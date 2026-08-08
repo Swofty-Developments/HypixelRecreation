@@ -5,22 +5,11 @@ import lombok.Setter;
 import net.minestom.server.instance.Instance;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
-import net.swofty.commons.bedwars.map.BedWarsMapsConfig.GeneratorSpeed;
-import net.swofty.commons.bedwars.map.BedWarsMapsConfig.MapEntry;
-import net.swofty.commons.bedwars.map.BedWarsMapsConfig.MapTeam;
-import net.swofty.commons.bedwars.map.BedWarsMapsConfig.MinMax;
-import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
-import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TwoBlockPosition;
+import net.swofty.commons.bedwars.map.BedWarsMapsConfig.*;
 import net.swofty.commons.mc.HypixelPosition;
 import net.swofty.commons.mc.Vec3i;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -37,10 +26,13 @@ public class AutoSetupSession {
     private final Map<TeamKey, TeamConfig> teams = new EnumMap<>(TeamKey.class);
     private final List<HypixelPosition> diamondGenerators = new ArrayList<>();
     private final List<HypixelPosition> emeraldGenerators = new ArrayList<>();
+    private final List<BedWarsMapsConfig.SprayPosition> sprays = new ArrayList<>();
     private GeneratorSpeed generatorSpeed = GeneratorSpeed.SLOW;
 
     private HypixelPosition waitingLocation;
     private HypixelPosition spectatorLocation;
+    private Vec3i waitingLobbyMin;
+    private Vec3i waitingLobbyMax;
 
     public AutoSetupSession(UUID playerUuid, Instance instance) {
         this.playerUuid = playerUuid;
@@ -99,9 +91,11 @@ public class AutoSetupSession {
         teams.clear();
         diamondGenerators.clear();
         emeraldGenerators.clear();
+        sprays.clear();
         generatorSpeed = GeneratorSpeed.SLOW;
         waitingLocation = null;
         spectatorLocation = null;
+        waitingLobbyMin = waitingLobbyMax = null;
     }
 
     public void removeTeam(TeamKey key) {
@@ -179,6 +173,10 @@ public class AutoSetupSession {
                 HypixelPosition s = locations.getSpectator();
                 spectatorLocation = new HypixelPosition(s.x(), s.y(), s.z(), 0, 0);
             }
+            if (locations.getWaitingLobby() != null) {
+                waitingLobbyMin = locations.getWaitingLobby().min();
+                waitingLobbyMax = locations.getWaitingLobby().max();
+            }
         }
 
         // Load global generators
@@ -196,6 +194,7 @@ public class AutoSetupSession {
                 }
             }
         }
+        if (config.getSprays() != null) sprays.addAll(config.getSprays());
     }
 
     public MapEntry toMapEntry() {
@@ -249,6 +248,9 @@ public class AutoSetupSession {
         if (spectatorLocation != null) {
             locations.setSpectator(new HypixelPosition(spectatorLocation.x(), spectatorLocation.y(), spectatorLocation.z()));
         }
+        if (waitingLobbyMin != null && waitingLobbyMax != null) {
+            locations.setWaitingLobby(new BedWarsMapsConfig.CuboidPosition(waitingLobbyMin, waitingLobbyMax));
+        }
         config.setLocations(locations);
 
         // Global generators
@@ -266,6 +268,7 @@ public class AutoSetupSession {
         }
 
         config.setGlobalGenerator(globalGenerators);
+        config.setSprays(new ArrayList<>(sprays));
         entry.setConfiguration(config);
 
         return entry;
@@ -282,5 +285,3 @@ public class AutoSetupSession {
         private HypixelPosition teamShop;
     }
 }
-
-

@@ -116,7 +116,7 @@ public class AquariumMapHandler extends MapHandler {
                 for (int z = minZ; z <= maxZ; z++) {
                     Point pos = new Vec(x, y, z);
                     Block block = volumeSnapshot.get(pos);
-                    if (block != null && !block.isAir()) {
+                    if (block != null && !block.air()) {
                         bridgeBlocks.put(pos, block);
                     }
                 }

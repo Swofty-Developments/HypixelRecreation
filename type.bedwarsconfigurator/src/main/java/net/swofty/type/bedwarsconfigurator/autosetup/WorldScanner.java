@@ -11,12 +11,7 @@ import net.swofty.commons.mc.HypixelPosition;
 import net.swofty.commons.mc.Vec3i;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class WorldScanner {
@@ -74,7 +69,7 @@ public class WorldScanner {
 
                 HypixelPosition spawn = findSpawnNearBed(bed);
                 if (spawn != null) {
-                    teamConfig.setSpawn(new HypixelPosition(spawn.x(), spawn.y(), spawn.z(), 0, calculateYawTowardsBed(spawn, bed)));
+                    teamConfig.setSpawn(new HypixelPosition(spawn.x(), spawn.y(), spawn.z(), calculateYawTowardsBed(spawn, bed), 0));
                 }
 
                 HypixelPosition generator = findTeamGenerator(bed, 20);

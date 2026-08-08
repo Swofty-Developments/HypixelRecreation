@@ -5,6 +5,7 @@ import net.minestom.server.event.trait.PlayerInstanceEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
 import net.swofty.type.replayviewer.item.ReplayItem;
@@ -31,10 +32,10 @@ public class PlaybackControlItem extends ReplayItem {
             session -> isPlaying.set(session.isPlaying())
         );
         if (isPlaying.get()) {
-            return appendData(ItemStackCreator.createNamedItemStack(Material.MAGENTA_DYE, "§aClick to Pause")).build();
+            return appendData(ItemStackCreator.createNamedItemStack(Material.MAGENTA_DYE, I18n.t("replays.click_to_pause"))).build();
         }
-        return appendData(ItemStackCreator.getStack("§aClick to Resume", Material.GRAY_DYE, 1, List.of(
-            "§7The replay is currently paused."
+        return appendData(ItemStackCreator.getStack(I18n.t("replays.click_to_resume"), Material.GRAY_DYE, 1, List.of(
+                I18n.t("replays.replay_currently_paused")
         ))).build();
     }
 
@@ -54,7 +55,7 @@ public class PlaybackControlItem extends ReplayItem {
                 }
                 TypeReplayViewerLoader.populateInventory(player);
             },
-            () -> player.sendMessage("§cNo active replay session.")
+                () -> player.sendMessage(I18n.t("replays.no_active_session"))
         );
     }
 }

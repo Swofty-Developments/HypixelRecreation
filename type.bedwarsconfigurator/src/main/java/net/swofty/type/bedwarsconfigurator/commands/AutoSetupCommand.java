@@ -36,11 +36,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @CommandParameters(labels = "setup mapsetup autosetup", description = "Automatic BedWars map configuration tool", usage = "/autosetup <subcommand>", permission = Rank.STAFF, allowsConsole = false)
 public class AutoSetupCommand extends HypixelCommand {
@@ -61,6 +57,7 @@ public class AutoSetupCommand extends HypixelCommand {
         registerLocationCommand(command);
         registerShowCommand(command);
         registerHideCommand(command);
+        registerSnapCommand(command);
         registerStatusCommand(command);
         registerSaveCommand(command);
         registerGeneratorSettingsCommand(command);
@@ -75,9 +72,11 @@ public class AutoSetupCommand extends HypixelCommand {
         sender.sendMessage(Component.text("§e/autosetup team <team> <spawn|bed|generator|itemshop|teamshop> [x y z] §7- Set team positions"));
         sender.sendMessage(Component.text("§e/autosetup global <diamond|emerald> <add|remove> [x y z] §7- Manage global generators"));
         sender.sendMessage(Component.text("§e/autosetup waiting [x y z] §7- Set waiting spawn"));
+        sender.sendMessage(Component.text("§e/autosetup waitinglobby <min|max> [x y z] §7- Select the removable waiting lobby"));
         sender.sendMessage(Component.text("§e/autosetup spectator [x y z] §7- Set spectator spawn"));
         sender.sendMessage(Component.text("§e/autosetup show §7- Show debug markers"));
         sender.sendMessage(Component.text("§e/autosetup hide §7- Hide debug markers"));
+        sender.sendMessage(Component.text("§e/autosetup snap §7- Snap team spawns and shops to the nearest compass direction"));
         sender.sendMessage(Component.text("§e/autosetup status §7- Show current configuration status"));
         sender.sendMessage(Component.text("§e/autosetup name <name> §7- Set map display name"));
         sender.sendMessage(Component.text("§e/autosetup generator <slow|medium|fast|very_fast> §7- Configure generator speed"));
@@ -331,7 +330,7 @@ public class AutoSetupCommand extends HypixelCommand {
     }
 
     private void setTeamProperty(Player player, TeamKey key, AutoSetupSession.TeamConfig teamConfig, String property, Pos pos) {
-        final HypixelPosition currentPosition = new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.pitch(), pos.yaw());
+        final HypixelPosition currentPosition = new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
         switch (property.toLowerCase()) {
             case "spawn" -> {
                 teamConfig.setSpawn(currentPosition);
@@ -516,6 +515,16 @@ public class AutoSetupCommand extends HypixelCommand {
     }
 
     private void registerLocationCommand(MinestomCommand command) {
+        var waitingCornerArg = ArgumentType.String("waitingCorner");
+        waitingCornerArg.setSuggestionCallback((_, _, suggestion) -> {
+            suggestion.addEntry(new SuggestionEntry("min"));
+            suggestion.addEntry(new SuggestionEntry("max"));
+        });
+        command.addSyntax((sender, context) -> {
+            if (!(sender instanceof Player player) || !permissionCheck(sender)) return;
+            setWaitingLobbyCorner(player, context.get(waitingCornerArg), player.getPosition());
+        }, ArgumentType.Literal("waitinglobby"), waitingCornerArg);
+
         // /autosetup waiting [x y z]
         command.addSyntax((sender, context) -> {
             if (!(sender instanceof Player player)) return;
@@ -523,7 +532,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             Pos pos = player.getPosition();
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
-            session.setWaitingLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.pitch(), pos.yaw()));
+            session.setWaitingLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch()));
             player.sendMessage(Component.text("§aSet waiting spawn to " + formatPos(pos)));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
@@ -535,7 +544,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             Pos pos = player.getPosition();
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
-            session.setSpectatorLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.pitch(), pos.yaw()));
+            session.setSpectatorLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch()));
             player.sendMessage(Component.text("§aSet spectator spawn to " + formatPos(pos)));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
@@ -545,6 +554,12 @@ public class AutoSetupCommand extends HypixelCommand {
         ArgumentDouble xArg = ArgumentType.Double("x");
         ArgumentDouble yArg = ArgumentType.Double("y");
         ArgumentDouble zArg = ArgumentType.Double("z");
+
+        command.addSyntax((sender, context) -> {
+            if (!(sender instanceof Player player) || !permissionCheck(sender)) return;
+            setWaitingLobbyCorner(player, context.get(waitingCornerArg),
+                    new Pos(context.get(xArg), context.get(yArg), context.get(zArg)));
+        }, ArgumentType.Literal("waitinglobby"), waitingCornerArg, xArg, yArg, zArg);
 
         command.addSyntax((sender, context) -> {
             if (!(sender instanceof Player player)) return;
@@ -575,6 +590,19 @@ public class AutoSetupCommand extends HypixelCommand {
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("spectator"), xArg, yArg, zArg);
+    }
+
+    private void setWaitingLobbyCorner(Player player, String corner, Pos pos) {
+        AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
+        Vec3i block = new Vec3i(pos.blockX(), pos.blockY(), pos.blockZ());
+        if (corner.equalsIgnoreCase("min")) session.setWaitingLobbyMin(block);
+        else if (corner.equalsIgnoreCase("max")) session.setWaitingLobbyMax(block);
+        else {
+            player.sendMessage(Component.text("§cUse min or max."));
+            return;
+        }
+        player.sendMessage(Component.text("§aSet waiting lobby " + corner.toLowerCase() + " to " + formatPosition(block)));
+        DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
     }
 
     private void registerShowCommand(MinestomCommand command) {
@@ -641,6 +669,45 @@ public class AutoSetupCommand extends HypixelCommand {
             player.sendMessage(Component.text("§eSpectator Location: §f" + (session.getSpectatorLocation() != null ? "✔" : "§c✖")));
 
         }, ArgumentType.Literal("status"));
+    }
+
+    private void registerSnapCommand(MinestomCommand command) {
+        command.addSyntax((sender, _) -> {
+            if (!(sender instanceof Player player)) return;
+            if (!permissionCheck(sender)) return;
+
+            AutoSetupSession session = AutoSetupSession.get(player.getUuid());
+            if (session == null) {
+                player.sendMessage(Component.text("§cNo configuration session active."));
+                return;
+            }
+
+            int snapped = 0;
+            for (AutoSetupSession.TeamConfig config : session.getTeams().values()) {
+                if (config.getSpawn() != null) {
+                    config.setSpawn(snapDirection(config.getSpawn()));
+                    snapped++;
+                }
+                if (config.getItemShop() != null) {
+                    config.setItemShop(snapDirection(config.getItemShop()));
+                    snapped++;
+                }
+                if (config.getTeamShop() != null) {
+                    config.setTeamShop(snapDirection(config.getTeamShop()));
+                    snapped++;
+                }
+            }
+
+            DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
+            player.sendMessage(Component.text("§aSnapped " + snapped + " spawn and shop positions to the nearest of 8 compass directions."));
+        }, ArgumentType.Literal("snap"));
+    }
+
+    private HypixelPosition snapDirection(HypixelPosition position) {
+        float yaw = Math.round(position.yaw() / 45.0f) * 45.0f;
+        if (yaw >= 180.0f) yaw -= 360.0f;
+        if (yaw < -180.0f) yaw += 360.0f;
+        return new HypixelPosition(position.x(), position.y(), position.z(), yaw, 0);
     }
 
     private void registerMapInfoCommand(MinestomCommand command) {
@@ -801,4 +868,3 @@ public class AutoSetupCommand extends HypixelCommand {
         return String.format("%d, %d, %d", pos.x(), pos.y(), pos.z());
     }
 }
-

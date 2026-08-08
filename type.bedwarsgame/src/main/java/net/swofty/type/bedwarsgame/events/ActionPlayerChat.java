@@ -1,5 +1,7 @@
 package net.swofty.type.bedwarsgame.events;
 
+import net.kyori.adventure.text.Component;
+
 import net.minestom.server.event.player.PlayerChatEvent;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
@@ -73,7 +75,7 @@ public class ActionPlayerChat implements HypixelEventClass {
 		}
 
 		if (game.getReplayManager().isRecording()) {
-			game.getReplayManager().recordPlayerChat(player, finalMessage, false);
+			game.getReplayManager().recordPlayerChat(player, Component.text(finalMessage), false);
 		}
 
 		List<BedWarsPlayer> receivers;

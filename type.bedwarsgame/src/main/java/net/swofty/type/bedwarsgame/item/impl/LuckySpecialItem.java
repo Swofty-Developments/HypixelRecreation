@@ -369,7 +369,7 @@ public class LuckySpecialItem extends SimpleInteractableItem {
         for (int i = 1; i <= range; i++) {
             Point point = player.getPosition().add(0, player.getEyeHeight(), 0).add(direction.mul(i));
             Block block = player.getInstance().getBlock(point);
-            Material material = block.registry().material();
+            Material material = block.material();
             if (material == Material.OBSIDIAN || material == Material.BEDROCK) {
                 return new Pos(point.blockX(), point.blockY(), point.blockZ());
             }

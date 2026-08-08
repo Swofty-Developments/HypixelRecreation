@@ -23,6 +23,7 @@ import net.swofty.type.generic.user.HypixelPlayer;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class BedWarsGameScoreboard {
@@ -95,10 +96,12 @@ public class BedWarsGameScoreboard {
                         Component.text(timeLeft)));
                     lines.add(Component.space());
 
-                    for (BedWarsTeam team : game.getTeams()) {
+                    for (BedWarsTeam team : game.getTeams().stream()
+                            .sorted(Comparator.comparingInt(value -> value.getTeamKey().ordinal()))
+                            .toList()) {
                         TeamKey teamKey = team.getTeamKey();
                         String teamName = teamKey.getName();
-                        String teamInitial = teamName.substring(0, 1).toUpperCase();
+                        String teamInitial = team.firstLetter().toUpperCase();
 
                         String bedStatus;
                         if (!team.hasPlayers()) {

@@ -2,7 +2,7 @@
 
 [<img src="https://discordapp.com/assets/e4923594e694a21542a489471ecffa50.svg" alt="Discord" height="55" />](https://discord.swofty.net)
 
-A 26.1.2 Minestom-based recreation of Hypixel SkyBlock with a properly abstracted, scalable microservices architecture.
+A 26.2 Minestom-based recreation of Hypixel with a properly abstracted, scalable microservices architecture.
 
 > **Note**: This implementation is under active development and is not yet production-ready.
 

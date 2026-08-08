@@ -1,7 +1,8 @@
 package net.swofty.type.game.replay.dispatcher;
 
 import net.swofty.type.game.replay.ReplayRecorder;
-import net.swofty.type.game.replay.recordable.RecordableBlockChange;
+import net.swofty.type.game.replay.delta.ReplayBlockDelta;
+import net.swofty.type.game.replay.model.ReplayBlockPosition;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -31,11 +32,8 @@ public class BlockChangeDispatcher implements ReplayDispatcher {
     public void tick() {
         PendingBlockChange change;
         while ((change = pendingChanges.poll()) != null) {
-            recorder.record(new RecordableBlockChange(
-                change.x, change.y, change.z,
-                change.newBlockStateId,
-                change.previousBlockStateId
-            ));
+            recorder.recordDelta(new ReplayBlockDelta(
+                    new ReplayBlockPosition(change.x, change.y, change.z), change.newBlockStateId));
         }
     }
 

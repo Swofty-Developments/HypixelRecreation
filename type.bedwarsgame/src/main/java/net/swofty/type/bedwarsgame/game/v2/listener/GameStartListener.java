@@ -3,8 +3,10 @@ package net.swofty.type.bedwarsgame.game.v2.listener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.instance.block.Block;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
+import net.swofty.commons.mc.Vec3i;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
@@ -27,6 +29,7 @@ public class GameStartListener implements HypixelEventClass {
 
         // Prepare world
         game.getWorldManager().clearExistingBeds();
+        removeWaitingLobby(game);
 
         // Assign players to teams
         game.autoAssignTeams();
@@ -117,6 +120,20 @@ public class GameStartListener implements HypixelEventClass {
         }, TaskSchedule.seconds(15));
 
         Logger.info("BedWars game {} started with {} active teams", event.game().getGameId(), activeTeamConfigs.size());
+    }
+
+    private void removeWaitingLobby(BedWarsGame game) {
+        var selection = game.getMapEntry().getConfiguration().getLocations().getWaitingLobby();
+        if (selection == null || selection.min() == null || selection.max() == null) return;
+        Vec3i min = selection.min();
+        Vec3i max = selection.max();
+        for (int x = Math.min(min.x(), max.x()); x <= Math.max(min.x(), max.x()); x++) {
+            for (int y = Math.min(min.y(), max.y()); y <= Math.max(min.y(), max.y()); y++) {
+                for (int z = Math.min(min.z(), max.z()); z <= Math.max(min.z(), max.z()); z++) {
+                    game.getInstance().setBlock(x, y, z, Block.AIR);
+                }
+            }
+        }
     }
 
 }

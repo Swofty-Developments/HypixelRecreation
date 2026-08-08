@@ -1,5 +1,7 @@
 package net.swofty.type.skywarsgame.luckyblock.items.weapons;
 
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.mechanics.projectile.ProjectileSnapshot;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -8,7 +10,6 @@ import net.minestom.server.entity.Entity;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.pvp.entity.projectile.Snowball;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -79,9 +80,11 @@ public class Shotgun implements LuckyBlockWeapon {
             float yawOffset = (float) ((RANDOM.nextDouble() - 0.5) * 2 * SPREAD_ANGLE);
             float pitchOffset = (float) ((RANDOM.nextDouble() - 0.5) * 2 * SPREAD_ANGLE);
 
-            Snowball snowball = new Snowball(holder);
-            snowball.setInstance(instance, eyePos);
-            snowball.shootFromRotation(basePitch + pitchOffset, baseYaw + yawOffset, 0, POWER, 0, 0.0);
+            Polyp.getInstance().services().projectiles().launch(
+                    ProjectileSnapshot.of(holder, io.github.term4.polyp.mechanics.projectile.types.Snowball.INSTANCE)
+                            .withSpawnPos(eyePos)
+                            .withVelocity(new Pos(0, 0, 0, baseYaw + yawOffset, basePitch + pitchOffset)
+                                    .direction().mul(POWER)));
         }
 
         return true;

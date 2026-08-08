@@ -171,5 +171,6 @@ public class BedWarsRespawnHandler implements RespawnHandler<BedWarsPlayer> {
         player.clearTitle();
 
         game.setupPlayer(player);
+        game.getReplayManager().recordPlayerRespawn(player);
     }
 }

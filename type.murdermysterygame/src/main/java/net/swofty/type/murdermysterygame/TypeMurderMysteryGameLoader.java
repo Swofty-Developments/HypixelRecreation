@@ -2,6 +2,23 @@ package net.swofty.type.murdermysterygame;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.term4.polyp.MechanicsKeys;
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.mechanics.attack.AttackSystem;
+import io.github.term4.polyp.mechanics.attribute.AttributeSystem;
+import io.github.term4.polyp.mechanics.blocking.BlockingSystem;
+import io.github.term4.polyp.mechanics.consumable.ConsumableSystem;
+import io.github.term4.polyp.mechanics.damage.DamageSystem;
+import io.github.term4.polyp.mechanics.explosion.ExplosionSystem;
+import io.github.term4.polyp.mechanics.hunger.HungerSystem;
+import io.github.term4.polyp.mechanics.knockback.KnockbackSystem;
+import io.github.term4.polyp.mechanics.projectile.ProjectileSystem;
+import io.github.term4.polyp.platform.compatibility.Compat18;
+import io.github.term4.polyp.platform.fixes.Fixes18;
+import io.github.term4.polyp.platform.fixes.FixesSystem;
+import io.github.term4.polyp.presets.Preset;
+import io.github.term4.polyp.vri.Vri;
+import io.github.term4.polyp.vri.VriConfig;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.hollowcube.polar.PolarLoader;
@@ -25,9 +42,8 @@ import net.swofty.commons.ServiceType;
 import net.swofty.commons.murdermystery.MurderMysteryGameType;
 import net.swofty.commons.murdermystery.map.MurderMysteryMapsConfig;
 import net.swofty.commons.protocol.objects.orchestrator.GameHeartbeatProtocol;
-import net.swofty.proxyapi.ProxyService;
 import net.swofty.commons.redis.RedisMessageHandler;
-import net.swofty.pvp.MinestomPvP;
+import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.game.game.GameObject;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
@@ -77,6 +93,7 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
     @Getter
     private static MurderMysteryMapsConfig mapsConfig;
     private static InstanceManager instanceManager;
+    private static ExplosionSystem explosions;
     private static RegistryKey<@NotNull DimensionType> fullbrightDimension;
     private Gson gson;
 
@@ -100,6 +117,7 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
         }
         InstanceContainer mapInstance = instanceManager.createInstanceContainer(fullbrightDimension);
         mapInstance.setChunkLoader(new PolarLoader(new File("./configuration/murdermystery/" + entry.getId() + ".polar").toPath()));
+        mapInstance.setExplosionSupplier(explosions.supplier());
         Game game = new Game(entry, mapInstance, gameType);
         games.add(game);
         return game;
@@ -125,6 +143,7 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
 
     @Override
     public void onInitialize(MinecraftServer server) {
+        initializePolyp();
         gson = new GsonBuilder().create();
         instanceManager = MinecraftServer.getInstanceManager();
         fullbrightDimension = MinecraftServer.getDimensionTypeRegistry().register("fullbright", DimensionType.builder().ambientLight(1f).setAttribute(EnvironmentAttribute.AMBIENT_LIGHT_COLOR, Color.WHITE).build());
@@ -173,9 +192,6 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
                 Logger.error(e, "Failed to register command " + command.getCommand().getName() + " in class " + command.getClass().getSimpleName());
             }
         });
-        MinestomPvP.init();
-        // Attach the PvP event node for bow shooting, arrow consumption, etc.
-        MinecraftServer.getGlobalEventHandler().addChild(MinestomPvP.events());
         MurderMysteryGameScoreboard.start();
         HypixelGenericLoader.loopThroughPackage("net.swofty.type.murdermysterygame.item.impl", SimpleInteractableItem.class).forEach(itemHandler::add);
 
@@ -226,6 +242,28 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
                 player.sendPlayerListHeaderAndFooter(header(), footer(player));
             }
         }).repeat(10, TimeUnit.SERVER_TICK).schedule();
+    }
+
+    private static void initializePolyp() {
+        Polyp polyp = Polyp.getInstance();
+        polyp.installPlayerProvider = false;
+        polyp.metaFix = false;
+        polyp.init();
+        polyp.profiles().setGlobal(Preset.HYPIXEL.profile().toBuilder()
+                .set(MechanicsKeys.COMPAT, Compat18.config())
+                .set(MechanicsKeys.FIXES, Fixes18.config())
+                .build());
+        AttackSystem.install(polyp);
+        DamageSystem.install(polyp);
+        KnockbackSystem.install(polyp);
+        ProjectileSystem.install(polyp);
+        AttributeSystem.install(polyp);
+        ConsumableSystem.install(polyp);
+        BlockingSystem.install(polyp);
+        HungerSystem.install(polyp);
+        FixesSystem.install(polyp);
+        Vri.install(polyp, VriConfig.all());
+        explosions = ExplosionSystem.install(polyp);
     }
 
     @Override

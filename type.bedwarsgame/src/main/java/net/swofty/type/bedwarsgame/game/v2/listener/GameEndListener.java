@@ -23,6 +23,8 @@ import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.guild.GuildManager;
 import org.tinylog.Logger;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 public class GameEndListener implements HypixelEventClass {
@@ -81,9 +83,18 @@ public class GameEndListener implements HypixelEventClass {
                 player.sendMessage(Component.empty());
             });
 
-            player.sendMessage(Component.text(ChatUtility.FontInfo.center("§e§l1st Killer §7- Username §7- 0")));
-            player.sendMessage(Component.text(ChatUtility.FontInfo.center("§6§l2nd Killer §7- Username §7- 0")));
-            player.sendMessage(Component.text(ChatUtility.FontInfo.center("§c§l3rd Killer §7- Username §7- 0")));
+            List<BedWarsPlayer> killers = game.getPlayers().stream()
+                    .sorted(Comparator.comparingInt(BedWarsPlayer::getKillsThisGame).reversed()
+                            .thenComparing(BedWarsPlayer::getUsername, String.CASE_INSENSITIVE_ORDER))
+                    .limit(3)
+                    .toList();
+            String[] places = {"§e§l1st Killer", "§6§l2nd Killer", "§c§l3rd Killer"};
+            for (int index = 0; index < killers.size(); index++) {
+                BedWarsPlayer killer = killers.get(index);
+                String name = LegacyComponentSerializer.legacySection().serialize(killer.getColouredName());
+                player.sendMessage(Component.text(ChatUtility.FontInfo.center(
+                        places[index] + " §7- " + name + " §7- " + killer.getKillsThisGame())));
+            }
             player.sendMessage(Component.empty());
             player.sendMessage(Component.text(THICK_BAR));
         }

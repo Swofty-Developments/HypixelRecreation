@@ -125,7 +125,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             Pos pos = player.getPosition();
             MurderMysterySetupSession session = MurderMysterySetupSession.getOrCreate(player.getUuid(), player.getInstance());
-            session.setWaitingLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.pitch(), pos.yaw()));
+            session.setWaitingLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch()));
             player.sendMessage(Component.text("§aSet waiting spawn to " + formatPos(pos)));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 

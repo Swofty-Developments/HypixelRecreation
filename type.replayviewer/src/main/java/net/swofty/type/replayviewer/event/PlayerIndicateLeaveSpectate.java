@@ -2,8 +2,8 @@ package net.swofty.type.replayviewer.event;
 
 import net.minestom.server.event.player.PlayerInputEvent;
 import net.swofty.type.generic.event.EventNodes;
-import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.event.HypixelEventClass;
+import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
 
@@ -20,7 +20,7 @@ public final class PlayerIndicateLeaveSpectate implements HypixelEventClass {
         }
 
         TypeReplayViewerLoader.getSession(player.getUuid()).ifPresent(session -> {
-            Integer followedEntityId = session.getViewerSpectating().get(player.getUuid());
+            Integer followedEntityId = session.getFollowedEntityId(player);
             if (followedEntityId == null) {
                 return;
             }

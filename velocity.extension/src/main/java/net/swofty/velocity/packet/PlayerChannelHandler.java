@@ -1,7 +1,10 @@
 package net.swofty.velocity.packet;
 
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.proxy.protocol.packet.*;
+import com.velocitypowered.proxy.protocol.packet.BossBarPacket;
+import com.velocitypowered.proxy.protocol.packet.KeepAlivePacket;
+import com.velocitypowered.proxy.protocol.packet.PluginMessagePacket;
+import com.velocitypowered.proxy.protocol.packet.RespawnPacket;
 import com.velocitypowered.proxy.protocol.packet.chat.SystemChatPacket;
 import com.velocitypowered.proxy.protocol.packet.chat.legacy.LegacyChatPacket;
 import com.velocitypowered.proxy.protocol.packet.chat.session.SessionPlayerChatPacket;
@@ -10,6 +13,7 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import net.swofty.velocity.gamemanager.TransferHandler;
+import org.tinylog.Logger;
 
 public final class PlayerChannelHandler extends ChannelDuplexHandler {
     private final Player player;
@@ -51,7 +55,7 @@ public final class PlayerChannelHandler extends ChannelDuplexHandler {
             // Limbo packet replay is best-effort: a malformed cached respawn
             // shouldn't drop the player. Log at debug so it surfaces during
             // diagnostic runs without spamming production logs.
-            org.tinylog.Logger.debug(e, "Failed to replay cached respawn during limbo transfer");
+            Logger.debug(e, "Failed to replay cached respawn during limbo transfer");
         }
 
 

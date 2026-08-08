@@ -1,16 +1,19 @@
 package net.swofty.type.bedwarsgame.game.v2;
 
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.ItemEntity;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.minestom.server.item.component.CustomData;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.StringUtility;
@@ -28,14 +31,12 @@ import net.swofty.type.generic.entity.FloatingBlockEntity;
 import org.tinylog.Logger;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BedWarsGeneratorManager {
+    private static final int IRON_LIMIT = 48;
+    private static final int GOLD_LIMIT = 16;
     private final BedWarsGame game;
     private final Map<TeamKey, List<Task>> teamGeneratorTasks = new EnumMap<>(TeamKey.class);
     private final Map<BedWarsMapsConfig.GlobalGeneratorKey, List<GeneratorDisplay>> generatorDisplays = new HashMap<>();
@@ -102,7 +103,11 @@ public class BedWarsGeneratorManager {
                     LuckyBlockItem luckyBlock = (LuckyBlockItem) TypeBedWarsGameLoader.getItemHandler().getItem("lucky_block");
                     spawnItem(luckyBlock.getItemStack(tier), 1, spawnPosition);
                 }
-                spawnItem(itemMaterial, finalAmount, spawnPosition);
+                int currentAmount = countNearbyItems(spawnPosition, itemMaterial);
+                int limit = itemMaterial == Material.IRON_INGOT ? IRON_LIMIT : GOLD_LIMIT;
+                if (currentAmount < limit) {
+                    spawnItem(itemMaterial, Math.min(finalAmount, limit - currentAmount), spawnPosition);
+                }
             }
 
             if (spawnRound.get() > 7) spawnRound.set(0); // not official timing
@@ -360,16 +365,47 @@ public class BedWarsGeneratorManager {
         }
     }
 
+    public void dropItemsAtTeamGenerator(TeamKey teamKey, Collection<ItemStack> items) {
+        if (game.getState() != GameState.IN_PROGRESS || teamKey == null || items.isEmpty()) return;
+
+        MapTeam team = game.getMapEntry().getConfiguration().getTeams().get(teamKey);
+        if (team == null || team.getGenerator() == null) return;
+
+        HypixelPosition generator = team.getGenerator();
+        Pos position = new Pos(generator.x(), generator.y(), generator.z());
+        for (ItemStack item : items) {
+            if (item == null || item.isAir()) continue;
+
+            ItemEntity entity = new ItemEntity(item);
+            entity.setPickupDelay(Duration.ofMillis(500));
+            entity.setInstance(game.getInstance(), position);
+        }
+    }
+
     private void spawnItem(Material material, int amount, Pos position) {
         spawnItem(ItemStack.of(material), amount, position);
     }
 
     private void spawnItem(ItemStack stack, int amount, Pos position) {
         ItemStack item = stack.withAmount(amount);
+        if (item.material() == Material.IRON_INGOT || item.material() == Material.GOLD_INGOT
+                || item.material() == Material.DIAMOND || item.material() == Material.EMERALD) {
+            item = item.with(DataComponents.CUSTOM_DATA,
+                    new CustomData(CompoundBinaryTag.builder().putBoolean("generator", true).build()));
+        }
         ItemEntity entity = new ItemEntity(item);
         entity.setPickupDelay(Duration.ofMillis(500));
         entity.setInstance(game.getInstance(), position);
         entity.setVelocity(new Vec(0, 0.1, 0));
+    }
+
+    private int countNearbyItems(Pos position, Material material) {
+        return game.getInstance().getNearbyEntities(position, 1.5).stream()
+                .filter(ItemEntity.class::isInstance)
+                .map(ItemEntity.class::cast)
+                .filter(entity -> entity.getItemStack().material() == material)
+                .mapToInt(entity -> entity.getItemStack().amount())
+                .sum();
     }
 
     private Material getMaterialFromType(BedWarsMapsConfig.GlobalGeneratorKey type) {

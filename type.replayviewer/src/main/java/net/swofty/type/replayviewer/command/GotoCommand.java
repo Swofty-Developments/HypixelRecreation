@@ -1,8 +1,10 @@
 package net.swofty.type.replayviewer.command;
 
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
+import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
@@ -28,12 +30,13 @@ public class GotoCommand extends HypixelCommand {
                         int tick = parseTime(time);
                         if (tick >= 0) {
                             session.seekTo(tick);
-                            player.sendMessage("§aGoing to " + tick / 20 * 50 + " seconds into the replay!");
+                            player.sendMessage(I18n.t("replays.going_to_seconds",
+                                    Argument.string("seconds", String.valueOf(tick / 20 * 50))));
                         } else {
-                            player.sendMessage("§cInvalid time format. Use mm:ss or tick number.");
+                            player.sendMessage(I18n.t("replays.invalid_time_format"));
                         }
                     },
-                    () -> player.sendMessage("§cNo active replay session.")
+                    () -> player.sendMessage(I18n.t("replays.no_active_session"))
             );
         }, timeArg);
 
@@ -41,7 +44,7 @@ public class GotoCommand extends HypixelCommand {
             HypixelPlayer player = (HypixelPlayer) sender;
             TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
                     session -> session.seekTo(0),
-                    () -> player.sendMessage("§cNo active replay session.")
+                    () -> player.sendMessage(I18n.t("replays.no_active_session"))
             );
         }, ArgumentType.Literal("start"));
 
@@ -49,7 +52,7 @@ public class GotoCommand extends HypixelCommand {
             HypixelPlayer player = (HypixelPlayer) sender;
             TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
                     session -> session.seekTo(session.getTotalTicks() - 1),
-                    () -> player.sendMessage("§cNo active replay session.")
+                    () -> player.sendMessage(I18n.t("replays.no_active_session"))
             );
         }, ArgumentType.Literal("end"));
     }

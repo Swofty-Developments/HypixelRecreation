@@ -1,7 +1,7 @@
 package net.swofty.type.generic.gui.impl.replay;
 
 import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponents;
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
@@ -13,6 +13,7 @@ import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
+import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 import java.text.SimpleDateFormat;
@@ -34,7 +35,7 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return ViewConfiguration.translatable("general.recent_games", InventoryType.CHEST_6_ROW);
+        return ViewConfiguration.translatable("replays.replays", InventoryType.CHEST_6_ROW);
     }
 
     @Override
@@ -66,25 +67,26 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
     }
 
     @Override
+    protected boolean shouldRenderNavBackground() {
+        return false;
+    }
+
+    @Override
     protected void layoutBackground(ViewLayout<State> layout, State state, ViewContext ctx) {
         Components.close(layout, 48);
 
-        layout.slot(47, (_, _) -> ItemStackCreator.getStack("§aHypixel Replays", Material.BOOK, 1, List.of(
-            "§7The Hypixel Replay System allows",
-            "§7players to watch back their recently",
-            "§7played games.",
-            "§7",
-            "§7Replays are currently supported in the following games:",
-            "§f - Bed Wars"
+        layout.slot(47, (_, _) -> ItemStackCreator.getStack(I18n.t("replays.replays_title"), Material.BOOK, 1, List.of(
+                I18n.t("replays.replays_description"),
+                Component.empty(),
+                I18n.t("replays.replays_supported"),
+                I18n.t("replays.bedwars_supported")
         )));
 
         // TODO: behaviour
-        layout.slot(49, (_, _) -> ItemStackCreator.getStack("§aShow Replays Only", Material.GRAY_DYE, 1, List.of(
-            "§7Toggle whether all your recently",
-            "§7played games should be displayed or",
-            "§7only games with replays attached.",
-            "§7",
-            "§eClick to toggle!"
+        layout.slot(49, (_, _) -> ItemStackCreator.getStack(I18n.t("replays.show_replays_only"), Material.GRAY_DYE, 1, List.of(
+                I18n.t("replays.show_replays_only_description"),
+                Component.empty(),
+                I18n.t("replays.click_to_toggle")
         )));
     }
 
@@ -99,14 +101,14 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
 
 
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("§7" + DATE_FORMAT.format(new Date(item.startTime()))));
-        lore.add(Component.text("§7Duration: " + item.formattedDuration()));
+        lore.add(I18n.t("replays.replay_date", Argument.string("date", DATE_FORMAT.format(new Date(item.startTime())))));
+        lore.add(I18n.t("replays.replay_duration", Argument.string("duration", item.formattedDuration())));
         lore.add(Component.empty());
-        lore.add(Component.text("§7Mode: §a" + StringUtility.capitalize(item.gameTypeName())));
-        lore.add(Component.text("§7Map: §a" + item.mapName()));
+        lore.add(I18n.t("replays.replay_mode", Argument.string("mode", formatMode(item.gameTypeName()))));
+        lore.add(I18n.t("replays.replay_map", Argument.string("map", item.mapName())));
         lore.add(Component.empty());
-        lore.add(Component.text("§7Server: §a" + item.serverId()));
-        lore.add(Component.text("§7Players: §a" + item.players().size()));
+        lore.add(I18n.t("replays.server", Argument.string("server", item.serverId())));
+        lore.add(I18n.t("replays.player_count", Argument.numeric("players", item.players().size())));
         lore.add(Component.empty());
 
         // add this properly on Duels
@@ -119,13 +121,14 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
                     Component.text("DEFEAT", NamedTextColor.RED));
         }*/
 
-        lore.add(Component.text("§eClick to view replay!"));
+        lore.add(I18n.t("replays.click_to_view_replay"));
 
-        return ItemStack.builder(material)
-                .set(DataComponents.CUSTOM_NAME, Component.text("§a" + item.displayName()))
-                .set(DataComponents.LORE, lore)
-                //.set(DataComponents.TOOLTIP_DISPLAY, new TooltipDisplay(false, Set.of()))
-                ;
+        return ItemStackCreator.getStack(
+                I18n.t("replays.replay_item_name", Argument.string("name", item.displayName())),
+                material,
+                1,
+                lore
+        );
     }
 
     @Override
@@ -137,6 +140,13 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
     @Override
     protected boolean shouldFilterFromSearch(State state, ReplayEntry item) {
         return false;
+    }
+
+    private static String formatMode(String gameTypeName) {
+        if ("ONE_EIGHT".equalsIgnoreCase(gameTypeName)) {
+            return "Solo";
+        }
+        return StringUtility.capitalize(gameTypeName.replace('_', ' '));
     }
 
     public record State(

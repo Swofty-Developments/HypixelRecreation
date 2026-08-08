@@ -13,6 +13,7 @@ import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.tinylog.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -210,7 +211,8 @@ public class HypixelTranslator extends MiniMessageTranslator {
                 long approxEntries = Math.clamp(size / 40L, 128L, 250_000L);
                 initialCapacity = (int) Math.min(Integer.MAX_VALUE - 8L, (approxEntries / 0.75d) + 1);
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Logger.error("IOException occurred", e);
         }
 
         Map<String, String> out = new HashMap<>(initialCapacity, 0.75f);

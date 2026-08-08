@@ -19,10 +19,12 @@ import net.swofty.type.bedwarsgame.stats.BedWarsStatsRecorder;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.generic.event.EventNodes;
-import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.event.HypixelEventClass;
+import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.utility.ScheduleUtility;
 
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class ActionGameDeath implements HypixelEventClass {
@@ -40,10 +42,18 @@ public class ActionGameDeath implements HypixelEventClass {
     }
 
     public static void death(BedWarsPlayer player, BedWarsGame game, Consumer<Component> deathMessageConsumer, boolean voidDeath) {
+        BedWarsDeathResult deathResult = BedWarsDeathHandler.calculateDeath(player, game, voidDeath);
+        Component deathMessage = BedWarsDeathHandler.createDeathMessage(deathResult);
+        game.getReplayManager().recordPlayerDeath(
+                player,
+                deathResult.getKillCreditPlayer(),
+                deathMessage
+        );
         HypixelPosition position = game.getMapEntry().getConfiguration().getLocations().getSpectator();
         player.setVelocity(Vec.ZERO); // Stop any momentum the player had before death
         player.teleport(new Pos(position.x(), position.y(), position.z()));
         BedWarsGame.literalSetupSpectator(player);
+        game.getReplayManager().recordPlayerState(player);
 
         Integer pickaxeLevel = player.getTag(PickaxeShopItem.PICKAXE_UPGRADE_TAG);
         if (pickaxeLevel != null && pickaxeLevel > 1) {
@@ -73,7 +83,6 @@ public class ActionGameDeath implements HypixelEventClass {
             }
         }
 
-        BedWarsDeathResult deathResult = BedWarsDeathHandler.calculateDeath(player, game, voidDeath);
         if (deathResult.deathType() == BedWarsDeathType.VOID) {
             if (player.allowsPersistentProgress())
                 player.getAchievementHandler().completeAchievement("bedwars.its_dark_down_there");
@@ -85,7 +94,6 @@ public class ActionGameDeath implements HypixelEventClass {
         TeamKey teamKey = player.getTeamKey();
         boolean bedExists = teamKey != null && game.isBedAlive(teamKey);
 
-        Component deathMessage = BedWarsDeathHandler.createDeathMessage(deathResult);
         handleDeathTypeActions(deathResult, game);
         deathMessageConsumer.accept(deathMessage);
 
@@ -125,8 +133,21 @@ public class ActionGameDeath implements HypixelEventClass {
             game.getRespawnHandler().startRespawn(player);
         } else {
             // Final kill if the bed doesn't exist
+            Map<Integer, ItemStack> enderChest = game.getEnderChests().remove(player.getUuid());
+            List<ItemStack> enderChestItems = enderChest == null
+                ? List.of()
+                : enderChest.values().stream()
+                    .filter(item -> item != null && !item.isAir())
+                    .toList();
             player.getInventory().clear();
             game.onPlayerEliminated(player);
+            if (deathResult.isFinalKill() && !enderChestItems.isEmpty()) {
+                ScheduleUtility.nextTick(() -> {
+                    if (game.getState() == GameState.IN_PROGRESS) {
+                        game.getGeneratorManager().dropItemsAtTeamGenerator(teamKey, enderChestItems);
+                    }
+                });
+            }
         }
     }
 
@@ -135,14 +156,13 @@ public class ActionGameDeath implements HypixelEventClass {
         BedWarsPlayer creditPlayer = result.getKillCreditPlayer();
 
         if (creditPlayer != null) {
+            creditPlayer.recordGameKill();
             BedWarsStatsRecorder.recordKill(creditPlayer, game.getGameType());
         }
 
         BedWarsStatsRecorder.recordDeath(victim, game.getGameType());
 
-        if (creditPlayer != null) {
-            game.getReplayManager().recordKill(creditPlayer, victim, result.deathType(), result.isFinalKill());
-        }
+        game.getReplayManager().recordKill(creditPlayer, victim, result.deathType(), result.isFinalKill());
 
         if (result.isFinalKill() && creditPlayer != null) {
             if (creditPlayer.allowsPersistentProgress())

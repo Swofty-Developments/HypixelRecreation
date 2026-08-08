@@ -31,14 +31,12 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
-import com.velocitypowered.proxy.network.Connections;
 import com.viaversion.viabackwards.ViaBackwardsPlatformImpl;
 import com.viaversion.viarewind.ViaRewindPlatformImpl;
 import com.viaversion.viaversion.ViaManagerImpl;
 import com.viaversion.viaversion.commands.ViaCommandHandler;
 import io.github.retrooper.packetevents.velocity.factory.VelocityPacketEventsBuilder;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelPipeline;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.swofty.commons.ServerType;
@@ -48,11 +46,7 @@ import net.swofty.commons.config.Settings;
 import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.proxy.from.*;
 import net.swofty.commons.protocol.objects.punishment.GetActivePunishmentProtocol;
-import net.swofty.commons.punishment.ActivePunishment;
-import net.swofty.commons.punishment.PunishmentMessages;
-import net.swofty.commons.punishment.PunishmentReason;
-import net.swofty.commons.punishment.PunishmentTag;
-import net.swofty.commons.punishment.PunishmentType;
+import net.swofty.commons.punishment.*;
 import net.swofty.commons.redis.ProxyHeartbeat;
 import net.swofty.commons.redis.RedisClient;
 import net.swofty.commons.redis.RedisEndpoint;
@@ -68,7 +62,6 @@ import net.swofty.velocity.gamemanager.BalanceConfiguration;
 import net.swofty.velocity.gamemanager.BalanceConfigurations;
 import net.swofty.velocity.gamemanager.GameManager;
 import net.swofty.velocity.gamemanager.TransferHandler;
-import net.swofty.velocity.packet.PlayerChannelHandler;
 import net.swofty.velocity.packet.listener.PlayerMovementListener;
 import net.swofty.velocity.presence.PresencePublisher;
 import net.swofty.velocity.redis.RedisHandlerRegistry;
@@ -164,7 +157,7 @@ public class SkyBlockVelocity {
         // Register packets
         server.getEventManager().register(this, PostLoginEvent.class,
             (AwaitingEventExecutor<PostLoginEvent>) postLoginEvent -> EventTask.withContinuation(continuation -> {
-                injectPlayer(postLoginEvent.getPlayer());
+                // injectPlayer(postLoginEvent.getPlayer());
                 TestFlowManager.handlePlayerJoin(postLoginEvent.getPlayer().getUsername());
                 PresencePublisher.publish(postLoginEvent.getPlayer(), true, (String) null, null);
 
@@ -521,10 +514,10 @@ public class SkyBlockVelocity {
     }
 
     private void injectPlayer(final Player player) {
-        final ConnectedPlayer connectedPlayer = (ConnectedPlayer) player;
-        Channel channel = connectedPlayer.getConnection().getChannel();
-        ChannelPipeline pipeline = channel.pipeline();
-        pipeline.addBefore(Connections.HANDLER, "PACKET", new PlayerChannelHandler(player));
+        // final ConnectedPlayer connectedPlayer = (ConnectedPlayer) player;
+        // Channel channel = connectedPlayer.getConnection().getChannel();
+        // ChannelPipeline pipeline = channel.pipeline();
+        // pipeline.addBefore(Connections.HANDLER, "PACKET", new PlayerChannelHandler(player));
     }
 
     private void removePlayer(final Player player) {

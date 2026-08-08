@@ -13,7 +13,8 @@ import net.swofty.type.generic.user.categories.Rank;
         description = "Rejoin an active BedWars game",
         usage = "/rejoin",
         permission = Rank.DEFAULT,
-        allowsConsole = false
+        allowsConsole = false,
+        labels = "rejoin"
 )
 public class RejoinCommand extends HypixelCommand {
     private static final ProxyService ORCHESTRATOR = new ProxyService(ServiceType.ORCHESTRATOR);

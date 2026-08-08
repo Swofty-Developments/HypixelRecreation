@@ -12,12 +12,7 @@ import net.swofty.type.skyblockgeneric.data.monogdb.RegionDatabase;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Getter
 @Setter
@@ -95,9 +90,9 @@ public class SkyBlockRegion {
             }
 
             if (instance.isChunkLoaded(randomPosition)
-                && instance.getBlock(randomPosition).isAir()
-                && instance.getBlock(blockAbove).isAir()
-                && !instance.getBlock(blockBelow).isAir())
+                    && instance.getBlock(randomPosition).air()
+                    && instance.getBlock(blockAbove).air()
+                    && !instance.getBlock(blockBelow).air())
                 return randomPosition;
         }
     }

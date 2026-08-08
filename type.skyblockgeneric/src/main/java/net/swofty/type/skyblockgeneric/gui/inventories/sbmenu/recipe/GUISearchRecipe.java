@@ -10,11 +10,7 @@ import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.gui.HypixelSignGUI;
 import net.swofty.type.generic.gui.inventory.ItemStackCreator;
-import net.swofty.type.generic.gui.v2.Components;
-import net.swofty.type.generic.gui.v2.Layouts;
-import net.swofty.type.generic.gui.v2.PaginatedView;
-import net.swofty.type.generic.gui.v2.ViewConfiguration;
-import net.swofty.type.generic.gui.v2.ViewLayout;
+import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.generic.i18n.I18n;
@@ -87,13 +83,12 @@ public class GUISearchRecipe extends PaginatedView<SkyBlockRecipe<?>, GUISearchR
 
     @Override
     public void layout(ViewLayout<SearchState> layout, SearchState state, ViewContext ctx) {
-        layout.filler(Layouts.border(0, 53), FILLER);
+        layout.filler(Layouts.border(0, 53));
         Components.back(layout, 48, ctx);
         Components.close(layout, 49);
 
         layout.slot(50, (_, c) -> {
-            Locale l = c.player().getLocale();
-            return ItemStackCreator.getStack(I18n.string("gui_sbmenu.recipe.book.search", l), Material.OAK_SIGN, 1,
+            return ItemStackCreator.getStack(I18n.t("gui_sbmenu.recipe.book.search"), Material.OAK_SIGN, 1,
                 I18n.iterable("gui_sbmenu.recipe.book.search.lore"));
         }, (_, c) -> {
             new HypixelSignGUI(c.player()).open(new String[]{I18n.string("gui_sbmenu.recipe.search.sign_prompt", c.player().getLocale())}).thenAccept(line -> {
@@ -108,8 +103,7 @@ public class GUISearchRecipe extends PaginatedView<SkyBlockRecipe<?>, GUISearchR
         // if no results
         if (state.items().isEmpty()) {
             layout.slot(22, (searchState, c) -> {
-                Locale l = c.player().getLocale();
-                return ItemStackCreator.getStack(I18n.string("gui_sbmenu.recipe.search.no_results", l), Material.BARRIER, 1,
+                return ItemStackCreator.getStack(I18n.t("gui_sbmenu.recipe.search.no_results"), Material.BARRIER, 1,
                     I18n.iterable("gui_sbmenu.recipe.search.no_results.lore", Component.text(searchState.query())));
             });
         }

@@ -15,7 +15,7 @@ public final class BedWarsPrestigeDefinitions {
     public static final String DEFAULT_BRACKET_ID = "prestige_bracket_none";
 
     public static final List<Scheme> SCHEMES = List.of(
-        new Scheme("none", "None", Material.NAME_TAG, 0, style("", List.of("", "", ""), "", "")),
+            new Scheme("none", "None", Material.NAME_TAG, 0, style("§7", List.of("§7", "", ""), "§7", "§7")),
         new Scheme("iron", "Iron", Material.IRON_INGOT, 100, style("§f", List.of("§f", "§f", "§f"), "§f", "§f")),
         new Scheme("gold", "Gold", Material.GOLD_INGOT, 200, style("§6", List.of("§6", "§6", "§6"), "§6", "§6")),
         new Scheme("diamond", "Diamond", Material.DIAMOND, 300, style("§b", List.of("§b", "§b", "§b"), "§b", "§b")),

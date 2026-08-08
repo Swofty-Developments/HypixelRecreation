@@ -32,7 +32,7 @@ public class BedWarsTeam extends SimpleGameTeam {
     }
 
     public String firstLetter() {
-        return getName().substring(0, 1);
+        return teamKey == TeamKey.GRAY ? "S" : getName().substring(0, 1);
     }
 
     /**

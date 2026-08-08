@@ -9,8 +9,8 @@ import net.swofty.type.bedwarsgame.shop.Currency;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.bedwarsgame.user.ExperienceCause;
 import net.swofty.type.generic.event.EventNodes;
-import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.event.HypixelEventClass;
+import net.swofty.type.generic.event.phase.PhasedEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class ActionGamePickup implements HypixelEventClass {
@@ -31,10 +31,17 @@ public class ActionGamePickup implements HypixelEventClass {
 					event.getItemEntity().getEntityId(),
 					player.getEntityId()
 				);
-				game.getReplayManager().recordEntityDespawn(event.getItemEntity().getEntityId());
 			}
 
 			player.getInventory().addItemStack(itemStack);
+			if (isSplittableGeneratorResource(itemStack)) {
+				game.getPlayers().stream()
+						.filter(teammate -> teammate != player)
+						.filter(teammate -> teammate.getTeamKey() == player.getTeamKey())
+						.filter(teammate -> teammate.getInstance() == player.getInstance())
+						.filter(teammate -> teammate.getPosition().distanceSquared(player.getPosition()) <= 4)
+						.forEach(teammate -> teammate.getInventory().addItemStack(itemStack));
+			}
 
 			// handle bedwars xp for diamonds and emeralds
 			for (Currency currency : Currency.values()) {
@@ -54,6 +61,13 @@ public class ActionGamePickup implements HypixelEventClass {
 				}
 			}
 		}
+	}
+
+	private boolean isSplittableGeneratorResource(ItemStack itemStack) {
+		if (itemStack.material() != net.minestom.server.item.Material.IRON_INGOT
+				&& itemStack.material() != net.minestom.server.item.Material.GOLD_INGOT) return false;
+		CustomData data = itemStack.get(DataComponents.CUSTOM_DATA);
+		return data != null && data.nbt().getBoolean("generator");
 	}
 
 }

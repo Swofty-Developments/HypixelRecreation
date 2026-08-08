@@ -134,6 +134,8 @@ public class BedWarsWorldManager {
                     itemShopPos.yaw(), itemShopPos.pitch());
                 String[] holograms = new String[]{"§bITEM SHOP", "§e§lRIGHT CLICK"};
 
+                new Pos(0, 0, 0, 0, 0);
+
                 BedWarsShopkeeperAppearanceService.ShopkeeperAppearance appearance =
                     resolveShopkeeperAppearance(sources.itemShopPlayer());
 

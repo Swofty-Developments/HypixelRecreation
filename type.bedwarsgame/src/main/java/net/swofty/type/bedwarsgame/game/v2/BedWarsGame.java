@@ -47,6 +47,7 @@ import net.swofty.type.generic.data.datapoints.DatapointBedWarsHotbar;
 import net.swofty.type.generic.event.HypixelEventHandler;
 import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.party.PartyManager;
+import net.swofty.type.generic.utility.ScheduleUtility;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -217,7 +218,7 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
         TeamKey teamKey = player.getTeamKey();
         MapTeam playerTeam = getMapEntry().getConfiguration().getTeams().get(teamKey);
         HypixelPosition spawnPos = playerTeam.getSpawn();
-        Pos spawnPoint = new Pos(spawnPos.x(), spawnPos.y(), spawnPos.z(), spawnPos.pitch(), spawnPos.yaw());
+        Pos spawnPoint = new Pos(spawnPos.x(), spawnPos.y(), spawnPos.z(), spawnPos.yaw(), spawnPos.pitch());
 
         player.getInventory().clear();
         player.clearTitle();
@@ -226,11 +227,17 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
         player.setRespawnPoint(spawnPoint);
         player.setGameMode(GameMode.SURVIVAL);
         player.setInvisible(false);
+        player.setInvulnerable(true);
         player.setFlying(false);
         BedWarsInventoryManipulator.addItemWithHotbarPriority(player, ItemStack.of(Material.WOODEN_SWORD), DatapointBedWarsHotbar.HotbarItemType.MELEE);
         player.setHealth(20f);
         player.setFood(20);
         equipTeamArmor(player, teamKey);
+
+        // hypixel seems to do something like this
+        ScheduleUtility.delay(() -> {
+            player.setInvulnerable(false);
+        }, TaskSchedule.seconds(1));
 
         // Give back the downgraded tools
         AxeShopItem axeShopItem = new AxeShopItem();
@@ -430,10 +437,10 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
                 MapTeam config = teamConfigs.get(team.getTeamKey());
                 if (config != null) {
                     setupPlayer(player);
-                    player.reveal();
                     player.setDisplayName(Component.text(
                         team.getColorCode() + "§l" + team.firstLetter() + " §r" + team.getColorCode() + player.getUsername()
                     ));
+                    player.reveal();
                 }
             });
         }

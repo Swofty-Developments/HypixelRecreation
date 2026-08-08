@@ -86,12 +86,12 @@ public class ActionGamePlayerEvent implements HypixelEventClass {
             event.setCancelled(true);
             return;
         }
-        if (block.registry().material() == Material.ENDER_CHEST) {
+        if (block.material() == Material.ENDER_CHEST) {
             player.openView(new GUIEnderChest());
             return;
         }
 
-        if (block.registry().material() != Material.CHEST) return;
+        if (block.material() != Material.CHEST) return;
 
         BedWarsGame game = player.getGame();
         if (game == null || game.getState() != GameState.IN_PROGRESS) {
@@ -152,14 +152,14 @@ public class ActionGamePlayerEvent implements HypixelEventClass {
         }
 
         if (itemInHand.isAir()) {
-            if (block.registry().material() == Material.CHEST || block.registry().material() == Material.ENDER_CHEST) {
+            if (block.material() == Material.CHEST || block.material() == Material.ENDER_CHEST) {
                 event.setCancelled(true);
             }
             return;
         }
 
-        if (block.registry().material() != Material.CHEST &&
-            block.registry().material() != Material.ENDER_CHEST) {
+        if (block.material() != Material.CHEST &&
+                block.material() != Material.ENDER_CHEST) {
             return;
         }
 
@@ -170,7 +170,7 @@ public class ActionGamePlayerEvent implements HypixelEventClass {
         }
 
         // Handle Ender Chest
-        if (block.registry().material() == Material.ENDER_CHEST) {
+        if (block.material() == Material.ENDER_CHEST) {
             event.setCancelled(true);
             try {
                 Map<Integer, ItemStack> playerEnderChest = game.getEnderChests().computeIfAbsent(player.getUuid(), k -> new ConcurrentHashMap<>());
@@ -199,7 +199,7 @@ public class ActionGamePlayerEvent implements HypixelEventClass {
             return;
         }
 
-        if (block.registry().material() == Material.CHEST) {
+        if (block.material() == Material.CHEST) {
             event.setCancelled(true);
 
             TeamKey playerTeamName = player.getTeamKey();
@@ -240,7 +240,7 @@ public class ActionGamePlayerEvent implements HypixelEventClass {
             }
 
             try {
-                Map<Integer, ItemStack> teamChest = game.getTeamChests().computeIfAbsent(chestTeamName, k -> new ConcurrentHashMap<>());
+                Map<Integer, ItemStack> teamChest = game.getTeamChests().computeIfAbsent(chestTeamName, _ -> new ConcurrentHashMap<>());
                 boolean itemAdded = false;
                 for (int i = 0; i < 27; i++) {
                     if (teamChest.get(i) == null || teamChest.get(i).isAir()) {

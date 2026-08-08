@@ -19,8 +19,8 @@ import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.game.replay.dispatcher.BlockChangeDispatcher;
 import net.swofty.type.generic.event.EventNodes;
-import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.event.HypixelEventClass;
+import net.swofty.type.generic.event.phase.PhasedEvent;
 
 import java.util.Map;
 import java.util.Objects;
@@ -111,7 +111,7 @@ public class ActionGameBreak implements HypixelEventClass {
         // If it's not a team bed part, then check if it's any other player-placed block
         if (!isTeamBedPart) {
             if (Boolean.TRUE.equals(blockBeingBroken.getTag(TypeBedWarsGameLoader.PLAYER_PLACED_TAG))) {
-                new ItemEntity(ItemStack.of(Objects.requireNonNull(blockBeingBroken.registry().material()))).setInstance(player.getInstance(), event.getBlockPosition());
+                new ItemEntity(ItemStack.of(Objects.requireNonNull(blockBeingBroken.material()))).setInstance(player.getInstance(), event.getBlockPosition());
                 event.setCancelled(false);
             } else {
                 // Not a team bed and not a player-placed block

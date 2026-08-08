@@ -1,23 +1,22 @@
 package net.swofty.type.bedwarsgame.events;
 
-import net.kyori.adventure.sound.Sound;
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.presets.hypixel.Tnt;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.player.PlayerBlockPlaceEvent;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.Material;
-import net.minestom.server.sound.SoundEvent;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.MapTeam;
 import net.swofty.commons.mc.HypixelPosition;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
-import net.swofty.type.bedwarsgame.entity.TntEntity;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.game.replay.dispatcher.BlockChangeDispatcher;
 import net.swofty.type.generic.event.EventNodes;
-import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.event.HypixelEventClass;
+import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.utility.ScheduleUtility;
 import org.tinylog.Logger;
 
@@ -62,14 +61,8 @@ public class ActionGamePlace implements HypixelEventClass {
 			}
 		}
 
-		if (event.getBlock().registry().material() == Material.TNT) {
-			TntEntity entity = new TntEntity(event.getPlayer());
-			entity.setFuse(50);
-			entity.setInstance(event.getInstance(), blockPosition.add(0.5, 0, 0.5));
-			entity.getViewersAsAudience().playSound(Sound.sound(
-					SoundEvent.ENTITY_TNT_PRIMED, Sound.Source.BLOCK,
-					1.0f, 1.0f
-			), entity);
+		if (event.getBlock().material() == Material.TNT) {
+			Tnt.spawn(Polyp.getInstance().services().explosion(), event.getInstance(), blockPosition);
 			ScheduleUtility.nextTick(
 					() -> player.getInstance().setBlock(blockPosition, Block.AIR)
 			);

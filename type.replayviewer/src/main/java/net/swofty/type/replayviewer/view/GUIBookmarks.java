@@ -1,18 +1,20 @@
 package net.swofty.type.replayviewer.view;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.translation.Argument;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.game.replay.recordable.Recordable;
-import net.swofty.type.game.replay.recordable.bedwars.RecordableBedDestruction;
-import net.swofty.type.game.replay.recordable.bedwars.RecordableKill;
+import net.swofty.type.game.replay.event.ReplayBookmarkEvent;
 import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
+import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
 import net.swofty.type.replayviewer.playback.ReplaySession;
@@ -33,7 +35,7 @@ public class GUIBookmarks implements StatefulView<GUIBookmarks.State> {
     public record State(int page) {
     }
 
-    private record BookmarkEntry(int tick, String title, String playerDisplayName) {
+    private record BookmarkEntry(int tick, Component title, Component playerDisplayName) {
     }
 
     @Override
@@ -43,7 +45,7 @@ public class GUIBookmarks implements StatefulView<GUIBookmarks.State> {
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return new ViewConfiguration<>("Bookmarks", InventoryType.CHEST_6_ROW);
+        return ViewConfiguration.translatable("replays.bookmarks", InventoryType.CHEST_6_ROW);
     }
 
     @Override
@@ -51,11 +53,13 @@ public class GUIBookmarks implements StatefulView<GUIBookmarks.State> {
         var sessionOpt = TypeReplayViewerLoader.getSession(ctx.player());
         if (sessionOpt.isEmpty()) {
             layout.slot(22, ItemStackCreator.getStack(
-                "§cNo Replay Session",
+                    I18n.t("replays.no_replay_session_title"),
                 Material.BARRIER,
                 1,
-                "§7You are not currently watching",
-                "§7a replay."
+                    List.of(
+                            I18n.t("replays.no_replay_session_description"),
+                            I18n.t("replays.no_replay_session_description_line")
+                    )
             ));
             Components.back(layout, 49, ctx);
             return;
@@ -80,15 +84,16 @@ public class GUIBookmarks implements StatefulView<GUIBookmarks.State> {
 
             BookmarkEntry entry = bookmarks.get(index);
             layout.slot(slot, ItemStackCreator.getStack(
-                entry.title(),
-                Material.PAPER,
-                1,
-                "§7Time: §a" + formatBookmarkTime(entry.tick()),
-                "",
-                "§aPlayer: " + entry.playerDisplayName(),
-                "",
-                "§eLeft Click to go to this time!",
-                "§eRight Click to share!"
+                    entry.title(),
+                    Material.PAPER,
+                    1,
+                    List.of(
+                            I18n.t("replays.bookmark_time", Argument.string("time", formatBookmarkTime(entry.tick()))),
+                            Component.empty(),
+                            I18n.t("replays.player_label", Argument.component("player", entry.playerDisplayName())),
+                            Component.empty(),
+                            I18n.t("replays.click_to_seek"),
+                            I18n.t("replays.right_click_share"))
             ), (click, c) -> {
                 if (click.click() instanceof Click.Right) {
                     ReplayShareUtil.sendShareCommandMessage(c.player(), replaySession, entry.tick());
@@ -101,29 +106,29 @@ public class GUIBookmarks implements StatefulView<GUIBookmarks.State> {
 
         if (currentPage > 0) {
             layout.slot(45, ItemStackCreator.getStack(
-                "§aPrevious Page",
+                    I18n.t("replays.previous_page"),
                 Material.ARROW,
                 1,
-                "§7Page §e" + currentPage
+                    I18n.t("replays.page", Argument.numeric("page", currentPage))
             ), (_, c) -> c.session(State.class).setState(new State(currentPage - 1)));
         }
 
         if (currentPage < totalPages - 1) {
             layout.slot(53, ItemStackCreator.getStack(
-                "§aNext Page",
+                    I18n.t("replays.next_page"),
                 Material.ARROW,
                 1,
-                "§7Page §e" + (currentPage + 2)
+                    I18n.t("replays.page", Argument.numeric("page", currentPage + 2))
             ), (_, c) -> c.session(State.class).setState(new State(currentPage + 1)));
         }
 
         Components.back(layout, 49, ctx);
         if (bookmarks.isEmpty()) {
             layout.slot(22, ItemStackCreator.getStack(
-                "§cNo Bookmarks Found",
+                    I18n.t("replays.no_bookmarks_found"),
                 Material.BARRIER,
                 1,
-                "§7There are no bookmarks in this match."
+                    I18n.t("replays.no_bookmarks")
             ));
         }
     }
@@ -132,31 +137,10 @@ public class GUIBookmarks implements StatefulView<GUIBookmarks.State> {
         List<BookmarkEntry> entries = new ArrayList<>();
 
         for (int tick : session.getReplayData().getAllTicks()) {
-            List<Recordable> tickRecordables = session.getReplayData().getRecordablesAt(tick);
-            for (Recordable recordable : tickRecordables) {
-                if (recordable instanceof RecordableBedDestruction bedDestruction) {
-                    String fallback = bedDestruction.getDestroyerEntityId() >= 0
-                        ? session.getEntityDisplayName(bedDestruction.getDestroyerEntityId())
-                        : "§7Unknown";
-                    String playerName = resolveDisplayName(bedDestruction.getDestroyerUuid(), fallback);
-
-                    entries.add(new BookmarkEntry(
-                        tick,
-                        "§a" + getTeamName(bedDestruction.getTeamId()) + " Bed Destroyed",
-                        playerName
-                    ));
-                    continue;
-                }
-
-                if (recordable instanceof RecordableKill kill && kill.getFinalKill() != 0) {
-                    String fallback = session.getEntityDisplayName(kill.getVictimEntityId());
-                    String playerName = resolveDisplayName(kill.getVictimUuid(), fallback);
-
-                    entries.add(new BookmarkEntry(
-                        tick,
-                        "§aFinal Death",
-                        playerName
-                    ));
+            for (var event : session.getReplayData().transientEventsAt(tick)) {
+                if (event instanceof ReplayBookmarkEvent bookmark) {
+                    entries.add(new BookmarkEntry(tick, bookmark.title(),
+                            resolveDisplayName(bookmark.participantUuid())));
                 }
             }
         }
@@ -171,29 +155,16 @@ public class GUIBookmarks implements StatefulView<GUIBookmarks.State> {
         return String.format("%02d:%02d seconds", minutes, seconds);
     }
 
-    private static String resolveDisplayName(UUID uuid, String fallback) {
+    private static Component resolveDisplayName(UUID uuid) {
         if (uuid == null) {
-            return fallback != null ? fallback : "§7Unknown";
+            return I18n.t("replays.unknown_player");
         }
 
         try {
-            return HypixelPlayer.getDisplayName(uuid);
+            return LegacyComponentSerializer.legacySection().deserialize(HypixelPlayer.getDisplayName(uuid));
         } catch (Exception ignored) {
-            return fallback != null ? fallback : "§7Unknown";
+            return I18n.t("replays.unknown_player");
         }
     }
 
-    private static String getTeamName(byte teamId) {
-        return switch (teamId) {
-            case 0 -> "Red";
-            case 1 -> "Blue";
-            case 2 -> "Green";
-            case 3 -> "Yellow";
-            case 4 -> "Aqua";
-            case 5 -> "White";
-            case 6 -> "Pink";
-            case 7 -> "Gray";
-            default -> "Team " + teamId;
-        };
-    }
 }

@@ -1,5 +1,8 @@
 package net.swofty.type.replayviewer.playback.display;
 
+import net.kyori.adventure.text.minimessage.translation.Argument;
+import net.swofty.type.generic.i18n.I18n;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -75,21 +78,21 @@ public class GeneratorTextSource implements DynamicTextSource {
         List<String> result = new ArrayList<>();
 
         // Format based on generator type
-        String color = generatorType.equalsIgnoreCase("diamond") ? "§b" : "§a";
-        String name = generatorType.equalsIgnoreCase("diamond") ? "Diamond" : "Emerald";
-
-        result.add(color + "§l" + name);
-        result.add("§7Tier " + tier);
+        result.add(ReplayDisplayTranslations.toLegacy(I18n.t(
+                generatorType.equalsIgnoreCase("diamond") ? "replays.generator_diamond" : "replays.generator_emerald")));
+        result.add(ReplayDisplayTranslations.toLegacy(I18n.t(
+                "replays.generator_tier", Argument.numeric("tier", tier))));
 
         if (tier < 3) {
             String spawnRate = switch (tier) {
-                case 1 -> generatorType.equalsIgnoreCase("diamond") ? "§730s" : "§760s";
-                case 2 -> generatorType.equalsIgnoreCase("diamond") ? "§723s" : "§745s";
-                default -> "§7???";
+                case 1 -> generatorType.equalsIgnoreCase("diamond") ? "30s" : "60s";
+                case 2 -> generatorType.equalsIgnoreCase("diamond") ? "23s" : "45s";
+                default -> "???";
             };
-            result.add("§7Spawns every " + spawnRate);
+            result.add(ReplayDisplayTranslations.toLegacy(I18n.t(
+                    "replays.generator_spawn_rate", Argument.string("rate", spawnRate))));
         } else {
-            result.add("§6Max Tier!");
+            result.add(ReplayDisplayTranslations.toLegacy(I18n.t("replays.generator_max_tier")));
         }
 
         return result;

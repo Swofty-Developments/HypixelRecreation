@@ -1,26 +1,26 @@
 package net.swofty.type.murdermysterygame.events;
 
+import io.github.term4.polyp.api.event.attack.PreAttackEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.item.Material;
-import net.swofty.pvp.events.PrepareAttackEvent;
+import net.swofty.type.generic.event.EventNodes;
+import net.swofty.type.generic.event.HypixelEventClass;
+import net.swofty.type.generic.event.phase.EventPhase;
+import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
 import net.swofty.type.murdermysterygame.game.GameStatus;
 import net.swofty.type.murdermysterygame.protection.WeaknessProtectionManager;
 import net.swofty.type.murdermysterygame.role.GameRole;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
-import net.swofty.type.generic.event.EventNodes;
-import net.swofty.type.generic.event.HypixelEventClass;
-import net.swofty.type.generic.event.phase.EventPhase;
-import net.swofty.type.generic.event.phase.PhasedEvent;
 
 public class ActionPlayerCombat implements HypixelEventClass {
 
     @PhasedEvent(node = EventNodes.ALL, requireDataLoaded = false, phase = EventPhase.GAMEPLAY)
-    public void run(PrepareAttackEvent event) {
-        if (!(event.getEntity() instanceof MurderMysteryPlayer attacker)) return;
-        if (!(event.getTarget() instanceof MurderMysteryPlayer victim)) return;
+    public void run(PreAttackEvent event) {
+        if (!(event.attacker() instanceof MurderMysteryPlayer attacker)) return;
+        if (!(event.target() instanceof MurderMysteryPlayer victim)) return;
 
         Game game = TypeMurderMysteryGameLoader.getPlayerGame(attacker);
         if (game == null) {

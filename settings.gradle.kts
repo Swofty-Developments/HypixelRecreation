@@ -14,6 +14,8 @@ include(":type.game")
 include(":spark")
 include(":loader")
 include(":pvp")
+include(":codegen")
+project(":codegen").projectDir = file("pvp/codegen")
 
 include(":type.prototypelobby")
 include(":type.thefarmingislands")

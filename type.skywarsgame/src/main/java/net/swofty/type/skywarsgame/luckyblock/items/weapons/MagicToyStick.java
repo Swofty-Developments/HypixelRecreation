@@ -1,5 +1,9 @@
 package net.swofty.type.skywarsgame.luckyblock.items.weapons;
 
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.mechanics.projectile.ProjectileBehavior;
+import io.github.term4.polyp.mechanics.projectile.ProjectileSnapshot;
+import io.github.term4.polyp.mechanics.projectile.entities.ManagedProjectile;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -10,7 +14,6 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.pvp.entity.projectile.Snowball;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -74,12 +77,17 @@ public class MagicToyStick implements LuckyBlockWeapon {
         Instance instance = holder.getInstance();
         if (instance == null) return false;
 
-        MagicProjectile projectile = new MagicProjectile(holder, instance);
-        projectile.setNoGravity(true);
-        projectile.setInstance(instance, holder.getPosition().add(0, holder.getEyeHeight(), 0));
-        projectile.setVelocity(holder.getPosition().direction().mul(40));
+        var projectile = Polyp.getInstance().services().projectiles().launch(
+                ProjectileSnapshot.of(holder, io.github.term4.polyp.mechanics.projectile.types.Snowball.INSTANCE)
+                        .withVelocity(holder.getPosition().direction().mul(2))
+                        .withBehavior(new ProjectileBehavior() {
+                            @Override
+                            public void onImpact(ManagedProjectile projectile, @Nullable Entity hit) {
+                                explode(projectile, instance);
+                            }
+                        }));
 
-        projectile.scheduler().buildTask(projectile::remove)
+        if (projectile != null) projectile.scheduler().buildTask(projectile::remove)
                 .delay(Duration.ofSeconds(10))
                 .schedule();
 
@@ -106,34 +114,11 @@ public class MagicToyStick implements LuckyBlockWeapon {
         return false;
     }
 
-    private static class MagicProjectile extends Snowball {
-
-        private final Instance instance;
-
-        public MagicProjectile(@Nullable Entity shooter, Instance instance) {
-            super(shooter);
-            this.instance = instance;
-        }
-
-        @Override
-        public boolean onStuck() {
-            triggerStatus((byte) 3);
-            explode();
-            return true;
-        }
-
-        @Override
-        public boolean onHit(Entity entity) {
-            triggerStatus((byte) 3);
-            explode();
-            return true;
-        }
-
-        private void explode() {
-            Point impactPos = position;
+    private static void explode(ManagedProjectile projectile, Instance instance) {
+        Point impactPos = projectile.getPosition();
 
             for (Entity entity : instance.getEntities()) {
-                if (entity == this || entity == getShooter()) continue;
+                if (entity == projectile || entity == projectile.getShooter()) continue;
                 if (!(entity instanceof Player player)) continue;
                 if (player.getGameMode().name().equals("SPECTATOR")) continue;
 
@@ -151,6 +136,5 @@ public class MagicToyStick implements LuckyBlockWeapon {
 
                 entity.setVelocity(knockback);
             }
-        }
     }
 }

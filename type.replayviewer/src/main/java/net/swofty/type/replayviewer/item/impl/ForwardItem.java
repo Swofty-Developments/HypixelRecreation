@@ -1,5 +1,6 @@
 package net.swofty.type.replayviewer.item.impl;
 
+import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.event.player.PlayerHandAnimationEvent;
 import net.minestom.server.event.trait.CancellableEvent;
 import net.minestom.server.event.trait.PlayerInstanceEvent;
@@ -7,6 +8,7 @@ import net.minestom.server.item.ItemStack;
 import net.swofty.type.generic.data.datapoints.DatapointReplaySettings;
 import net.swofty.type.generic.data.handlers.ReplayDataHandler;
 import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
 import net.swofty.type.replayviewer.item.ReplayItem;
@@ -38,9 +40,12 @@ public class ForwardItem extends ReplayItem {
                 .getValue();
             duration = settings.getSkipIntervals();
         }
-        return appendData(ItemStackCreator.getStackHead("§a" + duration + "s Forward", "db2f30502a8fe4c80e883d23b47389b03a7818d9bbad2ba4dc10d653d3eb52b2", 1, List.of(
-            "§7Left click to change the duration."
-        ))).build();
+        return appendData(ItemStackCreator.getStackHead(
+                I18n.t("replays.skip_forward", Argument.string("value", String.valueOf(duration))),
+                "db2f30502a8fe4c80e883d23b47389b03a7818d9bbad2ba4dc10d653d3eb52b2",
+                1,
+                List.of(I18n.t("replays.click_to_change_duration"))
+        )).build();
     }
 
     @Override
@@ -59,7 +64,7 @@ public class ForwardItem extends ReplayItem {
         }
         TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
             (session) -> session.skipForward(duration),
-            () -> player.sendMessage("§cError: no active replay session.")
+                () -> player.sendMessage(I18n.t("replays.no_active_session"))
         );
     }
 
@@ -80,7 +85,7 @@ public class ForwardItem extends ReplayItem {
                 handler.get(ReplayDataHandler.Data.REPLAY_SETTINGS, DatapointReplaySettings.class).setValue(settings);
                 TypeReplayViewerLoader.populateInventory(player);
             },
-            () -> player.sendMessage("§cError: no active replay session.")
+                () -> player.sendMessage(I18n.t("replays.no_active_session"))
         );
     }
 

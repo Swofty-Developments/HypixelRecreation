@@ -2,12 +2,7 @@ package net.swofty.type.bedwarslobby.hologram;
 
 import lombok.Getter;
 import net.minestom.server.coordinate.Pos;
-import net.swofty.commons.bedwars.BedwarsLeaderboardMode;
-import net.swofty.commons.bedwars.BedwarsLeaderboardPeriod;
-import net.swofty.commons.bedwars.BedwarsLeaderboardView;
-import net.swofty.commons.bedwars.BedwarsLevelUtil;
-import net.swofty.commons.bedwars.BedwarsStatType;
-import net.swofty.commons.bedwars.BedwarsTextAlignment;
+import net.swofty.commons.bedwars.*;
 import net.swofty.type.bedwarslobby.hologram.LeaderboardHologramManager.PlayerLeaderboardState;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.collectibles.bedwars.prestige.BedWarsPrestigeRenderer;
@@ -23,18 +18,14 @@ import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 public enum BedWarsLeaderboardHologram {
-	LEVEL(BedwarsStatType.LEVEL, new Pos(-17, 68.6, -28)),
-	WINS(BedwarsStatType.WINS, new Pos(-11.5, 68.6, -28)),
-	FINAL_KILLS(BedwarsStatType.FINAL_KILLS, new Pos(-5.5, 68.6, -28)),
-	BEDS_BROKEN(BedwarsStatType.BEDS_BROKEN, new Pos(0.7, 68.6, -28));
+	LEVEL(BedwarsStatType.LEVEL, new Pos(-17, 69.5, -28)),
+	WINS(BedwarsStatType.WINS, new Pos(-11.5, 69.5, -28)),
+	FINAL_KILLS(BedwarsStatType.FINAL_KILLS, new Pos(-5.5, 69.5, -28)),
+	BEDS_BROKEN(BedwarsStatType.BEDS_BROKEN, new Pos(0.7, 69.5, -28));
 
 	private final BedwarsStatType statType;
 	private final Pos position;

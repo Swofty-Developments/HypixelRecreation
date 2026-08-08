@@ -4,13 +4,11 @@ import net.kyori.adventure.text.Component;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.minestom.server.item.component.TooltipDisplay;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 import java.util.List;
-import java.util.Set;
 
 public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>> implements View<S> {
 
@@ -26,8 +24,6 @@ public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>
         19, 20, 21, 22, 23, 24, 25,
         28, 29, 30, 31, 32, 33, 34
     };
-
-    protected static final ItemStack.Builder FILLER = ItemStack.builder(Material.BLACK_STAINED_GLASS_PANE).set(DataComponents.CUSTOM_NAME, Component.text(" ")).set(DataComponents.TOOLTIP_DISPLAY, new TooltipDisplay(true, Set.of()));
 
     public interface PaginatedState<T> {
         List<T> items();
@@ -78,7 +74,7 @@ public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>
     }
 
     protected void layoutBackground(ViewLayout<S> layout, S state, ViewContext ctx) {
-        layout.filler(FILLER);
+        layout.filler(Components.FILLER);
     }
 
     protected void layoutNavigation(ViewLayout<S> layout, S state, ViewContext ctx, int currentPage, int totalPages) {
@@ -92,7 +88,7 @@ public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>
                     return typedState.withPage(Math.max(0, typedState.page() - 1));
                 }));
             } else if (shouldRenderNavBackground()) {
-                layout.slot(prevSlot, FILLER);
+                layout.slot(prevSlot, Components.FILLER);
             }
         }
 
@@ -103,7 +99,7 @@ public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>
                     return typedState.withPage(typedState.page() + 1);
                 }));
             } else if (shouldRenderNavBackground()) {
-                layout.slot(nextSlot, FILLER);
+                layout.slot(nextSlot, Components.FILLER);
             }
         }
     }

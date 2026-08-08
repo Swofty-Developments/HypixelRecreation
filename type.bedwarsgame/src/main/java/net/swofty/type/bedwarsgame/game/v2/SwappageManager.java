@@ -13,11 +13,7 @@ import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.generic.i18n.I18n;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RequiredArgsConstructor
@@ -83,6 +79,7 @@ public class SwappageManager {
                 player.setDisplayName(player.getColouredName());
                 player.updateBelowTag();
                 game.equipTeamArmor(player, team.getTeamKey());
+                game.getReplayManager().recordPlayerTeam(player);
 
                 if (!game.getRespawnHandler().isRespawning(uuid)
                     && game.isPlayerCurrentlyPlaying(uuid) && !positions.isEmpty()) {
