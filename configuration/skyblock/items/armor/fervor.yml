@@ -1,0 +1,75 @@
+items:
+  - id: FERVOR_HELMET
+    material: PLAYER_HEAD
+    name: Fervor Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 100
+      health: 180
+      intelligence: 15
+      true_defense: 5
+    lore:
+      - "Full Set Bonus: Intimidate \u2014 Attacking a mob has a 50% chance to direct aggro from 3 mobs to you."
+      - "Tiered Bonus: Fervor \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, attacking a mob grants 1 stack of \u0489 Fervor. Lose\
+        \ 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+      - "Ability: Ground Pound \u2014 At 10 stacks, sneak to reset your stacks and perform a Ground Pound dealing damage to\
+        \ mobs within 6 blocks. Damage scales with EHP, up to 25000000 Damage."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: bc6e137e2a6a501dfc854ca900b5b681227dea4d5a9616849a3a68f09c6dc327
+  - id: FERVOR_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Fervor Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 140
+      health: 265
+      intelligence: 5
+      true_defense: 5
+    lore:
+      - "Full Set Bonus: Intimidate \u2014 Attacking a mob has a 50% chance to direct aggro from 3 mobs to you."
+      - "Tiered Bonus: Fervor \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, attacking a mob grants 1 stack of \u0489 Fervor. Lose\
+        \ 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+      - "Ability: Ground Pound \u2014 At 10 stacks, sneak to reset your stacks and perform a Ground Pound dealing damage to\
+        \ mobs within 6 blocks. Damage scales with EHP, up to 25000000 Damage."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: FERVOR_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Fervor Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 115
+      health: 210
+      intelligence: 5
+      true_defense: 5
+    lore:
+      - "Full Set Bonus: Intimidate \u2014 Attacking a mob has a 50% chance to direct aggro from 3 mobs to you."
+      - "Tiered Bonus: Fervor \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, attacking a mob grants 1 stack of \u0489 Fervor. Lose\
+        \ 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+      - "Ability: Ground Pound \u2014 At 10 stacks, sneak to reset your stacks and perform a Ground Pound dealing damage to\
+        \ mobs within 6 blocks. Damage scales with EHP, up to 25000000 Damage."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: FERVOR_BOOTS
+    material: LEATHER_BOOTS
+    name: Fervor Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 85
+      health: 160
+      intelligence: 5
+      true_defense: 5
+    lore:
+      - "Full Set Bonus: Intimidate \u2014 Attacking a mob has a 50% chance to direct aggro from 3 mobs to you."
+      - "Tiered Bonus: Fervor \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, attacking a mob grants 1 stack of \u0489 Fervor. Lose\
+        \ 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+      - "Ability: Ground Pound \u2014 At 10 stacks, sneak to reset your stacks and perform a Ground Pound dealing damage to\
+        \ mobs within 6 blocks. Damage scales with EHP, up to 25000000 Damage."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

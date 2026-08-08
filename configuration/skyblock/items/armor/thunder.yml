@@ -1,0 +1,63 @@
+items:
+  - id: THUNDER_HELMET
+    material: PLAYER_HEAD
+    name: Thunder Helmet
+    rarity: EPIC
+    default_statistics:
+      health: 200
+      defense: 175
+      sea_creature_chance: 4
+      strength: 25
+    lore:
+      - "Tiered Bonus: Static Charge \u2014 Gains 1 static charge every 30/25/20/10 seconds. Hitting a target will cause a\
+        \ discharge, adding 15%/20%/25%/40% damage to that hit for each charge collected. Maximum Charge Capacity: 2/3/4/5"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 4a93d2bf999a7fe052bf6795e0a0bc7555cc1e014c667fa86dc421cb186d5b67
+  - id: THUNDER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Thunder Chestplate
+    rarity: EPIC
+    default_statistics:
+      health: 250
+      defense: 225
+      sea_creature_chance: 4
+      strength: 25
+    lore:
+      - "Tiered Bonus: Static Charge \u2014 Gains 1 static charge every 30/25/20/10 seconds. Hitting a target will cause a\
+        \ discharge, adding 15%/20%/25%/40% damage to that hit for each charge collected. Maximum Charge Capacity: 2/3/4/5"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: THUNDER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Thunder Leggings
+    rarity: EPIC
+    default_statistics:
+      health: 225
+      defense: 200
+      sea_creature_chance: 4
+      strength: 25
+    lore:
+      - "Tiered Bonus: Static Charge \u2014 Gains 1 static charge every 30/25/20/10 seconds. Hitting a target will cause a\
+        \ discharge, adding 15%/20%/25%/40% damage to that hit for each charge collected. Maximum Charge Capacity: 2/3/4/5"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: THUNDER_BOOTS
+    material: LEATHER_BOOTS
+    name: Thunder Boots
+    rarity: EPIC
+    default_statistics:
+      health: 175
+      defense: 150
+      sea_creature_chance: 4
+      strength: 25
+    lore:
+      - "Tiered Bonus: Static Charge \u2014 Gains 1 static charge every 30/25/20/10 seconds. Hitting a target will cause a\
+        \ discharge, adding 15%/20%/25%/40% damage to that hit for each charge collected. Maximum Charge Capacity: 2/3/4/5"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

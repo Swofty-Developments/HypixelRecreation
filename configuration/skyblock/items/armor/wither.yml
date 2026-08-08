@@ -1,0 +1,59 @@
+items:
+  - id: WITHER_HELMET
+    material: PLAYER_HEAD
+    name: Wither Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 100
+      health: 200
+      intelligence: 30
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 691129409789589ae1b43e1d828c06fc9a213b78348a68b7313bdd401d7485cc
+  - id: WITHER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Wither Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 250
+      health: 300
+      intelligence: 10
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: WITHER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Wither Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 220
+      health: 250
+      intelligence: 10
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: WITHER_BOOTS
+    material: LEATHER_BOOTS
+    name: Wither Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 150
+      health: 180
+      intelligence: 10
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

@@ -1,0 +1,72 @@
+items:
+  - id: CROPIE_HELMET
+    material: PLAYER_HEAD
+    name: Cropie Helmet
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 20
+      speed: 3
+      health: 110
+      defense: 30
+      bonus_pest_chance: 12.5
+    lore:
+      - "Tiered Bonus: Squashbuckle \u2014 Farming Pumpkin, Melon, and Cocoa Beans have a 0.01%\u279C0.01%\u279C0.02%\u279C\
+        0.03% chance of dropping a Squash. Inside the Greenhouse gives a 4.0%\u279C4.0%\u279C8.0%\u279C12.0% chance to drop\
+        \ one from any crop grown inside. Grants +0\u279C15\u279C30\u279C45 Farming Fortune."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: e4bacb96734e244b9f7331d453e686fa2e32522a411aa568f960e741d74b3289
+  - id: CROPIE_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Cropie Chestplate
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 25
+      speed: 4
+      health: 165
+      defense: 30
+      bonus_pest_chance: 12.5
+    lore:
+      - "Tiered Bonus: Squashbuckle \u2014 Farming Pumpkin, Melon, and Cocoa Beans have a 0.01%\u279C0.01%\u279C0.02%\u279C\
+        0.03% chance of dropping a Squash. Inside the Greenhouse gives a 4.0%\u279C4.0%\u279C8.0%\u279C12.0% chance to drop\
+        \ one from any crop grown inside. Grants +0\u279C15\u279C30\u279C45 Farming Fortune."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: CROPIE_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Cropie Leggings
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 25
+      speed: 4
+      health: 165
+      defense: 30
+      bonus_pest_chance: 12.5
+    lore:
+      - "Tiered Bonus: Squashbuckle \u2014 Farming Pumpkin, Melon, and Cocoa Beans have a 0.01%\u279C0.01%\u279C0.02%\u279C\
+        0.03% chance of dropping a Squash. Inside the Greenhouse gives a 4.0%\u279C4.0%\u279C8.0%\u279C12.0% chance to drop\
+        \ one from any crop grown inside. Grants +0\u279C15\u279C30\u279C45 Farming Fortune."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: CROPIE_BOOTS
+    material: LEATHER_BOOTS
+    name: Cropie Boots
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 20
+      speed: 4
+      health: 110
+      defense: 30
+      bonus_pest_chance: 12.5
+    lore:
+      - "Tiered Bonus: Squashbuckle \u2014 Farming Pumpkin, Melon, and Cocoa Beans have a 0.01%\u279C0.01%\u279C0.02%\u279C\
+        0.03% chance of dropping a Squash. Inside the Greenhouse gives a 4.0%\u279C4.0%\u279C8.0%\u279C12.0% chance to drop\
+        \ one from any crop grown inside. Grants +0\u279C15\u279C30\u279C45 Farming Fortune."
+      - "Ability: Farmer's Grace \u2014 Grants immunity to trampling crops."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

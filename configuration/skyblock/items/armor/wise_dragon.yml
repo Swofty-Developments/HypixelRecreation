@@ -1,0 +1,55 @@
+items:
+  - id: WISE_DRAGON_HELMET
+    material: PLAYER_HEAD
+    name: Wise Dragon Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 110
+      health: 70
+      intelligence: 125
+    lore:
+      - "Full Set Bonus: Wise Blood \u2014 Abilities have 2/3 of the mana cost."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 5797c77ccee3c04c3deed770595ea83ea1e84c9a4629b753af5d351c0cc11a74
+  - id: WISE_DRAGON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Wise Dragon Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 160
+      health: 120
+      intelligence: 75
+    lore:
+      - "Full Set Bonus: Wise Blood \u2014 Abilities have 2/3 of the mana cost."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: WISE_DRAGON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Wise Dragon Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 140
+      health: 100
+      intelligence: 75
+    lore:
+      - "Full Set Bonus: Wise Blood \u2014 Abilities have 2/3 of the mana cost."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: WISE_DRAGON_BOOTS
+    material: LEATHER_BOOTS
+    name: Wise Dragon Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 90
+      health: 60
+      intelligence: 75
+    lore:
+      - "Full Set Bonus: Wise Blood \u2014 Abilities have 2/3 of the mana cost."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

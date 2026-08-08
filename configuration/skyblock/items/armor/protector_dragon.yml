@@ -1,0 +1,55 @@
+items:
+  - id: PROTECTOR_DRAGON_HELMET
+    material: PLAYER_HEAD
+    name: Protector Dragon Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 135
+      health: 70
+    lore:
+      - "Full Set Bonus: Protective Blood \u2014 Increases the defence of each armor piece by +1% Defense for each missing\
+        \ percent of Health."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 1f1a1ccbb024ed1d28471bc4b3c28d093277161a3871d2699d68e5d2c387964
+  - id: PROTECTOR_DRAGON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Protector Dragon Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 185
+      health: 120
+    lore:
+      - "Full Set Bonus: Protective Blood \u2014 Increases the defence of each armor piece by +1% Defense for each missing\
+        \ percent of Health."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: PROTECTOR_DRAGON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Protector Dragon Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 165
+      health: 100
+    lore:
+      - "Full Set Bonus: Protective Blood \u2014 Increases the defence of each armor piece by +1% Defense for each missing\
+        \ percent of Health."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: PROTECTOR_DRAGON_BOOTS
+    material: LEATHER_BOOTS
+    name: Protector Dragon Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 115
+      health: 60
+    lore:
+      - "Full Set Bonus: Protective Blood \u2014 Increases the defence of each armor piece by +1% Defense for each missing\
+        \ percent of Health."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

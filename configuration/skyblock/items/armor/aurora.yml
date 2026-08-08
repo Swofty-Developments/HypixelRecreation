@@ -1,0 +1,64 @@
+items:
+  - id: AURORA_HELMET
+    material: PLAYER_HEAD
+    name: Aurora Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 50
+      health: 160
+      intelligence: 275
+      ability_damage: 16
+    lore:
+      - "Tiered Bonus: Arcane Energy \u2014 Every 1 s\u279C0.7\u279C0.5 s , dealing Magic Damage from an ability grants 1\
+        \ stack of Arcane Energy \u046A. At 10 stacks, sneak to reset your stacks and shoot 3 homing missiles dealing 5,000\
+        \ Damage each. Lose 1 stack after 4 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 763d2fe93881b4f26cbe1dd3b09da7cc48dbcdc568d19852ad635d5d16859611
+  - id: AURORA_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Aurora Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 65
+      health: 230
+      intelligence: 175
+    lore:
+      - "Tiered Bonus: Arcane Energy \u2014 Every 1 s\u279C0.7\u279C0.5 s , dealing Magic Damage from an ability grants 1\
+        \ stack of Arcane Energy \u046A. At 10 stacks, sneak to reset your stacks and shoot 3 homing missiles dealing 5,000\
+        \ Damage each. Lose 1 stack after 4 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: AURORA_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Aurora Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 55
+      health: 205
+      intelligence: 175
+    lore:
+      - "Tiered Bonus: Arcane Energy \u2014 Every 1 s\u279C0.7\u279C0.5 s , dealing Magic Damage from an ability grants 1\
+        \ stack of Arcane Energy \u046A. At 10 stacks, sneak to reset your stacks and shoot 3 homing missiles dealing 5,000\
+        \ Damage each. Lose 1 stack after 4 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: AURORA_BOOTS
+    material: LEATHER_BOOTS
+    name: Aurora Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 40
+      health: 130
+      intelligence: 175
+    lore:
+      - "Tiered Bonus: Arcane Energy \u2014 Every 1 s\u279C0.7\u279C0.5 s , dealing Magic Damage from an ability grants 1\
+        \ stack of Arcane Energy \u046A. At 10 stacks, sneak to reset your stacks and shoot 3 homing missiles dealing 5,000\
+        \ Damage each. Lose 1 stack after 4 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

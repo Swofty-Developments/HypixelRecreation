@@ -1,0 +1,41 @@
+items:
+  - id: VELVET_TOP_HAT
+    material: LEATHER_HELMET
+    name: Velvet Top Hat
+    rarity: RARE
+    default_statistics:
+      health: 25
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: CASHMERE_JACKET
+    material: LEATHER_CHESTPLATE
+    name: Cashmere Jacket
+    rarity: RARE
+    default_statistics:
+      health: 25
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SATIN_TROUSERS
+    material: LEATHER_LEGGINGS
+    name: Satin Trousers
+    rarity: RARE
+    default_statistics:
+      health: 25
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: OXFORD_SHOES
+    material: LEATHER_BOOTS
+    name: Oxford Shoes
+    rarity: RARE
+    default_statistics:
+      health: 25
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

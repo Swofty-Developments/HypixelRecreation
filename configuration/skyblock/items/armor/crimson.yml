@@ -1,0 +1,71 @@
+items:
+  - id: CRIMSON_HELMET
+    material: PLAYER_HEAD
+    name: Crimson Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 50
+      health: 160
+      intelligence: 15
+      strength: 30
+      critical_damage: 20
+    lore:
+      - "Tiered Bonus: Dominus \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, melee attacks gain 1 stack of \u1750 Dominus. Each\
+        \ \u1750 Dominus stack grants 0.05 SR. At 10 stacks also swipe in a random direction hitting every enemy in the path\
+        \ of the swipe. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 5051c83d9ebf69013f1ec8c9efc979ec2d925a921cc877ff64abe09aadd2f6cc
+  - id: CRIMSON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Crimson Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 65
+      health: 230
+      intelligence: 5
+      strength: 30
+      critical_damage: 20
+    lore:
+      - "Tiered Bonus: Dominus \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, melee attacks gain 1 stack of \u1750 Dominus. Each\
+        \ \u1750 Dominus stack grants 0.05 SR. At 10 stacks also swipe in a random direction hitting every enemy in the path\
+        \ of the swipe. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: CRIMSON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Crimson Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 55
+      health: 205
+      intelligence: 5
+      strength: 30
+      critical_damage: 20
+    lore:
+      - "Tiered Bonus: Dominus \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, melee attacks gain 1 stack of \u1750 Dominus. Each\
+        \ \u1750 Dominus stack grants 0.05 SR. At 10 stacks also swipe in a random direction hitting every enemy in the path\
+        \ of the swipe. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: CRIMSON_BOOTS
+    material: LEATHER_BOOTS
+    name: Crimson Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 40
+      health: 130
+      intelligence: 5
+      strength: 30
+      critical_damage: 20
+    lore:
+      - "Tiered Bonus: Dominus \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, melee attacks gain 1 stack of \u1750 Dominus. Each\
+        \ \u1750 Dominus stack grants 0.05 SR. At 10 stacks also swipe in a random direction hitting every enemy in the path\
+        \ of the swipe. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

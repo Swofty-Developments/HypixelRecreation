@@ -1,11 +1,11 @@
 items:
   - id: END_HELMET
-    material: leather_helmet
-    name: "Ender Helmet"
+    material: PLAYER_HEAD
+    name: Ender Helmet
     rarity: EPIC
     default_statistics:
-      health: 20
       defense: 35
+      health: 20
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -20,10 +20,11 @@ items:
         museum_category: ARMOR_SETS
         game_stage: AMATEUR
         donation_xp: 3
-
+      - id: SKULL_HEAD
+        texture: f715ca0f742544ae3ca104297578c2ed700ea3a54980413512f5e7a0bc06729a
   - id: END_CHESTPLATE
-    material: leather_chestplate
-    name: "Ender Chestplate"
+    material: CHAINMAIL_CHESTPLATE
+    name: Ender Chestplate
     rarity: EPIC
     default_statistics:
       health: 30
@@ -42,10 +43,9 @@ items:
         museum_category: ARMOR_SETS
         game_stage: AMATEUR
         donation_xp: 3
-
   - id: END_LEGGINGS
-    material: leather_leggings
-    name: "Ender Leggings"
+    material: CHAINMAIL_LEGGINGS
+    name: Ender Leggings
     rarity: EPIC
     default_statistics:
       health: 25
@@ -64,10 +64,9 @@ items:
         museum_category: ARMOR_SETS
         game_stage: AMATEUR
         donation_xp: 3
-
   - id: END_BOOTS
-    material: leather_boots
-    name: "Ender Boots"
+    material: CHAINMAIL_BOOTS
+    name: Ender Boots
     rarity: EPIC
     default_statistics:
       health: 15
@@ -86,14 +85,12 @@ items:
         museum_category: ARMOR_SETS
         game_stage: AMATEUR
         donation_xp: 3
-
   - id: OBSIDIAN_CHESTPLATE
-    material: diamond_chestplate
-    name: "Obsidian Chestplate"
-    rarity: LEGENDARY
+    material: LEATHER_CHESTPLATE
+    name: Obsidian Chestplate
+    rarity: EPIC
     default_statistics:
-      health: 40
-      defense: 40
+      defense: 250
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE

@@ -1,11 +1,14 @@
 items:
   - id: MERCENARY_BOOTS
-    material: leather_boots
-    name: "Mercenary Boots"
+    material: LEATHER_BOOTS
+    name: Mercenary Boots
     rarity: RARE
     default_statistics:
-      health: 30.0
-      defense: 30.0
+      defense: 30
+      health: 30
+      strength: 10
+    lore:
+      - "Full Set Bonus: Death Tax \u2014 Earn 5 coins and heal 20 Health each kill from a level 10 or higher enemy."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS
@@ -16,36 +19,45 @@ items:
       - id: SELLABLE
         value: 5000.0
   - id: MERCENARY_CHESTPLATE
-    material: iron_chestplate
-    name: "Mercenary Chestplate"
+    material: IRON_CHESTPLATE
+    name: Mercenary Chestplate
     rarity: RARE
     default_statistics:
       health: 70.0
       defense: 70.0
+      strength: 10.0
+    lore:
+      - "Full Set Bonus: Death Tax \u2014 Earn 5 coins and heal 20 Health each kill from a level 10 or higher enemy."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
       - id: SELLABLE
         value: 20000.0
   - id: MERCENARY_HELMET
-    material: chainmail_helmet
-    name: "Mercenary Helmet"
+    material: IRON_HELMET
+    name: Mercenary Helmet
     rarity: RARE
     default_statistics:
       health: 40.0
       defense: 40.0
+      strength: 10.0
+    lore:
+      - "Full Set Bonus: Death Tax \u2014 Earn 5 coins and heal 20 Health each kill from a level 10 or higher enemy."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
       - id: SELLABLE
         value: 10000.0
   - id: MERCENARY_LEGGINGS
-    material: chainmail_leggings
-    name: "Mercenary Leggings"
+    material: CHAINMAIL_LEGGINGS
+    name: Mercenary Leggings
     rarity: RARE
     default_statistics:
       health: 60.0
       defense: 60.0
+      strength: 10.0
+    lore:
+      - "Full Set Bonus: Death Tax \u2014 Earn 5 coins and heal 20 Health each kill from a level 10 or higher enemy."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS

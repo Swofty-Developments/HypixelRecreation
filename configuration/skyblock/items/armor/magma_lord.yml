@@ -1,0 +1,63 @@
+items:
+  - id: MAGMA_LORD_HELMET
+    material: PLAYER_HEAD
+    name: Magma Lord Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      health: 225
+      defense: 175
+      sea_creature_chance: 4.5
+      strength: 10
+      critical_damage: 35
+    lore:
+      - "Tiered Bonus: Fireproof \u2014 Provides immunity to Crimson Isle Lava."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 77d91bac4755dbc968add75e6ec3979a74da30bcb4d2556e35a4635718ae7390
+  - id: MAGMA_LORD_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Magma Lord Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      health: 275
+      defense: 225
+      sea_creature_chance: 4.5
+      strength: 10
+      critical_damage: 35
+    lore:
+      - "Tiered Bonus: Fireproof \u2014 Provides immunity to Crimson Isle Lava."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: MAGMA_LORD_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Magma Lord Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      health: 250
+      defense: 200
+      sea_creature_chance: 4.5
+      strength: 10
+      critical_damage: 35
+    lore:
+      - "Tiered Bonus: Fireproof \u2014 Provides immunity to Crimson Isle Lava."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: MAGMA_LORD_BOOTS
+    material: LEATHER_BOOTS
+    name: Magma Lord Boots
+    rarity: LEGENDARY
+    default_statistics:
+      health: 200
+      defense: 150
+      sea_creature_chance: 4.5
+      strength: 10
+      critical_damage: 35
+    lore:
+      - "Tiered Bonus: Fireproof \u2014 Provides immunity to Crimson Isle Lava."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

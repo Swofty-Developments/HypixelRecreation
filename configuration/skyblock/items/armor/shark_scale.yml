@@ -1,0 +1,135 @@
+items:
+  - id: SHARK_SCALE_HELMET
+    material: PLAYER_HEAD
+    name: Shark Scale Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      health: 150
+      defense: 125
+      sea_creature_chance: 2.5
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
+      - "Tiered Bonus: Festival Fisher \u2014 Grants a +10%\u279C+20% chance to catch Sharks during the Fishing Festival."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - ABA
+              - ABA
+              - ABA
+            ingredients:
+              A:
+                type: ENCHANTED_SHARK_FIN
+                amount: 1
+              B:
+                type: SPONGE_HELMET
+                amount: 1
+            result:
+              type: SHARK_SCALE_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: d38e3f1152b4855fea5865357e03ecb4d80c52889d641cc5f023e6d16996d8f1
+  - id: SHARK_SCALE_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Shark Scale Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      health: 200
+      defense: 175
+      sea_creature_chance: 2.5
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
+      - "Tiered Bonus: Festival Fisher \u2014 Grants a +10%\u279C+20% chance to catch Sharks during the Fishing Festival."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - ABA
+              - ABA
+              - ABA
+            ingredients:
+              A:
+                type: ENCHANTED_SHARK_FIN
+                amount: 1
+              B:
+                type: SPONGE_CHESTPLATE
+                amount: 1
+            result:
+              type: SHARK_SCALE_CHESTPLATE
+              amount: 1
+  - id: SHARK_SCALE_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Shark Scale Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      health: 175
+      defense: 150
+      sea_creature_chance: 2.5
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
+      - "Tiered Bonus: Festival Fisher \u2014 Grants a +10%\u279C+20% chance to catch Sharks during the Fishing Festival."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - ABA
+              - ABA
+              - ABA
+            ingredients:
+              A:
+                type: ENCHANTED_SHARK_FIN
+                amount: 1
+              B:
+                type: SPONGE_LEGGINGS
+                amount: 1
+            result:
+              type: SHARK_SCALE_LEGGINGS
+              amount: 1
+  - id: SHARK_SCALE_BOOTS
+    material: LEATHER_BOOTS
+    name: Shark Scale Boots
+    rarity: LEGENDARY
+    default_statistics:
+      health: 125
+      defense: 100
+      sea_creature_chance: 2.5
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
+      - "Tiered Bonus: Festival Fisher \u2014 Grants a +10%\u279C+20% chance to catch Sharks during the Fishing Festival."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - ABA
+              - ABA
+              - ABA
+            ingredients:
+              A:
+                type: ENCHANTED_SHARK_FIN
+                amount: 1
+              B:
+                type: SPONGE_BOOTS
+                amount: 1
+            result:
+              type: SHARK_SCALE_BOOTS
+              amount: 1

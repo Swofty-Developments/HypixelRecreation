@@ -1,0 +1,125 @@
+items:
+  - id: ARMOR_OF_MAGMA_HELMET
+    material: LEATHER_HELMET
+    name: Armor of Magma Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 15
+      health: 50
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Every 10 Magma Cube"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: SPECIAL
+            pattern:
+              - AAA
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_MAGMA_CREAM
+                amount: 12
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: ARMOR_OF_MAGMA_HELMET
+              amount: 1
+  - id: ARMOR_OF_MAGMA_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Armor of Magma Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 30
+      health: 100
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Every 10 Magma Cube"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: SPECIAL
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_MAGMA_CREAM
+                amount: 12
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: ARMOR_OF_MAGMA_CHESTPLATE
+              amount: 1
+  - id: ARMOR_OF_MAGMA_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Armor of Magma Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 25
+      health: 75
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Every 10 Magma Cube"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: SPECIAL
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_MAGMA_CREAM
+                amount: 12
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: ARMOR_OF_MAGMA_LEGGINGS
+              amount: 1
+  - id: ARMOR_OF_MAGMA_BOOTS
+    material: LEATHER_BOOTS
+    name: Armor of Magma Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 15
+      health: 45
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Every 10 Magma Cube"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: SPECIAL
+            pattern:
+              - AOA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_MAGMA_CREAM
+                amount: 12
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: ARMOR_OF_MAGMA_BOOTS
+              amount: 1

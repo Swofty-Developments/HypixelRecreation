@@ -1,0 +1,49 @@
+items:
+  - id: ANGLER_HELMET
+    material: DIAMOND_HELMET
+    name: Angler Helmet
+    rarity: COMMON
+    default_statistics:
+      defense: 20
+      sea_creature_chance: 1
+    lore:
+      - "Tiered Bonus: Depth Champion \u2014 Reduces the damage taken from Sea Creatures by 3-10%."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: ANGLER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Angler Chestplate
+    rarity: COMMON
+    default_statistics:
+      defense: 40
+      sea_creature_chance: 1
+    lore:
+      - "Tiered Bonus: Depth Champion \u2014 Reduces the damage taken from Sea Creatures by 3-10%."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: ANGLER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Angler Leggings
+    rarity: COMMON
+    default_statistics:
+      defense: 30
+      sea_creature_chance: 1
+    lore:
+      - "Tiered Bonus: Depth Champion \u2014 Reduces the damage taken from Sea Creatures by 3-10%."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: ANGLER_BOOTS
+    material: LEATHER_BOOTS
+    name: Angler Boots
+    rarity: COMMON
+    default_statistics:
+      defense: 15
+      sea_creature_chance: 1
+    lore:
+      - "Tiered Bonus: Depth Champion \u2014 Reduces the damage taken from Sea Creatures by 3-10%."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

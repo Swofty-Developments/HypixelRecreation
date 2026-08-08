@@ -1,0 +1,63 @@
+items:
+  - id: GOBLIN_HELMET
+    material: PLAYER_HEAD
+    name: Goblin Helmet
+    rarity: RARE
+    default_statistics:
+      health: 70
+      intelligence: -1
+      mining_speed: 10
+      mining_fortune: 4
+    lore:
+      - "Full Set Bonus: Smart Miner \u2014 Converts your Intelligence into Mining Speed. +1 Mining Speed for every 15 Intelligence\
+        \ removed."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 82cbb800ce0bd9ea4cecc0ecce3c9528cdef396f3fd779a287dc6d5cb99e2394
+  - id: GOBLIN_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Goblin Chestplate
+    rarity: RARE
+    default_statistics:
+      health: 140
+      intelligence: -1
+      mining_speed: 10
+      mining_fortune: 4
+    lore:
+      - "Full Set Bonus: Smart Miner \u2014 Converts your Intelligence into Mining Speed. +1 Mining Speed for every 15 Intelligence\
+        \ removed."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: GOBLIN_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Goblin Leggings
+    rarity: RARE
+    default_statistics:
+      health: 125
+      intelligence: -1
+      mining_speed: 10
+      mining_fortune: 4
+    lore:
+      - "Full Set Bonus: Smart Miner \u2014 Converts your Intelligence into Mining Speed. +1 Mining Speed for every 15 Intelligence\
+        \ removed."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: GOBLIN_BOOTS
+    material: LEATHER_BOOTS
+    name: Goblin Boots
+    rarity: RARE
+    default_statistics:
+      health: 60
+      intelligence: -1
+      mining_speed: 10
+      mining_fortune: 4
+    lore:
+      - "Full Set Bonus: Smart Miner \u2014 Converts your Intelligence into Mining Speed. +1 Mining Speed for every 15 Intelligence\
+        \ removed."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

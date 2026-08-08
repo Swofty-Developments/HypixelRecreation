@@ -1,0 +1,125 @@
+items:
+  - id: SPONGE_HELMET
+    material: SPONGE
+    name: Sponge Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 100
+      sea_creature_chance: 2
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - AAA
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_WET_SPONGE
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: SPONGE_HELMET
+              amount: 1
+  - id: SPONGE_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Sponge Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 150
+      sea_creature_chance: 2
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_WET_SPONGE
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: SPONGE_CHESTPLATE
+              amount: 1
+  - id: SPONGE_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Sponge Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 125
+      sea_creature_chance: 2
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_WET_SPONGE
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: SPONGE_LEGGINGS
+              amount: 1
+  - id: SPONGE_BOOTS
+    material: LEATHER_BOOTS
+    name: Sponge Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 75
+      sea_creature_chance: 2
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - AOA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_WET_SPONGE
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: SPONGE_BOOTS
+              amount: 1

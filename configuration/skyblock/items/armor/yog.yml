@@ -1,0 +1,61 @@
+items:
+  - id: ARMOR_OF_YOG_HELMET
+    material: LEATHER_HELMET
+    name: Yog Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 15
+      health: 50
+      mining_speed: 25
+      mining_fortune: 20
+      heat_resistance: 10
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Every 5 Yogs killed grants the wearer +1 Mining Speed. (Max 500)."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: ARMOR_OF_YOG_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Yog Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 15
+      health: 50
+      mining_speed: 25
+      mining_fortune: 20
+      heat_resistance: 10
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Every 5 Yogs killed grants the wearer +1 Mining Speed. (Max 500)."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: ARMOR_OF_YOG_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Yog Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 15
+      health: 50
+      mining_speed: 25
+      mining_fortune: 20
+      heat_resistance: 10
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Every 5 Yogs killed grants the wearer +1 Mining Speed. (Max 500)."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: ARMOR_OF_YOG_BOOTS
+    material: LEATHER_BOOTS
+    name: Yog Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 15
+      health: 50
+      mining_speed: 25
+      mining_fortune: 20
+      heat_resistance: 10
+    lore:
+      - "Full Set Bonus: Absorb \u2014 Every 5 Yogs killed grants the wearer +1 Mining Speed. (Max 500)."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

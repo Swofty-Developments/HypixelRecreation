@@ -1,0 +1,131 @@
+items:
+  - id: GLOSSY_MINERAL_HELMET
+    material: PLAYER_HEAD
+    name: Glossy Mineral Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 20
+      defense: 90
+      block_fortune: 50
+    lore:
+      - "Tiered Bonus: Glossy Mineralworks \u2014 Grants +150/300/450/600 Mining Spread on Ores and Blocks."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: GLOSSY_GEMSTONE
+                amount: 2
+              B:
+                type: MINERAL_HELMET
+                amount: 1
+            result:
+              type: GLOSSY_MINERAL_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: 6528b235c607467c369ca9c3f2bf89014fe2ea45f88df28d029a581ff4bb1721
+  - id: GLOSSY_MINERAL_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Glossy Mineral Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 25
+      defense: 150
+      block_fortune: 50
+    lore:
+      - "Tiered Bonus: Glossy Mineralworks \u2014 Grants +150/300/450/600 Mining Spread on Ores and Blocks."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: GLOSSY_GEMSTONE
+                amount: 2
+              B:
+                type: MINERAL_CHESTPLATE
+                amount: 1
+            result:
+              type: GLOSSY_MINERAL_CHESTPLATE
+              amount: 1
+  - id: GLOSSY_MINERAL_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Glossy Mineral Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 25
+      defense: 150
+      block_fortune: 50
+    lore:
+      - "Tiered Bonus: Glossy Mineralworks \u2014 Grants +150/300/450/600 Mining Spread on Ores and Blocks."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: GLOSSY_GEMSTONE
+                amount: 2
+              B:
+                type: MINERAL_LEGGINGS
+                amount: 1
+            result:
+              type: GLOSSY_MINERAL_LEGGINGS
+              amount: 1
+  - id: GLOSSY_MINERAL_BOOTS
+    material: LEATHER_BOOTS
+    name: Glossy Mineral Boots
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 20
+      defense: 90
+      block_fortune: 50
+    lore:
+      - "Tiered Bonus: Glossy Mineralworks \u2014 Grants +150/300/450/600 Mining Spread on Ores and Blocks."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: GLOSSY_GEMSTONE
+                amount: 2
+              B:
+                type: MINERAL_BOOTS
+                amount: 1
+            result:
+              type: GLOSSY_MINERAL_BOOTS
+              amount: 1

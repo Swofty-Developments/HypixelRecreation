@@ -1,0 +1,55 @@
+items:
+  - id: OLD_DRAGON_HELMET
+    material: PLAYER_HEAD
+    name: Old Dragon Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 110
+      health: 90
+    lore:
+      - "Full Set Bonus: Old Blood \u2014 Increases the strength of Growth, Protection, Feather Falling, Sugar Rush, and True\
+        \ Protection while worn."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 524c4da6ab27e9c93fbf49ea1b1fefaefbe2d4c0c8b222e2ff6b18179fb5addf
+  - id: OLD_DRAGON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Old Dragon Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 160
+      health: 150
+    lore:
+      - "Full Set Bonus: Old Blood \u2014 Increases the strength of Growth, Protection, Feather Falling, Sugar Rush, and True\
+        \ Protection while worn."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: OLD_DRAGON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Old Dragon Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 140
+      health: 130
+    lore:
+      - "Full Set Bonus: Old Blood \u2014 Increases the strength of Growth, Protection, Feather Falling, Sugar Rush, and True\
+        \ Protection while worn."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: OLD_DRAGON_BOOTS
+    material: LEATHER_BOOTS
+    name: Old Dragon Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 90
+      health: 80
+    lore:
+      - "Full Set Bonus: Old Blood \u2014 Increases the strength of Growth, Protection, Feather Falling, Sugar Rush, and True\
+        \ Protection while worn."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

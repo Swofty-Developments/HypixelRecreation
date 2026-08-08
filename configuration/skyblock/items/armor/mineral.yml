@@ -1,0 +1,138 @@
+items:
+  - id: MINERAL_HELMET
+    material: PLAYER_HEAD
+    name: Mineral Helmet
+    rarity: EPIC
+    default_statistics:
+      speed: 10
+      defense: 70
+      block_fortune: 25
+    lore:
+      - "Tiered Bonus: Mineralworks \u2014 Grants +100/200/300/400 Mining Spread on Ores and Blocks."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+            ingredients:
+              A:
+                type: REFINED_MINERAL
+                amount: 1
+              B:
+                type: HARDENED_DIAMOND_HELMET
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: MINERAL_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: a95280a7b21b06e3887f165c8ca7a03bfac96378acd96cdf5944bcd08a0b6587
+  - id: MINERAL_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Mineral Chestplate
+    rarity: EPIC
+    default_statistics:
+      speed: 15
+      defense: 125
+      block_fortune: 25
+    lore:
+      - "Tiered Bonus: Mineralworks \u2014 Grants +100/200/300/400 Mining Spread on Ores and Blocks."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: REFINED_MINERAL
+                amount: 1
+              B:
+                type: HARDENED_DIAMOND_CHESTPLATE
+                amount: 1
+            result:
+              type: MINERAL_CHESTPLATE
+              amount: 1
+  - id: MINERAL_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Mineral Leggings
+    rarity: EPIC
+    default_statistics:
+      speed: 15
+      defense: 125
+      block_fortune: 25
+    lore:
+      - "Tiered Bonus: Mineralworks \u2014 Grants +100/200/300/400 Mining Spread on Ores and Blocks."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AOA
+            ingredients:
+              A:
+                type: REFINED_MINERAL
+                amount: 1
+              B:
+                type: HARDENED_DIAMOND_LEGGINGS
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: MINERAL_LEGGINGS
+              amount: 1
+  - id: MINERAL_BOOTS
+    material: LEATHER_BOOTS
+    name: Mineral Boots
+    rarity: EPIC
+    default_statistics:
+      speed: 10
+      defense: 70
+      block_fortune: 25
+    lore:
+      - "Tiered Bonus: Mineralworks \u2014 Grants +100/200/300/400 Mining Spread on Ores and Blocks."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AOA
+              - ABA
+            ingredients:
+              A:
+                type: REFINED_MINERAL
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+              B:
+                type: HARDENED_DIAMOND_BOOTS
+                amount: 1
+            result:
+              type: MINERAL_BOOTS
+              amount: 1

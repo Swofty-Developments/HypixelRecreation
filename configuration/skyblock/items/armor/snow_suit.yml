@@ -1,0 +1,63 @@
+items:
+  - id: SNOW_SUIT_HELMET
+    material: PLAYER_HEAD
+    name: Snow Suit Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 30
+      health: 70
+    lore:
+      - "Piece Bonus: Cold Thumb \u2014 Each piece grants +5% bonus gift chance for every present earned from Gift Attack.\
+        \ All stats of this armor piece are doubled on Jerry's Workshop."
+      - "Full Set Bonus: Cold Thumb \u2014 Allows the wearer to shoot unlimited snowballs when using Frosty the Snow Cannon/Frosty\
+        \ the Snow Blaster/Frosty the Howitzer."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 3d1119643cecfbe004141a1ea4062f8315ca78e503958ac50505e8592c44a601
+  - id: SNOW_SUIT_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Snow Suit Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 40
+      health: 100
+    lore:
+      - "Piece Bonus: Cold Thumb \u2014 Each piece grants +5% bonus gift chance for every present earned from Gift Attack.\
+        \ All stats of this armor piece are doubled on Jerry's Workshop."
+      - "Full Set Bonus: Cold Thumb \u2014 Allows the wearer to shoot unlimited snowballs when using Frosty the Snow Cannon/Frosty\
+        \ the Snow Blaster/Frosty the Howitzer."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SNOW_SUIT_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Snow Suit Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 30
+      health: 75
+    lore:
+      - "Piece Bonus: Cold Thumb \u2014 Each piece grants +5% bonus gift chance for every present earned from Gift Attack.\
+        \ All stats of this armor piece are doubled on Jerry's Workshop."
+      - "Full Set Bonus: Cold Thumb \u2014 Allows the wearer to shoot unlimited snowballs when using Frosty the Snow Cannon/Frosty\
+        \ the Snow Blaster/Frosty the Howitzer."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SNOW_SUIT_BOOTS
+    material: LEATHER_BOOTS
+    name: Snow Suit Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 25
+      health: 65
+    lore:
+      - "Piece Bonus: Cold Thumb \u2014 Each piece grants +5% bonus gift chance for every present earned from Gift Attack.\
+        \ All stats of this armor piece are doubled on Jerry's Workshop."
+      - "Full Set Bonus: Cold Thumb \u2014 Allows the wearer to shoot unlimited snowballs when using Frosty the Snow Cannon/Frosty\
+        \ the Snow Blaster/Frosty the Howitzer."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

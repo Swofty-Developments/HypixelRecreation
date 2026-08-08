@@ -1,0 +1,71 @@
+items:
+  - id: TERROR_HELMET
+    material: PLAYER_HEAD
+    name: Terror Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 12
+      defense: 50
+      health: 160
+      critical_damage: 50
+      intelligence: 15
+    lore:
+      - "Tiered Bonus: Hydra Strike \u2014 Every 0.2 s, arrow attacks grant 1 stack of Hydra Strike \u2051. Each Hydra Strike\
+        \ \u2051 stack grants +2% Damage\u279C+4% Damage\u279C+6% Damage and +1% Arrow Speed. At 10 stacks, shoot +2 arrows\
+        \ that deal 20% Arrow Damage. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 52af8833697c81b46e83c8f1895266e606efbb3a59f1c3b4ca2816da2bcfa9d6
+  - id: TERROR_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Terror Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 12
+      defense: 65
+      health: 230
+      critical_damage: 50
+      intelligence: 5
+    lore:
+      - "Tiered Bonus: Hydra Strike \u2014 Every 0.2 s, arrow attacks grant 1 stack of Hydra Strike \u2051. Each Hydra Strike\
+        \ \u2051 stack grants +2% Damage\u279C+4% Damage\u279C+6% Damage and +1% Arrow Speed. At 10 stacks, shoot +2 arrows\
+        \ that deal 20% Arrow Damage. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: TERROR_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Terror Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 12
+      defense: 55
+      health: 205
+      critical_damage: 50
+      intelligence: 5
+    lore:
+      - "Tiered Bonus: Hydra Strike \u2014 Every 0.2 s, arrow attacks grant 1 stack of Hydra Strike \u2051. Each Hydra Strike\
+        \ \u2051 stack grants +2% Damage\u279C+4% Damage\u279C+6% Damage and +1% Arrow Speed. At 10 stacks, shoot +2 arrows\
+        \ that deal 20% Arrow Damage. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: TERROR_BOOTS
+    material: LEATHER_BOOTS
+    name: Terror Boots
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 12
+      defense: 40
+      health: 130
+      critical_damage: 50
+      intelligence: 5
+    lore:
+      - "Tiered Bonus: Hydra Strike \u2014 Every 0.2 s, arrow attacks grant 1 stack of Hydra Strike \u2051. Each Hydra Strike\
+        \ \u2051 stack grants +2% Damage\u279C+4% Damage\u279C+6% Damage and +1% Arrow Speed. At 10 stacks, shoot +2 arrows\
+        \ that deal 20% Arrow Damage. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

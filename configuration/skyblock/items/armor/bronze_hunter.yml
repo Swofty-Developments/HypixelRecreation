@@ -1,0 +1,49 @@
+items:
+  - id: BRONZE_HUNTER_HELMET
+    material: LEATHER_HELMET
+    name: Bronze Hunter Helmet
+    rarity: UNCOMMON
+    default_statistics:
+      health: 50
+    lore:
+      - "Full Set Bonus: Star Fisher \u2014 Grants +0.2 Fishing Speed per Upgrade Star on your armor."
+      - "Tiered Bonus: Odger's Blessing \u2014 Grants +0\u279C3\u279C4\u279C5 tfc."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: BRONZE_HUNTER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Bronze Hunter Chestplate
+    rarity: UNCOMMON
+    default_statistics:
+      health: 100
+    lore:
+      - "Full Set Bonus: Star Fisher \u2014 Grants +0.2 Fishing Speed per Upgrade Star on your armor."
+      - "Tiered Bonus: Odger's Blessing \u2014 Grants +0\u279C3\u279C4\u279C5 tfc."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: BRONZE_HUNTER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Bronze Hunter Leggings
+    rarity: UNCOMMON
+    default_statistics:
+      health: 75
+    lore:
+      - "Full Set Bonus: Star Fisher \u2014 Grants +0.2 Fishing Speed per Upgrade Star on your armor."
+      - "Tiered Bonus: Odger's Blessing \u2014 Grants +0\u279C3\u279C4\u279C5 tfc."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: BRONZE_HUNTER_BOOTS
+    material: LEATHER_BOOTS
+    name: Bronze Hunter Boots
+    rarity: UNCOMMON
+    default_statistics:
+      health: 25
+    lore:
+      - "Full Set Bonus: Star Fisher \u2014 Grants +0.2 Fishing Speed per Upgrade Star on your armor."
+      - "Tiered Bonus: Odger's Blessing \u2014 Grants +0\u279C3\u279C4\u279C5 tfc."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

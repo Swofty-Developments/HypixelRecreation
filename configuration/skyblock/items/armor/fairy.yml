@@ -1,0 +1,61 @@
+items:
+  - id: FAIRY_HELMET
+    material: LEATHER_HELMET
+    name: Fairy's Fedora
+    rarity: RARE
+    default_statistics:
+      speed: 10
+      defense: 1
+      health: 1
+      intelligence: -1
+    lore:
+      - "Full Set Bonus: Fairy's Outfit \u2014 Gain 1 Health per Fairy Soul found. Also alerts the player if they are near\
+        \ a fairy soul they haven't discovered yet. Changelog/2019/December 18"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: FAIRY_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Fairy's Polo
+    rarity: RARE
+    default_statistics:
+      speed: 10
+      defense: 1
+      health: 1
+      intelligence: -1
+    lore:
+      - "Full Set Bonus: Fairy's Outfit \u2014 Gain 1 Health per Fairy Soul found. Also alerts the player if they are near\
+        \ a fairy soul they haven't discovered yet. Changelog/2019/December 18"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: FAIRY_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Fairy's Trousers
+    rarity: RARE
+    default_statistics:
+      speed: 10
+      defense: 1
+      health: 1
+      intelligence: -1
+    lore:
+      - "Full Set Bonus: Fairy's Outfit \u2014 Gain 1 Health per Fairy Soul found. Also alerts the player if they are near\
+        \ a fairy soul they haven't discovered yet. Changelog/2019/December 18"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: FAIRY_BOOTS
+    material: LEATHER_BOOTS
+    name: Fairy's Galoshes
+    rarity: RARE
+    default_statistics:
+      speed: 10
+      defense: 1
+      health: 1
+      intelligence: -1
+    lore:
+      - "Full Set Bonus: Fairy's Outfit \u2014 Gain 1 Health per Fairy Soul found. Also alerts the player if they are near\
+        \ a fairy soul they haven't discovered yet. Changelog/2019/December 18"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

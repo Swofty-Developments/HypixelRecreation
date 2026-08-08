@@ -20,6 +20,8 @@ GENERATED_DIR = ITEMS_ROOT / "generated"
 GENERATED_FILE = GENERATED_DIR / "hypixel_api_items.yml"
 
 MATERIAL_ALIASES = {
+    "LEAVES": "OAK_LEAVES",
+    "RAW_FISH": "COD",
     "SKULL_ITEM": "PLAYER_HEAD",
     "INK_SACK": "INK_SAC",
     "GOLD_AXE": "GOLDEN_AXE",
@@ -42,19 +44,22 @@ MATERIAL_ALIASES = {
 }
 
 STAT_ALIASES = {
+    "ABILITY_DAMAGE_PERCENT": "ability_damage",
     "DAMAGE": "damage",
     "STRENGTH": "strength",
-    "CRIT_CHANCE": "crit_chance",
-    "CRIT_DAMAGE": "crit_damage",
+    "CRIT_CHANCE": "critical_chance",
+    "CRIT_DAMAGE": "critical_damage",
     "ATTACK_SPEED": "bonus_attack_speed",
     "HEALTH": "health",
     "DEFENSE": "defense",
     "SPEED": "speed",
+    "WALK_SPEED": "speed",
     "INTELLIGENCE": "intelligence",
     "MAGIC_FIND": "magic_find",
     "PET_LUCK": "pet_luck",
     "FEROCITY": "ferocity",
     "ABILITY_DAMAGE": "ability_damage",
+    "WEAPON_ABILITY_DAMAGE": "ability_damage",
     "MINING_SPEED": "mining_speed",
     "MINING_FORTUNE": "mining_fortune",
     "FARMING_FORTUNE": "farming_fortune",

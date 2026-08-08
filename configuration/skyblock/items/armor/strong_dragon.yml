@@ -1,0 +1,59 @@
+items:
+  - id: STRONG_DRAGON_HELMET
+    material: PLAYER_HEAD
+    name: Strong Dragon Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 110
+      health: 70
+      strength: 25
+    lore:
+      - "Full Set Bonus: Strong Blood \u2014 Improves the Aspect of the End: ; +75 Damage Instant Transmission: ; +2 Teleport\
+        \ range ; +3 seconds ; +5 Strength on cast"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 78bc6551beb2148d939b69925140d2379fe0fab6e7d31f65df50b59e9f77a0e4
+  - id: STRONG_DRAGON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Strong Dragon Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 160
+      health: 120
+      strength: 25
+    lore:
+      - "Full Set Bonus: Strong Blood \u2014 Improves the Aspect of the End: ; +75 Damage Instant Transmission: ; +2 Teleport\
+        \ range ; +3 seconds ; +5 Strength on cast"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: STRONG_DRAGON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Strong Dragon Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 140
+      health: 100
+      strength: 25
+    lore:
+      - "Full Set Bonus: Strong Blood \u2014 Improves the Aspect of the End: ; +75 Damage Instant Transmission: ; +2 Teleport\
+        \ range ; +3 seconds ; +5 Strength on cast"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: STRONG_DRAGON_BOOTS
+    material: LEATHER_BOOTS
+    name: Strong Dragon Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 90
+      health: 60
+      strength: 25
+    lore:
+      - "Full Set Bonus: Strong Blood \u2014 Improves the Aspect of the End: ; +75 Damage Instant Transmission: ; +2 Teleport\
+        \ range ; +3 seconds ; +5 Strength on cast"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

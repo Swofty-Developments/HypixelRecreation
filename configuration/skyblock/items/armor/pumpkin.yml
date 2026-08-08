@@ -1,11 +1,11 @@
 items:
   - id: PUMPKIN_HELMET
-    material: leather_helmet
-    name: "Pumpkin Helmet"
-    rarity: COMMON
+    material: PLAYER_HEAD
+    name: Pumpkin Helmet
+    rarity: UNCOMMON
     default_statistics:
-      defense: 8.0
-      health: 8.0
+      defense: 20
+      farming_fortune: 15
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -34,14 +34,15 @@ items:
             result:
               type: PUMPKIN_HELMET
               amount: 1
-
+      - id: SKULL_HEAD
+        texture: 2f92489725093d51dd18a259382fa0207a20a94495883d9f4b1fd97a8a11b9f0
   - id: PUMPKIN_CHESTPLATE
-    material: leather_chestplate
-    name: "Pumpkin Chestplate"
-    rarity: COMMON
+    material: LEATHER_CHESTPLATE
+    name: Pumpkin Chestplate
+    rarity: UNCOMMON
     default_statistics:
-      defense: 14.0
-      health: 14.0
+      defense: 20
+      farming_fortune: 15
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -71,14 +72,13 @@ items:
             result:
               type: PUMPKIN_CHESTPLATE
               amount: 1
-
   - id: PUMPKIN_LEGGINGS
-    material: leather_leggings
-    name: "Pumpkin Leggings"
-    rarity: COMMON
+    material: LEATHER_LEGGINGS
+    name: Pumpkin Leggings
+    rarity: UNCOMMON
     default_statistics:
-      defense: 10.0
-      health: 10.0
+      defense: 20
+      farming_fortune: 15
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS
@@ -108,14 +108,13 @@ items:
             result:
               type: PUMPKIN_LEGGINGS
               amount: 1
-
   - id: PUMPKIN_BOOTS
-    material: leather_boots
-    name: "Pumpkin Boots"
-    rarity: COMMON
+    material: LEATHER_BOOTS
+    name: Pumpkin Boots
+    rarity: UNCOMMON
     default_statistics:
-      defense: 8.0
-      health: 8.0
+      defense: 20
+      farming_fortune: 15
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

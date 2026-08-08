@@ -1,0 +1,59 @@
+items:
+  - id: WISE_WITHER_HELMET
+    material: PLAYER_HEAD
+    name: Storm's Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 80
+      health: 180
+      intelligence: 400
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: f83159c5bb7d80454d2d646b15774b7116aabcb3af5b6777a27573fc45f7854f
+  - id: WISE_WITHER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Storm's Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 120
+      health: 260
+      intelligence: 250
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: WISE_WITHER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Storm's Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 105
+      health: 230
+      intelligence: 250
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: WISE_WITHER_BOOTS
+    material: LEATHER_BOOTS
+    name: Storm's Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 65
+      health: 145
+      intelligence: 250
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

@@ -1,0 +1,139 @@
+items:
+  - id: FROZEN_BLAZE_HELMET
+    material: PLAYER_HEAD
+    name: Frozen Blaze Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 2
+      defense: 105
+      strength: 40
+    lore:
+      - "Full Set Bonus: Frozen Blazing Aura \u2014 Damages mobs within 5 block range for 300 base damage + 3% of their max\
+        \ Health every second and applies Slowness 1 for 4 seconds. Max damage/s increased by +100 per 5,000 rods in collection\
+        \ (5000 max damage cap at 225,000 rods in collection)"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_PACKED_ICE
+                amount: 8
+              B:
+                type: BLAZE_HELMET
+                amount: 1
+            result:
+              type: FROZEN_BLAZE_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: 70310b55eed958fee8ffaaf718467167deb1a7c9046d67b25887b596925636bb
+  - id: FROZEN_BLAZE_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Frozen Blaze Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 2
+      defense: 180
+      strength: 40
+    lore:
+      - "Full Set Bonus: Frozen Blazing Aura \u2014 Damages mobs within 5 block range for 300 base damage + 3% of their max\
+        \ Health every second and applies Slowness 1 for 4 seconds. Max damage/s increased by +100 per 5,000 rods in collection\
+        \ (5000 max damage cap at 225,000 rods in collection)"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_PACKED_ICE
+                amount: 8
+              B:
+                type: BLAZE_CHESTPLATE
+                amount: 1
+            result:
+              type: FROZEN_BLAZE_CHESTPLATE
+              amount: 1
+  - id: FROZEN_BLAZE_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Frozen Blaze Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 2
+      defense: 140
+      strength: 40
+    lore:
+      - "Full Set Bonus: Frozen Blazing Aura \u2014 Damages mobs within 5 block range for 300 base damage + 3% of their max\
+        \ Health every second and applies Slowness 1 for 4 seconds. Max damage/s increased by +100 per 5,000 rods in collection\
+        \ (5000 max damage cap at 225,000 rods in collection)"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_PACKED_ICE
+                amount: 8
+              B:
+                type: BLAZE_LEGGINGS
+                amount: 1
+            result:
+              type: FROZEN_BLAZE_LEGGINGS
+              amount: 1
+  - id: FROZEN_BLAZE_BOOTS
+    material: LEATHER_BOOTS
+    name: Frozen Blaze Boots
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 2
+      defense: 95
+      strength: 40
+    lore:
+      - "Full Set Bonus: Frozen Blazing Aura \u2014 Damages mobs within 5 block range for 300 base damage + 3% of their max\
+        \ Health every second and applies Slowness 1 for 4 seconds. Max damage/s increased by +100 per 5,000 rods in collection\
+        \ (5000 max damage cap at 225,000 rods in collection)"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_PACKED_ICE
+                amount: 8
+              B:
+                type: BLAZE_BOOTS
+                amount: 1
+            result:
+              type: FROZEN_BLAZE_BOOTS
+              amount: 1

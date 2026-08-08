@@ -1,0 +1,154 @@
+items:
+  - id: CHALLENGER_HELMET
+    material: PLAYER_HEAD
+    name: Challenger's Helmet
+    rarity: EPIC
+    default_statistics:
+      strength: 10
+      health: 50
+      defense: 25
+    lore:
+      - "Tiered Bonus: Unearthed \u2014 Reduces damage taken from Mythological mobs by 10%/12.5%/15%/17.5%/20%/22.5%/25%."
+      - "Ability: Mythos' Night \u2014 Grants 2 x this armor's stats while in The Hub"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - ABA
+              - COC
+            ingredients:
+              A:
+                type: ENCHANTED_GOLD_INGOT
+                amount: 16
+              B:
+                type: GRIFFIN_FEATHER
+                amount: 4
+              C:
+                type: ANCIENT_CLAW
+                amount: 32
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: CHALLENGER_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: efca286890072570f152239faf68e8dd82e792236b49e3e0338d82d50f379b13
+  - id: CHALLENGER_CHESTPLATE
+    material: GOLDEN_CHESTPLATE
+    name: Challenger's Chestplate
+    rarity: EPIC
+    default_statistics:
+      strength: 25
+      health: 80
+      defense: 40
+    lore:
+      - "Tiered Bonus: Unearthed \u2014 Reduces damage taken from Mythological mobs by 10%/12.5%/15%/17.5%/20%/22.5%/25%."
+      - "Ability: Mythos' Night \u2014 Grants 2 x this armor's stats while in The Hub"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - BAB
+              - BCB
+            ingredients:
+              A:
+                type: ENCHANTED_GOLD_INGOT
+                amount: 16
+              O:
+                type: AIR
+                amount: 1
+              B:
+                type: GRIFFIN_FEATHER
+                amount: 1
+              C:
+                type: ANCIENT_CLAW
+                amount: 64
+            result:
+              type: CHALLENGER_CHESTPLATE
+              amount: 1
+  - id: CHALLENGER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Challenger's Leggings
+    rarity: EPIC
+    default_statistics:
+      strength: 20
+      health: 70
+      defense: 35
+    lore:
+      - "Tiered Bonus: Unearthed \u2014 Reduces damage taken from Mythological mobs by 10%/12.5%/15%/17.5%/20%/22.5%/25%."
+      - "Ability: Mythos' Night \u2014 Grants 2 x this armor's stats while in The Hub"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - BCB
+              - BOB
+            ingredients:
+              A:
+                type: ANCIENT_CLAW
+                amount: 64
+              O:
+                type: AIR
+                amount: 1
+              B:
+                type: GRIFFIN_FEATHER
+                amount: 1
+              C:
+                type: ENCHANTED_GOLD_INGOT
+                amount: 16
+            result:
+              type: CHALLENGER_LEGGINGS
+              amount: 1
+  - id: CHALLENGER_BOOTS
+    material: LEATHER_BOOTS
+    name: Challenger's Boots
+    rarity: EPIC
+    default_statistics:
+      strength: 5
+      health: 40
+      defense: 30
+    lore:
+      - "Tiered Bonus: Unearthed \u2014 Reduces damage taken from Mythological mobs by 10%/12.5%/15%/17.5%/20%/22.5%/25%."
+      - "Ability: Mythos' Night \u2014 Grants 2 x this armor's stats while in The Hub"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - BOB
+            ingredients:
+              O:
+                type: AIR
+                amount: 1
+              A:
+                type: ENCHANTED_GOLD_INGOT
+                amount: 32
+              B:
+                type: GRIFFIN_FEATHER
+                amount: 2
+            result:
+              type: CHALLENGER_BOOTS
+              amount: 1

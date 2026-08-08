@@ -1,0 +1,55 @@
+items:
+  - id: BAT_PERSON_HELMET
+    material: PLAYER_HEAD
+    name: Bat Person Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 15
+    lore:
+      - "Full Set Bonus: Bat Powers Activate! \u2014 Upgrades your Grappling Hook and turns you into a true vigilante! Grants\
+        \ a +5% chance to find rare Candy. Bat Powers Activate! removes the cooldown on the grappling hook and increases its\
+        \ power and range."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: a83b3f04fc16bc2c2cb36a12044265b0b933f3dfa2b342eb45798ff7d715b0d8
+  - id: BAT_PERSON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Bat Person Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 30
+    lore:
+      - "Full Set Bonus: Bat Powers Activate! \u2014 Upgrades your Grappling Hook and turns you into a true vigilante! Grants\
+        \ a +5% chance to find rare Candy. Bat Powers Activate! removes the cooldown on the grappling hook and increases its\
+        \ power and range."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: BAT_PERSON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Bat Person Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 25
+    lore:
+      - "Full Set Bonus: Bat Powers Activate! \u2014 Upgrades your Grappling Hook and turns you into a true vigilante! Grants\
+        \ a +5% chance to find rare Candy. Bat Powers Activate! removes the cooldown on the grappling hook and increases its\
+        \ power and range."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: BAT_PERSON_BOOTS
+    material: LEATHER_BOOTS
+    name: Bat Person Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 15
+    lore:
+      - "Full Set Bonus: Bat Powers Activate! \u2014 Upgrades your Grappling Hook and turns you into a true vigilante! Grants\
+        \ a +5% chance to find rare Candy. Bat Powers Activate! removes the cooldown on the grappling hook and increases its\
+        \ power and range."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

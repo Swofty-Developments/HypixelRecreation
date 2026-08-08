@@ -1,0 +1,15 @@
+items:
+  - id: SPIDER_BOOTS
+    material: IRON_BOOTS
+    name: Spider's Boots
+    rarity: RARE
+    default_statistics:
+      speed: 5
+      defense: 45
+      intelligence: 50
+    lore:
+      - "Full Set Bonus: Monster Hunter \u2014 Take -25% damage when being attacked by Monsters, and deal +25% damage when\
+        \ attacking Monsters."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

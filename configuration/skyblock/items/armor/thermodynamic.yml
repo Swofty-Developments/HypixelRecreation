@@ -1,0 +1,55 @@
+items:
+  - id: THERMODYNAMIC_HELMET
+    material: PLAYER_HEAD
+    name: Thermodynamic Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 25
+      defense: 135
+      bonus_attack_speed: 5
+    lore:
+      - "Full Set Bonus: Newton's Demise \u2014 Grants +50 Attack Speed Cap"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: cad67cf33188a54b6f55d2ef5248cd3b72176994e1d203731e86b365a8581726
+  - id: THERMODYNAMIC_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Thermodynamic Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 25
+      defense: 240
+      bonus_attack_speed: 5
+    lore:
+      - "Full Set Bonus: Newton's Demise \u2014 Grants +50 Attack Speed Cap"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: THERMODYNAMIC_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Thermodynamic Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 25
+      defense: 200
+      bonus_attack_speed: 5
+    lore:
+      - "Full Set Bonus: Newton's Demise \u2014 Grants +50 Attack Speed Cap"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: THERMODYNAMIC_BOOTS
+    material: LEATHER_BOOTS
+    name: Thermodynamic Boots
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 25
+      defense: 125
+      bonus_attack_speed: 5
+    lore:
+      - "Full Set Bonus: Newton's Demise \u2014 Grants +50 Attack Speed Cap"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

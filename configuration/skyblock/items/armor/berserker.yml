@@ -1,0 +1,55 @@
+items:
+  - id: BERSERKER_HELMET
+    material: PLAYER_HEAD
+    name: Berserker Helmet
+    rarity: EPIC
+    default_statistics:
+      strength: 35
+      critical_damage: 35
+    lore:
+      - "Tiered Bonus: Berserk \u2014 Reduces your health and defense by half and reduces the cost of health-consuming abilities\
+        \ by 20%/40%/60%."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: fead3b51077eda3dea6f76f18b7ef089e289e87c002a6c8f92e6a340f9ae84a4
+  - id: BERSERKER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Berserker Chestplate
+    rarity: EPIC
+    default_statistics:
+      strength: 60
+      critical_damage: 60
+    lore:
+      - "Tiered Bonus: Berserk \u2014 Reduces your health and defense by half and reduces the cost of health-consuming abilities\
+        \ by 20%/40%/60%."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: BERSERKER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Berserker Leggings
+    rarity: EPIC
+    default_statistics:
+      strength: 50
+      critical_damage: 50
+    lore:
+      - "Tiered Bonus: Berserk \u2014 Reduces your health and defense by half and reduces the cost of health-consuming abilities\
+        \ by 20%/40%/60%."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: BERSERKER_BOOTS
+    material: LEATHER_BOOTS
+    name: Berserker Boots
+    rarity: EPIC
+    default_statistics:
+      strength: 25
+      critical_damage: 25
+    lore:
+      - "Tiered Bonus: Berserk \u2014 Reduces your health and defense by half and reduces the cost of health-consuming abilities\
+        \ by 20%/40%/60%."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

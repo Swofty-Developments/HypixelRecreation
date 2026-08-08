@@ -1,0 +1,65 @@
+items:
+  - id: PRIMORDIAL_HELMET
+    material: PLAYER_HEAD
+    name: Primordial Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 100
+      health: 120
+      intelligence: 100
+      critical_damage: 10
+    lore:
+      - "Tiered Bonus: Octodexterity \u2014 Every 3 rd strike, deal +50% Damage and apply Venom reducing healing by 10% for\
+        \ 4 seconds."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 307cefa20028878ef529d6b9208d2812010d086f961b964c328f09b3f6573d6
+  - id: PRIMORDIAL_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Primordial Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 115
+      health: 150
+      intelligence: 110
+      critical_damage: 10
+    lore:
+      - "Tiered Bonus: Octodexterity \u2014 Every 3 rd strike, deal +50% Damage and apply Venom reducing healing by 10% for\
+        \ 4 seconds."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: PRIMORDIAL_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Primordial Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 105
+      health: 135
+      intelligence: 105
+      critical_damage: 10
+    lore:
+      - "Tiered Bonus: Octodexterity \u2014 Every 3 rd strike, deal +50% Damage and apply Venom reducing healing by 10% for\
+        \ 4 seconds."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: PRIMORDIAL_BOOTS
+    material: LEATHER_BOOTS
+    name: Primordial Boots
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 15
+      defense: 90
+      health: 75
+      intelligence: 75
+      critical_damage: 10
+    lore:
+      - "Tiered Bonus: Octodexterity \u2014 Every 3 rd strike, deal +50% Damage and apply Venom reducing healing by 10% for\
+        \ 4 seconds."
+      - "Ability: Double Jump \u2014 Allows you to double jump by sneaking mid air!"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

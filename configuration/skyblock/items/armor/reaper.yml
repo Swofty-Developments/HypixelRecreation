@@ -1,0 +1,118 @@
+items:
+  - id: REAPER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Reaper Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 70
+      health: 180
+      strength: 25
+      intelligence: 250
+    lore:
+      - "Full Set Bonus: Enrage \u2014 Enrage for 6 s gaining 100 Speed, 100 Damage, and 100 Strength."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - ABA
+              - ACA
+              - ADA
+            ingredients:
+              A:
+                type: ENCHANTED_DIAMOND_BLOCK
+                amount: 1
+              B:
+                type: REVENANT_CATALYST
+                amount: 1
+              C:
+                type: REVENANT_CHESTPLATE
+                amount: 1
+              D:
+                type: REVENANT_VISCERA
+                amount: 64
+            result:
+              type: REAPER_CHESTPLATE
+              amount: 1
+  - id: REAPER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Reaper Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 50
+      health: 120
+      strength: 25
+      intelligence: 250
+    lore:
+      - "Full Set Bonus: Enrage \u2014 Enrage for 6 s gaining 100 Speed, 100 Damage, and 100 Strength."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - ABA
+              - ACA
+              - ADA
+            ingredients:
+              A:
+                type: ENCHANTED_DIAMOND_BLOCK
+                amount: 1
+              B:
+                type: REVENANT_CATALYST
+                amount: 1
+              C:
+                type: REVENANT_LEGGINGS
+                amount: 1
+              D:
+                type: REVENANT_VISCERA
+                amount: 64
+            result:
+              type: REAPER_LEGGINGS
+              amount: 1
+  - id: REAPER_BOOTS
+    material: LEATHER_BOOTS
+    name: Reaper Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 30
+      health: 100
+      strength: 25
+      intelligence: 250
+    lore:
+      - "Full Set Bonus: Enrage \u2014 Enrage for 6 s gaining 100 Speed, 100 Damage, and 100 Strength."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - ABA
+              - ACA
+              - ADA
+            ingredients:
+              A:
+                type: ENCHANTED_DIAMOND_BLOCK
+                amount: 1
+              B:
+                type: REVENANT_CATALYST
+                amount: 1
+              C:
+                type: REVENANT_BOOTS
+                amount: 1
+              D:
+                type: REVENANT_VISCERA
+                amount: 64
+            result:
+              type: REAPER_BOOTS
+              amount: 1

@@ -1,0 +1,47 @@
+items:
+  - id: SPOOKY_HELMET
+    material: PLAYER_HEAD
+    name: Spooky Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 25
+    lore:
+      - "Full Set Bonus: Candy Man \u2014 Grants a +5% chance to find rare candy"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 121ebb2b36c1f5dde4fa665cd39a4895ef02d00fcb3eb3588b86a13f9ae7e9a8
+  - id: SPOOKY_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Spooky Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 50
+    lore:
+      - "Full Set Bonus: Candy Man \u2014 Grants a +5% chance to find rare candy"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SPOOKY_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Spooky Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 35
+    lore:
+      - "Full Set Bonus: Candy Man \u2014 Grants a +5% chance to find rare candy"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SPOOKY_BOOTS
+    material: LEATHER_BOOTS
+    name: Spooky Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 25
+    lore:
+      - "Full Set Bonus: Candy Man \u2014 Grants a +5% chance to find rare candy"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

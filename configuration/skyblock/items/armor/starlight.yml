@@ -1,12 +1,14 @@
 items:
   - id: STARLIGHT_BOOTS
-    material: leather_boots
-    name: "Starlight Boots"
+    material: LEATHER_BOOTS
+    name: Starlight Boots
     rarity: RARE
     default_statistics:
-      health: 30.0
-      defense: 30.0
-      intelligence: 50.0
+      defense: 15
+      intelligence: 30
+      health: 15
+    lore:
+      - "Full Set Bonus: Starpower \u2014 Increases the duration of Starfall by 2x and its range by +1."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS
@@ -17,13 +19,15 @@ items:
       - id: SELLABLE
         value: 15000.0
   - id: STARLIGHT_CHESTPLATE
-    material: leather_chestplate
-    name: "Starlight Chestplate"
+    material: LEATHER_CHESTPLATE
+    name: Starlight Chestplate
     rarity: RARE
     default_statistics:
-      health: 30.0
-      defense: 30.0
-      intelligence: 50.0
+      health: 40.0
+      defense: 40.0
+      intelligence: 90.0
+    lore:
+      - "Full Set Bonus: Starpower \u2014 Increases the duration of Starfall by 2x and its range by +1."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -34,26 +38,30 @@ items:
       - id: SELLABLE
         value: 35000.0
   - id: STARLIGHT_HELMET
-    material: golden_helmet
-    name: "Starlight Helmet"
+    material: GOLDEN_HELMET
+    name: Starlight Helmet
     rarity: RARE
     default_statistics:
-      health: 30.0
-      defense: 30.0
-      intelligence: 50.0
+      health: 25.0
+      defense: 25.0
+      intelligence: 45.0
+    lore:
+      - "Full Set Bonus: Starpower \u2014 Increases the duration of Starfall by 2x and its range by +1."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
       - id: SELLABLE
         value: 17500.0
   - id: STARLIGHT_LEGGINGS
-    material: golden_leggings
-    name: "Starlight Leggings"
+    material: GOLDEN_LEGGINGS
+    name: Starlight Leggings
     rarity: RARE
     default_statistics:
       health: 30.0
       defense: 30.0
-      intelligence: 50.0
+      intelligence: 60.0
+    lore:
+      - "Full Set Bonus: Starpower \u2014 Increases the duration of Starfall by 2x and its range by +1."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS

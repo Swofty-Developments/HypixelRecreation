@@ -1,0 +1,123 @@
+items:
+  - id: EMERALD_ARMOR_HELMET
+    material: LEATHER_HELMET
+    name: Emerald Armor Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 50
+    lore:
+      - "Full Set Bonus: Tank \u2014 Increases the wearers maximum Health and Defense by +1 for every 3,000 Emeralds in your\
+        \ collection. Max +350 each"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_EMERALD_BLOCK
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: EMERALD_ARMOR_HELMET
+              amount: 1
+  - id: EMERALD_ARMOR_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Emerald Armor Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 100
+    lore:
+      - "Full Set Bonus: Tank \u2014 Increases the wearers maximum Health and Defense by +1 for every 3,000 Emeralds in your\
+        \ collection. Max +350 each"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_EMERALD_BLOCK
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: EMERALD_ARMOR_CHESTPLATE
+              amount: 1
+  - id: EMERALD_ARMOR_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Emerald Armor Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 75
+    lore:
+      - "Full Set Bonus: Tank \u2014 Increases the wearers maximum Health and Defense by +1 for every 3,000 Emeralds in your\
+        \ collection. Max +350 each"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_EMERALD_BLOCK
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: EMERALD_ARMOR_LEGGINGS
+              amount: 1
+  - id: EMERALD_ARMOR_BOOTS
+    material: LEATHER_BOOTS
+    name: Emerald Armor Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 45
+    lore:
+      - "Full Set Bonus: Tank \u2014 Increases the wearers maximum Health and Defense by +1 for every 3,000 Emeralds in your\
+        \ collection. Max +350 each"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_EMERALD_BLOCK
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: EMERALD_ARMOR_BOOTS
+              amount: 1

@@ -1,0 +1,59 @@
+items:
+  - id: TANK_WITHER_HELMET
+    material: PLAYER_HEAD
+    name: Goldor's Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 180
+      health: 210
+      intelligence: 30
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: d4923e28a187fe6af2278b7394ef253a96331fa2dc0731879c780bfee244228a
+  - id: TANK_WITHER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Goldor's Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 275
+      health: 310
+      intelligence: 20
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: TANK_WITHER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Goldor's Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 240
+      health: 260
+      intelligence: 20
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: TANK_WITHER_BOOTS
+    material: LEATHER_BOOTS
+    name: Goldor's Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 165
+      health: 190
+      intelligence: 20
+    lore:
+      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
+        \ will travel to and explode on nearby enemies."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

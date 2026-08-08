@@ -1,0 +1,141 @@
+items:
+  - id: HEAT_HELMET
+    material: LEATHER_HELMET
+    name: Heat Helmet
+    rarity: RARE
+    default_statistics:
+      defense: 50
+      health: 20
+      mining_fortune: 10
+      mining_speed: 15
+      strength: 15
+      heat_resistance: 20
+    lore:
+      - "Full Set Bonus: Heat Shield \u2014 You are immune to Heat."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: HARD_STONE
+                amount: 32
+              B:
+                type: MINER_ARMOR_HELMET
+                amount: 1
+            result:
+              type: HEAT_HELMET
+              amount: 1
+  - id: HEAT_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Heat Chestplate
+    rarity: RARE
+    default_statistics:
+      defense: 50
+      health: 20
+      mining_fortune: 10
+      mining_speed: 15
+      strength: 15
+      heat_resistance: 20
+    lore:
+      - "Full Set Bonus: Heat Shield \u2014 You are immune to Heat."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: HARD_STONE
+                amount: 32
+              B:
+                type: MINER_ARMOR_CHESTPLATE
+                amount: 1
+            result:
+              type: HEAT_CHESTPLATE
+              amount: 1
+  - id: HEAT_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Heat Leggings
+    rarity: RARE
+    default_statistics:
+      defense: 50
+      health: 20
+      mining_fortune: 10
+      mining_speed: 15
+      strength: 15
+      heat_resistance: 20
+    lore:
+      - "Full Set Bonus: Heat Shield \u2014 You are immune to Heat."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: HARD_STONE
+                amount: 32
+              B:
+                type: MINER_ARMOR_LEGGINGS
+                amount: 1
+            result:
+              type: HEAT_LEGGINGS
+              amount: 1
+  - id: HEAT_BOOTS
+    material: LEATHER_BOOTS
+    name: Heat Boots
+    rarity: RARE
+    default_statistics:
+      defense: 50
+      health: 20
+      mining_fortune: 10
+      mining_speed: 15
+      strength: 15
+      heat_resistance: 20
+    lore:
+      - "Full Set Bonus: Heat Shield \u2014 You are immune to Heat."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: HARD_STONE
+                amount: 32
+              B:
+                type: MINER_ARMOR_BOOTS
+                amount: 1
+            result:
+              type: HEAT_BOOTS
+              amount: 1

@@ -1,0 +1,41 @@
+items:
+  - id: FLAMEBREAKER_HELMET
+    material: CHAINMAIL_HELMET
+    name: Ember Ash Helmet
+    rarity: UNCOMMON
+    default_statistics:
+      mining_fortune: 5
+      mining_speed: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: FLAMEBREAKER_CHESTPLATE
+    material: CHAINMAIL_CHESTPLATE
+    name: Ember Ash Chestplate
+    rarity: UNCOMMON
+    default_statistics:
+      mining_fortune: 5
+      mining_speed: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: FLAMEBREAKER_LEGGINGS
+    material: CHAINMAIL_LEGGINGS
+    name: Ember Ash Leggings
+    rarity: UNCOMMON
+    default_statistics:
+      mining_fortune: 5
+      mining_speed: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: FLAMEBREAKER_BOOTS
+    material: CHAINMAIL_BOOTS
+    name: Ember Ash Boots
+    rarity: UNCOMMON
+    default_statistics:
+      mining_fortune: 5
+      mining_speed: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

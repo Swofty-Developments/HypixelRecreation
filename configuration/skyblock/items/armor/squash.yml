@@ -1,0 +1,72 @@
+items:
+  - id: SQUASH_HELMET
+    material: PLAYER_HEAD
+    name: Squash Helmet
+    rarity: RARE
+    default_statistics:
+      farming_fortune: 25
+      speed: 4
+      health: 120
+      defense: 35
+      bonus_pest_chance: 15
+    lore:
+      - "Tiered Bonus: Mento Fermento \u2014 Farming Sugar Cane, Cactus, Mushroom and Nether Warts have a 0.005%\u279C0.005%\u279C\
+        0.006%\u279C0.007% chance of dropping a Fermento. Inside the Greenhouse gives a 2.0%\u279C2.0%\u279C2.4%\u279C2.8%\
+        \ chance to drop one from any crop grown inside. Grants +0\u279C20\u279C40\u279C60 Farming Fortune."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: de1087c0c519a9a1dcee4325410b19a1be4855eac5a662ae1b523329f90faecd
+  - id: SQUASH_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Squash Chestplate
+    rarity: RARE
+    default_statistics:
+      farming_fortune: 30
+      speed: 5
+      health: 180
+      defense: 35
+      bonus_pest_chance: 15
+    lore:
+      - "Tiered Bonus: Mento Fermento \u2014 Farming Sugar Cane, Cactus, Mushroom and Nether Warts have a 0.005%\u279C0.005%\u279C\
+        0.006%\u279C0.007% chance of dropping a Fermento. Inside the Greenhouse gives a 2.0%\u279C2.0%\u279C2.4%\u279C2.8%\
+        \ chance to drop one from any crop grown inside. Grants +0\u279C20\u279C40\u279C60 Farming Fortune."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SQUASH_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Squash Leggings
+    rarity: RARE
+    default_statistics:
+      farming_fortune: 30
+      speed: 5
+      health: 180
+      defense: 35
+      bonus_pest_chance: 15
+    lore:
+      - "Tiered Bonus: Mento Fermento \u2014 Farming Sugar Cane, Cactus, Mushroom and Nether Warts have a 0.005%\u279C0.005%\u279C\
+        0.006%\u279C0.007% chance of dropping a Fermento. Inside the Greenhouse gives a 2.0%\u279C2.0%\u279C2.4%\u279C2.8%\
+        \ chance to drop one from any crop grown inside. Grants +0\u279C20\u279C40\u279C60 Farming Fortune."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SQUASH_BOOTS
+    material: LEATHER_BOOTS
+    name: Squash Boots
+    rarity: RARE
+    default_statistics:
+      farming_fortune: 25
+      speed: 4
+      health: 120
+      defense: 35
+      bonus_pest_chance: 15
+    lore:
+      - "Tiered Bonus: Mento Fermento \u2014 Farming Sugar Cane, Cactus, Mushroom and Nether Warts have a 0.005%\u279C0.005%\u279C\
+        0.006%\u279C0.007% chance of dropping a Fermento. Inside the Greenhouse gives a 2.0%\u279C2.0%\u279C2.4%\u279C2.8%\
+        \ chance to drop one from any crop grown inside. Grants +0\u279C20\u279C40\u279C60 Farming Fortune."
+      - "Ability: Farmer's Grace \u2014 Grants immunity to trampling crops."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

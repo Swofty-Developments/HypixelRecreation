@@ -1,0 +1,125 @@
+items:
+  - id: RABBIT_HELMET
+    material: PLAYER_HEAD
+    name: Rabbit Helmet
+    rarity: COMMON
+    default_statistics:
+      defense: 15
+      speed: 5
+    lore:
+      - "Full Set Bonus: Springsneak \u2014 While sneaking, you have permanent Jump Boost II"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: RABBIT_HIDE
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: RABBIT_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: da0ca2b90d831f17f7c8b771fb3973cca2d76a456bb7b47b80d6872b05b251f5
+  - id: RABBIT_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Rabbit Chestplate
+    rarity: COMMON
+    default_statistics:
+      defense: 40
+      speed: 5
+    lore:
+      - "Full Set Bonus: Springsneak \u2014 While sneaking, you have permanent Jump Boost II"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: RABBIT_HIDE
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: RABBIT_CHESTPLATE
+              amount: 1
+  - id: RABBIT_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Rabbit Leggings
+    rarity: COMMON
+    default_statistics:
+      defense: 30
+      speed: 5
+    lore:
+      - "Full Set Bonus: Springsneak \u2014 While sneaking, you have permanent Jump Boost II"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: RABBIT_HIDE
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: RABBIT_LEGGINGS
+              amount: 1
+  - id: RABBIT_BOOTS
+    material: LEATHER_BOOTS
+    name: Rabbit Boots
+    rarity: COMMON
+    default_statistics:
+      defense: 15
+      speed: 5
+    lore:
+      - "Full Set Bonus: Springsneak \u2014 While sneaking, you have permanent Jump Boost II"
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: RABBIT_HIDE
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: RABBIT_BOOTS
+              amount: 1

@@ -1,0 +1,55 @@
+items:
+  - id: SNORKELING_HELMET
+    material: PLAYER_HEAD
+    name: Snorkeling Visor
+    rarity: UNCOMMON
+    default_statistics:
+      health: 65
+      defense: 60
+      pressure_resistance: 10
+    lore:
+      - "Tiered Bonus: Long Tuba \u2014 Grants +0/2/5/10 respiration."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 875478f91a51c281255545fd700d3155d9628ac7f6ecacb96110416cbc3849d3
+  - id: SNORKELING_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Snorkeling Vest
+    rarity: UNCOMMON
+    default_statistics:
+      health: 100
+      defense: 100
+      pressure_resistance: 10
+    lore:
+      - "Tiered Bonus: Long Tuba \u2014 Grants +0/2/5/10 respiration."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SNORKELING_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Snorkeling Pants
+    rarity: UNCOMMON
+    default_statistics:
+      health: 75
+      defense: 85
+      pressure_resistance: 10
+    lore:
+      - "Tiered Bonus: Long Tuba \u2014 Grants +0/2/5/10 respiration."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SNORKELING_BOOTS
+    material: LEATHER_BOOTS
+    name: Snorkeling Shoes
+    rarity: UNCOMMON
+    default_statistics:
+      health: 60
+      defense: 55
+      pressure_resistance: 10
+    lore:
+      - "Tiered Bonus: Long Tuba \u2014 Grants +0/2/5/10 respiration."
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
