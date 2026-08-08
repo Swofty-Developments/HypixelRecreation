@@ -8,7 +8,7 @@ import net.minestom.server.event.player.PlayerBlockInteractEvent;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 
 import java.util.List;
@@ -90,8 +90,8 @@ public abstract class MapHandler {
                                              Block originalBlock,
                                              int delaySeconds) {
         MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (game.getGameStatus() == GameStatus.IN_PROGRESS) {
-                game.getInstanceContainer().setBlock(position, originalBlock);
+            if (game.getState() == GameState.IN_PROGRESS) {
+                game.setBlock(position, originalBlock);
             }
         }).delay(TaskSchedule.seconds(delaySeconds)).schedule();
     }

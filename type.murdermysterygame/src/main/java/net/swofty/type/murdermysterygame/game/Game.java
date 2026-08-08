@@ -1,37 +1,48 @@
 package net.swofty.type.murdermysterygame.game;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.hollowcube.polar.PolarLoader;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.color.TeamColor;
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.metadata.item.ItemEntityMeta;
+import net.minestom.server.event.Event;
 import net.minestom.server.instance.InstanceContainer;
+import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.network.packet.server.play.TeamsPacket;
 import net.minestom.server.tag.Tag;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.ServerType;
+import net.swofty.commons.ServiceType;
 import net.swofty.commons.murdermystery.MurderMysteryGameType;
 import net.swofty.commons.murdermystery.MurderMysteryLeaderboardMode;
 import net.swofty.commons.murdermystery.map.MurderMysteryMapsConfig;
+import net.swofty.type.game.game.AbstractGame;
+import net.swofty.type.game.game.CountdownConfig;
+import net.swofty.type.game.game.GameState;
+import net.swofty.type.game.game.Game.JoinResult;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.generic.data.datapoints.DatapointMurderMysteryModeStats;
 import net.swofty.type.generic.data.handlers.MurderMysteryDataHandler;
+import net.swofty.type.generic.event.HypixelEventHandler;
 import net.swofty.type.generic.experience.PlayerExperienceHandler;
+import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.gold.GoldManager;
+import net.swofty.type.murdermysterygame.replay.MurderMysteryReplayManager;
 import net.swofty.type.murdermysterygame.role.GameRole;
 import net.swofty.type.murdermysterygame.role.RoleManager;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
@@ -41,28 +52,21 @@ import java.io.File;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import net.minestom.server.color.TeamColor;
 
 @Getter
-public class Game {
+public class Game extends AbstractGame<MurderMysteryPlayer> {
     public static final Tag<Boolean> ELIMINATED_TAG = Tag.Boolean("eliminated");
 
-    private final InstanceContainer instanceContainer;
     private final MurderMysteryGameType gameType;
-    private final String gameId = UUID.randomUUID().toString();
     private final MurderMysteryMapsConfig.MapEntry mapEntry;
 
-    private final List<MurderMysteryPlayer> players = new ArrayList<>();
-    private final List<UUID> disconnectedPlayerUuids = new ArrayList<>();
     private final RoleManager roleManager;
     private final GoldManager goldManager;
     private final WeaponManager weaponManager;
-    private final GameCountdown countdown;
-
-    @Setter
-    private GameStatus gameStatus;
+    private MurderMysteryReplayManager replayManager;
 
     private boolean murdererReceivedSword = false;
+    private boolean forceCountdownAnnouncements = false;
     private long gameStartTime = 0;
     private long murdererSwordTime = 0;
     private Entity droppedDetectiveBow = null;
@@ -76,140 +80,155 @@ public class Game {
     public Game(MurderMysteryMapsConfig.MapEntry mapEntry,
                 InstanceContainer instanceContainer,
                 MurderMysteryGameType gameType) {
-        this.mapEntry = mapEntry;
-        this.instanceContainer = instanceContainer;
+        super(instanceContainer, event -> HypixelEventHandler.callCustomEvent((Event) event));
+
         this.gameType = gameType;
+        this.mapEntry = mapEntry;
 
         this.roleManager = new RoleManager(this);
         this.goldManager = new GoldManager(this);
         this.weaponManager = new WeaponManager(this);
-        this.countdown = new GameCountdown(this);
-
-        this.gameStatus = GameStatus.WAITING;
     }
 
-    public void join(MurderMysteryPlayer player) {
-        if (gameStatus != GameStatus.WAITING) {
-            player.sendMessage(Component.text("Game already in progress!", NamedTextColor.RED));
-            player.sendTo(ServerType.MURDER_MYSTERY_LOBBY);
-            return;
-        }
+    @Override
+    protected CountdownConfig getCountdownConfig() {
+        return CountdownConfig.DEFAULT;
+    }
 
-        if (players.size() >= gameType.getMaxPlayers()) {
-            player.sendMessage(Component.text("Game is full!", NamedTextColor.RED));
+    @Override
+    protected void onCountdownCancelled() {
+        forceCountdownAnnouncements = false;
+        super.onCountdownCancelled();
+    }
+
+    @Override
+    public int getMaxPlayers() {
+        return gameType.getMaxPlayers();
+    }
+
+    @Override
+    public int getMinPlayers() {
+        return gameType.getMinPlayers();
+    }
+
+    @Override
+    public JoinResult join(MurderMysteryPlayer player) {
+        JoinResult result = super.join(player);
+        if (!(result instanceof JoinResult.Success)) {
+            if (result instanceof JoinResult.Denied denied) {
+                player.sendMessage(Component.text(denied.reason(), NamedTextColor.RED));
+            }
             player.sendTo(ServerType.MURDER_MYSTERY_LOBBY);
-            return;
+            return result;
         }
 
         setupPlayerForWaiting(player);
-        players.add(player);
-        player.setTag(Tag.String("gameId"), gameId);
 
         broadcastMessage(Component.empty()
                 .append(Component.text(player.getFullDisplayName()))
                 .append(Component.text(" has joined ", NamedTextColor.YELLOW))
                 .append(Component.text("(", NamedTextColor.YELLOW))
-                .append(Component.text(players.size(), NamedTextColor.AQUA))
+                .append(Component.text(getPlayers().size(), NamedTextColor.AQUA))
                 .append(Component.text("/", NamedTextColor.YELLOW))
                 .append(Component.text(gameType.getMaxPlayers(), NamedTextColor.AQUA))
                 .append(Component.text(")!", NamedTextColor.YELLOW)));
 
-        if (hasMinimumPlayers() && !countdown.isActive()) {
-            countdown.startCountdown();
-        }
+        return result;
     }
 
+    @Override
     public void leave(MurderMysteryPlayer player) {
-        players.remove(player);
-        player.removeTag(Tag.String("gameId"));
+        if (getPlayer(player.getUuid()).isEmpty()) return;
+        super.leave(player);
         player.sendTo(ServerType.MURDER_MYSTERY_LOBBY);
 
-        countdown.checkCountdownConditions();
-
-        if (gameStatus == GameStatus.IN_PROGRESS) {
-            checkWinConditions();
+        if (getState() == GameState.COUNTDOWN && !hasMinimumPlayers()) {
+            getCountdown().terminate();
+            forceCountdownAnnouncements = false;
+            setState(GameState.WAITING);
+            broadcastMessage(Component.text("Countdown cancelled - not enough players!", NamedTextColor.RED));
         }
     }
 
     public void disconnect(MurderMysteryPlayer player) {
-        disconnectedPlayerUuids.add(player.getUuid());
-        players.remove(player);
-
-        if (gameStatus == GameStatus.IN_PROGRESS) {
-            checkWinConditions();
+        if (getState() == GameState.IN_PROGRESS) {
+            handleDisconnect(player);
+        } else {
+            leave(player);
         }
     }
 
     public boolean hasDisconnectedPlayer(UUID uuid) {
-        return disconnectedPlayerUuids.contains(uuid);
+        return disconnectedPlayers.containsKey(uuid);
     }
 
     public void rejoin(MurderMysteryPlayer player) {
-        disconnectedPlayerUuids.remove(player.getUuid());
-        players.add(player);
-        player.setTag(Tag.String("gameId"), gameId);
-
-        if (gameStatus == GameStatus.IN_PROGRESS) {
-            GameRole role = roleManager.getRole(player.getUuid());
-            if (role != null) {
-                setupPlayerForGame(player, role);
-                addPlayerToHiddenNametagsTeam(player);
-                player.setInstance(instanceContainer, getWaitingPosition());
-                player.sendMessage(Component.text("You have rejoined the game!", NamedTextColor.GREEN));
-            } else {
-                setupPlayerForSpectator(player);
-                player.setInstance(instanceContainer, getWaitingPosition());
-                player.sendMessage(Component.text("You have rejoined as a spectator.", NamedTextColor.GRAY));
-            }
-        } else if (gameStatus == GameStatus.WAITING) {
-            setupPlayerForWaiting(player);
-            broadcastMessage(Component.empty()
-                    .append(Component.text(player.getFullDisplayName()))
-                    .append(Component.text(" has rejoined ", NamedTextColor.YELLOW))
-                    .append(Component.text("(", NamedTextColor.YELLOW))
-                    .append(Component.text(players.size(), NamedTextColor.AQUA))
-                    .append(Component.text("/", NamedTextColor.YELLOW))
-                    .append(Component.text(gameType.getMaxPlayers(), NamedTextColor.AQUA))
-                    .append(Component.text(")!", NamedTextColor.YELLOW)));
-        } else {
-            setupPlayerForSpectator(player);
-            player.setInstance(instanceContainer, getWaitingPosition());
+        if (!handleRejoin(player)) {
+            player.sendTo(ServerType.MURDER_MYSTERY_LOBBY);
         }
     }
 
-    public void startGame() {
-        gameStatus = GameStatus.IN_PROGRESS;
+    @Override
+    public boolean handleRejoin(MurderMysteryPlayer player) {
+        if (!super.handleRejoin(player)) return false;
+
+        GameRole role = roleManager.getRole(player.getUuid());
+        if (role != null) {
+            setupPlayerForGame(player, role);
+            addPlayerToHiddenNametagsTeam(player);
+            player.setInstance(getInstanceContainer(), getWaitingPosition());
+            player.sendMessage(Component.text("You have rejoined the game!", NamedTextColor.GREEN));
+        } else {
+            setupPlayerForSpectator(player);
+            player.setInstance(getInstanceContainer(), getWaitingPosition());
+            player.sendMessage(Component.text("You have rejoined as a spectator.", NamedTextColor.GRAY));
+        }
+        return true;
+    }
+
+    @Override
+    public void start() {
+        if (getState() == GameState.IN_PROGRESS) return;
+        super.start();
+        if (getState() != GameState.IN_PROGRESS) return;
+        forceCountdownAnnouncements = false;
+
         gameStartTime = System.currentTimeMillis();
         murdererReceivedSword = false;
 
         roleManager.assignRoles();
         setupHiddenNametags();
 
-        for (MurderMysteryPlayer player : players) {
+        for (MurderMysteryPlayer player : getPlayers()) {
             GameRole role = roleManager.getRole(player.getUuid());
             setupPlayerForGame(player, role);
             announceRole(player, role);
         }
 
+        replayManager = new MurderMysteryReplayManager(this, new ProxyService(ServiceType.REPLAY));
+        replayManager.startRecording();
         broadcastMessage(Component.text("Teaming with the Murderer is not allowed!", NamedTextColor.RED, net.kyori.adventure.text.format.TextDecoration.BOLD));
-
         goldManager.startSpawning();
         startKillZoneCheck();
         startMurdererSwordCountdown();
         startSurvivalRewards();
 
         MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (gameStatus == GameStatus.IN_PROGRESS) {
+            if (getState() == GameState.IN_PROGRESS) {
                 endGame(WinCondition.TIME_EXPIRED);
             }
         }).delay(TaskSchedule.minutes(5)).schedule();
+    }
+
+    public void startGame() {
+        start();
     }
 
     private void startMurdererSwordCountdown() {
         final int[] secondsRemaining = {30};
 
         var task = MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (gameStatus != GameStatus.IN_PROGRESS) return;
+            if (getState() != GameState.IN_PROGRESS) return;
 
             secondsRemaining[0]--;
 
@@ -223,7 +242,7 @@ public class Game {
         }).delay(TaskSchedule.seconds(1)).repeat(TaskSchedule.seconds(1)).schedule();
 
         MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (gameStatus != GameStatus.IN_PROGRESS) return;
+            if (getState() != GameState.IN_PROGRESS) return;
             task.cancel();
             murdererReceivedSword = true;
             murdererSwordTime = System.currentTimeMillis();
@@ -240,11 +259,11 @@ public class Game {
 
     private void startSurvivalRewards() {
         MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (gameStatus != GameStatus.IN_PROGRESS) return;
+            if (getState() != GameState.IN_PROGRESS) return;
 
             MurderMysteryLeaderboardMode leaderboardMode = MurderMysteryLeaderboardMode.fromGameType(gameType);
 
-            for (MurderMysteryPlayer player : players) {
+            for (MurderMysteryPlayer player : getPlayers()) {
                 if (!player.isEliminated()) {
                     player.addTokens(40);
 
@@ -274,9 +293,9 @@ public class Game {
                 mapEntry.getName().toLowerCase().contains("aquarium");
 
         MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (gameStatus != GameStatus.IN_PROGRESS) return;
+            if (getState() != GameState.IN_PROGRESS) return;
 
-            List<MurderMysteryPlayer> playersToCheck = new ArrayList<>(players);
+            List<MurderMysteryPlayer> playersToCheck = new ArrayList<>(getPlayers());
             for (MurderMysteryPlayer player : playersToCheck) {
                 if (player.isEliminated()) continue;
 
@@ -309,6 +328,10 @@ public class Game {
         victim.setTag(ELIMINATED_TAG, true);
         setupPlayerForSpectator(victim);
 
+        if (replayManager != null) {
+            replayManager.recordEnvironmentalDeath(victim, deathReason);
+        }
+
         sendDeathMessage(victim, deathReason);
 
         if (victimRole == GameRole.DETECTIVE) {
@@ -321,8 +344,8 @@ public class Game {
     private void setupPlayerForWaiting(MurderMysteryPlayer player) {
         Pos waitingPos = getWaitingPosition();
 
-        if (player.getInstance() == null || !player.getInstance().getUuid().equals(instanceContainer.getUuid())) {
-            player.setInstance(instanceContainer, waitingPos);
+        if (player.getInstance() == null || !player.getInstance().getUuid().equals(getInstanceContainer().getUuid())) {
+            player.setInstance(getInstanceContainer(), waitingPos);
         } else {
             player.teleport(waitingPos);
         }
@@ -371,7 +394,7 @@ public class Game {
         player.getInventory().setItemStack(8,
                 TypeMurderMysteryGameLoader.getItemHandler().getItem("leave_game").getItemStack());
 
-        for (MurderMysteryPlayer otherPlayer : players) {
+        for (MurderMysteryPlayer otherPlayer : getPlayers()) {
             if (!otherPlayer.equals(player) && !otherPlayer.isEliminated()) {
                 player.removeViewer(otherPlayer);
                 player.updateOldViewer(otherPlayer);
@@ -385,7 +408,7 @@ public class Game {
     }
 
     private void setupHiddenNametags() {
-        List<String> playerNames = players.stream()
+        List<String> playerNames = getPlayers().stream()
                 .map(MurderMysteryPlayer::getUsername)
                 .toList();
 
@@ -405,13 +428,13 @@ public class Game {
                 )
         );
 
-        for (MurderMysteryPlayer player : players) {
+        for (MurderMysteryPlayer player : getPlayers()) {
             player.sendPacket(createTeamPacket);
         }
     }
 
     private void addPlayerToHiddenNametagsTeam(MurderMysteryPlayer newPlayer) {
-        List<String> allPlayerNames = players.stream()
+        List<String> allPlayerNames = getPlayers().stream()
                 .map(MurderMysteryPlayer::getUsername)
                 .toList();
 
@@ -437,7 +460,7 @@ public class Game {
                 new TeamsPacket.AddEntitiesToTeamAction(List.of(newPlayer.getUsername()))
         );
 
-        for (MurderMysteryPlayer player : players) {
+        for (MurderMysteryPlayer player : getPlayers()) {
             if (!player.equals(newPlayer)) {
                 player.sendPacket(addPlayerPacket);
             }
@@ -561,6 +584,10 @@ public class Game {
         victim.setTag(ELIMINATED_TAG, true);
         setupPlayerForSpectator(victim);
 
+        if (replayManager != null) {
+            replayManager.recordKill(killer, victim, killType);
+        }
+
         if (gameType == MurderMysteryGameType.ASSASSINS) {
             handleAssassinKill(killer, victim);
         } else {
@@ -607,9 +634,13 @@ public class Game {
         Entity bowEntity = new Entity(EntityType.ITEM);
         ItemEntityMeta meta = (ItemEntityMeta) bowEntity.getEntityMeta();
         meta.setItem(ItemStack.of(Material.BOW));
-        bowEntity.setInstance(instanceContainer, deathPos);
+        bowEntity.setInstance(getInstanceContainer(), deathPos);
         droppedDetectiveBow = bowEntity;
         detectiveBowPickedUp = false;
+
+        if (replayManager != null) {
+            replayManager.recordBowDrop();
+        }
 
         broadcastMessage(Component.empty()
                 .append(Component.text("The Bow has been dropped! ", NamedTextColor.GOLD))
@@ -627,6 +658,10 @@ public class Game {
             detectiveBowPickedUp = true;
 
             weaponManager.giveInnocentBow(player);
+
+            if (replayManager != null) {
+                replayManager.recordBowPickup(player);
+            }
 
             broadcastMessage(Component.text("A player has picked up the Bow!", NamedTextColor.YELLOW));
         }
@@ -687,8 +722,9 @@ public class Game {
         }
     }
 
+    @Override
     public void checkWinConditions() {
-        if (gameStatus != GameStatus.IN_PROGRESS) return;
+        if (getState() != GameState.IN_PROGRESS) return;
 
         if (gameType == MurderMysteryGameType.ASSASSINS) {
             int aliveCount = countAlivePlayers();
@@ -709,12 +745,16 @@ public class Game {
     }
 
     private void endGame(WinCondition condition) {
-        gameStatus = GameStatus.ENDING;
+        setState(GameState.ENDING);
         goldManager.stopSpawning();
+        if (replayManager != null) {
+            replayManager.recordGameEnd(condition.name(), getLastStandingPlayer());
+            replayManager.stopRecording();
+        }
 
         recordGameStats(condition);
 
-        for (MurderMysteryPlayer player : players) {
+        for (MurderMysteryPlayer player : getPlayers()) {
             GameRole role = roleManager.getRole(player.getUuid());
             if (role == GameRole.MURDERER) {
                 int kills = murdererKillsThisGame.getOrDefault(player.getUuid(), 0);
@@ -729,7 +769,7 @@ public class Game {
             int maxKills = 0;
             boolean tied = false;
 
-            for (MurderMysteryPlayer player : players) {
+            for (MurderMysteryPlayer player : getPlayers()) {
                 int kills = player.getKillsThisGame();
                 if (kills > maxKills) {
                     maxKills = kills;
@@ -750,7 +790,7 @@ public class Game {
         boolean innocentsWon = (condition == WinCondition.INNOCENTS_WIN || condition == WinCondition.TIME_EXPIRED);
         boolean murdererWon = (condition == WinCondition.MURDERER_WINS);
 
-        for (MurderMysteryPlayer player : players) {
+        for (MurderMysteryPlayer player : getPlayers()) {
             GameRole role = roleManager.getRole(player.getUuid());
             if (role == null) continue;
 
@@ -826,31 +866,31 @@ public class Game {
                 Component.empty(),
                 Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(5), Duration.ofMillis(500))
         );
-        players.forEach(p -> p.showTitle(title));
+        getPlayers().forEach(p -> p.showTitle(title));
 
         MinecraftServer.getSchedulerManager().buildTask(() -> {
             sendGameResults(condition);
         }).delay(TaskSchedule.seconds(2)).schedule();
 
         MinecraftServer.getSchedulerManager().buildTask(() -> {
-            List<MurderMysteryPlayer> playersToRemove = new ArrayList<>(players);
+            List<MurderMysteryPlayer> playersToRemove = new ArrayList<>(getPlayers());
             for (MurderMysteryPlayer player : playersToRemove) {
                 leave(player);
             }
-            players.clear();
             roleManager.clear();
             murdererKiller = null;
 
             resetInstance();
 
-            gameStatus = GameStatus.WAITING;
+            gameStartTime = 0;
+            setState(GameState.WAITING);
         }).delay(TaskSchedule.seconds(10)).schedule();
     }
 
     private void sendGameResults(WinCondition condition) {
         String thickBar = "§a§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
 
-        for (MurderMysteryPlayer player : players) {
+        for (MurderMysteryPlayer player : getPlayers()) {
             player.sendMessage(Component.text(thickBar));
             player.sendMessage(Component.text("                    ")
                     .append(Component.text("MURDER MYSTERY", NamedTextColor.WHITE, TextDecoration.BOLD)));
@@ -927,7 +967,7 @@ public class Game {
         boolean innocentsWon = (condition == WinCondition.INNOCENTS_WIN || condition == WinCondition.TIME_EXPIRED);
         boolean murdererWon = (condition == WinCondition.MURDERER_WINS);
 
-        for (MurderMysteryPlayer player : players) {
+        for (MurderMysteryPlayer player : getPlayers()) {
             MurderMysteryDataHandler handler = MurderMysteryDataHandler.getUser(player);
             if (handler == null) continue;
 
@@ -974,25 +1014,26 @@ public class Game {
         }
     }
 
-    private boolean hasMinimumPlayers() {
-        return players.size() >= gameType.getMinPlayers();
+    @Override
+    public boolean hasMinimumPlayers() {
+        return getPlayers().size() >= gameType.getMinPlayers();
     }
 
     private int countAlivePlayers() {
-        return (int) players.stream()
+        return (int) getPlayers().stream()
                 .filter(p -> !p.isEliminated())
                 .count();
     }
 
     private int countAliveNonMurderers() {
-        return (int) players.stream()
+        return (int) getPlayers().stream()
                 .filter(p -> !p.isEliminated())
                 .filter(p -> roleManager.getRole(p.getUuid()) != GameRole.MURDERER)
                 .count();
     }
 
     private MurderMysteryPlayer getLastStandingPlayer() {
-        return players.stream()
+        return getPlayers().stream()
                 .filter(p -> !p.isEliminated())
                 .findFirst()
                 .orElse(null);
@@ -1003,22 +1044,52 @@ public class Game {
     }
 
     public void forceStart(int seconds) {
-        if (gameStatus != GameStatus.WAITING) return;
-        countdown.forceStart(seconds);
+        if (getState() != GameState.WAITING && getState() != GameState.COUNTDOWN) return;
+        if (!hasMinimumPlayers()) return;
+        if (!getCountdown().isActive() && !getCountdown().start()) return;
+        setState(GameState.COUNTDOWN);
+        forceCountdownAnnouncements = true;
+        broadcastMessage(Component.text("Game force started! Starting in " + seconds + " seconds!", NamedTextColor.GREEN));
+        getCountdown().setRemainingSeconds(seconds);
     }
 
     public Audience getPlayersAsAudience() {
-        return Audience.audience(players);
+        return Audience.audience(getPlayers().stream().map(MurderMysteryPlayer::getServerPlayer).toList());
     }
 
-    private void broadcastMessage(Component message) {
+    public InstanceContainer getInstanceContainer() {
+        return (InstanceContainer) getInstance();
+    }
+
+    public List<UUID> getDisconnectedPlayerUuids() {
+        return new ArrayList<>(disconnectedPlayers.keySet());
+    }
+
+    public void broadcastMessage(Component message) {
         getPlayersAsAudience().sendMessage(message);
+        if (replayManager != null) replayManager.recordAnnouncement(message);
+    }
+
+    public void setBlock(Point position, Block block) {
+        Block previous = getInstanceContainer().getBlock(position);
+        getInstanceContainer().setBlock(position, block);
+        if (replayManager != null) {
+            replayManager.recordBlockChange(position.blockX(), position.blockY(), position.blockZ(),
+                    previous.stateId(), block.stateId());
+        }
+    }
+
+    public void playSound(Sound sound, Pos position) {
+        getInstanceContainer().playSound(sound, position);
+        if (replayManager != null) {
+            replayManager.recordSound(sound, position.x(), position.y(), position.z());
+        }
     }
 
     @lombok.SneakyThrows
     private void resetInstance() {
         // Remove all entities from the instance (dropped items, etc.)
-        for (Entity entity : instanceContainer.getEntities()) {
+        for (Entity entity : getInstanceContainer().getEntities()) {
             if (!(entity instanceof Player)) {
                 entity.remove();
             }
@@ -1027,10 +1098,10 @@ public class Game {
         // Reload the map from the polar file by unloading all chunks
         // When chunks are re-loaded, they'll come fresh from the PolarLoader
         PolarLoader loader = new PolarLoader(new File("./configuration/murdermystery/" + mapEntry.getId() + ".polar").toPath());
-        instanceContainer.setChunkLoader(loader);
+        getInstanceContainer().setChunkLoader(loader);
 
         // Unload all chunks so they reload fresh from the polar file
-        instanceContainer.getChunks().forEach(instanceContainer::unloadChunk);
+        getInstanceContainer().getChunks().forEach(getInstanceContainer()::unloadChunk);
     }
 
     private enum WinCondition {
@@ -1042,7 +1113,7 @@ public class Game {
      * @return true if game is in WAITING state and can accept players
      */
     public boolean canAcceptNewPlayers() {
-        return gameStatus == GameStatus.WAITING;
+        return getState() == GameState.WAITING || getState() == GameState.COUNTDOWN;
     }
 
     /**
@@ -1050,7 +1121,7 @@ public class Game {
      * @return number of slots available for new players
      */
     public int getAvailableSlots() {
-        return Math.max(0, gameType.getMaxPlayers() - players.size());
+        return Math.max(0, gameType.getMaxPlayers() - getPlayers().size());
     }
 
     /**
@@ -1058,10 +1129,10 @@ public class Game {
      * @return null if warp is allowed, otherwise an error message
      */
     public String canAcceptPartyWarp() {
-        if (gameStatus == GameStatus.IN_PROGRESS) {
+        if (getState() == GameState.IN_PROGRESS) {
             return "Cannot warp - game has already started";
         }
-        if (gameStatus == GameStatus.ENDING) {
+        if (getState() == GameState.ENDING) {
             return "Cannot warp - game is ending";
         }
         return null; // Warp is allowed

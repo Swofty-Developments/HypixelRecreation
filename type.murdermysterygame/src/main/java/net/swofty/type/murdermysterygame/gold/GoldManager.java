@@ -17,7 +17,7 @@ import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.murdermystery.map.MurderMysteryMapsConfig;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 
 import net.minestom.server.inventory.PlayerInventory;
@@ -64,7 +64,7 @@ public class GoldManager {
         }).delay(TaskSchedule.seconds(3)).repeat(TaskSchedule.seconds(SPAWN_INTERVAL_SECONDS)).schedule();
 
         pickupCheckTask = MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (game.getGameStatus() != GameStatus.IN_PROGRESS) return;
+            if (game.getState() != GameState.IN_PROGRESS) return;
 
             List<Entity> goldToRemove = new ArrayList<>();
 

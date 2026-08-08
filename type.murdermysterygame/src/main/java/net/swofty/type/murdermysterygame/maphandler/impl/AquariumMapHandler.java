@@ -17,7 +17,7 @@ import net.minestom.server.item.component.PotionContents;
 import net.minestom.server.potion.PotionType;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.maphandler.InteractionType;
 import net.swofty.type.murdermysterygame.maphandler.InteractiveElement;
 import net.swofty.type.murdermysterygame.maphandler.MapHandler;
@@ -128,7 +128,7 @@ public class AquariumMapHandler extends MapHandler {
         AtomicInteger holdCounter = new AtomicInteger(0);
 
         var task = MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (game.getGameStatus() != GameStatus.IN_PROGRESS) {
+            if (game.getState() != GameState.IN_PROGRESS) {
                 // Restore original state and exit
                 restoreVolume(game, volumeSnapshot);
                 bridgeRaising = false;
@@ -148,15 +148,15 @@ public class AquariumMapHandler extends MapHandler {
 
                     // When raising, just set leaving position to AIR (bridge moves up, leaves air behind)
                     Point leavingPos = new Vec(originalPos.x(), originalPos.y() + h - 1, originalPos.z());
-                    game.getInstanceContainer().setBlock(leavingPos, Block.AIR);
+                    game.setBlock(leavingPos, Block.AIR);
 
                     // Place bridge block at new position
                     Point newPos = new Vec(originalPos.x(), originalPos.y() + h, originalPos.z());
-                    game.getInstanceContainer().setBlock(newPos, block);
+                    game.setBlock(newPos, block);
                 }
 
                 // Play piston sound for bridge movement
-                game.getInstanceContainer().playSound(
+                game.playSound(
                         Sound.sound(Key.key("minecraft:block.piston.extend"), Sound.Source.BLOCK, 1f, 1f),
                         new Pos(0, 72, 54));
 
@@ -176,14 +176,14 @@ public class AquariumMapHandler extends MapHandler {
 
                     Point leavingPos = new Vec(originalPos.x(), originalPos.y() + h, originalPos.z());
                     Block originalBlock = volumeSnapshot.get(leavingPos);
-                    game.getInstanceContainer().setBlock(leavingPos, originalBlock != null ? originalBlock : Block.AIR);
+                    game.setBlock(leavingPos, originalBlock != null ? originalBlock : Block.AIR);
 
                     Point newPos = new Vec(originalPos.x(), originalPos.y() + h - 1, originalPos.z());
-                    game.getInstanceContainer().setBlock(newPos, block);
+                    game.setBlock(newPos, block);
                 }
 
                 // Play piston sound for bridge movement
-                game.getInstanceContainer().playSound(
+                game.playSound(
                         Sound.sound(Key.key("minecraft:block.piston.contract"), Sound.Source.BLOCK, 1f, 1f),
                         new Pos(0, 72, 54));
 
@@ -203,7 +203,7 @@ public class AquariumMapHandler extends MapHandler {
 
     private void restoreVolume(Game game, Map<Point, Block> volumeSnapshot) {
         for (Map.Entry<Point, Block> entry : volumeSnapshot.entrySet()) {
-            game.getInstanceContainer().setBlock(entry.getKey(), entry.getValue());
+            game.setBlock(entry.getKey(), entry.getValue());
         }
     }
 
@@ -224,23 +224,23 @@ public class AquariumMapHandler extends MapHandler {
                 Block block = game.getInstanceContainer().getBlock(pos);
                 if (block == Block.LIGHT_BLUE_STAINED_GLASS) {
                     removedBlocks.put(pos, block);
-                    game.getInstanceContainer().setBlock(pos, Block.AIR);
+                    game.setBlock(pos, Block.AIR);
                 }
             }
         }
 
         // Play glass breaking sound
-        game.getInstanceContainer().playSound(
+        game.playSound(
                 Sound.sound(Key.key("minecraft:block.glass.break"), Sound.Source.BLOCK, 1f, 1f),
                 new Pos(-36, 65, 23));
 
         // Regenerate after 5 seconds
         MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (game.getGameStatus() == GameStatus.IN_PROGRESS) {
+            if (game.getState() == GameState.IN_PROGRESS) {
                 for (Map.Entry<Point, Block> entry : removedBlocks.entrySet()) {
-                    game.getInstanceContainer().setBlock(entry.getKey(), entry.getValue());
+                    game.setBlock(entry.getKey(), entry.getValue());
                 }
-                game.getInstanceContainer().playSound(
+                game.playSound(
                         Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.BLOCK, 1f, 1f),
                         new Pos(-36, 65, 23));
             }

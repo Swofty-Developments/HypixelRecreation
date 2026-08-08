@@ -13,7 +13,7 @@ import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 
 public class ActionPlayerChat implements HypixelEventClass {
@@ -49,21 +49,25 @@ public class ActionPlayerChat implements HypixelEventClass {
         }
 
         // Dead players can only talk to other dead players
-        if (player.isEliminated() && game.getGameStatus() == GameStatus.IN_PROGRESS) {
+        if (player.isEliminated() && game.getState() == GameState.IN_PROGRESS) {
+            Component chatMessage = Component.text("[DEAD] ", NamedTextColor.GRAY)
+                    .append(Component.text(player.getUsername() + ": ", NamedTextColor.WHITE))
+                    .append(Component.text(finalMessage, NamedTextColor.GRAY));
             for (MurderMysteryPlayer gamePlayer : game.getPlayers()) {
                 if (gamePlayer.isEliminated()) {
-                    gamePlayer.sendMessage(Component.text("[DEAD] ", NamedTextColor.GRAY)
-                            .append(Component.text(player.getUsername() + ": ", NamedTextColor.WHITE))
-                            .append(Component.text(finalMessage, NamedTextColor.GRAY)));
+                    gamePlayer.sendMessage(chatMessage);
                 }
             }
+            if (game.getReplayManager() != null) game.getReplayManager().recordPlayerChat(player, chatMessage);
             return;
         }
 
         // Normal chat
+        Component chatMessage = Component.text(player.getLegacyRankPrefix() + StringUtility.getTextFromComponent(player.getName()) + ": ", NamedTextColor.WHITE)
+                .append(Component.text(finalMessage, NamedTextColor.WHITE));
         for (MurderMysteryPlayer gamePlayer : game.getPlayers()) {
-            gamePlayer.sendMessage(Component.text(player.getLegacyRankPrefix() + StringUtility.getTextFromComponent(player.getName()) + ": ", NamedTextColor.WHITE)
-                    .append(Component.text(finalMessage, NamedTextColor.WHITE)));
+            gamePlayer.sendMessage(chatMessage);
         }
+        if (game.getReplayManager() != null) game.getReplayManager().recordPlayerChat(player, chatMessage);
     }
 }

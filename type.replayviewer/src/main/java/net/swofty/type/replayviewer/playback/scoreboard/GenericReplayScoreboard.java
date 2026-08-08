@@ -80,7 +80,9 @@ public class GenericReplayScoreboard implements ReplayScoreboard {
         lines.add(Component.empty());
 
         lines.add(I18n.t("replays.game").color(NamedTextColor.WHITE)
-                .append(I18n.t("replays.bedwars").color(NamedTextColor.GREEN)));
+                .append("MURDER_MYSTERY".equals(session.getMetadata().descriptor().gameType())
+                        ? Component.text("Murder Mystery", NamedTextColor.GREEN)
+                        : I18n.t("replays.bedwars").color(NamedTextColor.GREEN)));
         lines.add(I18n.t("replays.mode").color(NamedTextColor.WHITE)
                 .append(Component.text(formatMode(session.gameModeId()), NamedTextColor.GREEN)));
 
