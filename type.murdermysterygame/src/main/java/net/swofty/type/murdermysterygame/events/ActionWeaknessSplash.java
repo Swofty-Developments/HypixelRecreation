@@ -8,7 +8,7 @@ import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.protection.WeaknessProtectionManager;
 import net.swofty.type.murdermysterygame.role.GameRole;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
@@ -27,7 +27,7 @@ public class ActionWeaknessSplash implements HypixelEventClass {
         if (event.getPotion().effect() != PotionEffect.WEAKNESS) return;
 
         Game game = TypeMurderMysteryGameLoader.getPlayerGame(player);
-        if (game == null || game.getGameStatus() != GameStatus.IN_PROGRESS) return;
+        if (game == null || game.getState() != GameState.IN_PROGRESS) return;
 
         // Check if this player is the murderer
         GameRole role = game.getRoleManager().getRole(player.getUuid());

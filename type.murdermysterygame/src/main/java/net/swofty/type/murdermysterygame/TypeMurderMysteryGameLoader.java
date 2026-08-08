@@ -45,6 +45,8 @@ import net.swofty.commons.protocol.objects.orchestrator.GameHeartbeatProtocol;
 import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.game.game.GameObject;
+import net.swofty.type.game.game.GameState;
+import net.swofty.type.game.replay.api.ReplayAdapterRegistry;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.HypixelTypeLoader;
@@ -63,6 +65,7 @@ import net.swofty.type.murdermysterygame.item.SimpleInteractableItem;
 import net.swofty.type.murdermysterygame.item.SimpleInteractableItemHandler;
 import net.swofty.type.murdermysterygame.maphandler.MapHandler;
 import net.swofty.type.murdermysterygame.maphandler.MapHandlerRegistry;
+import net.swofty.type.murdermysterygame.replay.MurderMysteryReplayAdapter;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,6 +80,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static net.swofty.type.generic.HypixelGenericLoader.getLoadedPlayers;
 
@@ -89,6 +93,9 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
 
     @Getter
     public static final SimpleInteractableItemHandler itemHandler = new SimpleInteractableItemHandler();
+
+    @Getter
+    private static final ReplayAdapterRegistry<Function<Game, MurderMysteryReplayAdapter>> replayAdapters = new ReplayAdapterRegistry<>();
 
     @Getter
     private static MurderMysteryMapsConfig mapsConfig;
@@ -144,6 +151,7 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
     @Override
     public void onInitialize(MinecraftServer server) {
         initializePolyp();
+        replayAdapters.register(MurderMysteryReplayAdapter.GAME_TYPE, MurderMysteryReplayAdapter::new);
         gson = new GsonBuilder().create();
         instanceManager = MinecraftServer.getInstanceManager();
         fullbrightDimension = MinecraftServer.getDimensionTypeRegistry().register("fullbright", DimensionType.builder().ambientLight(1f).setAttribute(EnvironmentAttribute.AMBIENT_LIGHT_COLOR, Color.WHITE).build());
@@ -212,6 +220,8 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
                 commonsGame.setType(ServerType.MURDER_MYSTERY_GAME);
                 commonsGame.setMap(internalGame.getMapEntry().getName());
                 commonsGame.setGameTypeName(internalGame.getGameType().name());
+                commonsGame.setAcceptingJoins(internalGame.getState() == GameState.WAITING
+                        || internalGame.getState() == GameState.COUNTDOWN);
 
                 List<UUID> playerUuids = new ArrayList<>();
                 for (MurderMysteryPlayer player : internalGame.getPlayers()) {
@@ -268,7 +278,7 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
 
     @Override
     public List<ServiceType> getRequiredServices() {
-        return List.of(ServiceType.ORCHESTRATOR);
+        return List.of(ServiceType.ORCHESTRATOR, ServiceType.REPLAY);
     }
 
     @Override

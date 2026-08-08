@@ -11,7 +11,7 @@ import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.scoreboard.HypixelScoreboard;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.role.GameRole;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 
@@ -44,7 +44,7 @@ public class MurderMysteryGameScoreboard {
 					lines.add(I18n.t("scoreboard.common.date_line", Argument.tagResolver(Formatter.date("date", LocalDateTime.now(ZoneId.systemDefault()))), Argument.string("id", HypixelConst.getServerName())));
 					lines.add(Component.space());
 
-					if (game.getGameStatus() == GameStatus.WAITING) {
+					if (game.getState() == GameState.WAITING || game.getState() == GameState.COUNTDOWN) {
 						lines.add(I18n.t("scoreboard.murdermystery_game.map_line", Component.text(game.getMapEntry().getName())));
 						lines.add(I18n.t("scoreboard.murdermystery_game.players_line",
 							Component.text(String.valueOf(game.getPlayers().size())),
@@ -52,7 +52,7 @@ public class MurderMysteryGameScoreboard {
 						lines.add(Component.space());
 						if (game.getCountdown().isActive()) {
 							lines.add(I18n.t("scoreboard.murdermystery_game.starting_in_line",
-								Component.text(String.valueOf(game.getCountdown().getSecondsRemaining()))));
+								Component.text(String.valueOf(game.getCountdown().getRemainingSeconds()))));
 						} else {
 							lines.add(I18n.t("scoreboard.murdermystery_game.waiting_for_players"));
 						}
@@ -67,7 +67,7 @@ public class MurderMysteryGameScoreboard {
 							.append(Component.text("    "))
 							.append(I18n.t("scoreboard.murdermystery_game.actionbar.detective_chance", Component.text(String.valueOf(detectiveChance))));
 						player.sendActionBar(actionBar);
-					} else if (game.getGameStatus() == GameStatus.IN_PROGRESS) {
+					} else if (game.getState() == GameState.IN_PROGRESS) {
 						GameRole role = game.getRoleManager().getRole(player.getUuid());
 
 						if (player.isEliminated()) {
@@ -119,7 +119,7 @@ public class MurderMysteryGameScoreboard {
 
 							lines.add(I18n.t("scoreboard.murdermystery_game.map_line", Component.text(game.getMapEntry().getName())));
 						}
-					} else if (game.getGameStatus() == GameStatus.ENDING) {
+					} else if (game.getState() == GameState.ENDING) {
 						lines.add(I18n.t("scoreboard.murdermystery_game.game_over"));
 						lines.add(Component.space());
 

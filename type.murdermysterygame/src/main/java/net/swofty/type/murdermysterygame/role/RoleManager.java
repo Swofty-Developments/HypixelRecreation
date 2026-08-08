@@ -63,6 +63,14 @@ public class RoleManager {
         return assassinTargets.get(hunterUuid);
     }
 
+    public Map<UUID, GameRole> getRoles() {
+        return Map.copyOf(playerRoles);
+    }
+
+    public Map<UUID, UUID> getAssassinTargets() {
+        return Map.copyOf(assassinTargets);
+    }
+
     public void reassignTarget(UUID hunterUuid, UUID newTarget) {
         assassinTargets.put(hunterUuid, newTarget);
     }
