@@ -1,0 +1,100 @@
+items:
+  - id: SILENT_PEARL
+    material: ender_pearl
+    name: "Silent Pearl"
+    rarity: RARE
+
+  - id: REMNANT_OF_THE_EYE
+    material: player_head
+    name: "Remnant of the Eye"
+    rarity: RARE
+
+  - id: STONK
+    material: golden_pickaxe
+    name: "Stonk"
+    rarity: EPIC
+
+  - id: ENDERMAN_MASK
+    material: player_head
+    name: "Enderman Mask"
+    rarity: RARE
+
+  - id: NOPE_THE_FISH
+    material: cod
+    name: "Nope the Fish"
+    rarity: RARE
+
+  - id: PIGS_FOOT
+    material: rabbit_foot
+    name: "Pig's Foot"
+    rarity: RARE
+
+  - id: DRAGON_ESSENCE
+    material: dragon_breath
+    name: "Dragon Essence"
+    rarity: COMMON
+
+  - id: DRAGON_SCALE
+    material: prismarine_crystals
+    name: "Dragon Scale"
+    rarity: RARE
+
+  - id: DRAGON_CLAW
+    material: prismarine_shard
+    name: "Dragon Claw"
+    rarity: LEGENDARY
+
+  - id: DRAGON_HORN
+    material: player_head
+    name: "Dragon Horn"
+    rarity: LEGENDARY
+
+  - id: ENDERMAN_CORTEX_REWRITER
+    material: enchanted_book
+    name: "Enderman Cortex Rewriter"
+    rarity: LEGENDARY
+
+  - id: MITE_GEL
+    material: slime_ball
+    name: "Mite Gel"
+    rarity: COMMON
+
+  - id: PEARLESCENT_DYE
+    material: purple_dye
+    name: "Pearlescent Dye"
+    rarity: LEGENDARY
+
+  - id: YOUNG_DRAGON_FRAGMENT
+    material: player_head
+    name: "Young Dragon Fragment"
+    rarity: RARE
+
+  - id: OLD_DRAGON_FRAGMENT
+    material: player_head
+    name: "Old Dragon Fragment"
+    rarity: RARE
+
+  - id: STRONG_DRAGON_FRAGMENT
+    material: player_head
+    name: "Strong Dragon Fragment"
+    rarity: RARE
+
+  - id: WISE_DRAGON_FRAGMENT
+    material: player_head
+    name: "Wise Dragon Fragment"
+    rarity: RARE
+
+  - id: UNSTABLE_DRAGON_FRAGMENT
+    material: player_head
+    name: "Unstable Dragon Fragment"
+    rarity: RARE
+
+  - id: PROTECTOR_DRAGON_FRAGMENT
+    material: player_head
+    name: "Protector Dragon Fragment"
+    rarity: RARE
+
+  - id: SUPERIOR_DRAGON_FRAGMENT
+    material: player_head
+    name: "Superior Dragon Fragment"
+    rarity: RARE

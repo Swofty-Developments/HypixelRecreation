@@ -11,6 +11,7 @@ public enum BestiaryCategories {
     YOUR_ISLAND("§aYour island", BestiaryCategory.PRIVATE_ISLAND.values()),
     HUB("§aHub", BestiaryCategory.HUB.values()),
     DEEP_CAVERNS("§bDeep Caverns", BestiaryCategory.DEEP_CAVERNS.values()),
+    THE_END("§dThe End", BestiaryCategory.THE_END.values()),
     ;
 
     private final String displayName;

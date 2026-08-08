@@ -1,0 +1,44 @@
+items:
+  - id: ENDER_NECKLACE
+    material: player_head
+    name: "Ender Necklace"
+    rarity: EPIC
+    default_statistics:
+      health: 15
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: NECKLACE
+
+  - id: ENDER_CLOAK
+    material: player_head
+    name: "Ender Cloak"
+    rarity: EPIC
+    default_statistics:
+      health: 15
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CLOAK
+
+  - id: ENDER_BELT
+    material: player_head
+    name: "Ender Belt"
+    rarity: EPIC
+    default_statistics:
+      health: 15
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BELT
+
+  - id: ENDER_GAUNTLET
+    material: player_head
+    name: "Ender Gauntlet"
+    rarity: EPIC
+    default_statistics:
+      health: 15
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: GLOVES

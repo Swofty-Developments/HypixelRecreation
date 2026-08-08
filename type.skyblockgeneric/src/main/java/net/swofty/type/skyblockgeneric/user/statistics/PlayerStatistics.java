@@ -130,6 +130,14 @@ public class PlayerStatistics {
         }
         if (player.getArmorSet() != null) {
             ArmorSetRegistry armorSetRegistry = player.getArmorSet();
+            if (armorSetRegistry == ArmorSetRegistry.ENDER
+                    && player.getRegion() != null
+                    && switch (player.getRegion().getType()) {
+                        case THE_END, THE_END_NEST, VOID_SEPULTURE, DRAGONS_NEST -> true;
+                        default -> false;
+                    }) {
+                total = ItemStatistics.multiply(total, 2);
+            }
             try {
                 Constructor<? extends ArmorSet> constructor = armorSetRegistry.getClazz().getConstructor();
                 ArmorSet armorSet = constructor.newInstance();

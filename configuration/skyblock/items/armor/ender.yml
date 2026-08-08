@@ -1,0 +1,102 @@
+items:
+  - id: END_HELMET
+    material: leather_helmet
+    name: "Ender Helmet"
+    rarity: EPIC
+    default_statistics:
+      health: 20
+      defense: 35
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: LEATHER_COLOR
+        r: '80'
+        g: '0'
+        b: '120'
+      - id: SELLABLE
+        value: 10000
+      - id: TRACKED_UNIQUE
+      - id: MUSEUM
+        museum_category: ARMOR_SETS
+        game_stage: AMATEUR
+        donation_xp: 3
+
+  - id: END_CHESTPLATE
+    material: leather_chestplate
+    name: "Ender Chestplate"
+    rarity: EPIC
+    default_statistics:
+      health: 30
+      defense: 60
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: LEATHER_COLOR
+        r: '80'
+        g: '0'
+        b: '120'
+      - id: SELLABLE
+        value: 10000
+      - id: TRACKED_UNIQUE
+      - id: MUSEUM
+        museum_category: ARMOR_SETS
+        game_stage: AMATEUR
+        donation_xp: 3
+
+  - id: END_LEGGINGS
+    material: leather_leggings
+    name: "Ender Leggings"
+    rarity: EPIC
+    default_statistics:
+      health: 25
+      defense: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: LEATHER_COLOR
+        r: '80'
+        g: '0'
+        b: '120'
+      - id: SELLABLE
+        value: 10000
+      - id: TRACKED_UNIQUE
+      - id: MUSEUM
+        museum_category: ARMOR_SETS
+        game_stage: AMATEUR
+        donation_xp: 3
+
+  - id: END_BOOTS
+    material: leather_boots
+    name: "Ender Boots"
+    rarity: EPIC
+    default_statistics:
+      health: 15
+      defense: 25
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: LEATHER_COLOR
+        r: '80'
+        g: '0'
+        b: '120'
+      - id: SELLABLE
+        value: 10000
+      - id: TRACKED_UNIQUE
+      - id: MUSEUM
+        museum_category: ARMOR_SETS
+        game_stage: AMATEUR
+        donation_xp: 3
+
+  - id: OBSIDIAN_CHESTPLATE
+    material: diamond_chestplate
+    name: "Obsidian Chestplate"
+    rarity: LEGENDARY
+    default_statistics:
+      health: 40
+      defense: 40
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: SELLABLE
+        value: 10000
+      - id: TRACKED_UNIQUE

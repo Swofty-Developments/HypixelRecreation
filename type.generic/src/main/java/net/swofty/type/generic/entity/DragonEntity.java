@@ -149,6 +149,11 @@ public class DragonEntity extends LivingEntity {
         double dz = effectiveTarget.z() - current.z();
         double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
+        if (dist < 0.001) {
+            setVelocity(Vec.ZERO);
+            return;
+        }
+
         if (dist < 3.0 && !idleMode) {
             setVelocity(Vec.ZERO);
             return;
