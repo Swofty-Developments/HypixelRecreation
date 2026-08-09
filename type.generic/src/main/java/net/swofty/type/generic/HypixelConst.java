@@ -50,4 +50,8 @@ public class HypixelConst {
     public static boolean isIslandServer() {
         return typeLoader.getType() == ServerType.SKYBLOCK_ISLAND;
     }
+
+    public static boolean isGarden() {
+        return typeLoader.getType() == ServerType.SKYBLOCK_GARDEN;
+    }
 }

@@ -1,0 +1,35 @@
+base_spawn_chance: 0.002
+sprayonator_bonus_percent: 50
+atmospheric_filter_autumn_bonus_percent: 15
+base_cooldown_seconds: 300
+offline_spawn_cap_per_hour: 1
+max_spawn_cooldown_seconds: 1200
+min_spawn_cooldown_seconds: 75
+start_garden_level: 5
+adjacent_plot_spawns_only: true
+trap_spawn_minutes: 15
+trap_field_mouse_chances:
+  PEST_TRAP: 0.0278
+  MOUSE_TRAP: 0.0789
+  VERMIN_TRAP: 0.1026
+fortune_penalties:
+  - { pests: 4, percent: 5 }
+  - { pests: 5, percent: 15 }
+  - { pests: 6, percent: 30 }
+  - { pests: 7, percent: 50 }
+  - { pests: 8, percent: 75 }
+registry:
+  - { id: FLY, display_name: Fly, crop: WHEAT, garden_level: 5, sprayonator_item: DUNG, vinyl: PRETTY_FLY_VINYL }
+  - { id: CRICKET, display_name: Cricket, crop: CARROT, garden_level: 5, sprayonator_item: HONEY_JAR, vinyl: CRICKET_CHOIR_VINYL }
+  - { id: LOCUST, display_name: Locust, crop: POTATO, garden_level: 5, sprayonator_item: PLANT_MATTER, vinyl: CICADA_SYMPHONY_VINYL }
+  - { id: RAT, display_name: Rat, crop: PUMPKIN, garden_level: 5, sprayonator_item: TASTY_CHEESE, vinyl: RODENT_REVOLUTION_VINYL }
+  - { id: MOSQUITO, display_name: Mosquito, crop: SUGAR_CANE, garden_level: 5, sprayonator_item: COMPOST, vinyl: BUZZIN_BEATS_VINYL }
+  - { id: EARTHWORM, display_name: Earthworm, crop: MELON_SLICE, garden_level: 6, sprayonator_item: null, vinyl: EARTHWORM_ENSEMBLE_VINYL }
+  - { id: MITE, display_name: Mite, crop: CACTUS, garden_level: 7, sprayonator_item: TASTY_CHEESE, vinyl: DYNAMITES_VINYL }
+  - { id: MOTH, display_name: Moth, crop: COCOA_BEANS, garden_level: 8, sprayonator_item: HONEY_JAR, vinyl: WINGS_OF_HARMONY_VINYL }
+  - { id: SLUG, display_name: Slug, crop: MUSHROOM, garden_level: 9, sprayonator_item: PLANT_MATTER, vinyl: SLOW_AND_GROOVY_VINYL }
+  - { id: BEETLE, display_name: Beetle, crop: NETHER_WART, garden_level: 10, sprayonator_item: DUNG, vinyl: NOT_JUST_A_PEST_VINYL }
+  - { id: FIREFLY, display_name: Firefly, crop: MOONFLOWER, garden_level: 11, sprayonator_item: JELLY, vinyl: FIREFLY_IN_THE_HOLE_VINYL, night_only: true }
+  - { id: DRAGONFLY, display_name: Dragonfly, crop: SUNFLOWER, garden_level: 11, sprayonator_item: null, vinyl: IMAGINE_DRAGONFLIES_VINYL, day_only: true }
+  - { id: PRAYING_MANTIS, display_name: Praying Mantis, crop: WILD_ROSE, garden_level: 12, sprayonator_item: null, vinyl: PRAY_FOR_ME_VINYL }
+  - { id: FIELD_MOUSE, display_name: Field Mouse, crop: RANDOM, garden_level: 5, trap_only: true }

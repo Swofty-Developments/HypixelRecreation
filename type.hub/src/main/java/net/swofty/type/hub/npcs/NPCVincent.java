@@ -1,10 +1,16 @@
 package net.swofty.type.hub.npcs;
 
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.item.Material;
+import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
 import net.swofty.type.generic.user.HypixelPlayer;
+import net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward;
+import net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport;
+import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
+import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 public class NPCVincent extends HypixelNPC {
 
@@ -39,6 +45,20 @@ public class NPCVincent extends HypixelNPC {
 
     @Override
     public void onClick(NPCInteractEvent event) {
-
+        SkyBlockPlayer player = (SkyBlockPlayer) event.player();
+        SkyBlockItem heldItem = new SkyBlockItem(player.getItemInMainHand());
+        ItemType heldType = heldItem.getAttributeHandler().getPotentialType();
+        boolean dyeItem = heldType != null
+            ? heldType.name().endsWith("_DYE")
+            : heldItem.getMaterial().name().endsWith("_DYE") || heldItem.getMaterial() == Material.INK_SAC;
+        if (dyeItem) {
+            if (heldType != null) {
+                player.takeItem(heldType, 1);
+            }
+            GardenProgressionSupport.apply(player, GardenProgressionReward.donatedItem("DYE"));
+            sendNPCMessage(player, "A lovely color choice. I'll remember your donation.");
+            return;
+        }
+        sendNPCMessage(player, "Bring me any dye if you want to trade colors with the Garden.");
     }
 }

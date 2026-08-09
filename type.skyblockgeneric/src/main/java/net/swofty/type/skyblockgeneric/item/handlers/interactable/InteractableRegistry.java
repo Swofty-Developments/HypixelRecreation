@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.entity.hologram.ServerHolograms;
+import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.GUISkyBlockMenu;
 import net.swofty.type.skyblockgeneric.user.island.SkyBlockIsland;
 import net.swofty.type.skyblockgeneric.utility.JerryInformation;
@@ -27,7 +28,7 @@ public class InteractableRegistry {
         ).build());
         register("MOVE_JERRY_INTERACT", InteractableItemConfig.builder().rightClickHandler(
                 ((player, skyBlockItem) -> {
-                    if (!HypixelConst.isIslandServer()) {
+                    if (!HypixelConst.isIslandServer() && !HypixelConst.isGarden()) {
                         player.sendMessage("§cYou can't move Jerry here! He doesn't belong here!");
                         return;
                     }
@@ -60,6 +61,24 @@ public class InteractableRegistry {
                     jerryInformation.setHologram(hologram);
                     skyBlockItem.setAmount(0);
                 })
+        ).build());
+        register("MOVE_SAM_INTERACT", InteractableItemConfig.builder().rightClickHandler(
+            ((player, skyBlockItem) -> {
+                if (!HypixelConst.isIslandServer()) {
+                    player.sendMessage("§cYou can't move Sam here! She doesn't belong here!");
+                    return;
+                }
+
+                Point position = player.getTargetBlockPosition(5);
+                if (position == null || player.getSkyBlockIsland() == null) {
+                    return;
+                }
+
+                position = position.add(0.5, 1, 0.5);
+                player.getSkyBlockIsland().setSamPosition(new Pos(position).withLookAt(player.getPosition()));
+                HypixelNPC.updateForPlayer(player);
+                skyBlockItem.setAmount(0);
+            })
         ).build());
     }
 

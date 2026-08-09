@@ -42,7 +42,7 @@ public class NPCClerkSeraphine extends HypixelNPC {
     @Override
     public void onClick(NPCInteractEvent e) {
         if (isInDialogue(e.player())) return;
-        setDialogue(e.player(), "hello");
+        setGardenDialogue(e.player(), "hello");
     }
 
     @Override
@@ -55,5 +55,16 @@ public class NPCClerkSeraphine extends HypixelNPC {
                                 "You can also vote in the §bmayor elections §fby heading through the warp behind me!"
                         }).build()
         ).toArray(DialogueSet[]::new);
+    }
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("CLERK_SERAPHINE")
+                );
+            }
+        });
     }
 }

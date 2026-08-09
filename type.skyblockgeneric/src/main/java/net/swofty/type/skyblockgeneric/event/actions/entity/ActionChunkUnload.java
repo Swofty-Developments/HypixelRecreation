@@ -16,7 +16,7 @@ public class ActionChunkUnload implements HypixelEventClass {
         int chunkX = event.getChunkX();
         int chunkZ = event.getChunkZ();
 
-        if (HypixelConst.isIslandServer()) return;
+        if (HypixelConst.isIslandServer() || HypixelConst.isGarden()) return;
 
         instance.loadChunk(chunkX, chunkZ).join();
     }

@@ -51,7 +51,12 @@ import net.swofty.type.skyblockgeneric.collection.CollectionCategories;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategory;
 import net.swofty.type.skyblockgeneric.collection.CustomCollectionAward;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
-import net.swofty.type.skyblockgeneric.data.monogdb.*;
+import net.swofty.type.skyblockgeneric.data.monogdb.CoopDatabase;
+import net.swofty.type.skyblockgeneric.data.monogdb.CrystalDatabase;
+import net.swofty.type.skyblockgeneric.data.monogdb.FairySoulDatabase;
+import net.swofty.type.skyblockgeneric.data.monogdb.GardenDatabase;
+import net.swofty.type.skyblockgeneric.data.monogdb.IslandDatabase;
+import net.swofty.type.skyblockgeneric.data.monogdb.RegionDatabase;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
 import net.swofty.type.skyblockgeneric.entity.ServerCrystalImpl;
 import net.swofty.type.skyblockgeneric.entity.mob.MobRegistry;
@@ -139,6 +144,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
 
         RegionDatabase.connect(mongoClient);
         IslandDatabase.connect(mongoClient);
+        GardenDatabase.connect(mongoClient);
         FairySoulDatabase.connect(mongoClient);
         CoopDatabase.connect(mongoClient);
         CrystalDatabase.connect(mongoClient);

@@ -525,6 +525,24 @@ public class SkyBlockDataHandler extends DataHandler {
         KAT("kat", false, false, false,
                 DatapointKat.class, new DatapointKat("kat")),
 
+        GARDEN_CORE("garden_core", false, true, false,
+                DatapointGardenCore.class, new DatapointGardenCore("garden_core")),
+
+        GARDEN_VISITORS("garden_visitors", false, true, false,
+                DatapointGardenVisitors.class, new DatapointGardenVisitors("garden_visitors")),
+
+        GARDEN_PESTS("garden_pests", false, true, false,
+                DatapointGardenPests.class, new DatapointGardenPests("garden_pests")),
+
+        GARDEN_COMPOSTER("garden_composter", false, true, false,
+                DatapointGardenComposter.class, new DatapointGardenComposter("garden_composter")),
+
+        GARDEN_GREENHOUSE("garden_greenhouse", false, true, false,
+                DatapointGardenGreenhouse.class, new DatapointGardenGreenhouse("garden_greenhouse")),
+
+        GARDEN_PERSONAL("garden_personal", false, false, false,
+                DatapointGardenPersonal.class, new DatapointGardenPersonal("garden_personal")),
+
         STASH("stash", false, false, false,
                 DatapointStash.class, new DatapointStash("stash")),
 

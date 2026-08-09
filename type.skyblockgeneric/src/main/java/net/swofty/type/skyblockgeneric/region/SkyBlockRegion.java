@@ -207,7 +207,7 @@ public class SkyBlockRegion {
 
     public static void cacheRegions() {
         for (SkyBlockRegion region : RegionDatabase.getAllRegions()) {
-            if (region.getType() == null || region.getType() == RegionType.PRIVATE_ISLAND) {
+            if (region.getType() == null || region.getType() == RegionType.PRIVATE_ISLAND || region.getType() == RegionType.THE_GARDEN) {
                 region.delete();
             } else {
                 ServerType typeOfRegion = region.getServerType();
@@ -222,9 +222,18 @@ public class SkyBlockRegion {
             new Pos(0, 0, 0),
             RegionType.PRIVATE_ISLAND,
             ServerType.SKYBLOCK_ISLAND));
+        REGION_CACHE.put("the_garden", new SkyBlockRegion("the_garden",
+            new Pos(0, 0, 0),
+            new Pos(0, 0, 0),
+            RegionType.THE_GARDEN,
+            ServerType.SKYBLOCK_GARDEN));
     }
 
     public static SkyBlockRegion getIslandRegion() {
         return REGION_CACHE.get("island");
+    }
+
+    public static SkyBlockRegion getGardenRegion() {
+        return REGION_CACHE.get("the_garden");
     }
 }

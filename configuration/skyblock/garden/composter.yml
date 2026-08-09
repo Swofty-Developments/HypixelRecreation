@@ -1,0 +1,117 @@
+base_production_seconds: 600
+base_organic_matter_cost: 4000
+base_fuel_cost: 2000
+branches:
+  speed:
+    unlock_garden_level: 2
+    per_tier_percent: 20
+    max_tier: 25
+  multi_drop:
+    unlock_garden_level: 4
+    per_tier_percent: 3
+    max_tier: 25
+  fuel_cap:
+    unlock_garden_level: 6
+    per_tier_capacity: 30000
+    base_capacity: 100000
+    max_capacity: 850000
+  organic_matter_cap:
+    unlock_garden_level: 8
+    per_tier_capacity: 30000
+    base_capacity: 40000
+    max_capacity: 790000
+  cost_reduction:
+    unlock_garden_level: 10
+    per_tier_percent: 1
+    max_tier: 25
+upgrade_tiers:
+  - { tier: 1, copper: 100, rare_crop_item: NONE, rare_crop_amount: 0, speed_units: 128, multi_drop_units: 0, fuel_cap_units: 0, organic_matter_cap_units: 0, cost_reduction_units: 32 }
+  - { tier: 2, copper: 150, rare_crop_item: NONE, rare_crop_amount: 0, speed_units: 2, multi_drop_units: 64, fuel_cap_units: 4, organic_matter_cap_units: 3, cost_reduction_units: 0 }
+  - { tier: 3, copper: 200, rare_crop_item: NONE, rare_crop_amount: 0, speed_units: 256, multi_drop_units: 2, fuel_cap_units: 2, organic_matter_cap_units: 2, cost_reduction_units: 2 }
+  - { tier: 4, copper: 250, rare_crop_item: NONE, rare_crop_amount: 0, speed_units: 4, multi_drop_units: 0, fuel_cap_units: 8, organic_matter_cap_units: 6, cost_reduction_units: 2 }
+  - { tier: 5, copper: 300, rare_crop_item: NONE, rare_crop_amount: 0, speed_units: 512, multi_drop_units: 4, fuel_cap_units: 4, organic_matter_cap_units: 4, cost_reduction_units: 4 }
+  - { tier: 6, copper: 350, rare_crop_item: NONE, rare_crop_amount: 0, speed_units: 8, multi_drop_units: 2, fuel_cap_units: 16, organic_matter_cap_units: 12, cost_reduction_units: 4 }
+  - { tier: 7, copper: 400, rare_crop_item: NONE, rare_crop_amount: 0, speed_units: 8, multi_drop_units: 8, fuel_cap_units: 8, organic_matter_cap_units: 7, cost_reduction_units: 8 }
+  - { tier: 8, copper: 500, rare_crop_item: CROPIE, rare_crop_amount: 3, speed_units: 16, multi_drop_units: 4, fuel_cap_units: 32, organic_matter_cap_units: 24, cost_reduction_units: 8 }
+  - { tier: 9, copper: 600, rare_crop_item: CROPIE, rare_crop_amount: 6, speed_units: 12, multi_drop_units: 16, fuel_cap_units: 16, organic_matter_cap_units: 10, cost_reduction_units: 16 }
+  - { tier: 10, copper: 700, rare_crop_item: CROPIE, rare_crop_amount: 12, speed_units: 32, multi_drop_units: 8, fuel_cap_units: 40, organic_matter_cap_units: 48, cost_reduction_units: 16 }
+  - { tier: 11, copper: 800, rare_crop_item: CROPIE, rare_crop_amount: 24, speed_units: 16, multi_drop_units: 32, fuel_cap_units: 32, organic_matter_cap_units: 16, cost_reduction_units: 24 }
+  - { tier: 12, copper: 900, rare_crop_item: CROPIE, rare_crop_amount: 48, speed_units: 40, multi_drop_units: 16, fuel_cap_units: 48, organic_matter_cap_units: 64, cost_reduction_units: 32 }
+  - { tier: 13, copper: 1000, rare_crop_item: CROPIE, rare_crop_amount: 96, speed_units: 24, multi_drop_units: 48, fuel_cap_units: 40, organic_matter_cap_units: 24, cost_reduction_units: 32 }
+  - { tier: 14, copper: 1200, rare_crop_item: SQUASH, rare_crop_amount: 3, speed_units: 48, multi_drop_units: 24, fuel_cap_units: 64, organic_matter_cap_units: 96, cost_reduction_units: 48 }
+  - { tier: 15, copper: 1400, rare_crop_item: SQUASH, rare_crop_amount: 6, speed_units: 32, multi_drop_units: 64, fuel_cap_units: 48, organic_matter_cap_units: 32, cost_reduction_units: 48 }
+  - { tier: 16, copper: 1600, rare_crop_item: SQUASH, rare_crop_amount: 12, speed_units: 64, multi_drop_units: 32, fuel_cap_units: 96, organic_matter_cap_units: 128, cost_reduction_units: 64 }
+  - { tier: 17, copper: 1800, rare_crop_item: SQUASH, rare_crop_amount: 24, speed_units: 40, multi_drop_units: 80, fuel_cap_units: 64, organic_matter_cap_units: 40, cost_reduction_units: 64 }
+  - { tier: 18, copper: 2000, rare_crop_item: SQUASH, rare_crop_amount: 48, speed_units: 96, multi_drop_units: 48, fuel_cap_units: 128, organic_matter_cap_units: 160, cost_reduction_units: 80 }
+  - { tier: 19, copper: 2250, rare_crop_item: SQUASH, rare_crop_amount: 96, speed_units: 48, multi_drop_units: 112, fuel_cap_units: 96, organic_matter_cap_units: 48, cost_reduction_units: 96 }
+  - { tier: 20, copper: 2500, rare_crop_item: FERMENTO, rare_crop_amount: 3, speed_units: 128, multi_drop_units: 64, fuel_cap_units: 192, organic_matter_cap_units: 208, cost_reduction_units: 112 }
+  - { tier: 21, copper: 2750, rare_crop_item: FERMENTO, rare_crop_amount: 6, speed_units: 64, multi_drop_units: 144, fuel_cap_units: 144, organic_matter_cap_units: 64, cost_reduction_units: 128 }
+  - { tier: 22, copper: 3000, rare_crop_item: FERMENTO, rare_crop_amount: 12, speed_units: 192, multi_drop_units: 96, fuel_cap_units: 288, organic_matter_cap_units: 256, cost_reduction_units: 160 }
+  - { tier: 23, copper: 3300, rare_crop_item: CONDENSED_FERMENTO, rare_crop_amount: 2, speed_units: 96, multi_drop_units: 176, fuel_cap_units: 192, organic_matter_cap_units: 96, cost_reduction_units: 160 }
+  - { tier: 24, copper: 3600, rare_crop_item: CONDENSED_FERMENTO, rare_crop_amount: 4, speed_units: 256, multi_drop_units: 128, fuel_cap_units: 384, organic_matter_cap_units: 320, cost_reduction_units: 224 }
+  - { tier: 25, copper: 4000, rare_crop_item: CONDENSED_FERMENTO, rare_crop_amount: 8, speed_units: 128, multi_drop_units: 224, fuel_cap_units: 256, organic_matter_cap_units: 128, cost_reduction_units: 192 }
+organic_matter_values:
+  CROPIE: 2500
+  SQUASH: 10000
+  FERMENTO: 20000
+  CONDENSED_FERMENTO: 180000
+  FLOWERING_BOUQUET: 6000
+  FINE_FLOUR: 150
+  WHEAT: 1
+  ENCHANTED_BREAD: 60
+  ENCHANTED_WHEAT: 160
+  ENCHANTED_HAY_BALE: 25600
+  SEEDS: 1
+  ENCHANTED_SEEDS: 160
+  BOX_OF_SEEDS: 25600
+  CARROT: 0.29
+  ENCHANTED_CARROT: 46.4
+  ENCHANTED_GOLDEN_CARROT: 5939.2
+  POTATO: 0.33
+  POISONOUS_POTATO: 0.33
+  ENCHANTED_POTATO: 52.8
+  ENCHANTED_POISONOUS_POTATO: 52.8
+  ENCHANTED_BAKED_POTATO: 8448
+  PUMPKIN: 1
+  ENCHANTED_PUMPKIN: 160
+  POLISHED_PUMPKIN: 25600
+  MELON_SLICE: 0.2
+  MELON: 1.8
+  ENCHANTED_MELON_SLICE: 32
+  ENCHANTED_MELON: 5120
+  RED_MUSHROOM: 1
+  RED_MUSHROOM_BLOCK: 9
+  ENCHANTED_RED_MUSHROOM: 160
+  ENCHANTED_RED_MUSHROOM_BLOCK: 5184
+  BROWN_MUSHROOM: 1
+  BROWN_MUSHROOM_BLOCK: 9
+  ENCHANTED_BROWN_MUSHROOM: 160
+  ENCHANTED_BROWN_MUSHROOM_BLOCK: 5184
+  COCOA_BEANS: 0.4
+  ENCHANTED_COCOA_BEAN: 64
+  CACTUS: 0.5
+  CACTUS_GREEN: 0.5
+  ENCHANTED_CACTUS_GREEN: 80
+  ENCHANTED_CACTUS: 12800
+  SUGAR_CANE: 0.5
+  ENCHANTED_SUGAR: 80
+  ENCHANTED_PAPER: 96
+  ENCHANTED_SUGAR_CANE: 12800
+  NETHER_WART: 0.33
+  ENCHANTED_NETHER_WART: 52.8
+  MUTANT_NETHER_WART: 8448
+fuel_values:
+  ENCHANTED_DANDELION: 360
+  ENCHANTED_POPPY: 1024
+  BIOFUEL: 3000
+  VOLTA: 10000
+  OIL_BARREL: 10000
+  CLAW_FOSSIL: 50000
+  CLUBBED_FOSSIL: 50000
+  FOOTPRINT_FOSSIL: 50000
+  SPINE_FOSSIL: 50000
+  TUSK_FOSSIL: 50000
+  UGLY_FOSSIL: 50000
+  WEBBED_FOSSIL: 50000
+  SUNFLOWER_OIL: 20000
+  COALROOT: 5000

@@ -19,6 +19,7 @@ import net.minestom.server.item.Material;
 import net.minestom.server.network.packet.server.play.UpdateHealthPacket;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
+import net.swofty.commons.ServerType;
 import net.minestom.server.tag.Tag;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.PlayerShopData;
@@ -43,6 +44,8 @@ import net.swofty.type.skyblockgeneric.event.value.SkyBlockValueEvent;
 import net.swofty.type.skyblockgeneric.event.value.ValueUpdateEvent;
 import net.swofty.type.skyblockgeneric.event.value.events.MaxHealthValueUpdateEvent;
 import net.swofty.type.skyblockgeneric.event.value.events.MiningValueUpdateEvent;
+import net.swofty.type.skyblockgeneric.garden.SkyBlockEditableWorldHandle;
+import net.swofty.type.skyblockgeneric.garden.SkyBlockGardenHandle;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItemComponent;
 import net.swofty.type.skyblockgeneric.item.components.AccessoryComponent;
@@ -94,6 +97,8 @@ public class SkyBlockPlayer extends HypixelPlayer {
     public boolean speedManaged = false;
     @Setter
     private SkyBlockIsland skyBlockIsland;
+    @Setter
+    private SkyBlockGardenHandle skyBlockGarden;
     private static final Tag<Integer> fallHeight = Tag.Integer("fallHeight");
 
     private static final Pattern SACK_PATTERN = Pattern.compile("^(?:(SMALL|MEDIUM|LARGE|ENCHANTED)_)?(.+?)_SACK$");
@@ -199,6 +204,22 @@ public class SkyBlockPlayer extends HypixelPlayer {
         return getInstance() != null
                 && getInstance() != HypixelConst.getInstanceContainer()
                 && getInstance() != HypixelConst.getEmptyInstance();
+    }
+
+    public boolean isOnGarden() {
+        return skyBlockGarden != null
+                && HypixelConst.getTypeLoader().getType() == ServerType.SKYBLOCK_GARDEN
+                && isOnIsland();
+    }
+
+    public @Nullable SkyBlockEditableWorldHandle getEditableWorldHandle() {
+        if (HypixelConst.getTypeLoader().getType() == ServerType.SKYBLOCK_GARDEN && skyBlockGarden != null) {
+            return skyBlockGarden;
+        }
+        if (HypixelConst.getTypeLoader().getType() == ServerType.SKYBLOCK_ISLAND) {
+            return skyBlockIsland;
+        }
+        return null;
     }
 
     public @Nullable SkyBlockItem getArrow() {
@@ -463,7 +484,10 @@ public class SkyBlockPlayer extends HypixelPlayer {
     }
 
     public @Nullable SkyBlockRegion getRegion() {
-        if (isOnIsland()) return SkyBlockRegion.getIslandRegion();
+        if (HypixelConst.getTypeLoader().getType() == ServerType.SKYBLOCK_GARDEN) {
+            return SkyBlockRegion.getGardenRegion();
+        }
+        if (getEditableWorldHandle() != null) return SkyBlockRegion.getIslandRegion();
         return SkyBlockRegion.getRegionOfPosition(this.getPosition());
     }
 

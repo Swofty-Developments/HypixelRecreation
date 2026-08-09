@@ -65,7 +65,7 @@ public class BuildersWandAbility extends RegisteredAbility {
                 }
             }
             Pos fillBlock = l.add(translate);
-            if (HypixelConst.isIslandServer()) {
+            if (HypixelConst.isIslandServer() || HypixelConst.isGarden()) {
                 blocks.removeIf(blocks.getFirst()::equals);
                 if (!player.getInstance().getBlock(fillBlock).key().equals(fillMaterial.key())) {
                     player.getInstance().setBlock(fillBlock, Block.fromKey(fillMaterial.key()));

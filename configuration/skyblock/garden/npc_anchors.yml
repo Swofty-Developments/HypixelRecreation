@@ -1,0 +1,115 @@
+skins:
+  default:
+    npcs:
+      sam: { enabled: true, x: -8.0, y: 71.0, z: -7.0, yaw: 0, pitch: 0 }
+      anita: { enabled: true, x: -23.0, y: 71.0, z: -15.0, yaw: 0, pitch: 0 }
+      pamela: { enabled: true, x: -24.0, y: 71.0, z: -15.0, yaw: 0, pitch: 0 }
+      jacob: { enabled: true, x: -21.0, y: 71.0, z: -15.0, yaw: 0, pitch: 0 }
+      jeff: { enabled: true, x: 0.0, y: 72.0, z: -29.0, yaw: 0, pitch: 0 }
+      phillip: { enabled: true, x: -25.5, y: 71.0, z: -14.0, yaw: 0, pitch: 0 }
+    interactions:
+      desk: { enabled: true, x: -5.5, y: 72, z: -24.5, yaw: 180, pitch: 0, offsetY: 1 }
+      composter: { enabled: true, x: -11.0, y: 72, z: -28.0, yaw: 180, pitch: 0, offsetY: 2 }
+      visitor_logbook: { enabled: true, x: 7.5, y: 73.0, z: -22.5, yaw: 180, pitch: 0, offsetY: 0.5 }
+    visitor_slots:
+      slot_1: { enabled: true, x: 5.0, y: 72.0, z: -18.0, yaw: 180, pitch: 0 }
+      slot_2: { enabled: true, x: 5.0, y: 72.0, z: -15.0, yaw: 180, pitch: 0 }
+      slot_3: { enabled: true, x: 7.0, y: 72.0, z: -13.0, yaw: 180, pitch: 0 }
+      slot_4: { enabled: true, x: 9.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+      slot_5: { enabled: true, x: 12.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+    armor_stands: { }
+  spruce:
+    npcs:
+      sam: { enabled: true, x: -8.0, y: 71.0, z: -7.0, yaw: 180, pitch: 0 }
+      anita: { enabled: true, x: -23.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      pamela: { enabled: true, x: -24.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      jacob: { enabled: true, x: -21.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      jeff: { enabled: true, x: 0.0, y: 72.0, z: -29.0, yaw: 180, pitch: 0 }
+      phillip: { enabled: true, x: -26.0, y: 71.0, z: -14.0, yaw: 90, pitch: 0 }
+    interactions:
+      desk: { enabled: true, x: -5.5, y: 72, z: -24.5, yaw: 180, pitch: 0, offsetY: 0.5 }
+      composter: { enabled: true, x: -11.0, y: 71.0, z: -28.0, yaw: 180, pitch: 0, offsetY: 3 }
+      visitor_logbook: { enabled: true, x: 7.5, y: 73.0, z: -22.5, yaw: 180, pitch: 0 }
+    visitor_slots:
+      slot_1: { enabled: true, x: 5.0, y: 72.0, z: -18.0, yaw: 180, pitch: 0 }
+      slot_2: { enabled: true, x: 5.0, y: 72.0, z: -15.0, yaw: 180, pitch: 0 }
+      slot_3: { enabled: true, x: 7.0, y: 72.0, z: -13.0, yaw: 180, pitch: 0 }
+      slot_4: { enabled: true, x: 9.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+      slot_5: { enabled: true, x: 12.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+    armor_stands: { }
+  red:
+    npcs:
+      sam: { enabled: true, x: -8.0, y: 71.0, z: -7.0, yaw: 180, pitch: 0 }
+      anita: { enabled: true, x: -23.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      pamela: { enabled: true, x: -24.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      jacob: { enabled: true, x: -21.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      jeff: { enabled: true, x: 0.0, y: 72.0, z: -29.0, yaw: 180, pitch: 0 }
+      phillip: { enabled: true, x: -26.0, y: 71.0, z: -14.0, yaw: 90, pitch: 0 }
+    interactions:
+      desk: { enabled: true, x: -5.5, y: 72, z: -24.5, yaw: 180, pitch: 0, offsetY: 0.5 }
+      composter: { enabled: true, x: -11.0, y: 71.0, z: -28.0, yaw: 180, pitch: 0, offsetY: 3 }
+      visitor_logbook: { enabled: true, x: 7.5, y: 73.0, z: -22.5, yaw: 180, pitch: 0 }
+    visitor_slots:
+      slot_1: { enabled: true, x: 5.0, y: 72.0, z: -18.0, yaw: 180, pitch: 0 }
+      slot_2: { enabled: true, x: 5.0, y: 72.0, z: -15.0, yaw: 180, pitch: 0 }
+      slot_3: { enabled: true, x: 7.0, y: 72.0, z: -13.0, yaw: 180, pitch: 0 }
+      slot_4: { enabled: true, x: 9.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+      slot_5: { enabled: true, x: 12.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+    armor_stands: { }
+  sunny:
+    npcs:
+      sam: { enabled: true, x: -8.0, y: 71.0, z: -7.0, yaw: 180, pitch: 0 }
+      anita: { enabled: true, x: -23.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      pamela: { enabled: true, x: -24.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      jacob: { enabled: true, x: -21.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      jeff: { enabled: true, x: 0.0, y: 72.0, z: -29.0, yaw: 180, pitch: 0 }
+      phillip: { enabled: true, x: -26.0, y: 71.0, z: -14.0, yaw: 90, pitch: 0 }
+    interactions:
+      desk: { enabled: true, x: -5.5, y: 72, z: -24.5, yaw: 180, pitch: 0, offsetY: 0.5 }
+      composter: { enabled: true, x: -11.0, y: 71.0, z: -28.0, yaw: 180, pitch: 0, offsetY: 3 }
+      visitor_logbook: { enabled: true, x: 7.5, y: 73.0, z: -22.5, yaw: 180, pitch: 0 }
+    visitor_slots:
+      slot_1: { enabled: true, x: 5.0, y: 72.0, z: -18.0, yaw: 180, pitch: 0 }
+      slot_2: { enabled: true, x: 5.0, y: 72.0, z: -15.0, yaw: 180, pitch: 0 }
+      slot_3: { enabled: true, x: 7.0, y: 72.0, z: -13.0, yaw: 180, pitch: 0 }
+      slot_4: { enabled: true, x: 9.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+      slot_5: { enabled: true, x: 12.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+    armor_stands: { }
+  cabin:
+    npcs:
+      sam: { enabled: true, x: -8.0, y: 71.0, z: -7.0, yaw: 180, pitch: 0 }
+      anita: { enabled: true, x: -23.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      pamela: { enabled: true, x: -24.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      jacob: { enabled: true, x: -21.0, y: 71.0, z: -15.0, yaw: 90, pitch: 0 }
+      jeff: { enabled: true, x: 0.0, y: 72.0, z: -29.0, yaw: 180, pitch: 0 }
+      phillip: { enabled: true, x: -26.0, y: 71.0, z: -14.0, yaw: 90, pitch: 0 }
+    interactions:
+      desk: { enabled: true, x: -5.5, y: 72, z: -24.5, yaw: 180, pitch: 0, offsetY: 0.5 }
+      composter: { enabled: true, x: -11.0, y: 71.0, z: -28.0, yaw: 180, pitch: 0, offsetY: 3 }
+      visitor_logbook: { enabled: true, x: 7.5, y: 73.0, z: -22.5, yaw: 180, pitch: 0 }
+    visitor_slots:
+      slot_1: { enabled: true, x: 5.0, y: 72.0, z: -18.0, yaw: 180, pitch: 0 }
+      slot_2: { enabled: true, x: 5.0, y: 72.0, z: -15.0, yaw: 180, pitch: 0 }
+      slot_3: { enabled: true, x: 7.0, y: 72.0, z: -13.0, yaw: 180, pitch: 0 }
+      slot_4: { enabled: true, x: 9.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+      slot_5: { enabled: true, x: 12.0, y: 71.0, z: -11.0, yaw: 180, pitch: 0 }
+    armor_stands: { }
+  chocolate:
+    npcs:
+      sam: { enabled: true, x: -7.5, y: 71.0, z: -6.5, yaw: 0, pitch: 0 }
+      anita: { enabled: true, x: -21.5, y: 71.0, z: -11.5, yaw: 0, pitch: 0 }
+      jacob: { enabled: true, x: -19.5, y: 71.0, z: -11.5, yaw: 0, pitch: 0 }
+      jeff: { enabled: true, x: -9.0, y: 80.0, z: -15.0, yaw: 0, pitch: 0 }
+      phillip: { enabled: true, x: -25.5, y: 71.0, z: -10.5, yaw: 0, pitch: 0 }
+      pamela: { enabled: true, x: -23.5, y: 71.0, z: -10.5, yaw: 0, pitch: 0 }
+    interactions:
+      desk: { enabled: true, x: -5.5, y: 72, z: -24.5, yaw: 180, pitch: 0, offsetY: 0.5 }
+      composter: { enabled: true, x: -11.0, y: 71.0, z: -28.0, yaw: 180, pitch: 0, offsetY: 3 }
+      visitor_logbook: { enabled: true, x: 24.5, y: 73.0, z: -17.5, yaw: 180, pitch: 0 }
+    visitor_slots:
+      slot_1: { enabled: true, x: 24.5, y: 72.0, z: -15.5, yaw: 180, pitch: 0 }
+      slot_2: { enabled: true, x: 24.5, y: 72.0, z: -12.5, yaw: 180, pitch: 0 }
+      slot_3: { enabled: true, x: 27.5, y: 71.0, z: -9.5, yaw: 180, pitch: 0 }
+      slot_4: { enabled: true, x: 30.5, y: 71.0, z: -9.5, yaw: 180, pitch: 0 }
+      slot_5: { enabled: true, x: 33.5, y: 71.0, z: -9.5, yaw: 180, pitch: 0 }
+    armor_stands: { }

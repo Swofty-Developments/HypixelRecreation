@@ -48,11 +48,11 @@ public class NPCMadameEleanorQGoldsworthIII extends HypixelNPC {
         if (isInDialogue(player)) return;
 
         if (!player.getToggles().get(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_CURATOR)) {
-            setDialogue(player, "pre-curator");
+            setGardenDialogue(player, "pre-curator");
             return;
         }
         if (!player.getToggles().get(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_MADAME_ELEANOR)) {
-            setDialogue(player, "post-curator").thenRun(() -> {
+            setGardenDialogue(player, "post-curator").thenRun(() -> {
                 player.getToggles().set(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_MADAME_ELEANOR, true);
             });
             return;
@@ -80,5 +80,16 @@ public class NPCMadameEleanorQGoldsworthIII extends HypixelNPC {
                                 "In the future, reaching these thresholds will reward even more!"
                         }).build()
         ).toArray(DialogueSet[]::new);
+    }
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("MADAME_ELEANOR_Q_GOLDSWORTH_III")
+                );
+            }
+        });
     }
 }

@@ -1,0 +1,216 @@
+max_level: 15
+crop_growth_per_level_percent: 10
+skyblock_xp_per_level: 10
+levels:
+  - level: 1
+    visitor_unlocks: 46
+    crop_unlocks:
+      - WHEAT
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 46 }
+      - { type: CROP_UNLOCK, key: WHEAT }
+  - level: 2
+    visitor_unlocks: 9
+    crop_unlocks:
+      - CARROT
+    crop_upgrade_tier: 1
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 9 }
+      - { type: CROP_UNLOCK, key: CARROT }
+      - { type: CROP_UPGRADE_TIER, amount: 1 }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 3
+    visitor_unlocks: 13
+    crop_unlocks:
+      - POTATO
+    barn_skin_unlocks:
+      - spruce
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 13 }
+      - { type: CROP_UNLOCK, key: POTATO }
+      - { type: BARN_SKIN_UNLOCK, key: spruce }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 4
+    visitor_unlocks: 5
+    crop_unlocks:
+      - PUMPKIN
+    crop_upgrade_tier: 2
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 5 }
+      - { type: CROP_UNLOCK, key: PUMPKIN }
+      - { type: CROP_UPGRADE_TIER, amount: 2 }
+      - { type: PROFILE_FLAG, key: GEARING_UP_QUEST, display: Gearing Up Quest }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 5
+    visitor_unlocks: 5
+    crop_unlocks:
+      - SUGAR_CANE
+    pest_unlocks:
+      - FLY
+      - CRICKET
+      - LOCUST
+      - RAT
+      - MOSQUITO
+      - FIELD_MOUSE
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 5 }
+      - { type: CROP_UNLOCK, key: SUGAR_CANE }
+      - { type: PEST_UNLOCK, key: FLY }
+      - { type: PEST_UNLOCK, key: CRICKET }
+      - { type: PEST_UNLOCK, key: LOCUST }
+      - { type: PEST_UNLOCK, key: RAT }
+      - { type: PEST_UNLOCK, key: FIELD_MOUSE }
+      - { type: PEST_UNLOCK, key: MOSQUITO }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 6
+    visitor_unlocks: 6
+    crop_unlocks:
+      - MELON_SLICE
+    pest_unlocks:
+      - EARTHWORM
+    crop_upgrade_tier: 3
+    barn_skin_unlocks:
+      - sunny
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 6 }
+      - { type: CROP_UNLOCK, key: MELON_SLICE }
+      - { type: PEST_UNLOCK, key: EARTHWORM }
+      - { type: CROP_UPGRADE_TIER, amount: 3 }
+      - { type: BARN_SKIN_UNLOCK, key: sunny }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 7
+    visitor_unlocks: 10
+    crop_unlocks:
+      - CACTUS
+    pest_unlocks:
+      - MITE
+    greenhouse_unlocked: true
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 10 }
+      - { type: CROP_UNLOCK, key: CACTUS }
+      - { type: PEST_UNLOCK, key: MITE }
+      - { type: GREENHOUSE_UNLOCK }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 8
+    visitor_unlocks: 9
+    crop_unlocks:
+      - COCOA_BEANS
+    pest_unlocks:
+      - MOTH
+    crop_upgrade_tier: 4
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 9 }
+      - { type: CROP_UNLOCK, key: COCOA_BEANS }
+      - { type: PEST_UNLOCK, key: MOTH }
+      - { type: CROP_UPGRADE_TIER, amount: 4 }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 9
+    visitor_unlocks: 8
+    crop_unlocks:
+      - MUSHROOM
+    pest_unlocks:
+      - SLUG
+    barn_skin_unlocks:
+      - red
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 8 }
+      - { type: CROP_UNLOCK, key: MUSHROOM }
+      - { type: PEST_UNLOCK, key: SLUG }
+      - { type: BARN_SKIN_UNLOCK, key: red }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 10
+    visitor_unlocks: 9
+    crop_unlocks:
+      - NETHER_WART
+    pest_unlocks:
+      - BEETLE
+    crop_upgrade_tier: 5
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 9 }
+      - { type: CROP_UNLOCK, key: NETHER_WART }
+      - { type: PEST_UNLOCK, key: BEETLE }
+      - { type: CROP_UPGRADE_TIER, amount: 5 }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 11
+    visitor_unlocks: 3
+    crop_unlocks:
+      - SUNFLOWER
+      - MOONFLOWER
+    pest_unlocks:
+      - FIREFLY
+      - DRAGONFLY
+    barn_skin_unlocks:
+      - cabin
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 3 }
+      - { type: CROP_UNLOCK, key: SUNFLOWER }
+      - { type: CROP_UNLOCK, key: MOONFLOWER }
+      - { type: PEST_UNLOCK, key: FIREFLY }
+      - { type: PEST_UNLOCK, key: DRAGONFLY }
+      - { type: BARN_SKIN_UNLOCK, key: cabin }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 12
+    visitor_unlocks: 9
+    crop_unlocks:
+      - WILD_ROSE
+    pest_unlocks:
+      - PRAYING_MANTIS
+    crop_upgrade_tier: 6
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 9 }
+      - { type: CROP_UNLOCK, key: WILD_ROSE }
+      - { type: PEST_UNLOCK, key: PRAYING_MANTIS }
+      - { type: CROP_UPGRADE_TIER, amount: 6 }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 13
+    visitor_unlocks: 2
+    crop_upgrade_tier: 7
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 2 }
+      - { type: CROP_UPGRADE_TIER, amount: 7 }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 14
+    visitor_unlocks: 1
+    crop_upgrade_tier: 8
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 1 }
+      - { type: CROP_UPGRADE_TIER, amount: 8 }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }
+  - level: 15
+    visitor_unlocks: 2
+    crop_upgrade_tier: 9
+    barn_skin_unlocks:
+      - mansion_heights
+    skyblock_xp: 10
+    rewards:
+      - { type: VISITOR_UNLOCKS, amount: 2 }
+      - { type: CROP_UPGRADE_TIER, amount: 9 }
+      - { type: BARN_SKIN_UNLOCK, key: mansion_heights }
+      - { type: SKYBLOCK_XP, amount: 10 }
+      - { type: CROP_GROWTH, amount: 10 }

@@ -3,11 +3,13 @@ package net.swofty.type.thefarmingislands.npcs;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.minestom.server.coordinate.Pos;
-import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
-
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
+import net.swofty.type.generic.user.HypixelPlayer;
+import net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward;
+import net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport;
+import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 public class NPCHungryHiker extends HypixelNPC {
     public NPCHungryHiker() {
@@ -41,6 +43,11 @@ public class NPCHungryHiker extends HypixelNPC {
 
     @Override
     public void onClick(NPCInteractEvent e) {
+        if (e.player() instanceof SkyBlockPlayer player) {
+            GardenProgressionSupport.apply(player, GardenProgressionReward.flag("SAVE_THIS_HIKER"));
+            sendNPCMessage(player, "Thanks for stopping by. I feel a lot safer now.");
+            return;
+        }
         e.player().notImplemented();
     }
 }

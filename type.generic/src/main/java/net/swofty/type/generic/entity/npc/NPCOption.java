@@ -24,11 +24,27 @@ public class NPCOption {
 			boolean prefix,
 			List<Option> message
 	) {
-		Component optionMessage = Component.empty();
+		sendOption(player, id, prefix ? selectAnOption : Component.empty(), message);
+	}
 
-		if (prefix) {
-			optionMessage = optionMessage.append(selectAnOption).appendSpace();
-		}
+	public static void sendOption(
+			HypixelPlayer player,
+			String id,
+			String prompt,
+			List<Option> message
+	) {
+		sendOption(player, id, Component.text(prompt, NamedTextColor.YELLOW), message);
+	}
+
+	private static void sendOption(
+			HypixelPlayer player,
+			String id,
+			Component prompt,
+			List<Option> message
+	) {
+		Component optionMessage = prompt.equals(Component.empty())
+				? Component.empty()
+				: prompt.appendSpace();
 
 		for (int i = 0; i < message.size(); i++) {
 			Option option = message.get(i);

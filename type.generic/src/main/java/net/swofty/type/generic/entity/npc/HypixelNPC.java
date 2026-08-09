@@ -135,7 +135,13 @@ public abstract class HypixelNPC {
                     return;
                 }
 
-                Pos npcPosition = entity.getPosition();
+                if (entity.getInstance() != config.instance(player)) {
+                    entity.remove();
+                    cache.remove(npc);
+                    return;
+                }
+
+                Pos npcPosition = config.position(player);
                 if (!(entity instanceof NPCViewable npcViewable)) {
                     Logger.error("Entity for NPC {} does not implement NPCViewable, skipping update", npc.getName(player));
                     return;
@@ -252,7 +258,7 @@ public abstract class HypixelNPC {
     }
 
     public void sendNPCMessage(HypixelPlayer player, String message) {
-        sendNPCMessage(player, Component.text(message));
+        sendNPCMessage(player, LegacyComponentSerializer.legacySection().deserialize(message));
     }
 
     public void sendNPCMessage(HypixelPlayer player, Component message) {
@@ -381,7 +387,7 @@ public abstract class HypixelNPC {
 
                 Component[] components = new Component[lines.length];
                 for (int i = 0; i < lines.length; i++) {
-                    components[i] = Component.text(lines[i]);
+                    components[i] = LegacyComponentSerializer.legacySection().deserialize(lines[i]);
                 }
                 this.lines = components;
                 return this;

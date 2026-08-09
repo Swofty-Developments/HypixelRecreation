@@ -1,0 +1,136 @@
+items:
+  - id: FLOWERING_BOUQUET
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Flowering Bouquet
+      - id: NOT_FINISHED_YET
+
+  - id: FRUIT_BOWL
+    material: bowl
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Fruit Bowl
+      - id: NOT_FINISHED_YET
+
+  - id: OVERGROWN_GRASS
+    material: grass_block
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Overgrown Grass
+      - id: NOT_FINISHED_YET
+
+  - id: GREEN_BANDANA
+    material: lime_banner
+    rarity: EPIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Green Bandana
+      - id: NOT_FINISHED_YET
+
+  - id: COPPER_DYE
+    material: orange_dye
+    rarity: SPECIAL
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Copper Dye
+      - id: NOT_FINISHED_YET
+
+  - id: FINE_FLOUR
+    material: player_head
+    rarity: UNCOMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Fine Flour
+      - id: NOT_FINISHED_YET
+
+  - id: CARNIVAL_TICKET
+    material: name_tag
+    rarity: UNCOMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Carnival Ticket
+      - id: NOT_FINISHED_YET
+
+  - id: CROPIE
+    material: player_head
+    rarity: UNCOMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Cropie
+      - id: NOT_FINISHED_YET
+
+  - id: SQUASH
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Squash
+      - id: NOT_FINISHED_YET
+
+  - id: FERMENTO
+    material: player_head
+    rarity: EPIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Fermento
+      - id: NOT_FINISHED_YET
+
+  - id: FARMING_EXP_BOOST_UNCOMMON
+    material: iron_hoe
+    rarity: UNCOMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Farming Exp Boost
+      - id: NOT_FINISHED_YET
+
+  - id: HARVEST_HARBINGER_POTION
+    material: potion
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Harvest Harbinger V Potion
+      - id: NOT_FINISHED_YET
+
+  - id: MYSTERIOUS_CROP
+    material: dead_bush
+    rarity: COMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Mysterious Crop
+      - id: NOT_FINISHED_YET
+
+  - id: PET_CAKE
+    material: cake
+    rarity: COMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Pet Cake
+      - id: NOT_FINISHED_YET
+
+  - id: ARACHNE_FRAGMENT
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Arachne Fragment
+      - id: NOT_FINISHED_YET
+
+  - id: SPACE_HELMET
+    material: player_head
+    rarity: SPECIAL
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Space Helmet
+      - id: NOT_FINISHED_YET
+
+  - id: WILD_STRAWBERRY_DYE
+    material: player_head
+    rarity: LEGENDARY
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Wild Strawberry Dye
+      - id: NOT_FINISHED_YET

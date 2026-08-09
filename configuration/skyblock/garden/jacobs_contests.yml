@@ -1,0 +1,75 @@
+calendar:
+  year_length: 8928000
+  day_length: 24000
+  contest_interval_days: 3
+  contest_duration_days: 1
+requirements:
+  farming_level: 10
+  talk_to_jacob: true
+  minimum_collection: 100
+brackets:
+  BRONZE:
+    default_top_percent: 60
+    goated_top_percent: 70
+  SILVER:
+    default_top_percent: 30
+    goated_top_percent: 40
+  GOLD:
+    default_top_percent: 10
+    goated_top_percent: 20
+  PLATINUM:
+    default_top_percent: 5
+    goated_top_percent: 10
+  DIAMOND:
+    default_top_percent: 2
+    goated_top_percent: 5
+include_one_player_beyond_cutoff: true
+crops:
+  - WHEAT
+  - CARROT
+  - POTATO
+  - PUMPKIN
+  - MELON_SLICE
+  - MUSHROOM
+  - CACTUS
+  - SUGAR_CANE
+  - NETHER_WART
+  - COCOA_BEANS
+  - SUNFLOWER
+  - MOONFLOWER
+  - WILD_ROSE
+rewards:
+  consolation:
+    jacobs_tickets: 1
+  BRONZE:
+    bronze_medals: 1
+    jacobs_tickets: 10
+    carnival_tickets: 1
+    turbo_crop_books: 1
+    bits: 40
+  SILVER:
+    silver_medals: 1
+    jacobs_tickets: 15
+    carnival_tickets: 1
+    turbo_crop_books: 1
+    bits: 50
+  GOLD:
+    gold_medals: 1
+    jacobs_tickets: 25
+    carnival_tickets: 2
+    turbo_crop_books: 1
+    bits: 60
+  PLATINUM:
+    gold_medals: 1
+    bronze_medals: 1
+    jacobs_tickets: 30
+    carnival_tickets: 2
+    turbo_crop_books: 1
+    bits: 70
+  DIAMOND:
+    gold_medals: 1
+    silver_medals: 1
+    jacobs_tickets: 35
+    carnival_tickets: 3
+    turbo_crop_books: 1
+    bits: 80

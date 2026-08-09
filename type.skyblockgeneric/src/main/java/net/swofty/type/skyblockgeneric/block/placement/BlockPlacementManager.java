@@ -109,10 +109,7 @@ public enum BlockPlacementManager {
             ChestBlockPlacement::new
     ),
     WALL(
-            block -> {
-                String blockName = block.name().toLowerCase();
-                return blockName.contains("wall") && !blockName.contains("skull") && !blockName.contains("torch") && !blockName.contains("head") && !blockName.contains("wall_sign");
-            },
+        BlockPlacementManager::isWallBlock,
             WallPlacement::new
     ),
     SLAB(
@@ -154,6 +151,15 @@ public enum BlockPlacementManager {
     BlockPlacementManager(Predicate<Block> condition, Function<Block, PlacementRule> placementSupplier) {
         this.condition = condition;
         this.placementSupplier = placementSupplier;
+    }
+
+    private static boolean isWallBlock(Block block) {
+        var properties = block.properties();
+        return properties.containsKey("north")
+            && properties.containsKey("east")
+            && properties.containsKey("south")
+            && properties.containsKey("west")
+            && properties.containsKey("up");
     }
 
     public static void register(Block block) {

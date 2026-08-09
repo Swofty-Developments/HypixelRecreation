@@ -8,6 +8,7 @@ public enum ServiceType {
     DATA_MUTEX,
     PARTY,
     DARK_AUCTION,
+    JACOBS_CONTEST,
     ORCHESTRATOR,
     FRIEND,
     REPLAY,

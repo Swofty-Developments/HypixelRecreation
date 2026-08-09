@@ -52,11 +52,12 @@ public class NPCEntityImpl extends EntityCreature implements NPCViewable {
         setNoGravity(true);
         setAutoViewable(false);
 
+        Instance instance = config.instance(viewer);
         PlayerHolograms.ExternalPlayerHologram holo = PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(pos.add(0, getBoundingBox().height() - 0.1f, 0))
             .text(holograms)
             .player(viewer)
-            .instance(config.instance())
+            .instance(instance)
             .build();
 
         this.holo = holo;
@@ -64,7 +65,7 @@ public class NPCEntityImpl extends EntityCreature implements NPCViewable {
             PlayerHolograms.addExternalPlayerHologram(holo);
         }
 
-        setInstance(config.instance(), pos);
+        setInstance(instance, pos);
         addViewer(viewer);
         setCustomNameVisible(false);
 
@@ -126,6 +127,11 @@ public class NPCEntityImpl extends EntityCreature implements NPCViewable {
 
     @Override
     public void updateNPC() {
+        Pos configuredPosition = config.position(viewer);
+        if (!getPosition().asVec().equals(configuredPosition.asVec())) {
+            teleport(configuredPosition);
+        }
+
         Pos npcPosition = getPosition();
         if (!npcPosition.asVec().equals(lastHologramPosition.asVec()) && config.shouldDisplayHolograms(viewer)) {
             PlayerHolograms.relocateExternalPlayerHologram(holo, npcPosition.add(0, getBoundingBox().height() - 0.1f, 0));

@@ -1,0 +1,1595 @@
+expected_unique_visitors: 137
+arrival_minutes:
+  base: 15
+  fifty_unique: 12
+  one_hundred_unique: 9
+farming_speedup_multiplier: 3
+finnegan_blooming_business_reduction_percent: 25
+max_visible_visitors: 5
+max_queued_visitors: 1
+rarity_weights:
+  UNCOMMON: 50
+  RARE: 15
+  LEGENDARY: 3
+  MYTHIC: 0.3
+  SPECIAL: 0.03
+rarity_request_multipliers:
+  UNCOMMON: 1
+  RARE: 1.5
+  LEGENDARY: 3
+  MYTHIC: 3
+  SPECIAL: 3
+farming_xp_rarity_multipliers:
+  UNCOMMON: 0.05
+  RARE: 0.06
+  LEGENDARY: 0.075
+  MYTHIC: 0.075
+  SPECIAL: 0.075
+copper_rarity_multipliers:
+  UNCOMMON: 1
+  RARE: 2
+  LEGENDARY: 5
+  MYTHIC: 5
+  SPECIAL: 5
+bits_base: 5
+bonus_rewards:
+  - chance: 0.02
+    min_rarity: UNCOMMON
+    rewards:
+      - { type: ITEM, key: FLOWERING_BOUQUET, amount: 1 }
+  - chance: 0.002
+    min_rarity: UNCOMMON
+    rewards:
+      - { type: ITEM, key: FRUIT_BOWL, amount: 1 }
+  - chance: 0.001
+    min_rarity: UNCOMMON
+    rewards:
+      - { type: ITEM, key: OVERGROWN_GRASS, amount: 1 }
+  - chance: 0.004
+    min_rarity: RARE
+    rewards:
+      - { type: ITEM, key: GREEN_BANDANA, amount: 1 }
+  - chance: 0.0001
+    min_rarity: UNCOMMON
+    rewards:
+      - { type: ITEM, key: COPPER_DYE, amount: 1 }
+base_item_ranges:
+  - { level: 1, min: 500, max: 1000 }
+  - { level: 2, min: 1250, max: 2500 }
+  - { level: 3, min: 2000, max: 4000 }
+  - { level: 4, min: 5000, max: 10000 }
+  - { level: 5, min: 10000, max: 20000 }
+  - { level: 6, min: 20000, max: 40000 }
+  - { level: 7, min: 30000, max: 60000 }
+  - { level: 8, min: 40000, max: 80000 }
+  - { level: 9, min: 50000, max: 100000 }
+  - { level: 10, min: 70000, max: 140000 }
+  - { level: 11, min: 75000, max: 150000 }
+  - { level: 12, min: 80000, max: 160000 }
+  - { level: 13, min: 85000, max: 170000 }
+  - { level: 14, min: 90000, max: 180000 }
+  - { level: 15, min: 95000, max: 190000 }
+garden_xp_by_level:
+  - { level: 1, uncommon: 2, rare: 4, legendary: 10, mythic: 10, special: 10 }
+  - { level: 2, uncommon: 3, rare: 5, legendary: 13, mythic: 13, special: 13 }
+  - { level: 3, uncommon: 3, rare: 6, legendary: 15, mythic: 15, special: 15 }
+  - { level: 4, uncommon: 4, rare: 8, legendary: 20, mythic: 20, special: 20 }
+  - { level: 5, uncommon: 5, rare: 10, legendary: 25, mythic: 25, special: 25 }
+  - { level: 6, uncommon: 6, rare: 12, legendary: 30, mythic: 30, special: 30 }
+  - { level: 7, uncommon: 8, rare: 16, legendary: 40, mythic: 40, special: 40 }
+  - { level: 8, uncommon: 10, rare: 20, legendary: 50, mythic: 50, special: 50 }
+  - { level: 9, uncommon: 12, rare: 24, legendary: 60, mythic: 60, special: 60 }
+  - { level: 10, uncommon: 15, rare: 30, legendary: 75, mythic: 75, special: 75 }
+  - { level: 11, uncommon: 15, rare: 30, legendary: 75, mythic: 75, special: 75 }
+  - { level: 12, uncommon: 15, rare: 30, legendary: 75, mythic: 75, special: 75 }
+  - { level: 13, uncommon: 15, rare: 30, legendary: 75, mythic: 75, special: 75 }
+  - { level: 14, uncommon: 15, rare: 30, legendary: 75, mythic: 75, special: 75 }
+  - { level: 15, uncommon: 15, rare: 30, legendary: 75, mythic: 75, special: 75 }
+item_quantity_multipliers:
+  WHEAT: 1
+  BREAD: 1
+  CARROT: 3.5
+  GOLDEN_CARROT: 3.5
+  POTATO: 3
+  PUMPKIN: 0.85
+  SUGAR_CANE: 2
+  MELON_SLICE: 4
+  CACTUS: 1.5
+  COCOA_BEANS: 1
+  MUSHROOM: 0.95
+  NETHER_WART: 3
+  SUNFLOWER: 1
+  MOONFLOWER: 1
+  WILD_ROSE: 1
+  RAW_MUTTON: 1
+  RAW_PORKCHOP: 1
+  RAW_RABBIT: 1
+  COMPOST: 1
+request_item_aliases:
+  RAW_MUTTON: MUTTON
+  ENCHANTED_RAW_MUTTON: ENCHANTED_MUTTON
+  ENCHANTED_RAW_PORKCHOP: ENCHANTED_PORK
+  ENCHANTED_COOKED_PORKCHOP: ENCHANTED_GRILLED_PORK
+  ENCHANTED_MELON_SLICE: ENCHANTED_MELON
+  ENCHANTED_MELON: ENCHANTED_MELON_BLOCK
+request_compaction:
+  WHEAT:
+    profiles:
+      - id: WHEAT
+        weight: 1
+        stages:
+          - { item: WHEAT, raw_cost: 1 }
+          - { item: ENCHANTED_WHEAT, raw_cost: 160 }
+          - { item: ENCHANTED_HAY_BALE, raw_cost: 25600 }
+  BREAD:
+    profiles:
+      - id: BREAD
+        weight: 1
+        stages:
+          - { item: BREAD, raw_cost: 3 }
+          - { item: ENCHANTED_BREAD, raw_cost: 480 }
+  CARROT:
+    profiles:
+      - id: CARROT
+        weight: 1
+        stages:
+          - { item: CARROT, raw_cost: 1 }
+          - { item: ENCHANTED_CARROT, raw_cost: 160 }
+  GOLDEN_CARROT:
+    profiles:
+      - id: GOLDEN_CARROT
+        weight: 1
+        stages:
+          - { item: GOLDEN_CARROT, raw_cost: 1 }
+          - { item: ENCHANTED_GOLDEN_CARROT, raw_cost: 160 }
+  POTATO:
+    profiles:
+      - id: POTATO
+        weight: 1
+        stages:
+          - { item: POTATO, raw_cost: 1 }
+          - { item: ENCHANTED_POTATO, raw_cost: 160 }
+          - { item: ENCHANTED_BAKED_POTATO, raw_cost: 25600 }
+  PUMPKIN:
+    profiles:
+      - id: PUMPKIN
+        weight: 1
+        stages:
+          - { item: PUMPKIN, raw_cost: 1 }
+          - { item: ENCHANTED_PUMPKIN, raw_cost: 160 }
+          - { item: POLISHED_PUMPKIN, raw_cost: 25600 }
+  SUGAR_CANE:
+    profiles:
+      - id: SUGAR_CANE
+        weight: 1
+        stages:
+          - { item: SUGAR_CANE, raw_cost: 1 }
+          - { item: ENCHANTED_SUGAR, raw_cost: 160 }
+          - { item: ENCHANTED_SUGAR_CANE, raw_cost: 25600 }
+  MELON_SLICE:
+    profiles:
+      - id: MELON_SLICE
+        weight: 1
+        stages:
+          - { item: MELON_SLICE, raw_cost: 1 }
+          - { item: ENCHANTED_MELON, raw_cost: 160 }
+          - { item: ENCHANTED_MELON_BLOCK, raw_cost: 25600 }
+  CACTUS:
+    profiles:
+      - id: CACTUS
+        weight: 1
+        stages:
+          - { item: CACTUS, raw_cost: 1 }
+          - { item: ENCHANTED_CACTUS_GREEN, raw_cost: 160 }
+          - { item: ENCHANTED_CACTUS, raw_cost: 25600 }
+  COCOA_BEANS:
+    profiles:
+      - id: COCOA_BEANS
+        weight: 1
+        stages:
+          - { item: COCOA_BEANS, raw_cost: 1 }
+          - { item: ENCHANTED_COCOA_BEANS, raw_cost: 160 }
+          - { item: ENCHANTED_COOKIE, raw_cost: 20480 }
+  MUSHROOM:
+    profiles:
+      - id: RED_MUSHROOM
+        weight: 1
+        stages:
+          - { item: RED_MUSHROOM, raw_cost: 1 }
+          - { item: ENCHANTED_RED_MUSHROOM, raw_cost: 160 }
+          - { item: ENCHANTED_RED_MUSHROOM_BLOCK, raw_cost: 1440 }
+      - id: BROWN_MUSHROOM
+        weight: 1
+        stages:
+          - { item: BROWN_MUSHROOM, raw_cost: 1 }
+          - { item: ENCHANTED_BROWN_MUSHROOM, raw_cost: 160 }
+          - { item: ENCHANTED_BROWN_MUSHROOM_BLOCK, raw_cost: 1440 }
+  NETHER_WART:
+    profiles:
+      - id: NETHER_WART
+        weight: 1
+        stages:
+          - { item: NETHER_WART, raw_cost: 1 }
+          - { item: ENCHANTED_NETHER_WART, raw_cost: 160 }
+          - { item: MUTANT_NETHER_WART, raw_cost: 25600 }
+  SUNFLOWER:
+    profiles:
+      - id: SUNFLOWER
+        weight: 1
+        stages:
+          - { item: SUNFLOWER, raw_cost: 1 }
+          - { item: ENCHANTED_SUNFLOWER, raw_cost: 160 }
+          - { item: COMPACTED_SUNFLOWER, raw_cost: 25600 }
+  MOONFLOWER:
+    profiles:
+      - id: MOONFLOWER
+        weight: 1
+        stages:
+          - { item: MOONFLOWER, raw_cost: 1 }
+          - { item: ENCHANTED_MOONFLOWER, raw_cost: 160 }
+          - { item: COMPACTED_MOONFLOWER, raw_cost: 25600 }
+  WILD_ROSE:
+    profiles:
+      - id: WILD_ROSE
+        weight: 1
+        stages:
+          - { item: WILD_ROSE, raw_cost: 1 }
+          - { item: ENCHANTED_WILD_ROSE, raw_cost: 160 }
+          - { item: COMPACTED_WILD_ROSE, raw_cost: 25600 }
+  RAW_MUTTON:
+    profiles:
+      - id: MUTTON
+        weight: 1
+        stages:
+          - { item: MUTTON, raw_cost: 1 }
+          - { item: ENCHANTED_MUTTON, raw_cost: 160 }
+          - { item: ENCHANTED_COOKED_MUTTON, raw_cost: 25600 }
+  RAW_PORKCHOP:
+    profiles:
+      - id: RAW_PORKCHOP
+        weight: 1
+        stages:
+          - { item: RAW_PORKCHOP, raw_cost: 1 }
+          - { item: ENCHANTED_PORK, raw_cost: 160 }
+          - { item: ENCHANTED_GRILLED_PORK, raw_cost: 25600 }
+  RAW_RABBIT:
+    profiles:
+      - id: RAW_RABBIT
+        weight: 1
+        stages:
+          - { item: RAW_RABBIT, raw_cost: 1 }
+          - { item: ENCHANTED_RAW_RABBIT, raw_cost: 160 }
+  COMPOST:
+    profiles:
+      - id: COMPOST
+        weight: 1
+        stages:
+          - { item: COMPOST, raw_cost: 1 }
+registry:
+  - id: adventurer
+    display_name: Adventurer
+    rarity: UNCOMMON
+    garden_level: 3
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ADVENTURER
+        display: "Talk to the Adventurer"
+    wanted_items:
+      - POTATO
+  - id: alchemage
+    display_name: Alchemage
+    rarity: RARE
+    wanted_items:
+      - CARROT
+  - id: alchemist
+    display_name: Alchemist
+    rarity: UNCOMMON
+    garden_level: 10
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ALCHEMIST
+        display: "Talk to the Alchemist"
+    wanted_items:
+      - NETHER_WART
+  - id: an
+    display_name: An
+    rarity: UNCOMMON
+    wanted_items:
+      - NETHER_WART
+  - id: andrew
+    display_name: Andrew
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ANDREW
+        display: "Talk to Andrew"
+    wanted_items:
+      - ANY
+  - id: anita
+    display_name: Anita
+    rarity: UNCOMMON
+    garden_level: 2
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ANITA
+        display: "Talk to Anita"
+    wanted_items:
+      - CARROT
+  - id: archaeologist
+    display_name: Archaeologist
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: arthur
+    display_name: Arthur
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ARTHUR
+        display: "Talk to Arthur"
+    wanted_items:
+      - WHEAT
+  - id: baker
+    display_name: Baker
+    rarity: LEGENDARY
+    requirements:
+      - type: MAYOR_PERK_ACTIVE
+        key: BLOOMING_BUSINESS
+        display: "Mayor Finnegan's Blooming Business perk"
+      - type: ITEM_EXPORTED
+        key: FINE_FLOUR
+        amount: 3000
+        display: "Export 3,000x Fine Flour"
+    wanted_items:
+      - FINE_FLOUR
+  - id: banker_broadjaw
+    display_name: Banker Broadjaw
+    rarity: UNCOMMON
+    garden_level: 7
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: BANKER_BROADJAW
+        display: "Talk to Banker Broadjaw"
+    wanted_items:
+      - CACTUS
+  - id: bartender
+    display_name: Bartender
+    rarity: RARE
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: BARTENDER
+        display: "Talk to the Bartender"
+    wanted_items:
+      - ANY 2
+  - id: bednom
+    display_name: Bednom
+    rarity: UNCOMMON
+    wanted_items:
+      - COCOA_BEANS
+  - id: beth
+    display_name: Beth
+    rarity: LEGENDARY
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: BETH
+        display: "Talk to Beth"
+    wanted_items:
+      - ANY
+  - id: bruuh
+    display_name: Bruuh
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: FAIRY_SOUL, amount: 1, display: "Fairy Soul" }
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: carpenter
+    display_name: Carpenter
+    rarity: RARE
+    wanted_items:
+      - MELON_SLICE
+      - COCOA_BEANS
+    guaranteed_rewards:
+      - { type: ITEM, key: GREENHOUSE_BLUEPRINT, amount: 1, first_visit_only: true }
+  - id: chantelle
+    display_name: Chantelle
+    rarity: RARE
+    wanted_items:
+      - SUNFLOWER
+      - MOONFLOWER
+    guaranteed_rewards:
+      - { type: ITEM, key: CARNIVAL_TICKET, amount: 5 }
+  - id: chief_scorn
+    display_name: Chief Scorn
+    rarity: LEGENDARY
+    wanted_items:
+      - NETHER_WART
+  - id: chunk
+    display_name: Chunk
+    rarity: UNCOMMON
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: ITEM, key: SUPERBOOM_TNT, amount: 1 }
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: clerk_seraphine
+    display_name: Clerk Seraphine
+    rarity: LEGENDARY
+    garden_level: 5
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: CLERK_SERAPHINE
+        display: "Talk to Clerk Seraphine"
+    wanted_items:
+      - SUGAR_CANE
+  - id: cold_enjoyer
+    display_name: Cold Enjoyer
+    rarity: RARE
+    wanted_items:
+      - CACTUS
+  - id: dalbrek
+    display_name: Dalbrek
+    rarity: RARE
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: DALBREK
+        display: "Talk to Dalbrek"
+    wanted_items:
+      - ANY
+  - id: dante_goon
+    display_name: Dante Goon
+    rarity: LEGENDARY
+    wanted_items:
+      - WILD_ROSE
+    guaranteed_rewards:
+      - { type: ITEM, key: POPPY, amount: 1 }
+  - id: duke
+    display_name: Duke
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: DUKE
+        display: "Talk to Duke"
+    wanted_items:
+      - ANY
+  - id: dulin
+    display_name: Dulin
+    rarity: LEGENDARY
+    wanted_items:
+      - POTATO
+  - id: duncan
+    display_name: Duncan
+    rarity: RARE
+    wanted_items:
+      - MELON_SLICE
+  - id: dusk
+    display_name: Dusk
+    rarity: UNCOMMON
+    garden_level: 6
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: DUSK
+        display: "Talk to Dusk"
+    wanted_items:
+      - MELON_SLICE
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: LEVEL_ONE_RUNE, display: "Random Level I Rune" }
+  - id: elle
+    display_name: Elle
+    rarity: LEGENDARY
+    wanted_items:
+      - MUSHROOM
+  - id: emissary_carlton
+    display_name: Emissary Carlton
+    rarity: UNCOMMON
+    garden_level: 8
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: EMISSARY_CARLTON
+        display: "Talk to Emissary Carlton"
+    wanted_items:
+      - COCOA_BEANS
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: EMISSARY_POWDER, display: "Mithril Powder or Gemstone Powder" }
+  - id: emissary_ceanna
+    display_name: Emissary Ceanna
+    rarity: UNCOMMON
+    garden_level: 3
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: EMISSARY_CEANNA
+        display: "Talk to Emissary Ceanna"
+    wanted_items:
+      - POTATO
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: EMISSARY_POWDER, display: "Mithril Powder or Gemstone Powder" }
+  - id: emissary_fraiser
+    display_name: Emissary Fraiser
+    rarity: UNCOMMON
+    garden_level: 6
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: EMISSARY_FRAISER
+        display: "Talk to Emissary Fraiser"
+    wanted_items:
+      - MELON_SLICE
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: EMISSARY_POWDER, display: "Mithril Powder or Gemstone Powder" }
+  - id: emissary_sisko
+    display_name: Emissary Sisko
+    rarity: RARE
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: EMISSARY_SISKO
+        display: "Talk to Emissary Sisko"
+    wanted_items:
+      - MUSHROOM
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: EMISSARY_POWDER, display: "Mithril Powder or Gemstone Powder" }
+  - id: emissary_wilson
+    display_name: Emissary Wilson
+    rarity: UNCOMMON
+    garden_level: 2
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: EMISSARY_WILSON
+        display: "Talk to Emissary Wilson"
+    wanted_items:
+      - CARROT
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: EMISSARY_POWDER, display: "Mithril Powder or Gemstone Powder" }
+  - id: erihann
+    display_name: Erihann
+    rarity: RARE
+    wanted_items:
+      - NETHER_WART
+  - id: fann
+    display_name: Fann
+    rarity: RARE
+    wanted_items:
+      - NETHER_WART
+      - MUSHROOM
+  - id: farm_merchant
+    display_name: Farm Merchant
+    rarity: UNCOMMON
+    wanted_items:
+      - WHEAT
+  - id: farmer_jon
+    display_name: Farmer Jon
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: FARMER_JON
+        display: "Talk to Farmer Jon"
+    wanted_items:
+      - SUGAR_CANE
+  - id: farmhand
+    display_name: Farmhand
+    rarity: UNCOMMON
+    garden_level: 3
+    entity:
+      kind: VILLAGER
+      profession: FARMER
+      icon_item: WHEAT
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: FARMHAND
+        display: "Talk to Farmhand"
+    wanted_items:
+      - WHEAT
+      - CARROT
+      - POTATO
+  - id: fear_mongerer
+    display_name: Fear Mongerer
+    rarity: UNCOMMON
+    garden_level: 4
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: FEAR_MONGERER
+        display: "Talk to the Fear Mongerer"
+    wanted_items:
+      - PUMPKIN
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: SPOOKY_CANDY, display: "Green Candy or Purple Candy" }
+  - id: felix
+    display_name: Felix
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: FELIX
+        display: "Talk to Felix"
+    wanted_items:
+      - ANY
+  - id: fisherman_gerald
+    display_name: Fisherman Gerald
+    rarity: UNCOMMON
+    requirements:
+      - type: SKILL_LEVEL_AT_LEAST
+        key: FISHING
+        amount: 5
+        display: "Fishing V"
+      - type: SPOKEN_TO_NPC
+        key: FISHERMAN_GERALD
+        display: "Talk to Fisherman Gerald"
+    wanted_items:
+      - CARROT
+  - id: fragilis
+    display_name: Fragilis
+    rarity: RARE
+    garden_level: 7
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: FRAGILIS
+        display: "Talk to Fragilis"
+    wanted_items:
+      - CACTUS
+  - id: friendly_hiker
+    display_name: Friendly Hiker
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: FRIENDLY_HIKER
+        display: "Talk to this Hiker"
+    wanted_items:
+      - RAW_MUTTON
+      - RAW_PORKCHOP
+      - RAW_RABBIT
+  - id: frozen_alex
+    display_name: Frozen Alex
+    rarity: RARE
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: ESSENCE, key: ICE, amount: 10 }
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: gary
+    display_name: Gary
+    rarity: RARE
+    wanted_items:
+      - COCOA_BEANS
+  - id: gemma
+    display_name: Gemma
+    rarity: RARE
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: ESSENCE, key: DIAMOND, amount: 10 }
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: geonathan_greatforge
+    display_name: Geonathan Greatforge
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: GEONATHAN_GREATFORGE
+        display: "Talk to Geonathan Greatforge"
+    wanted_items:
+      - COMPOST
+    override_rewards:
+      farming_xp: 15000
+      copper: 30
+      rewards:
+        - { type: ITEM, key: BIOFUEL, amount: 1 }
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      raw_unique_rewards: "Biofuel
++15,000 Farming XP
+30 Copper"
+  - id: gimley
+    display_name: Gimley
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: GIMLEY
+        display: "Talk to Gimley"
+    wanted_items:
+      - WHEAT
+  - id: gold_forger
+    display_name: Gold Forger
+    rarity: RARE
+    garden_level: 2
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: GOLD_FORGER
+        display: "Talk to the Gold Forger"
+    wanted_items:
+      - id: GOLDEN_CARROT
+        fixed_amount: 1024
+    guaranteed_rewards:
+      - { type: ESSENCE, key: GOLD, min: 2, max: 5 }
+  - id: grandma_wolf
+    display_name: Grandma Wolf
+    rarity: RARE
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: GRANDMA_WOLF
+        display: "Talk to Grandma Wolf"
+    wanted_items:
+      - ANY 3
+  - id: guy
+    display_name: Guy
+    rarity: UNCOMMON
+    garden_level: 9
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: GUY
+        display: "Talk to Guy"
+    wanted_items:
+      - MUSHROOM
+  - id: gwendolyn
+    display_name: Gwendolyn
+    rarity: RARE
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: GWENDOLYN
+        display: "Talk to Gwendolyn"
+    wanted_items:
+      - COCOA_BEANS
+    guaranteed_rewards:
+      - { type: ACCESS_FLAG, key: CRYSTAL_HOLLOWS_PASS, display: "Crystal Hollows Pass" }
+  - id: hendrik
+    display_name: Hendrik
+    rarity: RARE
+    wanted_items:
+      - POTATO
+      - CACTUS
+  - id: hoppity
+    display_name: Hoppity
+    rarity: LEGENDARY
+    wanted_items:
+      - COCOA_BEANS
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: CHOCOLATE_RABBIT, display: "1 Random Chocolate Rabbit" }
+  - id: hornum
+    display_name: Hornum
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: HORNUM
+        display: "Talk to Hornum"
+    wanted_items:
+      - WHEAT
+  - id: hungry_hiker
+    display_name: Hungry Hiker
+    rarity: UNCOMMON
+    requirements:
+      - type: PROFILE_FLAG
+        key: SAVE_THIS_HIKER
+        display: "Save this Hiker"
+    wanted_items:
+      - PUMPKIN
+    guaranteed_rewards:
+      - { type: ITEM, key: FARMING_EXP_BOOST_UNCOMMON, amount: 1, display: "Uncommon Farming Exp Boost" }
+  - id: iron_forger
+    display_name: Iron Forger
+    rarity: RARE
+    garden_level: 2
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: IRON_FORGER
+        display: "Talk to the Iron Forger"
+    wanted_items:
+      - CARROT
+  - id: jack
+    display_name: Jack
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: JACK
+        display: "Talk to Jack"
+    wanted_items:
+      - ANY
+  - id: jacob
+    display_name: Jacob
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: JACOB
+        display: "Talk to Jacob"
+    wanted_items:
+      - WHEAT
+    guaranteed_rewards:
+      - { type: JACOBS_TICKET, amount: 1, display: "Jacob's Ticket" }
+  - id: jacobus
+    display_name: Jacobus
+    rarity: UNCOMMON
+    wanted_items:
+      - SUGAR_CANE
+  - id: jamie
+    display_name: Jamie
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: JAMIE
+        display: "Talk to Jamie"
+    wanted_items:
+      - ANY
+  - id: jerry
+    display_name: Jerry
+    rarity: LEGENDARY
+    entity:
+      kind: VILLAGER
+      profession: NITWIT
+      icon_item: SLIME_BALL
+    wanted_items:
+      - ANY
+    first_visit_override:
+      garden_level: 1
+      farming_xp: 500
+      copper: 5
+      wanted_items:
+        - BREAD
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      raw_unique_rewards: "+500 Farming XP (When Garden I)
+5 Copper (When Garden I)"
+  - id: jotraeline_greatforge
+    display_name: Jotraeline Greatforge
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: JOTRAELINE_GREATFORGE
+        display: "Talk to Jotraeline Greatforge"
+    wanted_items:
+      - COMPOST
+    override_rewards:
+      farming_xp: 15000
+      copper: 30
+      rewards:
+        - { type: ITEM, key: BIOFUEL, amount: 1 }
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      raw_unique_rewards: "Biofuel
++15,000 Farming XP
+30 Copper"
+  - id: lazy_miner
+    display_name: Lazy Miner
+    rarity: RARE
+    garden_level: 8
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: LAZY_MINER
+        display: "Talk to the Lazy Miner"
+    wanted_items:
+      - COCOA_BEANS
+  - id: leo
+    display_name: Leo
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: LEO
+        display: "Talk to Leo"
+    wanted_items:
+      - ANY
+  - id: liam
+    display_name: Liam
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: LIAM
+        display: "Talk to Liam"
+    wanted_items:
+      - ANY
+  - id: librarian
+    display_name: Librarian
+    rarity: UNCOMMON
+    garden_level: 5
+    entity:
+      kind: VILLAGER
+      profession: LIBRARIAN
+      icon_item: BOOK
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: LIBRARIAN
+        display: "Talk to the Librarian"
+    wanted_items:
+      - SUGAR_CANE
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: FARMING_BOOK, display: "Random Farming Enchanted Book" }
+  - id: lift_operator
+    display_name: Lift Operator
+    rarity: UNCOMMON
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: ludleth
+    display_name: Ludleth
+    rarity: MYTHIC
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: lumber_jack
+    display_name: Lumber Jack
+    rarity: UNCOMMON
+    garden_level: 9
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: LUMBER_JACK
+        display: "Talk to the Lumberjack"
+    wanted_items:
+      - CARROT
+      - POTATO
+      - MELON_SLICE
+      - PUMPKIN
+      - MUSHROOM
+  - id: lumina
+    display_name: Lumina
+    rarity: RARE
+    garden_level: 4
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: LUMINA
+        display: "Talk to Lumina"
+    wanted_items:
+      - PUMPKIN
+  - id: lynn
+    display_name: Lynn
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: LYNN
+        display: "Talk to Lynn"
+    wanted_items:
+      - ANY
+  - id: madame_eleanor_q_goldsworth_iii
+    display_name: Madame Eleanor Q. Goldsworth III
+    rarity: LEGENDARY
+    garden_level: 2
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: MADAME_ELEANOR_Q_GOLDSWORTH_III
+        display: "Talk to Madame Eleanor Q. Goldsworth III"
+    wanted_items:
+      - ENCHANTED_GOLDEN_CARROT
+  - id: maeve
+    display_name: Maeve
+    rarity: MYTHIC
+    garden_level: 12
+    wanted_items:
+      - CROPIE
+      - SQUASH
+      - FERMENTO
+    guaranteed_rewards:
+      - { type: ITEM, key: HARVEST_HARBINGER_POTION, amount: 1, display: "Harvest Harbinger V Potion" }
+  - id: marco
+    display_name: Marco
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: marigold
+    display_name: Marigold
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: mason
+    display_name: Mason
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: MASON
+        display: "Talk to Mason"
+    wanted_items:
+      - RAW_MUTTON
+      - POTATO
+      - CARROT
+      - MUSHROOM
+  - id: master_tactician_funk
+    display_name: Master Tactician Funk
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: mayor_aatrox
+    display_name: Mayor Aatrox
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: mayor_cole
+    display_name: Mayor Cole
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: mayor_diana
+    display_name: Mayor Diana
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: mayor_diaz
+    display_name: Mayor Diaz
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: mayor_finnegan
+    display_name: Mayor Finnegan
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: mayor_foxy
+    display_name: Mayor Foxy
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: mayor_marina
+    display_name: Mayor Marina
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: mayor_paul
+    display_name: Mayor Paul
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: moby
+    display_name: Moby
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: odawa
+    display_name: Odawa
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ODAWA
+        display: "Talk to Odawa"
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: ITEM, key: JUNGLE_KEY, amount: 1 }
+  - id: old_man_garry
+    display_name: Old Man Garry
+    rarity: RARE
+    garden_level: 8
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: OLD_MAN_GARRY
+        display: "Talk to Old Man Garry"
+    wanted_items:
+      - COCOA_BEANS
+  - id: old_shaman_nyko
+    display_name: Old Shaman Nyko
+    rarity: UNCOMMON
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: ophelia
+    display_name: Ophelia
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: oringo
+    display_name: Oringo
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ORINGO
+        display: "Talk to Oringo"
+    wanted_items:
+      - WHEAT
+    guaranteed_rewards:
+      - { type: ITEM, key: PET_CAKE, amount: 1 }
+  - id: pearl_dealer
+    display_name: Pearl Dealer
+    rarity: UNCOMMON
+    wanted_items:
+      - NETHER_WART
+  - id: pest_wrangler
+    display_name: Pest Wrangler
+    rarity: UNCOMMON
+    requirements:
+      - type: MAYOR_PERK_ACTIVE
+        key: BLOOMING_BUSINESS
+        display: "Mayor Finnegan's Blooming Business perk"
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: ITEM, key: FINE_FLOUR, amount: 5 }
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      request_pool: "SPRAYONATOR_MATERIAL"
+  - id: pest_wrangler_question
+    display_name: Pest Wrangler?
+    rarity: LEGENDARY
+    requirements:
+      - type: MAYOR_PERK_ACTIVE
+        key: BLOOMING_BUSINESS
+        display: "Mayor Finnegan's Blooming Business perk"
+    wanted_items:
+      - TASTY_CHEESE
+    guaranteed_rewards:
+      - { type: ITEM, key: FINE_FLOUR, amount: 50 }
+  - id: pete
+    display_name: Pete
+    rarity: RARE
+    garden_level: 7
+    requirements:
+      - type: PROFILE_FLAG
+        key: HEARD_BEAR_STORY
+        display: "Listen to the Bear Story"
+    wanted_items:
+      - SUGAR_CANE
+  - id: plumber_joe
+    display_name: Plumber Joe
+    rarity: UNCOMMON
+    garden_level: 7
+    entity:
+      kind: VILLAGER
+      profession: TOOLSMITH
+      icon_item: WATER_BUCKET
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: PLUMBER_JOE
+        display: "Talk to Plumber Joe"
+    wanted_items:
+      - CACTUS
+  - id: puzzler
+    display_name: Puzzler
+    rarity: RARE
+    garden_level: 2
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: PUZZLER
+        display: "Talk to the Puzzler"
+    wanted_items:
+      - CARROT
+  - id: queen_mismyla
+    display_name: Queen Mismyla
+    rarity: RARE
+    garden_level: 2
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: QUEEN_MISMYLA
+        display: "Talk to Queen Mismyla"
+    wanted_items:
+      - ANY 2
+  - id: queen_nyx
+    display_name: Queen Nyx
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: ravenous_rhino
+    display_name: Ravenous Rhino
+    rarity: MYTHIC
+    requirements:
+      - type: MAYOR_PERK_ACTIVE
+        key: BLOOMING_BUSINESS
+        display: "Mayor Finnegan's Blooming Business perk"
+    wanted_items:
+      - BREAD
+      - ENCHANTED_CAKE
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: DEDICATION_BOOK, display: "Enchanted Book (Dedication IV)" }
+  - id: rhys
+    display_name: Rhys
+    rarity: UNCOMMON
+    garden_level: 4
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: RHYS
+        display: "Talk to Rhys"
+    wanted_items:
+      - id: JACK_O_LANTERN
+        fixed_amount: 512
+    override_rewards:
+      farming_xp: 1000
+      copper: 2
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      raw_unique_rewards: "+1,000 Farming XP
+2 Copper"
+  - id: royal_resident
+    display_name: Royal Resident
+    rarity: RARE
+    garden_level: 7
+    requirements:
+      - type: PROFILE_FLAG
+        key: ROYAL_RESIDENT_CAKE
+        display: "Recieve the Royal Resident's Cake"
+    wanted_items:
+      - WHEAT
+      - SUGAR_CANE
+  - id: resident_neighbor
+    display_name: Resident Neighbor
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ROYAL_RESIDENT_NEIGHBOR
+        display: "Talk to the Royal Resident (Neighbor)"
+    wanted_items:
+      - ANY
+  - id: resident_snooty
+    display_name: Resident Snooty
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ROYAL_RESIDENT_SNOOTY
+        display: "Talk to the Royal Resident (Snooty)"
+    wanted_items:
+      - ANY
+  - id: rusty
+    display_name: Rusty
+    rarity: RARE
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: RUSTY
+        display: "Talk to Rusty"
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: ITEM, key: IRON_HOE, amount: 1 }
+  - id: ryu
+    display_name: Ryu
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: RYU
+        display: "Talk to Ryu"
+    wanted_items:
+      - ANY
+  - id: romero
+    display_name: Romero
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: ryan
+    display_name: Ryan
+    rarity: UNCOMMON
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: sargwyn
+    display_name: Sargwyn
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: SARGWYN
+        display: "Talk to Sargwyn"
+    wanted_items:
+      - WHEAT
+  - id: scout_scardius
+    display_name: Scout Scardius
+    rarity: UNCOMMON
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: seymour
+    display_name: Seymour
+    rarity: RARE
+    garden_level: 4
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: SEYMOUR
+        display: "Talk to Seymour"
+    wanted_items:
+      - PUMPKIN
+    guaranteed_rewards:
+      - { type: RANDOM_POOL, pool_id: SEYMOUR_SPECIAL_ARMOR, display: "Random piece of Seymour's Special Armor" }
+  - id: shaggy
+    display_name: Shaggy
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: SHAGGY
+        display: "Talk to Shaggy"
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: ITEM, key: ARACHNE_FRAGMENT, amount: 1 }
+  - id: sherry
+    display_name: Sherry
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: shifty
+    display_name: Shifty
+    rarity: RARE
+    garden_level: 6
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: SHIFTY
+        display: "Talk to the Shady Bartender"
+    wanted_items:
+      - MELON_SLICE
+  - id: sirius
+    display_name: Sirius
+    rarity: LEGENDARY
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: SIRIUS
+        display: "Talk to Sirius"
+    wanted_items:
+      - ANY
+  - id: spaceman
+    display_name: Spaceman
+    rarity: SPECIAL
+    garden_level: 15
+    requirements:
+      - type: GARDEN_COUNTER_AT_LEAST
+        key: SERVED_UNIQUE_VISITORS
+        amount: 75
+        display: "Serve 75 unique visitors"
+    wanted_items:
+      - ANY
+    override_rewards:
+      farming_xp: 100000
+      copper: 100
+      rewards:
+        - { type: ITEM, key: SPACE_HELMET, amount: 1 }
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      raw_unique_rewards: "Space Helmet
++100,000 Farming XP
+100 Copper"
+  - id: spider_tamer
+    display_name: Spider Tamer
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: st_jerry
+    display_name: St. Jerry
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: stella
+    display_name: Stella
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: STELLA
+        display: "Talk to Stella"
+    wanted_items:
+      - ANY
+  - id: tammy
+    display_name: Tammy
+    rarity: RARE
+    garden_level: 7
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: TAMMY
+        display: "Talk to Tammy"
+    wanted_items:
+      - CACTUS
+  - id: tarwen
+    display_name: Tarwen
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: TARWEN
+        display: "Talk to Tarwen"
+    wanted_items:
+      - WHEAT
+  - id: terry
+    display_name: Terry
+    rarity: UNCOMMON
+    garden_level: 6
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: TERRY
+        display: "Talk to Terry"
+    wanted_items:
+      - MELON_SLICE
+  - id: tia_the_fairy
+    display_name: Tia the Fairy
+    rarity: RARE
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: TIA_THE_FAIRY
+        display: "Talk to Tia the Fairy"
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: FAIRY_SOUL, amount: 1, display: "Fairy Soul" }
+  - id: tom
+    display_name: Tom
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: TOM
+        display: "Talk to Tom"
+    wanted_items:
+      - ANY
+  - id: tomioka
+    display_name: Tomioka
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: trevor
+    display_name: Trevor
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: TREVOR_THE_TRAPPER
+        display: "Talk to Trevor"
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: PELTS, amount: 2, display: "2 Pelts" }
+  - id: trinity
+    display_name: Trinity
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: tyashoi_alchemist
+    display_name: Tyashoi Alchemist
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: tyzzo
+    display_name: Tyzzo
+    rarity: RARE
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: vargul
+    display_name: Vargul
+    rarity: LEGENDARY
+    wanted_items:
+      - ANY
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      completeness: "PARTIAL"
+  - id: vex
+    display_name: Vex
+    rarity: UNCOMMON
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: VEX
+        display: "Talk to Vex"
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: ITEM, key: DEAD_BUSH, amount: 1 }
+  - id: vincent
+    display_name: Vincent
+    rarity: LEGENDARY
+    requirements:
+      - type: ITEM_DONATED
+        key: DYE
+        display: "Donate a Dye"
+    wanted_items:
+      - SUNFLOWER
+    guaranteed_rewards:
+      - { type: ITEM, key: WILD_STRAWBERRY_DYE, amount: 1 }
+  - id: vinyl_collector
+    display_name: Vinyl Collector
+    rarity: RARE
+    requirements:
+      - type: MAYOR_PERK_ACTIVE
+        key: BLOOMING_BUSINESS
+        display: "Mayor Finnegan's Blooming Business perk"
+    wanted_items:
+      - ANY
+    guaranteed_rewards:
+      - { type: ITEM, key: FINE_FLOUR, amount: 15 }
+    source_metadata:
+      source: "FANDOM_GARDEN_VISITORS"
+      request_pool: "PEST_VINYL"
+  - id: weaponsmith
+    display_name: Weaponsmith
+    rarity: UNCOMMON
+    garden_level: 3
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: WEAPONSMITH
+        display: "Talk to the Weaponsmith"
+    wanted_items:
+      - POTATO
+  - id: wizard
+    display_name: Wizard
+    rarity: UNCOMMON
+    garden_level: 3
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: WIZARD
+        display: "Talk to the Wizard"
+    wanted_items:
+      - CARROT
+    first_visit_override:
+      wanted_items:
+        - POTATO
+  - id: xalx
+    display_name: Xalx
+    rarity: UNCOMMON
+    garden_level: 5
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: XALX
+        display: "Talk to Xalx"
+    wanted_items:
+      - SUGAR
+    guaranteed_rewards:
+      - { type: ITEM, key: MYSTERIOUS_CROP, amount: 1 }
+  - id: zog
+    display_name: Zog
+    rarity: RARE
+    garden_level: 7
+    requirements:
+      - type: SPOKEN_TO_NPC
+        key: ZOG
+        display: "Talk to Zog"
+    wanted_items:
+      - MELON_SLICE
+      - CACTUS

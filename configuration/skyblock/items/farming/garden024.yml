@@ -1,0 +1,320 @@
+items:
+  - id: SOWDUST
+    material: green_dye
+    rarity: COMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Sowdust
+      - id: NOT_FINISHED_YET
+
+  - id: ETHEREAL_VINE
+    material: vine
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Ethereal Vine
+      - id: NOT_FINISHED_YET
+
+  - id: GREENHOUSE_BLUEPRINT
+    material: paper
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Greenhouse Blueprint
+      - id: NOT_FINISHED_YET
+
+  - id: SUNFLOWER_OIL
+    material: honey_bottle
+    rarity: UNCOMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Sunflower Oil
+      - id: NOT_FINISHED_YET
+
+  - id: COALROOT
+    material: coal
+    rarity: UNCOMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Coalroot
+      - id: NOT_FINISHED_YET
+
+  - id: TASTY_CHEESE
+    material: honeycomb
+    rarity: COMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Tasty Cheese
+      - id: NOT_FINISHED_YET
+
+  - id: JELLY
+    material: slime_ball
+    rarity: COMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Jelly
+      - id: NOT_FINISHED_YET
+
+  - id: BURROWING_SPORES
+    material: brown_mushroom
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Burrowing Spores
+      - id: NOT_FINISHED_YET
+
+  - id: IRIDIUM
+    material: prismarine_crystals
+    rarity: EPIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Iridium
+      - id: NOT_FINISHED_YET
+
+  - id: BEADY_EYES
+    material: spider_eye
+    rarity: UNCOMMON
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Beady Eyes
+      - id: NOT_FINISHED_YET
+
+  - id: CLIPPED_WINGS
+    material: feather
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Clipped Wings
+      - id: NOT_FINISHED_YET
+
+  - id: BOOKWORMS_FAVORITE_BOOK
+    material: book
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Bookworm's Favorite Book
+      - id: NOT_FINISHED_YET
+
+  - id: WRIGGLING_LARVA
+    material: string
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Wriggling Larva
+      - id: NOT_FINISHED_YET
+
+  - id: MANTID_CLAW
+    material: rabbit_foot
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Mantid Claw
+      - id: NOT_FINISHED_YET
+
+  - id: FIRE_IN_A_BOTTLE
+    material: experience_bottle
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Fire in a Bottle
+      - id: NOT_FINISHED_YET
+
+  - id: DUNG_DYE
+    material: brown_dye
+    rarity: EPIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Dung Dye
+      - id: NOT_FINISHED_YET
+
+  - id: SQUEAKY_TOY
+    material: rabbit_foot
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Squeaky Toy
+      - id: NOT_FINISHED_YET
+
+  - id: SQUEAKY_MOUSEMAT
+    material: gray_carpet
+    rarity: EPIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Squeaky Mousemat
+      - id: NOT_FINISHED_YET
+
+  - id: ENCHANTED_SUNFLOWER
+    material: sunflower
+    rarity: UNCOMMON
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Enchanted Sunflower
+      - id: NOT_FINISHED_YET
+
+  - id: COMPACTED_SUNFLOWER
+    material: yellow_wool
+    rarity: RARE
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Compacted Sunflower
+      - id: NOT_FINISHED_YET
+
+  - id: ENCHANTED_MOONFLOWER
+    material: white_dye
+    rarity: UNCOMMON
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Enchanted Moonflower
+      - id: NOT_FINISHED_YET
+
+  - id: COMPACTED_MOONFLOWER
+    material: white_wool
+    rarity: RARE
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Compacted Moonflower
+      - id: NOT_FINISHED_YET
+
+  - id: ENCHANTED_WILD_ROSE
+    material: poppy
+    rarity: UNCOMMON
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Enchanted Wild Rose
+      - id: NOT_FINISHED_YET
+
+  - id: COMPACTED_WILD_ROSE
+    material: red_wool
+    rarity: RARE
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Compacted Wild Rose
+      - id: NOT_FINISHED_YET
+
+  - id: VERMIN_VAPORIZER_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Vermin Vaporizer Chip
+      - id: NOT_FINISHED_YET
+
+  - id: SYNTHESIS_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Synthesis Chip
+      - id: NOT_FINISHED_YET
+
+  - id: SOWLEDGE_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Sowledge Chip
+      - id: NOT_FINISHED_YET
+
+  - id: MECHAMIND_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Mechamind Chip
+      - id: SKULL_HEAD
+        texture: 560aa469cc6b667dbcbfdc63e827b7c05ca7726af8a178a4aa2e8ffa2690e843
+      - id: NOT_FINISHED_YET
+
+  - id: HYPERCHARGE_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Hypercharge Chip
+      - id: NOT_FINISHED_YET
+
+  - id: EVERGREEN_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Evergreen Chip
+      - id: NOT_FINISHED_YET
+
+  - id: OVERDRIVE_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Overdrive Chip
+      - id: SKULL_HEAD
+        texture: 115f8b48be9a2c3539af2b7c4026fb27a3dc3580cba74cc1f3ec8beda9a91af5
+      - id: NOT_FINISHED_YET
+
+  - id: CROPSHOT_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Cropshot Chip
+      - id: SKULL_HEAD
+        texture: e85b6f92f03867f835d3179a42557b4c4bdd3545c9a8e9285bdd32dab464d08f
+      - id: NOT_FINISHED_YET
+
+  - id: QUICKDRAW_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Quickdraw Chip
+      - id: NOT_FINISHED_YET
+
+  - id: RAREFINDER_GARDEN_CHIP
+    material: player_head
+    rarity: RARE
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Rarefinder Chip
+      - id: NOT_FINISHED_YET
+
+  - id: SUNDER_I
+    material: enchanted_book
+    rarity: COMMON
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Enchanted Book (Sunder I)
+      - id: NOT_FINISHED_YET
+
+  - id: GREEN_THUMB_I
+    material: enchanted_book
+    rarity: COMMON
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Enchanted Book (Green Thumb I)
+      - id: NOT_FINISHED_YET
+
+  - id: DEDICATION_I
+    material: enchanted_book
+    rarity: COMMON
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Enchanted Book (Dedication I)
+      - id: NOT_FINISHED_YET
+
+  - id: SUNDER_VI_BOOK
+    material: enchanted_book
+    rarity: RARE
+    components:
+      - id: ENCHANTED
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Enchanted Book (Sunder VI)
+      - id: NOT_FINISHED_YET

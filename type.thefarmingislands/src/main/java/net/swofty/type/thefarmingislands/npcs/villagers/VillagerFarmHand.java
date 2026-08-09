@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.VillagerProfession;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.VillagerConfiguration;
+import net.swofty.type.generic.event.custom.NPCInteractEvent;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.mission.MissionData;
 import net.swofty.type.skyblockgeneric.mission.missions.barn.MissionCraftWheatMinion;
@@ -12,8 +13,6 @@ import net.swofty.type.skyblockgeneric.mission.missions.barn.MissionTalkToFarmha
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.List;
-
-import net.swofty.type.generic.event.custom.NPCInteractEvent;
 
 public class VillagerFarmHand extends HypixelNPC {
     public VillagerFarmHand() {
@@ -71,7 +70,7 @@ public class VillagerFarmHand extends HypixelNPC {
         MissionData data = ((SkyBlockPlayer) e.player()).getMissionData();
 
         if (data.isCurrentlyActive(MissionTalkToFarmHand.class)) {
-            setDialogue(e.player(), "quest-hello").thenRun(() -> {
+            setGardenDialogue(e.player(), "quest-hello").thenRun(() -> {
                 data.endMission(MissionTalkToFarmHand.class);
             });
             return;
@@ -81,11 +80,22 @@ public class VillagerFarmHand extends HypixelNPC {
             return;
         }
         if (!data.hasCompleted(MissionTalkToFarmhandAgain.class)) {
-            setDialogue(e.player(), "spoke-again").thenRun(() -> {
+            setGardenDialogue(e.player(), "spoke-again").thenRun(() -> {
                 data.endMission(MissionTalkToFarmhandAgain.class);
             });
             return;
         }
-        setDialogue(e.player(), "initial-hello");
+        setGardenDialogue(e.player(), "initial-hello");
+    }
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("FARMHAND")
+                );
+            }
+        });
     }
 }

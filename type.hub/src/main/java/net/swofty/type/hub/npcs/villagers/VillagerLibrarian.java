@@ -45,7 +45,7 @@ public class VillagerLibrarian extends HypixelNPC {
         MissionData data = player.getMissionData();
 
         if (data.isCurrentlyActive("speak_to_librarian")) {
-            setDialogue(player, "quest-hello").thenRun(() -> {
+            setGardenDialogue(player, "quest-hello").thenRun(() -> {
                 data.endMission("speak_to_librarian");
             });
             return;
@@ -65,5 +65,16 @@ public class VillagerLibrarian extends HypixelNPC {
                                 "Use the §aEnchanting Table §fto enchant an item!"
                         }).build()
         ).toArray(DialogueSet[]::new);
+    }
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("LIBRARIAN")
+                );
+            }
+        });
     }
 }

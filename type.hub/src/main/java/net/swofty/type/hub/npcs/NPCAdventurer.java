@@ -45,7 +45,7 @@ public class NPCAdventurer extends HypixelNPC {
         boolean hasSpokenBefore = player.getToggles().get(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_ADVENTURER);
 
         if (!hasSpokenBefore) {
-            setDialogue(player, "hello").thenRun(() -> {
+            setGardenDialogue(player, "hello").thenRun(() -> {
                 player.getToggles().set(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_ADVENTURER, true);
             });
             return;
@@ -59,5 +59,16 @@ public class NPCAdventurer extends HypixelNPC {
         return new DialogueSet[] {
             DialogueSet.ofTranslation("hello", "npcs_hub.adventurer.dialogue.hello")
         };
+    }
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("ADVENTURER")
+                );
+            }
+        });
     }
 }

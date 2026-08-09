@@ -55,7 +55,7 @@ public class NPCLumberJack extends HypixelNPC {
         MissionData data = player.getMissionData();
 
         if (data.isCurrentlyActive(MissionTalkToLumberjack.class)) {
-            setDialogue(player, "initial-hello").thenRun(() -> {
+            setGardenDialogue(player, "initial-hello").thenRun(() -> {
                 NPCOption.sendOption(player, "lumber_jack", true, List.of(
                         new NPCOption.Option(
                                 "r_2_1",
@@ -63,7 +63,7 @@ public class NPCLumberJack extends HypixelNPC {
 								false,
                                 "Sure",
                                 (p) -> {
-                                    setDialogue(p, "option-accept").thenRun(() -> {
+                                    setGardenDialogue(p, "option-accept").thenRun(() -> {
 										data.endMission(MissionTalkToLumberjack.class);
                                     });
                                 }
@@ -74,7 +74,7 @@ public class NPCLumberJack extends HypixelNPC {
 								false,
                                 "Nah, I'm good",
                                 (p) -> {
-                                    setDialogue(player, "option-nah");
+                                    setGardenDialogue(player, "option-nah");
                                 }
                         )
                 ));
@@ -86,14 +86,14 @@ public class NPCLumberJack extends HypixelNPC {
             return;
         }
         if (!data.hasCompleted(MissionTalkToLumberjackAgain.class)) {
-            setDialogue(player, "spoke-again").thenRun(() -> {
+            setGardenDialogue(player, "spoke-again").thenRun(() -> {
 				player.openView(new ClaimRewardView(), new ClaimRewardView.State(ItemType.PROMISING_AXE, () -> {
 					data.endMission(MissionTalkToLumberjackAgain.class);
 				}));
             });
             return;
         }
-		setDialogue(player, "idle-" + (1 + (int)(Math.random() * 3)));
+		setGardenDialogue(player, "idle-" + (1 + (int)(Math.random() * 3)));
     }
 
     @Override
@@ -137,5 +137,16 @@ public class NPCLumberJack extends HypixelNPC {
 								"Have you enchanted your axe with §aEfficiency V§f? It'll help ya break stuff a lot faster."
 						}).build()
 		).toArray(DialogueSet[]::new);
+    }
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("LUMBER_JACK")
+                );
+            }
+        });
     }
 }

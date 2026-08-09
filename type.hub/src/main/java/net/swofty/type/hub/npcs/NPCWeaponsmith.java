@@ -46,7 +46,7 @@ public class NPCWeaponsmith extends HypixelNPC {
         boolean hasSpokenBefore = player.getToggles().get(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_WEAPONSMITH);
 
         if (!hasSpokenBefore) {
-            setDialogue(player, "hello").thenRun(() -> {
+            setGardenDialogue(player, "hello").thenRun(() -> {
                 player.getToggles().set(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_WEAPONSMITH, true);
             });
             return;
@@ -64,5 +64,16 @@ public class NPCWeaponsmith extends HypixelNPC {
                                 "Click me again to open the Weaponsmith Shop!"
                         }).build(),
         };
+    }
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("WEAPONSMITH")
+                );
+            }
+        });
     }
 }

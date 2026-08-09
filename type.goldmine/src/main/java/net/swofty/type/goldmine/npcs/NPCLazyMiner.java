@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
+import net.swofty.type.generic.event.custom.NPCInteractEvent;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.calendar.SkyBlockCalendar;
 import net.swofty.type.skyblockgeneric.mission.MissionData;
@@ -13,8 +14,6 @@ import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.stream.Stream;
-
-import net.swofty.type.generic.event.custom.NPCInteractEvent;
 
 public class NPCLazyMiner extends HypixelNPC {
 
@@ -56,16 +55,16 @@ public class NPCLazyMiner extends HypixelNPC {
         // Check if mission is completed - show idle dialogue
         if (data.hasCompleted(MissionTalkToLazyMiner.class)) {
             if (player.getSkills().getCurrentLevel(SkillCategories.MINING) < 5) {
-                setDialogue(player, "not-reached-deep-caverns");
+                setGardenDialogue(player, "not-reached-deep-caverns");
                 return;
             }
-            setDialogue(player, "idle");
+            setGardenDialogue(player, "idle");
             return;
         }
 
         // Check if player needs to return the pickaxe (MissionTalkToLazyMiner is active)
         if (data.isCurrentlyActive(MissionTalkToLazyMiner.class)) {
-            setDialogue(player, "quest-complete").thenRun(() -> {
+            setGardenDialogue(player, "quest-complete").thenRun(() -> {
                 data.endMission(MissionTalkToLazyMiner.class);
             });
             return;
@@ -73,7 +72,7 @@ public class NPCLazyMiner extends HypixelNPC {
 
         // Check if player is looking for the pickaxe (MissionFindLazyMinerPickaxe is active)
         if (data.isCurrentlyActive(MissionFindLazyMinerPickaxe.class)) {
-            setDialogue(player, "no-pickaxe-found");
+            setGardenDialogue(player, "no-pickaxe-found");
             return;
         }
 
@@ -81,7 +80,7 @@ public class NPCLazyMiner extends HypixelNPC {
         boolean hasFoundPickaxe = player.getMissionData().hasCompleted(MissionFindLazyMinerPickaxe.class);
         if (hasFoundPickaxe) {
             // Player found the pickaxe before talking to Lazy Miner - skip to talk mission
-            setDialogue(player, "found-pick-intro").thenRun(() -> {
+            setGardenDialogue(player, "found-pick-intro").thenRun(() -> {
                 player.getToggles().set(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_LAZY_MINER, true);
                 data.startMission(MissionTalkToLazyMiner.class);
             });
@@ -89,7 +88,7 @@ public class NPCLazyMiner extends HypixelNPC {
         }
 
         // Normal first interaction - start the quest
-        setDialogue(player, "first-interaction").thenRun(() -> {
+        setGardenDialogue(player, "first-interaction").thenRun(() -> {
             player.getToggles().set(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_LAZY_MINER, true);
             data.startMission(MissionFindLazyMinerPickaxe.class);
         });
@@ -132,5 +131,16 @@ public class NPCLazyMiner extends HypixelNPC {
                                 "Maybe some day I'll go back down there."
                         }).build()
         ).toArray(DialogueSet[]::new);
+    }
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("LAZY_MINER")
+                );
+            }
+        });
     }
 }

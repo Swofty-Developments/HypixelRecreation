@@ -11,6 +11,7 @@ import net.swofty.type.generic.user.HypixelPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class HypixelCommand {
     @Getter
@@ -52,8 +53,12 @@ public abstract class HypixelCommand {
 
     public boolean permissionCheck(CommandSender sender) {
         HypixelPlayer player = (HypixelPlayer) sender;
-        HypixelDataHandler dataHandler = player.getDataHandler();
-        boolean passes = dataHandler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(params.permission());
+        Optional<HypixelDataHandler> dataHandler = player.getOptionalDataHandler();
+        if (dataHandler.isEmpty()) {
+            player.sendMessage("§cYour player data is unavailable right now. Please reconnect.");
+            return false;
+        }
+        boolean passes = dataHandler.get().get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(params.permission());
 
         if (!passes) {
             player.sendMessage("§cYou do not have permission to use this command.");
@@ -67,19 +72,17 @@ public abstract class HypixelCommand {
         public MinestomCommand(HypixelCommand command) {
             super(command.getName());
 
-            setDefaultExecutor((sender, context) -> {
-                sender.sendMessage("§cUsage: " + command.getParams().usage());
-            });
+            setDefaultExecutor((sender, _) -> sender.sendMessage("§cUsage: " + command.getParams().usage()));
 
-            setCondition((commandSender, string) -> {
+            setCondition((commandSender, _) -> {
                 if (commandSender instanceof ConsoleSender) {
                     return command.getParams().allowsConsole();
                 }
 
                 HypixelPlayer player = (HypixelPlayer) commandSender;
-                HypixelDataHandler dataHandler = player.getDataHandler();
+                Optional<HypixelDataHandler> dataHandler = player.getOptionalDataHandler();
+                return dataHandler.map(hypixelDataHandler -> hypixelDataHandler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(command.getParams().permission())).orElse(false);
 
-                return dataHandler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(command.getParams().permission());
             });
 
             command.registerUsage(this);
@@ -88,19 +91,19 @@ public abstract class HypixelCommand {
         public MinestomCommand(HypixelCommand command, String... aliases) {
             super(command.getName(), aliases);
 
-            setDefaultExecutor((sender, context) -> {
+            setDefaultExecutor((sender, _) -> {
                 sender.sendMessage("§cUsage: " + command.getParams().usage());
             });
 
-            setCondition((commandSender, string) -> {
+            setCondition((commandSender, _) -> {
                 if (commandSender instanceof ConsoleSender) {
                     return command.getParams().allowsConsole();
                 }
 
                 HypixelPlayer player = (HypixelPlayer) commandSender;
-                HypixelDataHandler dataHandler = player.getDataHandler();
+                Optional<HypixelDataHandler> dataHandler = player.getOptionalDataHandler();
+                return dataHandler.map(hypixelDataHandler -> hypixelDataHandler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(command.getParams().permission())).orElse(false);
 
-                return dataHandler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(command.getParams().permission());
             });
 
             command.registerUsage(this);

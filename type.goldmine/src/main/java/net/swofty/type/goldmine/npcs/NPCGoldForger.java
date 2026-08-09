@@ -4,11 +4,10 @@ import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
+import net.swofty.type.generic.event.custom.NPCInteractEvent;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.goldmine.gui.GUIShopGoldForger;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
-
-import net.swofty.type.generic.event.custom.NPCInteractEvent;
 
 public class NPCGoldForger extends HypixelNPC {
 
@@ -48,7 +47,7 @@ public class NPCGoldForger extends HypixelNPC {
 		boolean hasSpokenBefore = player.getToggles().get(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_GOLD_FORGER);
 
 		if (!hasSpokenBefore) {
-			setDialogue(player, "hello").thenRun(() -> {
+			setGardenDialogue(player, "hello").thenRun(() -> {
 				player.getToggles().set(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_GOLD_FORGER, true);
 			});
 			return;
@@ -67,4 +66,15 @@ public class NPCGoldForger extends HypixelNPC {
 						}).build(),
 		};
 	}
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("GOLD_FORGER")
+                );
+            }
+        });
+    }
 }

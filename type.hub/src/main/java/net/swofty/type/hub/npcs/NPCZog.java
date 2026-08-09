@@ -47,7 +47,7 @@ public class NPCZog extends HypixelNPC {
         boolean hasSpokenBefore = player.getToggles().get(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_ZOG);
 
         if (!hasSpokenBefore) {
-            setDialogue(player, "hello").thenRun(() -> {
+            setGardenDialogue(player, "hello").thenRun(() -> {
                 player.getToggles().set(DatapointToggles.Toggles.ToggleType.HAS_SPOKEN_TO_ZOG, true);
             });
             return;
@@ -66,5 +66,16 @@ public class NPCZog extends HypixelNPC {
                                 "I sell all kinds of them if you'd like to try one out!"
                         }).build(),
         };
+    }
+
+    private java.util.concurrent.CompletableFuture<Void> setGardenDialogue(HypixelPlayer player, String key) {
+        return setDialogue(player, key).thenRun(() -> {
+            if (player instanceof net.swofty.type.skyblockgeneric.user.SkyBlockPlayer skyBlockPlayer) {
+                net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport.apply(
+                    skyBlockPlayer,
+                    net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward.spokenNpc("ZOG")
+                );
+            }
+        });
     }
 }

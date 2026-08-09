@@ -1,0 +1,114 @@
+[
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -0.021884863069715266,
+      "y": -0.16696476165546414,
+      "z": -0.2075808103294321
+    },
+    "rotation": {
+      "yaw": 90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:wooden_sword",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:wooden_sword\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": 71.0,
+        "y": 50.0,
+        "z": -6.0
+      },
+      "leftLeg": {
+        "x": -19.0,
+        "y": 0.0,
+        "z": 15.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.5064550143374333,
+      "y": -0.25,
+      "z": 0.07497938488566547
+    },
+    "rotation": {
+      "yaw": -135.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:iron_sword",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:iron_sword\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": 71.0,
+        "y": 25.0,
+        "z": -31.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -4.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  }
+]
