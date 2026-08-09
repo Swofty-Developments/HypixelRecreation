@@ -161,59 +161,32 @@ regions:
     y2: 0
     z2: 48
     serverType: DEEP_CAVERNS
-  - id: the_end_nest_1
-    type: THE_END_NEST
-    x1: 78
-    y1: 117
-    z1: -87
-    x2: 149
-    y2: 0
-    z2: 85
-    serverType: THE_END
-  - id: the_end_1
-    type: THE_END
-    x1: 150
-    y1: 177
-    z1: 146
-    x2: 190
-    y2: 23
-    z2: -115
-    serverType: THE_END
-  - id: dragons_nest_2
+  - id: dragons_pnest_1
     type: DRAGONS_NEST
-    x1: -34
-    y1: 1
-    z1: 68
-    x2: -92
-    y2: 68
-    z2: -52
+    x1: -597
+    y1: 34
+    z1: -252
+    x2: -664
+    y2: 5
+    z2: -289
     serverType: THE_END
-  - id: vs1
+  - id: the_end_p_1
+    type: THE_END
+    x1: -470
+    y1: 216
+    z1: -173
+    x2: -777
+    y2: 2
+    z2: -323
+    serverType: THE_END
+  - id: void_sepu_plture_1
     type: VOID_SEPULTURE
-    x1: 100
-    y1: 62
-    z1: -17
-    x2: 56
+    x1: -546
+    y1: 55
+    z1: -289
+    x2: -598
     y2: 7
-    z2: -96
-    serverType: THE_END
-  - id: vs2
-    type: VOID_SEPULTURE
-    x1: 68
-    y1: 70
-    z1: -96
-    x2: 140
-    y2: 23
-    z2: -21
-    serverType: THE_END
-  - id: vs3
-    type: VOID_SEPULTURE
-    x1: 74
-    y1: 50
-    z1: -51
-    x2: 49
-    y2: 8
-    z2: -91
+    z2: -372
     serverType: THE_END
   - id: dwarvenmines1
     type: DWARVEN_MINES

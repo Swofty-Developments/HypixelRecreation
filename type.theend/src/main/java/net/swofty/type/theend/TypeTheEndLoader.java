@@ -9,16 +9,16 @@ import net.swofty.commons.CustomWorlds;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.redis.RedisMessageHandler;
-import net.swofty.type.generic.SkyBlockTypeLoader;
 import net.swofty.type.generic.HypixelConst;
+import net.swofty.type.generic.SkyBlockTypeLoader;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.event.HypixelEventClass;
+import net.swofty.type.generic.tab.AreaServerModule;
 import net.swofty.type.generic.tab.TablistManager;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import net.swofty.type.skyblockgeneric.tabmodules.AccountInformationModule;
 import net.swofty.type.skyblockgeneric.tabmodules.SkyBlockPlayersOnlineModule;
-import net.swofty.type.generic.tab.AreaServerModule;
 import net.swofty.type.theend.dragon.EndDragonManager;
 import net.swofty.type.theend.service.EndRaceService;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ public class TypeTheEndLoader implements SkyBlockTypeLoader {
 
     @Override
     public void afterInitialize(MinecraftServer server) {
-        EndDragonManager.initialize(HypixelConst.getInstanceContainer(), new Pos(-600, 22, -275));
+        EndDragonManager.initialize(HypixelConst.getInstanceContainer(), new Pos(-671, 9, -276));
         EndRaceService.initialize();
     }
 
