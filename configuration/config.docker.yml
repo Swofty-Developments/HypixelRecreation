@@ -4,7 +4,6 @@ mongodb: mongodb://mongodb
 redis-url: redis://redis:6379
 velocity-secret: ixmSUgWOgvs7
 require-auth: false
-sandbox: false
 spark: false
 anticheat: false
 redis-uri: redis://redis:6379

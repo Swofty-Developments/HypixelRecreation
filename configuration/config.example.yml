@@ -8,8 +8,6 @@ redis-uri: redis://localhost:6379
 velocity-secret: ixmSUgWOgvs7
 # Whether to require player authentication on initial connection
 require-auth: false
-# Whether to enable sandbox features (such as editing items)
-sandbox: false
 # Integrations with services
 integrations:
     # Whether to enable Spark for performance monitoring

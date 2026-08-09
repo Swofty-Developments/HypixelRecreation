@@ -50,14 +50,6 @@ public class ItemAttributeHandler {
         return item.hasComponent(EnchantedComponent.class);
     }
 
-    public @Nullable ItemAttributeSandboxItem.SandboxData getSandboxData() {
-        return ((ItemAttributeSandboxItem) item.getAttribute("sandboxdata")).getValue();
-    }
-
-    public void setSandboxData(ItemAttributeSandboxItem.SandboxData data) {
-        item.getAttribute("sandboxdata").setValue(data);
-    }
-
     public int getRuneLevel() {
         if (!(item.hasComponent(RuneableComponent.class))) {
             throw new RuntimeException("Item is not a rune item " + getTypeAsString());

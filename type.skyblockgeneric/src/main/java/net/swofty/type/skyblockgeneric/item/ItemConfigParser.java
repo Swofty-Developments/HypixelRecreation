@@ -162,7 +162,7 @@ public class ItemConfigParser {
 				case "CUSTOM_DISPLAY_NAME" ->
 						new CustomDisplayNameComponent((_) -> safeConfig.getString("display_name", ""));
 				case "DECORATION_HEAD" -> {
-					String texture = safeConfig.getString("texture");
+					String texture = safeConfig.getString("texture", "value", "");
 					yield new DecorationHeadComponent(texture);
 				}
 				case "DEFAULT_SOULBOUND" -> {

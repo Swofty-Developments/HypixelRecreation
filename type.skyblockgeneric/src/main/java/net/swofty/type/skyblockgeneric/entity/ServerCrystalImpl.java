@@ -110,7 +110,7 @@ public class ServerCrystalImpl extends LivingEntity {
             List<Pos> possiblePositions = new ArrayList<>();
             for (Pos block : landToPlaceOn) {
                 Block a = instance.getBlock(block.add(0, 1, 0));
-                if (a.isAir()) {
+                if (a.air()) {
                     possiblePositions.add(block);
                 }
             }

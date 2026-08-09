@@ -9,6 +9,8 @@ import team.unnamed.creative.server.handler.ResourcePackRequestHandler;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -34,6 +36,7 @@ public class HypixelPackServer {
                         RavengardPackDefinition.INSTANCE,
                         SkyblockPackDefinition.INSTANCE
                 ).stream()
+                .filter(HypixelPackServer::packDirectoryExists)
                 .map(HypixelPackServer::buildPack)
                 .collect(Collectors.toMap(
                         pack -> pack.hash() + ".zip",
@@ -62,6 +65,15 @@ public class HypixelPackServer {
         try {
             Thread.currentThread().join();
         } catch (InterruptedException ignored) {}
+    }
+
+    private static boolean packDirectoryExists(PackDefinition definition) {
+        boolean exists = Files.isDirectory(Path.of(definition.getPackDirectory()));
+        if (!exists) {
+            System.out.println("Skipping resource pack '" + definition.getPackName()
+                    + "': directory does not exist: " + definition.getPackDirectory());
+        }
+        return exists;
     }
 
     private static BuiltResourcePack buildPack(PackDefinition definition) {

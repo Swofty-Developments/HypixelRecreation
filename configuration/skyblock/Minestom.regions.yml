@@ -1,0 +1,739 @@
+regions:
+  - id: village_1
+    type: VILLAGE
+    x1: 229
+    y1: 3
+    z1: -194
+    x2: -276
+    y2: 182
+    z2: 201
+    serverType: SKYBLOCK_HUB
+  - id: ruins_1
+    type: RUINS
+    x1: -189
+    y1: 148
+    z1: 28
+    x2: -299
+    y2: 40
+    z2: 158
+    serverType: SKYBLOCK_HUB
+  - id: library_1
+    type: LIBRARY
+    x1: -75
+    y1: 75
+    z1: -83
+    x2: -71
+    y2: 70
+    z2: -79
+    serverType: SKYBLOCK_HUB
+  - id: library_2
+    type: LIBRARY
+    x1: -71
+    y1: 76
+    z1: -74
+    x2: -63
+    y2: 69
+    z2: -85
+    serverType: SKYBLOCK_HUB
+  - id: thaumaturgist
+    type: THAUMATURGIST
+    x1: -74
+    y1: 69
+    z1: -57
+    x2: -59
+    y2: 77
+    z2: -72
+    serverType: SKYBLOCK_HUB
+  - id: thaumaturgist_2
+    type: THAUMATURGIST
+    x1: -48
+    y1: 74
+    z1: -65
+    x2: -57
+    y2: 70
+    z2: -59
+    serverType: SKYBLOCK_HUB
+  - id: mountain
+    type: MOUNTAIN
+    x1: -51
+    y1: 98
+    z1: 16
+    x2: -38
+    y2: 85
+    z2: 1
+    serverType: SKYBLOCK_HUB
+  - id: trade_center
+    type: TRADE_CENTER
+    x1: -29
+    y1: 73
+    z1: -73
+    x2: -38
+    y2: 68
+    z2: -83
+    serverType: SKYBLOCK_HUB
+  - id: combat_settlement
+    type: COMBAT_SETTLEMENT
+    x1: -32
+    y1: 63
+    z1: -61
+    x2: -70
+    y2: 88
+    z2: -98
+    serverType: SKYBLOCK_HUB
+  - id: election_room
+    type: ELECTION_ROOM
+    x1: -16
+    y1: 63
+    z1: 54
+    x2: 16
+    y2: 47
+    z2: 16
+    serverType: SKYBLOCK_HUB
+  - id: goldmine_1
+    type: GOLD_MINE
+    x1: 52
+    y1: 136
+    z1: -261
+    x2: -106
+    y2: 14
+    z2: -404
+    serverType: GOLD_MINE
+  - id: deepcavern_1
+    type: DEEP_CAVERNS
+    x1: -68
+    y1: 235
+    z1: 112
+    x2: 135
+    y2: 0
+    z2: -72
+    serverType: DEEP_CAVERNS
+  - id: gunpowder
+    type: GUNPOWDER_MINES
+    x1: 159
+    y1: 165
+    z1: 42
+    x2: -38
+    y2: 143
+    z2: -62
+    serverType: DEEP_CAVERNS
+  - id: lapis_quarry
+    type: LAPIS_QUARRY
+    x1: -38
+    y1: 143
+    z1: -62
+    x2: 151
+    y2: 114
+    z2: 77
+    serverType: DEEP_CAVERNS
+  - id: pigmens_den
+    type: PIGMENS_DEN
+    x1: 151
+    y1: 114
+    z1: 77
+    x2: -26
+    y2: 85
+    z2: -61
+    serverType: DEEP_CAVERNS
+  - id: slimehill
+    type: SLIMEHILL
+    x1: -26
+    y1: 85
+    z1: -61
+    x2: 127
+    y2: 52
+    z2: 74
+    serverType: DEEP_CAVERNS
+  - id: diamond_reserve
+    type: DIAMOND_RESERVE
+    x1: 127
+    y1: 52
+    z1: 74
+    x2: -36
+    y2: 28
+    z2: -74
+    serverType: DEEP_CAVERNS
+  - id: obsidian_sanctuary
+    type: OBSIDIAN_SANCTUARY
+    x1: -36
+    y1: 28
+    z1: -74
+    x2: 121
+    y2: 0
+    z2: 48
+    serverType: DEEP_CAVERNS
+  - id: the_end_nest_1
+    type: THE_END_NEST
+    x1: 78
+    y1: 117
+    z1: -87
+    x2: 149
+    y2: 0
+    z2: 85
+    serverType: THE_END
+  - id: the_end_1
+    type: THE_END
+    x1: 150
+    y1: 177
+    z1: 146
+    x2: 190
+    y2: 23
+    z2: -115
+    serverType: THE_END
+  - id: dragons_nest_2
+    type: DRAGONS_NEST
+    x1: -34
+    y1: 1
+    z1: 68
+    x2: -92
+    y2: 68
+    z2: -52
+    serverType: THE_END
+  - id: vs1
+    type: VOID_SEPULTURE
+    x1: 100
+    y1: 62
+    z1: -17
+    x2: 56
+    y2: 7
+    z2: -96
+    serverType: THE_END
+  - id: vs2
+    type: VOID_SEPULTURE
+    x1: 68
+    y1: 70
+    z1: -96
+    x2: 140
+    y2: 23
+    z2: -21
+    serverType: THE_END
+  - id: vs3
+    type: VOID_SEPULTURE
+    x1: 74
+    y1: 50
+    z1: -51
+    x2: 49
+    y2: 8
+    z2: -91
+    serverType: THE_END
+  - id: dwarvenmines1
+    type: DWARVEN_MINES
+    x1: -243
+    y1: 255
+    z1: -205
+    x2: 308
+    y2: 3
+    z2: 291
+    serverType: DWARVEN_MINES
+  - id: forge1
+    type: THE_FORGE
+    x1: -34
+    y1: 168
+    z1: -42
+    x2: 30
+    y2: 144
+    z2: -125
+    serverType: DWARVEN_MINES
+  - id: forge2
+    type: FORGE_BASIN
+    x1: -16
+    y1: 189
+    z1: -1
+    x2: 17
+    y2: 144
+    z2: -38
+    serverType: DWARVEN_MINES
+  - id: divb1
+    type: DIVANS_GATEWAY
+    x1: 7
+    y1: 127
+    z1: 51
+    x2: -10
+    y2: 149
+    z2: 128
+    serverType: DWARVEN_MINES
+  - id: icewall
+    type: GREAT_ICE_WALL
+    x1: 25
+    y1: 169
+    z1: 138
+    x2: -25
+    y2: 126
+    z2: 174
+    serverType: DWARVEN_MINES
+  - id: gb1
+    type: GOBLIN_BURROWS
+    x1: -47
+    y1: 170
+    z1: 214
+    x2: -96
+    y2: 154
+    z2: 99
+    serverType: DWARVEN_MINES
+  - id: gb2
+    type: GOBLIN_BURROWS
+    x1: -60
+    y1: 163
+    z1: 180
+    x2: -192
+    y2: 131
+    z2: 110
+    serverType: DWARVEN_MINES
+  - id: mist1
+    type: THE_MIST
+    x1: -60
+    y1: 83
+    z1: 2
+    x2: 200
+    y2: 63
+    z2: 160
+    serverType: DWARVEN_MINES
+  - id: cliffv
+    type: CLIFFSIDE_VEINS
+    x1: 6
+    y1: 154
+    z1: 23
+    x2: 92
+    y2: 114
+    z2: 56
+    serverType: DWARVEN_MINES
+  - id: barn_1
+    type: THE_BARN
+    x1: 82
+    y1: 26
+    z1: -177
+    x2: 250
+    y2: 120
+    z2: -334
+    serverType: THE_FARMING_ISLANDS
+  - id: birch_forest
+    type: BIRCH_PARK
+    x1: -255
+    y1: 114
+    z1: 26
+    x2: -336
+    y2: 41
+    z2: -90
+    serverType: THE_PARK
+  - id: spruce_forest
+    type: SPRUCE_WOODS
+    x1: -387
+    y1: 151
+    z1: -22
+    x2: -309
+    y2: 59
+    z2: 107
+    serverType: THE_PARK
+  - id: dark_thicket
+    type: DARK_THICKET
+    x1: -333
+    y1: 148
+    z1: -24
+    x2: -415
+    y2: 59
+    z2: -122
+    serverType: THE_PARK
+  - id: trial_of_fire
+    type: TRIALS_OF_FIRE
+    x1: -369
+    y1: 120
+    z1: -100
+    x2: -357
+    y2: 101
+    z2: -88
+    serverType: THE_PARK
+  - id: jungle
+    type: JUNGLE_ISLAND
+    x1: -417
+    y1: 149
+    z1: -130
+    x2: -507
+    y2: 68
+    z2: -18
+    serverType: THE_PARK
+  - id: savanna
+    type: SAVANNA_WOODLAND
+    x1: -467
+    y1: 155
+    z1: -20
+    x2: -383
+    y2: 56
+    z2: 102
+    serverType: THE_PARK
+  - id: viking
+    type: VIKING_LONGHOUSE
+    x1: -349
+    y1: 50
+    z1: 53
+    x2: -315
+    y2: 131
+    z2: 94
+    serverType: THE_PARK
+  - id: melody
+    type: MELODY_PLATEAU
+    x1: -434
+    y1: 100
+    z1: 63
+    x2: -399
+    y2: 132
+    z2: 101
+    serverType: THE_PARK
+  - id: sherry
+    type: SHERRYS_SHOWROOM
+    x1: 21
+    y1: 98
+    z1: 86
+    x2: 7
+    y2: 76
+    z2: 108
+    serverType: JERRYS_WORKSHOP
+  - id: jerry
+    type: JERRYS_WORKSHOP
+    x1: 139
+    y1: 183
+    z1: 200
+    x2: -163
+    y2: 30
+    z2: -167
+    serverType: JERRYS_WORKSHOP
+  - id: terry
+    type: TERRYS_SHACK
+    x1: -87
+    y1: 94
+    z1: 30
+    x2: -95
+    y2: 76
+    z2: 21
+    serverType: JERRYS_WORKSHOP
+  - id: pond
+    type: JERRY_POND
+    x1: -82
+    y1: 110
+    z1: -17
+    x2: -35
+    y2: 68
+    z2: 63
+    serverType: JERRYS_WORKSHOP
+  - id: sunken_pond
+    type: SUNKEN_JERRY_POND
+    x1: -68
+    y1: 74
+    z1: 106
+    x2: -118
+    y2: 56
+    z2: 32
+    serverType: JERRYS_WORKSHOP
+  - id: mount
+    type: MOUNT_JERRY
+    x1: -57
+    y1: 81
+    z1: -40
+    x2: 51
+    y2: 158
+    z2: -104
+    serverType: JERRYS_WORKSHOP
+  - id: hotsprings
+    type: HOT_SPRINGS
+    x1: -32
+    y1: 82
+    z1: -32
+    x2: 60
+    y2: 46
+    z2: -86
+    serverType: JERRYS_WORKSHOP
+  - id: hotsprings2
+    type: HOT_SPRINGS
+    x1: -1
+    y1: 74
+    z1: -35
+    x2: 101
+    y2: 49
+    z2: 12
+    serverType: JERRYS_WORKSHOP
+  - id: glacial
+    type: GLACIAL_CAVE
+    x1: 56
+    y1: 88
+    z1: 20
+    x2: 111
+    y2: 63
+    z2: 115
+    serverType: JERRYS_WORKSHOP
+  - id: gary
+    type: GARYS_SHACK
+    x1: 56
+    y1: 102
+    z1: 52
+    x2: 49
+    y2: 118
+    z2: 63
+    serverType: JERRYS_WORKSHOP
+  - id: einary
+    type: EINARYS_EMPORIUM
+    x1: -12
+    y1: 75
+    z1: 60
+    x2: -21
+    y2: 86
+    z2: 66
+    serverType: JERRYS_WORKSHOP
+  - id: einary2
+    type: EINARYS_EMPORIUM
+    x1: -21
+    y1: 75
+    z1: 66
+    x2: -17
+    y2: 84
+    z2: 70
+    serverType: JERRYS_WORKSHOP
+  - id: community_center
+    type: COMMUNITY_CENTER
+    x1: 12
+    y1: 88
+    z1: 6
+    x2: -13
+    y2: 71
+    z2: 24
+    serverType: SKYBLOCK_HUB
+  - id: community_center_2
+    type: COMMUNITY_CENTER
+    x1: 11
+    y1: 83
+    z1: 11
+    x2: 15
+    y2: 78
+    z2: 16
+    serverType: SKYBLOCK_HUB
+  - id: auction
+    type: AUCTION_HOUSE
+    x1: -26
+    y1: 71
+    z1: -20
+    x2: -44
+    y2: 82
+    z2: -6
+    serverType: SKYBLOCK_HUB
+  - id: shens_auction
+    type: SHENS_AUCTION
+    x1: -37
+    y1: 63
+    z1: -22
+    x2: -2
+    y2: 52
+    z2: -1
+    serverType: SKYBLOCK_HUB
+  - id: bazaar
+    type: BAZAAR_ALLEY
+    x1: -30
+    y1: 79
+    z1: -21
+    x2: -40
+    y2: 71
+    z2: -35
+    serverType: SKYBLOCK_HUB
+  - id: bank
+    type: BANK
+    x1: -25
+    y1: 80
+    z1: -45
+    x2: -33
+    y2: 72
+    z2: -35
+    serverType: SKYBLOCK_HUB
+  - id: graveyard_1
+    type: GRAVEYARD
+    x1: -73
+    y1: 70
+    z1: -101
+    x2: -195
+    y2: 121
+    z2: -221
+    serverType: SKYBLOCK_HUB
+  - id: crypts_1
+    type: CRYPTS
+    x1: -176
+    y1: 71
+    z1: -120
+    x2: -157
+    y2: 60
+    z2: -105
+    serverType: SKYBLOCK_HUB
+  - id: crypts_2
+    type: CRYPTS
+    x1: -155
+    y1: 66
+    z1: -98
+    x2: -138
+    y2: 57
+    z2: -130
+    serverType: SKYBLOCK_HUB
+  - id: crypts_3
+    type: CRYPTS
+    x1: -164
+    y1: 70
+    z1: -115
+    x2: -155
+    y2: 58
+    z2: -99
+    serverType: SKYBLOCK_HUB
+  - id: crypts_4
+    type: CRYPTS
+    x1: -138
+    y1: 63
+    z1: -97
+    x2: -119
+    y2: 40
+    z2: -149
+    serverType: SKYBLOCK_HUB
+  - id: crypts_5
+    type: CRYPTS
+    x1: -119
+    y1: 41
+    z1: -144
+    x2: -80
+    y2: 57
+    z2: -77
+    serverType: SKYBLOCK_HUB
+  - id: crypts_6
+    type: CRYPTS
+    x1: -43
+    y1: 63
+    z1: -143
+    x2: -51
+    y2: 53
+    z2: -127
+    serverType: SKYBLOCK_HUB
+  - id: crypts_7
+    type: CRYPTS
+    x1: -51
+    y1: 62
+    z1: -135
+    x2: -90
+    y2: 46
+    z2: -100
+    serverType: SKYBLOCK_HUB
+  - id: wilderness
+    type: WILDERNESS
+    x1: 76
+    y1: 76
+    z1: 64
+    x2: 175
+    y2: 146
+    z2: 201
+    serverType: SKYBLOCK_HUB
+  - id: unincorporated
+    type: UNINCORPORATED
+    x1: 17
+    y1: 79
+    z1: 171
+    x2: -32
+    y2: 109
+    z2: 134
+    serverType: SKYBLOCK_HUB
+  - id: forest
+    type: FOREST
+    x1: -66
+    y1: 62
+    z1: -6
+    x2: -204
+    y2: 104
+    z2: -72
+    serverType: SKYBLOCK_HUB
+  - id: forest_camp
+    type: FORAGING_CAMP
+    x1: -151
+    y1: 72
+    z1: -50
+    x2: -101
+    y2: 87
+    z2: -15
+    serverType: SKYBLOCK_HUB
+  - id: library_3
+    type: LIBRARY
+    x1: -71
+    y1: 70
+    z1: -74
+    x2: -63
+    y2: 78
+    z2: -85
+    serverType: SKYBLOCK_HUB
+  - id: thaumaturgist_3
+    type: THAUMATURGIST
+    x1: -56
+    y1: 69
+    z1: -67
+    x2: -62
+    y2: 74
+    z2: -60
+    serverType: SKYBLOCK_HUB
+  - id: coalmine_1
+    type: COAL_MINE
+    x1: 24
+    y1: 61
+    z1: -146
+    x2: -31
+    y2: 112
+    z2: -199
+    serverType: SKYBLOCK_HUB
+  - id: mining_district
+    type: MINING_DISTRICT
+    x1: -25
+    y1: 55
+    z1: -93
+    x2: 23
+    y2: 92
+    z2: -142
+    serverType: SKYBLOCK_HUB
+  - id: farm
+    type: FARM
+    x1: 28
+    y1: 66
+    z1: -74
+    x2: 107
+    y2: 106
+    z2: -153
+    serverType: SKYBLOCK_HUB
+  - id: fishing_outpost
+    type: FISHING_OUTPOST
+    x1: 92
+    y1: 69
+    z1: -21
+    x2: 166
+    y2: 95
+    z2: -79
+    serverType: SKYBLOCK_HUB
+  - id: museum_1
+    type: PLAYER_MUSEUM
+    x1: 25
+    y1: 78
+    z1: -3
+    x2: 42
+    y2: 71
+    z2: 5
+    serverType: SKYBLOCK_HUB
+  - id: museum_2
+    type: PLAYER_MUSEUM
+    x1: 21
+    y1: 80
+    z1: 4
+    x2: 38
+    y2: 70
+    z2: 19
+    serverType: SKYBLOCK_HUB
+  - id: museum_3
+    type: PLAYER_MUSEUM
+    x1: 45
+    y1: 84
+    z1: 24
+    x2: 13
+    y2: 65
+    z2: 53
+    serverType: SKYBLOCK_HUB
+  - id: tangleburgs_path
+    type: TANGLEBURGS_PATH
+    x1: -533
+    y1: 107
+    z1: -32
+    x2: -560
+    y2: 122
+    z2: 20
+    serverType: SKYBLOCK_GALATEA

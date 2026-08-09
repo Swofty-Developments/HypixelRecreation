@@ -156,8 +156,8 @@ public class RyanScene {
 			int bz = (int) Math.floor(pz);
 
 			Block block = instance.getBlock(bx, by, bz);
-			if (block.isAir()) continue;
-			if (!block.isSolid()) continue;
+			if (block.air()) continue;
+			if (!block.solid()) continue;
 			String name = block.toString().toUpperCase();
 			if (name.contains("LEAVES")) continue;
 

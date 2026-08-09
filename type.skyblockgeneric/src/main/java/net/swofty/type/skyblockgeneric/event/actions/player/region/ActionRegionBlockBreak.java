@@ -193,7 +193,7 @@ public class ActionRegionBlockBreak implements HypixelEventClass {
                         Pos adjacentPos = orePos.add(offset);
                         Block block2 = player.getInstance().getBlock(adjacentPos);
 
-                        if (block2.isAir()) {
+                        if (block2.air()) {
                             double distanceSquared = adjacentPos.distanceSquared(playerPos);
                             if (distanceSquared < closestDistanceSquared) {
                                 closestDistanceSquared = distanceSquared;
@@ -285,7 +285,7 @@ public class ActionRegionBlockBreak implements HypixelEventClass {
         double nearestDistance = Double.MAX_VALUE;
         for (Pos offset : offsets) {
             Pos candidate = source.add(offset);
-            if (!player.getInstance().getBlock(candidate).isAir()) continue;
+            if (!player.getInstance().getBlock(candidate).air()) continue;
             double distance = candidate.distanceSquared(player.getPosition());
             if (distance < nearestDistance) {
                 nearest = candidate;

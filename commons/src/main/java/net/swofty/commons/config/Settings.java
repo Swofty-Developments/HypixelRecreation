@@ -28,9 +28,6 @@ public class Settings {
     @Comment("Whether to require player authentication on initial connection")
     private boolean requireAuth = false;
 
-    @Comment("Whether to enable sandbox features (such as editing items)")
-    private boolean sandbox = false;
-
     @Comment("Integrations with services")
     private IntegrationSettings integrations = new IntegrationSettings();
 

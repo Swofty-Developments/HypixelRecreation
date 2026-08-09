@@ -22,6 +22,9 @@ gameserver/
 │   │   ├── levels/
 │   │   ├── reforges/
 │   │   ├── skills/
+│   │   ├── Minestom.fairysouls.yml
+│   │   ├── Minestom.regions.yml
+│   │   ├── Minestom.crystals.yml
 │   │   ├── pack_textures/    # Optional
 │   │   └── songs/            # Optional
 │   ├── bedwars/              # BedWars maps (.polar)
@@ -51,7 +54,6 @@ mongodb: mongodb://localhost
 redis-url: redis://localhost:6379
 velocity-secret: your-forwarding-secret-here
 require-auth: false
-sandbox: false
 spark: false
 anticheat: false
 redis-uri: redis://localhost:6379
@@ -73,6 +75,7 @@ Download from [configuration/skyblock](https://github.com/Swofty-Developments/Hy
 - `reforges/` folder → `configuration/skyblock/reforges/`
 - `items/` folder → `configuration/skyblock/items/`
 - `collections/` folder → `configuration/skyblock/collections/`
+- `Minestom.fairysouls.yml`, `Minestom.regions.yml`, `Minestom.crystals.yml` → `configuration/skyblock/`
 - `songs/` folder → `configuration/skyblock/songs/` (optional)
 
 ### 5. Setup PicoLimbo
@@ -108,28 +111,6 @@ java -jar HypixelCore.jar SKYBLOCK_HUB
 # Terminal 3 - Another hub for load balancing
 java -jar HypixelCore.jar SKYBLOCK_HUB
 ```
-
-## Database Setup
-
-After starting your first server, import the required data into MongoDB:
-
-### Regions (Required)
-
-1. Download [`Minestom.regions.csv`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration/skyblock)
-2. Import to the `regions` collection in MongoDB
-3. Restart the server
-
-### Fairy Souls (Optional)
-
-1. Download [`Minestom.fairysouls.csv`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration/skyblock)
-2. Import to the `fairysouls` collection
-
-### Hub Crystals (Optional)
-
-1. Download [`Minestom.crystals.csv`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration/skyblock)
-2. Import to the `crystals` collection
-
-Or use the `/addcrystal` command in-game.
 
 ## Admin Setup
 

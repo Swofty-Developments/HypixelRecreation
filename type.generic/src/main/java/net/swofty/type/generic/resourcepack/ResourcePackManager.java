@@ -78,6 +78,9 @@ public class ResourcePackManager {
                     if (status == net.kyori.adventure.resource.ResourcePackStatus.SUCCESSFULLY_LOADED) {
                         player.getPlayerConnection().storeCookie("hypixel:applied_pack",
                                 packHash.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                    } else {
+                        Logger.warn("Resource pack {} for {} finished with status {}",
+                                packHash.substring(0, 8), player.getUsername(), status);
                     }
                     resolved.complete(null);
                 })

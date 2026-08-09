@@ -12,7 +12,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/broken/broken_bow
   - id: ALCHEMISTS_STAFF
@@ -58,7 +57,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/broken/broken_bow
@@ -68,7 +66,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/broken/broken_bow
@@ -81,7 +78,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_REQUIREMENTS
         requirements:
           - type: SKILL
@@ -334,6 +330,27 @@ items:
       damage: 140
       strength: 115
     components:
+      - id: DEFAULT_CRAFTABLE
+        recipes:
+          - type: SHAPED
+            recipe-type: REVENANT_HORROR
+            pattern:
+              - ABA
+              - BCB
+              - ABA
+            ingredients:
+              A:
+                type: REVENANT_VISCERA
+                amount: 64
+              B:
+                type: SHARD_OF_THE_SHREDDED
+                amount: 1
+              C:
+                type: REAPER_FALCHION
+                amount: 1
+            result:
+              type: AXE_OF_THE_SHREDDED
+              amount: 1
       - id: STANDARD_ITEM
         standard_item_type: SWORD
       - id: ITEM_REQUIREMENTS
@@ -475,7 +492,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -512,7 +528,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/island_relevant/dungeons/spirit_shortbow
@@ -548,7 +563,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
   - id: BURSTFIRE_DAGGER
     material: STONE_SWORD
     rarity: EPIC
@@ -689,7 +703,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -765,7 +778,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -782,7 +794,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/decent_bow
   - id: DIAMOND_SWORD
@@ -804,7 +815,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/island_relevant/combat_3/dragon_shortbow
   - id: EARTH_SHARD
@@ -883,7 +893,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/island_relevant/combat_3/weapons/ender_bow
   - id: END_STONE_BOW
@@ -894,7 +903,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_REQUIREMENTS
         requirements:
           - type: SKILL
@@ -967,7 +975,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/explosive_bow
   - id: FANCY_SWORD
@@ -1463,7 +1470,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/hurricane_bow
   - id: HYPERION
@@ -1575,7 +1581,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -1607,7 +1612,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_REQUIREMENTS
         requirements:
           - type: PENDING
@@ -1624,7 +1628,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -1692,7 +1695,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -1710,7 +1712,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/magma_bow
   - id: MAWDUST_DAGGER
@@ -1799,7 +1800,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/island_relevant/rift/zones/mirrorcosm/crafting_room/crafts/wob
   - id: MOSQUITO_BOW
@@ -1813,7 +1813,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_REQUIREMENTS
         requirements:
           - type: PENDING
@@ -2022,7 +2021,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/prismarine_bow
   - id: RABBIT_AXE
@@ -2167,7 +2165,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/runaans_bow
   - id: RUNIC_STAFF
@@ -2202,7 +2199,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/savanna_bow
   - id: SCORPION_BOW
@@ -2216,7 +2212,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_REQUIREMENTS
         requirements:
           - type: PENDING
@@ -2401,6 +2396,22 @@ items:
             level: 13
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/silk_edge_sword
+  - id: SILVER_FANG
+    material: GHAST_TEAR
+    rarity: UNCOMMON
+    components:
+      - id: DEFAULT_CRAFTABLE
+        recipes:
+          - type: SHAPELESS
+            recipe-type: COMBAT
+            ingredients:
+              - type: ENCHANTED_GHAST_TEAR
+                amount: 25
+            result:
+              type: SILVER_FANG
+              amount: 1
+      - id: ITEM_MODEL
+        item_model: hypixel_skyblock:item/uncategorized/silver_fang
   - id: SILVERTWIST_KARAMBIT
     material: IRON_SWORD
     rarity: EPIC
@@ -2445,21 +2456,6 @@ items:
             description: slayer_boss_type=enderman level=6
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/slayer/enderman/weapons/sinseeker_scythe
-  - id: SKELETON_LORD_BOW
-    material: BOW
-    rarity: EPIC
-    components:
-      - id: STANDARD_ITEM
-        standard_item_type: BOW
-      - id: BOW
-      - id: DUNGEON_ITEM
-      - id: ITEM_REQUIREMENTS
-        requirements:
-          - type: DUNGEON_SKILL
-            dungeon: CATACOMBS
-            level: 30
-      - id: ITEM_MODEL
-        item_model: hypixel_skyblock:item/broken/broken_bow
   - id: SLIME_BOW
     material: BOW
     rarity: EPIC
@@ -2469,7 +2465,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/slime_bow
   - id: SNIPER_BOW
@@ -2478,7 +2473,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -2495,7 +2489,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/souls_rebound
   - id: SOUL_ESOWARD
@@ -2538,7 +2531,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/spider_queens_stinger
   - id: SPIDER_SWORD
@@ -2664,7 +2656,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -2758,7 +2749,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -2777,7 +2767,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -2866,7 +2855,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/spider_queens_stinger
   - id: STARRED_STONE_BLADE
@@ -2897,7 +2885,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/venoms_touch
   - id: STARRED_YETI_SWORD
@@ -2966,7 +2953,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -3020,7 +3006,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_REQUIREMENTS
         requirements:
           - type: SKILL
@@ -3052,7 +3037,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_REQUIREMENTS
         requirements:
@@ -3145,7 +3129,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_REQUIREMENTS
         requirements:
           - type: PENDING
@@ -3221,7 +3204,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: DUNGEON_ITEM
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/undead_bow
@@ -3293,7 +3275,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/venoms_touch
   - id: VOIDEDGE_KATANA
@@ -3456,7 +3437,6 @@ items:
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOW
-      - id: BOW
       - id: ITEM_MODEL
         item_model: hypixel_skyblock:item/uncategorized/wither_bow
   - id: WITHER_CLOAK

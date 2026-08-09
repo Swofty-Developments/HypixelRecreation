@@ -1,5 +1,7 @@
 package net.swofty.type.skyblockgeneric.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.command.builder.arguments.ArgumentWord;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 import net.swofty.commons.skyblock.item.Rarity;
@@ -49,7 +51,9 @@ public class SetPetRarityCommand extends HypixelCommand {
                     return;
                 }
                 handler.setRarity(rarity);
-                sender.sendMessage("§aSet rarity to " + rarity.getLegacyColor() + rarity.name() + "§a.");
+                sender.sendMessage(Component.text("Set rarity to ", NamedTextColor.GREEN)
+                        .append(Component.text(rarity.name(), rarity.getColor()))
+                        .append(Component.text(".", NamedTextColor.GREEN)));
             });
         }, rarityArgument);
     }

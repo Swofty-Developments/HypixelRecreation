@@ -15,12 +15,12 @@ import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.calendar.SkyBlockCalendar;
-import net.swofty.type.skyblockgeneric.data.monogdb.FairySoulDatabase;
 import net.swofty.type.skyblockgeneric.mission.MissionData;
 import net.swofty.type.skyblockgeneric.mission.MissionSet;
 import net.swofty.type.skyblockgeneric.mission.SkyBlockMission;
 import net.swofty.type.skyblockgeneric.mission.SkyBlockProgressMission;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
+import net.swofty.type.skyblockgeneric.user.fairysouls.FairySoul;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,7 +70,7 @@ public class GUIMissionLog extends StatelessView {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             return TranslatableItemStackCreator.getStackHead("gui_sbmenu.questlog.fairy_souls",
                     "b96923ad247310007f6ae5d326d847ad53864cf16c3565a181dc8e6b20be2387", 1,
-                "gui_sbmenu.questlog.fairy_souls.lore", Component.text(String.valueOf(player.getFairySoulHandler().getTotalFoundFairySouls())), Component.text(String.valueOf(FairySoulDatabase.getAllSouls().size())));
+                "gui_sbmenu.questlog.fairy_souls.lore", Component.text(String.valueOf(player.getFairySoulHandler().getTotalFoundFairySouls())), Component.text(String.valueOf(FairySoul.getFairySouls().size())));
         }, (_, c) -> {
             c.push(new GUIFairySoulsGuide());
         });

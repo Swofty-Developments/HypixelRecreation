@@ -28,9 +28,7 @@ services:
       MONGO_INITDB_DATABASE: Minestom
       MONGO_URL: hypixel_mongo
     volumes:
-      - ./configuration/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
       - mongodb-data:/data/db
-      - ./configuration/:/csv
 %s    networks:
       - hypixel_network
     healthcheck:

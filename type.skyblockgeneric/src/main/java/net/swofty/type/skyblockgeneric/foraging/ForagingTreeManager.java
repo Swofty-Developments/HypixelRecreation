@@ -123,7 +123,7 @@ public final class ForagingTreeManager {
         List<HarvestedLog> harvested = new ArrayList<>(selected.size());
         for (BlockPosition position : selected) {
             Block original = tree.originalBlocks.get(position);
-            if (original == null || instance.getBlock(position.asPoint()).isAir()) continue;
+            if (original == null || instance.getBlock(position.asPoint()).air()) continue;
 
             instance.setBlock(position.asPoint(), Block.AIR);
             tree.broken.add(position);
@@ -191,7 +191,7 @@ public final class ForagingTreeManager {
 
     private static void scheduleLooseLeafRegeneration(Instance instance, BlockPosition position, Block leaf) {
         MinecraftServer.getSchedulerManager().scheduleTask(() -> {
-            if (instance.getBlock(position.asPoint()).isAir()) instance.setBlock(position.asPoint(), leaf);
+            if (instance.getBlock(position.asPoint()).air()) instance.setBlock(position.asPoint(), leaf);
         }, TaskSchedule.tick(REGEN_DELAY_TICKS), TaskSchedule.stop());
     }
 
@@ -290,7 +290,7 @@ public final class ForagingTreeManager {
         while (!queue.isEmpty() && selected.size() < count) {
             BlockPosition current = queue.removeFirst();
             if (!visited.add(current) || !tree.originalBlocks.containsKey(current)) continue;
-            if (instance.getBlock(current.asPoint()).isAir()) continue;
+            if (instance.getBlock(current.asPoint()).air()) continue;
 
             selected.add(current);
             for (int[] offset : TOUCHING_BLOCKS) {
@@ -532,7 +532,7 @@ public final class ForagingTreeManager {
             long version = regenerationVersion;
             MinecraftServer.getSchedulerManager().scheduleTask(() -> {
                 if (version != regenerationVersion || !brokenLeaves.remove(leaf)) return;
-                if (instance.getBlock(leaf.asPoint()).isAir())
+                if (instance.getBlock(leaf.asPoint()).air())
                     instance.setBlock(leaf.asPoint(), originalLeaves.get(leaf));
             }, TaskSchedule.tick(REGEN_DELAY_TICKS), TaskSchedule.stop());
         }
@@ -624,7 +624,7 @@ public final class ForagingTreeManager {
                 BlockPosition leaf = leaves.get(i);
                 MinecraftServer.getSchedulerManager().scheduleTask(() -> {
                     if (version != regenerationVersion) return;
-                    if (instance.getBlock(leaf.asPoint()).isAir())
+                    if (instance.getBlock(leaf.asPoint()).air())
                         instance.setBlock(leaf.asPoint(), originalLeaves.get(leaf));
                     brokenLeaves.remove(leaf);
                 }, TaskSchedule.tick(i / 20 + 1), TaskSchedule.stop());

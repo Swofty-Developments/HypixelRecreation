@@ -94,9 +94,6 @@ public class PlayerItemUpdater {
         } else {
             handler.setRarity(Rarity.COMMON);
         }
-        if (handler.isRecombobulated()) {
-            handler.setRarity(handler.getRarity().upgrade());
-        }
 
         /*
          * Update Lore
@@ -143,36 +140,24 @@ public class PlayerItemUpdater {
             toReturn.set(DataComponents.ITEM_MODEL, item.getComponent(ItemModelComponent.class).getItemModel());
         }
 
-        Rarity rarity = handler.getRarity();
+        Rarity rarity = handler.isRecombobulated()
+                ? handler.getRarity().upgrade()
+                : handler.getRarity();
         toReturn.set(DataComponents.TOOLTIP_STYLE, rarity.getTooltipStyle());
 
         if (item.hasComponent(GemstoneComponent.class)) {
             GemstoneComponent gemstoneComponent = item.getComponent(GemstoneComponent.class);
 
-            int index = 0;
             ItemAttributeGemData.GemData gemData = item.getAttributeHandler().getGemData();
-            for (GemstoneComponent.GemstoneSlot slot : gemstoneComponent.getSlots()) {
-                if (slot.unlockPrice() == 0 && slot.itemRequirements().isEmpty()) {
-                    // Slot should be unlocked by default
-                    if (gemData.hasGem(index)) continue;
-                    gemData.putGem(
-                            new ItemAttributeGemData.GemData.GemSlots(
-                                    index,
-                                    null,
-                                    true
-                            )
-                    );
-                } else {
-                    if (gemData.hasGem(index)) continue;
-                    gemData.putGem(
-                            new ItemAttributeGemData.GemData.GemSlots(
-                                    index,
-                                    null,
-                                    false
-                            )
-                    );
-                }
-                index++;
+            for (int index = 0; index < gemstoneComponent.getSlots().size(); index++) {
+                if (gemData.hasGem(index)) continue;
+
+                GemstoneComponent.GemstoneSlot slot = gemstoneComponent.getSlots().get(index);
+                gemData.putGem(new ItemAttributeGemData.GemData.GemSlots(
+                        index,
+                        null,
+                        slot.unlockPrice() == 0 && slot.itemRequirements().isEmpty()
+                ));
             }
             item.getAttributeHandler().setGemData(gemData);
         }

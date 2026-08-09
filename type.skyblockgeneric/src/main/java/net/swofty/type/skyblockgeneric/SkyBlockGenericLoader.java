@@ -51,6 +51,7 @@ import net.swofty.type.skyblockgeneric.collection.CollectionCategories;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategory;
 import net.swofty.type.skyblockgeneric.collection.CustomCollectionAward;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
+import net.swofty.type.skyblockgeneric.data.crystals.CrystalCatalog;
 import net.swofty.type.skyblockgeneric.data.monogdb.*;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
 import net.swofty.type.skyblockgeneric.entity.ServerCrystalImpl;
@@ -89,7 +90,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.skyblockgeneric.user.SkyBlockScoreboard;
 import net.swofty.type.skyblockgeneric.user.StashReminder;
 import net.swofty.type.skyblockgeneric.user.fairysouls.FairySoul;
-import net.swofty.type.skyblockgeneric.user.fairysouls.FairySoulZone;
 import net.swofty.type.skyblockgeneric.user.flow.SkyBlockPlayerDataFlow;
 import net.swofty.type.skyblockgeneric.user.island.SkyBlockIsland;
 import net.swofty.type.skyblockgeneric.user.statistics.PlayerStatistics;
@@ -137,11 +137,8 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(cs).build();
         MongoClient mongoClient = MongoClients.create(settings);
 
-        RegionDatabase.connect(mongoClient);
         IslandDatabase.connect(mongoClient);
-        FairySoulDatabase.connect(mongoClient);
         CoopDatabase.connect(mongoClient);
-        CrystalDatabase.connect(mongoClient);
 
         /**
          * Register items
@@ -379,8 +376,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
          */
         if (mainInstance != null) {
             ServerHolograms.spawnAll(HypixelConst.getInstanceContainer());
-            String zone = typeLoader.getType().skyblockName();
-            FairySoul.spawnEntities(HypixelConst.getInstanceContainer(), FairySoulZone.valueOf(zone.toUpperCase()));
+            FairySoul.spawnEntities(HypixelConst.getInstanceContainer(), typeLoader.getType());
         }
 
         /**
@@ -388,7 +384,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
          */
         if (HypixelConst.getInstanceContainer() != null) {
             Thread.startVirtualThread(() -> {
-                CrystalDatabase.getAllCrystals().forEach(crystal -> {
+                CrystalCatalog.getAllCrystals().forEach(crystal -> {
                     if (crystal.serverType != HypixelConst.getTypeLoader().getType()) return;
 
                     ItemType type = crystal.itemType;

@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.Material;
@@ -264,9 +263,7 @@ public final class StringUtility {
 
 	public static String getTextFromComponent(Component component) {
 		if (component == null)
-			throw new IllegalArgumentException("Component cannot be null");
-		if (!(component instanceof TextComponent))
-			throw new IllegalArgumentException("Component must be a TextComponent, but got: " + component.getClass().getSimpleName());
+			return "";
 		return PlainTextComponentSerializer.plainText().serialize(component);
 	}
 

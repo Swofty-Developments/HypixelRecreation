@@ -68,7 +68,6 @@ mongodb: mongodb://localhost
 redis-url: redis://localhost:6379
 velocity-secret: your-forwarding-secret-here
 require-auth: false
-sandbox: false
 spark: false
 anticheat: false
 redis-uri: redis://localhost:6379

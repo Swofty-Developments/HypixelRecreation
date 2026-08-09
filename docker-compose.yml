@@ -9,9 +9,7 @@ services:
       MONGO_INITDB_DATABASE: Minestom # Default database name
       MONGO_URL: hypixel_mongo
     volumes:
-      - ./configuration/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
       - mongodb-data:/data/db
-      - ./configuration/:/csv
     ports:
       - "27017:27017"
     networks:

@@ -4,20 +4,21 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.Instance;
+import net.swofty.commons.ServerType;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointFairySouls;
-import net.swofty.type.skyblockgeneric.data.monogdb.FairySoulDatabase;
+import net.swofty.type.skyblockgeneric.data.fairysouls.FairySoulCatalog;
 import net.swofty.type.skyblockgeneric.entity.EntityFairySoul;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Getter
 public class FairySoul {
-    private static final Map<Integer, FairySoul> SOULS_CACHE = new HashMap<>();
+    private static final Map<Integer, FairySoul> SOULS_CACHE = new LinkedHashMap<>();
 
     @Getter
     private int id;
@@ -38,7 +39,12 @@ public class FairySoul {
     }
 
     public void spawnEntity(Instance instance) {
+        if (location == null || getServerType() == null) return;
         new EntityFairySoul(this).spawn(instance);
+    }
+
+    public ServerType getServerType() {
+        return zone.getServerType();
     }
 
     public void collect(SkyBlockPlayer player) {
@@ -67,12 +73,9 @@ public class FairySoul {
     }
 
     public static void cacheFairySouls() {
-        for (FairySoul soul : FairySoulDatabase.getAllSouls()) {
-            if (soul.getZone() == null) {
-                soul.delete();
-            } else {
-                SOULS_CACHE.put(soul.getId(), soul);
-            }
+        SOULS_CACHE.clear();
+        for (FairySoul soul : FairySoulCatalog.getAllSouls()) {
+            SOULS_CACHE.put(soul.getId(), soul);
         }
     }
 
@@ -83,6 +86,13 @@ public class FairySoul {
     public static void spawnEntities(Instance instance, FairySoulZone zone) {
         getFairySouls().forEach(soul -> {
             if (soul.zone == zone)
+                soul.spawnEntity(instance);
+        });
+    }
+
+    public static void spawnEntities(Instance instance, ServerType serverType) {
+        getFairySouls().forEach(soul -> {
+            if (soul.getServerType() == serverType)
                 soul.spawnEntity(instance);
         });
     }

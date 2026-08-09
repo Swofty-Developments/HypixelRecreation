@@ -5,7 +5,7 @@ import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
-import net.swofty.type.skyblockgeneric.data.monogdb.CrystalDatabase;
+import net.swofty.type.skyblockgeneric.data.crystals.CrystalCatalog;
 import net.swofty.type.skyblockgeneric.entity.ServerCrystalImpl;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.ServerOrbComponent;
@@ -37,7 +37,7 @@ public class AddCrystalCommand extends HypixelCommand {
             );
             crystal.setInstance(((SkyBlockPlayer) sender).getInstance(), ((SkyBlockPlayer) sender).getPosition());
 
-            CrystalDatabase.addCrystal(item.getComponent(SkullHeadComponent.class).getSkullTexture(item),
+            CrystalCatalog.addCrystal(item.getComponent(SkullHeadComponent.class).getSkullTexture(item),
                     ((SkyBlockPlayer) sender).getPosition(),
                     type);
         }, itemType);

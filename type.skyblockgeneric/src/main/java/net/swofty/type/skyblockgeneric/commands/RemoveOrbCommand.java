@@ -2,7 +2,7 @@ package net.swofty.type.skyblockgeneric.commands;
 
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
-import net.swofty.type.skyblockgeneric.data.monogdb.CrystalDatabase;
+import net.swofty.type.skyblockgeneric.data.crystals.CrystalCatalog;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 
@@ -17,7 +17,7 @@ public class RemoveOrbCommand extends HypixelCommand {
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
 
-            new CrystalDatabase().removeCrystals(((SkyBlockPlayer) sender).getPosition(), 1.5);
+            CrystalCatalog.removeCrystals(((SkyBlockPlayer) sender).getPosition(), 1.5);
         });
     }
 }

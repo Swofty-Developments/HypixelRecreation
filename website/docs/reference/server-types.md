@@ -22,6 +22,8 @@ These server types are part of the SkyBlock gamemode and share SkyBlock-specific
 | `SKYBLOCK_GALATEA`             | Galatea          | `hypixel_skyblock_galatea.polar`         |
 | `SKYBLOCK_BACKWATER_BAYOU`     | Backwater Bayou  | `hypixel_skyblock_backwater_bayou.polar` |
 | `SKYBLOCK_JERRYS_WORKSHOP`     | Jerry's Workshop | `hypixel_skyblock_jerrys_workshop.polar` |
+| `SKYBLOCK_LOTUS_ATOLL`         | Lotus Atoll      | Not bundled                           |
+| `SKYBLOCK_SAFARI`              | Safari           | Not bundled                           |
 ### Starting a SkyBlock Server
 
 ```bash

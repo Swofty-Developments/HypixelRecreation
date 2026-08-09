@@ -92,7 +92,7 @@ public class RandomRegionStrollGoal extends GoalSelector {
 
                     if (avoidWater && BlockProps.isWater(block)) continue;
 
-                    if (!block.isAir()) continue;
+                    if (!block.air()) continue;
                 }
 
                 SkyBlockRegion region = SkyBlockRegion.getRegionOfPosition(new Pos(entityX, y, entityZ));

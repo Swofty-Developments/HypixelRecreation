@@ -47,7 +47,7 @@ final class AttributeGUIItems {
         lore.addAll(List.of("§eRight-click to convert to an item!", "§eShift Right-click to convert to a stack of items!", "",
                 definition.rarity().itemRarity().getLegacyColor() + "§l" + definition.rarity() + " " + definition.category() + " SHARD §8(ID " + definition.id() + ")"));
         ItemStack.Builder builder = new NonPlayerItemUpdater(AttributeShardComponent.create(definition, 1)).getUpdatedItem();
-        builder.set(DataComponents.CUSTOM_NAME, Component.text(definition.rarity().itemRarity().getLegacyColor() + definition.shard())
+        builder.set(DataComponents.CUSTOM_NAME, Component.text(definition.shard(), definition.rarity().itemRarity().getColor())
                 .decoration(TextDecoration.ITALIC, false));
         return ItemStackCreator.updateLore(builder, lore);
     }

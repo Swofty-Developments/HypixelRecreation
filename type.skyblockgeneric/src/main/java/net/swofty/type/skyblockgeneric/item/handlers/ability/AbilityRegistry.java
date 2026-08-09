@@ -102,7 +102,7 @@ public class AbilityRegistry {
                 Point targetedBlock = player.getTargetBlockPosition(57);
                 if (targetedBlock == null) return false;
                 BlockVec tpPos = targetedBlock.asBlockVec();
-                if (!player.getInstance().getBlock(tpPos.add(0, 1, 0)).isAir() || !player.getInstance().getBlock(tpPos.add(0, 2, 0)).isAir())
+                if (!player.getInstance().getBlock(tpPos.add(0, 1, 0)).air() || !player.getInstance().getBlock(tpPos.add(0, 2, 0)).air())
                     return false;
                 player.teleport(tpPos.add(0, 1, 0).asPos(player.getPosition().yaw(), player.getPosition().pitch()));
                 return true;

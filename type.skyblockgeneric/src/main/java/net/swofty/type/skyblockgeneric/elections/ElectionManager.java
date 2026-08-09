@@ -22,18 +22,28 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ElectionManager {
 
     private static final Gson GSON = new Gson();
     private static ProxyService SERVICE;
     private static final ConcurrentHashMap<UUID, String> playerVoteCache = new ConcurrentHashMap<>();
+    private static final AtomicBoolean tallyRefreshStarted = new AtomicBoolean();
 
     @Getter
     private static ElectionData electionData = new ElectionData();
 
     public static void loadFromService() {
         SERVICE = new ProxyService(ServiceType.ELECTION);
+        if (!SERVICE.isOnline().join()) {
+            Logger.error("Service ELECTION is not online!");
+            electionData = new ElectionData();
+            initializeFirstElection();
+            startTallyRefreshTask();
+            return;
+        }
+
         try {
             GetElectionDataProtocol.GetElectionDataResponse response =
                 SERVICE.<GetElectionDataProtocol.GetElectionDataMessage,
@@ -54,7 +64,7 @@ public class ElectionManager {
                 Logger.info("No election data found. Initialized first election.");
             }
         } catch (Exception e) {
-            Logger.error(e, "Failed to load election data from service");
+            Logger.error("Failed to load election data from service: {}", e.getMessage());
             electionData = new ElectionData();
             initializeFirstElection();
         }
@@ -219,6 +229,7 @@ public class ElectionManager {
     }
 
     private static void startTallyRefreshTask() {
+        if (!tallyRefreshStarted.compareAndSet(false, true)) return;
         MinecraftServer.getSchedulerManager().submitTask(() -> {
             if (electionData.isElectionOpen()) {
                 refreshTalliesAsync();

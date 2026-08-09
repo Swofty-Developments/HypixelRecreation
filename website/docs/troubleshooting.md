@@ -44,13 +44,12 @@ Common issues and their solutions.
 
 ### "You have strayed too far from spawn!"
 
-**Cause**: Regions not imported correctly
+**Cause**: The static region catalog is missing or invalid
 
 **Solution**:
 
-1. Download `Minestom.regions.csv` from the configuration folder
-2. Import it to the `regions` collection in MongoDB
-3. Restart the game server
+1. Ensure `configuration/skyblock/Minestom.regions.yml` exists
+2. Restart the game server
 
 ### Data saving issues between changing servers
 
@@ -103,13 +102,13 @@ Common issues and their solutions.
 
 ### Missing Hub Features
 
-**Cause**: Data not imported
+**Cause**: Required world data or static catalogs are missing
 
-**Solution**: Import these CSV files to MongoDB:
+**Solution**:
 
-- `Minestom.regions.csv` → `regions`
-- `Minestom.fairysouls.csv` → `fairysouls`
-- `Minestom.crystals.csv` → `crystals`
+- Ensure `configuration/skyblock/Minestom.fairysouls.yml` exists
+- Ensure `configuration/skyblock/Minestom.regions.yml` exists
+- Ensure `configuration/skyblock/Minestom.crystals.yml` exists
 
 ## Docker Issues
 

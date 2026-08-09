@@ -106,30 +106,16 @@ public class NonPlayerItemUpdater {
         if (item.hasComponent(GemstoneComponent.class)) {
             GemstoneComponent gemstoneComponent = item.getComponent(GemstoneComponent.class);
 
-            int index = 0;
             ItemAttributeGemData.GemData gemData = item.getAttributeHandler().getGemData();
-            for (GemstoneComponent.GemstoneSlot slot : gemstoneComponent.getSlots()) {
-                if (slot.unlockPrice() == 0 && slot.itemRequirements().isEmpty()) {
-                    // Slot should be unlocked by default
-                    if (gemData.hasGem(index)) continue;
-                    gemData.putGem(
-                            new ItemAttributeGemData.GemData.GemSlots(
-                                    index,
-                                    null,
-                                    true
-                            )
-                    );
-                } else {
-                    if (gemData.hasGem(index)) continue;
-                    gemData.putGem(
-                            new ItemAttributeGemData.GemData.GemSlots(
-                                    index,
-                                    null,
-                                    false
-                            )
-                    );
-                }
-                index++;
+            for (int index = 0; index < gemstoneComponent.getSlots().size(); index++) {
+                if (gemData.hasGem(index)) continue;
+
+                GemstoneComponent.GemstoneSlot slot = gemstoneComponent.getSlots().get(index);
+                gemData.putGem(new ItemAttributeGemData.GemData.GemSlots(
+                        index,
+                        null,
+                        slot.unlockPrice() == 0 && slot.itemRequirements().isEmpty()
+                ));
             }
             item.getAttributeHandler().setGemData(gemData);
         }

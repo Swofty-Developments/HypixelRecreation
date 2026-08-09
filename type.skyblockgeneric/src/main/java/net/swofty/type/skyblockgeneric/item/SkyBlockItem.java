@@ -14,7 +14,6 @@ import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.item.UnderstandableSkyBlockItem;
 import net.swofty.commons.skyblock.item.attribute.ItemAttribute;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributeRarity;
-import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributeSandboxItem;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributeStatistics;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributeType;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
@@ -259,10 +258,6 @@ public class SkyBlockItem {
 	}
 
 	public Material getMaterial() {
-		ItemAttributeSandboxItem.SandboxData data = getAttributeHandler().getSandboxData();
-		if (data != null && data.getMaterial() != ItemType.AIR)
-			return data.getMaterial().material;
-
 		ItemAttributeType typeAttribute = (ItemAttributeType) getAttribute("item_type");
 		try {
 			return ItemType.valueOf(typeAttribute.getValue()).material;

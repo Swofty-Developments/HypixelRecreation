@@ -19,6 +19,7 @@ import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
 import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategories;
+import net.swofty.type.skyblockgeneric.enchantment.SkyBlockEnchantment;
 import net.swofty.type.skyblockgeneric.fishing.rod.FishingRodLoreBuilder;
 import net.swofty.type.skyblockgeneric.gems.GemRarity;
 import net.swofty.type.skyblockgeneric.gems.Gemstone;
@@ -31,7 +32,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ItemLore {
 	private final ArrayList<Component> loreLines = new ArrayList<>();
@@ -255,11 +255,7 @@ public class ItemLore {
 					});
 
 				} else {
-					String enchantmentNames = handler.getEnchantments().toList().stream().map(enchantment1 ->
-									"§9" + enchantment1.type().getName() + " " + StringUtility
-											.getAsRomanNumeral(enchantment1.level()))
-							.collect(Collectors.joining(", "));
-					StringUtility.splitByWordAndLength(enchantmentNames, 34).forEach(this::addLoreLine);
+					addCompactEnchantmentLore(handler.getEnchantments().toList());
 				}
 
 				if (enchantmentCount != 0) addLoreLine(null);
@@ -436,6 +432,25 @@ public class ItemLore {
 
 		addLoreLine(line);
 		return true;
+	}
+
+	private void addCompactEnchantmentLore(List<SkyBlockEnchantment> enchantments) {
+		StringBuilder line = new StringBuilder();
+
+		for (SkyBlockEnchantment enchantment : enchantments) {
+			String name = "§9" + enchantment.type().getName() + " "
+					+ StringUtility.getAsRomanNumeral(enchantment.level());
+			String separator = line.isEmpty() ? "" : "§7, ";
+
+			if (!line.isEmpty() && StringUtility.stripColor(line + separator + name).length() > 34) {
+				addLoreLine(line.toString());
+				line = new StringBuilder(name);
+			} else {
+				line.append(separator).append(name);
+			}
+		}
+
+		if (!line.isEmpty()) addLoreLine(line.toString());
 	}
 
 	@Deprecated // we need to use Components

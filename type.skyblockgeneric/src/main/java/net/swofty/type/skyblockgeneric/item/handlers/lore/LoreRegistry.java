@@ -18,27 +18,6 @@ public class LoreRegistry {
     private static final Map<String, LoreConfig> REGISTERED_HANDLERS = new HashMap<>();
 
     static {
-        register("SANDBOX_ITEM", new LoreConfig(
-                (item, player) -> {
-                    List<String> lore = item.getAttributeHandler().getSandboxData().getLore();
-                    List<String> loreToDisplay = new ArrayList<>();
-
-                    if (item.getAttributeHandler().getSandboxData().isShowLoreLinesToggle()) {
-                        // Add the line number to the start of every line
-                        for (int i = 0; i < lore.size(); i++) {
-                            loreToDisplay.add("§c" + (i + 1) + ". §7" + lore.get(i));
-                        }
-                    } else {
-                        loreToDisplay.addAll(lore);
-                    }
-
-                    // Replace all & with §
-                    loreToDisplay.replaceAll(s -> s.replace("&", "§"));
-
-                    return loreToDisplay;
-                },
-                (item, player) -> item.getAttributeHandler().getSandboxData().getDisplayName().replace("&", "§")
-        ));
         register("ENCHANTED_BOOK", new LoreConfig(
                 (item, player) -> {
                     List<SkyBlockEnchantment> enchantments = item.getAttributeHandler().getEnchantments().toList();

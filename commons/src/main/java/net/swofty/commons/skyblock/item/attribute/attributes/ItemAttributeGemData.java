@@ -36,10 +36,11 @@ public class ItemAttributeGemData extends ItemAttribute<ItemAttributeGemData.Gem
             String[] gemSplit = gem.split(":");
             int index = Integer.parseInt(gemSplit[0]);
             ItemType filledWith = null;
-            boolean unlocked = false;
+            boolean unlocked = gemSplit.length > 2 && Boolean.parseBoolean(gemSplit[2]);
 
             if (!gemSplit[1].equals("null")) {
                 filledWith = ItemType.valueOf(gemSplit[1]);
+                unlocked = true;
             }
 
             gemData.putGem(new GemData.GemSlots(index, filledWith, unlocked));

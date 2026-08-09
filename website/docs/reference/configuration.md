@@ -15,7 +15,6 @@ mongodb: mongodb://localhost
 redis-url: redis://localhost:6379
 velocity-secret: your-forwarding-secret-here
 require-auth: false
-sandbox: false
 spark: false
 anticheat: false
 redis-uri: redis://localhost:6379
@@ -159,6 +158,3 @@ MongoDB collections created automatically:
 | `auction_inactive` | Completed auctions       |
 | `orders`           | Bazaar orders            |
 | `tracked_items`    | Item tracking            |
-| `regions`          | World regions            |
-| `fairysouls`       | Fairy soul locations     |
-| `crystals`         | Hub crystal locations    |

@@ -221,7 +221,7 @@ public class WorldScanner {
             Block feet = instance.getBlock(x, y, z);
             Block head = instance.getBlock(x, y + 1, z);
 
-            if (ground.isSolid() && feet.isAir() && head.isAir()) {
+            if (ground.solid() && feet.air() && head.air()) {
                 return new HypixelPosition(x + 0.5, y, z + 0.5);
             }
         }

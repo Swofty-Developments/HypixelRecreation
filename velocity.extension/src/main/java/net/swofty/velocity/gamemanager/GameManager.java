@@ -98,8 +98,8 @@ public class GameManager {
 
     public static void loopServers(ProxyServer server) {
         server.getScheduler().buildTask(SkyBlockVelocity.getPlugin(), () -> {
-            servers.forEach((serverType, registeredServers) -> {
-                registeredServers.forEach(registeredServer -> {
+            new HashMap<>(servers).forEach((serverType, registeredServers) -> {
+                new ArrayList<>(registeredServers).forEach(registeredServer -> {
                     RegisteredServer givenServer = registeredServer.registeredServer();
                     AtomicBoolean pingSuccess = new AtomicBoolean(false);
                     long startTime = System.currentTimeMillis();
@@ -118,7 +118,8 @@ public class GameManager {
                                 startTime,
                                 System.currentTimeMillis() - startTime
                             );
-                            servers.get(serverType).remove(registeredServer);
+                            ArrayList<GameServer> currentServers = servers.get(serverType);
+                            if (currentServers == null || !currentServers.remove(registeredServer)) return;
 
                             TestFlowManager.handleServerDisconnect(registeredServer.internalID);
                         }

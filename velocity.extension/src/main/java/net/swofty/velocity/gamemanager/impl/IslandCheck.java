@@ -48,7 +48,7 @@ public class IslandCheck extends BalanceConfiguration {
             if (serverType == ServerType.SKYBLOCK_ISLAND) {
                 ArrayList<GameManager.GameServer> gameServers = entry.getValue();
 
-                gameServers.forEach(gameServer -> {
+                new ArrayList<>(gameServers).forEach(gameServer -> {
                     DoesServerHaveIslandProtocol.Response response = RedisClient.requestServer(
                         gameServer.internalID(),
                         new DoesServerHaveIslandProtocol(),
