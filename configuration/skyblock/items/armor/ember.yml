@@ -7,9 +7,6 @@ items:
       defense: 35
       health: 40
       intelligence: 5
-    lore:
-      - "Full Set Bonus: Nether Lord \u2014 Walking over Lava creates Obsidian under your feet. You are also immune to all\
-        \ damage from Lava and Fire."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -23,9 +20,6 @@ items:
       defense: 60
       health: 65
       intelligence: 10
-    lore:
-      - "Full Set Bonus: Nether Lord \u2014 Walking over Lava creates Obsidian under your feet. You are also immune to all\
-        \ damage from Lava and Fire."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -37,9 +31,6 @@ items:
       defense: 55
       health: 60
       intelligence: 5
-    lore:
-      - "Full Set Bonus: Nether Lord \u2014 Walking over Lava creates Obsidian under your feet. You are also immune to all\
-        \ damage from Lava and Fire."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -51,9 +42,6 @@ items:
       defense: 30
       health: 35
       intelligence: 5
-    lore:
-      - "Full Set Bonus: Nether Lord \u2014 Walking over Lava creates Obsidian under your feet. You are also immune to all\
-        \ damage from Lava and Fire."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

@@ -7,9 +7,6 @@ items:
       defense: 135
       ferocity: 10
       intelligence: 50
-    lore:
-      - "Full Set Bonus: Regenerative Howl \u2014 Upon activating Ferocity heal players within 25 blocks for 1% of your Defense\
-        \ and gain 50 Defense for 5 s (up to 10 stacks)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -41,9 +38,6 @@ items:
       defense: 240
       ferocity: 10
       intelligence: 50
-    lore:
-      - "Full Set Bonus: Regenerative Howl \u2014 Upon activating Ferocity heal players within 25 blocks for 1% of your Defense\
-        \ and gain 50 Defense for 5 s (up to 10 stacks)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -74,9 +68,6 @@ items:
       defense: 200
       ferocity: 10
       intelligence: 50
-    lore:
-      - "Full Set Bonus: Regenerative Howl \u2014 Upon activating Ferocity heal players within 25 blocks for 1% of your Defense\
-        \ and gain 50 Defense for 5 s (up to 10 stacks)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -107,9 +98,6 @@ items:
       defense: 125
       ferocity: 10
       intelligence: 50
-    lore:
-      - "Full Set Bonus: Regenerative Howl \u2014 Upon activating Ferocity heal players within 25 blocks for 1% of your Defense\
-        \ and gain 50 Defense for 5 s (up to 10 stacks)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

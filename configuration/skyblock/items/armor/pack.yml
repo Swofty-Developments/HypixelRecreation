@@ -6,9 +6,6 @@ items:
     default_statistics:
       defense: 65
       health: 70
-    lore:
-      - "Full Set Bonus: Armor of the Pack \u2014 Gain +35 Strength and +80 Defense for each Armor of the Pack wearers within\
-        \ 30 blocks. Max of 3 players"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -19,9 +16,6 @@ items:
     default_statistics:
       defense: 95
       health: 100
-    lore:
-      - "Full Set Bonus: Armor of the Pack \u2014 Gain +35 Strength and +80 Defense for each Armor of the Pack wearers within\
-        \ 30 blocks. Max of 3 players"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -32,9 +26,6 @@ items:
     default_statistics:
       defense: 75
       health: 80
-    lore:
-      - "Full Set Bonus: Armor of the Pack \u2014 Gain +35 Strength and +80 Defense for each Armor of the Pack wearers within\
-        \ 30 blocks. Max of 3 players"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -45,9 +36,6 @@ items:
     default_statistics:
       defense: 45
       health: 50
-    lore:
-      - "Full Set Bonus: Armor of the Pack \u2014 Gain +35 Strength and +80 Defense for each Armor of the Pack wearers within\
-        \ 30 blocks. Max of 3 players"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

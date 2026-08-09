@@ -9,10 +9,6 @@ items:
       health: 160
       critical_damage: 50
       intelligence: 15
-    lore:
-      - "Tiered Bonus: Hydra Strike \u2014 Every 0.2 s, arrow attacks grant 1 stack of Hydra Strike \u2051. Each Hydra Strike\
-        \ \u2051 stack grants +2% Damage\u279C+4% Damage\u279C+6% Damage and +1% Arrow Speed. At 10 stacks, shoot +2 arrows\
-        \ that deal 20% Arrow Damage. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -28,10 +24,6 @@ items:
       health: 230
       critical_damage: 50
       intelligence: 5
-    lore:
-      - "Tiered Bonus: Hydra Strike \u2014 Every 0.2 s, arrow attacks grant 1 stack of Hydra Strike \u2051. Each Hydra Strike\
-        \ \u2051 stack grants +2% Damage\u279C+4% Damage\u279C+6% Damage and +1% Arrow Speed. At 10 stacks, shoot +2 arrows\
-        \ that deal 20% Arrow Damage. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -45,10 +37,6 @@ items:
       health: 205
       critical_damage: 50
       intelligence: 5
-    lore:
-      - "Tiered Bonus: Hydra Strike \u2014 Every 0.2 s, arrow attacks grant 1 stack of Hydra Strike \u2051. Each Hydra Strike\
-        \ \u2051 stack grants +2% Damage\u279C+4% Damage\u279C+6% Damage and +1% Arrow Speed. At 10 stacks, shoot +2 arrows\
-        \ that deal 20% Arrow Damage. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -62,10 +50,6 @@ items:
       health: 130
       critical_damage: 50
       intelligence: 5
-    lore:
-      - "Tiered Bonus: Hydra Strike \u2014 Every 0.2 s, arrow attacks grant 1 stack of Hydra Strike \u2051. Each Hydra Strike\
-        \ \u2051 stack grants +2% Damage\u279C+4% Damage\u279C+6% Damage and +1% Arrow Speed. At 10 stacks, shoot +2 arrows\
-        \ that deal 20% Arrow Damage. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

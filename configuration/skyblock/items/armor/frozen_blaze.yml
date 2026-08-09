@@ -7,10 +7,6 @@ items:
       speed: 2
       defense: 105
       strength: 40
-    lore:
-      - "Full Set Bonus: Frozen Blazing Aura \u2014 Damages mobs within 5 block range for 300 base damage + 3% of their max\
-        \ Health every second and applies Slowness 1 for 4 seconds. Max damage/s increased by +100 per 5,000 rods in collection\
-        \ (5000 max damage cap at 225,000 rods in collection)"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -43,10 +39,6 @@ items:
       speed: 2
       defense: 180
       strength: 40
-    lore:
-      - "Full Set Bonus: Frozen Blazing Aura \u2014 Damages mobs within 5 block range for 300 base damage + 3% of their max\
-        \ Health every second and applies Slowness 1 for 4 seconds. Max damage/s increased by +100 per 5,000 rods in collection\
-        \ (5000 max damage cap at 225,000 rods in collection)"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -77,10 +69,6 @@ items:
       speed: 2
       defense: 140
       strength: 40
-    lore:
-      - "Full Set Bonus: Frozen Blazing Aura \u2014 Damages mobs within 5 block range for 300 base damage + 3% of their max\
-        \ Health every second and applies Slowness 1 for 4 seconds. Max damage/s increased by +100 per 5,000 rods in collection\
-        \ (5000 max damage cap at 225,000 rods in collection)"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -111,10 +99,6 @@ items:
       speed: 2
       defense: 95
       strength: 40
-    lore:
-      - "Full Set Bonus: Frozen Blazing Aura \u2014 Damages mobs within 5 block range for 300 base damage + 3% of their max\
-        \ Health every second and applies Slowness 1 for 4 seconds. Max damage/s increased by +100 per 5,000 rods in collection\
-        \ (5000 max damage cap at 225,000 rods in collection)"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

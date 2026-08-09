@@ -8,12 +8,6 @@ items:
       health: 180
       intelligence: 15
       true_defense: 5
-    lore:
-      - "Full Set Bonus: Intimidate \u2014 Attacking a mob has a 50% chance to direct aggro from 3 mobs to you."
-      - "Tiered Bonus: Fervor \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, attacking a mob grants 1 stack of \u0489 Fervor. Lose\
-        \ 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
-      - "Ability: Ground Pound \u2014 At 10 stacks, sneak to reset your stacks and perform a Ground Pound dealing damage to\
-        \ mobs within 6 blocks. Damage scales with EHP, up to 25000000 Damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -28,12 +22,6 @@ items:
       health: 265
       intelligence: 5
       true_defense: 5
-    lore:
-      - "Full Set Bonus: Intimidate \u2014 Attacking a mob has a 50% chance to direct aggro from 3 mobs to you."
-      - "Tiered Bonus: Fervor \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, attacking a mob grants 1 stack of \u0489 Fervor. Lose\
-        \ 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
-      - "Ability: Ground Pound \u2014 At 10 stacks, sneak to reset your stacks and perform a Ground Pound dealing damage to\
-        \ mobs within 6 blocks. Damage scales with EHP, up to 25000000 Damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -46,12 +34,6 @@ items:
       health: 210
       intelligence: 5
       true_defense: 5
-    lore:
-      - "Full Set Bonus: Intimidate \u2014 Attacking a mob has a 50% chance to direct aggro from 3 mobs to you."
-      - "Tiered Bonus: Fervor \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, attacking a mob grants 1 stack of \u0489 Fervor. Lose\
-        \ 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
-      - "Ability: Ground Pound \u2014 At 10 stacks, sneak to reset your stacks and perform a Ground Pound dealing damage to\
-        \ mobs within 6 blocks. Damage scales with EHP, up to 25000000 Damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -64,12 +46,6 @@ items:
       health: 160
       intelligence: 5
       true_defense: 5
-    lore:
-      - "Full Set Bonus: Intimidate \u2014 Attacking a mob has a 50% chance to direct aggro from 3 mobs to you."
-      - "Tiered Bonus: Fervor \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, attacking a mob grants 1 stack of \u0489 Fervor. Lose\
-        \ 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
-      - "Ability: Ground Pound \u2014 At 10 stacks, sneak to reset your stacks and perform a Ground Pound dealing damage to\
-        \ mobs within 6 blocks. Damage scales with EHP, up to 25000000 Damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

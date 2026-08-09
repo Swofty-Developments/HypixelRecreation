@@ -6,8 +6,6 @@ items:
     default_statistics:
       defense: 15
       health: 50
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Every 10 Magma Cube"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -37,8 +35,6 @@ items:
     default_statistics:
       defense: 30
       health: 100
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Every 10 Magma Cube"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -68,8 +64,6 @@ items:
     default_statistics:
       defense: 25
       health: 75
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Every 10 Magma Cube"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -99,8 +93,6 @@ items:
     default_statistics:
       defense: 15
       health: 45
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Every 10 Magma Cube"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

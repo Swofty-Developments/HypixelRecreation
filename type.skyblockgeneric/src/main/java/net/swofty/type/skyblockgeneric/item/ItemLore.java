@@ -5,7 +5,10 @@ import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.translation.GlobalTranslator;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
@@ -18,6 +21,7 @@ import net.swofty.commons.skyblock.item.reforge.Reforge;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
 import net.swofty.type.generic.i18n.I18n;
+import net.swofty.type.generic.i18n.HypixelTranslator;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategories;
 import net.swofty.type.skyblockgeneric.enchantment.SkyBlockEnchantment;
 import net.swofty.type.skyblockgeneric.fishing.rod.FishingRodLoreBuilder;
@@ -27,6 +31,8 @@ import net.swofty.type.skyblockgeneric.item.components.*;
 import net.swofty.type.skyblockgeneric.item.handlers.lore.LoreConfig;
 import net.swofty.type.skyblockgeneric.item.set.ArmorSetRegistry;
 import net.swofty.type.skyblockgeneric.item.set.impl.ArmorSet;
+import net.swofty.type.skyblockgeneric.item.set.impl.ArmorSetContext;
+import net.swofty.type.skyblockgeneric.item.set.impl.ArmorSetEffect;
 import net.swofty.type.skyblockgeneric.potion.PotionEffectType;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +40,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ItemLore {
+	private static final MiniMessage ARMOR_EFFECT_LORE = MiniMessage.builder()
+			.tags(TagResolver.builder()
+					.resolver(TagResolver.standard())
+					.resolver(HypixelTranslator.SKYBLOCK_STAT_TAG_RESOLVER)
+					.build())
+			.build();
 	private final ArrayList<Component> loreLines = new ArrayList<>();
 
 	@Getter
@@ -319,26 +331,31 @@ public class ItemLore {
 			}
 		}
 
-		// Handle full set abilities
-		ArmorSetRegistry itemSetRegistry = ArmorSetRegistry.getArmorSet(handler.getPotentialType());
-		if (itemSetRegistry != null) {
-			ArmorSet armorSet = itemSetRegistry.create();
-
-			int wearingAmount = 0;
-			if (player != null && player.isWearingItem(item)) {
-				for (SkyBlockItem armorItem : player.getArmor()) {
-					if (armorItem == null) continue;
-					ArmorSetRegistry armorSetRegistry = ArmorSetRegistry.getArmorSet(armorItem.getAttributeHandler().getPotentialType());
-					if (armorSetRegistry == null) continue;
-					if (armorSetRegistry == itemSetRegistry) {
-						wearingAmount++;
-					}
-				}
+		Set<ItemType> wornItems = EnumSet.noneOf(ItemType.class);
+		if (player != null && player.isWearingItem(item)) {
+			for (SkyBlockItem armorItem : player.getArmor()) {
+				if (armorItem == null) continue;
+				ItemType armorType = armorItem.getAttributeHandler().getPotentialType();
+				if (armorType != null) wornItems.add(armorType);
 			}
-			if (!armorSet.getDescription().isEmpty()) {
-				int totalPieces = ArmorSetRegistry.getPieceCount(itemSetRegistry);
-				addLoreLine(I18n.string("items.lore.full_set_bonus", l, Component.text(armorSet.getName()), Component.text(String.valueOf(wearingAmount)), Component.text(String.valueOf(totalPieces))));
-				armorSet.getLore().forEach(line -> addLoreLine("§7" + line));
+		}
+		for (ArmorSetRegistry itemSetRegistry : ArmorSetRegistry.getArmorSets(handler.getPotentialType())) {
+			ArmorSet armorSet = itemSetRegistry.create();
+			ArmorSetContext context = new ArmorSetContext(itemSetRegistry, player, wornItems,
+					itemSetRegistry.getWornPieceCount(wornItems));
+			for (ArmorSetEffect effect : armorSet.getEffects()) {
+				if (!effect.isRelevantTo(handler.getPotentialType())) continue;
+				int requiredPieces = effect.getRequiredItems().isEmpty()
+						? effect.getRequiredPieces(context)
+						: effect.getRequiredItems().size();
+				int activePieces = effect.getRequiredItems().isEmpty()
+						? context.wornPieces()
+						: (int) effect.getRequiredItems().stream().filter(wornItems::contains).count();
+				addLoreComponent(GlobalTranslator.render(I18n.t("items.lore.armor_bonus",
+						Component.text(effect.getType().getDisplayName()), Component.text(effect.getName()),
+						Component.text(String.valueOf(activePieces)), Component.text(String.valueOf(requiredPieces))), l));
+				effect.getDescription(context).forEach(line -> addLoreComponent(
+						ARMOR_EFFECT_LORE.deserialize("<reset><gray>" + line)));
 				addLoreLine(null);
 			}
 		}

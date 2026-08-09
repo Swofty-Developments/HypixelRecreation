@@ -7,8 +7,6 @@ items:
       defense: 110
       health: 110
       mending: 10
-    lore:
-      - "Full Set Bonus: Holy Blood \u2014 Grants +75 Health Regen to you and all players within 10 blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -22,8 +20,6 @@ items:
       defense: 160
       health: 180
       mending: 10
-    lore:
-      - "Full Set Bonus: Holy Blood \u2014 Grants +75 Health Regen to you and all players within 10 blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -35,8 +31,6 @@ items:
       defense: 140
       health: 155
       mending: 10
-    lore:
-      - "Full Set Bonus: Holy Blood \u2014 Grants +75 Health Regen to you and all players within 10 blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -48,8 +42,6 @@ items:
       defense: 90
       health: 100
       mending: 10
-    lore:
-      - "Full Set Bonus: Holy Blood \u2014 Grants +75 Health Regen to you and all players within 10 blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

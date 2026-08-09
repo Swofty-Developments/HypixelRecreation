@@ -8,9 +8,6 @@ items:
       defense: 1
       health: 1
       intelligence: -1
-    lore:
-      - "Full Set Bonus: Fairy's Outfit \u2014 Gain 1 Health per Fairy Soul found. Also alerts the player if they are near\
-        \ a fairy soul they haven't discovered yet. Changelog/2019/December 18"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -23,9 +20,6 @@ items:
       defense: 1
       health: 1
       intelligence: -1
-    lore:
-      - "Full Set Bonus: Fairy's Outfit \u2014 Gain 1 Health per Fairy Soul found. Also alerts the player if they are near\
-        \ a fairy soul they haven't discovered yet. Changelog/2019/December 18"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -38,9 +32,6 @@ items:
       defense: 1
       health: 1
       intelligence: -1
-    lore:
-      - "Full Set Bonus: Fairy's Outfit \u2014 Gain 1 Health per Fairy Soul found. Also alerts the player if they are near\
-        \ a fairy soul they haven't discovered yet. Changelog/2019/December 18"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -53,9 +44,6 @@ items:
       defense: 1
       health: 1
       intelligence: -1
-    lore:
-      - "Full Set Bonus: Fairy's Outfit \u2014 Gain 1 Health per Fairy Soul found. Also alerts the player if they are near\
-        \ a fairy soul they haven't discovered yet. Changelog/2019/December 18"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

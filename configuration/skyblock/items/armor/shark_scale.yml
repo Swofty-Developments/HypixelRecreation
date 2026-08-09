@@ -7,9 +7,6 @@ items:
       health: 150
       defense: 125
       sea_creature_chance: 2.5
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
-      - "Tiered Bonus: Festival Fisher \u2014 Grants a +10%\u279C+20% chance to catch Sharks during the Fishing Festival."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -42,9 +39,6 @@ items:
       health: 200
       defense: 175
       sea_creature_chance: 2.5
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
-      - "Tiered Bonus: Festival Fisher \u2014 Grants a +10%\u279C+20% chance to catch Sharks during the Fishing Festival."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -75,9 +69,6 @@ items:
       health: 175
       defense: 150
       sea_creature_chance: 2.5
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
-      - "Tiered Bonus: Festival Fisher \u2014 Grants a +10%\u279C+20% chance to catch Sharks during the Fishing Festival."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -108,9 +99,6 @@ items:
       health: 125
       defense: 100
       sea_creature_chance: 2.5
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
-      - "Tiered Bonus: Festival Fisher \u2014 Grants a +10%\u279C+20% chance to catch Sharks during the Fishing Festival."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

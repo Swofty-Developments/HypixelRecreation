@@ -8,12 +8,6 @@ items:
       defense: 70
       health: 70
       intelligence: 50
-    lore:
-      - "Full Set Bonus: Monster Raider \u2014 Take -35% damage when being attacked by Monsters, and deal +35% damage when\
-        \ attacking Monsters."
-      - "Full Set Bonus: Octodexterity \u2014 Every 4 th strike, deal +100% Damage and apply Venom reducing healing by 40%\
-        \ for 4 seconds."
-      - "Ability: Double Jump \u2014 Allows you to double jump by sneaking mid air!"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS
@@ -50,9 +44,6 @@ items:
       defense: 80
       health: 100
       intelligence: 80
-    lore:
-      - "Full Set Bonus: Octodexterity \u2014 Every 4 th strike, deal +100% Damage and apply Venom reducing healing by 40%\
-        \ for 4 seconds."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -85,9 +76,6 @@ items:
       defense: 100
       health: 120
       intelligence: 100
-    lore:
-      - "Full Set Bonus: Octodexterity \u2014 Every 4 th strike, deal +100% Damage and apply Venom reducing healing by 40%\
-        \ for 4 seconds."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -121,9 +109,6 @@ items:
       defense: 90
       health: 105
       intelligence: 80
-    lore:
-      - "Full Set Bonus: Octodexterity \u2014 Every 4 th strike, deal +100% Damage and apply Venom reducing healing by 40%\
-        \ for 4 seconds."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS

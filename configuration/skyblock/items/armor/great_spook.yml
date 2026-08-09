@@ -5,8 +5,6 @@ items:
     rarity: EPIC
     default_statistics:
       fear: 5
-    lore:
-      - "Full Set Bonus: Spooky \u2014 Lets you spook other players while worn by punching them with the Great Spook Staff."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -16,8 +14,6 @@ items:
     rarity: EPIC
     default_statistics:
       fear: 5
-    lore:
-      - "Full Set Bonus: Spooky \u2014 Lets you spook other players while worn by punching them with the Great Spook Staff."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -27,8 +23,6 @@ items:
     rarity: EPIC
     default_statistics:
       fear: 5
-    lore:
-      - "Full Set Bonus: Spooky \u2014 Lets you spook other players while worn by punching them with the Great Spook Staff."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -38,8 +32,6 @@ items:
     rarity: EPIC
     default_statistics:
       fear: 5
-    lore:
-      - "Full Set Bonus: Spooky \u2014 Lets you spook other players while worn by punching them with the Great Spook Staff."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

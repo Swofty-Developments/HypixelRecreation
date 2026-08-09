@@ -7,8 +7,6 @@ items:
       speed: 20
       defense: 110
       health: 70
-    lore:
-      - "Full Set Bonus: Young Blood \u2014 Gain +70 Walk Speed when you are above 50% Health"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -22,8 +20,6 @@ items:
       speed: 20
       defense: 160
       health: 120
-    lore:
-      - "Full Set Bonus: Young Blood \u2014 Gain +70 Walk Speed when you are above 50% Health"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -35,8 +31,6 @@ items:
       speed: 20
       defense: 140
       health: 100
-    lore:
-      - "Full Set Bonus: Young Blood \u2014 Gain +70 Walk Speed when you are above 50% Health"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -48,8 +42,6 @@ items:
       speed: 20
       defense: 90
       health: 60
-    lore:
-      - "Full Set Bonus: Young Blood \u2014 Gain +70 Walk Speed when you are above 50% Health"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

@@ -9,8 +9,6 @@ items:
       sea_creature_chance: 4.5
       strength: 10
       critical_damage: 35
-    lore:
-      - "Tiered Bonus: Fireproof \u2014 Provides immunity to Crimson Isle Lava."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -26,8 +24,6 @@ items:
       sea_creature_chance: 4.5
       strength: 10
       critical_damage: 35
-    lore:
-      - "Tiered Bonus: Fireproof \u2014 Provides immunity to Crimson Isle Lava."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -41,8 +37,6 @@ items:
       sea_creature_chance: 4.5
       strength: 10
       critical_damage: 35
-    lore:
-      - "Tiered Bonus: Fireproof \u2014 Provides immunity to Crimson Isle Lava."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -56,8 +50,6 @@ items:
       sea_creature_chance: 4.5
       strength: 10
       critical_damage: 35
-    lore:
-      - "Tiered Bonus: Fireproof \u2014 Provides immunity to Crimson Isle Lava."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

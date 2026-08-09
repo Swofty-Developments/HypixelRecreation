@@ -7,8 +7,6 @@ items:
       speed: 25
       defense: 135
       bonus_attack_speed: 5
-    lore:
-      - "Full Set Bonus: Newton's Demise \u2014 Grants +50 Attack Speed Cap"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -22,8 +20,6 @@ items:
       speed: 25
       defense: 240
       bonus_attack_speed: 5
-    lore:
-      - "Full Set Bonus: Newton's Demise \u2014 Grants +50 Attack Speed Cap"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -35,8 +31,6 @@ items:
       speed: 25
       defense: 200
       bonus_attack_speed: 5
-    lore:
-      - "Full Set Bonus: Newton's Demise \u2014 Grants +50 Attack Speed Cap"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -48,8 +42,6 @@ items:
       speed: 25
       defense: 125
       bonus_attack_speed: 5
-    lore:
-      - "Full Set Bonus: Newton's Demise \u2014 Grants +50 Attack Speed Cap"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

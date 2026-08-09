@@ -9,10 +9,6 @@ items:
       pressure_resistance: 20
       respiration: 5
       sea_creature_chance: 2
-    lore:
-      - "Full Set Bonus: One with the Fish \u2014 Grants the ability to breathe permanently while underwater. (disabled on\
-        \ Galatea and Backwater Bayou)"
-      - "Tiered Bonus: Deep Sea Diver \u2014 Grants +0/1.5/2/2.5 treasure chance while underwater."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -28,10 +24,6 @@ items:
       pressure_resistance: 20
       respiration: 5
       sea_creature_chance: 2
-    lore:
-      - "Full Set Bonus: One with the Fish \u2014 Grants the ability to breathe permanently while underwater. (disabled on\
-        \ Galatea and Backwater Bayou)"
-      - "Tiered Bonus: Deep Sea Diver \u2014 Grants +0/1.5/2/2.5 treasure chance while underwater."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -45,10 +37,6 @@ items:
       pressure_resistance: 20
       respiration: 5
       sea_creature_chance: 2
-    lore:
-      - "Full Set Bonus: One with the Fish \u2014 Grants the ability to breathe permanently while underwater. (disabled on\
-        \ Galatea and Backwater Bayou)"
-      - "Tiered Bonus: Deep Sea Diver \u2014 Grants +0/1.5/2/2.5 treasure chance while underwater."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -62,10 +50,6 @@ items:
       pressure_resistance: 20
       respiration: 5
       sea_creature_chance: 2
-    lore:
-      - "Full Set Bonus: One with the Fish \u2014 Grants the ability to breathe permanently while underwater. (disabled on\
-        \ Galatea and Backwater Bayou)"
-      - "Tiered Bonus: Deep Sea Diver \u2014 Grants +0/1.5/2/2.5 treasure chance while underwater."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

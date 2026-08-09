@@ -7,8 +7,6 @@ items:
       speed: 10
       defense: 70
       block_fortune: 25
-    lore:
-      - "Tiered Bonus: Mineralworks \u2014 Grants +100/200/300/400 Mining Spread on Ores and Blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -43,8 +41,6 @@ items:
       speed: 15
       defense: 125
       block_fortune: 25
-    lore:
-      - "Tiered Bonus: Mineralworks \u2014 Grants +100/200/300/400 Mining Spread on Ores and Blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -75,8 +71,6 @@ items:
       speed: 15
       defense: 125
       block_fortune: 25
-    lore:
-      - "Tiered Bonus: Mineralworks \u2014 Grants +100/200/300/400 Mining Spread on Ores and Blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -110,8 +104,6 @@ items:
       speed: 10
       defense: 70
       block_fortune: 25
-    lore:
-      - "Tiered Bonus: Mineralworks \u2014 Grants +100/200/300/400 Mining Spread on Ores and Blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

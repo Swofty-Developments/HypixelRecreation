@@ -7,8 +7,6 @@ items:
       defense: 110
       health: 70
       intelligence: 125
-    lore:
-      - "Full Set Bonus: Wise Blood \u2014 Abilities have 2/3 of the mana cost."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -22,8 +20,6 @@ items:
       defense: 160
       health: 120
       intelligence: 75
-    lore:
-      - "Full Set Bonus: Wise Blood \u2014 Abilities have 2/3 of the mana cost."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -35,8 +31,6 @@ items:
       defense: 140
       health: 100
       intelligence: 75
-    lore:
-      - "Full Set Bonus: Wise Blood \u2014 Abilities have 2/3 of the mana cost."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -48,8 +42,6 @@ items:
       defense: 90
       health: 60
       intelligence: 75
-    lore:
-      - "Full Set Bonus: Wise Blood \u2014 Abilities have 2/3 of the mana cost."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

@@ -9,8 +9,6 @@ items:
       true_defense: 5
       mining_speed: 10
       mining_fortune: 5
-    lore:
-      - "Full Set Bonus: Expert Miner \u2014 Grants +2 Mining Speed for each of your mining levels."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -24,8 +22,6 @@ items:
       true_defense: 10
       mining_speed: 10
       mining_fortune: 5
-    lore:
-      - "Full Set Bonus: Expert Miner \u2014 Grants +2 Mining Speed for each of your mining levels."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -39,8 +35,6 @@ items:
       true_defense: 10
       mining_speed: 10
       mining_fortune: 5
-    lore:
-      - "Full Set Bonus: Expert Miner \u2014 Grants +2 Mining Speed for each of your mining levels."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -54,8 +48,6 @@ items:
       true_defense: 5
       mining_speed: 10
       mining_fortune: 5
-    lore:
-      - "Full Set Bonus: Expert Miner \u2014 Grants +2 Mining Speed for each of your mining levels."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

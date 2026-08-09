@@ -8,9 +8,6 @@ items:
       mining_fortune: 20
       true_defense: 50
       mining_speed: 50
-    lore:
-      - "Ability: 2-Piece Set Bonus: Mist Aura \u2014 Hides the wearer in a guise of mist, multiplying damage from ghosts\
-        \ by 0.6 x."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -41,9 +38,6 @@ items:
       mining_fortune: 20
       true_defense: 80
       mining_speed: 50
-    lore:
-      - "Ability: 2-Piece Set Bonus: Mist Aura \u2014 Hides the wearer in a guise of mist, multiplying damage from ghosts\
-        \ by 0.6 x."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -75,9 +69,6 @@ items:
       mining_fortune: 20
       true_defense: 70
       mining_speed: 50
-    lore:
-      - "Ability: 2-Piece Set Bonus: Mist Aura \u2014 Hides the wearer in a guise of mist, multiplying damage from ghosts\
-        \ by 0.6 x."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -109,9 +100,6 @@ items:
       mining_fortune: 20
       true_defense: 40
       mining_speed: 50
-    lore:
-      - "Ability: 2-Piece Set Bonus: Mist Aura \u2014 Hides the wearer in a guise of mist, multiplying damage from ghosts\
-        \ by 0.6 x."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

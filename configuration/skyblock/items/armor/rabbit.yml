@@ -6,8 +6,6 @@ items:
     default_statistics:
       defense: 15
       speed: 5
-    lore:
-      - "Full Set Bonus: Springsneak \u2014 While sneaking, you have permanent Jump Boost II"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -38,8 +36,6 @@ items:
     default_statistics:
       defense: 40
       speed: 5
-    lore:
-      - "Full Set Bonus: Springsneak \u2014 While sneaking, you have permanent Jump Boost II"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -69,8 +65,6 @@ items:
     default_statistics:
       defense: 30
       speed: 5
-    lore:
-      - "Full Set Bonus: Springsneak \u2014 While sneaking, you have permanent Jump Boost II"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -100,8 +94,6 @@ items:
     default_statistics:
       defense: 15
       speed: 5
-    lore:
-      - "Full Set Bonus: Springsneak \u2014 While sneaking, you have permanent Jump Boost II"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

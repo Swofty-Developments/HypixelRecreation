@@ -6,8 +6,6 @@ items:
     default_statistics:
       defense: 40
       health: 55
-    lore:
-      - "Tiered Bonus: Arachne's Faithful \u2014 Grants +5/10/20/35/50/70/100 Health and +5/10/20/35/50/70/100 Defense."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -20,8 +18,6 @@ items:
     default_statistics:
       defense: 60
       health: 85
-    lore:
-      - "Tiered Bonus: Arachne's Faithful \u2014 Grants +5/10/20/35/50/70/100 Health and +5/10/20/35/50/70/100 Defense."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -32,8 +28,6 @@ items:
     default_statistics:
       defense: 50
       health: 75
-    lore:
-      - "Tiered Bonus: Arachne's Faithful \u2014 Grants +5/10/20/35/50/70/100 Health and +5/10/20/35/50/70/100 Defense."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -44,8 +38,6 @@ items:
     default_statistics:
       defense: 30
       health: 45
-    lore:
-      - "Tiered Bonus: Arachne's Faithful \u2014 Grants +5/10/20/35/50/70/100 Health and +5/10/20/35/50/70/100 Defense."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

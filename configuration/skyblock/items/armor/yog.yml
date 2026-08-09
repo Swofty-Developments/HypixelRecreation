@@ -9,8 +9,6 @@ items:
       mining_speed: 25
       mining_fortune: 20
       heat_resistance: 10
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Every 5 Yogs killed grants the wearer +1 Mining Speed. (Max 500)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -24,8 +22,6 @@ items:
       mining_speed: 25
       mining_fortune: 20
       heat_resistance: 10
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Every 5 Yogs killed grants the wearer +1 Mining Speed. (Max 500)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -39,8 +35,6 @@ items:
       mining_speed: 25
       mining_fortune: 20
       heat_resistance: 10
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Every 5 Yogs killed grants the wearer +1 Mining Speed. (Max 500)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -54,8 +48,6 @@ items:
       mining_speed: 25
       mining_fortune: 20
       heat_resistance: 10
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Every 5 Yogs killed grants the wearer +1 Mining Speed. (Max 500)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

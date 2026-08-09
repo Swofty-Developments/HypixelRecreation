@@ -7,9 +7,6 @@ items:
       speed: 2
       defense: 90
       strength: 30
-    lore:
-      - "Full Set Bonus: Blazing Aura \u2014 Damages mobs within 5 blocks for 3% of their max Health per second. Max damage/s\
-        \ increased by +100 per 5,000 rods. (5000 max damage cap)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -42,9 +39,6 @@ items:
       speed: 2
       defense: 165
       strength: 30
-    lore:
-      - "Full Set Bonus: Blazing Aura \u2014 Damages mobs within 5 blocks for 3% of their max Health per second. Max damage/s\
-        \ increased by +100 per 5,000 rods. (5000 max damage cap)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -75,9 +69,6 @@ items:
       speed: 2
       defense: 130
       strength: 30
-    lore:
-      - "Full Set Bonus: Blazing Aura \u2014 Damages mobs within 5 blocks for 3% of their max Health per second. Max damage/s\
-        \ increased by +100 per 5,000 rods. (5000 max damage cap)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -108,9 +99,6 @@ items:
       speed: 2
       defense: 80
       strength: 30
-    lore:
-      - "Full Set Bonus: Blazing Aura \u2014 Damages mobs within 5 blocks for 3% of their max Health per second. Max damage/s\
-        \ increased by +100 per 5,000 rods. (5000 max damage cap)."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

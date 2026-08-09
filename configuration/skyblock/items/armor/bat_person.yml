@@ -5,10 +5,6 @@ items:
     rarity: LEGENDARY
     default_statistics:
       defense: 15
-    lore:
-      - "Full Set Bonus: Bat Powers Activate! \u2014 Upgrades your Grappling Hook and turns you into a true vigilante! Grants\
-        \ a +5% chance to find rare Candy. Bat Powers Activate! removes the cooldown on the grappling hook and increases its\
-        \ power and range."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -20,10 +16,6 @@ items:
     rarity: LEGENDARY
     default_statistics:
       defense: 30
-    lore:
-      - "Full Set Bonus: Bat Powers Activate! \u2014 Upgrades your Grappling Hook and turns you into a true vigilante! Grants\
-        \ a +5% chance to find rare Candy. Bat Powers Activate! removes the cooldown on the grappling hook and increases its\
-        \ power and range."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -33,10 +25,6 @@ items:
     rarity: LEGENDARY
     default_statistics:
       defense: 25
-    lore:
-      - "Full Set Bonus: Bat Powers Activate! \u2014 Upgrades your Grappling Hook and turns you into a true vigilante! Grants\
-        \ a +5% chance to find rare Candy. Bat Powers Activate! removes the cooldown on the grappling hook and increases its\
-        \ power and range."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -46,10 +34,6 @@ items:
     rarity: LEGENDARY
     default_statistics:
       defense: 15
-    lore:
-      - "Full Set Bonus: Bat Powers Activate! \u2014 Upgrades your Grappling Hook and turns you into a true vigilante! Grants\
-        \ a +5% chance to find rare Candy. Bat Powers Activate! removes the cooldown on the grappling hook and increases its\
-        \ power and range."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

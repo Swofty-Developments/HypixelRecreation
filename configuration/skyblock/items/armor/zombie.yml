@@ -6,9 +6,6 @@ items:
     default_statistics:
       defense: 40
       health: 200
-    lore:
-      - "Full Set Bonus: Projectile Absorption \u2014 Heals the wearer for 10 Health per second for 5 seconds when hit by\
-        \ a projectile"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -41,9 +38,6 @@ items:
     default_statistics:
       defense: 30
       health: 160
-    lore:
-      - "Full Set Bonus: Projectile Absorption \u2014 Heals the wearer for 10 Health per second for 5 seconds when hit by\
-        \ a projectile"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -76,9 +70,6 @@ items:
     default_statistics:
       defense: 25
       health: 120
-    lore:
-      - "Full Set Bonus: Projectile Absorption \u2014 Heals the wearer for 10 Health per second for 5 seconds when hit by\
-        \ a projectile"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

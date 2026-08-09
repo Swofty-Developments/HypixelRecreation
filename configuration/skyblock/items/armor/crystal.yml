@@ -6,8 +6,6 @@ items:
     default_statistics:
       defense: 20
       intelligence: 65
-    lore:
-      - "Full Set Bonus: Refraction \u2014 The stats of this armor change from 0 to 200% depending on the current light level."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -18,8 +16,6 @@ items:
     default_statistics:
       defense: 35
       intelligence: 120
-    lore:
-      - "Full Set Bonus: Refraction \u2014 The stats of this armor change from 0 to 200% depending on the current light level."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -30,8 +26,6 @@ items:
     default_statistics:
       defense: 30
       intelligence: 100
-    lore:
-      - "Full Set Bonus: Refraction \u2014 The stats of this armor change from 0 to 200% depending on the current light level."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -42,8 +36,6 @@ items:
     default_statistics:
       defense: 15
       intelligence: 60
-    lore:
-      - "Full Set Bonus: Refraction \u2014 The stats of this armor change from 0 to 200% depending on the current light level."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

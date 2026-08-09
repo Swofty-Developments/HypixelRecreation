@@ -7,8 +7,6 @@ items:
       health: 65
       defense: 60
       pressure_resistance: 10
-    lore:
-      - "Tiered Bonus: Long Tuba \u2014 Grants +0/2/5/10 respiration."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -22,8 +20,6 @@ items:
       health: 100
       defense: 100
       pressure_resistance: 10
-    lore:
-      - "Tiered Bonus: Long Tuba \u2014 Grants +0/2/5/10 respiration."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -35,8 +31,6 @@ items:
       health: 75
       defense: 85
       pressure_resistance: 10
-    lore:
-      - "Tiered Bonus: Long Tuba \u2014 Grants +0/2/5/10 respiration."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -48,8 +42,6 @@ items:
       health: 60
       defense: 55
       pressure_resistance: 10
-    lore:
-      - "Tiered Bonus: Long Tuba \u2014 Grants +0/2/5/10 respiration."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

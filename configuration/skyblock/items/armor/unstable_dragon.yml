@@ -9,9 +9,6 @@ items:
       critical_damage: 15
       critical_chance: 5
       intelligence: 25
-    lore:
-      - "Full Set Bonus: Unstable Blood \u2014 Strikes all nearby mobs within an 8 block radius with lightning every 15 seconds,\
-        \ dealing 3000 damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -26,9 +23,6 @@ items:
       health: 120
       critical_damage: 15
       critical_chance: 5
-    lore:
-      - "Full Set Bonus: Unstable Blood \u2014 Strikes all nearby mobs within an 8 block radius with lightning every 15 seconds,\
-        \ dealing 3000 damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -41,9 +35,6 @@ items:
       health: 100
       critical_damage: 15
       critical_chance: 5
-    lore:
-      - "Full Set Bonus: Unstable Blood \u2014 Strikes all nearby mobs within an 8 block radius with lightning every 15 seconds,\
-        \ dealing 3000 damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -56,9 +47,6 @@ items:
       health: 60
       critical_damage: 15
       critical_chance: 5
-    lore:
-      - "Full Set Bonus: Unstable Blood \u2014 Strikes all nearby mobs within an 8 block radius with lightning every 15 seconds,\
-        \ dealing 3000 damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

@@ -9,11 +9,6 @@ items:
       health: 130
       defense: 40
       bonus_pest_chance: 17.5
-    lore:
-      - "Tiered Bonus: Feast \u2014 Farming Wild Rose, Sunflower and Moonflower have a 0.000%\u279C0.002%\u279C0.003%\u279C\
-        0.004% chance of dropping a Helianthus. Inside the Greenhouse gives a 0.0%\u279C0.8%\u279C1.2%\u279C1.6% chance to\
-        \ drop one from any crop grown inside. Also combines the Tiered Bonuses of wearing 1\u279C2\u279C3\u279C4 pieces of\
-        \ the Tater Armor, Cropie Armor, and Squash Armor. Grants +0\u279C25\u279C50\u279C75 Farming Fortune."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -29,11 +24,6 @@ items:
       health: 195
       defense: 40
       bonus_pest_chance: 17.5
-    lore:
-      - "Tiered Bonus: Feast \u2014 Farming Wild Rose, Sunflower and Moonflower have a 0.000%\u279C0.002%\u279C0.003%\u279C\
-        0.004% chance of dropping a Helianthus. Inside the Greenhouse gives a 0.0%\u279C0.8%\u279C1.2%\u279C1.6% chance to\
-        \ drop one from any crop grown inside. Also combines the Tiered Bonuses of wearing 1\u279C2\u279C3\u279C4 pieces of\
-        \ the Tater Armor, Cropie Armor, and Squash Armor. Grants +0\u279C25\u279C50\u279C75 Farming Fortune."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -47,11 +37,6 @@ items:
       health: 195
       defense: 40
       bonus_pest_chance: 17.5
-    lore:
-      - "Tiered Bonus: Feast \u2014 Farming Wild Rose, Sunflower and Moonflower have a 0.000%\u279C0.002%\u279C0.003%\u279C\
-        0.004% chance of dropping a Helianthus. Inside the Greenhouse gives a 0.0%\u279C0.8%\u279C1.2%\u279C1.6% chance to\
-        \ drop one from any crop grown inside. Also combines the Tiered Bonuses of wearing 1\u279C2\u279C3\u279C4 pieces of\
-        \ the Tater Armor, Cropie Armor, and Squash Armor. Grants +0\u279C25\u279C50\u279C75 Farming Fortune."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -65,12 +50,6 @@ items:
       health: 130
       defense: 40
       bonus_pest_chance: 17.5
-    lore:
-      - "Tiered Bonus: Feast \u2014 Farming Wild Rose, Sunflower and Moonflower have a 0.000%\u279C0.002%\u279C0.003%\u279C\
-        0.004% chance of dropping a Helianthus. Inside the Greenhouse gives a 0.0%\u279C0.8%\u279C1.2%\u279C1.6% chance to\
-        \ drop one from any crop grown inside. Also combines the Tiered Bonuses of wearing 1\u279C2\u279C3\u279C4 pieces of\
-        \ the Tater Armor, Cropie Armor, and Squash Armor. Grants +0\u279C25\u279C50\u279C75 Farming Fortune."
-      - "Ability: Farmer's Grace \u2014 Grants immunity to trampling crops."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

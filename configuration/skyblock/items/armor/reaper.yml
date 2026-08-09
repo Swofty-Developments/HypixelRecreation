@@ -8,8 +8,6 @@ items:
       health: 180
       strength: 25
       intelligence: 250
-    lore:
-      - "Full Set Bonus: Enrage \u2014 Enrage for 6 s gaining 100 Speed, 100 Damage, and 100 Strength."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -47,8 +45,6 @@ items:
       health: 120
       strength: 25
       intelligence: 250
-    lore:
-      - "Full Set Bonus: Enrage \u2014 Enrage for 6 s gaining 100 Speed, 100 Damage, and 100 Strength."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -86,8 +82,6 @@ items:
       health: 100
       strength: 25
       intelligence: 250
-    lore:
-      - "Full Set Bonus: Enrage \u2014 Enrage for 6 s gaining 100 Speed, 100 Damage, and 100 Strength."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

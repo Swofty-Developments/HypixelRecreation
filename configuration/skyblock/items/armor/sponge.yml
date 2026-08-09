@@ -6,8 +6,6 @@ items:
     default_statistics:
       defense: 100
       sea_creature_chance: 2
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -37,8 +35,6 @@ items:
     default_statistics:
       defense: 150
       sea_creature_chance: 2
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -68,8 +64,6 @@ items:
     default_statistics:
       defense: 125
       sea_creature_chance: 2
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -99,8 +93,6 @@ items:
     default_statistics:
       defense: 75
       sea_creature_chance: 2
-    lore:
-      - "Full Set Bonus: Absorb \u2014 Doubles your Defense while in water."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

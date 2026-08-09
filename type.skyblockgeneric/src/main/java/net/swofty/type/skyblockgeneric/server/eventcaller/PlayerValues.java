@@ -57,9 +57,15 @@ public class PlayerValues {
             if (oldSet != null && oldSet.create() instanceof SetEvents setEvents) {
                 setEvents.setTakeOff(player);
             }
+            if (oldSet != null) {
+                oldSet.getEffects().forEach(effect -> effect.onUnequip(player));
+            }
 
             if (newSet != null && newSet.create() instanceof SetEvents setEvents) {
                 setEvents.setPutOn(player);
+            }
+            if (newSet != null) {
+                newSet.getEffects().forEach(effect -> effect.onEquip(player));
             }
         });
 

@@ -5,9 +5,6 @@ items:
     rarity: UNCOMMON
     default_statistics:
       intelligence: 10
-    lore:
-      - "Ability: Helmets All The Way Down \u2014 Regain +1 Rift Time when killing a monster. Note: Monsters already grant\
-        \ time on death."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET

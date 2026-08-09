@@ -5,9 +5,6 @@ items:
     rarity: EPIC
     default_statistics:
       defense: 50
-    lore:
-      - "Full Set Bonus: Tank \u2014 Increases the wearers maximum Health and Defense by +1 for every 3,000 Emeralds in your\
-        \ collection. Max +350 each"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -35,9 +32,6 @@ items:
     rarity: EPIC
     default_statistics:
       defense: 100
-    lore:
-      - "Full Set Bonus: Tank \u2014 Increases the wearers maximum Health and Defense by +1 for every 3,000 Emeralds in your\
-        \ collection. Max +350 each"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -66,9 +60,6 @@ items:
     rarity: EPIC
     default_statistics:
       defense: 75
-    lore:
-      - "Full Set Bonus: Tank \u2014 Increases the wearers maximum Health and Defense by +1 for every 3,000 Emeralds in your\
-        \ collection. Max +350 each"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -97,9 +88,6 @@ items:
     rarity: EPIC
     default_statistics:
       defense: 45
-    lore:
-      - "Full Set Bonus: Tank \u2014 Increases the wearers maximum Health and Defense by +1 for every 3,000 Emeralds in your\
-        \ collection. Max +350 each"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

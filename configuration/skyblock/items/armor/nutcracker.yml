@@ -7,9 +7,6 @@ items:
       health: 80
       defense: 35
       sea_creature_chance: 1.5
-    lore:
-      - "Full Set Bonus: Cold Thumb \u2014 Allows the wearer to shoot unlimited snowballs when using Frosty the Snow Cannon/Frosty\
-        \ the Snow Blaster."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -23,9 +20,6 @@ items:
       health: 115
       defense: 45
       sea_creature_chance: 1.5
-    lore:
-      - "Full Set Bonus: Cold Thumb \u2014 Allows the wearer to shoot unlimited snowballs when using Frosty the Snow Cannon/Frosty\
-        \ the Snow Blaster."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -37,9 +31,6 @@ items:
       health: 85
       defense: 35
       sea_creature_chance: 1.5
-    lore:
-      - "Full Set Bonus: Cold Thumb \u2014 Allows the wearer to shoot unlimited snowballs when using Frosty the Snow Cannon/Frosty\
-        \ the Snow Blaster."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -51,9 +42,6 @@ items:
       health: 75
       defense: 30
       sea_creature_chance: 1.5
-    lore:
-      - "Full Set Bonus: Cold Thumb \u2014 Allows the wearer to shoot unlimited snowballs when using Frosty the Snow Cannon/Frosty\
-        \ the Snow Blaster."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

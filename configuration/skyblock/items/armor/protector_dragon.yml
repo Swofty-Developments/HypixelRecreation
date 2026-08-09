@@ -6,9 +6,6 @@ items:
     default_statistics:
       defense: 135
       health: 70
-    lore:
-      - "Full Set Bonus: Protective Blood \u2014 Increases the defence of each armor piece by +1% Defense for each missing\
-        \ percent of Health."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -21,9 +18,6 @@ items:
     default_statistics:
       defense: 185
       health: 120
-    lore:
-      - "Full Set Bonus: Protective Blood \u2014 Increases the defence of each armor piece by +1% Defense for each missing\
-        \ percent of Health."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -34,9 +28,6 @@ items:
     default_statistics:
       defense: 165
       health: 100
-    lore:
-      - "Full Set Bonus: Protective Blood \u2014 Increases the defence of each armor piece by +1% Defense for each missing\
-        \ percent of Health."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -47,9 +38,6 @@ items:
     default_statistics:
       defense: 115
       health: 60
-    lore:
-      - "Full Set Bonus: Protective Blood \u2014 Increases the defence of each armor piece by +1% Defense for each missing\
-        \ percent of Health."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

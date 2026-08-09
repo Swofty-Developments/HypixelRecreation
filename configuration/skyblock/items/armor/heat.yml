@@ -10,8 +10,6 @@ items:
       mining_speed: 15
       strength: 15
       heat_resistance: 20
-    lore:
-      - "Full Set Bonus: Heat Shield \u2014 You are immune to Heat."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -45,8 +43,6 @@ items:
       mining_speed: 15
       strength: 15
       heat_resistance: 20
-    lore:
-      - "Full Set Bonus: Heat Shield \u2014 You are immune to Heat."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -80,8 +76,6 @@ items:
       mining_speed: 15
       strength: 15
       heat_resistance: 20
-    lore:
-      - "Full Set Bonus: Heat Shield \u2014 You are immune to Heat."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -115,8 +109,6 @@ items:
       mining_speed: 15
       strength: 15
       heat_resistance: 20
-    lore:
-      - "Full Set Bonus: Heat Shield \u2014 You are immune to Heat."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

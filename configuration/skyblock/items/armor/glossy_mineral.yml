@@ -7,8 +7,6 @@ items:
       speed: 20
       defense: 90
       block_fortune: 50
-    lore:
-      - "Tiered Bonus: Glossy Mineralworks \u2014 Grants +150/300/450/600 Mining Spread on Ores and Blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -41,8 +39,6 @@ items:
       speed: 25
       defense: 150
       block_fortune: 50
-    lore:
-      - "Tiered Bonus: Glossy Mineralworks \u2014 Grants +150/300/450/600 Mining Spread on Ores and Blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -73,8 +69,6 @@ items:
       speed: 25
       defense: 150
       block_fortune: 50
-    lore:
-      - "Tiered Bonus: Glossy Mineralworks \u2014 Grants +150/300/450/600 Mining Spread on Ores and Blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -105,8 +99,6 @@ items:
       speed: 20
       defense: 90
       block_fortune: 50
-    lore:
-      - "Tiered Bonus: Glossy Mineralworks \u2014 Grants +150/300/450/600 Mining Spread on Ores and Blocks."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

@@ -5,10 +5,6 @@ items:
     rarity: LEGENDARY
     default_statistics:
       health: 125
-    lore:
-      - "Full Set Bonus: Star Fisher \u2014 Grants +1 Fishing Speed per \u272A Upgrade Star on your armor."
-      - "Tiered Bonus: Peace Treaty \u2014 Gain immunity to Sea Creatures but they are immune to you and you can no longer\
-        \ catch them."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -18,10 +14,6 @@ items:
     rarity: LEGENDARY
     default_statistics:
       health: 175
-    lore:
-      - "Full Set Bonus: Star Fisher \u2014 Grants +1 Fishing Speed per \u272A Upgrade Star on your armor."
-      - "Tiered Bonus: Peace Treaty \u2014 Gain immunity to Sea Creatures but they are immune to you and you can no longer\
-        \ catch them."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -31,10 +23,6 @@ items:
     rarity: LEGENDARY
     default_statistics:
       health: 150
-    lore:
-      - "Full Set Bonus: Star Fisher \u2014 Grants +1 Fishing Speed per \u272A Upgrade Star on your armor."
-      - "Tiered Bonus: Peace Treaty \u2014 Gain immunity to Sea Creatures but they are immune to you and you can no longer\
-        \ catch them."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -44,10 +32,6 @@ items:
     rarity: LEGENDARY
     default_statistics:
       health: 100
-    lore:
-      - "Full Set Bonus: Star Fisher \u2014 Grants +1 Fishing Speed per \u272A Upgrade Star on your armor."
-      - "Tiered Bonus: Peace Treaty \u2014 Gain immunity to Sea Creatures but they are immune to you and you can no longer\
-        \ catch them."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

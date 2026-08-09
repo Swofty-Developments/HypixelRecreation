@@ -9,10 +9,6 @@ items:
       intelligence: 15
       strength: 30
       critical_damage: 20
-    lore:
-      - "Tiered Bonus: Rekindle \u2014 Increase all of your outgoing burning damage by 200%/400%/600%. For each second you\
-        \ are on fire additionally increase all burning damage by 1.2%/2.5%/5% up to 50%/100%/200%. When wearing 2 or more\
-        \ armor pieces of this set, melee attacks from ignited mobs will set you on fire!"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -28,10 +24,6 @@ items:
       intelligence: 5
       strength: 30
       critical_damage: 20
-    lore:
-      - "Tiered Bonus: Rekindle \u2014 Increase all of your outgoing burning damage by 200%/400%/600%. For each second you\
-        \ are on fire additionally increase all burning damage by 1.2%/2.5%/5% up to 50%/100%/200%. When wearing 2 or more\
-        \ armor pieces of this set, melee attacks from ignited mobs will set you on fire!"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -45,10 +37,6 @@ items:
       intelligence: 5
       strength: 30
       critical_damage: 20
-    lore:
-      - "Tiered Bonus: Rekindle \u2014 Increase all of your outgoing burning damage by 200%/400%/600%. For each second you\
-        \ are on fire additionally increase all burning damage by 1.2%/2.5%/5% up to 50%/100%/200%. When wearing 2 or more\
-        \ armor pieces of this set, melee attacks from ignited mobs will set you on fire!"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -62,10 +50,6 @@ items:
       intelligence: 5
       strength: 30
       critical_damage: 15
-    lore:
-      - "Tiered Bonus: Rekindle \u2014 Increase all of your outgoing burning damage by 200%/400%/600%. For each second you\
-        \ are on fire additionally increase all burning damage by 1.2%/2.5%/5% up to 50%/100%/200%. When wearing 2 or more\
-        \ armor pieces of this set, melee attacks from ignited mobs will set you on fire!"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

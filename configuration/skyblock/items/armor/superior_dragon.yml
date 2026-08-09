@@ -11,9 +11,6 @@ items:
       critical_damage: 10
       critical_chance: 2
       intelligence: 25
-    lore:
-      - "Full Set Bonus: Superior Blood \u2014 Increases all Combat stats and mf by 5% and Aspect of the Dragons ability deals\
-        \ 50% more damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -31,9 +28,6 @@ items:
       critical_damage: 10
       critical_chance: 2
       intelligence: 25
-    lore:
-      - "Full Set Bonus: Superior Blood \u2014 Increases all Combat stats and mf by 5% and Aspect of the Dragons ability deals\
-        \ 50% more damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -49,9 +43,6 @@ items:
       critical_damage: 10
       critical_chance: 2
       intelligence: 25
-    lore:
-      - "Full Set Bonus: Superior Blood \u2014 Increases all Combat stats and mf by 5% and Aspect of the Dragons ability deals\
-        \ 50% more damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -67,9 +58,6 @@ items:
       critical_damage: 10
       critical_chance: 2
       intelligence: 25
-    lore:
-      - "Full Set Bonus: Superior Blood \u2014 Increases all Combat stats and mf by 5% and Aspect of the Dragons ability deals\
-        \ 50% more damage."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

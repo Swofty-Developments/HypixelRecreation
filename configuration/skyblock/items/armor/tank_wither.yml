@@ -7,9 +7,6 @@ items:
       defense: 180
       health: 210
       intelligence: 30
-    lore:
-      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
-        \ will travel to and explode on nearby enemies."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -23,9 +20,6 @@ items:
       defense: 275
       health: 310
       intelligence: 20
-    lore:
-      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
-        \ will travel to and explode on nearby enemies."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -37,9 +31,6 @@ items:
       defense: 240
       health: 260
       intelligence: 20
-    lore:
-      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
-        \ will travel to and explode on nearby enemies."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -51,9 +42,6 @@ items:
       defense: 165
       health: 190
       intelligence: 20
-    lore:
-      - "Full Set Bonus: Witherborn \u2014 Spawns a wither minion every 30 seconds up to a maximum of 1 wither. Your withers\
-        \ will travel to and explode on nearby enemies."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

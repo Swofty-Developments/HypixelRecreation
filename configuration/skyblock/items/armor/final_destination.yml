@@ -7,9 +7,6 @@ items:
       defense: 100
       health: 140
       intelligence: 100
-    lore:
-      - "Full Set Bonus: Vivacious Darkness \u2014 Costs 2 soulflow per 5 s in combat while sneaking: ; +30 Strength ; +20%\
-        \ Attack Speed ; +10 Speed ; 1.25 x Intelligence ; +200 Ferocity against Endermen ; +100% Damage against Endermen"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -23,9 +20,6 @@ items:
       defense: 100
       health: 200
       intelligence: 100
-    lore:
-      - "Full Set Bonus: Vivacious Darkness \u2014 Costs 2 soulflow per 5 s in combat while sneaking: ; +30 Strength ; +20%\
-        \ Attack Speed ; +10 Speed ; 1.25 x Intelligence ; +200 Ferocity against Endermen ; +100% Damage against Endermen"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -37,9 +31,6 @@ items:
       defense: 100
       health: 160
       intelligence: 100
-    lore:
-      - "Full Set Bonus: Vivacious Darkness \u2014 Costs 2 soulflow per 5 s in combat while sneaking: ; +30 Strength ; +20%\
-        \ Attack Speed ; +10 Speed ; 1.25 x Intelligence ; +200 Ferocity against Endermen ; +100% Damage against Endermen"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -51,9 +42,6 @@ items:
       defense: 100
       health: 100
       intelligence: 100
-    lore:
-      - "Full Set Bonus: Vivacious Darkness \u2014 Costs 2 soulflow per 5 s in combat while sneaking: ; +30 Strength ; +20%\
-        \ Attack Speed ; +10 Speed ; 1.25 x Intelligence ; +200 Ferocity against Endermen ; +100% Damage against Endermen"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

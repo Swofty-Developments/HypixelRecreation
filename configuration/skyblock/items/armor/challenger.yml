@@ -7,9 +7,6 @@ items:
       strength: 10
       health: 50
       defense: 25
-    lore:
-      - "Tiered Bonus: Unearthed \u2014 Reduces damage taken from Mythological mobs by 10%/12.5%/15%/17.5%/20%/22.5%/25%."
-      - "Ability: Mythos' Night \u2014 Grants 2 x this armor's stats while in The Hub"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -47,9 +44,6 @@ items:
       strength: 25
       health: 80
       defense: 40
-    lore:
-      - "Tiered Bonus: Unearthed \u2014 Reduces damage taken from Mythological mobs by 10%/12.5%/15%/17.5%/20%/22.5%/25%."
-      - "Ability: Mythos' Night \u2014 Grants 2 x this armor's stats while in The Hub"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -86,9 +80,6 @@ items:
       strength: 20
       health: 70
       defense: 35
-    lore:
-      - "Tiered Bonus: Unearthed \u2014 Reduces damage taken from Mythological mobs by 10%/12.5%/15%/17.5%/20%/22.5%/25%."
-      - "Ability: Mythos' Night \u2014 Grants 2 x this armor's stats while in The Hub"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -125,9 +116,6 @@ items:
       strength: 5
       health: 40
       defense: 30
-    lore:
-      - "Tiered Bonus: Unearthed \u2014 Reduces damage taken from Mythological mobs by 10%/12.5%/15%/17.5%/20%/22.5%/25%."
-      - "Ability: Mythos' Night \u2014 Grants 2 x this armor's stats while in The Hub"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

@@ -6,8 +6,6 @@ items:
     default_statistics:
       defense: 45
       health: 45
-    lore:
-      - "Full Set Bonus: Absorption \u2014 Grants the wearer Abs III for 20 seconds when they kill an enemy."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -37,8 +35,6 @@ items:
     default_statistics:
       defense: 90
       health: 65
-    lore:
-      - "Full Set Bonus: Absorption \u2014 Grants the wearer Abs III for 20 seconds when they kill an enemy."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -68,8 +64,6 @@ items:
     default_statistics:
       defense: 75
       health: 55
-    lore:
-      - "Full Set Bonus: Absorption \u2014 Grants the wearer Abs III for 20 seconds when they kill an enemy."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -99,8 +93,6 @@ items:
     default_statistics:
       defense: 40
       health: 40
-    lore:
-      - "Full Set Bonus: Absorption \u2014 Grants the wearer Abs III for 20 seconds when they kill an enemy."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

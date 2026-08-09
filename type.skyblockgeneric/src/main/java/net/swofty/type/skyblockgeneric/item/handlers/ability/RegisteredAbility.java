@@ -7,6 +7,7 @@ import net.minestom.server.instance.block.BlockFace;
 import net.swofty.type.generic.data.datapoints.DatapointInteger;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
+import net.swofty.type.skyblockgeneric.item.set.ArmorSetEffectDispatcher;
 import net.swofty.type.skyblockgeneric.user.SkyBlockActionBar;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -96,20 +97,21 @@ public class RegisteredAbility {
 
         @Override
         public boolean canUse(@NotNull SkyBlockPlayer player) {
-            return player.getMana() >= cost;
+            return player.getMana() >= effectiveCost(player);
         }
 
         @Override
         public void onUse(@NonNull SkyBlockPlayer player, @NonNull RegisteredAbility ability) {
+            int effectiveCost = effectiveCost(player);
             SkyBlockActionBar.getFor(player).addReplacement(
                     SkyBlockActionBar.BarSection.MANA,
                     new SkyBlockActionBar.DisplayReplacement(
-                            "§b-" + cost + " (§6" + ability.getName() + "§b)",
+                            "§b-" + effectiveCost + " (§6" + ability.getName() + "§b)",
                             20,
                             2
                     )
             );
-            player.setMana(player.getMana() - cost);
+            player.setMana(player.getMana() - effectiveCost);
         }
 
         @Override
@@ -128,6 +130,10 @@ public class RegisteredAbility {
         public String getLoreDisplay() {
             return "§8Mana Cost: §3" + cost;
         }
+
+        private int effectiveCost(SkyBlockPlayer player) {
+            return ArmorSetEffectDispatcher.modifyManaCost(player, cost);
+        }
     }
 
     public static class AbilityManaSoulflowCost extends AbilityCost {
@@ -141,20 +147,21 @@ public class RegisteredAbility {
 
         @Override
         public boolean canUse(@NotNull SkyBlockPlayer player) {
-            return (player.getMana() >= cost) && (player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.SOULFLOW, DatapointInteger.class).getValue() >= soulflow);
+            return (player.getMana() >= effectiveCost(player)) && (player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.SOULFLOW, DatapointInteger.class).getValue() >= soulflow);
         }
 
         @Override
         public void onUse(@NonNull SkyBlockPlayer player, @NonNull RegisteredAbility ability) {
+            int effectiveCost = effectiveCost(player);
             SkyBlockActionBar.getFor(player).addReplacement(
                     SkyBlockActionBar.BarSection.MANA,
                     new SkyBlockActionBar.DisplayReplacement(
-                            "§b-" + cost + " (§6" + ability.getName() + "§b)",
+                            "§b-" + effectiveCost + " (§6" + ability.getName() + "§b)",
                             20,
                             2
                     )
             );
-            player.setMana(player.getMana() - cost);
+            player.setMana(player.getMana() - effectiveCost);
             player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.SOULFLOW, DatapointInteger.class).setValue(
                     player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.SOULFLOW, DatapointInteger.class).getValue() - soulflow
             );
@@ -186,6 +193,10 @@ public class RegisteredAbility {
         @Override
         public String getLoreDisplay() {
             return "§8Soulflow Cost: §3" + soulflow + "\n§8Mana Cost: §3" + cost;
+        }
+
+        private int effectiveCost(SkyBlockPlayer player) {
+            return ArmorSetEffectDispatcher.modifyManaCost(player, cost);
         }
     }
 

@@ -8,9 +8,6 @@ items:
       defense: 175
       sea_creature_chance: 4
       strength: 25
-    lore:
-      - "Tiered Bonus: Static Charge \u2014 Gains 1 static charge every 30/25/20/10 seconds. Hitting a target will cause a\
-        \ discharge, adding 15%/20%/25%/40% damage to that hit for each charge collected. Maximum Charge Capacity: 2/3/4/5"
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -25,9 +22,6 @@ items:
       defense: 225
       sea_creature_chance: 4
       strength: 25
-    lore:
-      - "Tiered Bonus: Static Charge \u2014 Gains 1 static charge every 30/25/20/10 seconds. Hitting a target will cause a\
-        \ discharge, adding 15%/20%/25%/40% damage to that hit for each charge collected. Maximum Charge Capacity: 2/3/4/5"
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -40,9 +34,6 @@ items:
       defense: 200
       sea_creature_chance: 4
       strength: 25
-    lore:
-      - "Tiered Bonus: Static Charge \u2014 Gains 1 static charge every 30/25/20/10 seconds. Hitting a target will cause a\
-        \ discharge, adding 15%/20%/25%/40% damage to that hit for each charge collected. Maximum Charge Capacity: 2/3/4/5"
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -55,9 +46,6 @@ items:
       defense: 150
       sea_creature_chance: 4
       strength: 25
-    lore:
-      - "Tiered Bonus: Static Charge \u2014 Gains 1 static charge every 30/25/20/10 seconds. Hitting a target will cause a\
-        \ discharge, adding 15%/20%/25%/40% damage to that hit for each charge collected. Maximum Charge Capacity: 2/3/4/5"
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

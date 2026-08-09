@@ -9,10 +9,6 @@ items:
       intelligence: 15
       strength: 30
       critical_damage: 20
-    lore:
-      - "Tiered Bonus: Dominus \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, melee attacks gain 1 stack of \u1750 Dominus. Each\
-        \ \u1750 Dominus stack grants 0.05 SR. At 10 stacks also swipe in a random direction hitting every enemy in the path\
-        \ of the swipe. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -28,10 +24,6 @@ items:
       intelligence: 5
       strength: 30
       critical_damage: 20
-    lore:
-      - "Tiered Bonus: Dominus \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, melee attacks gain 1 stack of \u1750 Dominus. Each\
-        \ \u1750 Dominus stack grants 0.05 SR. At 10 stacks also swipe in a random direction hitting every enemy in the path\
-        \ of the swipe. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -45,10 +37,6 @@ items:
       intelligence: 5
       strength: 30
       critical_damage: 20
-    lore:
-      - "Tiered Bonus: Dominus \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, melee attacks gain 1 stack of \u1750 Dominus. Each\
-        \ \u1750 Dominus stack grants 0.05 SR. At 10 stacks also swipe in a random direction hitting every enemy in the path\
-        \ of the swipe. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -62,10 +50,6 @@ items:
       intelligence: 5
       strength: 30
       critical_damage: 20
-    lore:
-      - "Tiered Bonus: Dominus \u2014 Every 1.5 s\u279C1 s\u279C0.5 s, melee attacks gain 1 stack of \u1750 Dominus. Each\
-        \ \u1750 Dominus stack grants 0.05 SR. At 10 stacks also swipe in a random direction hitting every enemy in the path\
-        \ of the swipe. Lose 1 stack after 4 s\u279C7 s\u279C10 s of not gaining a stack."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

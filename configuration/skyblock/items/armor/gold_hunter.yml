@@ -5,9 +5,6 @@ items:
     rarity: EPIC
     default_statistics:
       health: 100
-    lore:
-      - "Full Set Bonus: Star Fisher \u2014 Grants +0.7 Fishing Speed per \u272A Upgrade Star on your armor."
-      - "Tiered Bonus: Odger's Blessing \u2014 Grants +0\u279C10\u279C15\u279C20 tfc."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -17,9 +14,6 @@ items:
     rarity: EPIC
     default_statistics:
       health: 150
-    lore:
-      - "Full Set Bonus: Star Fisher \u2014 Grants +0.7 Fishing Speed per \u272A Upgrade Star on your armor."
-      - "Tiered Bonus: Odger's Blessing \u2014 Grants +0\u279C10\u279C15\u279C20 tfc."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -29,9 +23,6 @@ items:
     rarity: EPIC
     default_statistics:
       health: 125
-    lore:
-      - "Full Set Bonus: Star Fisher \u2014 Grants +0.7 Fishing Speed per \u272A Upgrade Star on your armor."
-      - "Tiered Bonus: Odger's Blessing \u2014 Grants +0\u279C10\u279C15\u279C20 tfc."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -41,9 +32,6 @@ items:
     rarity: EPIC
     default_statistics:
       health: 75
-    lore:
-      - "Full Set Bonus: Star Fisher \u2014 Grants +0.7 Fishing Speed per \u272A Upgrade Star on your armor."
-      - "Tiered Bonus: Odger's Blessing \u2014 Grants +0\u279C10\u279C15\u279C20 tfc."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

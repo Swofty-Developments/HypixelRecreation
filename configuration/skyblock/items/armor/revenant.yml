@@ -6,8 +6,6 @@ items:
     default_statistics:
       defense: 70
       health: 180
-    lore:
-      - "Full Set Bonus: Trolling The Reaper \u2014 Healing Wands are +50% more effective. Gain +100 Defense against Zombies."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -40,8 +38,6 @@ items:
     default_statistics:
       defense: 50
       health: 120
-    lore:
-      - "Full Set Bonus: Trolling The Reaper \u2014 Healing Wands are +50% more effective. Gain +100 Defense against Zombies."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
@@ -74,8 +70,6 @@ items:
     default_statistics:
       defense: 30
       health: 100
-    lore:
-      - "Full Set Bonus: Trolling The Reaper \u2014 Healing Wands are +50% more effective. Gain +100 Defense against Zombies."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS

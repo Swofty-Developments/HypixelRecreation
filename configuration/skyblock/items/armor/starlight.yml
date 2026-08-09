@@ -7,8 +7,6 @@ items:
       defense: 15
       intelligence: 30
       health: 15
-    lore:
-      - "Full Set Bonus: Starpower \u2014 Increases the duration of Starfall by 2x and its range by +1."
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS
@@ -26,8 +24,6 @@ items:
       health: 40.0
       defense: 40.0
       intelligence: 90.0
-    lore:
-      - "Full Set Bonus: Starpower \u2014 Increases the duration of Starfall by 2x and its range by +1."
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -45,8 +41,6 @@ items:
       health: 25.0
       defense: 25.0
       intelligence: 45.0
-    lore:
-      - "Full Set Bonus: Starpower \u2014 Increases the duration of Starfall by 2x and its range by +1."
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -60,8 +54,6 @@ items:
       health: 30.0
       defense: 30.0
       intelligence: 60.0
-    lore:
-      - "Full Set Bonus: Starpower \u2014 Increases the duration of Starfall by 2x and its range by +1."
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS
