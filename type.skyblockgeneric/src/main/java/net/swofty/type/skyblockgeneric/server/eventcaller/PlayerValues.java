@@ -54,16 +54,12 @@ public class PlayerValues {
             ArmorSetRegistry oldSet = (ArmorSetRegistry) armorSet.getKey();
             ArmorSetRegistry newSet = (ArmorSetRegistry) armorSet.getValue();
 
-            try {
-                if (oldSet != null && oldSet.getClazz().newInstance() instanceof SetEvents setEvents) {
-                    setEvents.setTakeOff(player);
-                }
+            if (oldSet != null && oldSet.create() instanceof SetEvents setEvents) {
+                setEvents.setTakeOff(player);
+            }
 
-                if (newSet != null && newSet.getClazz().newInstance() instanceof SetEvents setEvents) {
-                    setEvents.setPutOn(player);
-                }
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
+            if (newSet != null && newSet.create() instanceof SetEvents setEvents) {
+                setEvents.setPutOn(player);
             }
         });
 

@@ -324,8 +324,9 @@ public class ItemLore {
 		}
 
 		// Handle full set abilities
-		if (ArmorSetRegistry.getArmorSet(handler.getPotentialType()) != null && ArmorSetRegistry.getArmorSet(handler.getPotentialType()).getClazz() != null) {
-			ArmorSet armorSet = ArmorSetRegistry.getArmorSet(handler.getPotentialType()).getClazz().getDeclaredConstructor().newInstance();
+		ArmorSetRegistry itemSetRegistry = ArmorSetRegistry.getArmorSet(handler.getPotentialType());
+		if (itemSetRegistry != null) {
+			ArmorSet armorSet = itemSetRegistry.create();
 
 			int wearingAmount = 0;
 			if (player != null && player.isWearingItem(item)) {
@@ -333,16 +334,17 @@ public class ItemLore {
 					if (armorItem == null) continue;
 					ArmorSetRegistry armorSetRegistry = ArmorSetRegistry.getArmorSet(armorItem.getAttributeHandler().getPotentialType());
 					if (armorSetRegistry == null) continue;
-					if (armorSetRegistry.getClazz() == armorSet.getClass()) {
+					if (armorSetRegistry == itemSetRegistry) {
 						wearingAmount++;
 					}
 				}
 			}
-			ArmorSetRegistry setRegistry = ArmorSetRegistry.getArmorSet(armorSet.getClass());
-			int totalPieces = setRegistry == null ? 4 : ArmorSetRegistry.getPieceCount(setRegistry);
-			addLoreLine(I18n.string("items.lore.full_set_bonus", l, Component.text(armorSet.getName()), Component.text(String.valueOf(wearingAmount)), Component.text(String.valueOf(totalPieces))));
-			armorSet.getDescription().forEach(line -> addLoreLine("§7" + line));
-			addLoreLine(null);
+			if (!armorSet.getDescription().isEmpty()) {
+				int totalPieces = ArmorSetRegistry.getPieceCount(itemSetRegistry);
+				addLoreLine(I18n.string("items.lore.full_set_bonus", l, Component.text(armorSet.getName()), Component.text(String.valueOf(wearingAmount)), Component.text(String.valueOf(totalPieces))));
+				armorSet.getLore().forEach(line -> addLoreLine("§7" + line));
+				addLoreLine(null);
+			}
 		}
 
 		if (item.hasComponent(RightClickRecipeComponent.class)) {

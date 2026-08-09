@@ -58,7 +58,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockActionBar;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Constructor;
 import java.util.*;
 
 public class PlayerStatistics {
@@ -128,23 +127,19 @@ public class PlayerStatistics {
                     enemy
             )));
         }
-        if (player.getArmorSet() != null) {
-            ArmorSetRegistry armorSetRegistry = player.getArmorSet();
-            if (armorSetRegistry == ArmorSetRegistry.ENDER
-                    && player.getRegion() != null
-                    && switch (player.getRegion().getType()) {
+		List<ArmorSetRegistry> wornSets = getWornArmorSets();
+		if (player.getArmorSet() == ArmorSetRegistry.ENDER
+					&& player.getRegion() != null
+					&& switch (player.getRegion().getType()) {
                         case THE_END, THE_END_NEST, VOID_SEPULTURE, DRAGONS_NEST -> true;
-                        default -> false;
-                    }) {
-                total = ItemStatistics.multiply(total, 2);
-            }
-            try {
-                Constructor<? extends ArmorSet> constructor = armorSetRegistry.getClazz().getConstructor();
-                ArmorSet armorSet = constructor.newInstance();
-                total = ItemStatistics.add(total, armorSet.getStatistics());
-            } catch (Exception _) {
-            }
-        }
+						default -> false;
+					}) {
+				total = ItemStatistics.multiply(total, 2);
+			}
+		for (ArmorSetRegistry armorSetRegistry : wornSets) {
+			ArmorSet armorSet = armorSetRegistry.create();
+			total = ItemStatistics.add(total, armorSet.getStatistics(player));
+		}
         return total;
     }
 
@@ -292,15 +287,12 @@ public class PlayerStatistics {
         addItemModifiers(modifiers, cache.get(PlayerItemOrigin.CHESTPLATE), StatisticSourceType.ARMOR);
         addItemModifiers(modifiers, cache.get(PlayerItemOrigin.LEGGINGS), StatisticSourceType.ARMOR);
         addItemModifiers(modifiers, cache.get(PlayerItemOrigin.BOOTS), StatisticSourceType.ARMOR);
-        if (player.getArmorSet() != null) {
-            try {
-                ArmorSet armorSet = player.getArmorSet().getClazz().getConstructor().newInstance();
-                addModifier(modifiers, player.getArmorSet().getDisplayName() + " Set Bonus",
-                    armorSet.getStatistics(), StatisticSourceType.ARMOR,
-                    StatisticModifierType.ABILITY_PASSIVE, null, Material.IRON_CHESTPLATE, null);
-            } catch (ReflectiveOperationException ignored) {
-            }
-        }
+		for (ArmorSetRegistry armorSetRegistry : getWornArmorSets()) {
+			ArmorSet armorSet = armorSetRegistry.create();
+			addModifier(modifiers, armorSetRegistry.getDisplayName() + " Set Bonus",
+				armorSet.getStatistics(player), StatisticSourceType.ARMOR,
+				StatisticModifierType.ABILITY_PASSIVE, null, Material.IRON_CHESTPLATE, null);
+		}
 
         DatapointInventory inventory = player.getSkyblockDataHandler()
             .get(SkyBlockDataHandler.Data.INVENTORY, DatapointInventory.class);
@@ -333,6 +325,14 @@ public class PlayerStatistics {
             ItemStatistic.getOfAllBaseValues(), StatisticSourceType.INNATE, StatisticModifierType.INNATE, null));
         return modifiers;
     }
+
+	private List<ArmorSetRegistry> getWornArmorSets() {
+		ItemType helmet = new SkyBlockItem(player.getHelmet()).getAttributeHandler().getPotentialType();
+		ItemType chestplate = new SkyBlockItem(player.getChestplate()).getAttributeHandler().getPotentialType();
+		ItemType leggings = new SkyBlockItem(player.getLeggings()).getAttributeHandler().getPotentialType();
+		ItemType boots = new SkyBlockItem(player.getBoots()).getAttributeHandler().getPotentialType();
+		return ArmorSetRegistry.getWornSets(boots, leggings, chestplate, helmet);
+	}
 
     /**
      * the updater skips the main hand while a menu is open, which causes
