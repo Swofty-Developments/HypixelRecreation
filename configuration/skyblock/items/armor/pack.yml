@@ -1,0 +1,41 @@
+items:
+  - id: HELMET_OF_THE_PACK
+    material: LEATHER_HELMET
+    name: Helmet of the Pack
+    rarity: EPIC
+    default_statistics:
+      defense: 65
+      health: 70
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: CHESTPLATE_OF_THE_PACK
+    material: LEATHER_CHESTPLATE
+    name: Chestplate of the Pack
+    rarity: EPIC
+    default_statistics:
+      defense: 95
+      health: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: LEGGINGS_OF_THE_PACK
+    material: IRON_LEGGINGS
+    name: Leggings of the Pack
+    rarity: EPIC
+    default_statistics:
+      defense: 75
+      health: 80
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: BOOTS_OF_THE_PACK
+    material: IRON_BOOTS
+    name: Boots of the Pack
+    rarity: EPIC
+    default_statistics:
+      defense: 45
+      health: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

@@ -1,0 +1,131 @@
+items:
+  - id: MELON_HELMET
+    material: PLAYER_HEAD
+    name: Tater Helmet
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 15
+      speed: 2
+      health: 100
+      defense: 25
+      bonus_pest_chance: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_POTATO
+                amount: 32
+              B:
+                type: SPROUT_HELMET
+                amount: 1
+            result:
+              type: MELON_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: 8208669e699d6f0d3a77f74b2b27228ce51b9359678d26f9c3408764b2e779aa
+  - id: MELON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Tater Chestplate
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 20
+      speed: 3
+      health: 150
+      defense: 25
+      bonus_pest_chance: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_POTATO
+                amount: 32
+              B:
+                type: SPROUT_CHESTPLATE
+                amount: 1
+            result:
+              type: MELON_CHESTPLATE
+              amount: 1
+  - id: MELON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Tater Leggings
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 20
+      speed: 3
+      health: 150
+      defense: 25
+      bonus_pest_chance: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_POTATO
+                amount: 32
+              B:
+                type: SPROUT_LEGGINGS
+                amount: 1
+            result:
+              type: MELON_LEGGINGS
+              amount: 1
+  - id: MELON_BOOTS
+    material: LEATHER_BOOTS
+    name: Tater Boots
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 15
+      speed: 2
+      health: 100
+      defense: 25
+      bonus_pest_chance: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_POTATO
+                amount: 32
+              B:
+                type: SPROUT_BOOTS
+                amount: 1
+            result:
+              type: MELON_BOOTS
+              amount: 1

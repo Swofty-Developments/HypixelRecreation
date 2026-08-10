@@ -1,11 +1,11 @@
 items:
   - id: FARM_SUIT_HELMET
-    material: leather_helmet
-    name: "Farm Suit Helmet"
+    material: LEATHER_HELMET
+    name: Farmhand Helmet
     rarity: COMMON
     default_statistics:
-      defense: 15.0
-      farming_fortune: 5.0
+      defense: 10
+      farming_fortune: 5
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
@@ -26,21 +26,20 @@ items:
               - AOA
             ingredients:
               A:
-                type: HAY_BALE
-                amount: 1
+                type: WHEAT
+                amount: 8
               O:
                 type: AIR
                 amount: 1
             result:
               type: FARM_SUIT_HELMET
               amount: 1
-
   - id: FARM_SUIT_CHESTPLATE
-    material: leather_chestplate
-    name: "Farm Suit Chestplate"
+    material: LEATHER_CHESTPLATE
+    name: Farmhand Chestplate
     rarity: COMMON
     default_statistics:
-      defense: 40.0
+      defense: 10.0
       farming_fortune: 5.0
     components:
       - id: STANDARD_ITEM
@@ -63,21 +62,20 @@ items:
               - AAA
             ingredients:
               A:
-                type: HAY_BALE
-                amount: 1
+                type: WHEAT
+                amount: 8
               O:
                 type: AIR
                 amount: 1
             result:
               type: FARM_SUIT_CHESTPLATE
               amount: 1
-
   - id: FARM_SUIT_LEGGINGS
-    material: leather_leggings
-    name: "Farm Suit Leggings"
+    material: LEATHER_LEGGINGS
+    name: Farmhand Leggings
     rarity: COMMON
     default_statistics:
-      defense: 15.0
+      defense: 10.0
       farming_fortune: 5.0
     components:
       - id: STANDARD_ITEM
@@ -100,21 +98,20 @@ items:
               - AOA
             ingredients:
               A:
-                type: HAY_BALE
-                amount: 1
+                type: WHEAT
+                amount: 8
               O:
                 type: AIR
                 amount: 1
             result:
               type: FARM_SUIT_LEGGINGS
               amount: 1
-
   - id: FARM_SUIT_BOOTS
-    material: leather_boots
-    name: "Farm Suit Boots"
+    material: LEATHER_BOOTS
+    name: Farmhand Boots
     rarity: COMMON
     default_statistics:
-      defense: 15.0
+      defense: 10.0
       farming_fortune: 5.0
     components:
       - id: STANDARD_ITEM
@@ -136,8 +133,8 @@ items:
               - AOA
             ingredients:
               A:
-                type: HAY_BALE
-                amount: 1
+                type: WHEAT
+                amount: 8
               O:
                 type: AIR
                 amount: 1

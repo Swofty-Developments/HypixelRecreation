@@ -1,0 +1,47 @@
+items:
+  - id: HOLY_DRAGON_HELMET
+    material: PLAYER_HEAD
+    name: Holy Dragon Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 110
+      health: 110
+      mending: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 99cc8ba26793218f6f6491947a1837fd52878701f33f76bbe2883a45aba8ab8f
+  - id: HOLY_DRAGON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Holy Dragon Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 160
+      health: 180
+      mending: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: HOLY_DRAGON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Holy Dragon Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 140
+      health: 155
+      mending: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: HOLY_DRAGON_BOOTS
+    material: LEATHER_BOOTS
+    name: Holy Dragon Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 90
+      health: 100
+      mending: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

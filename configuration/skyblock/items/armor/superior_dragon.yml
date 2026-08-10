@@ -1,0 +1,63 @@
+items:
+  - id: SUPERIOR_DRAGON_HELMET
+    material: PLAYER_HEAD
+    name: Superior Dragon Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 3
+      defense: 130
+      health: 90
+      strength: 10
+      critical_damage: 10
+      critical_chance: 2
+      intelligence: 25
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 1e0329f42192ee7c1a0c704f82dbbbe7c00fbfa3f020c1067a208630b991b988
+  - id: SUPERIOR_DRAGON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Superior Dragon Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 3
+      defense: 190
+      health: 150
+      strength: 10
+      critical_damage: 10
+      critical_chance: 2
+      intelligence: 25
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SUPERIOR_DRAGON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Superior Dragon Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 3
+      defense: 170
+      health: 130
+      strength: 10
+      critical_damage: 10
+      critical_chance: 2
+      intelligence: 25
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SUPERIOR_DRAGON_BOOTS
+    material: LEATHER_BOOTS
+    name: Superior Dragon Boots
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 3
+      defense: 110
+      health: 80
+      strength: 10
+      critical_damage: 10
+      critical_chance: 2
+      intelligence: 25
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

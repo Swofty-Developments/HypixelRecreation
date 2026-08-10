@@ -1,0 +1,55 @@
+items:
+  - id: FERMENTO_HELMET
+    material: PLAYER_HEAD
+    name: Fermento Helmet
+    rarity: EPIC
+    default_statistics:
+      farming_fortune: 30
+      speed: 5
+      health: 130
+      defense: 40
+      bonus_pest_chance: 17.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 5086ddbe960f33480ca229da7402391ab417d32ebb21770430ea610de5801fe3
+  - id: FERMENTO_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Fermento Chestplate
+    rarity: EPIC
+    default_statistics:
+      farming_fortune: 35
+      speed: 6
+      health: 195
+      defense: 40
+      bonus_pest_chance: 17.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: FERMENTO_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Fermento Leggings
+    rarity: EPIC
+    default_statistics:
+      farming_fortune: 35
+      speed: 6
+      health: 195
+      defense: 40
+      bonus_pest_chance: 17.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: FERMENTO_BOOTS
+    material: LEATHER_BOOTS
+    name: Fermento Boots
+    rarity: EPIC
+    default_statistics:
+      farming_fortune: 30
+      speed: 5
+      health: 130
+      defense: 40
+      bonus_pest_chance: 17.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

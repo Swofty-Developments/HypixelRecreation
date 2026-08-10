@@ -1,0 +1,33 @@
+items:
+  - id: WYLD_HELMET
+    material: PLAYER_HEAD
+    name: Wyld Helmet on a Helmet
+    rarity: UNCOMMON
+    default_statistics:
+      intelligence: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: fc8593b91058ff24a0f6845130ed3e449569ce9c6b22fa9cd1ed7360b5045ea3
+  - id: WYLD_CHESTPLATE
+    material: CHAINMAIL_CHESTPLATE
+    name: Wyld Chain Top
+    rarity: UNCOMMON
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: WYLD_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Wyld Leggings
+    rarity: UNCOMMON
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: WYLD_BOOTS
+    material: LEATHER_BOOTS
+    name: Wyld Boots
+    rarity: UNCOMMON
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

@@ -5,60 +5,80 @@ items:
     components:
       - id: SELLABLE
         value: 7.0
+    default_statistics:
+      defense: 12
   - id: CHAINMAIL_CHESTPLATE
     rarity: UNCOMMON
     material: CHAINMAIL_CHESTPLATE
     components:
       - id: SELLABLE
         value: 12.0
+    default_statistics:
+      defense: 30
   - id: CHAINMAIL_LEGGINGS
     rarity: UNCOMMON
     material: CHAINMAIL_LEGGINGS
     components:
       - id: SELLABLE
         value: 10.0
+    default_statistics:
+      defense: 20
   - id: CHAINMAIL_BOOTS
     rarity: UNCOMMON
     material: CHAINMAIL_BOOTS
     components:
       - id: SELLABLE
         value: 6.0
+    default_statistics:
+      defense: 7
   - id: MINER_ARMOR_HELMET
     rarity: RARE
     material: IRON_HELMET
-    name: "Miner Armor Helmet"
+    name: Miner Helmet
+    default_statistics:
+      defense: 15
+      mining_speed: 10
   - id: MINER_ARMOR_CHESTPLATE
     rarity: RARE
     material: IRON_CHESTPLATE
-    name: "Miner Armor Chestplate"
+    name: Miner Chestplate
+    default_statistics:
+      defense: 15
+      mining_speed: 10
   - id: MINER_ARMOR_LEGGINGS
     rarity: RARE
     material: IRON_LEGGINGS
-    name: "Miner Armor Leggings"
+    name: Miner Leggings
+    default_statistics:
+      defense: 15
+      mining_speed: 10
   - id: MINER_ARMOR_BOOTS
     rarity: RARE
     material: IRON_BOOTS
-    name: "Miner Armor Boots"
+    name: Miner Boots
+    default_statistics:
+      defense: 15
+      mining_speed: 10
   - id: MINERS_OUTFIT_HELMET
     rarity: UNCOMMON
     material: LEATHER_HELMET
-    name: "Miners Outfit Helmet"
+    name: Miners Outfit Helmet
   - id: MINERS_OUTFIT_CHESTPLATE
     rarity: UNCOMMON
     material: LEATHER_CHESTPLATE
-    name: "Miners Outfit Chestplate"
+    name: Miners Outfit Chestplate
   - id: MINERS_OUTFIT_LEGGINGS
     rarity: UNCOMMON
     material: LEATHER_LEGGINGS
-    name: "Miners Outfit Leggings"
+    name: Miners Outfit Leggings
   - id: MINERS_OUTFIT_BOOTS
     rarity: UNCOMMON
     material: LEATHER_BOOTS
-    name: "Miners Outfit Boots"
+    name: Miners Outfit Boots
   - id: DWARF_TURTLE_SHELMET
     rarity: EPIC
     material: PLAYER_HEAD
-    name: "Dwarf Turtle Shelmet"
+    name: Dwarf Turtle Shelmet
     components:
       - id: SELLABLE
         value: 250000.0

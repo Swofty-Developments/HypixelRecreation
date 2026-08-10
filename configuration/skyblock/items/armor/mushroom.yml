@@ -1,10 +1,10 @@
 items:
   - id: MUSHROOM_HELMET
-    material: leather_helmet
-    name: "Mushroom Helmet"
+    material: LEATHER_HELMET
+    name: Mushroom Helmet
     rarity: COMMON
     default_statistics:
-      health: 20.0
+      health: 20
     components:
       - id: NOT_FINISHED_YET
       - id: SELLABLE
@@ -33,10 +33,9 @@ items:
             result:
               type: MUSHROOM_HELMET
               amount: 1
-
   - id: MUSHROOM_CHESTPLATE
-    material: leather_chestplate
-    name: "Mushroom Chestplate"
+    material: LEATHER_CHESTPLATE
+    name: Mushroom Chestplate
     rarity: COMMON
     default_statistics:
       health: 10.0
@@ -70,10 +69,9 @@ items:
             result:
               type: MUSHROOM_CHESTPLATE
               amount: 1
-
   - id: MUSHROOM_LEGGINGS
-    material: leather_leggings
-    name: "Mushroom Leggings"
+    material: LEATHER_LEGGINGS
+    name: Mushroom Leggings
     rarity: COMMON
     default_statistics:
       health: 10.0
@@ -107,10 +105,9 @@ items:
             result:
               type: MUSHROOM_LEGGINGS
               amount: 1
-
   - id: MUSHROOM_BOOTS
-    material: leather_boots
-    name: "Mushroom Boots"
+    material: LEATHER_BOOTS
+    name: Mushroom Boots
     rarity: COMMON
     default_statistics:
       health: 15.0

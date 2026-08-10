@@ -1,0 +1,115 @@
+items:
+  - id: CACTUS_HELMET
+    material: LEATHER_HELMET
+    name: Cactus Helmet
+    rarity: COMMON
+    default_statistics:
+      defense: 10
+      health: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: CACTUS
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: CACTUS_HELMET
+              amount: 1
+  - id: CACTUS_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Cactus Chestplate
+    rarity: COMMON
+    default_statistics:
+      defense: 25
+      health: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: CACTUS
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: CACTUS_CHESTPLATE
+              amount: 1
+  - id: CACTUS_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Cactus Leggings
+    rarity: COMMON
+    default_statistics:
+      defense: 20
+      health: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: CACTUS
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: CACTUS_LEGGINGS
+              amount: 1
+  - id: CACTUS_BOOTS
+    material: LEATHER_BOOTS
+    name: Cactus Boots
+    rarity: COMMON
+    default_statistics:
+      defense: 10
+      health: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AOA
+              - AOA
+            ingredients:
+              O:
+                type: AIR
+                amount: 1
+              A:
+                type: CACTUS
+                amount: 1
+            result:
+              type: CACTUS_BOOTS
+              amount: 1

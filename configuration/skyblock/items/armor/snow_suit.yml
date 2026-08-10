@@ -1,0 +1,43 @@
+items:
+  - id: SNOW_SUIT_HELMET
+    material: PLAYER_HEAD
+    name: Snow Suit Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 30
+      health: 70
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 3d1119643cecfbe004141a1ea4062f8315ca78e503958ac50505e8592c44a601
+  - id: SNOW_SUIT_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Snow Suit Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 40
+      health: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SNOW_SUIT_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Snow Suit Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 30
+      health: 75
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SNOW_SUIT_BOOTS
+    material: LEATHER_BOOTS
+    name: Snow Suit Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 25
+      health: 65
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

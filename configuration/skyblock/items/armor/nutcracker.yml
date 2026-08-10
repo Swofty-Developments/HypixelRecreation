@@ -1,0 +1,47 @@
+items:
+  - id: NUTCRACKER_HELMET
+    material: PLAYER_HEAD
+    name: Nutcracker Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      health: 80
+      defense: 35
+      sea_creature_chance: 1.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: c2407e66c81b1443c2e7dfc4d6583eb19c622fa22f34fbf99fe6c45f76a
+  - id: NUTCRACKER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Nutcracker Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      health: 115
+      defense: 45
+      sea_creature_chance: 1.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: NUTCRACKER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Nutcracker Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      health: 85
+      defense: 35
+      sea_creature_chance: 1.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: NUTCRACKER_BOOTS
+    material: LEATHER_BOOTS
+    name: Nutcracker Boots
+    rarity: LEGENDARY
+    default_statistics:
+      health: 75
+      defense: 30
+      sea_creature_chance: 1.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

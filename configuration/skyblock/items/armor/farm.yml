@@ -1,0 +1,117 @@
+items:
+  - id: FARM_ARMOR_HELMET
+    material: HAY_BLOCK
+    name: Haymaker Helmet
+    rarity: COMMON
+    default_statistics:
+      defense: 15
+      farming_fortune: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_WHEAT
+                amount: 1
+              B:
+                type: FARM_SUIT_HELMET
+                amount: 1
+            result:
+              type: FARM_ARMOR_HELMET
+              amount: 1
+  - id: FARM_ARMOR_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Haymaker Chestplate
+    rarity: COMMON
+    default_statistics:
+      defense: 15
+      farming_fortune: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_WHEAT
+                amount: 1
+              B:
+                type: FARM_SUIT_CHESTPLATE
+                amount: 1
+            result:
+              type: FARM_ARMOR_CHESTPLATE
+              amount: 1
+  - id: FARM_ARMOR_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Haymaker Leggings
+    rarity: COMMON
+    default_statistics:
+      defense: 15
+      farming_fortune: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_WHEAT
+                amount: 1
+              B:
+                type: FARM_SUIT_LEGGINGS
+                amount: 1
+            result:
+              type: FARM_ARMOR_LEGGINGS
+              amount: 1
+  - id: FARM_ARMOR_BOOTS
+    material: LEATHER_BOOTS
+    name: Haymaker Boots
+    rarity: COMMON
+    default_statistics:
+      defense: 15
+      farming_fortune: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_WHEAT
+                amount: 1
+              B:
+                type: FARM_SUIT_BOOTS
+                amount: 1
+            result:
+              type: FARM_ARMOR_BOOTS
+              amount: 1

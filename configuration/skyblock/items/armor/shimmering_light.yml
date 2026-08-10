@@ -1,0 +1,48 @@
+items:
+  - id: SHIMMERING_LIGHT_HOOD
+    material: PLAYER_HEAD
+    name: Shimmering Light Hood
+    rarity: RARE
+    default_statistics:
+      defense: 70
+      health: 80
+      intelligence: 70
+      speed: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 764b352f87e7b52291079c12061010f3f53cf15bfb9ce02f647bdf846a5afb4c
+  - id: SHIMMERING_LIGHT_TUNIC
+    material: LEATHER_CHESTPLATE
+    name: Shimmering Light Tunic
+    rarity: RARE
+    default_statistics:
+      defense: 120
+      health: 130
+      intelligence: 120
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SHIMMERING_LIGHT_TROUSERS
+    material: LEATHER_LEGGINGS
+    name: Shimmering Light Trousers
+    rarity: RARE
+    default_statistics:
+      defense: 100
+      health: 120
+      intelligence: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SHIMMERING_LIGHT_SLIPPERS
+    material: LEATHER_BOOTS
+    name: Shimmering Light Slippers
+    rarity: RARE
+    default_statistics:
+      defense: 60
+      health: 70
+      intelligence: 60
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

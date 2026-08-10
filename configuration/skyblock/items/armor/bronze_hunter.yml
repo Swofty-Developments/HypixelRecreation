@@ -1,0 +1,37 @@
+items:
+  - id: BRONZE_HUNTER_HELMET
+    material: LEATHER_HELMET
+    name: Bronze Hunter Helmet
+    rarity: UNCOMMON
+    default_statistics:
+      health: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: BRONZE_HUNTER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Bronze Hunter Chestplate
+    rarity: UNCOMMON
+    default_statistics:
+      health: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: BRONZE_HUNTER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Bronze Hunter Leggings
+    rarity: UNCOMMON
+    default_statistics:
+      health: 75
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: BRONZE_HUNTER_BOOTS
+    material: LEATHER_BOOTS
+    name: Bronze Hunter Boots
+    rarity: UNCOMMON
+    default_statistics:
+      health: 25
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

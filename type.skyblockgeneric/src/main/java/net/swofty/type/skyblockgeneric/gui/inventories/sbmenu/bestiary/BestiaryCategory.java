@@ -19,6 +19,18 @@ import net.swofty.type.skyblockgeneric.entity.mob.mobs.hub.MobRuinsOldWolf;
 import net.swofty.type.skyblockgeneric.entity.mob.mobs.hub.MobRuinsWolf;
 import net.swofty.type.skyblockgeneric.entity.mob.mobs.island.MobZombie_01;
 import net.swofty.type.skyblockgeneric.entity.mob.mobs.island.MobZombie_02;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobEnderman_42;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobEnderman_45;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobEnderman_50;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobEndermite;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobEndermite_40;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobObsidianDefender;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobSeer;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobSpecialZealot;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobVoidlingExtremist;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobVoidlingFanatic;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobZealot;
+import net.swofty.type.skyblockgeneric.entity.mob.mobs.end.MobZealotBruiser;
 
 import java.util.List;
 
@@ -83,6 +95,39 @@ public enum BestiaryCategory {
         private final List<BestiaryMob> mobs;
 
         DEEP_CAVERNS(String name, String description, GUIMaterial guiMaterial, List<BestiaryMob> mobs) {
+            this.name = name;
+            this.description = description;
+            this.guiMaterial = guiMaterial;
+            this.mobs = mobs;
+        }
+    }
+
+    @Getter
+    public enum THE_END implements BestiaryEntry {
+        ENDERMAN("§dEnderman", "Tall, dark and mysterious.", new GUIMaterial(Material.END_STONE),
+                List.of(new MobEnderman_42(), new MobEnderman_45(), new MobEnderman_50())),
+        ENDERMITE("§dEndermite", "A small creature from The End.", new GUIMaterial(Material.END_STONE),
+                List.of(new MobEndermite(), new MobEndermite_40())),
+        ZEALOT("§dZealot", "A devoted guardian of the summoning altar.", new GUIMaterial(Material.END_STONE),
+                List.of(new MobZealot())),
+        ZEALOT_BRUISER("§dZealot Bruiser", "A much stronger guardian of The End.", new GUIMaterial(Material.END_STONE),
+                List.of(new MobZealotBruiser())),
+        SPECIAL_ZEALOT("§dSpecial Zealot", "A rare and valuable variant of the Zealot.", new GUIMaterial(Material.END_STONE),
+                List.of(new MobSpecialZealot())),
+        OBSIDIAN_DEFENDER("§dObsidian Defender", "A defender made from the island's obsidian.", new GUIMaterial(Material.OBSIDIAN),
+                List.of(new MobObsidianDefender())),
+        SEER("§dSeer", "A watcher carrying a bow made from End Stone.", new GUIMaterial(Material.SKELETON_SKULL),
+                List.of(new MobSeer())),
+        VOIDLING_FANATIC("§dVoidling Fanatic", "A fanatic of the Void Sepulture.", new GUIMaterial(Material.END_STONE),
+                List.of(new MobVoidlingFanatic())),
+        VOIDLING_EXTREMIST("§dVoidling Extremist", "An extremist empowered by the void.", new GUIMaterial(Material.END_STONE),
+                List.of(new MobVoidlingExtremist()));
+
+        private final String name, description;
+        private final GUIMaterial guiMaterial;
+        private final List<BestiaryMob> mobs;
+
+        THE_END(String name, String description, GUIMaterial guiMaterial, List<BestiaryMob> mobs) {
             this.name = name;
             this.description = description;
             this.guiMaterial = guiMaterial;

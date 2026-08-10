@@ -1,0 +1,55 @@
+items:
+  - id: SPEED_WITHER_HELMET
+    material: PLAYER_HEAD
+    name: Maxor's Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 30
+      defense: 80
+      health: 180
+      critical_damage: 45
+      intelligence: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: dbfb0ed5959190d415e726a15f2984007a67a5fd4ea5671d0d676f9f641b5bac
+  - id: SPEED_WITHER_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Maxor's Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 30
+      defense: 120
+      health: 260
+      critical_damage: 45
+      intelligence: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SPEED_WITHER_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Maxor's Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 30
+      defense: 105
+      health: 230
+      critical_damage: 45
+      intelligence: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SPEED_WITHER_BOOTS
+    material: LEATHER_BOOTS
+    name: Maxor's Boots
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 30
+      defense: 65
+      health: 145
+      critical_damage: 45
+      intelligence: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

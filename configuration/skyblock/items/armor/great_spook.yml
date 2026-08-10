@@ -1,0 +1,37 @@
+items:
+  - id: GREAT_SPOOK_HELMET
+    material: LEATHER_HELMET
+    name: Great Spook Helmet
+    rarity: EPIC
+    default_statistics:
+      fear: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: GREAT_SPOOK_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Great Spook Chestplate
+    rarity: EPIC
+    default_statistics:
+      fear: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: GREAT_SPOOK_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Great Spook Leggings
+    rarity: EPIC
+    default_statistics:
+      fear: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: GREAT_SPOOK_BOOTS
+    material: LEATHER_BOOTS
+    name: Great Spook Boots
+    rarity: EPIC
+    default_statistics:
+      fear: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

@@ -1,0 +1,55 @@
+items:
+  - id: HOLLOW_HELMET
+    material: PLAYER_HEAD
+    name: Hollow Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 5
+      defense: 55
+      health: 175
+      intelligence: 130
+      mending: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 4aacd705a29b790528a70ee93a1cbd92c029601a762d52805f60460e7a7ff8f7
+  - id: HOLLOW_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Hollow Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 5
+      defense: 70
+      health: 250
+      intelligence: 85
+      mending: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: HOLLOW_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Hollow Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 5
+      defense: 60
+      health: 225
+      intelligence: 85
+      mending: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: HOLLOW_BOOTS
+    material: LEATHER_BOOTS
+    name: Hollow Boots
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 5
+      defense: 45
+      health: 150
+      intelligence: 85
+      mending: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

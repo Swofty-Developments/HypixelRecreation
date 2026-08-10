@@ -1,0 +1,52 @@
+items:
+  - id: UNSTABLE_DRAGON_HELMET
+    material: PLAYER_HEAD
+    name: Unstable Dragon Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 110
+      health: 70
+      critical_damage: 15
+      critical_chance: 5
+      intelligence: 25
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 605fc4e2b68c45059afef3999e9a95aa3d8943597a7894e569397d6cf5d1672a
+  - id: UNSTABLE_DRAGON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Unstable Dragon Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 160
+      health: 120
+      critical_damage: 15
+      critical_chance: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: UNSTABLE_DRAGON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Unstable Dragon Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 140
+      health: 100
+      critical_damage: 15
+      critical_chance: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: UNSTABLE_DRAGON_BOOTS
+    material: LEATHER_BOOTS
+    name: Unstable Dragon Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 90
+      health: 60
+      critical_damage: 15
+      critical_chance: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

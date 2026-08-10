@@ -1,0 +1,55 @@
+items:
+  - id: ABYSSAL_HELMET
+    material: PLAYER_HEAD
+    name: Abyssal Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      health: 130
+      defense: 120
+      pressure_resistance: 20
+      respiration: 5
+      sea_creature_chance: 2
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 29c1fb923e363b02929de8207c8013ea3c7e4b3933047fc9ca2bb08b8dc07254
+  - id: ABYSSAL_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Abyssal Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      health: 200
+      defense: 200
+      pressure_resistance: 20
+      respiration: 5
+      sea_creature_chance: 2
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: ABYSSAL_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Abyssal Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      health: 150
+      defense: 170
+      pressure_resistance: 20
+      respiration: 5
+      sea_creature_chance: 2
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: ABYSSAL_BOOTS
+    material: LEATHER_BOOTS
+    name: Abyssal Boots
+    rarity: LEGENDARY
+    default_statistics:
+      health: 120
+      defense: 110
+      pressure_resistance: 20
+      respiration: 5
+      sea_creature_chance: 2
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

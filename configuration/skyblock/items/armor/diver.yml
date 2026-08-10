@@ -1,0 +1,155 @@
+items:
+  - id: DIVER_HELMET
+    material: PLAYER_HEAD
+    name: Diver's Mask
+    rarity: EPIC
+    default_statistics:
+      health: 150
+      defense: 60
+      sea_creature_chance: 2
+      pressure_resistance: 15
+      respiration: 3
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - OAO
+              - BCB
+              - OAO
+            ingredients:
+              O:
+                type: AIR
+                amount: 1
+              A:
+                type: ENCHANTED_SEA_LUMIES
+                amount: 4
+              B:
+                type: GILL_MEMBRANE
+                amount: 16
+              C:
+                type: SNORKELING_HELMET
+                amount: 1
+            result:
+              type: DIVER_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: d8f11c2b1eb0568cac64f976e50e0e45f3c09a65801e7ed72734b1a99f1606ca
+  - id: DIVER_CHESTPLATE
+    material: GOLDEN_CHESTPLATE
+    name: Diver's Shirt
+    rarity: EPIC
+    default_statistics:
+      health: 200
+      defense: 100
+      sea_creature_chance: 2
+      pressure_resistance: 15
+      respiration: 3
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - OAO
+              - BCB
+              - OAO
+            ingredients:
+              O:
+                type: AIR
+                amount: 1
+              A:
+                type: ENCHANTED_SEA_LUMIES
+                amount: 4
+              B:
+                type: GILL_MEMBRANE
+                amount: 16
+              C:
+                type: SNORKELING_CHESTPLATE
+                amount: 1
+            result:
+              type: DIVER_CHESTPLATE
+              amount: 1
+  - id: DIVER_LEGGINGS
+    material: GOLDEN_LEGGINGS
+    name: Diver's Trunks
+    rarity: EPIC
+    default_statistics:
+      health: 175
+      defense: 80
+      sea_creature_chance: 2
+      pressure_resistance: 15
+      respiration: 3
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - OAO
+              - BCB
+              - OAO
+            ingredients:
+              O:
+                type: AIR
+                amount: 1
+              A:
+                type: ENCHANTED_SEA_LUMIES
+                amount: 4
+              B:
+                type: GILL_MEMBRANE
+                amount: 16
+              C:
+                type: SNORKELING_LEGGINGS
+                amount: 1
+            result:
+              type: DIVER_LEGGINGS
+              amount: 1
+  - id: DIVER_BOOTS
+    material: GOLDEN_BOOTS
+    name: Diver's Boots
+    rarity: EPIC
+    default_statistics:
+      health: 125
+      defense: 40
+      sea_creature_chance: 2
+      pressure_resistance: 15
+      respiration: 3
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - OAO
+              - BCB
+              - OAO
+            ingredients:
+              O:
+                type: AIR
+                amount: 1
+              A:
+                type: ENCHANTED_SEA_LUMIES
+                amount: 4
+              B:
+                type: GILL_MEMBRANE
+                amount: 16
+              C:
+                type: SNORKELING_BOOTS
+                amount: 1
+            result:
+              type: DIVER_BOOTS
+              amount: 1
