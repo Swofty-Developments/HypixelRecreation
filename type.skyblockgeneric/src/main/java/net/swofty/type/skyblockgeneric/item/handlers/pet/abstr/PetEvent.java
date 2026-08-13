@@ -16,6 +16,9 @@ public sealed interface PetEvent {
     record Kill(SkyBlockPlayer player, SkyBlockItem pet, SkyBlockMob mob) implements PetEvent {
     }
 
+    record DamageMob(SkyBlockPlayer player, SkyBlockItem pet, SkyBlockMob mob) implements PetEvent {
+    }
+
     @Getter
     @Accessors(fluent = true)
     final class DamagedByMob implements PetEvent {

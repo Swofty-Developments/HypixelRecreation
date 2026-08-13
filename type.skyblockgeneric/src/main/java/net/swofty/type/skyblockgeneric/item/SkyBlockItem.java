@@ -355,7 +355,7 @@ public class SkyBlockItem {
 	@Override
 	public String toString() {
 		return "SkyBlockItem{" +
-				"type=" + getMaterial().name() +
+				"type=" + getMaterial().key().asString() +
 				", itemType=" + getAttributeHandler().getTypeAsString() +
 				", config=" + config +
 				", amount=" + amount +

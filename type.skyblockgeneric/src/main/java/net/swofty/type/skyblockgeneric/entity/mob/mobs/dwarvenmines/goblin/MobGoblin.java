@@ -1,6 +1,7 @@
 package net.swofty.type.skyblockgeneric.entity.mob.mobs.dwarvenmines.goblin;
 
 import lombok.NonNull;
+import net.kyori.adventure.key.Key;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
@@ -17,6 +18,7 @@ import net.swofty.type.skyblockgeneric.entity.mob.ai.MeleeAttackWithinRegionGoal
 import net.swofty.type.skyblockgeneric.entity.mob.ai.RandomRegionStrollGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.impl.MobPlayerSkin;
 import net.swofty.type.skyblockgeneric.entity.mob.impl.RegionPopulator;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.region.RegionType;
@@ -107,11 +109,11 @@ public class MobGoblin extends BestiaryMob implements RegionPopulator, MobPlayer
 
 	@Override
 	public @Nullable SkyBlockLootTable getLootTable() {
-		return new SkyBlockLootTable() {
+        return new SkyBlockLootTable(Key.key("skyblock", "mob/goblin")) {
 			@Override
 			public @NonNull List<LootRecord> getLootTable() {
 				return List.of(
-						new LootRecord(ItemType.GOBLIN_EGG, 1, 100)
+                        new LootRecord(ItemType.GOBLIN_EGG, 1, 100, BestiaryDropRarity.COMMON)
 				);
 			}
 

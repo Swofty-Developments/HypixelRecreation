@@ -1,0 +1,1906 @@
+[
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.25,
+      "y": -0.0639786985992572,
+      "z": 0.5
+    },
+    "rotation": {
+      "yaw": -90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:polished_andesite",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:polished_andesite\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -14.0,
+        "y": 45.0,
+        "z": 0.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.40625,
+      "y": 0.05270353840620601,
+      "z": 0.5
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:enchanted_book",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:enchanted_book\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": 8.0,
+        "y": 0.0,
+        "z": 4.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -0.65625,
+      "y": -0.06520892629862374,
+      "z": 0.5
+    },
+    "rotation": {
+      "yaw": -90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:polished_andesite",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:polished_andesite\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -14.0,
+        "y": 45.0,
+        "z": 0.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.0625,
+      "y": -0.8883152378151351,
+      "z": 0.15625
+    },
+    "rotation": {
+      "yaw": -90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:stone_brick_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:stone_brick_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -90.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.09375,
+      "y": -0.9093578844215813,
+      "z": 0.03125
+    },
+    "rotation": {
+      "yaw": -90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:dark_oak_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:dark_oak_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -0.53125,
+      "y": -0.9246662921210458,
+      "z": 0.03125
+    },
+    "rotation": {
+      "yaw": -90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:dark_oak_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:dark_oak_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -0.875,
+      "y": 0.002832578403811681,
+      "z": 0.625
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:paper",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:paper\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": 2.0,
+        "y": -65.0,
+        "z": -5.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.71875,
+      "y": -0.9077352154473601,
+      "z": 0.03125
+    },
+    "rotation": {
+      "yaw": -90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:dark_oak_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:dark_oak_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -1.0,
+      "y": -0.6119264165705545,
+      "z": 0.28125
+    },
+    "rotation": {
+      "yaw": -135.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:red_carpet",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:red_carpet\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -0.375,
+      "y": -0.3674775842583813,
+      "z": 1.09375
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:allium",
+        "count": 1,
+        "snbt": "{components:{\"minecraft:enchantments\":{\"minecraft:unbreaking\":1}},count:1,id:\"minecraft:allium\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.4375,
+      "y": -0.8872188694499386,
+      "z": 0.71875
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:stone_brick_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:stone_brick_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -89.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.5247624814510345,
+      "y": -0.3717324494323435,
+      "z": -1.0596758723258972
+    },
+    "rotation": {
+      "yaw": -90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:player_head",
+        "count": 1,
+        "snbt": "{components:{\"minecraft:custom_name\":{color:\"blue\",italic:0b,text:\"Diamonds Blank\"},\"minecraft:profile\":{id:[I;67411088,-739686879,-1666252800,-1432267195],properties:[{name:\"textures\",value:\"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODNjN2FkZmMzZDg2NGJlYTgzYmQ3NzZhY2E0NzkxN2YxMmU2NTg3NmI2NGQ2Yzk2ODIyY2ZhNmEzNjhjMmVhIn19fQ==\"}]}},count:1,id:\"minecraft:player_head\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": -2.0,
+        "y": -19.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -45.0,
+        "y": 44.0,
+        "z": -1.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -0.84375,
+      "y": -0.9175424329958446,
+      "z": 0.15625
+    },
+    "rotation": {
+      "yaw": -45.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:dark_oak_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:dark_oak_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -0.5,
+      "y": -0.9015575192990184,
+      "z": 0.71875
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:stone_brick_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:stone_brick_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -90.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.5,
+      "y": -0.3689765125935196,
+      "z": 1.09375
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:allium",
+        "count": 1,
+        "snbt": "{components:{\"minecraft:enchantments\":{\"minecraft:unbreaking\":1}},count:1,id:\"minecraft:allium\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 1.125,
+      "y": -0.7029809670576697,
+      "z": 0.1875
+    },
+    "rotation": {
+      "yaw": -135.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:red_carpet",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:red_carpet\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -178.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -1.03125,
+      "y": 0.027680390023803625,
+      "z": 0.875
+    },
+    "rotation": {
+      "yaw": -135.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": true,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:player_head",
+        "count": 1,
+        "snbt": "{components:{\"minecraft:custom_name\":{color:\"blue\",italic:0b,text:\"Books\"},\"minecraft:profile\":{id:[I;67411088,-739686879,-1666252800,178923895],properties:[{name:\"textures\",value:\"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjMzNTk4NDM3ZTMxMzMyOWViMTQxYTEzZTkyZDliMDM0OWFhYmU1YzY0ODJhNWRkZTdiNzM3NTM2MzRhYmEifX19\"}]}},count:1,id:\"minecraft:player_head\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.0625,
+      "y": -0.8768451587130954,
+      "z": 1.03125
+    },
+    "rotation": {
+      "yaw": -90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:stone_brick_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:stone_brick_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -90.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 1.03125,
+      "y": -0.9138734227775132,
+      "z": 0.15625
+    },
+    "rotation": {
+      "yaw": -135.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:dark_oak_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:dark_oak_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.0625,
+      "y": -1.2151931510705083,
+      "z": 0.6875
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:player_head",
+        "count": 1,
+        "snbt": "{components:{\"minecraft:profile\":{id:[I;67411088,-739686879,-1666252800,178937976],properties:[{name:\"textures\",value:\"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjZlNjY5NmI2MzczOGJiY2M1ZmQ5NzM3MDllYTkwOTk3MjE1YjBjZmVlY2UyMGIyNjU5Y2I3YjM1ZjFiZjAifX19\"}]}},count:1,id:\"minecraft:player_head\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -0.96875,
+      "y": -0.9069627772094861,
+      "z": 0.46875
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:dark_oak_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:dark_oak_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -1.125,
+      "y": -0.6187100999882489,
+      "z": 0.59375
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:red_carpet",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:red_carpet\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 1.125,
+      "y": -0.13988203322375625,
+      "z": 0.875
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": true,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:player_head",
+        "count": 1,
+        "snbt": "{components:{\"minecraft:custom_name\":{color:\"blue\",italic:0b,text:\"Books\"},\"minecraft:profile\":{id:[I;67411088,-739686879,-1666252800,178923897],properties:[{name:\"textures\",value:\"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzI2MWJmNWM3ZmZhMjU0YzE4Mjg0NDgwMzIxMTVlNWNjMTU0NDM2ZGVjMDk5OGM0ZDdhYmQ5OTZhZTFkOTI3In19fQ==\"}]}},count:1,id:\"minecraft:player_head\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 319.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -0.15625,
+      "y": 0.2880083695582698,
+      "z": 1.40625
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:cobblestone_wall",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:cobblestone_wall\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -14.0,
+        "y": 45.0,
+        "z": 0.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 1.25,
+      "y": -0.6064099026728655,
+      "z": 0.5
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:red_carpet",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:red_carpet\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 1.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 0.0625,
+      "y": -1.4677465003354087,
+      "z": 0.34375
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:player_head",
+        "count": 1,
+        "snbt": "{components:{\"minecraft:custom_name\":{color:\"blue\",italic:0b,text:\"Skull\"},\"minecraft:profile\":{id:[I;67411088,-739686879,-1666252800,-1432189311],properties:[{name:\"textures\",value:\"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTUyOWFiYzg4MzA5NTNmNGQ5MWVkZmZmMjQ2OTVhOWY2Mjc1OGZhNGM1MWIyOWFjMjQ2YzM3NDllYWFlODliMyJ9fX0=\"}]}},count:1,id:\"minecraft:player_head\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 12.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 1.15625,
+      "y": -0.9192534106210957,
+      "z": 0.46875
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:dark_oak_slab",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:dark_oak_slab\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -1.21875,
+      "y": -0.9771299445094996,
+      "z": 0.0625
+    },
+    "rotation": {
+      "yaw": -135.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:red_carpet",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:red_carpet\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -96.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -1.5,
+      "y": 0.013093296838704305,
+      "z": 0.75
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:paper",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:paper\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": 2.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 1.40625,
+      "y": -0.9982548737931154,
+      "z": -0.09375
+    },
+    "rotation": {
+      "yaw": -45.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:red_carpet",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:red_carpet\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": -275.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -1.0625,
+      "y": 0.28723464618204275,
+      "z": 1.40625
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:cobblestone_wall",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:cobblestone_wall\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -14.0,
+        "y": 45.0,
+        "z": 0.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -1.40625,
+      "y": -0.9883850898589941,
+      "z": 0.59375
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:red_carpet",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:red_carpet\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -91.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": -1.4752375185489655,
+      "y": -0.37391578858654384,
+      "z": -1.0596758723258972
+    },
+    "rotation": {
+      "yaw": -90.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "mainhand": {
+        "id": "minecraft:player_head",
+        "count": 1,
+        "snbt": "{components:{\"minecraft:custom_name\":{color:\"blue\",italic:0b,text:\"Diamonds Blank\"},\"minecraft:profile\":{id:[I;67411088,-739686879,-1666252800,-1432267195],properties:[{name:\"textures\",value:\"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODNjN2FkZmMzZDg2NGJlYTgzYmQ3NzZhY2E0NzkxN2YxMmU2NTg3NmI2NGQ2Yzk2ODIyY2ZhNmEzNjhjMmVhIn19fQ==\"}]}},count:1,id:\"minecraft:player_head\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": -2.0,
+        "y": -19.0,
+        "z": 0.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -45.0,
+        "y": 44.0,
+        "z": -1.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  },
+  {
+    "type": "minecraft:armor_stand",
+    "position": {
+      "x": 1.625,
+      "y": -0.9869551110670329,
+      "z": 0.5
+    },
+    "rotation": {
+      "yaw": -180.0,
+      "pitch": 0.0
+    },
+    "invisible": true,
+    "small": false,
+    "marker": false,
+    "showArms": true,
+    "showBasePlate": true,
+    "equipment": {
+      "head": {
+        "id": "minecraft:red_carpet",
+        "count": 1,
+        "snbt": "{count:1,id:\"minecraft:red_carpet\"}"
+      }
+    },
+    "pose": {
+      "head": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -88.0
+      },
+      "body": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "leftArm": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": -10.0
+      },
+      "rightArm": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 10.0
+      },
+      "leftLeg": {
+        "x": -1.0,
+        "y": 0.0,
+        "z": -1.0
+      },
+      "rightLeg": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 1.0
+      }
+    }
+  }
+]

@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.entity.mob.mobs.deepcaverns;
 
-import lombok.NonNull;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
@@ -12,16 +11,15 @@ import net.swofty.commons.skyblock.statistics.ItemStatistics;
 import net.swofty.type.generic.gui.inventory.item.GUIMaterial;
 import net.swofty.type.skyblockgeneric.entity.mob.BestiaryMob;
 import net.swofty.type.skyblockgeneric.entity.mob.MobType;
-import net.swofty.type.skyblockgeneric.entity.mob.ai.ClosestEntityRegionTarget;
 import net.swofty.type.skyblockgeneric.entity.mob.ai.MeleeAttackWithinRegionGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.ai.RandomRegionStrollGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.impl.RegionPopulator;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
+import net.swofty.type.skyblockgeneric.loottable.MobLootTable;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.region.RegionType;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
-import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -49,7 +47,7 @@ public class MobRedstonePigman extends BestiaryMob implements RegionPopulator {
 						1.6,
 						20,
 						TimeUnit.SERVER_TICK,
-						RegionType.LAPIS_QUARRY), // TODO: only attack target if they broke a redstone ore, or they attacked first
+                        RegionType.PIGMENS_DEN),
 				new RandomRegionStrollGoal(this, 15, RegionType.PIGMENS_DEN)  // Walk around
 		);
 	}
@@ -57,11 +55,7 @@ public class MobRedstonePigman extends BestiaryMob implements RegionPopulator {
 	@Override
 	public List<TargetSelector> getTargetSelectors() {
 		return List.of(
-				new LastEntityDamagerTarget(this, 12), // First target the last entity which attacked you
-				new ClosestEntityRegionTarget(this,
-						6,
-						entity -> entity instanceof SkyBlockPlayer,
-						RegionType.PIGMENS_DEN) // If there is none, target the nearest player
+                new LastEntityDamagerTarget(this, 12)
 		);
 	}
 
@@ -76,22 +70,11 @@ public class MobRedstonePigman extends BestiaryMob implements RegionPopulator {
 
 	@Override
 	public @Nullable SkyBlockLootTable getLootTable() {
-		return new SkyBlockLootTable() {
-			@Override
-			public @NonNull List<LootRecord> getLootTable() {
-				return List.of(
-						new LootRecord(ItemType.GOLD_NUGGET, 2, 50),
-						new LootRecord(ItemType.REDSTONE, 5, 50)
-						//new LootRecord(ItemType.FLAMING_SWORD, 1, 0.01),
-						//new LootRecord(ItemType.EXP_SHARE_CORE, 1, 0.01)
-				);
-			}
-
-			@Override
-			public @NotNull CalculationMode getCalculationMode() {
-				return CalculationMode.CALCULATE_INDIVIDUAL;
-			}
-		};
+        return new MobLootTable("REDSTONE_PIGMAN",
+                new MobLootTable.Drop(ItemType.GOLD_NUGGET, 2, 50, BestiaryDropRarity.COMMON),
+                new MobLootTable.Drop(ItemType.REDSTONE, 5, 50, BestiaryDropRarity.COMMON),
+                new MobLootTable.Drop(ItemType.FLAMING_SWORD, 1, 1, BestiaryDropRarity.UNCOMMON),
+                new MobLootTable.Drop(ItemType.EXP_SHARE_CORE, 1, 0.01, BestiaryDropRarity.RNGESUS));
 	}
 
 	@Override

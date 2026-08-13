@@ -75,7 +75,9 @@ public class SkyBlockBlock {
             block = block.withTag(Tag.String(attribute.getKey()), attribute.saveIntoString());
         }
 
-        block = block.withProperty("facing", facing.getValue());
+        if (block.properties().containsKey("facing")) {
+            block = block.withProperty("facing", facing.getValue());
+        }
 
         return block;
     }

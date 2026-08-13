@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.entity.mob.mobs.deepcaverns;
 
-import lombok.NonNull;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
@@ -17,12 +16,13 @@ import net.swofty.type.skyblockgeneric.entity.mob.ai.MeleeAttackWithinRegionGoal
 import net.swofty.type.skyblockgeneric.entity.mob.ai.RandomRegionStrollGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.impl.RegionPopulator;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
+import net.swofty.type.skyblockgeneric.loottable.MobLootTable;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.region.RegionType;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -58,8 +58,8 @@ public class MobLapisZombie extends BestiaryMob implements RegionPopulator {
 						1.6,
 						20,
 						TimeUnit.SERVER_TICK,
-						RegionType.SLIMEHILL), // Attack the target
-				new RandomRegionStrollGoal(this, 15, RegionType.SLIMEHILL)  // Walk around
+						RegionType.LAPIS_QUARRY), // Attack the target
+				new RandomRegionStrollGoal(this, 15, RegionType.LAPIS_QUARRY)  // Walk around
 		);
 	}
 
@@ -70,7 +70,7 @@ public class MobLapisZombie extends BestiaryMob implements RegionPopulator {
 				new ClosestEntityRegionTarget(this,
 						6,
 						entity -> entity instanceof SkyBlockPlayer,
-						RegionType.SLIMEHILL) // If there is none, target the nearest player
+						RegionType.LAPIS_QUARRY) // If there is none, target the nearest player
 		);
 	}
 
@@ -85,25 +85,16 @@ public class MobLapisZombie extends BestiaryMob implements RegionPopulator {
 
 	@Override
 	public @Nullable SkyBlockLootTable getLootTable() {
-		return new SkyBlockLootTable() {
-			@Override
-			public @NonNull List<LootRecord> getLootTable() {
-				return List.of(
-						new LootRecord(ItemType.ROTTEN_FLESH, 1, 100),
-						new LootRecord(ItemType.LAPIS_ARMOR_BOOTS, 1, 1),
-						new LootRecord(ItemType.LAPIS_ARMOR_LEGGINGS, 1, 1),
-						new LootRecord(ItemType.LAPIS_ARMOR_CHESTPLATE, 1, 1),
-						new LootRecord(ItemType.LAPIS_ARMOR_HELMET, 1, 1)
-						//new LootRecord(ItemType.EXP_SHARE_CORE, 1, 0.01),
-						//new LootRecord(ItemType.LAPIS_CRYSTAL, 1, 1)
-				);
-			}
-
-			@Override
-			public @NotNull CalculationMode getCalculationMode() {
-				return CalculationMode.CALCULATE_INDIVIDUAL;
-			}
-		};
+		return MobLootTable.withPools("LAPIS_ZOMBIE",
+				MobLootTable.Pool.independent("drops",
+						new MobLootTable.Drop(ItemType.ROTTEN_FLESH, 1, 100, BestiaryDropRarity.COMMON),
+						new MobLootTable.Drop(ItemType.LAPIS_CRYSTAL, 1, 1, BestiaryDropRarity.RARE),
+						new MobLootTable.Drop(ItemType.EXP_SHARE_CORE, 1, 0.01, BestiaryDropRarity.RNGESUS)),
+				MobLootTable.Pool.weighted("lapis_armor", 0.96,
+						new MobLootTable.Drop(ItemType.LAPIS_ARMOR_BOOTS, 1, 1, BestiaryDropRarity.RARE),
+						new MobLootTable.Drop(ItemType.LAPIS_ARMOR_LEGGINGS, 1, 1, BestiaryDropRarity.RARE),
+						new MobLootTable.Drop(ItemType.LAPIS_ARMOR_CHESTPLATE, 1, 1, BestiaryDropRarity.RARE),
+						new MobLootTable.Drop(ItemType.LAPIS_ARMOR_HELMET, 1, 1, BestiaryDropRarity.RARE)));
 	}
 
 	@Override
@@ -148,6 +139,6 @@ public class MobLapisZombie extends BestiaryMob implements RegionPopulator {
 
 	@Override
 	public List<Populator> getPopulators() {
-		return List.of(new Populator(RegionType.SLIMEHILL, 20));
+		return List.of(new Populator(RegionType.LAPIS_QUARRY, 20));
 	}
 }

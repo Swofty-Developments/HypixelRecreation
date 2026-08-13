@@ -5,16 +5,22 @@ import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIMaterial;
-import net.swofty.type.generic.gui.v2.*;
+import net.swofty.type.generic.gui.v2.Components;
+import net.swofty.type.generic.gui.v2.DefaultState;
+import net.swofty.type.generic.gui.v2.StatelessView;
+import net.swofty.type.generic.gui.v2.ViewConfiguration;
+import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.bestiary.BestiaryData;
 import net.swofty.type.skyblockgeneric.entity.mob.BestiaryMob;
 import net.swofty.type.skyblockgeneric.entity.mob.MobType;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,32 +100,22 @@ public class GUIBestiaryMob extends StatelessView {
                 int deaths = player.getDeathData().getAmount(mob.getMobID());
                 OtherLoot otherLoot = mob.getOtherLoot();
 
-                List<SkyBlockLootTable.LootRecord> commonLoot = new ArrayList<>();
-                List<SkyBlockLootTable.LootRecord> uncommonLoot = new ArrayList<>();
-                List<SkyBlockLootTable.LootRecord> rareLoot = new ArrayList<>();
-                List<SkyBlockLootTable.LootRecord> legendaryLoot = new ArrayList<>();
-                List<SkyBlockLootTable.LootRecord> rngesusLoot = new ArrayList<>();
-
                 List<SkyBlockLootTable.LootRecord> lootRecords = mob.getLootTable().getLootTable();
-
+                Map<BestiaryDropRarity, List<SkyBlockLootTable.LootRecord>> lootByRarity =
+                        new EnumMap<>(BestiaryDropRarity.class);
                 for (SkyBlockLootTable.LootRecord lootRecord : lootRecords) {
-                    double chance = lootRecord.getChancePercent();
-                    if (chance <= 0.01) rngesusLoot.add(lootRecord);
-                    else if (chance <= 0.1) legendaryLoot.add(lootRecord);
-                    else if (chance <= 1) rareLoot.add(lootRecord);
-                    else if (chance <= 30) uncommonLoot.add(lootRecord);
-                    else commonLoot.add(lootRecord);
+                    lootByRarity.computeIfAbsent(lootRecord.getRarity(), ignored -> new ArrayList<>()).add(lootRecord);
                 }
 
                 List<MobType> mobtypes = mob.getMobTypes();
 
                 if (mobtypes.size() == 1) {
-                    lore.add(Text.of("<7>Mob Type: {}", Text.parse(mobtypes.getFirst().getFullDisplayName())));
+                    lore.add(Text.of("<7>Mob Type: {}", mobtypes.getFirst().getFullDisplayName()));
                     lore.add(Text.empty());
                 } else if (mobtypes.size() > 1) {
                     List<Text> displayNames = new ArrayList<>();
                     for (MobType mobType : mobtypes) {
-                        displayNames.add(Text.parse(mobType.getFullDisplayName()));
+                        displayNames.add(mobType.getFullDisplayName());
                     }
 
                     lore.add(Text.of("<7>Mob Types: {}", Text.join(Text.of("<7>, "), displayNames)));
@@ -139,42 +135,15 @@ public class GUIBestiaryMob extends StatelessView {
                 lore.add(Text.of("<7>Deaths: <a>{}", deaths));
                 lore.add(Text.empty());
 
-                if (!commonLoot.isEmpty()) {
-                    lore.add(Text.of("<f>Common Loot"));
-                    for (SkyBlockLootTable.LootRecord lootRecord : commonLoot) {
-                        lore.add(Text.of(" <8>■ <f>{}", lootRecord.getItemType().getDisplayName()));
-                    }
-                    lore.add(Text.empty());
-                }
-                if (!uncommonLoot.isEmpty()) {
-                    lore.add(Text.of("<a>Uncommon Loot"));
-                    for (SkyBlockLootTable.LootRecord lootRecord : uncommonLoot) {
-                        lore.add(Text.of(" <8>■ <f>{} <8>(<a>{}%<8>)",
-                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent()));
-                    }
-                    lore.add(Text.empty());
-                }
-                if (!rareLoot.isEmpty()) {
-                    lore.add(Text.of("<9>Rare Loot"));
-                    for (SkyBlockLootTable.LootRecord lootRecord : rareLoot) {
-                        lore.add(Text.of(" <8>■ <f>{} <8>(<a>{}%<8>)",
-                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent()));
-                    }
-                    lore.add(Text.empty());
-                }
-                if (!legendaryLoot.isEmpty()) {
-                    lore.add(Text.of("<6>Legendary Loot"));
-                    for (SkyBlockLootTable.LootRecord lootRecord : legendaryLoot) {
-                        lore.add(Text.of(" <8>■ <f>{} <8>(<a>{}%<8>)",
-                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent()));
-                    }
-                    lore.add(Text.empty());
-                }
-                if (!rngesusLoot.isEmpty()) {
-                    lore.add(Text.of("<d>RNGesus Loot"));
-                    for (SkyBlockLootTable.LootRecord lootRecord : rngesusLoot) {
-                        lore.add(Text.of(" <8>■ <f>{} <8>(<a>{}%<8>)",
-                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent()));
+                for (BestiaryDropRarity rarity : BestiaryDropRarity.values()) {
+                    List<SkyBlockLootTable.LootRecord> rarityLoot = lootByRarity.getOrDefault(rarity, List.of());
+                    if (rarityLoot.isEmpty()) continue;
+                    lore.add(rarity.displayName());
+                    for (SkyBlockLootTable.LootRecord lootRecord : rarityLoot) {
+                        lore.add(rarity.showsChance()
+                                ? Text.of(" <8>■ <f>{} <8>(<a>{}%<8>)",
+                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent())
+                                : Text.of(" <8>■ <f>{}", lootRecord.getItemType().getDisplayName()));
                     }
                     lore.add(Text.empty());
                 }

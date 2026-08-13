@@ -38,6 +38,9 @@ items:
     rarity: COMMON
     material: EXPERIENCE_BOTTLE
     name: "Experience Bottle"
+    components:
+      - id: EXPERIENCE_BOTTLE
+        base_experience: 8
   - id: FIREWORK_ROCKET
     rarity: COMMON
     material: FIREWORK_ROCKET

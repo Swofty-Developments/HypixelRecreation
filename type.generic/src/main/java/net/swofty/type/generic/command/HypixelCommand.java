@@ -15,6 +15,7 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointRank;
 import net.swofty.type.generic.user.HypixelPlayer;
+import net.swofty.type.generic.user.categories.Rank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,9 +77,12 @@ public abstract class HypixelCommand {
     }
 
     public boolean permissionCheck(CommandSender sender) {
-        HypixelPlayer player = (HypixelPlayer) sender;
+        return permissionCheck((HypixelPlayer) sender, params.permission());
+    }
+
+    public boolean permissionCheck(HypixelPlayer player, Rank rank) {
         HypixelDataHandler dataHandler = player.getDataHandler();
-        boolean passes = dataHandler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(params.permission());
+        boolean passes = dataHandler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(rank);
 
         if (!passes) {
             player.sendMessage("<c>You do not have permission to use this command.");

@@ -23,7 +23,47 @@ import net.swofty.type.generic.data.mongodb.ProfilesDatabase;
 import net.swofty.type.generic.data.mongodb.UserDatabase;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
-import net.swofty.type.skyblockgeneric.data.datapoints.*;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointAccessoryBag;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointArcheryPractice;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointAuctionEscrow;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointAuctionStatistics;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointBackpacks;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointBankData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointBestiary;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointChocolateFactory;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCollectedMobTypeRewards;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCollection;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCommissions;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCompletedBazaarTransactions;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointDeaths;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointExperimentation;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointFairySouls;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointHOTM;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointHunting;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointInventory;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointItemsInSacks;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointKat;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointLoadouts;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointMinionData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointMissionData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointMuseum;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointPetData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointPityCounters;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointQuiver;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointRNGMeters;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSackOfSacks;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointShipState;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointShopData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkillCategory;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkills;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkyBlockExperience;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSlayer;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointStash;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointStorage;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointTrophyFish;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointUUID;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointUUIDList;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointWardrobe;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.NonPlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.item.updater.PlayerItemOrigin;
@@ -37,7 +77,11 @@ import org.jetbrains.annotations.Nullable;
 import org.tinylog.Logger;
 import tools.jackson.core.JacksonException;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -343,6 +387,15 @@ public class SkyBlockDataHandler extends DataHandler {
 
         SKILLS("skills", false, false, false,
                 DatapointSkills.class, new DatapointSkills("skills")),
+
+        EXPERIMENTATION("experimentation", false, false, false,
+                DatapointExperimentation.class, new DatapointExperimentation("experimentation")),
+
+        RNG_METERS("rng_meters", false, false, false,
+                DatapointRNGMeters.class, new DatapointRNGMeters("rng_meters")),
+
+        PITY_COUNTERS("pity_counters", false, false, false,
+                DatapointPityCounters.class, new DatapointPityCounters("pity_counters")),
 
         EXPERIENCE("experience", false, false, false,
                 DatapointLong.class, new DatapointLong("experience", 0L),

@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.entity.mob.mobs.deepcaverns;
 
-import lombok.NonNull;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
@@ -15,12 +14,13 @@ import net.swofty.type.skyblockgeneric.entity.mob.ai.ClosestEntityRegionTarget;
 import net.swofty.type.skyblockgeneric.entity.mob.ai.RandomRegionStrollGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.impl.RegionPopulator;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
+import net.swofty.type.skyblockgeneric.loottable.MobLootTable;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.region.RegionType;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -71,33 +71,23 @@ public class MobMinerSkeleton_15 extends BestiaryMob implements RegionPopulator 
 	public ItemStatistics getBaseStatistics() {
 		return ItemStatistics.builder()
 				.withBase(ItemStatistic.HEALTH, 250D)
-				.withBase(ItemStatistic.DAMAGE, 200D)
+                .withBase(ItemStatistic.DAMAGE, 150D)
 				.withBase(ItemStatistic.SPEED, 100D)
 				.build();
 	}
 
 	@Override
 	public @Nullable SkyBlockLootTable getLootTable() {
-		return new SkyBlockLootTable() {
-			@Override
-			public @NonNull List<LootRecord> getLootTable() {
-				return List.of(
-						new LootRecord(ItemType.BONE, 1, 300), // hypixel, why is it 300% and what does that mean?
-						new LootRecord(ItemType.MINER_ARMOR_BOOTS, 1, 1),
-						new LootRecord(ItemType.MINER_ARMOR_LEGGINGS, 1, 1),
-						new LootRecord(ItemType.MINER_ARMOR_CHESTPLATE, 1, 1),
-						new LootRecord(ItemType.MINER_ARMOR_HELMET, 1, 1)
-
-						//new LootRecord(ItemType.EXP_SHARE_CORE, 1, 0.01)
-						// bone dye
-				);
-			}
-
-			@Override
-			public @NotNull CalculationMode getCalculationMode() {
-				return CalculationMode.CALCULATE_INDIVIDUAL;
-			}
-		};
+        return MobLootTable.withPools(getMobID(),
+                MobLootTable.Pool.independent("drops",
+                        new MobLootTable.Drop(ItemType.BONE, 3, 100, BestiaryDropRarity.COMMON),
+                        new MobLootTable.Drop(ItemType.EXP_SHARE_CORE, 1, 0.01, BestiaryDropRarity.RNGESUS),
+                        new MobLootTable.Drop(ItemType.BONE_DYE, 1, 0.000033, BestiaryDropRarity.RNGESUS)),
+                MobLootTable.Pool.weighted("diamond_tank", 0.96,
+                        new MobLootTable.Drop(ItemType.MINER_ARMOR_BOOTS, 1, 1, BestiaryDropRarity.RARE),
+                        new MobLootTable.Drop(ItemType.MINER_ARMOR_LEGGINGS, 1, 1, BestiaryDropRarity.RARE),
+                        new MobLootTable.Drop(ItemType.MINER_ARMOR_CHESTPLATE, 1, 1, BestiaryDropRarity.RARE),
+                        new MobLootTable.Drop(ItemType.MINER_ARMOR_HELMET, 1, 1, BestiaryDropRarity.RARE)));
 	}
 
 	@Override

@@ -69,7 +69,6 @@ public class PetComponent extends SkyBlockItemComponent {
     private void interact(SkyBlockPlayer player, SkyBlockItem item) {
         DatapointPetData.UserPetData petData = player.getPetData();
         ItemType type = item.getAttributeHandler().getPotentialType();
-        Rarity rarity = item.getAttributeHandler().getRarity();
 
         if (petData.getPet(type) != null) {
             player.sendMessage("<c>You already have a pet of this type.");
@@ -103,9 +102,9 @@ public class PetComponent extends SkyBlockItemComponent {
             if (value == 0) continue;
 
             if (stat.getIsPercentage()) {
-                addPropertyPercent(stat.getDisplayName(), value, lore);
+                addPropertyPercent(stat, value, lore);
             } else {
-                addPropertyInt(stat.getDisplayName(), value, lore);
+                addPropertyInt(stat, value, lore);
             }
         }
 
@@ -126,6 +125,9 @@ public class PetComponent extends SkyBlockItemComponent {
         }
 
         lore.add(" ");
+        lore.add("<e>Right-click to add this pet to your");
+        lore.add("<e>pet menu!");
+        lore.add(" ");
         lore.add(Text.of("<rarity:{}>", rarity.name()).serialize());
 
         return lore;
@@ -143,15 +145,24 @@ public class PetComponent extends SkyBlockItemComponent {
                 : "<7>" + label + ": <a>100.0%";
     }
 
-    private static void addPropertyInt(String name, double value, List<String> lore) {
+    private static void addPropertyInt(ItemStatistic stat, double value, List<String> lore) {
         if (value != 0.0) {
-            lore.add("<7>" + name + ": <a>" + (value >= 0 ? "+" : "") + value);
+            lore.add("<7>" + stat.getDisplayName() + ": " + Text.colorTag(stat.getLoreColor())
+                    + (value >= 0 ? "+" : "") + formatValue(value));
         }
     }
 
-    private static void addPropertyPercent(String name, double value, List<String> lore) {
+    private static void addPropertyPercent(ItemStatistic stat, double value, List<String> lore) {
         if (value != 0.0) {
-            lore.add("<7>" + name + ": <a>" + (value >= 0 ? "+" : "") + value + "%");
+            lore.add("<7>" + stat.getDisplayName() + ": " + Text.colorTag(stat.getLoreColor())
+                    + (value >= 0 ? "+" : "") + formatValue(value) + "%");
         }
+    }
+
+    private static String formatValue(double value) {
+        if (Math.abs(value - Math.rint(value)) < 0.0001D) {
+            return String.valueOf((long) Math.rint(value));
+        }
+        return StringUtility.decimalify(value, 2);
     }
 }

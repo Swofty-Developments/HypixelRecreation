@@ -92,6 +92,7 @@ public class ItemLore {
 		fillSoulbound(lore);
 		fillStatsWhenShot(lore);
 		fillUnfinished(lore);
+		fillDyeColor(lore);
 		lore.section(LoreText.Sections.RARITY_FOOTER).line("{}", displayRarity(item, rarity));
 
 		this.stack = ItemStacks.lines(stack.builder(), lore.render())
@@ -441,6 +442,19 @@ public class ItemLore {
 		lore.section(LoreText.Sections.UNFINISHED)
 				.line(Text.key("items.lore.not_finished"))
 				.line(Text.empty());
+	}
+
+	private static void fillDyeColor(LoreText lore) {
+		String dyeColor = lore.item().getAttributeHandler().getDyeColor();
+		if (dyeColor == null) return;
+
+		TextBody.Section section = lore.section(LoreText.Sections.DYE_COLOR);
+		if (dyeColor.startsWith("animated:")) {
+			String[] colors = dyeColor.split(":");
+			section.line(Text.of("<7>Color: <d>Animated <8>({} <7>➜ <8>{}<8>)", colors[1], colors[2]));
+		} else {
+			section.line(Text.of("<7>Color: <8>{}", dyeColor));
+		}
 	}
 
 	private static Text displayName(SkyBlockItem item, Material material) {

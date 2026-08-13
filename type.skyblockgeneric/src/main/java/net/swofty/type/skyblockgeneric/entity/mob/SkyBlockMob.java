@@ -8,13 +8,7 @@ import net.kyori.adventure.sound.Sound;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
-import net.minestom.server.entity.Entity;
-import net.minestom.server.entity.EntityCreature;
-import net.minestom.server.entity.EntityType;
-import net.minestom.server.entity.GameMode;
-import net.minestom.server.entity.Metadata;
-import net.minestom.server.entity.MetadataDef;
-import net.minestom.server.entity.Player;
+import net.minestom.server.entity.*;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
 import net.minestom.server.entity.attribute.Attribute;
@@ -29,9 +23,11 @@ import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
-import net.swofty.commons.text.Text;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.entity.ai.vanilla.VanillaNavigator;
 import net.swofty.type.generic.event.HypixelEventHandler;
+import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.utility.MathUtility;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import net.swofty.type.skyblockgeneric.entity.DroppedItemEntityImpl;
@@ -41,6 +37,7 @@ import net.swofty.type.skyblockgeneric.entity.mob.impl.RegionPopulator;
 import net.swofty.type.skyblockgeneric.event.custom.PlayerKilledSkyBlockMobEvent;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.ArmorComponent;
+import net.swofty.type.skyblockgeneric.item.components.PetComponent;
 import net.swofty.type.skyblockgeneric.loottable.LootAffector;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
@@ -48,14 +45,15 @@ import net.swofty.type.skyblockgeneric.region.RegionType;
 import net.swofty.type.skyblockgeneric.region.SkyBlockRegion;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
-import net.swofty.type.generic.entity.ai.vanilla.VanillaNavigator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Setter
 public abstract class SkyBlockMob extends EntityCreature {
@@ -65,6 +63,7 @@ public abstract class SkyBlockMob extends EntityCreature {
     private long lastAttack = System.currentTimeMillis();
     @Getter
     private boolean hasBeenDamaged = false;
+    private final Map<UUID, Double> damageContributions = new LinkedHashMap<>();
 
     private Text customName;
     private TextDisplayEntity nameDisplayEntity;
@@ -78,7 +77,17 @@ public abstract class SkyBlockMob extends EntityCreature {
     }
 
     public SkyBlockMob(EntityType entityType) {
+        this(entityType, true);
+    }
+
+    protected SkyBlockMob(EntityType entityType, boolean initialize) {
         super(entityType);
+        if (initialize) {
+            init();
+        }
+    }
+
+    protected final void initializeMob() {
         init();
     }
 
@@ -93,7 +102,7 @@ public abstract class SkyBlockMob extends EntityCreature {
 
         this.customName = Text.of("<8>[<7>Lv{}<8>] <c>{}<c> {} <a>{}<f>/<a>{}",
                 getLevel(),
-                Text.parse(getMobTypes().getFirst().getColor() + getMobTypes().getFirst().getSymbol()),
+                getMobTypes().getFirst().getColoredSymbol(),
                 getDisplayName(),
                 Math.round(getHealth()),
                 Math.round(getBaseStatistics().getOverall(ItemStatistic.HEALTH).floatValue())
@@ -169,6 +178,10 @@ public abstract class SkyBlockMob extends EntityCreature {
     public abstract List<TargetSelector> getTargetSelectors();
     public abstract ItemStatistics getBaseStatistics();
     public abstract @Nullable SkyBlockLootTable getLootTable();
+
+    public @Nullable SkyBlockLootTable getLootShareTable() {
+        return null;
+    }
     public abstract SkillCategories getSkillCategory();
     public abstract long damageCooldown();
     public abstract OtherLoot getOtherLoot();
@@ -193,7 +206,13 @@ public abstract class SkyBlockMob extends EntityCreature {
 
     @Override
     public boolean damage(@NotNull Damage damage) {
+        float healthBefore = getHealth();
         boolean toReturn = super.damage(damage);
+
+        if (toReturn && damage.getAttacker() instanceof SkyBlockPlayer player) {
+            double dealt = Math.max(0, healthBefore - getHealth());
+            if (dealt > 0) damageContributions.merge(player.getUuid(), dealt, Double::sum);
+        }
 
         setHasBeenDamaged(true);
 
@@ -220,49 +239,62 @@ public abstract class SkyBlockMob extends EntityCreature {
         mobs.remove(this);
         nameDisplayEntity.remove();
 
-        if (!(getLastDamageSource().getAttacker() instanceof SkyBlockPlayer player)) return;
+        if (getLastDamageSource() == null
+                || !(getLastDamageSource().getAttacker() instanceof SkyBlockPlayer player)) return;
 
         HypixelEventHandler.callCustomEvent(new PlayerKilledSkyBlockMobEvent(player, this));
 
         player.getSkills().increase(player, getSkillCategory(), (double) getOtherLoot().getSkillXPAmount());
         player.playSound(Sound.sound(Key.key("entity." + getEntityType().name().toLowerCase().replace("minecraft:", "") + ".death"), Sound.Source.PLAYER, 1f, 1f), Sound.Emitter.self());
 
-        if (getLootTable() == null) return;
-        if (getLastDamageSource() == null) return;
-        if (getLastDamageSource().getAttacker() == null) return;
+        awardDrops(player, getLootTable(), false);
+        awardLootShares(player);
+    }
 
-        Map<ItemType, SkyBlockLootTable.LootRecord> drops = new HashMap<>();
+    private void awardLootShares(SkyBlockPlayer killer) {
+        if (net.swofty.type.generic.HypixelConst.isIslandServer()) return;
+        String serverType = net.swofty.type.generic.HypixelConst.getTypeLoader().getType().name();
+        if (serverType.contains("DUNGEON")) return;
 
-        for (SkyBlockLootTable.LootRecord record : getLootTable().getLootTable()) {
-            ItemType itemType = record.getItemType();
+        double requiredDamage = getAttributeValue(Attribute.MAX_HEALTH)
+                * (this instanceof net.swofty.type.skyblockgeneric.entity.mob.mobs.slayer.SlayerBossMob ? 0.10 : 0.01);
+        damageContributions.entrySet().stream()
+                .filter(entry -> !entry.getKey().equals(killer.getUuid()))
+                .filter(entry -> entry.getValue() >= requiredDamage)
+                .map(entry -> getInstance() == null ? null : getInstance().getPlayerByUuid(entry.getKey()))
+                .filter(SkyBlockPlayer.class::isInstance)
+                .map(SkyBlockPlayer.class::cast)
+                .filter(assistant -> assistant.getPosition().distance(getPosition()) <= 30)
+                .sorted(Comparator.comparingDouble((SkyBlockPlayer assistant) ->
+                        damageContributions.getOrDefault(assistant.getUuid(), 0D)).reversed())
+                .limit(5)
+                .forEach(assistant -> {
+                    SkyBlockLootTable table = getLootShareTable() == null ? getLootTable() : getLootShareTable();
+                    awardDrops(assistant, table, true);
+                    assistant.sendMessage("<6><l>LOOT SHARE <e>You received loot for assisting "
+                            + killer.getUsername() + "!");
+                });
+    }
 
-            SkyBlockItem item = new SkyBlockItem(itemType);
+    private void awardDrops(SkyBlockPlayer player, @Nullable SkyBlockLootTable table, boolean shared) {
+        if (table == null) return;
+        List<SkyBlockLootTable.LootRecord> drops = table.roll(player, this, record -> {
+            SkyBlockItem item = new SkyBlockItem(record.getItemType());
             List<LootAffector> affectors = new ArrayList<>();
-
             affectors.add(LootAffector.MAGIC_FIND);
-            if (item.hasComponent(ArmorComponent.class)) {
+            if (item.hasComponent(PetComponent.class)) {
+                affectors.add(LootAffector.PET_LUCK);
+            } else if (!shared && item.hasComponent(ArmorComponent.class)) {
                 affectors.add(LootAffector.ENCHANTMENT_LUCK);
-            } else {
+            } else if (!shared) {
                 affectors.add(LootAffector.ENCHANTMENT_LOOTING);
             }
+            return affectors;
+        });
 
-            double adjustedChance = record.getChancePercent();
-
-            for (LootAffector affector : affectors) {
-                adjustedChance = affector.getAffector().apply(player, adjustedChance, this);
-            }
-
-            if (Math.random() * 100 < adjustedChance && record.getShouldCalculate().apply(player)) {
-                drops.put(itemType, record);
-            }
-        }
-
-        for (ItemType itemType : drops.keySet()) {
-            SkyBlockLootTable.LootRecord record = drops.get(itemType);
-
+        for (SkyBlockLootTable.LootRecord record : drops) {
             if (SkyBlockLootTable.LootRecord.isNone(record)) continue;
-
-            SkyBlockItem item = new SkyBlockItem(itemType, record.getAmount());
+            SkyBlockItem item = new SkyBlockItem(record.getItemType(), record.getAmount());
             ItemType droppedItemLinker = item.getAttributeHandler().getPotentialType();
 
             if (player.canInsertItemIntoSacks(droppedItemLinker, record.getAmount())) {
@@ -273,6 +305,7 @@ public abstract class SkyBlockMob extends EntityCreature {
                 DroppedItemEntityImpl droppedItem = new DroppedItemEntityImpl(item, player);
                 droppedItem.setInstance(getInstance(), getPosition().add(0, 0.5, 0));
             }
+            record.getRarity().announcement().announce(player, record.getItemType().getDisplayName());
         }
     }
 
@@ -297,6 +330,7 @@ public abstract class SkyBlockMob extends EntityCreature {
 
             MobRegistry.getMobsToRegionPopulate().forEach(mobRegistry -> {
                 RegionPopulator regionPopulator = (RegionPopulator) mobRegistry.getMobCache();
+                if (!regionPopulator.canPopulate(HypixelConst.getInstanceContainer())) return;
 
                 regionPopulator.getPopulators().forEach(populator -> {
                     RegionType regionType = populator.regionType();
@@ -305,7 +339,7 @@ public abstract class SkyBlockMob extends EntityCreature {
                     int amountInRegion = 0;
 
                     for (SkyBlockMob mob : SkyBlockRegion.getMobsInRegion(regionType)) {
-                        if (!MobRegistry.getFromMob(mob).equals(mobRegistry)) {
+                        if (!mobRegistry.equals(MobRegistry.getFromMob(mob))) {
                             continue;
                         }
 

@@ -2,6 +2,7 @@ package net.swofty.type.hub.npcs;
 
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.item.ItemStack;
+import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
@@ -57,9 +58,11 @@ public class NPCKat extends HypixelNPC {
                 player.sendMessage("Kat didn't upgrade ur pet yet");
             } else {
                 SkyBlockItem pet = katData.getPet();
-                pet.getAttributeHandler().getRarity().upgrade();
+                Rarity rarity = pet.getAttributeHandler().getRarity();
+                if (rarity == null || rarity == Rarity.MYTHIC) return;
+                pet.getAttributeHandler().setRarity(rarity.upgrade());
                 player.addAndUpdateItem(pet);
-                katData.setKatMap(0L, null);
+                katData.katMap().clear();
             }
         } else {
             new GUIKat().open(player);

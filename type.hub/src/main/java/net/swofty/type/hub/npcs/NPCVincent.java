@@ -1,10 +1,13 @@
 package net.swofty.type.hub.npcs;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
+import net.swofty.type.generic.entity.npc.NPCOption;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
 import net.swofty.type.generic.user.HypixelPlayer;
+import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 public class NPCVincent extends HypixelNPC {
 
@@ -39,6 +42,71 @@ public class NPCVincent extends HypixelNPC {
 
     @Override
     public void onClick(NPCInteractEvent event) {
+        SkyBlockPlayer player = (SkyBlockPlayer) event.player();
+        if (isInDialogue(player)) return;
+        if (player.getSkyBlockExperience().getLevel().asInt() < 10) {
+            setDialogue(player, "low-level");
+            return;
+        }
+        setDialogue(player, "hello").thenRun(() -> NPCOption.sendOption(player, "vincent-dyes", true,
+                java.util.List.of(
+                        NPCOption.Option.builder()
+                                .key("yes")
+                                .color(NamedTextColor.GREEN)
+                                .bold(false)
+                                .name("Yes...")
+                                .action(ignored -> setDialogue(player, "yes"))
+                                .build(),
+                        NPCOption.Option.builder()
+                                .key("no")
+                                .color(NamedTextColor.RED)
+                                .bold(false)
+                                .name("No, what are they?")
+                                .action(ignored -> setDialogue(player, "no"))
+                                .build()
+                )));
+    }
 
+    @Override
+    public DialogueSet[] dialogues(HypixelPlayer player) {
+        return new DialogueSet[]{
+                DialogueSet.builder()
+                        .key("low-level").lines(
+                                "Hmm. I don't know if you've been here long enough to appreciate my artistry.",
+                                "Maybe come back when you have SkyBlock Level 10!"
+                        ).build(),
+                DialogueSet.builder()
+                        .key("hello").lines(
+                                "Hello there. My name is Vincent.",
+                                "I'm an artist. I believe you may be familiar with others, such as Marco and Pablo.",
+                                "Let me ask you a question - have you ever heard of d y e s?"
+                        ).build(),
+                DialogueSet.builder()
+                        .key("yes").lines(
+                                "Very good, then I don't need to explain what they're used for.",
+                                "However, I should probably give you some tips on how to get them...",
+                                "As a painter, I prefer to use d y e s as part of my work.",
+                                "Dyes drop from a variety of different parts of SkyBlock and are extremely rare, so most artists just go with the flow and work with what they have.",
+                                "However, I feel like I'm... different.",
+                                "Depending on what I'm painting, I need different types of dyes, but I always find exactly what I need!",
+                                "It's almost as if the dyes I use become more common for everyone...",
+                                "Nah, that would be CRAZY.",
+                                "Anyways, if you ever want to see what I'm currently painting, come speak to me again!"
+                        ).build(),
+                DialogueSet.builder()
+                        .key("no").lines(
+                                "For someone like you, d y e s can be used to turn any kind of armor a certain color.",
+                                "You can apply them in an anvil alongside any piece of armor, and it will recolor it!",
+                                "Though it's worth noting that this will consume the dye, meaning you won't get it back afterwards.",
+                                "They don't call it a consumable for nothing!",
+                                "As a painter, I prefer to use d y e s as part of my work.",
+                                "Dyes drop from a variety of different parts of SkyBlock and are extremely rare, so most artists just go with the flow and work with what they have.",
+                                "However, I feel like I'm... different.",
+                                "Depending on what I'm painting, I need different types of dyes, but I always find exactly what I need!",
+                                "It's almost as if the dyes I use become more common for everyone...",
+                                "Nah, that would be CRAZY.",
+                                "Anyways, if you ever want to see what I'm currently painting, come speak to me again!"
+                        ).build()
+        };
     }
 }

@@ -21,6 +21,12 @@ public enum PetHandler {
             at(new FreeRangeAbility(), Rarity.COMMON),
             at(new EggstraLootAbility(), Rarity.RARE),
             at(new LightFeetAbility(), Rarity.LEGENDARY)
+    )),
+    GUARDIAN(List.of(
+            at(new GuardianLazerbeamAbility(), Rarity.COMMON),
+            at(new GuardianEnchantingWisdomAbility(), Rarity.RARE),
+            at(new GuardianManaPoolAbility(), Rarity.LEGENDARY),
+            at(new GuardianLuckySevenAbility(), Rarity.MYTHIC)
     ));
 
     private final List<AbilityEntry> abilities;
