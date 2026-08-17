@@ -12,7 +12,7 @@ import net.swofty.type.skyblockgeneric.data.datapoints.DatapointLoadouts;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.PlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.loadout.LoadoutManager;
-import net.swofty.type.skyblockgeneric.loadout.LoadoutManager.TreeType;
+import net.swofty.type.skyblockgeneric.skilltree.SkillTreeType;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
@@ -50,8 +50,8 @@ public class GUILoadoutEdit extends StatelessView {
         }
 
         layout.slot(21, (s, c) -> petItem((SkyBlockPlayer) c.player()), (_, c) -> c.push(new GUILoadoutPetSelection(index)));
-        layout.slot(23, treeItem(loadout, TreeType.HOTM), (_, c) -> c.push(new GUITreeSlots(TreeType.HOTM, index)));
-        layout.slot(24, treeItem(loadout, TreeType.HOTF), (_, c) -> c.push(new GUITreeSlots(TreeType.HOTF, index)));
+        layout.slot(23, treeItem(loadout, SkillTreeType.HOTM), (_, c) -> c.push(new GUITreeSlots(SkillTreeType.HOTM, index)));
+        layout.slot(24, treeItem(loadout, SkillTreeType.HOTF), (_, c) -> c.push(new GUITreeSlots(SkillTreeType.HOTF, index)));
         layout.slot(32, ItemStacks.head("71e1f6162db42245639609f728a4e134ed7bd7de3c15a7792d219a6e2a9db", """
                 <a>Power Stone
                 <7>Select a Power Stone to use in this
@@ -134,8 +134,8 @@ public class GUILoadoutEdit extends StatelessView {
                 <e>Left-click to change!""");
     }
 
-    private ItemStack.Builder treeItem(DatapointLoadouts.Loadout loadout, TreeType tree) {
-        boolean hotm = tree == TreeType.HOTM;
+    private ItemStack.Builder treeItem(DatapointLoadouts.Loadout loadout, SkillTreeType tree) {
+        boolean hotm = tree == SkillTreeType.HOTM;
         int selected = hotm ? loadout.getHotmSlot() : loadout.getHotfSlot();
         String title = hotm ? "Heart of the Mountain" : "Heart of the Forest";
         String texture = hotm ? "86f06eaa3004aeed09b3d5b45d976de584e691c0e9cade133635de93d23b9edb"

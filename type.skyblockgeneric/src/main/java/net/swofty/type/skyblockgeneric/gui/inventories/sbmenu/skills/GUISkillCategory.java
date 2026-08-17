@@ -13,6 +13,7 @@ import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkills;
 import net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.bestiary.GUIBestiary;
+import net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.skills.GUIHeartOfTheMountain;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import net.swofty.type.skyblockgeneric.skill.SkillCategory;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
@@ -91,6 +92,16 @@ public class GUISkillCategory extends StatelessView {
             return ItemStacks.item(category.asCategory().getDisplayIcon(), 1,
                     Text.of("<a>{} Skill", category.toString()), lore);
         });
+
+        if (category == SkillCategories.MINING) {
+            layout.slot(47, ItemStacks.item(Material.REDSTONE_BLOCK, 1, """
+                    <5>Heart of the Mountain
+                    <7>Improve your mining abilities with
+                    <7>perks powered by Powder and Tokens.
+
+                    <e>Click to view!"""),
+                    (_, c) -> c.push(new GUIHeartOfTheMountain(false)));
+        }
 
         List<SkillCategory.SkillReward> rewards = List.of(category.asCategory().getRewards());
 

@@ -10,6 +10,7 @@ import net.swofty.type.skyblockgeneric.data.datapoints.DatapointLoadouts;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointWardrobe;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.StandardItemComponent;
+import net.swofty.type.skyblockgeneric.skilltree.SkillTreeType;
 import net.swofty.type.skyblockgeneric.user.SkyBlockInventory;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.skyblockgeneric.wardrobe.WardrobeService;
@@ -94,17 +95,18 @@ public final class LoadoutManager {
         return true;
     }
 
-    public static boolean switchTree(SkyBlockPlayer player, TreeType tree, int slot) {
+    public static boolean switchTree(SkyBlockPlayer player, SkillTreeType tree, int slot) {
         if (slot < 0 || slot >= 2) return false;
         DatapointLoadouts.LoadoutsData data = data(player);
-        int active = tree == TreeType.HOTM ? data.getActiveHotmSlot() : data.getActiveHotfSlot();
-        long lastSwap = tree == TreeType.HOTM ? data.getLastHotmSwap() : data.getLastHotfSwap();
+        int active = activeSlot(data, tree);
+        if (slot == active) return true;
+        long lastSwap = lastSwap(data, tree);
         long now = System.currentTimeMillis();
         if (!canSwap(active, slot, lastSwap, now)) {
             player.sendMessage("<c>You must wait before swapping trees again!");
             return false;
         }
-        if (tree == TreeType.HOTM) {
+        if (tree == SkillTreeType.HOTM) {
             data.setActiveHotmSlot(slot);
             data.setLastHotmSwap(now);
         } else {
@@ -113,6 +115,22 @@ public final class LoadoutManager {
         }
         save(player);
         return true;
+    }
+
+    public static boolean switchTree(SkyBlockPlayer player, TreeType tree, int slot) {
+        return switchTree(player, tree.asSkillTreeType(), slot);
+    }
+
+    public static int activeSlot(SkyBlockPlayer player, SkillTreeType tree) {
+        return activeSlot(data(player), tree);
+    }
+
+    private static int activeSlot(DatapointLoadouts.LoadoutsData data, SkillTreeType tree) {
+        return tree == SkillTreeType.HOTM ? data.getActiveHotmSlot() : data.getActiveHotfSlot();
+    }
+
+    private static long lastSwap(DatapointLoadouts.LoadoutsData data, SkillTreeType tree) {
+        return tree == SkillTreeType.HOTM ? data.getLastHotmSwap() : data.getLastHotfSwap();
     }
 
     private static boolean canSwap(int active, int requested, long lastSwap, long now) {
@@ -179,6 +197,10 @@ public final class LoadoutManager {
 
     public enum TreeType {
         HOTM,
-        HOTF
+        HOTF;
+
+        public SkillTreeType asSkillTreeType() {
+            return this == HOTM ? SkillTreeType.HOTM : SkillTreeType.HOTF;
+        }
     }
 }
