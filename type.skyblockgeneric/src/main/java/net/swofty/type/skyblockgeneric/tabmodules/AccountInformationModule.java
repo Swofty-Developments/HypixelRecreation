@@ -13,6 +13,7 @@ import net.swofty.type.skyblockgeneric.data.datapoints.DatapointBankData;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkillCategory;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkills;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
+import net.swofty.type.skyblockgeneric.tabwidgets.*;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
@@ -22,6 +23,22 @@ import java.util.Locale;
 public class AccountInformationModule extends TablistModule {
 
     public List<TablistEntry> getEntries(SkyBlockPlayer player) {
+        TablistLocation location = TablistLocation.current();
+        TablistWidgetSettings widgetSettings = TablistSettingsStore.get(player);
+        ArrayList<TablistEntry> configured = new ArrayList<>();
+        for (TablistWidget widget : widgetSettings.order(location)) {
+            if (!widgetSettings.enabled(location, widget) || widget == TablistWidget.GENERAL_INFO) continue;
+            int before = configured.size();
+            appendWidget(configured, player, widget, widgetSettings.options(location, widget));
+            if (configured.size() > before && widgetSettings.options(location, widget).spacing())
+                configured.add(getGrayEntry());
+            if (configured.size() >= 20) break;
+        }
+        if (!configured.isEmpty()) {
+            if (configured.size() > 20) configured.subList(20, configured.size()).clear();
+            return fillRestWithGray(configured);
+        }
+
         Locale l = player.getLocale();
         ArrayList<TablistEntry> entries = new ArrayList<>(List.of(
                 centered(Text.key("tablist.module.account_info"), l, TablistSkinRegistry.ORANGE)
@@ -47,6 +64,74 @@ public class AccountInformationModule extends TablistModule {
         entries.add(getGrayEntry());
         fillRestWithGray(entries);
         return entries;
+    }
+
+    private void appendWidget(List<TablistEntry> entries, SkyBlockPlayer player, TablistWidget widget,
+                              TablistWidgetSettings.Options options) {
+        SkyBlockDataHandler data = player.getSkyblockDataHandler();
+        ItemStatistics stats = player.getStatistics().allStatistics();
+        switch (widget) {
+            case PROFILE -> {
+                DatapointBankData.BankData bank = data.get(SkyBlockDataHandler.Data.BANK_DATA, DatapointBankData.class).getValue();
+                entries.add(entry("§e§lProfile: §a" + data.get(SkyBlockDataHandler.Data.PROFILE_NAME, DatapointString.class).getValue()));
+                if (options.showSkyBlockLevel())
+                    entries.add(entry("§f SB Level: §b" + player.getSkyBlockExperience().getLevel()));
+                if (options.showBankBalance())
+                    entries.add(entry("§f Bank: §6" + StringUtility.shortenNumber(bank.getAmount())));
+            }
+            case PET -> {
+                var pet = player.getPetData().getEnabledPet();
+                entries.add(entry("§e§lPet:"));
+                entries.add(entry(pet == null ? "§7 None" : "§f " + pet.getDisplayName()));
+                // Pet XP/item lines are intentionally omitted until their backing component exposes stable display data.
+            }
+            case SKILLS -> {
+                entries.add(entry("§e§lSkills:"));
+                DatapointSkills.PlayerSkills skills = player.getSkills();
+                for (SkillCategories category : List.of(SkillCategories.FARMING, SkillCategories.MINING, SkillCategories.COMBAT, SkillCategories.FORAGING))
+                    entries.add(entry("§f " + category + " " + skills.getCurrentLevel(category) + ": §a" + skills.getPercentage(category) + "%"));
+            }
+            case STATS -> {
+                entries.add(entry("§e§lStats:"));
+                for (TablistStat selected : TablistStat.values())
+                    if (options.shownStats().contains(selected.id)) {
+                        ItemStatistic statistic = statistic(selected);
+                        if (statistic != null)
+                            entries.add(entry("§f " + selected.display + ": §f" + stats.getOverall(statistic)));
+                    }
+            }
+            default -> { /* No fabricated values for systems without a server-side provider. */ }
+        }
+    }
+
+    private ItemStatistic statistic(TablistStat stat) {
+        return switch (stat) {
+            case HEALTH -> ItemStatistic.HEALTH;
+            case DEFENSE -> ItemStatistic.DEFENSE;
+            case TRUE_DEFENSE -> ItemStatistic.TRUE_DEFENSE;
+            case STRENGTH -> ItemStatistic.STRENGTH;
+            case CRIT_CHANCE -> ItemStatistic.CRITICAL_CHANCE;
+            case CRIT_DAMAGE -> ItemStatistic.CRITICAL_DAMAGE;
+            case ATTACK_SPEED -> ItemStatistic.BONUS_ATTACK_SPEED;
+            case FEROCITY -> ItemStatistic.FEROCITY;
+            case SWING_RANGE -> ItemStatistic.SWING_RANGE;
+            case INTELLIGENCE -> ItemStatistic.INTELLIGENCE;
+            case ABILITY_DAMAGE -> ItemStatistic.ABILITY_DAMAGE;
+            case HEALTH_REGEN -> ItemStatistic.HEALTH_REGENERATION;
+            case PULL -> ItemStatistic.PULL;
+            case VITALITY -> ItemStatistic.VITALITY;
+            case MENDING -> ItemStatistic.MENDING;
+            case SPEED -> ItemStatistic.SPEED;
+            case MAGIC_FIND -> ItemStatistic.MAGIC_FIND;
+            case PET_LUCK -> ItemStatistic.PET_LUCK;
+            case FISHING_SPEED -> ItemStatistic.FISHING_SPEED;
+            case SEA_CREATURE_CHANCE -> ItemStatistic.SEA_CREATURE_CHANCE;
+            case DOUBLE_HOOK_CHANCE -> ItemStatistic.DOUBLE_HOOK_CHANCE;
+        };
+    }
+
+    private TablistEntry entry(String text) {
+        return new TablistEntry(Component.text(text), TablistSkinRegistry.GRAY);
     }
 
     @Override
