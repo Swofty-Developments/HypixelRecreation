@@ -4,6 +4,27 @@ This is a 26.2 mod meant for the developers of this project to easily capture da
 
 ## Features
 
+## Full capture
+
+`/fullcapture start <name>` records everything the client sees until you run `/fullcapture stop`. It is meant
+for building a baseline of a whole gamemode: start it, play a few games, stop it, and hand the folder to
+whatever is doing the recreation.
+
+- `/fullcapture start <name>` starts a session in `.minecraft/full-captures/<name>_<timestamp>`.
+- `/fullcapture start <name> raw` also keeps entity movement packets and full container refreshes.
+- `/fullcapture stop` finishes the session and converts every captured world to Polar.
+- `/fullcapture stop nopolar` skips the Polar conversion, which is the slow part.
+- `/fullcapture status` prints worlds, chunks, events and packet counts so far.
+- `/fullcapture split [label]` forces a new world segment instead of waiting for a world change.
+- `/fullcapture note <text>` writes a marker into the timeline, e.g. `note the game just started`.
+
+Every world you walk through becomes its own segment under `worlds/`, saved as both Anvil region files and a
+Polar world; switching worlds never overwrites an earlier one, and a transition that lands back in the world
+you just left (a death, a rejoin) is merged instead of duplicated. Alongside the worlds it records GUIs and
+every item and component in them, your inventory, chat, the scoreboard, tab, boss bars, titles, sounds,
+particles, block changes, entities, and your own clicks and commands, one JSON object per line under
+`streams/`. `session.json` indexes the lot and `README.md` inside the session explains the format.
+
 - `/getskins <radius>` Gets the information of player's or NPC's skins in the defined radius.
 - `/getarmorstandcolors <radius>` Gets the color information of armor stands in the defined radius.
 - `/getarmorstandinfos <radius>` Gets the position information of armor stands in the defined radius. (wip)

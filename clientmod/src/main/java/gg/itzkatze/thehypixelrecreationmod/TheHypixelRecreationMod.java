@@ -3,6 +3,7 @@ package gg.itzkatze.thehypixelrecreationmod;
 import gg.itzkatze.thehypixelrecreationmod.commands.*;
 import gg.itzkatze.thehypixelrecreationmod.features.KeybindRegistry;
 import gg.itzkatze.thehypixelrecreationmod.features.SpraySchemaRecorder;
+import gg.itzkatze.thehypixelrecreationmod.features.fullcapture.FullCapture;
 import gg.itzkatze.thehypixelrecreationmod.features.guicapture.GuiCaptureRecorder;
 import gg.itzkatze.thehypixelrecreationmod.features.packetlog.EntityPacketLogger;
 import gg.itzkatze.thehypixelrecreationmod.features.worldexport.ChunkExportRecorder;
@@ -47,6 +48,7 @@ public final class TheHypixelRecreationMod implements ClientModInitializer {
 		LogPacketsCommand.register();
 		RavengardSessionCommand.register();
 		HudCaptureCommand.register();
+		FullCaptureCommand.register();
 	}
 
 	private static void registerTickHandlers() {
@@ -56,6 +58,7 @@ public final class TheHypixelRecreationMod implements ClientModInitializer {
 			EntityPacketLogger.tick();
 			gg.itzkatze.thehypixelrecreationmod.features.packetlog.RavengardSessionLogger.tick();
 			GuiCaptureRecorder.tick(net.minecraft.client.Minecraft.getInstance());
+			FullCapture.tick();
 		});
 	}
 

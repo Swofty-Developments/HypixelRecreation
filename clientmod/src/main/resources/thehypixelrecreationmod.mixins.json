@@ -5,6 +5,7 @@
   "mixins": [
     "AbstractContainerScreenMixin",
     "BossHealthOverlayAccessor",
+    "ClientCommonPacketListenerImplMixin",
     "ClientPacketListenerMixin",
     "HandledScreenAccessor",
     "PacketUtilsMixin",
