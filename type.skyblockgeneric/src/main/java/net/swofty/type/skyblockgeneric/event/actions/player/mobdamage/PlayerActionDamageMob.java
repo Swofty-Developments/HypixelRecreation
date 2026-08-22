@@ -19,6 +19,7 @@ import net.swofty.type.skyblockgeneric.event.value.events.PlayerDamageMobValueUp
 import net.swofty.type.skyblockgeneric.hunting.AttributeEffectService;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.ItemRequirementsComponent;
+import net.swofty.type.skyblockgeneric.item.handlers.pet.abstr.PetEvent;
 import net.swofty.type.skyblockgeneric.item.updater.PlayerItemOrigin;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.skyblockgeneric.utility.AttackService;
@@ -77,5 +78,8 @@ public class PlayerActionDamageMob implements HypixelEventClass {
                 damageEventEnchant.onDamageDealt(player, targetLivingEntity, damageValue, enchantment.level());
             }
         }
+
+        SkyBlockItem pet = player.getPetData().getEnabledPet();
+        player.getPetData().dispatch(new PetEvent.MeleeDamageDealt(player, pet, mob, mainHandItem, damageValue));
     }
 }

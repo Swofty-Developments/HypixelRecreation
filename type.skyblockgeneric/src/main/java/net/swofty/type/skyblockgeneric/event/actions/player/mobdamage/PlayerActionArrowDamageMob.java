@@ -11,6 +11,8 @@ import net.swofty.type.skyblockgeneric.entity.ArrowEntityImpl;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
 import net.swofty.type.skyblockgeneric.hunting.AttributeEffectService;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
+import net.swofty.type.skyblockgeneric.item.handlers.pet.abstr.PetEvent;
+import net.swofty.type.skyblockgeneric.item.updater.PlayerItemOrigin;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.skyblockgeneric.user.statistics.PlayerStatistics;
 import net.swofty.type.skyblockgeneric.utility.AttackService;
@@ -38,7 +40,7 @@ public class PlayerActionArrowDamageMob implements HypixelEventClass {
 
         SkyBlockItem arrowItem = arrow.getArrowItem();
         ItemStatistics entityStats = mob.getStatistics();
-        ItemStatistics playerStats = shooter.getStatistics().allStatistics();
+        ItemStatistics playerStats = shooter.getStatistics().allStatistics(shooter, collidedWith);
 
         // Add the arrow's statistics to the player's statistics
         playerStats = ItemStatistics.add(playerStats, arrowItem.getAttributeHandler().getStatistics());
@@ -52,5 +54,9 @@ public class PlayerActionArrowDamageMob implements HypixelEventClass {
 
         double ferocity = playerStats.getOverall(ItemStatistic.FEROCITY);
         AttackService.scheduleExtraHits(shooter, collidedWith, damageAmount, critical, ferocity);
+
+        SkyBlockItem mainHandItem = PlayerItemOrigin.getFromCache(shooter.getUuid()).get(PlayerItemOrigin.MAIN_HAND);
+        SkyBlockItem pet = shooter.getPetData().getEnabledPet();
+        shooter.getPetData().dispatch(new PetEvent.RangedDamageDealt(shooter, pet, mob, mainHandItem, damageAmount));
     }
 }

@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.event.actions.player.region;
 
-import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.player.PlayerBlockBreakEvent;
 import net.minestom.server.instance.SharedInstance;
 import net.minestom.server.instance.block.Block;
@@ -9,13 +8,11 @@ import net.minestom.server.item.Material;
 import net.minestom.server.tag.Tag;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.HypixelConst;
-import net.swofty.type.generic.entity.drop.ItemDrops;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.HypixelEventHandler;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
-import net.swofty.type.skyblockgeneric.entity.DroppedItemEntityImpl;
 import net.swofty.type.skyblockgeneric.event.custom.CustomBlockBreakEvent;
 import net.swofty.type.skyblockgeneric.foraging.ForagingTreeManager;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -169,47 +166,7 @@ public class ActionRegionBlockBreak implements HypixelEventClass {
 
                 // Update the drop item amount
                 dropItem.setAmount(dropAmount);
-                ItemType droppedItemType = dropItem.getAttributeHandler().getPotentialType();
-
-                // Handle item distribution based on player conditions
-                if (player.canInsertItemIntoSacks(droppedItemType, dropAmount)) {
-                    player.getSackItems().increase(droppedItemType, dropAmount);
-                } else if (player.getSkyBlockExperience().getLevel().asInt() >= 6) {
-                    player.addAndUpdateItem(dropItem);
-                } else {
-                    // Determine nearest air block between ore and player
-                    Pos orePos = event.getBlockPosition().asPos();
-                    Pos playerPos = player.getPosition();
-
-                    Pos[] offsets = {
-                            new Pos(1, 0, 0), new Pos(-1, 0, 0),
-                            new Pos(0, 1, 0), new Pos(0, -1, 0),
-                            new Pos(0, 0, 1), new Pos(0, 0, -1)
-                    };
-
-                    Pos nearestAirBlock = null;
-                    double closestDistanceSquared = Double.MAX_VALUE;
-
-                    for (Pos offset : offsets) {
-                        Pos adjacentPos = orePos.add(offset);
-                        Block block2 = player.getInstance().getBlock(adjacentPos);
-
-                        if (block2.air()) {
-                            double distanceSquared = adjacentPos.distanceSquared(playerPos);
-                            if (distanceSquared < closestDistanceSquared) {
-                                closestDistanceSquared = distanceSquared;
-                                nearestAirBlock = adjacentPos;
-                            }
-                        }
-                    }
-
-                    // Use the nearest air block or fallback to default position
-                    Pos dropBlock = (nearestAirBlock != null) ? nearestAirBlock : orePos.add(0, 1, 0);
-
-                    // Spawn the item
-                    ItemDrops.dropFromBlock(new DroppedItemEntityImpl(dropItem, player),
-                            player.getInstance(), dropBlock);
-                }
+                player.giveLoot(dropItem, dropAmount, event.getBlockPosition().asPos());
             }
         }
     }
@@ -260,40 +217,7 @@ public class ActionRegionBlockBreak implements HypixelEventClass {
         ));
 
         for (SkyBlockItem drop : drops) {
-            distributeDrop(player, drop, harvested.position().asPos());
+            player.giveLoot(drop, drop.getAmount(), harvested.position().asPos());
         }
-    }
-
-    private void distributeDrop(SkyBlockPlayer player, SkyBlockItem dropItem, Pos source) {
-        int amount = dropItem.getAmount();
-        ItemType type = dropItem.getAttributeHandler().getPotentialType();
-        if (player.canInsertItemIntoSacks(type, amount)) {
-            player.getSackItems().increase(type, amount);
-            return;
-        }
-        if (player.getSkyBlockExperience().getLevel().asInt() >= 6) {
-            player.addAndUpdateItem(dropItem);
-            return;
-        }
-
-        Pos[] offsets = {
-                new Pos(1, 0, 0), new Pos(-1, 0, 0),
-                new Pos(0, 1, 0), new Pos(0, -1, 0),
-                new Pos(0, 0, 1), new Pos(0, 0, -1)
-        };
-        Pos nearest = null;
-        double nearestDistance = Double.MAX_VALUE;
-        for (Pos offset : offsets) {
-            Pos candidate = source.add(offset);
-            if (!player.getInstance().getBlock(candidate).air()) continue;
-            double distance = candidate.distanceSquared(player.getPosition());
-            if (distance < nearestDistance) {
-                nearest = candidate;
-                nearestDistance = distance;
-            }
-        }
-
-        Pos dropBlock = nearest == null ? source.add(0, 1, 0) : nearest;
-        ItemDrops.dropFromBlock(new DroppedItemEntityImpl(dropItem, player), player.getInstance(), dropBlock);
     }
 }

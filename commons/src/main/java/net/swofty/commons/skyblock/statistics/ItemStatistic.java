@@ -5,10 +5,11 @@ import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.item.Material;
 import net.swofty.commons.skyblock.PackSprite;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 @Getter
 public enum ItemStatistic {
@@ -109,6 +110,48 @@ public enum ItemStatistic {
     DAMAGE("Damage", NamedTextColor.RED, NamedTextColor.RED, false, PackSprite.STAT_ABILITY_DAMAGE,
             5D, 1D),
     ;
+
+    public static final List<ItemStatistic> COMBAT_STATS = List.of(
+            HEALTH, DEFENSE, TRUE_DEFENSE, STRENGTH, CRITICAL_CHANCE, CRITICAL_DAMAGE,
+            BONUS_ATTACK_SPEED, FEROCITY, SWING_RANGE, INTELLIGENCE, ABILITY_DAMAGE,
+            HEALTH_REGENERATION, VITALITY, MENDING
+    );
+
+    public static final List<ItemStatistic> MINING_STATS = List.of(
+            BREAKING_POWER, MINING_SPEED, MINING_SPREAD, GEMSTONE_SPREAD, PRISTINE,
+            MINING_FORTUNE, ORE_FORTUNE, BLOCK_FORTUNE, DWARVEN_METAL_FORTUNE, GEMSTONE_FORTUNE
+    );
+
+    public static final List<ItemStatistic> FARMING_STATS = List.of(
+            BONUS_PEST_CHANCE, OVERBLOOM, FARMING_FORTUNE, WHEAT_FORTUNE, CARROT_FORTUNE,
+            POTATO_FORTUNE, PUMPKIN_FORTUNE, SUGAR_CANE_FORTUNE, MELON_FORTUNE,
+            CACTUS_FORTUNE, COCOA_BEANS_FORTUNE, MUSHROOM_FORTUNE, NETHER_WART_FORTUNE,
+            SUNFLOWER_FORTUNE, MOONFLOWER_FORTUNE, WILD_ROSE_FORTUNE
+    );
+
+    public static final List<ItemStatistic> FORAGING_STATS = List.of(
+            SWEEP, FORAGING_FORTUNE, FIG_FORTUNE, MANGROVE_FORTUNE
+    );
+
+    public static final List<ItemStatistic> FISHING_STATS = List.of(
+            SEA_CREATURE_CHANCE, FISHING_SPEED, DOUBLE_HOOK_CHANCE, TREASURE_CHANCE,
+            TROPHY_FISH_CHANCE
+    );
+
+    public static final List<ItemStatistic> HUNTING_STATS = List.of(
+            PULL, HUNTER_FORTUNE
+    );
+
+    public static final List<ItemStatistic> WISDOM_STATS = List.of(
+            COMBAT_WISDOM, FARMING_WISDOM, FISHING_WISDOM, MINING_WISDOM, FORAGING_WISDOM,
+            ENCHANTING_WISDOM, ALCHEMY_WISDOM, CARPENTRY_WISDOM, RUNE_CRAFTING_WISDOM,
+            TAMING_WISDOM, SOCIAL_WISDOM, HUNTING_WISDOM
+    );
+
+    public static final List<ItemStatistic> MISC_STATS = List.of(
+            SPEED, MAGIC_FIND, PET_LUCK, HEAT_RESISTANCE, COLD_RESISTANCE, RESPIRATION,
+            PRESSURE_RESISTANCE, FEAR, TRACKING
+    );
 
     private final @NonNull String displayName;
     private final @NonNull TextColor loreColor;
