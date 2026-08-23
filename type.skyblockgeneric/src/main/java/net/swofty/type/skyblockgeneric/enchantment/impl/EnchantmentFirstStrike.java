@@ -22,7 +22,7 @@ public class EnchantmentFirstStrike implements Ench, EnchFromTable, EventBasedEn
 
     @Override
     public String getDescription(int level) {
-        return "Increases melee damage dealt by §a" + MULTIPLIERS[level - 1] + "% §7for the first hit on a mob.";
+        return "Increases melee damage dealt by <a>" + MULTIPLIERS[level - 1] + "% <7>for the first hit on a mob.";
     }
 
     @Override

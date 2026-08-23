@@ -29,16 +29,16 @@ public class SkyWarsConfigCommand extends HypixelCommand {
     public void registerUsage(MinestomCommand command) {
         // Default - show usage
         command.setDefaultExecutor((sender, context) -> {
-            sender.sendMessage("§eUsage:");
-            sender.sendMessage("§7/swconfig new <id> <name> §f- Start new session");
-            sender.sendMessage("§7/swconfig type <type> §f- Toggle game type");
-            sender.sendMessage("§7/swconfig center §f- Set map center");
-            sender.sendMessage("§7/swconfig void <y> §f- Set void Y level");
-            sender.sendMessage("§7/swconfig bounds <minX> <minZ> <maxX> <maxZ> §f- Set bounds");
-            sender.sendMessage("§7/swconfig island §f- Add island spawn");
-            sender.sendMessage("§7/swconfig save §f- Save configuration");
-            sender.sendMessage("§7/swconfig status §f- Show current status");
-            sender.sendMessage("§8(Chests are auto-detected at runtime)");
+            sender.sendMessage("<e>Usage:");
+            sender.sendMessage("<7>/swconfig new \\<id> \\<name> <f>- Start new session");
+            sender.sendMessage("<7>/swconfig type \\<type> <f>- Toggle game type");
+            sender.sendMessage("<7>/swconfig center <f>- Set map center");
+            sender.sendMessage("<7>/swconfig void \\<y> <f>- Set void Y level");
+            sender.sendMessage("<7>/swconfig bounds \\<minX> \\<minZ> \\<maxX> \\<maxZ> <f>- Set bounds");
+            sender.sendMessage("<7>/swconfig island <f>- Add island spawn");
+            sender.sendMessage("<7>/swconfig save <f>- Save configuration");
+            sender.sendMessage("<7>/swconfig status <f>- Show current status");
+            sender.sendMessage("<8>(Chests are auto-detected at runtime)");
         });
 
         // /swconfig new <id> <name>
@@ -47,11 +47,12 @@ public class SkyWarsConfigCommand extends HypixelCommand {
         var nameArg = ArgumentType.String("name");
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
+            HypixelPlayer player = (HypixelPlayer) sender;
             String id = context.get(idArg);
             String name = context.get(nameArg);
             MapConfigurationSession session = new MapConfigurationSession(id, name);
             TypeSkyWarsConfiguratorLoader.setCurrentSession(session);
-            sender.sendMessage("§aStarted new configuration session for map: " + name + " (id: " + id + ")");
+            player.sendMessage("<a>Started new configuration session for map: {} (id: {})", name, id);
         }, newLit, idArg, nameArg);
 
         // /swconfig type <type>
@@ -64,25 +65,26 @@ public class SkyWarsConfigCommand extends HypixelCommand {
         });
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
+            HypixelPlayer player = (HypixelPlayer) sender;
             MapConfigurationSession session = TypeSkyWarsConfiguratorLoader.getCurrentSession();
             if (session == null) {
-                sender.sendMessage("§cNo active session!");
+                player.sendMessage("<c>No active session!");
                 return;
             }
             String typeName = context.get(typeArg);
             SkywarsGameType type = SkywarsGameType.from(typeName);
             if (type == null) {
-                sender.sendMessage("§cInvalid type! Available: SOLO_NORMAL, SOLO_INSANE, DOUBLES_NORMAL, SOLO_LUCKY_BLOCK");
+                player.sendMessage("<c>Invalid type! Available: SOLO_NORMAL, SOLO_INSANE, DOUBLES_NORMAL, SOLO_LUCKY_BLOCK");
                 return;
             }
             if (session.getTypes().contains(type)) {
                 session.removeType(type);
-                sender.sendMessage("§cRemoved type: §f" + type.name());
+                player.sendMessage("<c>Removed type: <f>{}", type.name());
             } else {
                 session.addType(type);
-                sender.sendMessage("§aAdded type: §f" + type.name());
+                player.sendMessage("<a>Added type: <f>{}", type.name());
             }
-            sender.sendMessage("§7Current types: §f" + session.getTypes().stream()
+            player.sendMessage("<7>Current types: <f>{}", session.getTypes().stream()
                     .map(Enum::name).collect(Collectors.joining(", ")));
         }, typeLit, typeArg);
 
@@ -93,12 +95,12 @@ public class SkyWarsConfigCommand extends HypixelCommand {
             if (!(sender instanceof HypixelPlayer player)) return;
             MapConfigurationSession session = TypeSkyWarsConfiguratorLoader.getCurrentSession();
             if (session == null) {
-                sender.sendMessage("§cNo active session! Use /swconfig new <id> <name> first.");
+                player.sendMessage("<c>No active session! Use /swconfig new \\<id> \\<name> first.");
                 return;
             }
             Pos pos = player.getPosition();
             session.setCenter(pos.x(), pos.y(), pos.z());
-            sender.sendMessage("§aSet map center to " + formatPos(pos));
+            player.sendMessage("<a>Set map center to {}", formatPos(pos));
         }, centerLit);
 
         // /swconfig void <y>
@@ -106,14 +108,15 @@ public class SkyWarsConfigCommand extends HypixelCommand {
         var yArg = ArgumentType.Integer("y");
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
+            HypixelPlayer player = (HypixelPlayer) sender;
             MapConfigurationSession session = TypeSkyWarsConfiguratorLoader.getCurrentSession();
             if (session == null) {
-                sender.sendMessage("§cNo active session!");
+                player.sendMessage("<c>No active session!");
                 return;
             }
             int y = context.get(yArg);
             session.setVoidY(y);
-            sender.sendMessage("§aSet void Y level to " + y);
+            player.sendMessage("<a>Set void Y level to {}", y);
         }, voidLit, yArg);
 
         // /swconfig bounds <minX> <minZ> <maxX> <maxZ>
@@ -124,9 +127,10 @@ public class SkyWarsConfigCommand extends HypixelCommand {
         var maxZArg = ArgumentType.Integer("maxZ");
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
+            HypixelPlayer player = (HypixelPlayer) sender;
             MapConfigurationSession session = TypeSkyWarsConfiguratorLoader.getCurrentSession();
             if (session == null) {
-                sender.sendMessage("§cNo active session!");
+                player.sendMessage("<c>No active session!");
                 return;
             }
             int minX = context.get(minXArg);
@@ -134,7 +138,7 @@ public class SkyWarsConfigCommand extends HypixelCommand {
             int maxX = context.get(maxXArg);
             int maxZ = context.get(maxZArg);
             session.setBounds(minX, minZ, maxX, maxZ);
-            sender.sendMessage("§aSet bounds: (" + minX + ", " + minZ + ") to (" + maxX + ", " + maxZ + ")");
+            player.sendMessage("<a>Set bounds: ({}, {}) to ({}, {})", minX, minZ, maxX, maxZ);
         }, boundsLit, minXArg, minZArg, maxXArg, maxZArg);
 
         // /swconfig island
@@ -144,12 +148,12 @@ public class SkyWarsConfigCommand extends HypixelCommand {
             if (!(sender instanceof HypixelPlayer player)) return;
             MapConfigurationSession session = TypeSkyWarsConfiguratorLoader.getCurrentSession();
             if (session == null) {
-                sender.sendMessage("§cNo active session!");
+                player.sendMessage("<c>No active session!");
                 return;
             }
             Pos pos = player.getPosition();
             session.addIsland(pos);
-            sender.sendMessage("§aAdded island #" + (session.getIslands().size() - 1) + " at " + formatPos(pos));
+            player.sendMessage("<a>Added island #{} at {}", session.getIslands().size() - 1, formatPos(pos));
         }, islandLit);
 
         // /swconfig save
@@ -158,31 +162,32 @@ public class SkyWarsConfigCommand extends HypixelCommand {
             if (!permissionCheck(sender)) return;
             MapConfigurationSession session = TypeSkyWarsConfiguratorLoader.getCurrentSession();
             if (session == null) {
-                sender.sendMessage("§cNo active session!");
+                sender.sendMessage("<c>No active session!");
                 return;
             }
             session.saveToFile();
-            sender.sendMessage("§aSaved configuration to file!");
+            sender.sendMessage("<a>Saved configuration to file!");
         }, saveLit);
 
         // /swconfig status
         var statusLit = ArgumentType.Literal("status");
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
+            HypixelPlayer player = (HypixelPlayer) sender;
             MapConfigurationSession session = TypeSkyWarsConfiguratorLoader.getCurrentSession();
             if (session == null) {
-                sender.sendMessage("§cNo active session!");
+                player.sendMessage("<c>No active session!");
                 return;
             }
-            sender.sendMessage("§e=== Configuration Status ===");
-            sender.sendMessage("§7Map ID: §f" + session.getMapId());
-            sender.sendMessage("§7Map Name: §f" + session.getMapName());
-            sender.sendMessage("§7Types: §f" + (session.getTypes().isEmpty() ? "SOLO_NORMAL (default)" :
-                    session.getTypes().stream().map(Enum::name).collect(Collectors.joining(", "))));
-            sender.sendMessage("§7Islands: §f" + session.getIslands().size());
-            sender.sendMessage("§7Center: §f(" + session.getCenterX() + ", " + session.getCenterY() + ", " + session.getCenterZ() + ")");
-            sender.sendMessage("§7Void Y: §f" + session.getVoidY());
-            sender.sendMessage("§8(Chests are auto-detected at runtime)");
+            player.sendMessage("<e>=== Configuration Status ===");
+            player.sendMessage("<7>Map ID: <f>{}", session.getMapId());
+            player.sendMessage("<7>Map Name: <f>{}", session.getMapName());
+            player.sendMessage("<7>Types: <f>{}", session.getTypes().isEmpty() ? "SOLO_NORMAL (default)" :
+                    session.getTypes().stream().map(Enum::name).collect(Collectors.joining(", ")));
+            player.sendMessage("<7>Islands: <f>{}", session.getIslands().size());
+            player.sendMessage("<7>Center: <f>({}, {}, {})", session.getCenterX(), session.getCenterY(), session.getCenterZ());
+            player.sendMessage("<7>Void Y: <f>{}", session.getVoidY());
+            player.sendMessage("<8>(Chests are auto-detected at runtime)");
         }, statusLit);
     }
 

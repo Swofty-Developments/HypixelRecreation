@@ -14,7 +14,7 @@ public class NPCFriendlyHiker extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Friendly Hiker", "§e§lCLICK"};
+                return new String[]{"Friendly Hiker", "<e><l>CLICK"};
             }
 
             @Override

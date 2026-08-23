@@ -13,7 +13,7 @@ public class NPCAllGames extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bAll Games", "§e? Playing"}; // TODO: network player count
+                return new String[]{"<b>All Games", "<e>? Playing"}; // TODO: network player count
             }
 
             @Override

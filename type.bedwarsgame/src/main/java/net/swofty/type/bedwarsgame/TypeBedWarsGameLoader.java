@@ -24,8 +24,6 @@ import io.github.term4.polyp.world.MechanicsWorld;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.hollowcube.polar.PolarLoader;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.color.Color;
 import net.minestom.server.coordinate.Point;
@@ -45,6 +43,7 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
+import net.swofty.commons.text.Text;
 import net.swofty.commons.protocol.objects.orchestrator.GameHeartbeatProtocol;
 import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.proxyapi.ProxyService;
@@ -178,17 +177,16 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
             .toList();
     }
 
-    private static Component header() {
-        return MiniMessage.miniMessage().deserialize("<aqua>You are playing on <bold><yellow>MC.HYPIXEL.NET</yellow></bold>");
+    private static Text header() {
+        return Text.of("<b>You are playing on <l><e>MC.HYPIXEL.NET</e></l>");
     }
 
-    private static Component footer(BedWarsPlayer player) {
-        Component start = Component.empty();
+    private static Text footer(BedWarsPlayer player) {
+        Text start = Text.empty();
         if (player.getGame() != null) {
-            start = start.append(MiniMessage.miniMessage().deserialize("<aqua>Kills: <yellow>0 <aqua>Final Kills: <yellow>0 <aqua>Beds Broken: <yellow>0")).appendNewline();
+            start = start.append("<b>Kills: <e>0 <b>Final Kills: <e>0 <b>Beds Broken: <e>0\n");
         }
-        return start
-            .append(Component.text("§aRanks, Boosters & MORE! §c§lSTORE.HYPIXEL.NET"));
+        return start.append("<a>Ranks, Boosters & MORE! <c><l>STORE.HYPIXEL.NET");
     }
 
     @Override

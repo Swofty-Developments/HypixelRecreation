@@ -4,10 +4,10 @@ Game servers run the actual gameplay using Minestom. Each server runs as a speci
 
 ## Download Required Files
 
-1. Download `HypixelCore.jar` from the [releases page](https://github.com/Swofty-Developments/HypixelSkyBlock/releases/tag/latest)
-2. Download [`config.yml`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration)
-3. Download [world files](https://files.catbox.moe/oybade.zip) (all server worlds + `limbo.schem`; extract into `configuration/`)
-4. Download [`PicoLimbo.jar`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration) and its config
+1. Download `HypixelCore.jar` from the [releases page](https://github.com/Swofty-Developments/HypixelRecreation/releases/tag/latest)
+2. Download [`config.yml`](https://github.com/Swofty-Developments/HypixelRecreation/tree/master/configuration)
+3. Download [world files](https://files.catbox.moe/flri48.zip) (all server worlds + `limbo.schem`; extract into `configuration/`)
+4. Download [`PicoLimbo.jar`](https://github.com/Swofty-Developments/HypixelRecreation/tree/master/configuration) and its config
 
 ## Directory Structure
 
@@ -22,14 +22,25 @@ gameserver/
 │   │   ├── levels/
 │   │   ├── reforges/
 │   │   ├── skills/
+│   │   ├── Minestom.fairysouls.yml
+│   │   ├── Minestom.regions.yml
+│   │   ├── Minestom.crystals.yml
 │   │   ├── pack_textures/    # Optional
 │   │   └── songs/            # Optional
-│   ├── bedwars/              # BedWars maps (.polar)
-│   ├── murdermystery/        # Murder Mystery maps (.polar)
-│   ├── world/
-│   │   ├── hypixel_bedwars_lobby.polar
-│   │   ├── hypixel_murder_mystery_lobby.polar
-│   │   └── ... (other worlds)
+│   ├── bedwars/              # BedWars maps (.polar) + maps.json
+│   ├── murdermystery/        # Murder Mystery maps (.polar) + maps.json
+│   ├── skywars/              # SkyWars maps (.polar) + map configs (.json)
+│   ├── ravengard/            # Ravengard dungeon worlds + data
+│   ├── resourcepacks/        # Resource packs (e.g. ravengard-original.zip)
+│   └── world/
+│       ├── hypixel_main_lobby.polar
+│       ├── hypixel_prototype_lobby.polar
+│       ├── hypixel_bedwars_lobby.polar
+│       ├── hypixel_murder_mystery_lobby.polar
+│       ├── hypixel_skywars_lobby.polar
+│       ├── hypixel_ravengard_lobby.polar
+│       ├── hypixel_ravengard_tutorial.polar
+│       └── ... (other worlds)
 ```
 
 ## Setup Steps
@@ -46,18 +57,18 @@ Copy the `forwarding.secret` from your Velocity proxy directory and add it to `c
 
 ```yaml
 host-name: 0.0.0.0
-transfer-timeout: 800
 mongodb: mongodb://localhost
-redis-url: redis://localhost:6379
+redis-uri: redis://localhost:6379
 velocity-secret: your-forwarding-secret-here
 require-auth: false
-sandbox: false
-spark: false
-anticheat: false
-redis-uri: redis://localhost:6379
+integrations:
+    spark: false
+    anticheat: false
+    via-version: false
+    sentry-dsn: ''
 limbo:
-  host-name: 127.0.0.1
-  port: 65535
+    host-name: 127.0.0.1
+    port: 65535
 ```
 
 ### 3. Install World Files
@@ -66,13 +77,14 @@ Extract the world files zip directly into your `configuration/` folder. The zip 
 
 ### 4. Install Data Files
 
-Download from [configuration/skyblock](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration/skyblock):
+Download from [configuration/skyblock](https://github.com/Swofty-Developments/HypixelRecreation/tree/master/configuration/skyblock):
 
 - `skills/` folder → `configuration/skyblock/skills/`
 - `levels/` folder → `configuration/skyblock/levels/`
 - `reforges/` folder → `configuration/skyblock/reforges/`
 - `items/` folder → `configuration/skyblock/items/`
 - `collections/` folder → `configuration/skyblock/collections/`
+- `Minestom.fairysouls.yml`, `Minestom.regions.yml`, `Minestom.crystals.yml` → `configuration/skyblock/`
 - `songs/` folder → `configuration/skyblock/songs/` (optional)
 
 ### 5. Setup PicoLimbo
@@ -109,37 +121,25 @@ java -jar HypixelCore.jar SKYBLOCK_HUB
 java -jar HypixelCore.jar SKYBLOCK_HUB
 ```
 
-## Database Setup
-
-After starting your first server, import the required data into MongoDB:
-
-### Regions (Required)
-
-1. Download [`Minestom.regions.csv`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration/skyblock)
-2. Import to the `regions` collection in MongoDB
-3. Restart the server
-
-### Fairy Souls (Optional)
-
-1. Download [`Minestom.fairysouls.csv`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration/skyblock)
-2. Import to the `fairysouls` collection
-
-### Hub Crystals (Optional)
-
-1. Download [`Minestom.crystals.csv`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration/skyblock)
-2. Import to the `crystals` collection
-
-Or use the `/addcrystal` command in-game.
-
 ## Admin Setup
 
-To give yourself admin permissions:
+Ranks are not stored in MongoDB. They live in Redis on the account document at `hsb:acct:players:<uuid>`, under the `hypixel:rank` field, so editing anything in MongoDB Compass will not promote you.
 
-1. Log in and out of the server
-2. Open MongoDB Compass
-3. Navigate to `Minestom` → `profiles`
-4. Find your profile and set `rank: "ADMIN"`
-5. Log back in
+Join the server once first so your account document exists, then use one of these two routes.
+
+### Installer dashboard
+
+If you deployed with the [Docker installer](/docs/docker/setup), choose **Make player STAFF** on the management dashboard and enter your Minecraft username. It rewrites `hypixel:rank` on your Redis account document for you.
+
+### In-game command
+
+If you already have a staff account, promote others with the rank command (also available as `/setrank`):
+
+```
+/rank <player> <rank>
+```
+
+The command requires the `STAFF` rank and can also be run from the server console.
 
 ## Memory Allocation
 

@@ -5,8 +5,6 @@ import lombok.Setter;
 import net.hollowcube.polar.PolarLoader;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.color.TeamColor;
@@ -26,10 +24,12 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.murdermystery.MurderMysteryGameType;
 import net.swofty.commons.murdermystery.MurderMysteryLeaderboardMode;
 import net.swofty.commons.murdermystery.map.MurderMysteryMapsConfig;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.generic.data.datapoints.DatapointMurderMysteryModeStats;
 import net.swofty.type.generic.data.handlers.MurderMysteryDataHandler;
 import net.swofty.type.generic.experience.PlayerExperienceHandler;
+import net.swofty.type.generic.utility.Titles;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.gold.GoldManager;
 import net.swofty.type.murdermysterygame.role.GameRole;
@@ -90,13 +90,13 @@ public class Game {
 
     public void join(MurderMysteryPlayer player) {
         if (gameStatus != GameStatus.WAITING) {
-            player.sendMessage(Component.text("Game already in progress!", NamedTextColor.RED));
+            player.sendMessage("<c>Game already in progress!");
             player.sendTo(ServerType.MURDER_MYSTERY_LOBBY);
             return;
         }
 
         if (players.size() >= gameType.getMaxPlayers()) {
-            player.sendMessage(Component.text("Game is full!", NamedTextColor.RED));
+            player.sendMessage("<c>Game is full!");
             player.sendTo(ServerType.MURDER_MYSTERY_LOBBY);
             return;
         }
@@ -105,14 +105,10 @@ public class Game {
         players.add(player);
         player.setTag(Tag.String("gameId"), gameId);
 
-        broadcastMessage(Component.empty()
-                .append(Component.text(player.getFullDisplayName()))
-                .append(Component.text(" has joined ", NamedTextColor.YELLOW))
-                .append(Component.text("(", NamedTextColor.YELLOW))
-                .append(Component.text(players.size(), NamedTextColor.AQUA))
-                .append(Component.text("/", NamedTextColor.YELLOW))
-                .append(Component.text(gameType.getMaxPlayers(), NamedTextColor.AQUA))
-                .append(Component.text(")!", NamedTextColor.YELLOW)));
+        broadcastMessage(Text.of("{}<e> has joined (<b>{}<e>/<b>{}<e>)!",
+                player.getFullDisplayName(),
+                players.size(),
+                gameType.getMaxPlayers()));
 
         if (hasMinimumPlayers() && !countdown.isActive()) {
             countdown.startCountdown();
@@ -155,22 +151,18 @@ public class Game {
                 setupPlayerForGame(player, role);
                 addPlayerToHiddenNametagsTeam(player);
                 player.setInstance(instanceContainer, getWaitingPosition());
-                player.sendMessage(Component.text("You have rejoined the game!", NamedTextColor.GREEN));
+                player.sendMessage("<a>You have rejoined the game!");
             } else {
                 setupPlayerForSpectator(player);
                 player.setInstance(instanceContainer, getWaitingPosition());
-                player.sendMessage(Component.text("You have rejoined as a spectator.", NamedTextColor.GRAY));
+                player.sendMessage("<7>You have rejoined as a spectator.");
             }
         } else if (gameStatus == GameStatus.WAITING) {
             setupPlayerForWaiting(player);
-            broadcastMessage(Component.empty()
-                    .append(Component.text(player.getFullDisplayName()))
-                    .append(Component.text(" has rejoined ", NamedTextColor.YELLOW))
-                    .append(Component.text("(", NamedTextColor.YELLOW))
-                    .append(Component.text(players.size(), NamedTextColor.AQUA))
-                    .append(Component.text("/", NamedTextColor.YELLOW))
-                    .append(Component.text(gameType.getMaxPlayers(), NamedTextColor.AQUA))
-                    .append(Component.text(")!", NamedTextColor.YELLOW)));
+            broadcastMessage(Text.of("{}<e> has rejoined (<b>{}<e>/<b>{}<e>)!",
+                    player.getFullDisplayName(),
+                    players.size(),
+                    gameType.getMaxPlayers()));
         } else {
             setupPlayerForSpectator(player);
             player.setInstance(instanceContainer, getWaitingPosition());
@@ -191,7 +183,7 @@ public class Game {
             announceRole(player, role);
         }
 
-        broadcastMessage(Component.text("Teaming with the Murderer is not allowed!", NamedTextColor.RED, net.kyori.adventure.text.format.TextDecoration.BOLD));
+        broadcastMessage(Text.of("<c><l>Teaming with the Murderer is not allowed!"));
 
         goldManager.startSpawning();
         startKillZoneCheck();
@@ -215,10 +207,8 @@ public class Game {
 
             if (secondsRemaining[0] <= 5 && secondsRemaining[0] > 0) {
                 String word = secondsRemaining[0] == 1 ? "second" : "seconds";
-                broadcastMessage(Component.empty()
-                        .append(Component.text("The Murderer receives their sword in ", NamedTextColor.YELLOW))
-                        .append(Component.text(secondsRemaining[0], NamedTextColor.RED))
-                        .append(Component.text(" " + word + "!", NamedTextColor.YELLOW)));
+                broadcastMessage(Text.of("<e>The Murderer receives their sword in <c>{}<e> {}!",
+                        secondsRemaining[0], word));
             }
         }).delay(TaskSchedule.seconds(1)).repeat(TaskSchedule.seconds(1)).schedule();
 
@@ -234,7 +224,7 @@ public class Game {
                 }
             }
 
-            broadcastMessage(Component.text("The Murderer has received their sword!", NamedTextColor.YELLOW));
+            broadcastMessage(Text.of("<e>The Murderer has received their sword!"));
         }).delay(TaskSchedule.seconds(30)).schedule();
     }
 
@@ -256,7 +246,7 @@ public class Game {
                         statsDP.getValue().recordTokens(leaderboardMode, 40);
                     }
 
-                    player.sendMessage(Component.text("+40 Tokens! Survived 30 seconds", NamedTextColor.DARK_GREEN));
+                    player.sendMessage("<2>+40 Tokens! Survived 30 seconds");
                 }
             }
         }).delay(TaskSchedule.seconds(30)).repeat(TaskSchedule.seconds(30)).schedule();
@@ -455,12 +445,11 @@ public class Game {
     }
 
     private void announceRole(MurderMysteryPlayer player, GameRole role) {
-        Title title = Title.title(
-                Component.text("You are the " + role.getDisplayName(), role.getColor()),
-                Component.text(role.getDescription(), NamedTextColor.GRAY),
+        player.showTitle(
+                role.getAnnouncement(),
+                role.getDescription(),
                 Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(3), Duration.ofMillis(500))
         );
-        player.showTitle(title);
     }
 
     public void onPlayerKill(MurderMysteryPlayer killer, MurderMysteryPlayer victim) {
@@ -611,9 +600,7 @@ public class Game {
         droppedDetectiveBow = bowEntity;
         detectiveBowPickedUp = false;
 
-        broadcastMessage(Component.empty()
-                .append(Component.text("The Bow has been dropped! ", NamedTextColor.GOLD))
-                .append(Component.text("Find the Bow for a chance to kill the Murderer.", NamedTextColor.YELLOW)));
+        broadcastMessage(Text.of("<6>The Bow has been dropped! <e>Find the Bow for a chance to kill the Murderer."));
     }
 
     public boolean isDroppedDetectiveBow(Entity entity) {
@@ -628,14 +615,12 @@ public class Game {
 
             weaponManager.giveInnocentBow(player);
 
-            broadcastMessage(Component.text("A player has picked up the Bow!", NamedTextColor.YELLOW));
+            broadcastMessage(Text.of("<e>A player has picked up the Bow!"));
         }
     }
 
     public void sendDeathMessage(MurderMysteryPlayer player, String reason) {
-        player.sendMessage(Component.empty()
-                .append(Component.text("YOU DIED! ", NamedTextColor.RED))
-                .append(Component.text(reason, NamedTextColor.YELLOW)));
+        player.sendMessage("<c>YOU DIED! <e>{}", reason);
     }
 
     private void handleClassicKill(MurderMysteryPlayer killer, MurderMysteryPlayer victim,
@@ -644,7 +629,7 @@ public class Game {
             sendDeathMessage(victim, "You were killed by the Murderer.");
         } else {
             if (victimRole == GameRole.MURDERER) {
-                broadcastMessage(Component.text(killer.getUsername() + " killed the murderer!", NamedTextColor.GREEN));
+                broadcastMessage(Text.of("<a>{} killed the murderer!", killer.getUsername()));
                 sendDeathMessage(victim, "You were identified and eliminated.");
             } else {
                 sendDeathMessage(victim, "You were shot by " + killer.getUsername() + ".");
@@ -652,7 +637,7 @@ public class Game {
                 killer.setEliminated(true);
                 killer.setTag(ELIMINATED_TAG, true);
                 setupPlayerForSpectator(killer);
-                broadcastMessage(Component.text(killer.getUsername() + " killed an innocent and was struck by lightning!", NamedTextColor.RED));
+                broadcastMessage(Text.of("<c>{} killed an innocent and was struck by lightning!", killer.getUsername()));
                 sendDeathMessage(killer, "You killed an innocent player.");
 
                 GameRole killerRole2 = roleManager.getRole(killer.getUuid());
@@ -666,7 +651,7 @@ public class Game {
     private void handleAssassinKill(MurderMysteryPlayer killer, MurderMysteryPlayer victim) {
         UUID targetUuid = roleManager.getAssassinTarget(killer.getUuid());
         if (victim.getUuid().equals(targetUuid)) {
-            killer.sendMessage(Component.text("Target eliminated! New target assigned.", NamedTextColor.GREEN));
+            killer.sendMessage("<a>Target eliminated! New target assigned.");
             UUID newTarget = roleManager.getAssassinTarget(victim.getUuid());
             roleManager.reassignTarget(killer.getUuid(), newTarget);
 
@@ -683,7 +668,7 @@ public class Game {
             killer.setEliminated(true);
             killer.setTag(ELIMINATED_TAG, true);
             setupPlayerForSpectator(killer);
-            broadcastMessage(Component.text(killer.getUsername() + " attacked the wrong person!", NamedTextColor.RED));
+            broadcastMessage(Text.of("<c>{} attacked the wrong person!", killer.getUsername()));
         }
     }
 
@@ -806,24 +791,18 @@ public class Game {
 
         murdererKillsThisGame.clear();
 
-        String message = switch (condition) {
-            case INNOCENTS_WIN -> "The Innocents have won!";
-            case MURDERER_WINS -> "The Murderer has won!";
-            case TIME_EXPIRED -> "Time's up! Innocents survived!";
+        Text message = switch (condition) {
+            case INNOCENTS_WIN -> Text.of("<a>The Innocents have won!");
+            case MURDERER_WINS -> Text.of("<c>The Murderer has won!");
+            case TIME_EXPIRED -> Text.of("<a>Time's up! Innocents survived!");
             case LAST_STANDING -> getLastStandingPlayer() != null ?
-                    getLastStandingPlayer().getUsername() + " is the last one standing!" :
-                    "Game Over!";
+                    Text.of("<6>{} is the last one standing!", getLastStandingPlayer().getUsername()) :
+                    Text.of("<6>Game Over!");
         };
 
-        NamedTextColor color = switch (condition) {
-            case INNOCENTS_WIN, TIME_EXPIRED -> NamedTextColor.GREEN;
-            case MURDERER_WINS -> NamedTextColor.RED;
-            case LAST_STANDING -> NamedTextColor.GOLD;
-        };
-
-        Title title = Title.title(
-                Component.text(message, color),
-                Component.empty(),
+        Title title = Titles.title(
+                message,
+                Text.empty(),
                 Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(5), Duration.ofMillis(500))
         );
         players.forEach(p -> p.showTitle(title));
@@ -848,72 +827,62 @@ public class Game {
     }
 
     private void sendGameResults(WinCondition condition) {
-        String thickBar = "§a§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
+        Text thickBar = Text.of("<a><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
 
         for (MurderMysteryPlayer player : players) {
-            player.sendMessage(Component.text(thickBar));
-            player.sendMessage(Component.text("                    ")
-                    .append(Component.text("MURDER MYSTERY", NamedTextColor.WHITE, TextDecoration.BOLD)));
+            player.sendMessage(thickBar);
+            player.sendMessage("                    <f><l>MURDER MYSTERY");
 
             if (gameType == MurderMysteryGameType.ASSASSINS) {
                 MurderMysteryPlayer winner = getLastStandingPlayer();
                 if (winner != null) {
-                    player.sendMessage(Component.text("              ")
-                            .append(Component.text("Winner: ", NamedTextColor.WHITE, TextDecoration.BOLD))
-                            .append(Component.text(winner.getUsername(), NamedTextColor.GOLD)));
+                    player.sendMessage("              <f><l>Winner: </l><6>{}", winner.getUsername());
 
-                    player.sendMessage(Component.empty());
-                    player.sendMessage(Component.text(" §7Last Standing: ")
-                            .append(Component.text(winner.getFullDisplayName()))
-                            .append(Component.text(" §7(§6" + winner.getKillsThisGame() + "§7 kills)")));
+                    player.sendMessage("");
+                    player.sendMessage(" <7>Last Standing: </7>{} <7>(<6>{}<7> kills)",
+                            winner.getFullDisplayName(),
+                            winner.getKillsThisGame());
                 } else {
-                    player.sendMessage(Component.text("              ")
-                            .append(Component.text("Winner: ", NamedTextColor.WHITE, TextDecoration.BOLD))
-                            .append(Component.text("None", NamedTextColor.GRAY)));
+                    player.sendMessage("              <f><l>Winner: </l><7>None");
                 }
             } else {
                 boolean innocentsWon = (condition == WinCondition.INNOCENTS_WIN || condition == WinCondition.TIME_EXPIRED);
-                player.sendMessage(Component.text("         ")
-                        .append(Component.text("Winner: ", NamedTextColor.WHITE, TextDecoration.BOLD))
-                        .append(innocentsWon ?
-                                Component.text("INNOCENTS", NamedTextColor.GREEN) :
-                                Component.text("MURDERER", NamedTextColor.RED)));
+                player.sendMessage(innocentsWon
+                        ? "         <f><l>Winner: </l><a>INNOCENTS"
+                        : "         <f><l>Winner: </l><c>MURDERER");
 
-                player.sendMessage(Component.empty());
+                player.sendMessage("");
 
                 MurderMysteryPlayer detective = roleManager.getPlayersWithRole(GameRole.DETECTIVE).stream().findFirst().orElse(null);
                 if (detective != null) {
-                    Component detectiveName = detective.isEliminated() ?
-                            Component.text(detective.getFullDisplayName()).decorate(TextDecoration.STRIKETHROUGH) :
-                            Component.text(detective.getFullDisplayName());
-                    player.sendMessage(Component.text(" §7Detective: ").append(detectiveName));
+                    player.sendMessage(detective.isEliminated()
+                                    ? " <7>Detective: </7><m>{}"
+                                    : " <7>Detective: </7>{}",
+                            detective.getFullDisplayName());
                 }
 
                 MurderMysteryPlayer murderer = roleManager.getPlayersWithRole(GameRole.MURDERER).stream().findFirst().orElse(null);
                 if (murderer != null) {
-                    Component murdererName = murderer.isEliminated() ?
-                            Component.text(murderer.getFullDisplayName()).decorate(TextDecoration.STRIKETHROUGH) :
-                            Component.text(murderer.getFullDisplayName());
-                    player.sendMessage(Component.text(" §7Murderer: ")
-                            .append(murdererName)
-                            .append(Component.text(" §7(§6" + murderer.getKillsThisGame() + "§7 kills)")));
+                    String line = murderer.isEliminated()
+                            ? " <7>Murderer: </7><m>{}</m>"
+                            : " <7>Murderer: </7>{}";
+                    player.sendMessage(line + " <7>(<6>{}<7> kills)",
+                            murderer.getFullDisplayName(), murderer.getKillsThisGame());
                 }
 
                 if (murdererKiller != null && roleManager.getRole(murdererKiller.getUuid()) != GameRole.DETECTIVE) {
-                    player.sendMessage(Component.text(" §7Hero: ")
-                            .append(Component.text(murdererKiller.getFullDisplayName())));
+                    player.sendMessage(" <7>Hero: </7>{}", murdererKiller.getFullDisplayName());
                 }
             }
 
-            player.sendMessage(Component.text(thickBar));
+            player.sendMessage(thickBar);
 
-            player.sendMessage(Component.text("                 ")
-                    .append(Component.text("Reward Summary", NamedTextColor.WHITE, TextDecoration.BOLD)));
-            player.sendMessage(Component.text("   §7You earned:"));
-            player.sendMessage(Component.text("   §a+" + player.getTokensEarnedThisGame() + " Murder Mystery Tokens"));
-            player.sendMessage(Component.text("   §b+267 Hypixel Experience"));
+            player.sendMessage("                 <f><l>Reward Summary");
+            player.sendMessage("   <7>You earned:");
+            player.sendMessage("   <a>+{} Murder Mystery Tokens", player.getTokensEarnedThisGame());
+            player.sendMessage("   <b>+267 Hypixel Experience");
 
-            player.sendMessage(Component.text(thickBar));
+            player.sendMessage(thickBar);
 
             PlayerExperienceHandler expHandler = new PlayerExperienceHandler(player);
             expHandler.addExperience(267);
@@ -1011,8 +980,10 @@ public class Game {
         return Audience.audience(players);
     }
 
-    private void broadcastMessage(Component message) {
-        getPlayersAsAudience().sendMessage(message);
+    private void broadcastMessage(Text message) {
+        for (MurderMysteryPlayer player : players) {
+            player.sendMessage(message);
+        }
     }
 
     @lombok.SneakyThrows

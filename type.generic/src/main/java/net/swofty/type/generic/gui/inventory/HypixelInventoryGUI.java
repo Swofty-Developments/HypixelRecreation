@@ -12,7 +12,10 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.item.component.TooltipDisplay;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
+import net.swofty.type.generic.text.HypixelTextRenderer;
+import net.swofty.type.generic.text.RenderContext;
 import net.swofty.type.generic.user.HypixelPlayer;
 import org.tinylog.Logger;
 
@@ -33,7 +36,7 @@ public abstract class HypixelInventoryGUI {
             .set(DataComponents.CUSTOM_NAME, Component.space())
             .set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.EMPTY);
 
-    protected Component title;
+    protected Text title;
     protected InventoryType size;
     protected final List<GUIItem> items;
     private Inventory inventory;
@@ -41,13 +44,11 @@ public abstract class HypixelInventoryGUI {
     private boolean hasFinishedLoading = false;
     private int itemInHand = 0;
 
-    public HypixelInventoryGUI(String title, InventoryType size) {
-        this.title = Component.text(title);
-        this.size = size;
-        this.items = Collections.synchronizedList(new ArrayList<>());
+    public HypixelInventoryGUI(String titleMarkup, InventoryType size, Object... arguments) {
+        this(Text.of(titleMarkup, arguments), size);
     }
 
-    public HypixelInventoryGUI(Component title, InventoryType size) {
+    public HypixelInventoryGUI(Text title, InventoryType size) {
         this.title = title;
         this.size = size;
         this.items = Collections.synchronizedList(new ArrayList<>());
@@ -199,7 +200,7 @@ public abstract class HypixelInventoryGUI {
      * @param material the {@link Material} of your choice
      */
     public void fill(Material material, String name) {
-        fill(ItemStack.builder(material).set(DataComponents.CUSTOM_NAME, Component.text(name)));
+        fill(ItemStacks.named(material, name));
     }
 
     /**
@@ -308,7 +309,7 @@ public abstract class HypixelInventoryGUI {
     public void open(HypixelPlayer player) {
         this.player = player;
         this.itemInHand = player.getHeldSlot();
-        this.inventory = new Inventory(size, title);
+        this.inventory = new Inventory(size, renderedTitle());
 
         HypixelInventoryGUI previouslyOpen = GUI_MAP.get(player.getUuid());
         if (previouslyOpen != null) {
@@ -324,7 +325,7 @@ public abstract class HypixelInventoryGUI {
 
             if (previouslyOpen.getInventory().getInventoryType() == size) {
                 inventory = previouslyOpen.getInventory();
-                inventory.setTitle(title);
+                inventory.setTitle(renderedTitle());
                 for (int slot = 0; slot < inventory.getSize(); slot++) {
                     inventory.setItemStack(slot, ItemStack.AIR);
                 }
@@ -340,11 +341,11 @@ public abstract class HypixelInventoryGUI {
                 updateItemStacks(inventory, player);
                 onOpen(openEvent);
                 if (player.getHeldSlot() != itemInHand) {
-                    player.sendMessage("§cYour item in hand cannot change in between opening GUIs");
+                    player.sendMessage("<c>Your item in hand cannot change in between opening GUIs");
                     return;
                 }
             } catch (Exception e) {
-                player.sendMessage("§cAn error occurred while opening the GUI");
+                player.sendMessage("<c>An error occurred while opening the GUI");
                 player.closeInventory();
                 Logger.error(e, "Failed to open GUI '{}' for player {}", getTitle(), player.getUsername());
                 return;
@@ -373,14 +374,17 @@ public abstract class HypixelInventoryGUI {
         afterOpen(openEvent);
     }
 
-    protected void setTitle(String title) {
-        this.title = Component.text(title);
-        inventory.setTitle(this.title);
+    protected void setTitle(String titleMarkup, Object... arguments) {
+        setTitle(Text.of(titleMarkup, arguments));
     }
 
-    protected void setTitle(Component title) {
+    protected void setTitle(Text title) {
         this.title = title;
-        inventory.setTitle(this.title);
+        inventory.setTitle(renderedTitle());
+    }
+
+    private Component renderedTitle() {
+        return HypixelTextRenderer.render(title.asComponent(), RenderContext.of(player));
     }
 
     /**
@@ -439,8 +443,9 @@ public abstract class HypixelInventoryGUI {
      */
     public void updateItemStacks(Inventory inventory, HypixelPlayer player) {
         synchronized (items) {
+            RenderContext context = RenderContext.of(player);
             for (GUIItem item : items) {
-                ItemStack toReplace = item.getItem(player).build();
+                ItemStack toReplace = HypixelTextRenderer.renderStack(item.getItem(player).build(), context);
                 if (!inventory.getItemStack(item.itemSlot).equals(toReplace)) {
                     inventory.setItemStack(item.itemSlot, toReplace);
                 }

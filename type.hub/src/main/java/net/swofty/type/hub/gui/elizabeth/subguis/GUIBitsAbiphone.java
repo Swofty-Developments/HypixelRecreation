@@ -1,25 +1,21 @@
 package net.swofty.type.hub.gui.elizabeth.subguis;
 
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.hub.gui.elizabeth.GUIBitsShop;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.NonPlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
-
-import java.util.ArrayList;
 
 public class GUIBitsAbiphone extends HypixelInventoryGUI {
 
@@ -28,7 +24,7 @@ public class GUIBitsAbiphone extends HypixelInventoryGUI {
     }
 
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(GUIClickableItem.getGoBackItem(31, new GUIBitsShop()));
 
         set(new GUIClickableItem(12) {
@@ -49,7 +45,7 @@ public class GUIBitsAbiphone extends HypixelInventoryGUI {
                         new GUIBitsConfirmBuy(finalItem, price).open(player);
                     }
                 } else {
-                    player.sendMessage("§cYou don't have enough Bits to buy that!");
+                    player.sendMessage("<c>You don't have enough Bits to buy that!");
                 }
             }
 
@@ -57,13 +53,12 @@ public class GUIBitsAbiphone extends HypixelInventoryGUI {
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockItem skyBlockItem = new SkyBlockItem(item);
                 ItemStack.Builder itemStack = new NonPlayerItemUpdater(skyBlockItem).getUpdatedItem();
-                ArrayList<String> lore = new ArrayList<>(itemStack.build().get(DataComponents.LORE).stream().map(StringUtility::getTextFromComponent).toList());
-                lore.add(" ");
-                lore.add("§7Cost");
-                lore.add("§b" + StringUtility.commaify(price) + " Bits");
-                lore.add(" ");
-                lore.add("§eClick to trade!");
-                return ItemStackCreator.updateLore(itemStack, lore);
+                return ItemStacks.appendLore(itemStack, """
+                        \s
+                        <7>Cost
+                        <b>{:,} Bits
+                        <r>\s
+                        <e>Click to trade!""", price);
             }
         });
         set(new GUIClickableItem(14) {
@@ -76,17 +71,18 @@ public class GUIBitsAbiphone extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.getStackHead("§5Abicases", "a3c153c391c34e2d328a60839e683a9f82ad3048299d8bc6a39e6f915cc5a", 1,
-                        "§7Any expensive Abiphone needs some",
-                        "§7accessories!",
-                        " ",
-                        "§7Get an Abicase! It keeps your",
-                        "§7accessory bag safe while you hold",
-                        "§7your Abiphone in your hands.",
-                        " ",
-                        "§dThree brands to choose from!",
-                        "§7Only ONE Abicase will work at a time.",
-                        "§eClick to view Abicases!");
+                return ItemStacks.head("a3c153c391c34e2d328a60839e683a9f82ad3048299d8bc6a39e6f915cc5a", """
+                        <5>Abicases
+                        <7>Any expensive Abiphone needs some
+                        <7>accessories!
+
+                        <7>Get an Abicase! It keeps your
+                        <7>accessory bag safe while you hold
+                        <7>your Abiphone in your hands.
+
+                        <d>Three brands to choose from!
+                        <7>Only ONE Abicase will work at a time.
+                        <e>Click to view Abicases!""");
             }
         });
         updateItemStacks(getInventory(), getPlayer());

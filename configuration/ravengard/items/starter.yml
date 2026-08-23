@@ -14,7 +14,7 @@ items:
       - id: EQUIPPABLE
         asset_id: hypixel_ravengard:knight_starter
       - id: CLASS_RESTRICTED
-        class: KNIGHT
+        classes: [KNIGHT, SORCERER]
 
   - id: WEATHERED_HARNESS
     rarity: COMMON
@@ -56,7 +56,7 @@ items:
       - id: EQUIPPABLE
         asset_id: hypixel_ravengard:starter
       - id: CLASS_RESTRICTED
-        classes: [WARRIOR, HUNTER, ASSASSIN]
+        classes: [WARRIOR, HUNTER, ASSASSIN, SORCERER]
 
   - id: OLD_BOOTS
     rarity: COMMON
@@ -69,6 +69,48 @@ items:
         standard_item_type: BOOTS
       - id: EQUIPPABLE
         asset_id: hypixel_ravengard:starter
+
+  - id: WEATHERED_ROBE
+    rarity: COMMON
+    material: leather_chestplate
+    item_model: hypixel_ravengard:item/armor/starter/chestplate/weathered_robe
+    default_statistics:
+      defense: 4.0
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: EQUIPPABLE
+        asset_id: hypixel_ravengard:sorcerer_starter
+      - id: CLASS_RESTRICTED
+        class: SORCERER
+
+  - id: APPRENTICE_STAFF
+    rarity: COMMON
+    material: stick
+    item_model: hypixel_ravengard:item/weapons/staves/apprentice/apprentice_staff
+    default_statistics:
+      ranged_damage: 30.0
+      ranged_attack_speed: 0.5
+      ability_damage_boost: 3.0
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: STAFF
+      - id: CLASS_RESTRICTED
+        class: SORCERER
+
+  - id: STARTER_BANDAGE
+    tracked_id: STARTER_BANDAGE
+    rarity: COMMON
+    material: paper
+    item_model: hypixel_ravengard:item/consumables/bandage
+    display_name: Basic Bandage
+    description:
+      - A basic bandage that restores a
+      - small amount of health over time.
+    effect: Heals +35 HP over 6 seconds.
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CONSUMABLE
 
   - id: NECK_SLOT
     material: white_stained_glass_pane

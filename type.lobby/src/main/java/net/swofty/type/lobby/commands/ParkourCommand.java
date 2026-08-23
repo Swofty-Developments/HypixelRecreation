@@ -23,21 +23,21 @@ public class ParkourCommand extends HypixelCommand {
 		}
 
 		command.setDefaultExecutor(((sender, context) -> {
-			sender.sendMessage("§c/parkour start");
-			sender.sendMessage("§c/parkour reset");
-			sender.sendMessage("§c/parkour checkpoint");
-			sender.sendMessage("§c/parkour cancel");
+			sender.sendMessage("<c>/parkour start");
+			sender.sendMessage("<c>/parkour reset");
+			sender.sendMessage("<c>/parkour checkpoint");
+			sender.sendMessage("<c>/parkour cancel");
 		}));
 
 		// start
 		command.addSyntax((sender, context) -> {
 			if (manager == null) {
-				sender.sendMessage("§cThis command is unavailable here.");
+				sender.sendMessage("<c>This command is unavailable here.");
 				return;
 			}
 			if (!(sender instanceof HypixelPlayer player)) return;
 			if (manager.getPerPlayerStartTime().containsKey(player.getUuid())) {
-				sender.sendMessage("§cYou are currently in a parkour race. Use /parkour reset");
+				sender.sendMessage("<c>You are currently in a parkour race. Use /parkour reset");
 				return;
 			}
 
@@ -48,7 +48,7 @@ public class ParkourCommand extends HypixelCommand {
 		// cancel
 		command.addSyntax((sender, context) -> {
 			if (manager == null) {
-				sender.sendMessage("§cThis command is unavailable here.");
+				sender.sendMessage("<c>This command is unavailable here.");
 				return;
 			}
 			if (!(sender instanceof HypixelPlayer player)) return;
@@ -58,7 +58,7 @@ public class ParkourCommand extends HypixelCommand {
 		// reset
 		command.addSyntax((sender, context) -> {
 			if (manager == null) {
-				sender.sendMessage("§cThis command is unavailable here.");
+				sender.sendMessage("<c>This command is unavailable here.");
 				return;
 			}
 			if (!(sender instanceof HypixelPlayer player)) return;
@@ -68,13 +68,13 @@ public class ParkourCommand extends HypixelCommand {
 		// checkpoint
 		command.addSyntax((sender, context) -> {
 			if (manager == null) {
-				sender.sendMessage("§cThis command is unavailable here.");
+				sender.sendMessage("<c>This command is unavailable here.");
 				return;
 			}
 			if (!(sender instanceof HypixelPlayer player)) return;
 			Parkour parkour = manager.getParkour();
 			if (!manager.getPerPlayerStartTime().containsKey(player.getUuid())) {
-				sender.sendMessage("§cYou haven't started the parkour challenge yet! Use §e/parkour start §cto start!");
+				sender.sendMessage("<c>You haven't started the parkour challenge yet! Use <e>/parkour start</e> to start!");
 				return;
 			}
 			int checkpointIndex = manager.getPerPlayerStartTime().get(player.getUuid()).lastCheckpointIndex();

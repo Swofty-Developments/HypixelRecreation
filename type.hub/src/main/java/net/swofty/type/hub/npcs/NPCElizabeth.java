@@ -17,7 +17,7 @@ public class NPCElizabeth extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§e§lCOMMUNITY SHOP", "§dElizabeth" ,"§e§lCLICK" };
+                return new String[]{"<e><l>COMMUNITY SHOP", "<d>Elizabeth" ,"<e><l>CLICK" };
             }
 
             @Override
@@ -58,11 +58,11 @@ public class NPCElizabeth extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
-                                "§fHello! Welcome to §bSkyBlock§f!",
-                                "§fI have powerful items to offer, but only to experienced adventurers!",
-                                "§fUntil then, I suggest leveling up to SkyBlock Level 3!"
-                        }).build()
+                        .key("hello").lines(
+                                "<f>Hello! Welcome to <b>SkyBlock<f>!",
+                                "<f>I have powerful items to offer, but only to experienced adventurers!",
+                                "<f>Until then, I suggest leveling up to SkyBlock Level 3!"
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

@@ -19,7 +19,7 @@ repositories {
 
     maven {
         name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/Swofty-Developments/HypixelSkyBlock")
+        url = uri("https://maven.pkg.github.com/Swofty-Developments/HypixelRecreation")
         credentials {
             username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
             password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
@@ -53,7 +53,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/Swofty-Developments/HypixelSkyBlock")
+            url = uri("https://maven.pkg.github.com/Swofty-Developments/HypixelRecreation")
             credentials {
                 username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USERNAME")
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")

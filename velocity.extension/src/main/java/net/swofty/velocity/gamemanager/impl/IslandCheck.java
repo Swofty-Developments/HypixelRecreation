@@ -9,15 +9,17 @@ import net.swofty.velocity.gamemanager.BalanceConfiguration;
 import net.swofty.velocity.gamemanager.GameManager;
 import net.swofty.commons.redis.RedisClient;
 import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class IslandCheck extends BalanceConfiguration {
+    private static final long LOOKUP_TIMEOUT_MILLIS = 3000;
 
     @Override
     public GameManager.GameServer getServer(Player player, List<GameManager.GameServer> servers) {
@@ -34,32 +36,41 @@ public class IslandCheck extends BalanceConfiguration {
         }
 
         UUID islandUUID = UUID.fromString(document.getString("island_uuid").replace("\"", ""));
-        AtomicReference<GameManager.GameServer> toSendTo = getGameServerAtomicReference(islandUUID);
-
-        return toSendTo.get();
+        return findServerWithIsland(islandUUID);
     }
 
-    @NotNull
-    private static AtomicReference<GameManager.GameServer> getGameServerAtomicReference(UUID islandUUID) {
-        AtomicReference<GameManager.GameServer> toSendTo = new AtomicReference<>(null);
+    private static GameManager.GameServer findServerWithIsland(UUID islandUUID) {
+        Map<GameManager.GameServer, CompletableFuture<DoesServerHaveIslandProtocol.Response>> responses = new LinkedHashMap<>();
 
         for (Map.Entry<ServerType, ArrayList<GameManager.GameServer>> entry : GameManager.getServers().entrySet()) {
-            ServerType serverType = entry.getKey();
-            if (serverType == ServerType.SKYBLOCK_ISLAND) {
-                ArrayList<GameManager.GameServer> gameServers = entry.getValue();
+            if (entry.getKey() != ServerType.SKYBLOCK_ISLAND) continue;
 
-                gameServers.forEach(gameServer -> {
-                    DoesServerHaveIslandProtocol.Response response = RedisClient.requestServer(
-                        gameServer.internalID(),
-                        new DoesServerHaveIslandProtocol(),
-                        new DoesServerHaveIslandProtocol.Request(islandUUID.toString())).join();
-
-                    if (response.serverHasIt()) {
-                        toSendTo.set(gameServer);
-                    }
-                });
+            for (GameManager.GameServer gameServer : new ArrayList<>(entry.getValue())) {
+                responses.put(gameServer, RedisClient.requestServer(
+                    gameServer.internalID(),
+                    new DoesServerHaveIslandProtocol(),
+                    new DoesServerHaveIslandProtocol.Request(islandUUID.toString())));
             }
         }
+
+        GameManager.GameServer toSendTo = null;
+        long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(LOOKUP_TIMEOUT_MILLIS);
+
+        for (Map.Entry<GameManager.GameServer, CompletableFuture<DoesServerHaveIslandProtocol.Response>> entry : responses.entrySet()) {
+            long remaining = deadline - System.nanoTime();
+            if (remaining <= 0) break;
+
+            try {
+                if (entry.getValue().get(remaining, TimeUnit.NANOSECONDS).serverHasIt()) {
+                    toSendTo = entry.getKey();
+                }
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (Exception ignoredException) {
+            }
+        }
+
         return toSendTo;
     }
 }

@@ -29,26 +29,28 @@ public class ClassCommand extends HypixelCommand {
             RavengardClass chosen = RavengardClass.fromKey(context.get(classArg));
 
             if (chosen == null) {
-                player.sendMessage("§cUnknown class. Options: " + Arrays.stream(RavengardClass.values())
+                player.sendMessage("<c>Unknown class. Options: {}", Arrays.stream(RavengardClass.values())
                         .map(RavengardClass::getDisplayName)
                         .collect(Collectors.joining(", ")));
                 return;
             }
 
             player.setRavengardClass(chosen);
-            player.sendMessage(chosen.getIcon() + " §fYou are now a §e" + chosen.getDisplayName() + "§f.");
+            player.sendMessage("{} <f>You are now a <e>{}<f>.", chosen.getIcon(), chosen.getDisplayName());
             for (RavengardAbility ability : chosen.getAbilities()) {
-                player.sendMessage("  " + ability.getIcon() + " §7" + ability.getDisplayName()
-                        + " §8(" + ability.getCooldownText() + ")");
+                player.sendMessage("  {} <7>{} <8>({})", ability.getIcon(), ability.getDisplayName(),
+                        ability.getCooldownText());
             }
         }, classArg);
 
         command.addSyntax((sender, context) -> {
             RavengardPlayer player = (RavengardPlayer) sender;
             RavengardClass current = player.getRavengardClass();
-            player.sendMessage(current == null
-                    ? "§7You have not chosen a class yet."
-                    : current.getIcon() + " §fYou are a §e" + current.getDisplayName() + "§f.");
+            if (current == null) {
+                player.sendMessage("<7>You have not chosen a class yet.");
+            } else {
+                player.sendMessage("{} <f>You are a <e>{}<f>.", current.getIcon(), current.getDisplayName());
+            }
         });
     }
 }

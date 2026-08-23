@@ -5,8 +5,9 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelPaginatedGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -57,23 +58,20 @@ public class GUIGemstoneGuide extends HypixelPaginatedGUI<SkyBlockItem> {
         set(new GUIItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aGemstone Guide",
-                        Material.REDSTONE_TORCH,
-                        1,
-                        "§7Many items can have §dGemstones",
-                        "§7applied to them. Gemstones increase",
-                        "§7the stats of an item based on the",
-                        "§7type of Gemstone used.",
-                        "",
-                        "§7There are several §aqualities §7of",
-                        "§7Gemstones, ranging from §fRough §7to",
-                        "§6Perfect§7. The higher the quality, the",
-                        "§7better the stat!",
-                        "",
-                        "§7This guide shows the items that can",
-                        "§7have Gemstones applied to them."
-                );
+                return ItemStacks.item(Material.REDSTONE_TORCH, """
+                        <a>Gemstone Guide
+                        <7>Many items can have <d>Gemstones
+                        <7>applied to them. Gemstones increase
+                        <7>the stats of an item based on the
+                        <7>type of Gemstone used.
+
+                        <7>There are several <a>qualities <7>of
+                        <7>Gemstones, ranging from <f>Rough <7>to
+                        <6>Perfect<7>. The higher the quality, the
+                        <7>better the stat!
+
+                        <7>This guide shows the items that can
+                        <7>have Gemstones applied to them.""");
             }
         });
 
@@ -99,22 +97,22 @@ public class GUIGemstoneGuide extends HypixelPaginatedGUI<SkyBlockItem> {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                ArrayList<String> lore = new ArrayList<>(item.getLore());
+                List<Text> lore = item.getLoreText();
                 Map<Gemstone.Slots, Integer> slots = new HashMap<>();
 
                 for (GemstoneComponent.GemstoneSlot slot : item.getComponent(GemstoneComponent.class).getSlots()) {
                     slots.put(slot.slot(), slots.getOrDefault(slot.slot(), 0) + 1);
                 }
 
-                lore.add("");
-                lore.add("§7Available Gemstone Slots");
+                lore.add(Text.empty());
+                lore.add(Text.of("<7>Available Gemstone Slots"));
                 for (Map.Entry<Gemstone.Slots, Integer> slot : slots.entrySet()) {
                     Gemstone.Slots key = slot.getKey();
-                    lore.add("  " + key.getColor() + key.getSymbol() + " " + key.getName() + " §8x" + slot.getValue());
+                    lore.add(Text.of("  <color:{}>{} {} <8>x{}",
+                            key.getColor(), key.getSymbol(), key.getName(), slot.getValue()));
                 }
 
-                return ItemStackCreator.updateLore(itemStack, lore);
+                return ItemStacks.lore(itemStack, lore);
             }
         };
     }

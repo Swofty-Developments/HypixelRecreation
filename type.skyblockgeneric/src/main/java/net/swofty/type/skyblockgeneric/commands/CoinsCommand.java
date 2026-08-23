@@ -9,7 +9,7 @@ import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 
-@CommandParameters(description = "Sets your purse balance",
+@CommandParameters(labels = "coins", description = "Sets your purse balance",
         usage = "/coins <amount>",
         permission = Rank.STAFF,
         allowsConsole = false)
@@ -25,7 +25,7 @@ public class CoinsCommand extends HypixelCommand {
 
             player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.COINS, DatapointDouble.class).setValue(context.get(doubleArgument));
 
-            sender.sendMessage("§aSuccessfully set coins to to §e" + context.getRaw(doubleArgument) + "§a.");
+            player.sendMessage("<a>Successfully set coins to to <e>{}<a>.", context.getRaw(doubleArgument));
         }, doubleArgument);
     }
 }

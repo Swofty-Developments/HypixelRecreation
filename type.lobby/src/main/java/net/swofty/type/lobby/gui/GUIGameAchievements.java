@@ -4,12 +4,13 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.achievement.AchievementCategory;
 import net.swofty.type.generic.achievement.AchievementRegistry;
 import net.swofty.type.generic.achievement.AchievementType;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -18,7 +19,7 @@ public class GUIGameAchievements extends HypixelInventoryGUI {
     private final AchievementCategory category;
 
     public GUIGameAchievements(AchievementCategory category) {
-        super(category.getDisplayName() + " Achievements", InventoryType.CHEST_4_ROW);
+        super(Text.literal(category.getDisplayName() + " Achievements"), InventoryType.CHEST_4_ROW);
         this.category = category;
     }
 
@@ -44,19 +45,19 @@ public class GUIGameAchievements extends HypixelInventoryGUI {
                 double uPercent = total > 0 ? (unlocked * 100.0 / total) : 0;
                 double pPercent = maxPts > 0 ? (points * 100.0 / maxPts) : 0;
 
-                return ItemStackCreator.getStack(
-                        "§aChallenge Achievements",
-                        Material.DIAMOND,
-                        1,
-                        "§8" + category.getDisplayName(),
-                        "§7Unlocked: §b" + unlocked + "§7/§b" + total + " §8(" + (int) uPercent + "%)",
-                        "§7Points: §e" + points + "§7/§e" + maxPts + " §8(" + (int) pPercent + "%)",
-                        "",
-                        "§7Challenge achievements may be",
-                        "§7completed a single time.",
-                        "",
-                        "§eClick to view achievements!"
-                );
+                return ItemStacks.item(Material.DIAMOND, """
+                        <a>Challenge Achievements
+                        <8>{}
+                        <7>Unlocked: <b>{}<7>/<b>{} <8>({}%)
+                        <7>Points: <e>{}<7>/<e>{} <8>({}%)
+
+                        <7>Challenge achievements may be
+                        <7>completed a single time.
+
+                        <e>Click to view achievements!""",
+                        category.getDisplayName(),
+                        unlocked, total, (int) uPercent,
+                        points, maxPts, (int) pPercent);
             }
 
             @Override
@@ -75,19 +76,19 @@ public class GUIGameAchievements extends HypixelInventoryGUI {
                 double uPercent = total > 0 ? (unlocked * 100.0 / total) : 0;
                 double pPercent = maxPts > 0 ? (points * 100.0 / maxPts) : 0;
 
-                return ItemStackCreator.getStack(
-                        "§aTiered Achievements",
-                        Material.DIAMOND_BLOCK,
-                        1,
-                        "§8" + category.getDisplayName(),
-                        "§7Unlocked: §b" + unlocked + "§7/§b" + total + " §8(" + (int) uPercent + "%)",
-                        "§7Points: §e" + points + "§7/§e" + maxPts + " §8(" + (int) pPercent + "%)",
-                        "",
-                        "§7Tiered achievements are completed",
-                        "§7over multiple tiers.",
-                        "",
-                        "§eClick to view achievements!"
-                );
+                return ItemStacks.item(Material.DIAMOND_BLOCK, """
+                        <a>Tiered Achievements
+                        <8>{}
+                        <7>Unlocked: <b>{}<7>/<b>{} <8>({}%)
+                        <7>Points: <e>{}<7>/<e>{} <8>({}%)
+
+                        <7>Tiered achievements are completed
+                        <7>over multiple tiers.
+
+                        <e>Click to view achievements!""",
+                        category.getDisplayName(),
+                        unlocked, total, (int) uPercent,
+                        points, maxPts, (int) pPercent);
             }
 
             @Override
@@ -99,7 +100,9 @@ public class GUIGameAchievements extends HypixelInventoryGUI {
         set(new GUIClickableItem(30) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To Achievements");
+                return ItemStacks.item(Material.ARROW, """
+                        <a>Go Back
+                        <7>To Achievements""");
             }
 
             @Override
@@ -111,33 +114,30 @@ public class GUIGameAchievements extends HypixelInventoryGUI {
         set(new GUIItem(31) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getUsingGUIMaterial(
-                        "§aTotal Completion",
-                        category.getMaterial(),
-                        1,
-                        "§8" + category.getDisplayName(),
-                        "§7Unlocked: §b" + totalUnlocked + "§7/§b" + totalCount + " §8(" + (int) unlockedPercent + "%)",
-                        "§7Points: §e" + totalPoints + "§7/§e" + maxPoints + " §8(" + (int) pointsPercent + "%)"
-                );
+                return ItemStacks.of(category.getMaterial(), 1, """
+                        <a>Total Completion
+                        <8>{}
+                        <7>Unlocked: <b>{}<7>/<b>{} <8>({}%)
+                        <7>Points: <e>{}<7>/<e>{} <8>({}%)""",
+                        category.getDisplayName(),
+                        totalUnlocked, totalCount, (int) unlockedPercent,
+                        totalPoints, maxPoints, (int) pointsPercent);
             }
         });
 
         set(new GUIClickableItem(32) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aSeasonal Challenge Achievements",
-                        Material.MAGMA_CREAM,
-                        1,
-                        "§7View challenge achievements for " + category.getDisplayName(),
-                        "§7that are exclusive to seasonal",
-                        "§7events.",
-                        "",
-                        "§8These achievements do not count",
-                        "§8towards total game completion.",
-                        "",
-                        "§eClick to view achievements!"
-                );
+                return ItemStacks.item(Material.MAGMA_CREAM, """
+                        <a>Seasonal Challenge Achievements
+                        <7>View challenge achievements for {}
+                        <7>that are exclusive to seasonal
+                        <7>events.
+
+                        <8>These achievements do not count
+                        <8>towards total game completion.
+
+                        <e>Click to view achievements!""", category.getDisplayName());
             }
 
             @Override

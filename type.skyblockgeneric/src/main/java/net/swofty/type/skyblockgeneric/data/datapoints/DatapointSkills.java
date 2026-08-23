@@ -3,9 +3,9 @@ package net.swofty.type.skyblockgeneric.data.datapoints;
 import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.protocol.Serializer;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.HypixelEventHandler;
 import net.swofty.type.skyblockgeneric.collection.CustomCollectionAward;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDatapoint;
@@ -264,21 +264,17 @@ public class DatapointSkills extends SkyBlockDatapoint<DatapointSkills.PlayerSki
             double currentHas = getCumulative(category);
 
             String unlockedPercentage = String.format("%.2f", (currentHas / requirement) * 100);
-            lore.add("§7" + prefix + "§e" + unlockedPercentage + "§6%");
+            lore.add("<7>" + prefix + "<e>" + unlockedPercentage + "<6>%");
 
             String baseLoadingBar = "─────────────────";
             int maxBarLength = baseLoadingBar.length();
             int completedLength = (int) Math.round((currentHas / requirement) * maxBarLength);
 
-            String completedLoadingBar = "§2§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-            int formattingCodeLength = 4;  // Adjust this if you add or remove formatting codes
-            String uncompletedLoadingBar = "§7§m" + baseLoadingBar.substring(Math.min(
-                    completedLoadingBar.length() - formattingCodeLength, // Adjust for added formatting codes
-                    maxBarLength
-            ));
+            String completedLoadingBar = baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
+            String uncompletedLoadingBar = baseLoadingBar.substring(Math.min(completedLoadingBar.length(), maxBarLength));
 
-            lore.add(completedLoadingBar + uncompletedLoadingBar + "§r §e" +
-                    StringUtility.commaify(currentHas) + "§6/§e" + StringUtility.shortenNumber(requirement));
+            lore.add(Text.of("<2><m>{}<7>{}<r> <e>{:,}<6>/<e>{:short}",
+                    completedLoadingBar, uncompletedLoadingBar, currentHas, requirement).serialize());
 
             return lore;
         }

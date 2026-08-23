@@ -13,7 +13,7 @@ import java.util.Map;
 public class EnchantmentCaster implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "§a" + (level * 5) + "%§7 chance to not consume bait.";
+        return "<a>" + level * 5 + "%<7> chance to not consume bait.";
     }
 
     @Override

@@ -6,11 +6,12 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.UnderstandableProxyServer;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyInformation;
 import net.swofty.proxyapi.ProxyPlayer;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.gui.inventory.HypixelPaginatedGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.RefreshingGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -73,44 +74,46 @@ public class GUILobbySelector extends HypixelPaginatedGUI<UnderstandableProxySer
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 counter++;
                 counterAtThisMoment = counter;
-                return ItemStackCreator.getStack(
-                        (isThisServer ? "§c"  : "§a") + "Bed Wars Lobby #" + counter,
+                return ItemStacks.item(
                         (isThisServer ? Material.RED_CONCRETE  : Material.QUARTZ_BLOCK), 1,
-                        "§7Players: " + server.players().size() + "/" + server.maxPlayers(),
-                        " ",
-                        (isThisServer ? "§cAlready connected!" :
-                                isFull ? "§cFull!" : "§eClick to connect!")
+                        Text.of((isThisServer ? "<c>" : "<a>") + "Bed Wars Lobby #{}", counter),
+                        List.of(
+                                Text.of("<7>Players: {}/{}", server.players().size(), server.maxPlayers()),
+                                Text.literal(" "),
+                                Text.of(isThisServer ? "<c>Already connected!" :
+                                        isFull ? "<c>Full!" : "<e>Click to connect!")
+                        )
                 );
             }
 
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 if (isThisServer) {
-                    p.sendMessage("§cYou are already on this server!");
+                    p.sendMessage("<c>You are already on this server!");
                     p.closeInventory();
                     return;
                 }
 
                 if (isFull) {
-                    p.sendMessage("§cYou cannot join this server because it is full!");
+                    p.sendMessage("<c>You cannot join this server because it is full!");
                     return;
                 }
 
                 if (sending) {
-                    p.sendMessage("§cWe are currently trying to queue you into another server!");
+                    p.sendMessage("<c>We are currently trying to queue you into another server!");
                     return;
                 }
 
                 sending = true;
                 ProxyPlayer proxyPlayer = new ProxyPlayer(p.getUuid());
-                proxyPlayer.sendMessage("§7Request join for Hub #" + counterAtThisMoment + " (" + server.name() + ")...");
+                proxyPlayer.sendMessage("<7>Request join for Hub #{} ({})...", counterAtThisMoment, server.name());
                 proxyPlayer.transferToWithIndication(server.uuid())
                         .orTimeout(3, TimeUnit.SECONDS)
                         .exceptionally(throwable -> {
                             if (throwable instanceof TimeoutException) {
-                                p.sendMessage("§cYour transfer failed! The server took too long to respond.");
+                                p.sendMessage("<c>Your transfer failed! The server took too long to respond.");
                             } else {
-                                p.sendMessage("§cYour transfer failed! An error occurred.");
+                                p.sendMessage("<c>Your transfer failed! An error occurred.");
                             }
                             sending = false;
                             return null; // Return value for the CompletableFuture

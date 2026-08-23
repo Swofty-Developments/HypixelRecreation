@@ -14,7 +14,7 @@ public class NPCMason extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Mason", "§e§lCLICK"};
+                return new String[]{"Mason", "<e><l>CLICK"};
             }
 
             @Override

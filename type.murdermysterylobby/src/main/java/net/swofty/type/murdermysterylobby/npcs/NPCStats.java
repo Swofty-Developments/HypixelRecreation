@@ -3,6 +3,7 @@ package net.swofty.type.murdermysterylobby.npcs;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.murdermystery.MurderMysteryLeaderboardPeriod;
 import net.swofty.commons.murdermystery.MurderMysteryModeStats;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.achievement.AchievementCategory;
 import net.swofty.type.generic.achievement.AchievementRegistry;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
@@ -14,10 +15,7 @@ import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
 import net.swofty.type.murdermysterylobby.gui.GUIMurderMysteryStatistics;
 
-import java.text.DecimalFormat;
-
 public class NPCStats extends HypixelNPC {
-    private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("#,###");
 
     public NPCStats() {
         super(new HumanConfiguration() {
@@ -37,10 +35,10 @@ public class NPCStats extends HypixelNPC {
                 }
 
                 return new String[]{
-                        "§6§lYour Murder Mystery Profile",
-                        "§fAchievements: §e" + playerAchievements + "§7/§a" + totalAchievements,
-                        "§fTotal Wins: §a" + NUMBER_FORMAT.format(totalWins),
-                        "§e§lCLICK FOR STATS",
+                        "<6><l>Your Murder Mystery Profile",
+                        Text.of("<f>Achievements: <e>{}<7>/<a>{}", playerAchievements, totalAchievements).serialize(),
+                        Text.of("<f>Total Wins: <a>{:,}", totalWins).serialize(),
+                        "<e><l>CLICK FOR STATS"
                 };
             }
 

@@ -12,7 +12,7 @@ public class NPCLobbyExplorerOliver extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§aLobby Explorer Oliver", "§e§lCLICK"};
+                return new String[]{"<a>Lobby Explorer Oliver", "<e><l>CLICK"};
             }
 
             @Override

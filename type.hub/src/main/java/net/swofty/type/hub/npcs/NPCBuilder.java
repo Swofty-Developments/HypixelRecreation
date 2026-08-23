@@ -16,7 +16,7 @@ public class NPCBuilder extends HypixelNPC implements NPCAbiphoneTrait {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Builder", "§e§lCLICK"};
+                return new String[]{"Builder", "<e><l>CLICK"};
             }
 
             @Override
@@ -61,10 +61,10 @@ public class NPCBuilder extends HypixelNPC implements NPCAbiphoneTrait {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "If you build, they will come!",
                                 "Click me again to open the Builder Shop!"
-                        }).build(),
+                        ).build(),
         };
     }
 

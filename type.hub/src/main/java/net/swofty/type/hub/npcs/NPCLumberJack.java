@@ -23,7 +23,7 @@ public class NPCLumberJack extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§2Lumber Jack", "§e§lCLICK"};
+                return new String[]{"<2>Lumber Jack", "<e><l>CLICK"};
             }
 
             @Override
@@ -82,7 +82,7 @@ public class NPCLumberJack extends HypixelNPC {
             return;
         }
         if (!data.hasCompleted(MissionBreakOaklog.class)) {
-            sendNPCMessage(player, "Please collect and then bring to me §a20 Oak Logs§f! You can get 'em from the §bForest §fjust off the trail.");
+            sendNPCMessage(player, "Please collect and then bring to me <a>20 Oak Logs<f>! You can get 'em from the <b>Forest <f>just off the trail.");
             return;
         }
         if (!data.hasCompleted(MissionTalkToLumberjackAgain.class)) {
@@ -100,42 +100,42 @@ public class NPCLumberJack extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return List.of(
 				DialogueSet.builder()
-						.key("initial-hello").lines(new String[]{
+						.key("initial-hello").lines(
 								"Timber!",
 								"My woodcutting assistant has fallen quite ill! Do you think you could take over for him?",
 								"I just need you to chop down some Logs. If you do, I'll even give you his old axe as a reward!",
 								"Do you think you could take over for him?"
-						}).build(),
-				DialogueSet.builder().key("option-nah").lines(new String[]{
+						).build(),
+				DialogueSet.builder().key("option-nah").lines(
 						"Oh okay... maybe come back later!"
-				}).build(),
-				DialogueSet.builder().key("option-accept").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("option-accept").lines(
 						"Cheers!, Let me tell ya a little about what we're going to be doing.",
-						"We will be §aForaging§f! As one of SkyBlock's core skills, Foraging involves cutting down lots of different types of trees!",
+						"We will be <a>Foraging<f>! As one of SkyBlock's core skills, Foraging involves cutting down lots of different types of trees!",
 						"As you do this, you'll unlock various crafts and useful stat boots that will help in other areas of your adventure.",
-						"Here, let me unlock the §aForaging skill §ffor you, and then you can get started!",
-						"To get you started, please bring me §a20 Oak Logs§f! You can break the trees just off the trail to get 'em",
-						"§fUse your fists for now - I'll give you my previous assistant's axe if you can prove your worth!"
-				}).build(),
+						"Here, let me unlock the <a>Foraging skill <f>for you, and then you can get started!",
+						"To get you started, please bring me <a>20 Oak Logs<f>! You can break the trees just off the trail to get 'em",
+						"<f>Use your fists for now - I'll give you my previous assistant's axe if you can prove your worth!"
+				).build(),
 				DialogueSet.builder()
-						.key("spoke-again").lines(new String[]{
-								"Nice job! In return for those logs, I'll give ya this §aPromising Axe§f.",
+						.key("spoke-again").lines(
+								"Nice job! In return for those logs, I'll give ya this <a>Promising Axe<f>.",
 								"It's far less painful than using your fists to punch trees, I'll tell ya that much!",
-								"If you feel like Foraging is the thing for you, continue down the path and head towards §aThe Park§f.",
-								"My friend §eCharlie §fcan be found there. I'm sure he'll have some work for you!",
-						}).build(),
+								"If you feel like Foraging is the thing for you, continue down the path and head towards <a>The Park<f>.",
+								"My friend <e>Charlie <f>can be found there. I'm sure he'll have some work for you!"
+						).build(),
 				DialogueSet.builder()
-						.key("idl-1").lines(new String[]{
-								"My mate §dCharlie §fhas a §5Treecapitator§f! With it, he can break down entire trees in a single swipe!"
-						}).build(),
+						.key("idl-1").lines(
+								"My mate <d>Charlie <f>has a <5>Treecapitator<f>! With it, he can break down entire trees in a single swipe!"
+						).build(),
 				DialogueSet.builder()
-						.key("idle-2").lines(new String[]{
-								"Have you spoken to my mate §eCharlie §fover in §aThe Park §fyet? He could probably use your help."
-						}).build(),
+						.key("idle-2").lines(
+								"Have you spoken to my mate <e>Charlie <f>over in <a>The Park <f>yet? He could probably use your help."
+						).build(),
 				DialogueSet.builder()
-						.key("idle-3").lines(new String[]{
-								"Have you enchanted your axe with §aEfficiency V§f? It'll help ya break stuff a lot faster."
-						}).build()
+						.key("idle-3").lines(
+								"Have you enchanted your axe with <a>Efficiency V<f>? It'll help ya break stuff a lot faster."
+						).build()
 		).toArray(DialogueSet[]::new);
     }
 }

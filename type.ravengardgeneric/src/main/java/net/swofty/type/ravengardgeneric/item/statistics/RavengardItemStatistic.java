@@ -10,8 +10,10 @@ import lombok.Getter;
 @Getter
 public enum RavengardItemStatistic {
     DAMAGE("Damage", 0xE22F, true),
-    RANGED_DAMAGE("Ranged Damage", 0xE230, true),
+    RANGED_DAMAGE("Ranged Attack Damage", 0xE230, true),
     ATTACK_SPEED("Attack Speed", 0xE233, false),
+    RANGED_ATTACK_SPEED("Ranged Attack Speed", 0xE233, false),
+    ABILITY_DAMAGE_BOOST("Ability Damage Boost", 0xE22F, false, true),
     DEFENSE("Defense", 0xE231, true),
     RELOAD("Reload", 0xE232, false),
     COOLDOWN("Cooldown", 0xE22E, false);
@@ -19,11 +21,17 @@ public enum RavengardItemStatistic {
     private final String displayName;
     private final int iconGlyph;
     private final boolean boostable;
+    private final boolean percent;
 
     RavengardItemStatistic(String displayName, int iconGlyph, boolean boostable) {
+        this(displayName, iconGlyph, boostable, false);
+    }
+
+    RavengardItemStatistic(String displayName, int iconGlyph, boolean boostable, boolean percent) {
         this.displayName = displayName;
         this.iconGlyph = iconGlyph;
         this.boostable = boostable;
+        this.percent = percent;
     }
 
     public static RavengardItemStatistic fromKey(String key) {

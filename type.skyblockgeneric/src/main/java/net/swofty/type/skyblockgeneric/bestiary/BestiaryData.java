@@ -1,7 +1,6 @@
 package net.swofty.type.skyblockgeneric.bestiary;
 
-import net.swofty.commons.StringUtility;
-import net.swofty.commons.skyblock.statistics.ItemStatistic;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.entity.mob.BestiaryMob;
 
 import java.util.List;
@@ -214,33 +213,33 @@ public class BestiaryData {
     }
 
     public List<String> getTotalBonuses(List<String> lore, String name, int tier) {
-        lore.add("§a" + name + " §aBonuses");
-        lore.add("§8+" + ItemStatistic.MAGIC_FIND.getLegacyDisplayColor() + getTotalMagicFind(tier) + " " + ItemStatistic.MAGIC_FIND.getFullDisplayName());
-        lore.add("§8+" + ItemStatistic.STRENGTH.getLegacyDisplayColor() + getTotalStrength(tier) + " " + ItemStatistic.STRENGTH.getFullDisplayName());
-        lore.add("§8+§6" + getTotalExtraCoinPercentage(tier) + "% §7coin gain");
+        lore.add("<a>" + name + " Bonuses");
+        lore.add(Text.of("<8>+<stat:magic_find:{}>", getTotalMagicFind(tier)).serialize());
+        lore.add(Text.of("<8>+<stat:strength:{}>", getTotalStrength(tier)).serialize());
+        lore.add("<8>+<6>" + getTotalExtraCoinPercentage(tier) + "% <7>coin gain");
 
         int totalXp = getTotalExtraXPPercentage(tier);
         int percent = totalXp % 100;
         int extra = totalXp / 100;
 
-        if (totalXp >= 100) lore.add("§8+§a100% §7chance for §a+" + extra + " §7XP orbs");
-        if (percent > 0) lore.add("§8+§a50% §7chance for §a+" + (extra + 1) + " §7XP orbs");
+        if (totalXp >= 100) lore.add("<8>+<a>100% <7>chance for <a>+" + extra + " <7>XP orbs");
+        if (percent > 0) lore.add("<8>+<a>50% <7>chance for <a>+" + (extra + 1) + " <7>XP orbs");
 
         return lore;
     }
 
     public List<String> getNextBonuses(List<String> lore, String name, int tier) {
-        lore.add("§7Tier " + StringUtility.getAsRomanNumeral(tier) + " Rewards");
-        lore.add("  §8+" + ItemStatistic.MAGIC_FIND.getLegacyDisplayColor() + getMagicFind(tier) + " " + ItemStatistic.MAGIC_FIND.getFullDisplayName());
-        lore.add("  §8+" + ItemStatistic.STRENGTH.getLegacyDisplayColor() + getStrength(tier) + " " + ItemStatistic.STRENGTH.getFullDisplayName());
-        lore.add("  §8+§6" + getExtraCoinPercentage(tier) + "% §7coin gain");
+        lore.add(Text.of("<7>Tier {:roman} Rewards", tier).serialize());
+        lore.add(Text.of("  <8>+<stat:magic_find:{}>", getMagicFind(tier)).serialize());
+        lore.add(Text.of("  <8>+<stat:strength:{}>", getStrength(tier)).serialize());
+        lore.add("  <8>+<6>" + getExtraCoinPercentage(tier) + "% <7>coin gain");
 
         int totalXp = getExtraXpPercentage(tier);
         int percent = totalXp % 100;
         int extra = totalXp / 100;
 
-        if (totalXp >= 100) lore.add("  §8+§a100% §7chance for §a+" + extra + " §7XP orbs");
-        if (percent > 0) lore.add("  §8+§a50% §7chance for §a+" + (extra + 1) + " §7XP orbs");
+        if (totalXp >= 100) lore.add("  <8>+<a>100% <7>chance for <a>+" + extra + " <7>XP orbs");
+        if (percent > 0) lore.add("  <8>+<a>50% <7>chance for <a>+" + (extra + 1) + " <7>XP orbs");
 
         return lore;
     }

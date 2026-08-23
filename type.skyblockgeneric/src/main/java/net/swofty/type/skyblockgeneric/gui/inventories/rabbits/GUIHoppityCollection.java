@@ -5,7 +5,8 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -52,10 +53,10 @@ public class GUIHoppityCollection implements StatefulView<GUIHoppityCollection.S
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return ViewConfiguration.withString((state, ctx) -> {
+        return ViewConfiguration.withText((state, ctx) -> {
             int totalRabbits = ChocolateRabbit.values().length;
             int totalPages = Math.max(1, (int) Math.ceil(totalRabbits / (double) RABBITS_PER_PAGE));
-            return "(" + state.page() + "/" + totalPages + ") Hoppity's Collection";
+            return Text.of("({}/{}) Hoppity's Collection", state.page(), totalPages);
         }, InventoryType.CHEST_6_ROW);
     }
 
@@ -68,7 +69,7 @@ public class GUIHoppityCollection implements StatefulView<GUIHoppityCollection.S
         List<ChocolateRabbit> rabbits = getFilteredAndSortedRabbits(foundRabbits, state.sortType(), state.filterType());
         int totalPages = Math.max(1, (int) Math.ceil(rabbits.size() / (double) RABBITS_PER_PAGE));
         for (int slot : BORDER_SLOTS) {
-            layout.slot(slot, (s, c) -> ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE, " "));
+            layout.slot(slot, (s, c) -> ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, " "));
         }
 
         layout.slot(4, (s, c) -> createCollectionInfoItem((SkyBlockPlayer) c.player()));
@@ -89,46 +90,40 @@ public class GUIHoppityCollection implements StatefulView<GUIHoppityCollection.S
             }
         }
 
-        layout.slot(47, (s, c) -> {
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Each rabbit has a specific location");
-            lore.add("§7on a specific island where it can be");
-            lore.add("§7found, just for fun.");
-            lore.add("");
-            lore.add("§7The §9Hotspot §7of a Rabbit means that");
-            lore.add("§7this season they have a §a50% §7higher");
-            lore.add("§7chance to be found on this specific");
-            lore.add("§7island.");
-            lore.add("");
-            lore.add("§6Resident §7rabbits however, can §cONLY");
-            lore.add("§7be found on their respective islands.");
-            lore.add("");
-            lore.add("§7Currently selected: §aAll Rabbits");
-            lore.add("");
-            lore.add("§bRight-click to go backwards!");
-            lore.add("§eClick to cycle!");
+        layout.slot(47, (s, c) -> ItemStacks.head(LOCATION_TEXTURE, """
+                <9>Rabbit Locations
+                <7>Each rabbit has a specific location
+                <7>on a specific island where it can be
+                <7>found, just for fun.
 
-            return ItemStackCreator.getStackHead("§9Rabbit Locations", LOCATION_TEXTURE, 1, lore);
-        }, (click, c) -> c.player().sendMessage("§7Rabbit Locations filter coming soon!"));
+                <7>The <9>Hotspot <7>of a Rabbit means that
+                <7>this season they have a <a>50% <7>higher
+                <7>chance to be found on this specific
+                <7>island.
+
+                <6>Resident <7>rabbits however, can <c>ONLY
+                <7>be found on their respective islands.
+
+                <7>Currently selected: <a>All Rabbits
+
+                <b>Right-click to go backwards!
+                <e>Click to cycle!"""),
+                (click, c) -> c.player().sendMessage("<7>Rabbit Locations filter coming soon!"));
 
         Components.back(layout, 48, ctx);
         Components.close(layout, 49);
 
         layout.slot(50, (s, c) -> {
-            List<String> lore = new ArrayList<>();
-            lore.add("");
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.empty());
             for (SortType type : SortType.values()) {
-                if (type == s.sortType()) {
-                    lore.add("§b▶ " + type.getDisplayName());
-                } else {
-                    lore.add("§7  " + type.getDisplayName());
-                }
+                lore.add(Text.of(type == s.sortType() ? "<b>▶ {}" : "<7>  {}", type.getDisplayName()));
             }
-            lore.add("");
-            lore.add("§bRight-click to go backwards!");
-            lore.add("§eClick to switch sort!");
+            lore.add(Text.empty());
+            lore.add(Text.of("<b>Right-click to go backwards!"));
+            lore.add(Text.of("<e>Click to switch sort!"));
 
-            return ItemStackCreator.getStack("§aSort", Material.HOPPER, 1, lore);
+            return ItemStacks.item(Material.HOPPER, 1, Text.of("<a>Sort"), lore);
         }, (click, c) -> {
             boolean isRightClick = click.click() instanceof Click.Right;
             SortType newSort = isRightClick ? state.sortType().previous() : state.sortType().next();
@@ -136,20 +131,16 @@ public class GUIHoppityCollection implements StatefulView<GUIHoppityCollection.S
         });
 
         layout.slot(51, (s, c) -> {
-            List<String> lore = new ArrayList<>();
-            lore.add("");
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.empty());
             for (FilterType type : FilterType.values()) {
-                if (type == s.filterType()) {
-                    lore.add("§a▶ " + type.getDisplayName());
-                } else {
-                    lore.add("§7  " + type.getDisplayName());
-                }
+                lore.add(Text.of(type == s.filterType() ? "<a>▶ {}" : "<7>  {}", type.getDisplayName()));
             }
-            lore.add("");
-            lore.add("§bRight-click to go backwards!");
-            lore.add("§eClick to switch!");
+            lore.add(Text.empty());
+            lore.add(Text.of("<b>Right-click to go backwards!"));
+            lore.add(Text.of("<e>Click to switch!"));
 
-            return ItemStackCreator.getStack("§aFilter", Material.ENDER_EYE, 1, lore);
+            return ItemStacks.item(Material.ENDER_EYE, 1, Text.of("<a>Filter"), lore);
         }, (click, c) -> {
             boolean isRightClick = click.click() instanceof Click.Right;
             FilterType newFilter = isRightClick ? state.filterType().previous() : state.filterType().next();
@@ -157,19 +148,17 @@ public class GUIHoppityCollection implements StatefulView<GUIHoppityCollection.S
         });
 
         if (state.page() < totalPages) {
-            layout.slot(53, (s, c) -> {
-                List<String> lore = new ArrayList<>();
-                lore.add("§ePage " + (s.page() + 1));
-                return ItemStackCreator.getStack("§aNext Page", Material.ARROW, 1, lore);
-            }, (click, c) -> c.session(State.class).setState(new State(state.page() + 1, state.sortType(), state.filterType())));
+            layout.slot(53, (s, c) -> ItemStacks.item(Material.ARROW, """
+                    <a>Next Page
+                    <e>Page {}""", s.page() + 1),
+                    (click, c) -> c.session(State.class).setState(new State(state.page() + 1, state.sortType(), state.filterType())));
         }
 
         if (state.page() > 1) {
-            layout.slot(45, (s, c) -> {
-                List<String> lore = new ArrayList<>();
-                lore.add("§ePage " + (s.page() - 1));
-                return ItemStackCreator.getStack("§aPrevious Page", Material.ARROW, 1, lore);
-            }, (click, c) -> c.session(State.class).setState(new State(state.page() - 1, state.sortType(), state.filterType())));
+            layout.slot(45, (s, c) -> ItemStacks.item(Material.ARROW, """
+                    <a>Previous Page
+                    <e>Page {}""", s.page() - 1),
+                    (click, c) -> c.session(State.class).setState(new State(state.page() - 1, state.sortType(), state.filterType())));
         }
     }
 
@@ -186,79 +175,81 @@ public class GUIHoppityCollection implements StatefulView<GUIHoppityCollection.S
             totalMultiplier += rabbit.getMultiplierBonus();
         }
 
-        List<String> lore = new ArrayList<>();
-        lore.add("§7Help §aHoppity §7find all of his §aChocolate");
-        lore.add("§aRabbits §7during the §dHoppity's Hunt");
-        lore.add("§7event!");
-        lore.add("");
-        lore.add("§7The more unique §aChocolate Rabbits");
-        lore.add("§7that you find, the more your");
-        lore.add("§6Chocolate Factory §7will produce!");
-        lore.add("");
-        lore.add("§7Finding duplicate Rabbits grants");
-        lore.add("§a+10% §7extra §6Chocolate §7per duplicate,");
-        lore.add("§7up to §a+100%§7!");
-        lore.add("");
-        lore.add("§7Rabbits Found: §e" + String.format("%.1f", percentage) + "§6%");
-        lore.add(createProgressBar(percentage) + " §e" + found + "§6/§e" + TOTAL_RABBITS);
-        lore.add("");
+        List<Text> lore = new ArrayList<>(List.of(
+                Text.of("<7>Help <a>Hoppity <7>find all of his <a>Chocolate"),
+                Text.of("<a>Rabbits <7>during the <d>Hoppity's Hunt"),
+                Text.of("<7>event!"),
+                Text.empty(),
+                Text.of("<7>The more unique <a>Chocolate Rabbits"),
+                Text.of("<7>that you find, the more your"),
+                Text.of("<6>Chocolate Factory <7>will produce!"),
+                Text.empty(),
+                Text.of("<7>Finding duplicate Rabbits grants"),
+                Text.of("<a>+10% <7>extra <6>Chocolate <7>per duplicate,"),
+                Text.of("<7>up to <a>+100%<7>!"),
+                Text.empty(),
+                Text.of("<7>Rabbits Found: <e>{}<6>%", String.format("%.1f", percentage)),
+                createProgressBar(percentage, found),
+                Text.empty()));
         if (totalChocolate > 0) {
-            lore.add("§6+" + totalChocolate + " Chocolate per second");
+            lore.add(Text.of("<6>+{} Chocolate per second", totalChocolate));
         }
         if (totalMultiplier > 0) {
-            lore.add("§6+" + String.format("%.3fx", totalMultiplier) + " Chocolate Multiplier");
+            lore.add(Text.of("<6>+{} Chocolate Multiplier", String.format("%.3fx", totalMultiplier)));
         }
 
-        return ItemStackCreator.getStackHead("§aHoppity's Collection", HOPPITY_TEXTURE, 1, lore);
+        return ItemStacks.head(HOPPITY_TEXTURE, 1, Text.of("<a>Hoppity's Collection"), lore);
     }
 
     private ItemStack.Builder createRabbitItem(ChocolateRabbit rabbit, boolean found) {
-        List<Object> lore = new ArrayList<>();
+        List<Text> lore = new ArrayList<>();
 
         if (rabbit.getRarity() == ChocolateRabbit.RabbitRarity.LEGENDARY ||
                 rabbit.getRarity() == ChocolateRabbit.RabbitRarity.DIVINE ||
                 rabbit.getRarity() == ChocolateRabbit.RabbitRarity.MYTHIC) {
-            lore.add("§7Grants §6+" + String.format("%.2fx", rabbit.getMultiplierBonus()) + " Chocolate §7per second");
-            lore.add("§7to your §6Chocolate Factory§7.");
+            lore.add(Text.of("<7>Grants <6>+{} Chocolate <7>per second",
+                    String.format("%.2fx", rabbit.getMultiplierBonus())));
+            lore.add(Text.of("<7>to your <6>Chocolate Factory<7>."));
         } else {
-            lore.add("§7Grants §6+" + rabbit.getChocolateBonus() + " Chocolate §7and §6" +
-                    String.format("%.3fx", rabbit.getMultiplierBonus()));
-            lore.add("§6Chocolate §7per second to your");
-            lore.add("§6Chocolate Factory§7.");
+            lore.add(Text.of("<7>Grants <6>+{} Chocolate <7>and <6>{}", rabbit.getChocolateBonus(),
+                    String.format("%.3fx", rabbit.getMultiplierBonus())));
+            lore.add(Text.of("<6>Chocolate <7>per second to your"));
+            lore.add(Text.of("<6>Chocolate Factory<7>."));
         }
-        lore.add("");
+        lore.add(Text.empty());
 
         if (rabbit.getObtainMethod() != null) {
-            lore.add("§7" + rabbit.getObtainMethod());
-            lore.add("");
+            lore.add(Text.of("<7>{}", rabbit.getObtainMethod()));
+            lore.add(Text.empty());
         }
 
         if (rabbit.getRequirement() != null) {
-            lore.add("§c✖ §7Requirement");
-            lore.add("§7" + rabbit.getRequirement());
-            lore.add("");
+            lore.add(Text.of("<c>✖ <7>Requirement"));
+            lore.add(Text.of("<7>{}", rabbit.getRequirement()));
+            lore.add(Text.empty());
             if (!found) {
-                lore.add("§8You cannot find this rabbit until you");
-                lore.add("§8meet the requirement!");
-                lore.add("");
+                lore.add(Text.of("<8>You cannot find this rabbit until you"));
+                lore.add(Text.of("<8>meet the requirement!"));
+                lore.add(Text.empty());
             }
         }
 
         if (!found) {
-            lore.add("§8You have not found this rabbit yet!");
+            lore.add(Text.of("<8>You have not found this rabbit yet!"));
         }
 
         if (rabbit.getLocation() != null) {
-            lore.add("");
-            lore.add(rabbit.getResidentLabel());
+            lore.add(Text.empty());
+            lore.add(Text.of("{}", rabbit.getResidentLabel()));
         }
-        lore.add("");
+        lore.add(Text.empty());
         lore.add(rabbit.getRarity().getFormattedName());
 
+        Text name = rabbit.getFormattedName();
         if (found) {
-            return ItemStackCreator.getStackHead(rabbit.getFormattedName(), FOUND_RABBIT_TEXTURE, 1, lore);
+            return ItemStacks.head(FOUND_RABBIT_TEXTURE, 1, name, lore);
         } else {
-            return ItemStackCreator.getStack(rabbit.getFormattedName(), Material.GRAY_DYE, 1, lore);
+            return ItemStacks.item(Material.GRAY_DYE, 1, name, lore);
         }
     }
 
@@ -287,17 +278,12 @@ public class GUIHoppityCollection implements StatefulView<GUIHoppityCollection.S
         return rabbits;
     }
 
-    private String createProgressBar(double progress) {
+    private Text createProgressBar(double progress, int found) {
         int filled = (int) (progress / PERCENT_PER_PROGRESS_SEGMENT);
         int empty = PROGRESS_BAR_SEGMENTS - filled;
 
-        StringBuilder bar = new StringBuilder("§2§l§m");
-        bar.repeat(" ", Math.max(0, filled));
-        bar.append("§f§l§m");
-        bar.repeat(" ", Math.max(0, empty));
-        bar.append("§r");
-
-        return bar.toString();
+        return Text.of("<2><l><m>{}<f>{}<r> <e>{}<6>/<e>{}",
+                " ".repeat(Math.max(0, filled)), " ".repeat(Math.max(0, empty)), found, TOTAL_RABBITS);
     }
 
     @Getter

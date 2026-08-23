@@ -3,10 +3,10 @@ package net.swofty.type.ravengardgeneric.hud;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.swofty.type.ravengardgeneric.gui.RavengardFont;
 import org.tinylog.Logger;
 
 import java.io.InputStream;
@@ -85,21 +85,20 @@ public final class RavengardHudComposer {
             result = result.append(doubledFull(Component.text(state.healthText(), TextColor.color(0xFEFD04))))
                     .append(doubledFull(Component.text(state.staminaText(), TextColor.color(0xFEFD06))));
         }
-        Component activity = Component.empty()
-                .append(Component.text("\uE002" + state.getClock() + "  "))
-                .append(Component.text("\uE003" + state.getKillCount() + "  "))
-                .append(Component.text("\uE004" + state.getPlayerCount() + "  "))
-                .append(Component.text("\uE005" + state.getTeamCount() + "  "))
-                .append(Component.text("\uE00E" + state.getPortalCount()))
-                .color(TextColor.color(0xFEFD08));
-        result = result.append(tripled(activity));
+        result = result.append(tripledRuns(TextColor.color(0xFEFD08),
+                new String[]{"\uE002", state.getClock() + "  "},
+                new String[]{"\uE003", state.getKillCount() + "  "},
+                new String[]{"\uE004", state.getPlayerCount() + "  "},
+                new String[]{"\uE005", state.getTeamCount() + "  "},
+                new String[]{"\uE00E", String.valueOf(state.getPortalCount())}));
         if (state.isSpectating()) {
-            result = result.append(tripled(Component.text("\uE00FSPECTATING", TextColor.color(0xFEFD0A))));
+            result = result.append(tripledRuns(TextColor.color(0xFEFD0A),
+                    new String[]{"\uE00F", "SPECTATING"}));
         }
         Component date = Component.text(state.getDate() + " ", TextColor.color(0xFEFD10))
                 .append(Component.text(state.getServerId(), TextColor.color(0xFEFD12)));
-        result = result.append(date.font(Key.key("minecraft:-full")))
-                .append(date.font(Key.key("minecraft:default")));
+        result = result.append(date.font(RavengardFont.FULL))
+                .append(date.font(RavengardFont.DEFAULT));
         // the captured dungeon hud carries keybind hints and the map/inventory
         // icon block after the date; the shader positions them under the
         // ability slots and hotbar from these exact runs
@@ -107,33 +106,40 @@ public final class RavengardHudComposer {
                 .append(keybindHint("key.drop", 0xD0105))
                 .append(keybindHint("key.swapOffhand", 0xD0024))
                 .append(keybindHint("key.playerlist", 0xCFEB3));
-        Component mapIcons = Component.text("\uE006")
-                .append(Component.text(new String(Character.toChars(0xD0142))))
-                .append(Component.text("\uE007"))
-                .color(TextColor.color(0xFEFE00));
-        result = result.append(tripled(mapIcons));
+        result = result.append(tripledRuns(TextColor.color(0xFEFE00),
+                new String[]{"\uE006" + new String(Character.toChars(0xD0142)) + "\uE007", ""}));
         return result;
     }
 
     private static Component doubledFull(Component component) {
-        return component.font(Key.key("minecraft:-full"))
-                .append(component.font(Key.key("minecraft:default")));
+        return component.font(RavengardFont.FULL)
+                .append(component.font(RavengardFont.DEFAULT));
     }
 
     private static Component keybindHint(String key, int suffixCodepoint) {
         Component hint = Component.keybind(key).color(TextColor.color(0xFEFD18));
         return Component.empty()
-                .append(hint.font(Key.key("minecraft:-half")))
-                .append(hint.font(Key.key("minecraft:default")))
-                .append(hint.font(Key.key("minecraft:-half")))
-                .append(Component.text(new String(Character.toChars(suffixCodepoint))));
+                .append(hint.font(RavengardFont.HALF))
+                .append(hint.font(RavengardFont.DEFAULT))
+                .append(hint.font(RavengardFont.HALF))
+                .append(Component.text(new String(Character.toChars(suffixCodepoint)))
+                        .font(RavengardFont.RAVENGARD));
     }
 
-    private static Component tripled(Component component) {
-        return Component.empty()
-                .append(component.font(Key.key("minecraft:-half")))
-                .append(component.font(Key.key("minecraft:default")))
-                .append(component.font(Key.key("minecraft:-half")));
+    private static Component tripledRuns(TextColor color, String[]... runs) {
+        Component half = Component.empty();
+        Component visible = Component.empty();
+        for (String[] run : runs) {
+            half = half.append(Component.text(run[0] + run[1]));
+            visible = visible.append(Component.text(run[0]).font(RavengardFont.RAVENGARD));
+            if (!run[1].isEmpty()) {
+                visible = visible.append(Component.text(run[1]).font(RavengardFont.DEFAULT));
+            }
+        }
+        return Component.empty().color(color)
+                .append(half.font(RavengardFont.HALF))
+                .append(visible)
+                .append(half.font(RavengardFont.HALF));
     }
 
     // structure taken from the captured team_5 line: per slot a spell background glyph whose tint
@@ -151,12 +157,14 @@ public final class RavengardHudComposer {
         Component line = Component.empty();
         if (state.getAbilityOne() != 0) {
             line = line.append(Component.text(new String(Character.toChars(SPELL_BACKGROUND)))
+                    .font(RavengardFont.RAVENGARD)
                     .color(net.kyori.adventure.text.format.TextColor.color(SLOT_ONE_BACKGROUND))
                     .append(Component.text(new String(Character.toChars(state.getAbilityOne())))
                             .color(net.kyori.adventure.text.format.TextColor.color(SLOT_ONE_ICON))));
         }
         if (state.getAbilityTwo() != 0) {
             line = line.append(Component.text(new String(Character.toChars(SPELL_BACKGROUND)))
+                    .font(RavengardFont.RAVENGARD)
                     .color(net.kyori.adventure.text.format.TextColor.color(SLOT_TWO_BACKGROUND))
                     .append(Component.text(new String(Character.toChars(state.getAbilityTwo())))
                             .color(net.kyori.adventure.text.format.TextColor.color(SLOT_TWO_ICON))));

@@ -1,8 +1,5 @@
 package net.swofty.type.skywarsgame.luckyblock.items.armor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.color.Color;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
@@ -15,11 +12,10 @@ import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.particle.Particle;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class StingedLeggings implements LuckyBlockArmor {
 
@@ -50,23 +46,15 @@ public class StingedLeggings implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.LEATHER_LEGGINGS)
-                .customName(Component.text("Stinged Leggings", NamedTextColor.LIGHT_PURPLE)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Protection II", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Leaves a ", NamedTextColor.GRAY)
-                                .append(Component.text("poison cloud", NamedTextColor.DARK_GREEN))
-                                .append(Component.text(" behind you!", NamedTextColor.GRAY))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.LEATHER_LEGGINGS, """
+                        <d>Stinged Leggings
+
+                        <7>Protection II
+
+                        <7>Leaves a <2>poison cloud<7> behind you!
+
+                        <6><l>LUCKY BLOCK ITEM
+                        """)
                 .set(DataComponents.DYED_COLOR, new Color(255, 0, 255))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
@@ -74,7 +62,7 @@ public class StingedLeggings implements LuckyBlockArmor {
 
     @Override
     public void onEquip(SkywarsPlayer player) {
-        player.sendMessage(Component.text("Your legs ooze with poison!", NamedTextColor.DARK_GREEN));
+        player.sendMessage("<2>Your legs ooze with poison!");
     }
 
     @Override

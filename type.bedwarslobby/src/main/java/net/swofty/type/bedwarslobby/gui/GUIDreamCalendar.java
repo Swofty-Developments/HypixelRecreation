@@ -5,7 +5,8 @@ import net.minestom.server.item.Material;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.bedwars.BedWarsDreamRotation;
 import net.swofty.commons.bedwars.BedWarsGameType;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -47,27 +48,25 @@ public class GUIDreamCalendar extends StatelessView {
     private net.minestom.server.item.ItemStack.Builder render(BedWarsDreamRotation.RotationEntry entry, LocalDate today) {
         BedWarsDreamRotation.DreamMode mode = entry.mode();
         boolean current = entry.current();
-        String prefix = current ? "§6✸ §b" : "§b";
+        String prefix = current ? "<6>✸ <b>" : "<b>";
         long days = Math.max(0, ChronoUnit.DAYS.between(today, entry.startsAt()));
-        List<String> lore = new java.util.ArrayList<>();
-        lore.add("§8Dream Rotation");
-        lore.add("");
+        List<Text> lore = new java.util.ArrayList<>();
+        lore.add(Text.of("<8>Dream Rotation"));
+        lore.add(Text.empty());
         lore.addAll(description(mode.displayName()));
-        lore.add("");
+        lore.add(Text.empty());
         if (current) {
-            lore.add("§aThis mode is currently featured.");
-            lore.add("§eClick to play!");
+            lore.add(Text.of("<a>This mode is currently featured."));
+            lore.add(Text.of("<e>Click to play!"));
         } else {
-            lore.add("§eThis mode will be featured in " + days + " days.");
+            lore.add(Text.of("<e>This mode will be featured in {} days.", days));
         }
 
+        Text name = Text.of(prefix + "{}", mode.displayName());
         if (mode.displayName().contains("Lucky")) {
-            return ItemStackCreator.getStackHead(prefix + mode.displayName(),
-                "50d8f863e9b42653e642711ee8b854dd8f9463ef4bfcde7db9776daadb532b",
-                1,
-                lore);
+            return ItemStacks.head("50d8f863e9b42653e642711ee8b854dd8f9463ef4bfcde7db9776daadb532b", 1, name, lore);
         }
-        return ItemStackCreator.getStack(prefix + mode.displayName(), icon(mode.displayName()), amount(mode.displayName()), lore);
+        return ItemStacks.item(icon(mode.displayName()), amount(mode.displayName()), name, lore);
     }
 
     private void queueCurrent(ViewContext ctx, BedWarsGameType type) {
@@ -96,16 +95,16 @@ public class GUIDreamCalendar extends StatelessView {
         return name.contains("Castle") ? 40 : 1;
     }
 
-    private List<String> description(String name) {
+    private List<Text> description(String name) {
         if (name.contains("Lucky"))
-            return List.of("§7Find Lucky Blocks to earn a", "§7variety of events and effects,", "§7leading to total mayhem!");
+            return List.of(Text.of("<7>Find Lucky Blocks to earn a"), Text.of("<7>variety of events and effects,"), Text.of("<7>leading to total mayhem!"));
         if (name.contains("Rush"))
-            return List.of("§7Everything is upgraded at the start!", "§7Fight to the death right away!");
+            return List.of(Text.of("<7>Everything is upgraded at the start!"), Text.of("<7>Fight to the death right away!"));
         if (name.contains("Ultimate"))
-            return List.of("§7Pick an Ultimate Ability to use any", "§7time during the battle!");
-        if (name.contains("Castle")) return List.of("§7Massive 40 versus 40 all out war on", "§7a unique Castle map!");
-        if (name.contains("Voidless")) return List.of("§7No longer can you be a victim of the", "§7Void!");
-        if (name.contains("Armed")) return List.of("§7Utilize a new arsenal of ranged", "§7weapons to win the game!");
-        return List.of("§7Every few seconds brings a new", "§7surprise!");
+            return List.of(Text.of("<7>Pick an Ultimate Ability to use any"), Text.of("<7>time during the battle!"));
+        if (name.contains("Castle")) return List.of(Text.of("<7>Massive 40 versus 40 all out war on"), Text.of("<7>a unique Castle map!"));
+        if (name.contains("Voidless")) return List.of(Text.of("<7>No longer can you be a victim of the"), Text.of("<7>Void!"));
+        if (name.contains("Armed")) return List.of(Text.of("<7>Utilize a new arsenal of ranged"), Text.of("<7>weapons to win the game!"));
+        return List.of(Text.of("<7>Every few seconds brings a new"), Text.of("<7>surprise!"));
     }
 }

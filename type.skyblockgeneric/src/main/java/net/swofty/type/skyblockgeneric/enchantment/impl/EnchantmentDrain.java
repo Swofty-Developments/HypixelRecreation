@@ -25,7 +25,7 @@ public class EnchantmentDrain implements Ench, EnchFromTable, DamageEventEnchant
     @Override
     public String getDescription(int level) {
         double healPercent = HEAL_PERCENTAGES[level - 1] * 100;
-        return "Heals for §a" + healPercent + "%§7 of your max health per 100 ☠Crit Damage you deal per hit, up to 1,000 ☠Crit Damage.";
+        return "Heals for <a>" + healPercent + "%<7> of your max health per 100 ☠Crit Damage you deal per hit, up to 1,000 ☠Crit Damage.";
     }
 
     @Override

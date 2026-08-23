@@ -1,16 +1,15 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels.rewards;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkyBlockExperience;
 import net.swofty.type.skyblockgeneric.levels.CustomLevelAward;
 import net.swofty.type.skyblockgeneric.levels.SkyBlockEmblems;
@@ -20,7 +19,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class GUILevelRewards extends StatelessView {
@@ -39,66 +37,63 @@ public class GUILevelRewards extends StatelessView {
         // Feature Rewards
         layout.slot(11, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-            Locale l = player.getLocale();
             DatapointSkyBlockExperience.PlayerSkyBlockExperience experience = player.getSkyBlockExperience();
-            List<Object> lore = new ArrayList<>();
-            lore.addAll(List.of(I18n.iterable("gui_sbmenu.levels.rewards.feature.lore")));
-            lore.add(" ");
-            lore.add(I18n.string("gui_sbmenu.levels.rewards.next_reward", l));
+            List<Text> lore = new ArrayList<>();
+            lore.addAll(Text.keyLines("gui_sbmenu.levels.rewards.feature.lore"));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_sbmenu.levels.rewards.next_reward"));
 
             Map.Entry<Integer, List<CustomLevelAward>> nextAward = CustomLevelAward.getNextReward(experience.getLevel().asInt());
             if (nextAward == null) {
-                lore.add(I18n.string("gui_sbmenu.levels.rewards.no_more", l));
+                lore.add(Text.key("gui_sbmenu.levels.rewards.no_more"));
             } else {
-                nextAward.getValue().forEach(award -> lore.add("§7" + award.getDisplay()));
-                lore.add(I18n.string("gui_sbmenu.levels.rewards.at_level", l, Component.text(String.valueOf(nextAward.getKey()))));
+                nextAward.getValue().forEach(award -> lore.add(Text.of("<7>{}", award.getDisplay())));
+                lore.add(Text.key("gui_sbmenu.levels.rewards.at_level", nextAward.getKey()));
             }
 
-            lore.add(" ");
+            lore.add(Text.literal(" "));
             lore.addAll(getAsDisplay(CustomLevelAward.getFromLevel(experience.getLevel().asInt()).size(),
                     CustomLevelAward.getTotalLevelAwards()));
-            lore.add(" ");
-            lore.add(I18n.string("gui_sbmenu.levels.rewards.click_to_view", l));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_sbmenu.levels.rewards.click_to_view"));
 
-            return TranslatableItemStackCreator.getStack("gui_sbmenu.levels.rewards.feature", Material.NETHER_STAR, 1, lore);
+            return ItemStacks.item(Material.NETHER_STAR, 1, Text.key("gui_sbmenu.levels.rewards.feature"), lore);
         }, (click, c) -> c.player().openView(new GUILevelFeatureRewards()));
 
         // Prefix Color Rewards
         layout.slot(12, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-            Locale l = player.getLocale();
-            List<Object> lore = new ArrayList<>();
-            lore.addAll(List.of(I18n.iterable("gui_sbmenu.levels.rewards.prefix.lore")));
-            lore.add(" ");
-            lore.add(I18n.string("gui_sbmenu.levels.rewards.next_reward", l));
+            List<Text> lore = new ArrayList<>();
+            lore.addAll(Text.keyLines("gui_sbmenu.levels.rewards.prefix.lore"));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_sbmenu.levels.rewards.next_reward"));
 
             Map.Entry<SkyBlockLevelRequirement, String> nextPrefix = player.getSkyBlockExperience()
                     .getLevel().getNextPrefixChange();
             if (nextPrefix == null) {
-                lore.add(I18n.string("gui_sbmenu.levels.rewards.no_more", l));
+                lore.add(Text.key("gui_sbmenu.levels.rewards.no_more"));
             } else {
-                lore.add(nextPrefix.getValue() + nextPrefix.getKey().getPrefixDisplay());
-                lore.add(I18n.string("gui_sbmenu.levels.rewards.at_level", l, Component.text(String.valueOf(nextPrefix.getKey().asInt()))));
+                lore.add(Text.parse(nextPrefix.getValue() + nextPrefix.getKey().getPrefixDisplay()));
+                lore.add(Text.key("gui_sbmenu.levels.rewards.at_level", nextPrefix.getKey().asInt()));
             }
-            lore.add(" ");
+            lore.add(Text.literal(" "));
             lore.addAll(getAsDisplay(
                     player.getSkyBlockExperience().getLevel().getPreviousPrefixChanges().size(),
                     SkyBlockLevelRequirement.getAllPrefixChanges().size()
             ));
-            lore.add(" ");
-            lore.add(I18n.string("gui_sbmenu.levels.rewards.click_to_view", l));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_sbmenu.levels.rewards.click_to_view"));
 
-            return TranslatableItemStackCreator.getStack("gui_sbmenu.levels.rewards.prefix", Material.GRAY_DYE, 1, lore);
+            return ItemStacks.item(Material.GRAY_DYE, 1, Text.key("gui_sbmenu.levels.rewards.prefix"), lore);
         }, (click, c) -> c.player().openView(new GUILevelPrefixRewards()));
 
         // Emblem Rewards
         layout.slot(13, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-            Locale l = player.getLocale();
-            List<Object> lore = new ArrayList<>();
-            lore.addAll(List.of(I18n.iterable("gui_sbmenu.levels.rewards.emblem.lore")));
-            lore.add(" ");
-            lore.add(I18n.string("gui_sbmenu.levels.rewards.next_reward", l));
+            List<Text> lore = new ArrayList<>();
+            lore.addAll(Text.keyLines("gui_sbmenu.levels.rewards.emblem.lore"));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_sbmenu.levels.rewards.next_reward"));
 
             List<SkyBlockEmblems.SkyBlockEmblem> levelEmblems = SkyBlockEmblems.getEmblemsWithLevelCause();
             SkyBlockEmblems.SkyBlockEmblem nextEmblem = null;
@@ -109,21 +104,21 @@ public class GUILevelRewards extends StatelessView {
             }
 
             if (nextEmblem == null) {
-                lore.add(I18n.string("gui_sbmenu.levels.rewards.no_more", l));
+                lore.add(Text.key("gui_sbmenu.levels.rewards.no_more"));
             } else {
-                lore.add("§f" + nextEmblem.displayName() + " " + nextEmblem.emblem());
-                lore.add(I18n.string("gui_sbmenu.levels.rewards.at_level", l, Component.text(String.valueOf(((LevelCause) nextEmblem.cause()).getLevel()))));
+                lore.add(Text.of("<f>{} ", nextEmblem.displayName()).append(nextEmblem.emblem()));
+                lore.add(Text.key("gui_sbmenu.levels.rewards.at_level", ((LevelCause) nextEmblem.cause()).getLevel()));
             }
 
-            lore.add(" ");
+            lore.add(Text.literal(" "));
             lore.addAll(getAsDisplay(
                     player.getSkyBlockExperience().getOfType(LevelCause.class).size(),
                     levelEmblems.size()
             ));
-            lore.add(" ");
-            lore.add(I18n.string("gui_sbmenu.levels.rewards.click_to_view", l));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_sbmenu.levels.rewards.click_to_view"));
 
-            return TranslatableItemStackCreator.getStack("gui_sbmenu.levels.rewards.emblem", Material.NAME_TAG, 1, lore);
+            return ItemStacks.item(Material.NAME_TAG, 1, Text.key("gui_sbmenu.levels.rewards.emblem"), lore);
         }, (click, c) -> c.player().openView(new GUILevelEmblemRewards()));
 
         // Statistic Rewards
@@ -131,9 +126,9 @@ public class GUILevelRewards extends StatelessView {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             SkyBlockLevelRequirement nextLevel = player.getSkyBlockExperience().getLevel().getNextLevel();
 
-            return TranslatableItemStackCreator.getStack("gui_sbmenu.levels.rewards.statistic", Material.DIAMOND_HELMET, 1,
-                "gui_sbmenu.levels.rewards.statistic.lore",
-                Component.text(nextLevel == null ? "§cMAX" : String.valueOf(nextLevel.asInt())));
+            return ItemStacks.item(Material.DIAMOND_HELMET, 1, Text.key("gui_sbmenu.levels.rewards.statistic"),
+                    Text.keyLines("gui_sbmenu.levels.rewards.statistic.lore",
+                            nextLevel == null ? Text.of("<c>MAX") : Text.literal(String.valueOf(nextLevel.asInt()))));
         });
     }
 
@@ -153,24 +148,20 @@ public class GUILevelRewards extends StatelessView {
         return amountToReturn;
     }
 
-    public static List<String> getAsDisplay(int unlocked, int total) {
-        List<String> toReturn = new ArrayList<>();
+    public static List<Text> getAsDisplay(int unlocked, int total) {
+        List<Text> toReturn = new ArrayList<>();
 
         String unlockedPercentage = String.format("%.2f", (unlocked / (double) total) * 100);
-        toReturn.add(I18n.string("gui_sbmenu.levels.rewards.unlocked", Component.text(unlockedPercentage)));
+        toReturn.add(Text.key("gui_sbmenu.levels.rewards.unlocked", unlockedPercentage));
 
         String baseLoadingBar = "─────────────────";
         int maxBarLength = baseLoadingBar.length();
-        int completedLength = (int) ((unlocked / (double) total) * maxBarLength);
+        int completedLength = Math.min((int) ((unlocked / (double) total) * maxBarLength), maxBarLength);
 
-        String completedLoadingBar = "§b§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-        int formattingCodeLength = 4;
-        String uncompletedLoadingBar = "§7§m" + baseLoadingBar.substring(Math.min(
-                completedLoadingBar.length() - formattingCodeLength,
-                maxBarLength
-        ));
+        String completedDashes = baseLoadingBar.substring(0, completedLength);
+        String uncompletedDashes = baseLoadingBar.substring(completedLength);
 
-        toReturn.add(completedLoadingBar + uncompletedLoadingBar + "§r §e" + unlocked + "§6/§e" + total);
+        toReturn.add(Text.of("<b><m>{}<7>{}<r> <e>{}<6>/<e>{}", completedDashes, uncompletedDashes, unlocked, total));
         return toReturn;
     }
 }

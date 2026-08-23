@@ -108,60 +108,60 @@ public enum SkyBlockMayor {
 
     @Getter
     public enum Perk {
-        SLASHED_PRICING("SLASHED Pricing", "§7Starting slayer quests is §ehalf price§7."),
-        SLAYER_XP_BUFF("Slayer XP Buff", "§7Earn §d25% §7more Slayer XP."),
-        PATHFINDER("Pathfinder", "§7Gain rare drops §d20% §7more often."),
+        SLASHED_PRICING("SLASHED Pricing", "<7>Starting slayer quests is <e>half price</e>."),
+        SLAYER_XP_BUFF("Slayer XP Buff", "<7>Earn <d>25% </d>more Slayer XP."),
+        PATHFINDER("Pathfinder", "<7>Gain rare drops <d>20% </d>more often."),
 
-        PROSPECTION("Prospection", "§7Mining minions work §a25% §7faster."),
-        MINING_XP_BUFF("Mining XP Buff", "§7Get §3+60☯ Mining Wisdom §7on public islands."),
-        MINING_FIESTA("Mining Fiesta", "§7Schedules 5 §6Mining Fiestas §7throughout the year!"),
-        MOLTEN_FORGE("Molten Forge", "§7Decrease the time it takes to §6forge §7items by §d25%§7."),
+        PROSPECTION("Prospection", "<7>Mining minions work <a>25% </a>faster."),
+        MINING_XP_BUFF("Mining XP Buff", "<7>Get <3>+60☯ Mining Wisdom </3>on public islands."),
+        MINING_FIESTA("Mining Fiesta", "<7>Schedules 5 <6>Mining Fiestas </6>throughout the year!"),
+        MOLTEN_FORGE("Molten Forge", "<7>Decrease the time it takes to <6>forge </6>items by <d>25%</d>."),
 
-        HUNTRESS_INTUITION("Huntress' Intuition", "§7Gain §d+10❃ Tracking§7."),
-        SHARING_IS_CARING("Sharing is Caring", "§7Unlocks §a2 §7more §6Exp Share §7slots in your pets menu and increases the §6Exp Share §7rate by §a+10%§7!"),
-        LUCKY_PAWS("Lucky Paws", "§7Increases chance of finding rare Mythological creatures by §a+15%§7."),
-        PET_XP_BUFF("Pet XP Buff", "§7Gain §a+35% §7more pet experience from all sources."),
+        HUNTRESS_INTUITION("Huntress' Intuition", "<7>Gain <d>+10❃ Tracking</d>."),
+        SHARING_IS_CARING("Sharing is Caring", "<7>Unlocks <a>2 </a>more <6>Exp Share </6>slots in your pets menu and increases the <6>Exp Share </6>rate by <a>+10%</a>!"),
+        LUCKY_PAWS("Lucky Paws", "<7>Increases chance of finding rare Mythological creatures by <a>+15%</a>."),
+        PET_XP_BUFF("Pet XP Buff", "<7>Gain <a>+35% </a>more pet experience from all sources."),
 
-        STOCK_EXCHANGE("Stock Exchange", "§7Participate in the §dStonks Auction §7for a chance to win §5Stock of Stonks§7! Trade them for §6extravagant items §7at the §bTrade Center§7."),
-        LONG_TERM_INVESTMENT("Long Term Investment", "§7The §dMinister §7reappears in the next election with §aall §7of their perks."),
-        SHOPPING_SPREE("Shopping Spree", "§7Reduces NPC shop prices by §a20%§7."),
-        VOLUME_TRADING("Volume Trading", "§7Bazaar sell/buy orders are §a10% §7cheaper."),
+        STOCK_EXCHANGE("Stock Exchange", "<7>Participate in the <d>Stonks Auction </d>for a chance to win <5>Stock of Stonks</5>! Trade them for <6>extravagant items </6>at the <b>Trade Center</b>."),
+        LONG_TERM_INVESTMENT("Long Term Investment", "<7>The <d>Minister </d>reappears in the next election with <a>all </a>of their perks."),
+        SHOPPING_SPREE("Shopping Spree", "<7>Reduces NPC shop prices by <a>20%</a>."),
+        VOLUME_TRADING("Volume Trading", "<7>Bazaar sell/buy orders are <a>10% </a>cheaper."),
 
-        PEST_ERADICATOR("Pest Eradicator", "§7The duration of Pesthunter Phillip's §6☘ Farming Fortune §7bonus is now §a60m§7. Decreases the spawn cooldown of §2Pests §7by §a20%§7."),
-        GOATED("GOATed", "§eJacob's Farming Contest §7brackets include up to §a10% §7more players each."),
-        PELT_POCALYPSE("Pelt-pocalypse", "§7Obtain §a1.5x §7more §5pelts §7from §aTrevor §7in the §eMushroom Desert§7."),
-        BLOOMING_BUSINESS("Blooming Business", "§7All Garden Visitors reward §aFine Flour§7 and §c+10% Copper §7for accepting offers."),
+        PEST_ERADICATOR("Pest Eradicator", "<7>The duration of Pesthunter Phillip's <6>☘ Farming Fortune </6>bonus is now <a>60m</a>. Decreases the spawn cooldown of <2>Pests </2>by <a>20%</a>."),
+        GOATED("GOATed", "<e>Jacob's Farming Contest <7>brackets include up to <a>10% </a>more players each."),
+        PELT_POCALYPSE("Pelt-pocalypse", "<7>Obtain <a>1.5x </a>more <5>pelts </5>from <a>Trevor </a>in the <e>Mushroom Desert</e>."),
+        BLOOMING_BUSINESS("Blooming Business", "<7>All Garden Visitors reward <a>Fine Flour</a> and <c>+10% Copper </c>for accepting offers."),
 
-        SWEET_BENEVOLENCE("Sweet Benevolence", "§7Earn §a+30% §7more §dCandy§7, §cGifts §7and §6Chocolate §7from duplicate rabbits during their respective events."),
-        A_TIME_FOR_GIVING("A Time for Giving", "§7Spawn §dParty Chests §7by killing mobs during the §6Spooky Festival §7and collect §bParty Gifts §7from §cJerry's Workshop§7."),
-        CHIVALROUS_CARNIVAL("Chivalrous Carnival", "§7Schedules a §eCarnival §7in the hub, active throughout the §bentire year§7."),
-        EXTRA_EVENT("Extra Event", "§7Schedules an extra §6Spooky Festival §7event during the year."),
+        SWEET_BENEVOLENCE("Sweet Benevolence", "<7>Earn <a>+30% </a>more <d>Candy</d>, <c>Gifts </c>and <6>Chocolate </6>from duplicate rabbits during their respective events."),
+        A_TIME_FOR_GIVING("A Time for Giving", "<7>Spawn <d>Party Chests </d>by killing mobs during the <6>Spooky Festival </6>and collect <b>Party Gifts </b>from <c>Jerry's Workshop</c>."),
+        CHIVALROUS_CARNIVAL("Chivalrous Carnival", "<7>Schedules a <e>Carnival </e>in the hub, active throughout the <b>entire year</b>."),
+        EXTRA_EVENT("Extra Event", "<7>Schedules an extra <6>Spooky Festival </6>event during the year."),
 
-        FISHING_XP_BUFF("Fishing XP Buff", "§7Get §3+50☯ Fishing Wisdom §7on public islands."),
-        LUCK_OF_THE_SEA("Luck of the Sea 2.0", "§7Gain §a+15 ☂ Sea Creature Chance§7."),
-        FISHING_FESTIVAL("Fishing Festival", "§7Schedules 5 §6Fishing Festivals §7throughout the year!"),
-        DOUBLE_TROUBLE("Double Trouble", "§7Fishing minions work §a50% §7faster."),
+        FISHING_XP_BUFF("Fishing XP Buff", "<7>Get <3>+50☯ Fishing Wisdom </3>on public islands."),
+        LUCK_OF_THE_SEA("Luck of the Sea 2.0", "<7>Gain <a>+15 ☂ Sea Creature Chance</a>."),
+        FISHING_FESTIVAL("Fishing Festival", "<7>Schedules 5 <6>Fishing Festivals </6>throughout the year!"),
+        DOUBLE_TROUBLE("Double Trouble", "<7>Fishing minions work <a>50% </a>faster."),
 
-        MARAUDER("Marauder", "§7Dungeon reward chests are §e20% §7cheaper."),
-        BENEDICTION("Benediction", "§7Blessings are §d25% §7stronger."),
-        EZPZ("EZPZ", "§7Gain §e+25% §7more class experience."),
+        MARAUDER("Marauder", "<7>Dungeon reward chests are <e>20% </e>cheaper."),
+        BENEDICTION("Benediction", "<7>Blessings are <d>25% </d>stronger."),
+        EZPZ("EZPZ", "<7>Gain <e>+25% </e>more class experience."),
 
-        SEAL_OF_APPROVAL("Seal of Approval", "§7Rare items from the §dWizard Tower §7are §a5% §7more common."),
-        HOT_STUFF("Hot Stuff", "§7Get §d+10% §7bonus stats from Hot Potato Books on weapons and armor."),
-        ARCANE_CATALYST("Arcane Catalyst", "§7Enchanting pet XP is boosted §a50%§7."),
-        GOVERNMENT_REFORM("Government Reform", "§7Influence the perks of the current Mayor by selecting §a1 §7of §a3 §7options from a special menu."),
+        SEAL_OF_APPROVAL("Seal of Approval", "<7>Rare items from the <d>Wizard Tower </d>are <a>5% </a>more common."),
+        HOT_STUFF("Hot Stuff", "<7>Get <d>+10% </d>bonus stats from Hot Potato Books on weapons and armor."),
+        ARCANE_CATALYST("Arcane Catalyst", "<7>Enchanting pet XP is boosted <a>50%</a>."),
+        GOVERNMENT_REFORM("Government Reform", "<7>Influence the perks of the current Mayor by selecting <a>1 </a>of <a>3 </a>options from a special menu."),
 
-        BRIBE("Bribe", "§7If Scorpius wins, all players receive a §6gift §7at the §aElection Room §7based on their rank."),
-        DARKER_AUCTIONS("Darker Auctions", "§7During Scorpius's term, the §5Dark Auction §7sells extra rare items."),
+        BRIBE("Bribe", "<7>If Scorpius wins, all players receive a <6>gift </6>at the <a>Election Room </a>based on their rank."),
+        DARKER_AUCTIONS("Darker Auctions", "<7>During Scorpius's term, the <5>Dark Auction </5>sells extra rare items."),
 
-        TURBO_MINIONS("TURBO MINIONS!!!", "§7All minions work §a2x §7faster!"),
-        AH_CLOSED("AH CLOSED!!!", "§7Auction House is closed for the duration."),
-        DOUBLE_MOBS_HP("DOUBLE MOBS HP!!!", "§7All mobs have §c2x §7more health."),
-        MOAR_SKILLZ("MOAR SKILLZ!!!", "§7Earn §d+50% §7more skill experience."),
+        TURBO_MINIONS("TURBO MINIONS!!!", "<7>All minions work <a>2x </a>faster!"),
+        AH_CLOSED("AH CLOSED!!!", "<7>Auction House is closed for the duration."),
+        DOUBLE_MOBS_HP("DOUBLE MOBS HP!!!", "<7>All mobs have <c>2x </c>more health."),
+        MOAR_SKILLZ("MOAR SKILLZ!!!", "<7>Earn <d>+50% </d>more skill experience."),
 
-        PERKPOCALYPSE("Perkpocalypse", "§7All previously elected Mayor §aperks §7are activated!"),
-        STATSPOCALYPSE("Statspocalypse", "§7Gain §a+10% §7to all stats."),
-        JERRYPOCALYPSE("Jerrypocalypse", "§5Perk unknown until elected...");
+        PERKPOCALYPSE("Perkpocalypse", "<7>All previously elected Mayor <a>perks </a>are activated!"),
+        STATSPOCALYPSE("Statspocalypse", "<7>Gain <a>+10% </a>to all stats."),
+        JERRYPOCALYPSE("Jerrypocalypse", "<5>Perk unknown until elected...");
 
         private final String displayName;
         private final String description;

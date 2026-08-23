@@ -3,8 +3,8 @@ package net.swofty.type.skyblockgeneric.data.datapoints;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.protocol.Serializer;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.bestiary.BestiaryData;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDatapoint;
 import net.swofty.type.skyblockgeneric.entity.mob.BestiaryMob;
@@ -17,6 +17,7 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import org.json.JSONObject;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DatapointBestiary extends SkyBlockDatapoint<DatapointBestiary.PlayerBestiary> {
 
@@ -118,29 +119,23 @@ public class DatapointBestiary extends SkyBlockDatapoint<DatapointBestiary.Playe
 
             String baseLoadingBar = "─────────────────";
             int maxBarLength = baseLoadingBar.length();
-            int formattingCodeLength = 4;
 
             List<MobType> mobtypes = mob.getMobTypes();
 
             if (mobtypes.size() == 1) {
-                lore.add("§7Mob Type: " + mobtypes.getFirst().getFullDisplayName());
+                lore.add("<7>Mob Type: " + mobtypes.getFirst().getFullDisplayName());
                 lore.add("");
             } else if (mobtypes.size() > 1) {
-                StringBuilder sb = new StringBuilder();
-                for (MobType mobType : mobtypes) {
-                    sb.append(mobType.getFullDisplayName());
-                    sb.append("§7, ");
-                }
-                sb.delete(sb.chars().sum() - 3, sb.chars().sum());
-
-                lore.add("§7Mob Types: " + sb);
+                lore.add("<7>Mob Types: " + mobtypes.stream()
+                        .map(MobType::getFullDisplayName)
+                        .collect(Collectors.joining("<7>, ")));
                 lore.add("");
             }
 
-            lore.add("§7" + bestiaryEntry.getDescription());
+            lore.add("<7>" + bestiaryEntry.getDescription());
             lore.add("");
-            lore.add("§7Kills: §a" + kills);
-            lore.add("§7Deaths: §a" + deaths);
+            lore.add("<7>Kills: <a>" + kills);
+            lore.add("<7>Deaths: <a>" + deaths);
             lore.add("");
 
             if (tier > 0) {
@@ -151,33 +146,35 @@ public class DatapointBestiary extends SkyBlockDatapoint<DatapointBestiary.Playe
             // Current tier progress
             if (tier < mob.getMaxBestiaryTier()) {
                 int unlockedPercentage = (int) (currentProgress / currentRequirement * 100);
-                lore.add("§7Progress to Tier " + StringUtility.getAsRomanNumeral(tier + 1) + " §b" + unlockedPercentage + "%");
+                lore.add(Text.of("<7>Progress to Tier {:roman} <b>{}%", tier + 1, unlockedPercentage).serialize());
 
                 int completedLength = (int) Math.round((currentProgress / currentRequirement) * maxBarLength);
 
-                String completedLoadingBar = "§3§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-                String uncompletedLoadingBar = "§f§m" + baseLoadingBar.substring(Math.min(completedLoadingBar.length() - formattingCodeLength, maxBarLength));
+                String completedLoadingBar = baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
+                String uncompletedLoadingBar = baseLoadingBar.substring(Math.min(completedLoadingBar.length(), maxBarLength));
 
-                lore.add(completedLoadingBar + uncompletedLoadingBar + "§r §b" + StringUtility.commaify(currentProgress) + "§3/§b" + StringUtility.shortenNumber(currentRequirement));
+                lore.add(Text.of("<3><m>{}<f>{}<r> <b>{:,}<3>/<b>{:short}",
+                        completedLoadingBar, uncompletedLoadingBar, currentProgress, currentRequirement).serialize());
                 lore.add("");
             }
 
             // Total kill progress*
             int totalUnlockedPercentage = (int) (kills / totalRequirement * 100);
             if (tier < mob.getMaxBestiaryTier()) {
-                lore.add("§7Overall Progress: §b" + totalUnlockedPercentage + "%");
+                lore.add("<7>Overall Progress: <b>" + totalUnlockedPercentage + "%");
             } else {
-                lore.add("§7Overall Progress: §b" + totalUnlockedPercentage + "% §7(§c§lMAX!§7)");
+                lore.add("<7>Overall Progress: <b>" + totalUnlockedPercentage + "% <7>(<c><l>MAX!</l></c>)");
             }
 
             int totalCompletedLength = (int) Math.round((kills / totalRequirement) * maxBarLength);
-            String totalCompletedBar = "§3§m" + baseLoadingBar.substring(0, Math.min(totalCompletedLength, maxBarLength));
-            String totalUncompletedBar = "§f§m" + baseLoadingBar.substring(Math.min(totalCompletedBar.length() - formattingCodeLength, maxBarLength));
+            String totalCompletedBar = baseLoadingBar.substring(0, Math.min(totalCompletedLength, maxBarLength));
+            String totalUncompletedBar = baseLoadingBar.substring(Math.min(totalCompletedBar.length(), maxBarLength));
 
-            lore.add(totalCompletedBar + totalUncompletedBar + "§r §b" + StringUtility.commaify(kills) + "§3/§b" + StringUtility.shortenNumber(totalRequirement));
+            lore.add(Text.of("<3><m>{}<f>{}<r> <b>{:,}<3>/<b>{:short}",
+                    totalCompletedBar, totalUncompletedBar, kills, totalRequirement).serialize());
 
             if (mob.getMaxBestiaryTier() > tier) {
-                lore.add("§8Capped at Tier " + StringUtility.getAsRomanNumeral(mob.getMaxBestiaryTier()));
+                lore.add(Text.of("<8>Capped at Tier {:roman}", mob.getMaxBestiaryTier()).serialize());
             }
 
             lore.add("");
@@ -199,7 +196,6 @@ public class DatapointBestiary extends SkyBlockDatapoint<DatapointBestiary.Playe
 
             String baseLoadingBar = "─────────────────";
             int maxBarLength = baseLoadingBar.length();
-            int formattingCodeLength = 4;
 
             for (BestiaryCategories category : BestiaryCategories.values()) {
                 allEntries.addAll(Arrays.asList(category.getEntries()));
@@ -213,46 +209,48 @@ public class DatapointBestiary extends SkyBlockDatapoint<DatapointBestiary.Playe
                 if (kills >= bestiaryData.getTotalKillsForMaxTier(entry.getMobs().getFirst())) familiesCompleted++;
             }
 
-            lore.add("§7The Bestiary is a compendium of");
-            lore.add("§7mobs in SkyBlock. It contains detailed");
-            lore.add("§7information on loot drops, your mob");
-            lore.add("§7stats, and more!");
+            lore.add("<7>The Bestiary is a compendium of");
+            lore.add("<7>mobs in SkyBlock. It contains detailed");
+            lore.add("<7>information on loot drops, your mob");
+            lore.add("<7>stats, and more!");
             lore.add("");
-            lore.add("§7Kill mobs within §aFamilies §7to progress");
-            lore.add("§7and earn §arewards§7, including §b✯ Magic");
-            lore.add("§bFind §7bonuses towards mobs in the");
-            lore.add("§7Family.");
+            lore.add("<7>Kill mobs within <a>Families <7>to progress");
+            lore.add("<7>and earn <a>rewards<7>, including <b>✯ Magic");
+            lore.add("<b>Find <7>bonuses towards mobs in the");
+            lore.add("<7>Family.");
             lore.add("");
 
             // Families found
             int unlockedPercentage = (int) (familiesFound / totalFamilies * 100);
             if (familiesFound != totalFamilies) {
-                lore.add("§7Families Found: §e" + unlockedPercentage + "%");
+                lore.add("<7>Families Found: <e>" + unlockedPercentage + "%");
             } else {
-                lore.add("§7Families Found: §e" + unlockedPercentage + "% §7(§c§lMAX!§7)");
+                lore.add("<7>Families Found: <e>" + unlockedPercentage + "% <7>(<c><l>MAX!</l></c>)");
             }
 
             int completedLength = (int) Math.round((familiesFound / totalFamilies) * maxBarLength);
 
-            String completedLoadingBar = "§3§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-            String uncompletedLoadingBar = "§f§m" + baseLoadingBar.substring(Math.min(completedLoadingBar.length() - formattingCodeLength, maxBarLength));
+            String completedLoadingBar = baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
+            String uncompletedLoadingBar = baseLoadingBar.substring(Math.min(completedLoadingBar.length(), maxBarLength));
 
-            lore.add(completedLoadingBar + uncompletedLoadingBar + "§r §b" + StringUtility.commaify(familiesFound) + "§3/§b" + StringUtility.shortenNumber(totalFamilies));
+            lore.add(Text.of("<3><m>{}<f>{}<r> <b>{:,}<3>/<b>{:short}",
+                    completedLoadingBar, uncompletedLoadingBar, familiesFound, totalFamilies).serialize());
             lore.add("");
 
             // Families completed
             int totalUnlockedPercentage = (int) (familiesCompleted / totalFamilies * 100);
             if (familiesCompleted != totalFamilies) {
-                lore.add("§7Families Completed: §e" + totalUnlockedPercentage + "%");
+                lore.add("<7>Families Completed: <e>" + totalUnlockedPercentage + "%");
             } else {
-                lore.add("§7Families Completed: §e" + totalUnlockedPercentage + "% §7(§c§lMAX!§7)");
+                lore.add("<7>Families Completed: <e>" + totalUnlockedPercentage + "% <7>(<c><l>MAX!</l></c>)");
             }
 
             int totalCompletedLength = (int) Math.round((familiesCompleted / totalFamilies) * maxBarLength);
-            String totalCompletedBar = "§3§m" + baseLoadingBar.substring(0, Math.min(totalCompletedLength, maxBarLength));
-            String totalUncompletedBar = "§f§m" + baseLoadingBar.substring(Math.min(totalCompletedBar.length() - formattingCodeLength, maxBarLength));
+            String totalCompletedBar = baseLoadingBar.substring(0, Math.min(totalCompletedLength, maxBarLength));
+            String totalUncompletedBar = baseLoadingBar.substring(Math.min(totalCompletedBar.length(), maxBarLength));
 
-            lore.add(totalCompletedBar + totalUncompletedBar + "§r §b" + StringUtility.commaify(familiesCompleted) + "§3/§b" + StringUtility.shortenNumber(totalFamilies));
+            lore.add(Text.of("<3><m>{}<f>{}<r> <b>{:,}<3>/<b>{:short}",
+                    totalCompletedBar, totalUncompletedBar, familiesCompleted, totalFamilies).serialize());
 
             return lore;
         }

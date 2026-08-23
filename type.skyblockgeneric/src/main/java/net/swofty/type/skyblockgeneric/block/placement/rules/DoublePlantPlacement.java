@@ -25,7 +25,7 @@ public class DoublePlantPlacement extends PlacementRule {
         net.minestom.server.coordinate.Point blockPosition = placementState.placePosition();
         BlockFace blockFace = placementState.blockFace();
         BlockUtils self = new BlockUtils(instance, blockPosition);
-        return blockPosition.y() < 255 && self.getBlock().isAir() && self.above().getBlock().isAir() || !(blockFace == BlockFace.BOTTOM);
+        return blockPosition.y() < 255 && self.getBlock().air() && self.above().getBlock().air() || !(blockFace == BlockFace.BOTTOM);
     }
 
     @Override

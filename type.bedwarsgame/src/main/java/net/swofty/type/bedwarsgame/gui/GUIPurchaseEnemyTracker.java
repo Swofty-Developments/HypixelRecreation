@@ -1,14 +1,17 @@
 package net.swofty.type.bedwarsgame.gui;
 
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsTeam;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.bedwarsgame.util.BedWarsInventoryManipulator;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -41,25 +44,19 @@ public class GUIPurchaseEnemyTracker extends StatelessView {
         BedWarsGame game = player.getGame();
         TeamKey ownTeam = GUIQuickCommunications.resolveTeamKey(player);
         if (game == null || ownTeam == null) {
-            layout.slot(13, ItemStackCreator.getStack(
-                "§cUnavailable",
-                Material.BARRIER,
-                1,
-                "§7You must be in an active game",
-                "§7to purchase an enemy tracker."
-            ));
+            layout.slot(13, ItemStacks.item(Material.BARRIER, """
+                <c>Unavailable
+                <7>You must be in an active game
+                <7>to purchase an enemy tracker."""));
             return;
         }
 
         List<TeamKey> enemyTeams = getEnemyTeams(game, ownTeam);
         if (enemyTeams.isEmpty()) {
-            layout.slot(13, ItemStackCreator.getStack(
-                "§aNo enemies left",
-                Material.LIME_STAINED_GLASS_PANE,
-                1,
-                "§7There are no enemy teams",
-                "§7left to track."
-            ));
+            layout.slot(13, ItemStacks.item(Material.LIME_STAINED_GLASS_PANE, """
+                <a>No enemies left
+                <7>There are no enemy teams
+                <7>left to track."""));
             return;
         }
 
@@ -86,31 +83,30 @@ public class GUIPurchaseEnemyTracker extends StatelessView {
         boolean trackingThisTeam = isTrackingTeam(player, targetTeam);
         boolean canAfford = BedWarsInventoryManipulator.hasEnoughMaterial(player, Material.EMERALD, TRACKER_PRICE);
 
-        String nameColor = trackersUnlocked && (canAfford || trackingThisTeam) ? "§a" : "§c";
-        String teamName = targetTeam.chatColor() + targetTeam.getName();
+        TextColor nameColor = trackersUnlocked && (canAfford || trackingThisTeam) ? NamedTextColor.GREEN : NamedTextColor.RED;
 
-        List<String> lore = new ArrayList<>();
-        lore.add("§7Purchase tracking upgrade for your");
-        lore.add("§7compass which will track each player");
-        lore.add("§7on a specific team until you die.");
-        lore.add("");
-        lore.add("§7Cost: §2" + TRACKER_PRICE + " Emeralds");
-        lore.add("");
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<7>Purchase tracking upgrade for your"));
+        lore.add(Text.of("<7>compass which will track each player"));
+        lore.add(Text.of("<7>on a specific team until you die."));
+        lore.add(Text.empty());
+        lore.add(Text.of("<7>Cost: <2>{} Emeralds", TRACKER_PRICE));
+        lore.add(Text.empty());
 
         if (!trackersUnlocked) {
-            lore.add("§cUnlocks when all enemy beds are destroyed!");
+            lore.add(Text.of("<c>Unlocks when all enemy beds are destroyed!"));
         } else if (trackingThisTeam) {
-            lore.add("§aYou are already tracking this team!");
+            lore.add(Text.of("<a>You are already tracking this team!"));
         } else if (canAfford) {
-            lore.add("§eClick to purchase!");
+            lore.add(Text.of("<e>Click to purchase!"));
         } else {
-            lore.add("§cYou don't have enough Emeralds!");
+            lore.add(Text.of("<c>You don't have enough Emeralds!"));
         }
 
-        return ItemStackCreator.getStack(
-            nameColor + "Track Team " + teamName,
+        return ItemStacks.item(
             targetTeam.bedMaterial(),
             1,
+            Text.of("<color:{}>Track Team {}", nameColor, Text.of("<color:{}>{}", targetTeam.chatColor(), targetTeam.getName())),
             lore
         );
     }
@@ -121,26 +117,27 @@ public class GUIPurchaseEnemyTracker extends StatelessView {
                                        boolean trackersUnlocked,
                                        ViewContext ctx) {
         if (!trackersUnlocked) {
-            player.sendMessage("§cUnlocks when all enemy beds are destroyed!");
+            player.sendMessage("<c>Unlocks when all enemy beds are destroyed!");
             GUIQuickCommunications.playClickSound(player);
             return;
         }
 
         if (isTrackingTeam(player, targetTeam)) {
-            player.sendMessage("§cYou are already tracking this team!");
+            player.sendMessage("<c>You are already tracking this team!");
             GUIQuickCommunications.playClickSound(player);
             return;
         }
 
         if (!BedWarsInventoryManipulator.hasEnoughMaterial(player, Material.EMERALD, TRACKER_PRICE)) {
-            player.sendMessage("§cYou don't have enough Emeralds!");
+            player.sendMessage("<c>You don't have enough Emeralds!");
             GUIQuickCommunications.playClickSound(player);
             return;
         }
 
         BedWarsInventoryManipulator.removeItems(player, Material.EMERALD, TRACKER_PRICE);
         game.getTrackers().put(player.getUuid(), targetTeam);
-        player.sendMessage("§aYour compass is now tracking " + targetTeam.chatColor() + "Team " + targetTeam.getName() + "§a!");
+        player.sendMessage("<a>Your compass is now tracking {}<a>!",
+            Text.of("<color:{}>Team {}", targetTeam.chatColor(), targetTeam.getName()));
 
         GUIQuickCommunications.playBuySound(player);
         ctx.session(DefaultState.class).refresh();

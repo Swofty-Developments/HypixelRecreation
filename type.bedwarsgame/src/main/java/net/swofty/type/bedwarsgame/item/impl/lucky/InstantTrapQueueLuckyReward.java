@@ -15,6 +15,6 @@ public class InstantTrapQueueLuckyReward extends LuckyReward {
     public void apply(BedWarsPlayer player, Pos openedAt) {
         List<TrapId> traps = List.of(TrapId.BLINDNESS, TrapId.COUNTER_OFFENSIVE, TrapId.REVEAL);
         traps.forEach(trap -> player.getGame().addTeamTrap(player.getTeamKey(), trap));
-        player.sendMessage("§aFilled your trap queue.");
+        player.sendMessage("<a>Filled your trap queue.");
     }
 }

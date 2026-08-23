@@ -3,7 +3,7 @@ package net.swofty.type.skyblockgeneric.gui.inventories.banker;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -35,7 +35,7 @@ public class GUIPersonalVault extends StatelessView {
             });
         }
         for (int i = 27; i < 36; i++)
-            layout.slot(i, ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+            layout.slot(i, ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
         Components.back(layout, 30, ctx);
         Components.close(layout, 31);
         layout.allowHotkey(true);

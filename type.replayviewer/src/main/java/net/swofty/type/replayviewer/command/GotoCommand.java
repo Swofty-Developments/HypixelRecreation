@@ -1,10 +1,9 @@
 package net.swofty.type.replayviewer.command;
 
-import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
@@ -13,7 +12,8 @@ import net.swofty.type.replayviewer.TypeReplayViewerLoader;
         description = "Seeks to a specific time in the replay",
         usage = "/goto <time|tick>",
         permission = Rank.DEFAULT,
-        allowsConsole = false
+        allowsConsole = false,
+        labels = "goto"
 )
 public class GotoCommand extends HypixelCommand {
 
@@ -30,13 +30,13 @@ public class GotoCommand extends HypixelCommand {
                         int tick = parseTime(time);
                         if (tick >= 0) {
                             session.seekTo(tick);
-                            player.sendMessage(I18n.t("replays.going_to_seconds",
-                                    Argument.string("seconds", String.valueOf(tick / 20 * 50))));
+                            player.sendMessage(Text.key("replays.going_to_seconds",
+                                    String.valueOf(tick / 20 * 50)));
                         } else {
-                            player.sendMessage(I18n.t("replays.invalid_time_format"));
+                            player.sendMessage(Text.key("replays.invalid_time_format"));
                         }
                     },
-                    () -> player.sendMessage(I18n.t("replays.no_active_session"))
+                    () -> player.sendMessage(Text.key("replays.no_active_session"))
             );
         }, timeArg);
 
@@ -44,7 +44,7 @@ public class GotoCommand extends HypixelCommand {
             HypixelPlayer player = (HypixelPlayer) sender;
             TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
                     session -> session.seekTo(0),
-                    () -> player.sendMessage(I18n.t("replays.no_active_session"))
+                    () -> player.sendMessage(Text.key("replays.no_active_session"))
             );
         }, ArgumentType.Literal("start"));
 
@@ -52,7 +52,7 @@ public class GotoCommand extends HypixelCommand {
             HypixelPlayer player = (HypixelPlayer) sender;
             TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
                     session -> session.seekTo(session.getTotalTicks() - 1),
-                    () -> player.sendMessage(I18n.t("replays.no_active_session"))
+                    () -> player.sendMessage(Text.key("replays.no_active_session"))
             );
         }, ArgumentType.Literal("end"));
     }

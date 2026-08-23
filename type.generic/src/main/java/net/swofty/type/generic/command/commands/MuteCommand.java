@@ -1,16 +1,15 @@
 package net.swofty.type.generic.command.commands;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.arguments.Argument;
 import net.minestom.server.command.builder.arguments.ArgumentString;
 import net.minestom.server.command.builder.arguments.ArgumentType;
-import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.protocol.objects.punishment.PunishPlayerServiceProtocol;
 import net.swofty.commons.punishment.PunishmentReason;
 import net.swofty.commons.punishment.PunishmentType;
 import net.swofty.commons.punishment.template.MuteType;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
@@ -38,7 +37,7 @@ public class MuteCommand extends HypixelCommand {
         ArgumentString durationArg = ArgumentType.String("duration");
         Argument<String> reasonArg = ArgumentType.String("reason").setSuggestionCallback((sender, context, suggestion) -> {
             for (MuteType type : MuteType.values()) {
-                suggestion.addEntry(new SuggestionEntry(type.name(), Component.text("§c" + type.getReason())));
+                suggest(suggestion, type.name(), "<c>{}", type.getReason());
             }
         });
 
@@ -51,7 +50,7 @@ public class MuteCommand extends HypixelCommand {
             try {
                 type = MuteType.valueOf(context.get(reasonArg));
             } catch (IllegalArgumentException e) {
-                player.sendTranslated("commands.mute.invalid_reason");
+                player.sendMessage(Text.key("commands.mute.invalid_reason"));
                 return;
             }
 
@@ -62,7 +61,7 @@ public class MuteCommand extends HypixelCommand {
                     long expiryTime = System.currentTimeMillis() + actualTime;
                     mutePlayer(player, targetUuid, type, player.getUuid(), actualTime, expiryTime, playerName);
                 } catch (IOException e) {
-                    player.sendTranslated("commands.common.player_not_found_short", Component.text(playerName));
+                    player.sendMessage(Text.key("commands.common.player_not_found_short", playerName));
                 }
             });
         }, playerArg, durationArg, reasonArg);
@@ -75,7 +74,7 @@ public class MuteCommand extends HypixelCommand {
             try {
                 reason = MuteType.valueOf(context.get(reasonArg));
             } catch (IllegalArgumentException e) {
-                player.sendTranslated("commands.mute.invalid_reason");
+                player.sendMessage(Text.key("commands.mute.invalid_reason"));
                 return;
             }
 
@@ -84,7 +83,7 @@ public class MuteCommand extends HypixelCommand {
                     mutePlayer(player, net.minestom.server.utils.mojang.MojangUtils.getUUID(playerName), reason,
                             player.getUuid(), 0, -1, playerName);
                 } catch (IOException e) {
-                    player.sendTranslated("commands.common.player_not_found_short", Component.text(playerName));
+                    player.sendMessage(Text.key("commands.common.player_not_found_short", playerName));
                 }
             });
         }, playerArg, reasonArg);
@@ -106,15 +105,15 @@ public class MuteCommand extends HypixelCommand {
         punishmentService.handleRequest(message).thenAccept(result -> {
             if (result instanceof PunishPlayerServiceProtocol.PunishPlayerResponse response) {
                 if (response.success()) {
-                    sender.sendTranslated("commands.mute.success", Component.text(playerName), Component.text(response.punishmentId()));
+                    sender.sendMessage(Text.key("commands.mute.success", playerName, response.punishmentId()));
                 } else if (response.errorCode() == PunishPlayerServiceProtocol.ErrorCode.ALREADY_PUNISHED) {
-                    sender.sendTranslated("commands.mute.already_muted", Component.text(response.errorMessage()));
+                    sender.sendMessage(Text.key("commands.mute.already_muted", response.errorMessage()));
                 } else {
-                    sender.sendTranslated("commands.mute.failed", Component.text(response.errorMessage()));
+                    sender.sendMessage(Text.key("commands.mute.failed", response.errorMessage()));
                 }
             }
         }).orTimeout(5, TimeUnit.SECONDS).exceptionally(_ -> {
-            sender.sendTranslated("commands.mute.service_offline");
+            sender.sendMessage(Text.key("commands.mute.service_offline"));
             return null;
         });
     }

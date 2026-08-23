@@ -1,6 +1,5 @@
 package net.swofty.type.bedwarsgame.events;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.event.player.PlayerDeathEvent;
@@ -8,6 +7,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
 import net.swofty.commons.mc.HypixelPosition;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.death.BedWarsCombatTracker;
 import net.swofty.type.bedwarsgame.death.BedWarsDeathHandler;
 import net.swofty.type.bedwarsgame.death.BedWarsDeathResult;
@@ -38,12 +38,12 @@ public class ActionGameDeath implements HypixelEventClass {
             return;
         }
 
-        death(player, game, event::setChatMessage, false);
+        death(player, game, message -> event.setChatMessage(message.asComponent()), false);
     }
 
-    public static void death(BedWarsPlayer player, BedWarsGame game, Consumer<Component> deathMessageConsumer, boolean voidDeath) {
+    public static void death(BedWarsPlayer player, BedWarsGame game, Consumer<Text> deathMessageConsumer, boolean voidDeath) {
         BedWarsDeathResult deathResult = BedWarsDeathHandler.calculateDeath(player, game, voidDeath);
-        Component deathMessage = BedWarsDeathHandler.createDeathMessage(deathResult);
+        Text deathMessage = BedWarsDeathHandler.createDeathMessage(deathResult);
         game.getReplayManager().recordPlayerDeath(
                 player,
                 deathResult.getKillCreditPlayer(),
@@ -112,19 +112,19 @@ public class ActionGameDeath implements HypixelEventClass {
             if (itemRecipient != null) {
                 if (finalIron > 0) {
                     itemRecipient.getInventory().addItemStack(ItemStack.of(Material.IRON_INGOT, finalIron));
-                    itemRecipient.sendMessage("§f+" + finalIron + " Iron");
+                    itemRecipient.sendMessage("<f>+{} Iron", finalIron);
                 }
                 if (finalGold > 0) {
                     itemRecipient.getInventory().addItemStack(ItemStack.of(Material.GOLD_INGOT, finalGold));
-                    itemRecipient.sendMessage("§6+" + finalGold + " Gold");
+                    itemRecipient.sendMessage("<6>+{} Gold", finalGold);
                 }
                 if (finalDiamonds > 0) {
                     itemRecipient.getInventory().addItemStack(ItemStack.of(Material.DIAMOND, finalDiamonds));
-                    itemRecipient.sendMessage("§b+" + finalDiamonds + " Diamond");
+                    itemRecipient.sendMessage("<b>+{} Diamond", finalDiamonds);
                 }
                 if (finalEmeralds > 0) {
                     itemRecipient.getInventory().addItemStack(ItemStack.of(Material.EMERALD, finalEmeralds));
-                    itemRecipient.sendMessage("§3+" + finalEmeralds + " Emerald");
+                    itemRecipient.sendMessage("<3>+{} Emerald", finalEmeralds);
                 }
             }
         });

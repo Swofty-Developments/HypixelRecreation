@@ -1,10 +1,9 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.abiphone;
 
-import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.View;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -13,39 +12,30 @@ import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.abiphone.AbiphoneNPC;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 
-import java.util.List;
 
 public final class GUIContactManagementView implements View<GUIContactManagementView.State> {
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return ViewConfiguration.withString(
-                (state, ctx) -> "Contact Management",
-                InventoryType.CHEST_6_ROW
-        );
+        return ViewConfiguration.translatable("gui_abiphone.management.title", InventoryType.CHEST_6_ROW);
     }
 
     @Override
     public void layout(ViewLayout<State> layout, State state, ViewContext ctx) {
         Components.fill(layout);
-        layout.slot(4, (s, c) -> ItemStackCreator.updateLore(
-                s.npc().getIcon().set(DataComponents.CUSTOM_NAME, Component.text("§f" + s.npc().getName())),
-                List.of("§7" + s.npc().getDescription())
+        layout.slot(4, (s, c) -> ItemStacks.lore(
+                ItemStacks.name(s.npc().getIcon(), "<f>{}", s.npc().getName()),
+                "<7>{}", s.npc().getDescription()
         ));
 
-        layout.slot(31, (s, c) -> ItemStackCreator.getStack(
-                "§cRemove Contact",
+        layout.slot(31, (s, c) -> ItemStacks.item(
                 Material.FEATHER,
                 1,
-                List.of(
-                        "§7In case you're no longer friends, or",
-                        "§7whatever other reason.",
-                        " ",
-                        "§eClick to remove!"
-                )
+                Text.key("gui_abiphone.management.remove_contact"),
+                Text.keyLines("gui_abiphone.management.remove_contact.lore")
         ), (click, viewCtx) -> {
             state.abiphone().getAttributeHandler().removeAbiphoneNPC(state.npc());
-            viewCtx.player().sendMessage(Component.text("§c✆ Removed " + state.npc().getName() + " §cfrom your contacts!"));
+            viewCtx.player().sendMessage(Text.key("gui_abiphone.management.removed_message", state.npc().getName()));
 
             if (!viewCtx.pop()) {
                 viewCtx.player().closeInventory();

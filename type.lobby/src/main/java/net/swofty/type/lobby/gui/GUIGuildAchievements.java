@@ -3,13 +3,14 @@ package net.swofty.type.lobby.gui;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
 import net.swofty.commons.guild.GuildData;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.View;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 
-import java.text.NumberFormat;
+import java.util.List;
 
 public class GUIGuildAchievements implements View<GUIGuildAchievements.GuildAchievementsState> {
 
@@ -33,70 +34,62 @@ public class GUIGuildAchievements implements View<GUIGuildAchievements.GuildAchi
     public void layout(ViewLayout<GuildAchievementsState> layout, GuildAchievementsState state, ViewContext ctx) {
         GuildData guild = state.guild();
         int level = guild.getLevel();
-        NumberFormat nf = NumberFormat.getInstance();
 
         for (int i = 0; i < PRESTIGE_TIERS.length; i++) {
             int required = PRESTIGE_TIERS[i][0];
             boolean achieved = level >= required;
-            String name = (achieved ? "§a" : "§7") + "Prestige " + toRoman(i + 1);
+            Text name = Text.of((achieved ? "<a>" : "<7>") + "Prestige {:roman}", i + 1);
             Material mat = achieved ? Material.EXPERIENCE_BOTTLE : Material.GRAY_DYE;
-            String progress = "§7Progress: §e" + level + "§7/" + required + (achieved ? " §aACHIEVED" : "");
-            layout.slot(PRESTIGE_SLOTS[i], ItemStackCreator.getStack(name, mat, 1,
-                "§7Reach Guild level " + required, "", progress));
+            Text progress = Text.of("<7>Progress: <e>{}<7>/{}", level, required)
+                .appendIf(achieved, " <a>ACHIEVED");
+            layout.slot(PRESTIGE_SLOTS[i], ItemStacks.item(mat, 1, name, List.of(
+                Text.of("<7>Reach Guild level {}", required), Text.empty(), progress)));
         }
 
         long gexp = guild.getDailyGexp();
         for (int i = 0; i < EXP_KING_TIERS.length; i++) {
             int required = EXP_KING_TIERS[i][0];
             boolean achieved = gexp >= required;
-            String name = (achieved ? "§a" : "§7") + "Experience Kings " + toRoman(i + 1);
+            Text name = Text.of((achieved ? "<a>" : "<7>") + "Experience Kings {:roman}", i + 1);
             Material mat = achieved ? Material.CLOCK : Material.GRAY_DYE;
-            String progress = "§7Progress: §e" + nf.format(gexp) + "§7/" + nf.format(required) + (achieved ? " §aACHIEVED" : "");
-            layout.slot(EXP_KING_SLOTS[i], ItemStackCreator.getStack(name, mat, 1,
-                "§7Get " + nf.format(required) + " Guild Exp in one day", "", progress));
+            Text progress = Text.of("<7>Progress: <e>{:,}<7>/{:,}", gexp, required)
+                .appendIf(achieved, " <a>ACHIEVED");
+            layout.slot(EXP_KING_SLOTS[i], ItemStacks.item(mat, 1, name, List.of(
+                Text.of("<7>Get {:,} Guild Exp in one day", required), Text.empty(), progress)));
         }
 
         for (int i = 0; i < WINNER_TIERS.length; i++) {
             int required = WINNER_TIERS[i];
             boolean achieved = guild.getDailyWins() >= required;
-            layout.slot(WINNER_SLOTS[i], ItemStackCreator.getStack(
-                (achieved ? "§a" : "§7") + "Winners " + toRoman(i + 1),
+            layout.slot(WINNER_SLOTS[i], ItemStacks.item(
                 achieved ? Material.GOLD_INGOT : Material.GRAY_DYE, 1,
-                "§7Win " + nf.format(required) + " games as a Guild in a", "§7day", "",
-                "§7Progress: §e" + nf.format(guild.getDailyWins()) + "§7/" + nf.format(required)
-                    + (achieved ? " §aACHIEVED" : "")));
+                Text.of((achieved ? "<a>" : "<7>") + "Winners {:roman}", i + 1),
+                List.of(
+                    Text.of("<7>Win {:,} games as a Guild in a", required),
+                    Text.of("<7>day"),
+                    Text.empty(),
+                    Text.of("<7>Progress: <e>{:,}<7>/{:,}", guild.getDailyWins(), required)
+                        .appendIf(achieved, " <a>ACHIEVED"))));
         }
 
         int memberCount = guild.getMembers().size();
         for (int i = 0; i < FAMILY_TIERS.length; i++) {
             int required = FAMILY_TIERS[i][0];
             boolean achieved = memberCount >= required;
-            String name = (achieved ? "§a" : "§7") + "Family " + toRoman(i + 1);
+            Text name = Text.of((achieved ? "<a>" : "<7>") + "Family {:roman}", i + 1);
             Material mat = achieved ? Material.DIAMOND : Material.GRAY_DYE;
-            String progress = "§7Progress: §e" + memberCount + "§7/" + required + (achieved ? " §aACHIEVED" : "");
-            layout.slot(FAMILY_SLOTS[i], ItemStackCreator.getStack(name, mat, 1,
-                "§7Have " + required + " guild members online", "§7at the same time!", "", progress));
+            Text progress = Text.of("<7>Progress: <e>{}<7>/{}", memberCount, required)
+                .appendIf(achieved, " <a>ACHIEVED");
+            layout.slot(FAMILY_SLOTS[i], ItemStacks.item(mat, 1, name, List.of(
+                Text.of("<7>Have {} guild members online", required),
+                Text.of("<7>at the same time!"),
+                Text.empty(),
+                progress)));
         }
 
-        layout.slot(49, ItemStackCreator.getStack(
-            "§aGo Back",
-            Material.ARROW,
-            1,
-            "§7To Guild"
-        ), (click, viewCtx) -> viewCtx.navigator().pop());
-    }
-
-    private static String toRoman(int num) {
-        return switch (num) {
-            case 1 -> "I";
-            case 2 -> "II";
-            case 3 -> "III";
-            case 4 -> "IV";
-            case 5 -> "V";
-            case 6 -> "VI";
-            case 7 -> "VII";
-            default -> String.valueOf(num);
-        };
+        layout.slot(49, ItemStacks.item(Material.ARROW, """
+                <a>Go Back
+                <7>To Guild"""), (click, viewCtx) -> viewCtx.navigator().pop());
     }
 
     public record GuildAchievementsState(GuildData guild) {

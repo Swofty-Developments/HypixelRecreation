@@ -1,5 +1,7 @@
 package net.swofty.type.game.game.team;
 
+import net.kyori.adventure.text.format.TextColor;
+
 import java.util.Collection;
 import java.util.UUID;
 
@@ -7,10 +9,7 @@ public interface GameTeam {
     String getId();
     String getName();
 
-    /**
-     * @return The legacy color code for the team (e.g., "§c" for red)
-     */
-    String getColorCode();
+    TextColor getColor();
 
     Collection<UUID> getPlayerIds();
 

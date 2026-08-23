@@ -1,45 +1,31 @@
 package net.swofty.velocity.data;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import net.swofty.commons.data.SwoftyData;
 import org.bson.Document;
+import redis.clients.jedis.Jedis;
 
-import java.util.List;
 import java.util.UUID;
 
 public record CoopDatabase(UUID id) {
-    public static MongoClient client;
-    public static MongoDatabase database;
-    public static MongoCollection<Document> collection;
+    private static final String COOP_PREFIX = "hsb:coop:";
+    private static final String BY_PROFILE = "hsb:coop:byprofile";
 
     public static void connect(String connectionString) {
-        ConnectionString cs = new ConnectionString(connectionString);
-        MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(cs).build();
-        client = MongoClients.create(settings);
-
-        database = client.getDatabase("Minestom");
-        collection = database.getCollection("coop");
     }
 
     public Document getDocument() {
-        Document query = new Document("_id", id.toString());
-        return collection.find(query).first();
+        try (Jedis jedis = SwoftyData.jedisPool().getResource()) {
+            String json = jedis.get(COOP_PREFIX + id);
+            return json == null ? null : Document.parse(json);
+        }
     }
 
     public static Document getFromMemberProfile(UUID memberProfile) {
-        // Search through all coop documents and find the one that contains the UUID in the memberProfiles list
-        for (Document document : collection.find()) {
-            List<String> memberProfiles = (List<String>) document.get("memberProfiles");
-
-            if (memberProfiles.contains(memberProfile.toString())) {
-                return document;
-            }
+        try (Jedis jedis = SwoftyData.jedisPool().getResource()) {
+            String coopId = jedis.hget(BY_PROFILE, memberProfile.toString());
+            if (coopId == null) return null;
+            String json = jedis.get(COOP_PREFIX + coopId);
+            return json == null ? null : Document.parse(json);
         }
-
-        return null;
     }
 }

@@ -18,7 +18,7 @@ public class NPCLiftOperator extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Lift Operator", "§e§lCLICK"};
+				return new String[]{"Lift Operator", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -90,13 +90,13 @@ public class NPCLiftOperator extends HypixelNPC {
 	public DialogueSet[] dialogues(HypixelPlayer player) {
 		return Stream.of(
 				DialogueSet.builder()
-						.key("hello").lines(new String[]{
+						.key("hello").lines(
 								"Hey Feller!",
 								"I control this lift here behind me.",
 								"Once you've explored an area I can give you a safe ride back there.",
 								"Be careful not to fall down the shaft though, it's a long fall!",
 								"Good luck on your adventures."
-						}).build()
+						).build()
 		).toArray(DialogueSet[]::new);
 	}
 }

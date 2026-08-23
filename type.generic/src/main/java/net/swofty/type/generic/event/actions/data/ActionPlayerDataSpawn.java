@@ -1,12 +1,14 @@
 package net.swofty.type.generic.event.actions.data;
 
 import net.minestom.server.event.player.PlayerSpawnEvent;
+import net.swofty.commons.ServerType;
+import net.swofty.type.generic.HypixelConst;
+import net.swofty.type.generic.data.domain.PlayerDataService;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.user.HypixelPlayer;
-import net.swofty.type.generic.user.flow.GenericPlayerDataFlow;
 import net.swofty.type.generic.user.flow.PlayerFlow;
 
 public class ActionPlayerDataSpawn implements HypixelEventClass {
@@ -16,6 +18,7 @@ public class ActionPlayerDataSpawn implements HypixelEventClass {
         if (!event.isFirstSpawn()) return;
 
         HypixelPlayer player = (HypixelPlayer) event.getPlayer();
-        PlayerFlow.run(player, "generic-data/post-spawn", () -> GenericPlayerDataFlow.postSpawn(player));
+        ServerType type = HypixelConst.getTypeLoader().getType();
+        PlayerFlow.run(player, "data/apply", () -> PlayerDataService.applyAll(type, player));
     }
 }

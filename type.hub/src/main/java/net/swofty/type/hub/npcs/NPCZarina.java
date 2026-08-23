@@ -12,7 +12,7 @@ public class NPCZarina extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Zarina", "§e§lCLICK"};
+                return new String[]{"Zarina", "<e><l>CLICK"};
             }
 
             @Override

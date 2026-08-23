@@ -12,7 +12,7 @@ public class NPCKysha extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bKysha", "§e§lCLICK"};
+                return new String[]{"<b>Kysha", "<e><l>CLICK"};
             }
 
             @Override

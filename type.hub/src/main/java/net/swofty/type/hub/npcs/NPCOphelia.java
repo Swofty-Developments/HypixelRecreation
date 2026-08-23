@@ -15,7 +15,7 @@ public class NPCOphelia extends HypixelNPC{
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§9Ophelia", "§e§lCLICK"};
+                return new String[]{"<9>Ophelia", "<e><l>CLICK"};
             }
 
             @Override

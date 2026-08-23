@@ -19,7 +19,7 @@ public class EnchantmentCritical implements Ench, EnchFromTable {
 
     @Override
     public String getDescription(int level) {
-        return "Increases " + ItemStatistic.CRITICAL_DAMAGE.getFullDisplayName() + " §7by §a" + MULTIPLIERS[level - 1] + "%§7.";
+        return "Increases <stat:critical_damage> <7>by <a>" + MULTIPLIERS[level - 1] + "%<7>.";
     }
 
     @Override

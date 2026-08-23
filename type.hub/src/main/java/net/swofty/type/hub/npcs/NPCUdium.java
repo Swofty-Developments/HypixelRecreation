@@ -14,7 +14,7 @@ public class NPCUdium extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bUdium", "§e§lCLICK"};
+                return new String[]{"<b>Udium", "<e><l>CLICK"};
             }
 
             @Override

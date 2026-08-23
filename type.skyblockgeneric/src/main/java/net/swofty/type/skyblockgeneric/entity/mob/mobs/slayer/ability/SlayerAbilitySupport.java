@@ -74,7 +74,7 @@ abstract class SlayerAbilitySupport implements SlayerBossAbility {
 
         player.setHealth((float) Math.max(0, player.getHealth() - damage));
         new DamageIndicator().damage((float) damage).pos(player.getPosition()).critical(false).display(player.getInstance());
-        player.sendMessage("§c" + source + " dealt " + Math.round(damage) + " true damage!");
+        player.sendMessage("<c>{} dealt {} true damage!", source, Math.round(damage));
         player.playSound(Sound.sound(Key.key("entity.player.hurt"), Sound.Source.PLAYER, 0.8f, 0.8f), Sound.Emitter.self());
     }
 

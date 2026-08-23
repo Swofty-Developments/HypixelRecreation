@@ -13,7 +13,7 @@ import java.util.Map;
 public class EnchantmentBlessing implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Grants §a+" + (level * 5) + "%§7 chance for a better §6Treasure§7 quality outcome.";
+        return "Grants <a>+" + level * 5 + "%<7> chance for a better <6>Treasure</6> quality outcome.";
     }
 
     @Override

@@ -2,10 +2,6 @@ package net.swofty.type.bedwarsgame.gui;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.entity.Player;
 import net.minestom.server.inventory.InventoryType;
@@ -13,6 +9,7 @@ import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.shop.ShopItem;
@@ -20,7 +17,7 @@ import net.swofty.type.bedwarsgame.shop.ShopManager;
 import net.swofty.type.bedwarsgame.shop.UpgradeableItemTier;
 import net.swofty.type.bedwarsgame.shop.UpgradeableShopItem;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.StatefulView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
@@ -33,46 +30,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
-import static net.swofty.type.bedwarsgame.util.ComponentManipulator.noItalic;
-
 public class GUIItemShop implements StatefulView<GUIItemShop.State> {
 
-    private static final ItemStack QUICK_BUY = ItemStack.builder(Material.NETHER_STAR)
-            .customName(Component.text("Quick Buy").decorationIfAbsent(ITALIC, TextDecoration.State.FALSE).color(NamedTextColor.AQUA))
-            .build();
+    private static final ItemStack QUICK_BUY = ItemStacks.name(ItemStack.builder(Material.NETHER_STAR), "<b>Quick Buy").build();
 
-    private static final ItemStack BLOCKS = ItemStack.builder(Material.TERRACOTTA)
-            .customName(Component.text("Blocks").decorationIfAbsent(ITALIC, TextDecoration.State.FALSE).color(NamedTextColor.GREEN))
-            .build();
+    private static final ItemStack BLOCKS = ItemStacks.name(ItemStack.builder(Material.TERRACOTTA), "<a>Blocks").build();
 
-    private static final ItemStack WEAPONS = ItemStack.builder(Material.GOLDEN_SWORD)
-            .customName(Component.text("Weapons").decorationIfAbsent(ITALIC, TextDecoration.State.FALSE).color(NamedTextColor.GREEN))
-            .build();
+    private static final ItemStack WEAPONS = ItemStacks.name(ItemStack.builder(Material.GOLDEN_SWORD), "<a>Weapons").build();
 
-    private static final ItemStack ARMOR = ItemStack.builder(Material.CHAINMAIL_BOOTS)
-            .customName(Component.text("Armor").decorationIfAbsent(ITALIC, TextDecoration.State.FALSE).color(NamedTextColor.GREEN))
-            .build();
+    private static final ItemStack ARMOR = ItemStacks.name(ItemStack.builder(Material.CHAINMAIL_BOOTS), "<a>Armor").build();
 
-    private static final ItemStack TOOLS = ItemStack.builder(Material.STONE_PICKAXE)
-            .customName(Component.text("Tools").decorationIfAbsent(ITALIC, TextDecoration.State.FALSE).color(NamedTextColor.GREEN))
-            .build();
+    private static final ItemStack TOOLS = ItemStacks.name(ItemStack.builder(Material.STONE_PICKAXE), "<a>Tools").build();
 
-    private static final ItemStack BOWS = ItemStack.builder(Material.BOW)
-            .customName(Component.text("Bows & Arrows").decorationIfAbsent(ITALIC, TextDecoration.State.FALSE).color(NamedTextColor.GREEN))
-            .build();
+    private static final ItemStack BOWS = ItemStacks.name(ItemStack.builder(Material.BOW), "<a>Bows & Arrows").build();
 
-    private static final ItemStack POTIONS = ItemStack.builder(Material.BREWING_STAND)
-            .customName(Component.text("Potions").decorationIfAbsent(ITALIC, TextDecoration.State.FALSE).color(NamedTextColor.GREEN))
-            .build();
+    private static final ItemStack POTIONS = ItemStacks.name(ItemStack.builder(Material.BREWING_STAND), "<a>Potions").build();
 
-    private static final ItemStack UTILITY = ItemStack.builder(Material.TNT)
-            .customName(Component.text("Utility").decorationIfAbsent(ITALIC, TextDecoration.State.FALSE).color(NamedTextColor.GREEN))
-            .build();
+    private static final ItemStack UTILITY = ItemStacks.name(ItemStack.builder(Material.TNT), "<a>Utility").build();
 
-    private static final ItemStack ROTATING_ITEMS = ItemStack.builder(Material.REDSTONE_TORCH)
-            .customName(Component.text("Rotating Items").decorationIfAbsent(ITALIC, TextDecoration.State.FALSE).color(NamedTextColor.GREEN))
-            .build();
+    private static final ItemStack ROTATING_ITEMS = ItemStacks.name(ItemStack.builder(Material.REDSTONE_TORCH), "<a>Rotating Items").build();
 
     private static final List<List<Material>> TIERED_ITEM_GROUPS = List.of(
             List.of(Material.LEATHER_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.IRON_BOOTS, Material.DIAMOND_BOOTS, Material.NETHERITE_BOOTS)
@@ -100,9 +76,9 @@ public class GUIItemShop implements StatefulView<GUIItemShop.State> {
         layout.allowHotkey(false);
 
         for (int slot = 9; slot <= 17; slot++) {
-            layout.slot(slot, ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+            layout.slot(slot, ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
         }
-        layout.slot(state.currentPage() + 9, ItemStackCreator.createNamedItemStack(Material.GREEN_STAINED_GLASS_PANE));
+        layout.slot(state.currentPage() + 9, ItemStacks.named(Material.GREEN_STAINED_GLASS_PANE, ""));
 
         addCategoryButton(layout, 0, QUICK_BUY, state.currentPage(), 0);
         addCategoryButton(layout, 1, BLOCKS, state.currentPage(), 1);
@@ -130,7 +106,7 @@ public class GUIItemShop implements StatefulView<GUIItemShop.State> {
     private ItemStack.Builder convertToClickToView(ItemStack itemStack, int currentPage, int index) {
         ItemStack.Builder builder = itemStack.builder();
         if (currentPage != index) {
-            return builder.lore(noItalic(Component.text("Click to view!").color(NamedTextColor.YELLOW)));
+            return ItemStacks.lines(builder, "<e>Click to view!");
         }
         return builder;
     }
@@ -148,27 +124,29 @@ public class GUIItemShop implements StatefulView<GUIItemShop.State> {
         };
 
         if (currentPage != null && currentPage == 8) {
-            layout.slot(49, (s, c) -> ItemStackCreator.getStack("§aWhat are Rotating Items?", Material.PAPER, 1, List.of(
-                    "§7Rotating Items are items that are",
-                    "§7only available for a limited amount of",
-                    "§7time. They may disappear and be",
-                    "§7replaced with another temporary",
-                    "§7item at any time."
-            )));
+            layout.slot(49, (s, c) -> ItemStacks.item(Material.PAPER, """
+                    <a>What are Rotating Items?
+                    <7>Rotating Items are items that are
+                    <7>only available for a limited amount of
+                    <7>time. They may disappear and be
+                    <7>replaced with another temporary
+                    <7>item at any time."""));
         }
 
         if (currentPage != null && currentPage == 0) {
-            layout.slot(45, (_, _) -> ItemStackCreator.getStack(
-                "§aTracker Shop",
-                Material.COMPASS,
-                1,
-                "§7Purchase tracking upgrade for your",
-                "§7compass which will track each player",
-                "§7on a specific team until you die."
-            ), (_, context) -> {
+            layout.slot(45, (_, _) -> ItemStacks.item(Material.COMPASS, """
+                <a>Tracker Shop
+                <7>Purchase tracking upgrade for your
+                <7>compass which will track each player
+                <7>on a specific team until you die."""), (_, context) -> {
                 context.push(new TrackerShopView());
             });
-            layout.slot(53, (_, _) -> ItemStackCreator.getStack("§aHotbar Manager", Material.BLAZE_POWDER, 1, "§7Edit preferred slots for your items", "§7per category.", "", "§eClick to edit!"), (_, context) -> {
+            layout.slot(53, (_, _) -> ItemStacks.item(Material.BLAZE_POWDER, """
+                <a>Hotbar Manager
+                <7>Edit preferred slots for your items
+                <7>per category.
+
+                <e>Click to edit!"""), (_, context) -> {
                 context.push(new net.swofty.type.generic.gui.impl.HotbarManagerView());
             });
         }
@@ -202,20 +180,15 @@ public class GUIItemShop implements StatefulView<GUIItemShop.State> {
 
         if (shopItem == null) {
             if (quickBuyEditor != null) {
-                return ItemStackCreator.getStack(
-                        "§cEmpty slot!",
-                        Material.RED_STAINED_GLASS_PANE,
-                        1,
-                        List.of("§eClick to set!")
-                );
+                return ItemStacks.item(Material.RED_STAINED_GLASS_PANE, """
+                        <c>Empty slot!
+                        <e>Click to set!""");
             }
             if (currentPage != 0) return ItemStack.builder(Material.AIR);
-            return ItemStackCreator.getStack(
-                    "§cEmpty slot!",
-                    Material.RED_STAINED_GLASS_PANE,
-                    1,
-                    List.of("§7This is a Quick Buy Slot! §bShift Click", "§7any item in the shop to add it here.")
-            );
+            return ItemStacks.item(Material.RED_STAINED_GLASS_PANE, """
+                    <c>Empty slot!
+                    <7>This is a Quick Buy Slot! <b>Shift Click
+                    <7>any item in the shop to add it here.""");
         }
 
         if (shopItem instanceof UpgradeableShopItem upgradeableShopItem) {
@@ -223,78 +196,83 @@ public class GUIItemShop implements StatefulView<GUIItemShop.State> {
             UpgradeableItemTier nextTier = upgradeableShopItem.getNextTier(player);
             boolean hasEnough = hasPlayerEnoughCurrencyForTier(game, player, nextTier);
 
-            List<String> lore = new ArrayList<>();
+            List<Text> lore = new ArrayList<>();
             if (quickBuyEditor != null) {
-                lore.add("§eClick to replace!");
+                lore.add(Text.of("<e>Click to replace!"));
             } else {
-                lore.add("§7Cost: " + nextTier.currency().getColor() + nextTier.price().apply(game.getGameType()) + " " + nextTier.currency().getName());
-                lore.add(" ");
+                lore.add(Text.of("<7>Cost: {}", Text.of("<color:{}>{} {}", nextTier.currency().getColor(),
+                        nextTier.price().apply(game.getGameType()), nextTier.currency().getName())));
+                lore.add(Text.literal(" "));
                 if (upgradeableShopItem.getDescription() != null && !upgradeableShopItem.getDescription().isEmpty()) {
-                    lore.addAll(StringUtility.splitByNewLine(upgradeableShopItem.getDescription(), "§7"));
-                    lore.add(" ");
+                    for (String line : StringUtility.splitByNewLine(upgradeableShopItem.getDescription())) {
+                        lore.add(Text.of("<7>{}", Text.parse(line)));
+                    }
+                    lore.add(Text.literal(" "));
                 }
 
                 boolean isItemInQuickBuy = shopService.isItemIDinQuickBuy(player, upgradeableShopItem.getId());
                 if (currentPage != 0 && !isItemInQuickBuy) {
-                    lore.add("§bShift Click to add to Quick Buy");
+                    lore.add(Text.of("<b>Shift Click to add to Quick Buy"));
                 } else if (currentPage == 0 && isItemInQuickBuy) {
-                    lore.add("§bShift Click to remove from Quick Buy");
+                    lore.add(Text.of("<b>Shift Click to remove from Quick Buy"));
                 }
                 if (nextLevel >= upgradeableShopItem.getTiers().size()) {
-                    lore.add("§cYou have already purchased the maximum tier of this item!");
+                    lore.add(Text.of("<c>You have already purchased the maximum tier of this item!"));
                 } else if (hasEnough) {
-                    lore.add("§eClick to buy!");
+                    lore.add(Text.of("<e>Click to buy!"));
                 } else {
-                    lore.add("§cYou don't have enough " + nextTier.currency().getName() + "!");
+                    lore.add(Text.of("<c>You don't have enough {}!", nextTier.currency().getName()));
                 }
             }
 
-            String name = quickBuyEditor != null || hasEnough ? "§a" + nextTier.name() : "§c" + nextTier.name();
+            Text name = Text.of(quickBuyEditor != null || hasEnough ? "<a>{}" : "<c>{}", nextTier.name());
 
-            return ItemStackCreator.getStack(
-                    name,
+            return ItemStacks.item(
                     nextTier.material(),
                     1,
+                    name,
                     lore
             );
         }
 
         boolean hasEnough = hasPlayerEnoughCurrency(game, player, shopItem);
         ItemStack displayItem = shopItem.getDisplay(player);
-        List<String> lore = new ArrayList<>();
+        List<Text> lore = new ArrayList<>();
         if (quickBuyEditor != null) {
-            lore.add("§eClick to replace!");
+            lore.add(Text.of("<e>Click to replace!"));
         } else {
-            lore.add("§7Cost: " + shopItem.getCurrency().getColor() + shopItem.getPrice().apply(game.getGameType()) + " " + shopItem.getCurrency().getName());
-            lore.add(" ");
+            lore.add(Text.of("<7>Cost: {}", Text.of("<color:{}>{} {}", shopItem.getCurrency().getColor(),
+                    shopItem.getPrice().apply(game.getGameType()), shopItem.getCurrency().getName())));
+            lore.add(Text.literal(" "));
             if (shopItem.getDescription() != null && !shopItem.getDescription().isEmpty()) {
-                lore.addAll(StringUtility.splitByNewLine(shopItem.getDescription(), "§7"));
-                lore.add(" ");
+                for (String line : StringUtility.splitByNewLine(shopItem.getDescription())) {
+                    lore.add(Text.of("<7>{}", Text.parse(line)));
+                }
+                lore.add(Text.literal(" "));
             }
 
             boolean isItemInQuickBuy = shopService.isItemIDinQuickBuy(player, shopItem.getId());
             if (currentPage != 0 && !isItemInQuickBuy) {
-                lore.add("§bShift Click to add to Quick Buy");
+                lore.add(Text.of("<b>Shift Click to add to Quick Buy"));
             } else if (currentPage == 0 && isItemInQuickBuy) {
-                lore.add("§bShift Click to remove from Quick Buy");
+                lore.add(Text.of("<b>Shift Click to remove from Quick Buy"));
             }
             if (!hasEnough) {
-                lore.add("§cYou don't have enough " + shopItem.getCurrency().getName() + "!");
+                lore.add(Text.of("<c>You don't have enough {}!", shopItem.getCurrency().getName()));
             } else if (!shopItem.isOwned(player)) {
-                lore.add("§aUNLOCKED");
+                lore.add(Text.of("<a>UNLOCKED"));
             } else if (hasBetterItem(player, displayItem.material())) {
-                lore.add("§cYou already have a better item!");
+                lore.add(Text.of("<c>You already have a better item!"));
             } else {
-                lore.add("§eClick to buy!");
+                lore.add(Text.of("<e>Click to buy!"));
             }
         }
 
-        Component name = quickBuyEditor != null
-                ? Component.text("§a" + shopItem.getName())
-                : hasEnough && shopItem.isOwned(player) ? Component.text("§a" + shopItem.getName()) : Component.text("§c" + shopItem.getName());
+        Text name = Text.of(quickBuyEditor != null || (hasEnough && shopItem.isOwned(player)) ? "<a>{}" : "<c>{}",
+                shopItem.getName());
 
-        return ItemStackCreator.updateLore(
-            displayItem.builder().set(DataComponents.CUSTOM_NAME, name),
+        return ItemStacks.lore(
+            ItemStacks.customName(displayItem.builder(), name),
                 lore
         );
     }
@@ -320,7 +298,7 @@ public class GUIItemShop implements StatefulView<GUIItemShop.State> {
 
         if (quickBuyEditor != null) {
             shopService.setQuickBuyItem(player, index, quickBuyEditor);
-            player.sendMessage("§aAdded " + quickBuyEditor.getName() + " to Quick Buy!");
+            player.sendMessage("<a>Added {} to Quick Buy!", quickBuyEditor.getName());
             ctx.replace(new GUIItemShop(game));
             return;
         }
@@ -332,7 +310,7 @@ public class GUIItemShop implements StatefulView<GUIItemShop.State> {
             if (isInQuickBuy) {
                 if (currentPage != 0) return;
                 shopService.removeQuickBuyItem(player, shopItem);
-                player.sendMessage(noItalic(Component.text("Removed " + shopItem.getName() + " from Quick Buy!").color(NamedTextColor.RED)));
+                player.sendMessage("<c>Removed {} from Quick Buy!", shopItem.getName());
             } else {
                 ctx.replace(new GUIQuickBuyEditor(game, shopItem));
             }
@@ -344,7 +322,7 @@ public class GUIItemShop implements StatefulView<GUIItemShop.State> {
         if (shopItem instanceof UpgradeableShopItem upgradeableShopItem) {
             int nextLevel = upgradeableShopItem.getNextLevel(player);
             if (nextLevel >= upgradeableShopItem.getTiers().size()) {
-                player.sendMessage(noItalic(Component.text("You have already purchased the maximum tier of this item!").color(NamedTextColor.RED)));
+                player.sendMessage("<c>You have already purchased the maximum tier of this item!");
                 return;
             }
 
@@ -355,28 +333,28 @@ public class GUIItemShop implements StatefulView<GUIItemShop.State> {
                         .mapToInt(ItemStack::amount)
                         .sum();
                 int needed = nextTier.price().apply(game.getGameType()) - owned;
-                player.sendMessage(noItalic(Component.text("You don't have enough " + nextTier.currency().getName() + "! Need " + needed + " more!").color(NamedTextColor.RED)));
+                player.sendMessage("<c>You don't have enough {}! Need {} more!", nextTier.currency().getName(), needed);
                 return;
             }
 
             upgradeableShopItem.handlePurchase(player, game.getGameType());
-            player.sendMessage(noItalic(Component.text("You purchased " + nextTier.name() + "!").color(NamedTextColor.GREEN)));
+            player.sendMessage("<a>You purchased {}!", nextTier.name());
             playBuySound(player);
             update.accept(ctx);
             return;
         }
 
         if (!hasPlayerEnoughCurrency(game, player, shopItem)) {
-            player.sendMessage(noItalic(Component.text("You don't have enough " + shopItem.getCurrency().getName() + "!").color(NamedTextColor.RED)));
+            player.sendMessage("<c>You don't have enough {}!", shopItem.getCurrency().getName());
             return;
         }
         if (!shopItem.isOwned(player)) {
-            player.sendMessage(noItalic(Component.text("You already have the highest tier available!").color(NamedTextColor.RED)));
+            player.sendMessage("<c>You already have the highest tier available!");
             return;
         }
 
         if (hasBetterItem(player, shopItem.getDisplay(player).material())) {
-            player.sendMessage("§cYou already have a better item!");
+            player.sendMessage("<c>You already have a better item!");
             return;
         }
 

@@ -39,18 +39,18 @@ public class BellPlacement extends PlacementRule {
         BlockUtils oppositeBlock = selfBlock.getRelativeTo(facing.opposite());
 
         if (attachment == Attachment.SINGLE_WALL) {
-            if (!facingBlock.getBlock().isSolid()) {
+            if (!facingBlock.getBlock().solid()) {
                 instance.setBlock(selfBlock.position(), Block.AIR);
-            } else if (oppositeBlock.getBlock().isSolid()) {
+            } else if (oppositeBlock.getBlock().solid()) {
                 blockState.set(Attachment.DOUBLE_WALL);
             }
         } else if (attachment == Attachment.DOUBLE_WALL) {
-            if (!facingBlock.getBlock().isSolid() && oppositeBlock.getBlock().isSolid()) {
+            if (!facingBlock.getBlock().solid() && oppositeBlock.getBlock().solid()) {
                 blockState.set(Attachment.SINGLE_WALL);
                 blockState.set(facing.opposite());
-            } else if (!oppositeBlock.getBlock().isSolid() && facingBlock.getBlock().isSolid()) {
+            } else if (!oppositeBlock.getBlock().solid() && facingBlock.getBlock().solid()) {
                 blockState.set(Attachment.SINGLE_WALL);
-            } else if (!oppositeBlock.getBlock().isSolid() && !facingBlock.getBlock().isSolid()) {
+            } else if (!oppositeBlock.getBlock().solid() && !facingBlock.getBlock().solid()) {
                 instance.setBlock(selfBlock.position(), Block.AIR);
             }
         }
@@ -72,11 +72,11 @@ public class BellPlacement extends PlacementRule {
             BlockUtils facingBlock = selfBlock.getRelativeTo(facing);
             BlockUtils oppositeBlock = selfBlock.getRelativeTo(facing.opposite());
 
-            if (facingBlock.getBlock().isSolid() && oppositeBlock.getBlock().isSolid()) {
+            if (facingBlock.getBlock().solid() && oppositeBlock.getBlock().solid()) {
                 blockState.set(Attachment.DOUBLE_WALL);
-            } else if (facingBlock.getBlock().isSolid() && !oppositeBlock.getBlock().isSolid()) {
+            } else if (facingBlock.getBlock().solid() && !oppositeBlock.getBlock().solid()) {
                 blockState.set(Attachment.SINGLE_WALL);
-            } else if (oppositeBlock.getBlock().isSolid() && !facingBlock.getBlock().isSolid()) {
+            } else if (oppositeBlock.getBlock().solid() && !facingBlock.getBlock().solid()) {
                 blockState.set(Attachment.SINGLE_WALL);
                 blockState.set(facing.opposite());
             }

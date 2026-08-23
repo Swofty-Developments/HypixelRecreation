@@ -25,11 +25,11 @@ public final class PoweredByPollenAbility implements PetAbility {
         double fortune = PER_LEVEL * level;
 
         return List.of(
-                "§7Grants §6+" + decimalify(fortune, 1) + "☘ Sunflower§7,",
-                "§6Moonflower§7, and §6Wild Rose Fortune",
-                "§7while in §aThe Garden§7.",
+                "<7>Grants <6>+" + decimalify(fortune, 1) + "☘ Sunflower<7>,",
+                "<6>Moonflower<7>, and <6>Wild Rose Fortune",
+                "<7>while in <a>The Garden<7>.",
                 "",
-                "§c⚠ §lNOT IMPLEMENTED§r§c — The Garden region check not implemented"
+                "<c>⚠ <l>NOT IMPLEMENTED<r><c> — The Garden region check not implemented"
         );
     }
 

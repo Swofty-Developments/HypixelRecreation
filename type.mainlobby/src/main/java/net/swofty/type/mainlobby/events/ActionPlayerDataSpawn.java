@@ -3,6 +3,7 @@ package net.swofty.type.mainlobby.events;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.bedwars.BedwarsLevelUtil;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.data.datapoints.DatapointLeaderboardLong;
@@ -26,7 +27,7 @@ public class ActionPlayerDataSpawn implements HypixelEventClass {
         if (rank == Rank.DEFAULT) return;
 
         for (HypixelPlayer onlinePlayer : HypixelGenericLoader.getLoadedPlayers()) {
-            onlinePlayer.sendMessage(player.getFullDisplayName() + " §6joined the lobby!");
+            onlinePlayer.sendMessage("{} <6>joined the lobby!", player.getFullDisplayName());
         }
 
         BedWarsDataHandler handler = BedWarsDataHandler.getUser(player.getUuid());

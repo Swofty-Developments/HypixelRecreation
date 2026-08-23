@@ -26,7 +26,7 @@ public class ClearCommand extends HypixelCommand {
             MinecraftServer.getSchedulerManager().scheduleTask(() -> player.getInventory().setItemStack(8,
                     new NonPlayerItemUpdater(new SkyBlockItem(ItemType.SKYBLOCK_MENU).getItemStack())
                             .getUpdatedItem().build()), TaskSchedule.tick(1), TaskSchedule.stop());
-            player.sendMessage("§aWhoosh!");
+            player.sendMessage("<a>Whoosh!");
         });
     }
 }

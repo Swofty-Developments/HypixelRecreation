@@ -14,7 +14,7 @@ public class NPCMarco extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Marco", "§e§lCLICK"};
+                return new String[]{"Marco", "<e><l>CLICK"};
             }
 
             @Override

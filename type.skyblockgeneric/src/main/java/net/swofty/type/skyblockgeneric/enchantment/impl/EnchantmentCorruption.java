@@ -13,7 +13,7 @@ import java.util.Map;
 public class EnchantmentCorruption implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "§a" + (level * 10) + "%§7 chance to summon a §5Corrupted §7variant of a caught §3Sea Creature§7.";
+        return "<a>" + level * 10 + "%<7> chance to summon a <5>Corrupted <7>variant of a caught <3>Sea Creature<7>.";
     }
 
     @Override

@@ -1,19 +1,21 @@
 package net.swofty.type.generic.collectibles;
 
 import lombok.Getter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 
 import java.util.Locale;
 
 @Getter
 public enum CollectibleCurrency {
-    BEDWARS_TOKENS("Tokens", "§2"),
-    SKYWARS_COINS("Tokens", "§2"),
-    MURDER_MYSTERY_COINS("Tokens", "§2");
+    BEDWARS_TOKENS("Tokens", NamedTextColor.DARK_GREEN),
+    SKYWARS_COINS("Tokens", NamedTextColor.DARK_GREEN),
+    MURDER_MYSTERY_COINS("Tokens", NamedTextColor.DARK_GREEN);
 
     private final String displayName;
-    private final String color;
+    private final TextColor color;
 
-    CollectibleCurrency(String displayName, String color) {
+    CollectibleCurrency(String displayName, TextColor color) {
         this.displayName = displayName;
         this.color = color;
     }

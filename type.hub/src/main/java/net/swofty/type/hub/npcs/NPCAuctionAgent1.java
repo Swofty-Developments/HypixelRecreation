@@ -12,7 +12,7 @@ public class NPCAuctionAgent1 extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6Auction Agent", "§e§lCLICK"};
+                return new String[]{"<6>Auction Agent", "<e><l>CLICK"};
             }
 
             @Override

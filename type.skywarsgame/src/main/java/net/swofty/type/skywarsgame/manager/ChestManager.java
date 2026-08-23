@@ -8,6 +8,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.skywars.SkywarsGameType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.hologram.HologramEntity;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.loot.ChestLootTable;
@@ -136,12 +137,12 @@ public class ChestManager {
         return null;
     }
 
-    private String getHologramText() {
+    private Text getHologramText() {
         if (refillCount >= 2) {
-            return "§cLooted";
+            return Text.of("<c>Looted");
         }
         long remainingSeconds = getSecondsUntilNextRefill();
-        return "§a" + formatTime(remainingSeconds);
+        return Text.of("<a>{}", formatTime(remainingSeconds));
     }
 
     private long getSecondsUntilNextRefill() {
@@ -167,7 +168,7 @@ public class ChestManager {
     private void updateAllHolograms() {
         if (refillCount >= 2) return;
 
-        String newText = getHologramText();
+        Text newText = getHologramText();
         for (HologramEntity hologram : chestHolograms.values()) {
             hologram.setText(newText);
         }

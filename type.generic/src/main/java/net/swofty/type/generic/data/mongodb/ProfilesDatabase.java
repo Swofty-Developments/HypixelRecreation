@@ -1,24 +1,31 @@
 package net.swofty.type.generic.data.mongodb;
 
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
+import net.swofty.PlayerField;
+import net.swofty.commons.data.NameIndex;
+import net.swofty.commons.data.SwoftyData;
+import net.swofty.commons.skyblock.SkyBlockProfileFields;
 import org.bson.Document;
+import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public record ProfilesDatabase(String id) implements MongoDB {
-    public static MongoDatabase database;
-    public static MongoCollection<Document> collection;
+    public static final PlayerField<String> DOCUMENT = SkyBlockProfileFields.DOCUMENT;
+
+    private static volatile Predicate<UUID> hostedProfiles = profileId -> false;
 
     public static void connect(MongoClient client) {
-        database = client.getDatabase("Minestom");
-        collection = database.getCollection("data");
+    }
+
+    public static void setHostedProfileCheck(Predicate<UUID> check) {
+        hostedProfiles = check == null ? profileId -> false : check;
+    }
+
+    private Document read() {
+        return fetchDocument(id);
     }
 
     @Override
@@ -28,88 +35,82 @@ public record ProfilesDatabase(String id) implements MongoDB {
 
     @Override
     public Object get(String key, Object def) {
-        Document doc = collection.find(Filters.eq("_id", id)).first();
-        if (doc == null) {
-            return def;
-        }
-        return doc.get(key);
-    }
-
-    public static void replaceDocument(String uniqueId, Document document) {
-        collection.replaceOne(Filters.eq("_id", uniqueId), document);
-    }
-
-    public List<Document> getAll() {
-        FindIterable<Document> results = collection.find();
-        List<Document> list = new ArrayList<>();
-        for (Document doc : results) {
-            list.add(doc);
-        }
-        return list;
-    }
-
-    public Document getDocument() {
-        Document query = new Document("_id", id);
-        return collection.find(query).first();
-    }
-
-    @Override
-    public boolean remove(String id) {
-        Document query = new Document("_id", id);
-        Document found = collection.find(query).first();
-
-        if (found == null) {
-            return false;
-        }
-
-        collection.deleteOne(query);
-        return true;
+        Document doc = read();
+        return doc == null ? def : doc.getOrDefault(key, def);
     }
 
     public void insertOrUpdate(String key, Object value) {
-        if (exists()) {
-            Document query = new Document("_id", id);
-            Document found = collection.find(query).first();
+        Document doc = read();
+        if (doc == null) doc = new Document("_id", id);
+        doc.put(key, value);
+        saveDocument(doc);
+    }
 
-            assert found != null;
-            collection.updateOne(found, Updates.set(key, value));
-            return;
-        }
-        Document New = new Document("_id", id);
-        New.append(key, value);
-        collection.insertOne(New);
+    public Document getDocument() {
+        return read();
     }
 
     public void saveDocument(Document document) {
-        if (exists()) {
-            collection.replaceOne(Filters.eq("_id", id), document);
-        } else {
-            collection.insertOne(document);
-        }
+        writeDocument(UUID.fromString(id), document.toJson());
     }
 
     public boolean exists() {
-        Document query = new Document("_id", id);
-        Document found = collection.find(query).first();
-        return found != null;
+        return readDocument(UUID.fromString(id)) != null;
+    }
+
+    @Override
+    public boolean remove(String uniqueId) {
+        writeDocument(UUID.fromString(uniqueId), null);
+        return true;
+    }
+
+    public List<Document> getAll() {
+        return List.of();
+    }
+
+    public static void replaceDocument(String uniqueId, Document document) {
+        writeDocument(UUID.fromString(uniqueId), document.toJson());
     }
 
     public static UUID fetchUUID(String username) {
-        Document doc = collection.find(Filters.eq("ignLowercase", "\"" + username.toLowerCase() + "\"")).first();
-        if (doc == null)
-            return null;
-        return UUID.fromString(doc.getString("_owner"));
+        return NameIndex.lookup(username);
     }
 
     public static Document fetchDocument(String uniqueId) {
-        return collection.find(Filters.eq("_id", uniqueId)).first();
+        String json = readDocument(UUID.fromString(uniqueId));
+        return json == null ? null : Document.parse(json);
     }
 
     public static Document fetchDocument(UUID uniqueId) {
-        return collection.find(Filters.eq("_id", uniqueId.toString())).first();
+        return fetchDocument(uniqueId.toString());
     }
 
     public static void deleteDocument(String uniqueId) {
-        collection.deleteOne(Filters.eq("_id", uniqueId));
+        writeDocument(UUID.fromString(uniqueId), null);
+    }
+
+    private static String readDocument(UUID profileId) {
+        try {
+            return SwoftyData.profile().get(profileId, DOCUMENT);
+        } finally {
+            release(profileId);
+        }
+    }
+
+    private static void writeDocument(UUID profileId, String json) {
+        try {
+            SwoftyData.profile().set(profileId, DOCUMENT, json);
+        } finally {
+            release(profileId);
+        }
+    }
+
+    private static void release(UUID profileId) {
+        if (hostedProfiles.test(profileId)) return;
+        try {
+            SwoftyData.profile().unload(profileId);
+        } catch (Exception e) {
+            Logger.error(e, "Failed to release offline profile container {}", profileId);
+        }
     }
 }

@@ -1,19 +1,15 @@
 package net.swofty.velocity.data;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import net.swofty.PlayerField;
+import net.swofty.codec.Codecs;
+import net.swofty.commons.data.SwoftyData;
 import org.bson.Document;
 
 import java.util.UUID;
 
 public class UserDatabase {
-    public static MongoClient client;
-    public static MongoDatabase database;
-    public static MongoCollection<Document> collection;
+    private static final PlayerField<String> PROFILES_INDEX =
+            PlayerField.create("hypixel", "_profiles_index", Codecs.STRING, null);
 
     public UUID id;
 
@@ -26,16 +22,21 @@ public class UserDatabase {
     }
 
     public static void connect(String connectionString) {
-        ConnectionString cs = new ConnectionString(connectionString);
-        MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(cs).build();
-        client = MongoClients.create(settings);
-
-        database = client.getDatabase("Minestom");
-        collection = database.getCollection("profiles");
     }
 
     public Document getDocument() {
-        Document query = new Document("_id", id.toString());
-        return collection.find(query).first();
+        String stored = read(id);
+        if (stored == null || stored.isEmpty()) return null;
+        String[] parts = stored.split(";", 2);
+        if (parts[0].isEmpty()) return null;
+        return new Document("_id", id.toString()).append("selected", parts[0]);
+    }
+
+    private static String read(UUID uuid) {
+        try {
+            return SwoftyData.account().get(uuid, PROFILES_INDEX);
+        } finally {
+            SwoftyData.account().unload(uuid);
+        }
     }
 }

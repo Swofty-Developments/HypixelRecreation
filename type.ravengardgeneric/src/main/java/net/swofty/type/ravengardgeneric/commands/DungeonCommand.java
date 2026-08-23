@@ -5,6 +5,7 @@ import net.minestom.server.command.builder.arguments.number.ArgumentNumber;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.UnderstandableProxyServer;
+import net.swofty.commons.text.Text;
 import net.swofty.commons.protocol.objects.orchestrator.ChooseGameProtocol;
 import net.swofty.commons.protocol.objects.orchestrator.GetServerForMapProtocol;
 import net.swofty.commons.protocol.objects.orchestrator.ListGamesProtocol;
@@ -32,10 +33,10 @@ public class DungeonCommand extends HypixelCommand {
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
             RavengardPlayer player = (RavengardPlayer) sender;
-            player.sendMessage("§e/dungeon join §7- queue into a dungeon");
-            player.sendMessage("§e/dungeon join <instance> §7- fly over an instance");
-            player.sendMessage("§e/dungeon list §7- every dungeon server and its instances");
-            player.sendMessage("§e/dungeon generate [seed] [rooms] §7- dedicated instance");
+            player.sendMessage("<e>/dungeon join <7>- queue into a dungeon");
+            player.sendMessage("<e>/dungeon join \\<instance> <7>- fly over an instance");
+            player.sendMessage("<e>/dungeon list <7>- every dungeon server and its instances");
+            player.sendMessage("<e>/dungeon generate [seed] [rooms] <7>- dedicated instance");
         });
 
         command.addSyntax((sender, context) -> {
@@ -77,7 +78,7 @@ public class DungeonCommand extends HypixelCommand {
     }
 
     private static void adminGenerate(RavengardPlayer player, String mode) {
-        player.sendMessage("§7Allocating a dungeon instance...");
+        player.sendMessage("<7>Allocating a dungeon instance...");
         GetServerForMapProtocol.GetServerForMapMessage request =
                 new GetServerForMapProtocol.GetServerForMapMessage(
                         ServerType.RAVENGARD_DUNGEON, null, mode, 1);
@@ -87,17 +88,15 @@ public class DungeonCommand extends HypixelCommand {
                     || server == null || gameId == null) {
                 String reason = response instanceof GetServerForMapProtocol.GetServerForMapResponse r
                         && r.error() != null ? r.error() : "no servers available";
-                player.sendMessage("§cCould not allocate an instance: " + reason);
+                player.sendMessage("<c>Could not allocate an instance: {}", reason);
                 return;
             }
-            player.sendMessage("§aInstance §f" + gameId + "§a created on §f" + server.shortName()
-                    + "§a. It self-destructs after 30s with nobody inside.");
-            player.sendMessage(net.kyori.adventure.text.Component
-                    .text("§e§l[CLICK TO JOIN] §7or run /dungeon join " + gameId.substring(0, 8))
-                    .clickEvent(net.kyori.adventure.text.event.ClickEvent
-                            .runCommand("/dungeon join " + gameId)));
+            player.sendMessage("<a>Instance <f>{}<a> created on <f>{}<a>. It self-destructs after 30s with nobody inside.",
+                    gameId, server.shortName());
+            player.sendMessage("<click:run:'/dungeon join {0}'><e><l>[CLICK TO JOIN] <7>or run /dungeon join {1}</click>",
+                    gameId, gameId.substring(0, 8));
         }).exceptionally(throwable -> {
-            player.sendMessage("§cAllocation failed: " + throwable.getMessage());
+            player.sendMessage("<c>Allocation failed: {}", throwable.getMessage());
             return null;
         });
     }
@@ -110,7 +109,7 @@ public class DungeonCommand extends HypixelCommand {
                 .thenAccept(response -> {
                     if (!(response instanceof ListGamesProtocol.ListGamesResponse listing)
                             || !listing.success()) {
-                        player.sendMessage("§cFailed to look the instance up.");
+                        player.sendMessage("<c>Failed to look the instance up.");
                         return;
                     }
                     for (ListGamesProtocol.ServerGames server : listing.servers()) {
@@ -125,21 +124,21 @@ public class DungeonCommand extends HypixelCommand {
                                     server.shortName());
                             ORCHESTRATOR.handleRequest(new ChooseGameProtocol.ChooseGameMessage(
                                     player.getUuid(), proxy, game.gameId())).thenRun(() -> {
-                                player.sendMessage("§aSending you to §f" + server.shortName() + "§a!");
+                                player.sendMessage("<a>Sending you to <f>{}<a>!", server.shortName());
                                 player.asProxyPlayer().transferToWithIndication(proxy.uuid());
                             });
                             return;
                         }
                     }
-                    player.sendMessage("§cNo instance found matching §f" + instanceId + "§c.");
+                    player.sendMessage("<c>No instance found matching <f>{}<c>.", instanceId);
                 }).exceptionally(throwable -> {
-                    player.sendMessage("§cLookup failed: " + throwable.getMessage());
+                    player.sendMessage("<c>Lookup failed: {}", throwable.getMessage());
                     return null;
                 });
     }
 
     private static void queue(RavengardPlayer player, String mode) {
-        player.sendMessage("§7Finding a dungeon server...");
+        player.sendMessage("<7>Finding a dungeon server...");
         GetServerForMapProtocol.GetServerForMapMessage request =
                 new GetServerForMapProtocol.GetServerForMapMessage(
                         ServerType.RAVENGARD_DUNGEON, null, mode, 1);
@@ -150,20 +149,20 @@ public class DungeonCommand extends HypixelCommand {
                     || server == null || gameId == null) {
                 String reason = response instanceof GetServerForMapProtocol.GetServerForMapResponse r
                         && r.error() != null ? r.error() : "no servers available";
-                player.sendMessage("§cCould not find a dungeon: " + reason);
+                player.sendMessage("<c>Could not find a dungeon: {}", reason);
                 return;
             }
 
             ORCHESTRATOR.handleRequest(new ChooseGameProtocol.ChooseGameMessage(
                     player.getUuid(), server, gameId)).thenRun(() -> {
-                player.sendMessage("§aSending you to §f" + server.shortName() + "§a!");
+                player.sendMessage("<a>Sending you to <f>{}<a>!", server.shortName());
                 player.asProxyPlayer().transferToWithIndication(server.uuid());
             }).exceptionally(throwable -> {
-                player.sendMessage("§cFailed to register for the dungeon: " + throwable.getMessage());
+                player.sendMessage("<c>Failed to register for the dungeon: {}", throwable.getMessage());
                 return null;
             });
         }).exceptionally(throwable -> {
-            player.sendMessage("§cDungeon search failed: " + throwable.getMessage());
+            player.sendMessage("<c>Dungeon search failed: {}", throwable.getMessage());
             return null;
         });
     }
@@ -173,32 +172,31 @@ public class DungeonCommand extends HypixelCommand {
                 .thenAccept(response -> {
                     if (!(response instanceof ListGamesProtocol.ListGamesResponse listing)
                             || !listing.success()) {
-                        player.sendMessage("§cFailed to list dungeon servers.");
+                        player.sendMessage("<c>Failed to list dungeon servers.");
                         return;
                     }
                     if (listing.servers().isEmpty()) {
-                        player.sendMessage("§cNo dungeon servers are online.");
+                        player.sendMessage("<c>No dungeon servers are online.");
                         return;
                     }
                     for (ListGamesProtocol.ServerGames server : listing.servers()) {
-                        player.sendMessage("§e" + server.shortName() + " §7- §f"
-                                + server.onlinePlayers() + "§7/§f" + server.maxPlayers()
-                                + " players§7, §f" + (server.remainingGameSlots() == null
-                                ? "?" : server.remainingGameSlots()) + "§7 free instance slots");
+                        player.sendMessage("<e>{} <7>- <f>{}<7>/<f>{} players<7>, <f>{}<7> free instance slots",
+                                server.shortName(), server.onlinePlayers(), server.maxPlayers(),
+                                server.remainingGameSlots() == null ? "?" : server.remainingGameSlots());
                         for (ListGamesProtocol.GameSummary game : server.games()) {
-                            String expiry = game.map() != null && game.map().startsWith("empty:")
-                                    ? " §c(dies in " + game.map().substring(6) + "s)" : "";
-                            player.sendMessage("  §8- §f" + game.gameId().substring(0, 8)
-                                    + " §7" + game.gameTypeName()
-                                    + " §f" + game.playerCount() + " players "
-                                    + (game.acceptingJoins() ? "§aopen" : "§cclosed") + expiry);
+                            boolean dying = game.map() != null && game.map().startsWith("empty:");
+                            Text line = Text.of("  <8>- <f>{} <7>{} <f>{} players ",
+                                            game.gameId().substring(0, 8), game.gameTypeName(), game.playerCount())
+                                    .append(game.acceptingJoins() ? "<a>open" : "<c>closed")
+                                    .appendIf(dying, " <c>(dies in {}s)", dying ? game.map().substring(6) : "");
+                            player.sendMessage(line);
                         }
                         if (server.games().isEmpty()) {
-                            player.sendMessage("  §8- §7no instances");
+                            player.sendMessage("  <8>- <7>no instances");
                         }
                     }
                 }).exceptionally(throwable -> {
-                    player.sendMessage("§cListing failed: " + throwable.getMessage());
+                    player.sendMessage("<c>Listing failed: {}", throwable.getMessage());
                     return null;
                 });
     }

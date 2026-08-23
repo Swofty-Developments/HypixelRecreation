@@ -38,7 +38,7 @@ final class SvenPackmasterAbility extends SlayerAbilitySupport {
     private void callPups(SlayerBossMob boss) {
         int pups = boss.getProfile().tier().tier().number() >= 4 ? 6 : 5;
         double damage = boss.getProfile().tier().tier().number() >= 4 ? 220D : 90D;
-        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§fCall the pups!"));
+        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<f>Call the pups!"));
         for (int i = 0; i < pups; i++) {
             int index = i;
             delayed(boss, i * 10, () -> spawnMinion(boss, new SlayerMinionMob.SlayerMinionProfile(

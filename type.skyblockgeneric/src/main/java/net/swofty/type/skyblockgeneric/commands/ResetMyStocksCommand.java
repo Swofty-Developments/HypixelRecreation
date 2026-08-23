@@ -18,7 +18,7 @@ public class ResetMyStocksCommand extends HypixelCommand {
 
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
             player.getShoppingData().resetStocks();
-            player.sendMessage("§aWhoop!");
+            player.sendMessage("<a>Whoop!");
         });
     }
 }

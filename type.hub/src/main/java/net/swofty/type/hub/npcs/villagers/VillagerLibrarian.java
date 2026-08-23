@@ -17,7 +17,7 @@ public class VillagerLibrarian extends HypixelNPC {
         super(new VillagerConfiguration(){
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"&fLibrarian", "§e§lCLICK"};
+                return new String[]{"&fLibrarian", "<e><l>CLICK"};
             }
 
             @Override
@@ -58,12 +58,12 @@ public class VillagerLibrarian extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("quest-hello").lines(new String[]{
-                                "Greetings! Welcome to the §bLibrary§f!",
-                                "The §bLibrary §fis your one-stop shop for all things enchanting. Enchant items, purchase §aEnchanted Books§f, and more!",
-                                "You can enchant items by clicking any §aEnchanting Table§f. Enchanting costs §3experience levels §f- the more levels you spend, the better enchantments you will receive.",
-                                "Use the §aEnchanting Table §fto enchant an item!"
-                        }).build()
+                        .key("quest-hello").lines(
+                                "Greetings! Welcome to the <b>Library<f>!",
+                                "The <b>Library <f>is your one-stop shop for all things enchanting. Enchant items, purchase <a>Enchanted Books<f>, and more!",
+                                "You can enchant items by clicking any <a>Enchanting Table<f>. Enchanting costs <3>experience levels <f>- the more levels you spend, the better enchantments you will receive.",
+                                "Use the <a>Enchanting Table <f>to enchant an item!"
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

@@ -5,6 +5,7 @@ import net.minestom.server.command.builder.arguments.number.ArgumentLong;
 import net.minestom.server.entity.Player;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
+import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 
 @CommandParameters(
@@ -22,16 +23,16 @@ public class SkipWorldTimeCommand extends HypixelCommand {
         command.addSyntax((sender, context) -> {
             long time = context.get(timeArg);
             if (time < 0) {
-                sender.sendMessage("§cTick must be not negative.");
+                sender.sendMessage("<c>Tick must be not negative.");
                 return;
             }
             if (time > 24000) {
-                sender.sendMessage("§cTick must be less than or equal to 24000.");
+                sender.sendMessage("<c>Tick must be less than or equal to 24000.");
                 return;
             }
             if (sender instanceof Player player) {
                 player.getInstance().setTime(time);
-                player.sendMessage("§aSet the world time to §e" + time + "§a ticks.");
+                ((HypixelPlayer) player).sendMessage("<a>Set the world time to <e>{}<a> ticks.", time);
             }
         }, timeArg);
     }

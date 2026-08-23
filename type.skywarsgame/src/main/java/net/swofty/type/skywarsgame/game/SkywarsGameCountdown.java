@@ -1,12 +1,14 @@
 package net.swofty.type.skywarsgame.game;
 
-import lombok.Getter;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.NamedTextColor;
+import lombok.Getter;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.utility.Titles;
 
 import java.time.Duration;
 
@@ -51,7 +53,7 @@ public class SkywarsGameCountdown {
     private void broadcastCountdownMessage(int seconds) {
         String word = seconds == 1 ? "second" : "seconds";
 
-        NamedTextColor numberColor;
+        TextColor numberColor;
         if (seconds <= 5) {
             numberColor = NamedTextColor.RED;
         } else if (seconds == 10) {
@@ -60,19 +62,13 @@ public class SkywarsGameCountdown {
             numberColor = NamedTextColor.GREEN;
         }
 
-        Component message = Component.text("The game starts in ", NamedTextColor.YELLOW)
-                .append(Component.text(seconds, numberColor))
-                .append(Component.text(" " + word + "!", NamedTextColor.YELLOW));
-
-        game.broadcastMessage(message);
+        game.broadcastMessage(Text.of("<e>The game starts in <color:{}>{}<e> {}!", numberColor, seconds, word));
     }
 
     private void showCountdownTitle(int seconds) {
-        NamedTextColor color = NamedTextColor.RED;
-
-        Title title = Title.title(
-                Component.text(String.valueOf(seconds), color),
-                Component.empty(),
+        Title title = Titles.title(
+                Text.of("<c>{}", seconds),
+                Text.empty(),
                 Title.Times.times(Duration.ZERO, Duration.ofMillis(900), Duration.ofMillis(100))
         );
 
@@ -116,6 +112,6 @@ public class SkywarsGameCountdown {
             countdownTask.cancel();
         }
         game.setGameStatus(SkywarsGameStatus.WAITING);
-        game.broadcastMessage(Component.text("Not enough players! Countdown cancelled.", NamedTextColor.RED));
+        game.broadcastMessage(Text.of("<c>Not enough players! Countdown cancelled."));
     }
 }

@@ -1,15 +1,18 @@
 package net.swofty.type.skywarslobby.gui;
 
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -97,12 +100,9 @@ public class GUIKitSelector extends HypixelInventoryGUI {
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aGo Back",
-                        Material.ARROW,
-                        1,
-                        "§7To Kits & Perks"
-                );
+                return ItemStacks.item(Material.ARROW, 1, """
+                        <a>Go Back
+                        <7>To Kits & Perks""");
             }
 
             @Override
@@ -115,12 +115,9 @@ public class GUIKitSelector extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§7Total Coins: §6" + String.format("%,d", coins),
-                        Material.EMERALD,
-                        1,
-                        "§6https://store.hypixel.net"
-                );
+                return ItemStacks.item(Material.EMERALD, 1, """
+                        <7>Total Coins: <6>{:,}
+                        <6>https://store.hypixel.net""", coins);
             }
         });
 
@@ -130,20 +127,18 @@ public class GUIKitSelector extends HypixelInventoryGUI {
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 String currentSort = lowestFirst ? "Lowest rarity first" : "Highest rarity first";
                 String nextSort = lowestFirst ? "Highest rarity first" : "Lowest rarity first";
-                String ownedFirstStatus = ownedFirst ? "§aYes" : "§cNo";
+                Text ownedFirstStatus = Text.of(ownedFirst ? "<a>Yes" : "<c>No");
 
-                return ItemStackCreator.getStack(
-                        "§6Sorted by: §a" + currentSort,
-                        Material.HOPPER,
-                        1,
-                        "§7Sorts by rarity: " + currentSort,
-                        "",
-                        "§7Next sort: §a" + nextSort,
-                        "§eLeft click to use!",
-                        "",
-                        "§7Owned items first: " + ownedFirstStatus,
-                        "§eRight click to toggle!"
-                );
+                return ItemStacks.item(Material.HOPPER, 1, """
+                        <6>Sorted by: <a>{}
+                        <7>Sorts by rarity: {}
+
+                        <7>Next sort: <a>{}
+                        <e>Left click to use!
+
+                        <7>Owned items first: {}
+                        <e>Right click to toggle!""",
+                        currentSort, currentSort, nextSort, ownedFirstStatus);
             }
 
             @Override
@@ -165,12 +160,9 @@ public class GUIKitSelector extends HypixelInventoryGUI {
             set(new GUIClickableItem(45) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§aPrevious Page",
-                            Material.ARROW,
-                            1,
-                            "§ePage " + prevPage
-                    );
+                    return ItemStacks.item(Material.ARROW, 1, """
+                            <a>Previous Page
+                            <e>Page {}""", prevPage);
                 }
 
                 @Override
@@ -187,12 +179,9 @@ public class GUIKitSelector extends HypixelInventoryGUI {
             set(new GUIClickableItem(53) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§aNext Page",
-                            Material.ARROW,
-                            1,
-                            "§ePage " + nextPage
-                    );
+                    return ItemStacks.item(Material.ARROW, 1, """
+                            <a>Next Page
+                            <e>Page {}""", nextPage);
                 }
 
                 @Override
@@ -214,56 +203,58 @@ public class GUIKitSelector extends HypixelInventoryGUI {
                 boolean selected = unlocks.getSelectedKitForMode(mode).equals(kit.getId());
 
                 // Items preview
-                List<String> lore = new ArrayList<>(kit.getItemsLore(mode));
-                lore.add("");
+                List<Text> lore = new ArrayList<>();
+                lore.addAll(kit.getItemsLore(mode));
+                lore.add(Text.empty());
 
                 // Rarity
-                lore.add("§7Rarity: " + kit.getRarity().getFormattedName());
+                lore.add(Text.of("<7>Rarity: {}", kit.getRarity().getFormattedName()));
 
                 // Status and action
                 if (selected) {
-                    lore.add("§a§lSELECTED");
-                    lore.add("");
-                    lore.add("§eRight-click to open breakdown!");
+                    lore.add(Text.of("<a><l>SELECTED"));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<e>Right-click to open breakdown!"));
                 } else if (owned) {
-                    lore.add("§aUNLOCKED");
-                    lore.add("");
-                    lore.add("§eLeft-click to select!");
-                    lore.add("§eRight-click to open breakdown!");
+                    lore.add(Text.of("<a>UNLOCKED"));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<e>Left-click to select!"));
+                    lore.add(Text.of("<e>Right-click to open breakdown!"));
                 } else {
                     // Show cost
                     if (kit.costsCoin()) {
-                        lore.add("§7Cost: §6" + String.format("%,d", kit.getCost()));
+                        lore.add(Text.of("<7>Cost: <6>{:,}", kit.getCost()));
                     } else if (kit.costsOpal()) {
-                        lore.add("§7Cost: §9" + kit.getOpalCost() + " Opal" + (kit.getOpalCost() > 1 ? "s" : ""));
+                        lore.add(Text.of("<7>Cost: <9>{} Opal{}",
+                                kit.getOpalCost(), kit.getOpalCost() > 1 ? "s" : ""));
                     } else if (kit.getUnlockMethod() != null) {
-                        lore.add("§7" + kit.getFormattedCost());
+                        lore.add(Text.of("<7>{}", kit.getFormattedCost()));
                     }
 
                     if (kit.isSoulWellDrop()) {
-                        lore.add("§bAlso found in the Soul Well!");
+                        lore.add(Text.of("<b>Also found in the Soul Well!"));
                     }
-                    lore.add("");
+                    lore.add(Text.empty());
 
                     if (kit.costsCoin()) {
                         if (coins >= kit.getCost()) {
-                            lore.add("§eLeft-click to purchase!");
+                            lore.add(Text.of("<e>Left-click to purchase!"));
                         } else {
-                            lore.add("§cNot enough coins!");
+                            lore.add(Text.of("<c>Not enough coins!"));
                         }
                     } else if (kit.costsOpal()) {
-                        lore.add("§9Purchase with Opals in Angel's Descent");
+                        lore.add(Text.of("<9>Purchase with Opals in Angel's Descent"));
                     }
-                    lore.add("§eRight-click to open breakdown!");
+                    lore.add(Text.of("<e>Right-click to open breakdown!"));
                 }
 
-                String nameColor = owned ? "§a" : "§c";
-                String name = nameColor + kit.getName();
+                TextColor nameColor = owned ? NamedTextColor.GREEN : NamedTextColor.RED;
+                Text name = Text.of("<color:{}>{}", nameColor, kit.getName());
 
                 if (kit.hasCustomTexture()) {
-                    return ItemStackCreator.getStackHead(name, kit.getIconTexture(), 1, lore);
+                    return ItemStacks.head(kit.getIconTexture(), name, lore);
                 } else {
-                    return ItemStackCreator.getStack(name, kit.getIconMaterial(), 1, lore);
+                    return ItemStacks.item(kit.getIconMaterial(), 1, name, lore);
                 }
             }
 
@@ -289,7 +280,7 @@ public class GUIKitSelector extends HypixelInventoryGUI {
                 if (owned) {
                     // Select the kit
                     currentUnlocks.selectKitForMode(mode, kit.getId());
-                    player.sendMessage("§aYou selected the §e" + kit.getName() + " §akit for " + mode + " mode!");
+                    player.sendMessage("<a>You selected the <e>{} <a>kit for {} mode!", kit.getName(), mode);
                     // Refresh GUI with preserved sorting
                     new GUIKitSelector(mode, page, lowestFirst, ownedFirst).open(player);
                 } else if (kit.costsCoin()) {
@@ -298,10 +289,10 @@ public class GUIKitSelector extends HypixelInventoryGUI {
                         // Open confirmation dialog
                         new GUIKitPurchaseConfirm(kit, mode, page).open(player);
                     } else {
-                        player.sendMessage("§cYou don't have enough coins to purchase this kit!");
+                        player.sendMessage("<c>You don't have enough coins to purchase this kit!");
                     }
                 } else {
-                    player.sendMessage("§cThis kit cannot be purchased with coins.");
+                    player.sendMessage("<c>This kit cannot be purchased with coins.");
                 }
             }
         };

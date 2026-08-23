@@ -25,7 +25,7 @@ public class DoorPlacement extends PlacementRule {
         BlockFace blockFace = placementState.blockFace();
         BlockUtils self = new BlockUtils(instance, blockPosition);
 
-        boolean isAir = self.getBlock().isAir() && self.above().getBlock().isAir();
+        boolean isAir = self.getBlock().air() && self.above().getBlock().air();
         boolean withinHeightLimit = blockPosition.y() < 255;
 
         return withinHeightLimit && isAir || !(blockFace == BlockFace.BOTTOM);

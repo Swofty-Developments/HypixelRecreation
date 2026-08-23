@@ -2,7 +2,6 @@ package net.swofty.type.skyblockgeneric.utility;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.PlayerInventory;
@@ -11,8 +10,9 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.HypixelEventHandler;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skyblockgeneric.event.custom.ItemCraftEvent;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.crafting.SkyBlockRecipe;
@@ -21,11 +21,11 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PlayerInventoryCrafting {
-    private static final String[] DEFAULT_CRAFT_ERROR = new String[]{"§cYou cannot craft this item right now."};
+    private static final String[] DEFAULT_CRAFT_ERROR = new String[]{"<c>You cannot craft this item right now."};
     private static final int RESULT_SLOT = 36;
     private static final int[] CRAFT_SLOTS = new int[]{37, 38, 39, 40};
     private static final int[] RECIPE_GRID_INDEXES = new int[]{0, 1, 3, 4};
@@ -106,27 +106,22 @@ public final class PlayerInventoryCrafting {
         SkyBlockRecipe.CraftingResult result = recipe.getCanCraft().apply(player);
         if (result == null || !result.allowed()) {
             String[] craftErrorMessages = getCraftErrorMessages(result);
-            return ItemStackCreator.getStack(
-                craftErrorMessages[0],
-                Material.BEDROCK,
-                1,
-                Arrays.copyOfRange(craftErrorMessages, 1, craftErrorMessages.length)
-            ).build();
+            Text name = Text.parse(craftErrorMessages[0]);
+            List<Text> lore = Arrays.stream(craftErrorMessages, 1, craftErrorMessages.length)
+                .map(Text::parse)
+                .toList();
+            return ItemStacks.item(Material.BEDROCK, 1, name, lore).build();
         }
 
         ItemStack.Builder builder = PlayerItemUpdater.playerUpdate(player, recipe.getResult().getItemStack())
             .amount(recipe.getAmount());
 
-        ArrayList<Object> lore = new ArrayList<>();
+        ArrayList<Text> lore = new ArrayList<>();
         var existingLore = builder.build().get(DataComponents.LORE);
         if (existingLore != null) {
-            existingLore.stream().map(line -> "§7" + StringUtility.getTextFromComponent(line)).forEach(lore::add);
+            existingLore.stream().map(line -> Text.of("<7>{}", StringUtility.getTextFromComponent(line))).forEach(lore::add);
         }
-        builder.set(DataComponents.LORE, ItemStackCreator.literalLoreComponents(lore).stream()
-            .map(line -> line.decoration(TextDecoration.ITALIC, false))
-            .collect(Collectors.toList()));
-
-        return builder.build();
+        return ItemStacks.lines(builder, lore).build();
     }
 
     private static void craftToInventory(SkyBlockPlayer player, SkyBlockRecipe<?> recipe, ItemStack craftedItem, int amountPerCraft) {

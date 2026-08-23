@@ -14,7 +14,7 @@ public class NPCMort extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bMort", "§e§lGATE KEEPER"};
+                return new String[]{"<b>Mort", "<e><l>GATE KEEPER"};
             }
 
             @Override

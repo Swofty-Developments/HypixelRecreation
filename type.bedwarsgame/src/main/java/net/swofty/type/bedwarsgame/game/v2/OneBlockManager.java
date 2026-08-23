@@ -1,11 +1,11 @@
 package net.swofty.type.bedwarsgame.game.v2;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.shop.ShopItem;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
@@ -60,13 +60,13 @@ public class OneBlockManager {
         elapsedSeconds++;
         if (elapsedSeconds == 60) {
             itemIntervalSeconds = 4;
-            game.broadcastMessage(Component.translatable("bedwars.new_item_in_4"));
+            game.broadcastMessage(Text.key("bedwars.new_item_in_4"));
         } else if (elapsedSeconds == 150) {
             itemIntervalSeconds = 3;
-            game.broadcastMessage(Component.translatable("bedwars.new_item_in_3"));
+            game.broadcastMessage(Text.key("bedwars.new_item_in_3"));
         } else if (elapsedSeconds == 240) {
             itemIntervalSeconds = 1;
-            game.broadcastMessage(Component.translatable("bedwars.new_item_in_1"));
+            game.broadcastMessage(Text.key("bedwars.new_item_in_1"));
         }
 
         if (elapsedSeconds % itemIntervalSeconds == 0) {

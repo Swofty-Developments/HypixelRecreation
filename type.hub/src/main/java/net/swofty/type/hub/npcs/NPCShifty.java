@@ -12,7 +12,7 @@ public class NPCShifty extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Shifty", "§e§lCLICK"};
+                return new String[]{"Shifty", "<e><l>CLICK"};
             }
 
             @Override

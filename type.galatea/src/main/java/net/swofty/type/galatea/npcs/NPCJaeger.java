@@ -12,7 +12,7 @@ public class NPCJaeger extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bJaeger", "§e§lCLICK"};
+                return new String[]{"<b>Jaeger", "<e><l>CLICK"};
             }
 
             @Override

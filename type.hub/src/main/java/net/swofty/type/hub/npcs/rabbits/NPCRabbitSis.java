@@ -31,97 +31,97 @@ public class NPCRabbitSis extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("dialogue-1").lines(new String[]{
+                        .key("dialogue-1").lines(
                                 "Hire me, " + player.getUsername() + "!",
                                 "Together we can abolish the patriarchy, and ensure clean chocolate for all rabbits!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-2").lines(new String[]{
+                        .key("dialogue-2").lines(
                                 "Down with Big Chocolate!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-3").lines(new String[]{
+                        .key("dialogue-3").lines(
                                 "Regulate! Regulate! Regulate!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-4").lines(new String[]{
+                        .key("dialogue-4").lines(
                                 "Chocolate is love, chocolate is life. But at what cost?",
                                 "It's time this family faces the music and listens to the cocoa beans' side of the story!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-5").lines(new String[]{
+                        .key("dialogue-5").lines(
                                 "They call me a troublemaker, a rebel. I say, I'm the only one talking sense!",
                                 "Wake up and smell the exploitation, family!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-6").lines(new String[]{
+                        .key("dialogue-6").lines(
                                 "A protest a day keeps the unethical practices away.",
                                 "Dad might not see it now, but I'm doing this for the future of all chocolate bunnies."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-7").lines(new String[]{
+                        .key("dialogue-7").lines(
                                 "They say I'm disrupting the peace, but I'm just trying to sprinkle a little truth on our chocolate-covered lies.",
                                 "The factory needs a new recipe...for justice."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-8").lines(new String[]{
+                        .key("dialogue-8").lines(
                                 "Bro's always talking about his 'sigma grindset'. Tried to get me to read a book on it.",
                                 "I told him I'd start my own movement: the 'chocolate mindfulness mindset'."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-9").lines(new String[]{
+                        .key("dialogue-9").lines(
                                 "Cousin might be the laziest bunny I know, but he's onto something.",
                                 "Why protest when you can just 'be the change'? By napping, apparently."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-10").lines(new String[]{
-                                "I told §aHoppity§f we should have a line of eco-friendly chocolates.",
+                        .key("dialogue-10").lines(
+                                "I told <a>Hoppity<f> we should have a line of eco-friendly chocolates.",
                                 "He asked if green food coloring counted.",
                                 "We're...working on it."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-11").lines(new String[]{
-                                "§aHoppity§f actually listens to my protests.",
+                        .key("dialogue-11").lines(
+                                "<a>Hoppity<f> actually listens to my protests.",
                                 "Well, more like he can't avoid them since I do it in the lobby. But it's a start, right?"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-12").lines(new String[]{
+                        .key("dialogue-12").lines(
                                 "Hire me, " + player.getUsername() + "!",
                                 "Together we can abolish the patriarchy, and ensure clean chocolate for all rabbits!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-13").lines(new String[]{
+                        .key("dialogue-13").lines(
                                 "Down with Big Chocolate!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-14").lines(new String[]{
+                        .key("dialogue-14").lines(
                                 "Regulate! Regulate! Regulate!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-15").lines(new String[]{
+                        .key("dialogue-15").lines(
                                 "Chocolate is love, chocolate is life. But at what cost?",
                                 "It's time this family faces the music and listens to the cocoa beans' side of the story!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-16").lines(new String[]{
+                        .key("dialogue-16").lines(
                                 "They call me a troublemaker, a rebel. I say, I'm the only one talking sense!",
                                 "Wake up and smell the exploitation, family!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-17").lines(new String[]{
+                        .key("dialogue-17").lines(
                                 "A protest a day keeps the unethical practices away.",
                                 "Dad might not see it now, but I'm doing this for the future of all chocolate bunnies."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-18").lines(new String[]{
+                        .key("dialogue-18").lines(
                                 "They say I'm disrupting the peace, but I'm just trying to sprinkle a little truth on our chocolate-covered lies.",
                                 "The factory needs a new recipe...for justice."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-19").lines(new String[]{
+                        .key("dialogue-19").lines(
                                 "Bro's always talking about his 'sigma grindset'. Tried to get me to read a book on it.",
                                 "I told him I'd start my own movement: the 'chocolate mindfulness mindset'."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

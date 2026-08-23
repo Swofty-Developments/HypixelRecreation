@@ -21,7 +21,7 @@ public class EnchantmentThunderlord implements Ench, EnchFromTable, DamageEventE
     @Override
     public String getDescription(int level) {
         double damagePercent = ThunderboltTracker.THUNDERLORD_DAMAGE_PERCENTAGES[level - 1] * 100;
-        return "Strike lightning on a monster after hitting it §a3 times§7, dealing §a" + damagePercent + "%§7 of the hit's damage.";
+        return "Strike lightning on a monster after hitting it <a>3 times<7>, dealing <a>" + damagePercent + "%<7> of the hit's damage.";
     }
 
     @Override

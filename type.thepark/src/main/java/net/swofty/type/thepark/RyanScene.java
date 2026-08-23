@@ -69,7 +69,7 @@ public class RyanScene {
 		if (entity == null || entity.getInstance() == null) return;
 
 		if (isInView(entity.getInstance(), pos, player)) {
-			ryan.sendNPCMessage(player, "Hey, you're not part of our §cCult§f! Get out of here!");
+			ryan.sendNPCMessage(player, "Hey, you're not part of our <c>Cult<f>! Get out of here!");
 
 			player.setSpeedManaged(true);
 
@@ -156,8 +156,8 @@ public class RyanScene {
 			int bz = (int) Math.floor(pz);
 
 			Block block = instance.getBlock(bx, by, bz);
-			if (block.isAir()) continue;
-			if (!block.isSolid()) continue;
+			if (block.air()) continue;
+			if (!block.solid()) continue;
 			String name = block.toString().toUpperCase();
 			if (name.contains("LEAVES")) continue;
 

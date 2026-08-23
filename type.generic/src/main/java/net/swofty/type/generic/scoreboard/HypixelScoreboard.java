@@ -3,6 +3,11 @@ package net.swofty.type.generic.scoreboard;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.entity.Player;
 import net.minestom.server.scoreboard.Sidebar;
+import net.swofty.commons.text.Text;
+import net.swofty.commons.text.TextBody;
+import net.swofty.type.generic.text.HypixelTextRenderer;
+import net.swofty.type.generic.text.RenderContext;
+import net.swofty.type.generic.user.HypixelPlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,26 +23,56 @@ public class HypixelScoreboard {
         return "line_" + index;
     }
 
-    public void createScoreboard(Player player, Component title) {
+    private static Component render(Player player, Text text) {
+        Component component = text.asComponent();
+        return player instanceof HypixelPlayer viewer
+                ? HypixelTextRenderer.render(component, RenderContext.of(viewer))
+                : component;
+    }
+
+    private static List<Component> render(Player player, List<Text> texts) {
+        List<Component> out = new ArrayList<>(texts.size());
+        for (Text text : texts) {
+            out.add(render(player, text));
+        }
+        return out;
+    }
+
+    public void update(Player player, Text title, TextBody body) {
+        update(player, title, body.render());
+    }
+
+    public void update(Player player, Text title, List<Text> lines) {
+        createScoreboard(player, title);
+        updateLines(player, lines);
+        updateTitle(player, title);
+    }
+
+    public void createScoreboard(Player player, Text title) {
         if (sidebarCache.containsKey(player.getUuid())) return;
 
-        Sidebar sidebar = new Sidebar(title);
+        Sidebar sidebar = new Sidebar(render(player, title));
         sidebar.addViewer(player);
         sidebarCache.put(player.getUuid(), sidebar);
         lineCache.put(player.getUuid(), new ArrayList<>());
     }
 
-    public void updateTitle(Player player, Component title) {
+    public void updateTitle(Player player, Text title) {
         Sidebar sidebar = sidebarCache.get(player.getUuid());
         if (sidebar == null) return;
 
-        sidebar.setTitle(title);
+        sidebar.setTitle(render(player, title));
     }
 
-    public void updateLines(Player player, List<Component> lines) {
+    public void updateLines(Player player, TextBody body) {
+        updateLines(player, body.render());
+    }
+
+    public void updateLines(Player player, List<Text> rawLines) {
         Sidebar sidebar = sidebarCache.get(player.getUuid());
         if (sidebar == null) return;
 
+        List<Component> lines = render(player, rawLines);
         List<Component> cached = lineCache.getOrDefault(player.getUuid(), new ArrayList<>());
         if (cached.equals(lines)) return;
 

@@ -1,8 +1,8 @@
 package net.swofty.type.skywarslobby.events;
 
 import net.minestom.server.event.player.PlayerChatEvent;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skywars.SkyWarsLevelColor;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.chat.StaffChat;
 import net.swofty.type.generic.data.HypixelDataHandler;
@@ -34,7 +34,7 @@ public class ActionPlayerChat implements HypixelEventClass {
 
         SkywarsDataHandler skywarsDataHandler = SkywarsDataHandler.getUser(player);
         if (skywarsDataHandler == null) {
-            player.sendMessage("§cAn error occurred while processing your chat message. Please try again later.");
+            player.sendMessage("<c>An error occurred while processing your chat message. Please try again later.");
             return;
         }
 
@@ -50,7 +50,7 @@ public class ActionPlayerChat implements HypixelEventClass {
         DatapointChatType.Chats chatType = player.getChatType().currentChatType;
         if (chatType == DatapointChatType.Chats.STAFF) {
             if (!rank.isStaff()) {
-                player.sendMessage("§cUnknown chat type.");
+                player.sendMessage("<c>Unknown chat type.");
                 player.getChatType().switchTo(DatapointChatType.Chats.ALL);
                 return;
             }
@@ -60,7 +60,7 @@ public class ActionPlayerChat implements HypixelEventClass {
 
         if (chatType == DatapointChatType.Chats.PARTY) {
             if (!PartyManager.isInParty(player)) {
-                player.sendMessage("§cYou are not in a party and were moved to the ALL channel.");
+                player.sendMessage("<c>You are not in a party and were moved to the ALL channel.");
                 player.getChatType().switchTo(DatapointChatType.Chats.ALL);
                 return;
             }
@@ -72,21 +72,23 @@ public class ActionPlayerChat implements HypixelEventClass {
         List<HypixelPlayer> receivers = HypixelGenericLoader.getLoadedPlayers();
 
         boolean hideLevel = skywarsDataHandler.get(SkywarsDataHandler.Data.HIDE_LEVEL, DatapointBoolean.class).getValue();
-        String levelPrefix;
+        Text levelPrefix;
         if (!hideLevel) {
             int level = SkywarsLevelRegistry.calculateLevel(
                     skywarsDataHandler.get(SkywarsDataHandler.Data.EXPERIENCE, DatapointLong.class).getValue()
             );
-            levelPrefix = SkyWarsLevelColor.getLevelDisplay(level) + " ";
+            levelPrefix = Text.of("{} ", SkyWarsLevelColor.getLevelDisplay(level));
         } else {
-            levelPrefix = "";
+            levelPrefix = Text.empty();
         }
 
         receivers.forEach(onlinePlayer -> {
             if (rank.equals(Rank.DEFAULT))
-                onlinePlayer.sendMessage(levelPrefix + player.getLegacyRankPrefix() + StringUtility.getTextFromComponent(player.getName()) + "§7: " + finalMessage);
+                onlinePlayer.sendMessage("{}{}{}<7>: {}", levelPrefix, player.getRankPrefix(),
+                        player.getUsername(), finalMessage);
             else
-                onlinePlayer.sendMessage(levelPrefix + player.getLegacyRankPrefix() + StringUtility.getTextFromComponent(player.getName()) + "§f: " + finalMessage);
+                onlinePlayer.sendMessage("{}{}{}<f>: {}", levelPrefix, player.getRankPrefix(),
+                        player.getUsername(), finalMessage);
         });
     }
 }

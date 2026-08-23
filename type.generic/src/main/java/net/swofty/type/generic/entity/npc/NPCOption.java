@@ -6,6 +6,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.ScheduleUtility;
 
@@ -16,7 +17,7 @@ import java.util.function.Consumer;
 
 public class NPCOption {
 	public static final Map<HypixelPlayer, OptionData> options = new HashMap<>();
-	private static final Component selectAnOption = Component.text("Select an option:").color(NamedTextColor.YELLOW);
+	private static final Text selectAnOption = Text.of("<e>Select an option:");
 
 	public static void sendOption(
 			HypixelPlayer player,
@@ -37,7 +38,7 @@ public class NPCOption {
 					.color(option.color())
 					.decoration(TextDecoration.BOLD, option.bold())
 					.hoverEvent(
-							HoverEvent.showText(Component.text("Click to select", NamedTextColor.YELLOW))
+							HoverEvent.showText(Text.of("<e>Click to select"))
 					)
 					.clickEvent(
 							ClickEvent.runCommand("/selectnpcoption " + id + " " + option.key())

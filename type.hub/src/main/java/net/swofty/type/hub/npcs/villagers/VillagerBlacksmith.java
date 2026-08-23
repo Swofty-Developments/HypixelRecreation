@@ -20,7 +20,7 @@ public class VillagerBlacksmith extends HypixelNPC {
         super(new VillagerConfiguration(){
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6Blacksmith", "§e§lCLICK"};
+                return new String[]{"<6>Blacksmith", "<e><l>CLICK"};
             }
 
             @Override
@@ -70,18 +70,18 @@ public class VillagerBlacksmith extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return List.of(
                 DialogueSet.builder()
-                        .key("initial-hello").lines(new String[]{
-                                "I'm the town Blacksmith! I can §areforge §fitems for you, for a price.",
-                                "Reforging usually costs Coins, but since I'm feeling friendly I can reforge your first item for Coal §8x10.",
+                        .key("initial-hello").lines(
+                                "I'm the town Blacksmith! I can <a>reforge <f>items for you, for a price.",
+                                "Reforging usually costs Coins, but since I'm feeling friendly I can reforge your first item for Coal <8>x10.",
                                 "Go into the Mine to collect Coal, then come back to learn how to reforge items!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("spoke-again").lines(new String[]{
+                        .key("spoke-again").lines(
                                 "Ahh, excellent!",
                                 "Reforging items allows you to get the most out of your weapons, armor, and other items by applying stat modifiers to them!",
                                 "To reforge an item, place an item in my inventory. Reforging costs Coins - the more prestigious items cost more to reforge!",
-                                "However, this time I will reforge any item for the low price of Coal §8x10!"
-                        }).build()
+                                "However, this time I will reforge any item for the low price of Coal <8>x10!"
+                        ).build()
         ).stream().toArray(DialogueSet[]::new);
     }
 }

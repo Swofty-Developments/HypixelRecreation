@@ -5,11 +5,12 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -48,13 +49,10 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
         set(new GUIItem(9) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aPerk Slots",
-                        Material.GOLD_BLOCK,
-                        1,
-                        "§7Your selected perks will be active",
-                        "§7during your §aNormal SkyWars §7games."
-                );
+                return ItemStacks.item(Material.GOLD_BLOCK, 1, """
+                        <a>Perk Slots
+                        <7>Your selected perks will be active
+                        <7>during your <a>Normal SkyWars</a> games.""");
             }
         });
 
@@ -70,44 +68,34 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
 
                     if (perkId == null || perkId.isEmpty()) {
                         // Empty slot
-                        return ItemStackCreator.getStack(
-                                "§cEmpty",
-                                Material.RED_STAINED_GLASS_PANE,
-                                1,
-                                "§8Perk Slot #" + (slotIndex + 1),
-                                "",
-                                "§eClick to select a perk!"
-                        );
+                        return ItemStacks.item(Material.RED_STAINED_GLASS_PANE, 1, """
+                                <c>Empty
+                                <8>Perk Slot #{}
+
+                                <e>Click to select a perk!""", slotIndex + 1);
                     }
 
                     SkywarsPerk perk = SkywarsPerkRegistry.getPerk(perkId);
                     if (perk == null) {
-                        return ItemStackCreator.getStack(
-                                "§cEmpty",
-                                Material.RED_STAINED_GLASS_PANE,
-                                1,
-                                "§8Perk Slot #" + (slotIndex + 1),
-                                "",
-                                "§eClick to select a perk!"
-                        );
+                        return ItemStacks.item(Material.RED_STAINED_GLASS_PANE, 1, """
+                                <c>Empty
+                                <8>Perk Slot #{}
+
+                                <e>Click to select a perk!""", slotIndex + 1);
                     }
 
-                    List<String> lore = new ArrayList<>();
-                    lore.add("§8Perk Slot #" + (slotIndex + 1));
-                    lore.add("");
-                    lore.add("§7" + perk.getEffectDescription());
-                    lore.add("");
-                    lore.add("§7Rarity: " + perk.getRarity().getFormattedName());
-                    lore.add("");
-                    lore.add("§eLeft-click to replace!");
-                    lore.add("§eRight-click to clear!");
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.of("<8>Perk Slot #{}", slotIndex + 1));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>{}", perk.getEffectDescription()));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>Rarity: {}", perk.getRarity().getFormattedName()));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<e>Left-click to replace!"));
+                    lore.add(Text.of("<e>Right-click to clear!"));
 
-                    return ItemStackCreator.getStack(
-                            "§6" + perk.getName(),
-                            perk.getIconMaterial(),
-                            1,
-                            lore
-                    );
+                    return ItemStacks.item(perk.getIconMaterial(), 1,
+                            Text.of("<6>{}", perk.getName()), lore);
                 }
 
                 @Override
@@ -115,7 +103,7 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
                     if (e.getClick() instanceof Click.Right) {
                         // Right-click: clear slot
                         unlocks.clearPerkSlot(MODE, slotIndex);
-                        player.sendMessage("§7Cleared perk slot #" + (slotIndex + 1));
+                        player.sendMessage("<7>Cleared perk slot #{}", slotIndex + 1);
                         new GUISelectNormalPerks().open(player);
                     } else {
                         // Left-click: open perk selector for this slot
@@ -132,13 +120,10 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
         set(new GUIItem(27) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aGlobal Perks",
-                        Material.DIAMOND_BLOCK,
-                        1,
-                        "§7All players will have these perks",
-                        "§7active during §aNormal SkyWars §7games."
-                );
+                return ItemStacks.item(Material.DIAMOND_BLOCK, 1, """
+                        <a>Global Perks
+                        <7>All players will have these perks
+                        <7>active during <a>Normal SkyWars</a> games.""");
             }
         });
 
@@ -152,19 +137,15 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
             set(new GUIItem(guiSlot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    List<String> lore = new ArrayList<>();
-                    lore.add("§8Global Perk");
-                    lore.add("");
-                    lore.add("§7" + perk.getEffectDescription());
-                    lore.add("");
-                    lore.add("§7Rarity: " + perk.getRarity().getFormattedName());
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.of("<8>Global Perk"));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>{}", perk.getEffectDescription()));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>Rarity: {}", perk.getRarity().getFormattedName()));
 
-                    return ItemStackCreator.getStack(
-                            "§6" + perk.getName(),
-                            perk.getIconMaterial(),
-                            1,
-                            lore
-                    );
+                    return ItemStacks.item(perk.getIconMaterial(), 1,
+                            Text.of("<6>{}", perk.getName()), lore);
                 }
             });
         }
@@ -176,12 +157,9 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§7Total Coins: §6" + String.format("%,d", coins),
-                        Material.EMERALD,
-                        1,
-                        "§6https://store.hypixel.net"
-                );
+                return ItemStacks.item(Material.EMERALD, 1, """
+                        <7>Total Coins: <6>{:,}
+                        <6>https://store.hypixel.net""", coins);
             }
         });
 

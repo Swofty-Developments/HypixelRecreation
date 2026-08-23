@@ -28,9 +28,7 @@ services:
       MONGO_INITDB_DATABASE: Minestom
       MONGO_URL: hypixel_mongo
     volumes:
-      - ./configuration/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
       - mongodb-data:/data/db
-      - ./configuration/:/csv
 %s    networks:
       - hypixel_network
     healthcheck:
@@ -44,6 +42,9 @@ services:
   redis:
     image: redis:latest
     container_name: hypixel_redis
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
 %s    networks:
       - hypixel_network
     healthcheck:
@@ -177,6 +178,9 @@ services:
   mongodb-data:
     driver: local
     name: mongo-data
+  redis-data:
+    driver: local
+    name: redis-data
 
 networks:
   hypixel_network:

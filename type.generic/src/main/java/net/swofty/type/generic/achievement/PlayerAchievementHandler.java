@@ -1,10 +1,7 @@
 package net.swofty.type.generic.achievement;
 
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointAchievementData;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -128,53 +125,50 @@ public class PlayerAchievementHandler {
     public boolean toggleTracking(String achievementId) {
         AchievementDefinition def = AchievementRegistry.get(achievementId);
         if (def == null || def.getType() != AchievementType.TIERED) {
-            player.sendMessage("§cOnly tiered achievements can be tracked!");
+            player.sendMessage("<c>Only tiered achievements can be tracked!");
             return false;
         }
 
         if (hasFullyCompletedAchievement(achievementId)) {
-            player.sendMessage("§cYou have already completed all tiers of this achievement!");
+            player.sendMessage("<c>You have already completed all tiers of this achievement!");
             return false;
         }
 
         boolean nowTracking = getAchievementData().toggleTracking(achievementId);
 
         if (nowTracking) {
-            player.sendMessage("§aNow tracking: §e" + def.getName());
+            player.sendMessage("<a>Now tracking: <e>{}", def.getName());
             player.playSound(net.kyori.adventure.sound.Sound.sound(
                     net.minestom.server.sound.SoundEvent.BLOCK_NOTE_BLOCK_PLING,
                     net.kyori.adventure.sound.Sound.Source.MASTER, 1.0f, 2.0f));
         } else {
-            player.sendMessage("§cStopped tracking: §e" + def.getName());
+            player.sendMessage("<c>Stopped tracking: <e>{}", def.getName());
         }
 
         return nowTracking;
     }
 
     private void onAchievementUnlocked(AchievementDefinition def, AchievementData.AchievementProgress progress) {
+        AchievementStatisticsService.recordUnlock(def, progress);
+
         String tierText = "";
         if (def.getType() == AchievementType.TIERED) {
             tierText = " " + toRoman(progress.getCurrentTier());
         }
 
         // TODO: make this actually clickable to open the achievements menu
-        Component tierHover = Component.text(def.getName() + tierText, NamedTextColor.GREEN).appendNewline()
-                .append(Component.text(def.getDescription(), NamedTextColor.GRAY))
-                .appendNewline().appendNewline()
-                .append(Component.text("Reward:", NamedTextColor.GRAY))
-                .appendNewline()
-                .append(Component.text(" §8+§e5 §7Achievement Points"))
-                .appendNewline().appendNewline()
-                .append(Component.text("Click to open achievements menu!", NamedTextColor.YELLOW));
+        Text tierHover = Text.of("""
+                <a>{}{}
+                <7>{}
 
-        Component obf = Component.text("A", NamedTextColor.YELLOW, TextDecoration.OBFUSCATED);
-        player.sendMessage(
-                obf
-                        .append(Component.text(">>   Achievement Unlocked: ", NamedTextColor.GREEN).decorationIfAbsent(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE))
-                        .append(Component.text(def.getName() + tierText, NamedTextColor.GOLD).hoverEvent(HoverEvent.showText(tierHover)).decorationIfAbsent(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE))
-                        .append(Component.text("   <<", NamedTextColor.GREEN).decorationIfAbsent(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE))
-                        .append(obf)
-        );
+                <7>Reward:
+                 <8>+<e>5 <7>Achievement Points
+
+                <e>Click to open achievements menu!""",
+                def.getName(), tierText, def.getDescription());
+
+        player.sendMessage("<e><k>A</k><a>>>   Achievement Unlocked: <6><hover:'{0}'>{1}{2}</hover><a>   \\<\\<<e><k>A",
+                tierHover, def.getName(), tierText);
 
         player.playSound(net.kyori.adventure.sound.Sound.sound(
                 net.minestom.server.sound.SoundEvent.ENTITY_PLAYER_LEVELUP,

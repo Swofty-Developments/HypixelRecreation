@@ -1,11 +1,10 @@
 package net.swofty.type.hub;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.StringUtility;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.entity.hologram.PlayerHolograms;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.calendar.CalendarEvent;
 import net.swofty.type.skyblockgeneric.calendar.SkyBlockCalendar;
@@ -14,7 +13,6 @@ import net.swofty.type.skyblockgeneric.elections.ElectionManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -32,14 +30,13 @@ public class ElectionDisplay {
         holos.keySet().removeIf(p -> !loadedUuids.contains(p.getUuid()));
 
         HypixelGenericLoader.getLoadedPlayers().forEach(player -> {
-            Locale l = player.getLocale();
             long timeLeft = SkyBlockCalendar.ticksUntilEvent(CalendarEvent.ELECTION_CLOSE);
             String timeLeftFormatted = StringUtility.formatTimeLeft(timeLeft * 50L);
 
             List<String> message = new ArrayList<>(List.of(
-                I18n.string("gui_election.display.title", l),
-                I18n.string("gui_election.display.year", l, Component.text(String.valueOf(SkyBlockCalendar.getYear()))),
-                I18n.string("gui_election.display.time_left", l, Component.text(timeLeftFormatted))
+                "<key:'gui_election.display.title'>",
+                Text.key("gui_election.display.year", SkyBlockCalendar.getYear()).serialize(),
+                Text.key("gui_election.display.time_left", timeLeftFormatted).serialize()
             ));
 
             String vote = ElectionManager.getPlayerVote(player.getUuid());
@@ -49,9 +46,9 @@ public class ElectionDisplay {
                         .filter(c -> c.getMayorName().equals(vote))
                         .findFirst().orElse(null);
                 if (candidateData != null) {
-                    message.add(I18n.string("gui_election.display.your_vote", l,
-                        Component.text(candidateData.getColoredName())));
-                    message.add(I18n.string("gui_election.display.click_switch", l));
+                    message.add(Text.key("gui_election.display.your_vote",
+                        candidateData.getColoredName()).serialize());
+                    message.add("<key:'gui_election.display.click_switch'>");
                 }
             }
 

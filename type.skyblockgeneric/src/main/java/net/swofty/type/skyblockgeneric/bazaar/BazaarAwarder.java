@@ -4,6 +4,7 @@ import net.swofty.commons.skyblock.bazaar.BuyOrderRefundTransaction;
 import net.swofty.commons.skyblock.bazaar.OrderExpiredBazaarTransaction;
 import net.swofty.commons.skyblock.bazaar.SuccessfulBazaarTransaction;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCompletedBazaarTransactions;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -112,7 +113,7 @@ public class BazaarAwarder {
             double originalBid = transaction.originalBuyerBid();
             double priceImprovement = transaction.priceImprovement();
 
-            String displayName = getItemDisplayName(itemName);
+            Text displayName = getItemDisplayName(itemName);
 
             var completedTransaction = DatapointCompletedBazaarTransactions.CompletedBazaarTransaction
                     .createBuyTransaction(itemName, quantity, actualPrice, originalBid, transaction.buyerOrderId());
@@ -124,17 +125,14 @@ public class BazaarAwarder {
 
             completedTransactions.addTransaction(completedTransaction);
 
+            player.sendMessage("<6>[Bazaar] <e>Your <a>Buy Order <e>was partially filled! {}x {} <a>for <6>{} coins <a>each!",
+                    (int) quantity, displayName, FORMATTER.format(actualPrice));
             if (priceImprovement > 0) {
-                player.sendMessage("§6[Bazaar] §eYour §aBuy Order §ewas partially filled! §e" + (int)quantity +
-                        "x " + displayName + " §afor §6" + FORMATTER.format(actualPrice) + " coins §aeach!");
-                player.sendMessage("§6[Bazaar] §7You saved §a" + FORMATTER.format(priceImprovement) +
-                        " coins §7by getting a better price than your §6" + FORMATTER.format(originalBid) + " §7bid!");
-            } else {
-                player.sendMessage("§6[Bazaar] §eYour §aBuy Order §ewas partially filled! §e" + (int)quantity +
-                        "x " + displayName + " §afor §6" + FORMATTER.format(actualPrice) + " coins §aeach!");
+                player.sendMessage("<6>[Bazaar] <7>You saved <a>{} coins <7>by getting a better price than your <6>{} <7>bid!",
+                        FORMATTER.format(priceImprovement), FORMATTER.format(originalBid));
             }
 
-            player.sendMessage("§6[Bazaar] §7Items are ready to collect! Head to the Bazaar for collection.");
+            player.sendMessage("<6>[Bazaar] <7>Items are ready to collect! Head to the Bazaar for collection.");
             player.playSuccessSound();
             return true;
 
@@ -146,7 +144,7 @@ public class BazaarAwarder {
 
     private static boolean processRefund(SkyBlockPlayer player, BuyOrderRefundTransaction transaction) {
         try {
-            String displayName = getItemDisplayName(transaction.itemName());
+            Text displayName = getItemDisplayName(transaction.itemName());
 
             var completedTransaction = DatapointCompletedBazaarTransactions.CompletedBazaarTransaction
                     .createRefundTransaction(transaction.itemName(), transaction.refundAmount(),
@@ -166,10 +164,10 @@ public class BazaarAwarder {
                 default -> "Refund processed!";
             };
 
-            player.sendMessage("§6[Bazaar] §7" + reasonMsg);
-            player.sendMessage("§6[Bazaar] §7Refund of §a" + FORMATTER.format(transaction.refundAmount()) +
-                    " coins §7is ready to collect!");
-            player.sendMessage("§6[Bazaar] §7Head to the Bazaar to claim your refund.");
+            player.sendMessage("<6>[Bazaar] <7>{}", reasonMsg);
+            player.sendMessage("<6>[Bazaar] <7>Refund of <a>{} coins <7>is ready to collect!",
+                    FORMATTER.format(transaction.refundAmount()));
+            player.sendMessage("<6>[Bazaar] <7>Head to the Bazaar to claim your refund.");
 
             player.playSuccessSound();
             return true;
@@ -190,7 +188,7 @@ public class BazaarAwarder {
             double netEarnings = grossEarnings - taxTaken;
 
             // Get display name for the item
-            String displayName = getItemDisplayName(itemName);
+            Text displayName = getItemDisplayName(itemName);
 
             // Store the completed transaction in player data (unclaimed)
             DatapointCompletedBazaarTransactions.CompletedBazaarTransaction completedTransaction =
@@ -205,11 +203,11 @@ public class BazaarAwarder {
             completedTransactions.addTransaction(completedTransaction);
 
             // Send notification messages
-            player.sendMessage("§6[Bazaar] §aYour §6Sell Offer §awas filled! §e" + (int)quantity + "x " + displayName +
-                    " §afor §6" + FORMATTER.format(pricePerUnit) + " coins §aeach!");
-            player.sendMessage("§6[Bazaar] §7You earned §6" + FORMATTER.format(netEarnings) +
-                    " coins §7(§c-" + FORMATTER.format(taxTaken) + " tax§7)");
-            player.sendMessage("§6[Bazaar] §7Coins are ready to collect! Head to the Bazaar to claim them.");
+            player.sendMessage("<6>[Bazaar] <a>Your <6>Sell Offer <a>was filled! <e>{}x {} <a>for <6>{} coins <a>each!",
+                    (int) quantity, displayName, FORMATTER.format(pricePerUnit));
+            player.sendMessage("<6>[Bazaar] <7>You earned <6>{} coins <7>(<c>-{} tax<7>)",
+                    FORMATTER.format(netEarnings), FORMATTER.format(taxTaken));
+            player.sendMessage("<6>[Bazaar] <7>Coins are ready to collect! Head to the Bazaar to claim them.");
 
             player.playSuccessSound();
             return true;
@@ -228,7 +226,7 @@ public class BazaarAwarder {
             boolean isBuyOrder = "BUY".equals(side);
 
             // Get display name for the item
-            String displayName = getItemDisplayName(itemName);
+            Text displayName = getItemDisplayName(itemName);
 
             DatapointCompletedBazaarTransactions.CompletedBazaarTransaction completedTransaction;
 
@@ -239,19 +237,19 @@ public class BazaarAwarder {
                 completedTransaction = DatapointCompletedBazaarTransactions.CompletedBazaarTransaction
                         .createExpiredBuyOrder(itemName, remainingQty, originalPricePerUnit, transaction.orderId());
 
-                player.sendMessage("§6[Bazaar] §7Your buy order for §e" + (int)remainingQty +
-                        "x " + displayName + " §7expired!");
-                player.sendMessage("§6[Bazaar] §7Refund of §6" + FORMATTER.format(totalRefund) +
-                        " coins §7is ready to collect!");
+                player.sendMessage("<6>[Bazaar] <7>Your buy order for <e>{}x {} <7>expired!",
+                        (int) remainingQty, displayName);
+                player.sendMessage("<6>[Bazaar] <7>Refund of <6>{} coins <7>is ready to collect!",
+                        FORMATTER.format(totalRefund));
 
             } else {
                 // Expired sell order - return items
                 completedTransaction = DatapointCompletedBazaarTransactions.CompletedBazaarTransaction
                         .createExpiredSellOrder(itemName, remainingQty, transaction.orderId());
 
-                player.sendMessage("§6[Bazaar] §7Your sell order for §e" + (int)remainingQty +
-                        "x " + displayName + " §7expired!");
-                player.sendMessage("§6[Bazaar] §7Items are ready to collect!");
+                player.sendMessage("<6>[Bazaar] <7>Your sell order for <e>{}x {} <7>expired!",
+                        (int) remainingQty, displayName);
+                player.sendMessage("<6>[Bazaar] <7>Items are ready to collect!");
             }
 
             // Store the completed transaction in player data (unclaimed)
@@ -312,10 +310,10 @@ public class BazaarAwarder {
         );
     }
 
-    private static String getItemDisplayName(String itemName) {
+    private static Text getItemDisplayName(String itemName) {
         try {
             SkyBlockItem item = new SkyBlockItem(ItemType.valueOf(itemName));
-            return item.getDisplayName();
+            return Text.literal(item.getDisplayName());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Unknown item type: " + itemName);
         }

@@ -19,7 +19,7 @@ public class BambooPlacement extends PlacementRule {
         Point blockPosition = placementState.placePosition();
         Block bellowBlock = instance.getBlock(blockPosition.sub(0, 1, 0));
         Block block = instance.getBlock(blockPosition);
-        return (bellowBlock.isSolid() || bellowBlock == Block.BAMBOO_SAPLING) && block.isAir();
+        return (bellowBlock.solid() || bellowBlock == Block.BAMBOO_SAPLING) && block.air();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class BambooPlacement extends PlacementRule {
         BlockUtils upper = new BlockUtils(instance, blockPosition);
         BlockUtils bellow = new BlockUtils(instance, blockPosition).below();
 
-        if (bellow.getBlock().isAir() || !bellow.getBlock().isSolid()) {
+        if (bellow.getBlock().air() || !bellow.getBlock().solid()) {
             while (upper.getBlock() == Block.BAMBOO) {
                 instance.setBlock(blockPosition, Block.AIR);
                 blockPosition.add(0, 1, 0);

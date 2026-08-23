@@ -5,7 +5,7 @@ import net.minestom.server.event.trait.PlayerInstanceEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.HypixelConst;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.lobby.LobbyTypeLoader;
 import net.swofty.type.lobby.item.LobbyItem;
 import net.swofty.type.lobby.parkour.LobbyParkourManager;
@@ -18,7 +18,7 @@ public class LastCheckpoint extends LobbyItem {
 
 	@Override
 	public ItemStack getBlandItem() {
-		return ItemStackCreator.createNamedItemStack(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, "§aTeleport to Last Checkpoint").build();
+		return ItemStacks.named(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, "<a>Teleport to Last Checkpoint").build();
 	}
 
 	@Override

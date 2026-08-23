@@ -1,9 +1,8 @@
 package net.swofty.type.bedwarslobby.gui.cosmetics.prestige;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.collectibles.CollectibleCategory;
 import net.swofty.type.generic.collectibles.CollectibleDefinition;
 import net.swofty.type.generic.collectibles.CollectibleSelectionCheck;
@@ -13,7 +12,7 @@ import net.swofty.type.generic.collectibles.bedwars.prestige.BedWarsPrestigeRend
 import net.swofty.type.generic.data.datapoints.DatapointLeaderboardLong;
 import net.swofty.type.generic.data.handlers.BedWarsDataHandler;
 import net.swofty.type.generic.gui.impl.collectibles.CollectibleSelectionView;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
@@ -25,7 +24,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public abstract class GUIPrestigeSelection extends CollectibleSelectionView {
-    private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacySection();
     private static final int[] PRESTIGE_SLOTS = {
         10, 13, 14, 15, 16,
         19, 20, 21, 22, 23, 24, 25,
@@ -140,22 +138,24 @@ public abstract class GUIPrestigeSelection extends CollectibleSelectionView {
             }
         }
 
-        layout.slot(11, ItemStackCreator.getStack(
-            "§aRandom " + itemType,
-            Material.CHEST,
-            1,
-            "§7Use a random " + itemType + "!",
-            "",
-            randomSelected(ctx.player(), BedWarsCollectibleStateService.RANDOM_SELECTION_ID) ? "§aSELECTED!" : "§eClick to select!"
+        layout.slot(11, ItemStacks.item(Material.CHEST, """
+                <a>Random {}
+                <7>Use a random {}!
+
+                {}""",
+            itemType,
+            itemType,
+            actionLine(randomSelected(ctx.player(), BedWarsCollectibleStateService.RANDOM_SELECTION_ID))
         ), (click, context) -> selectSpecial(click, context, BedWarsCollectibleStateService.RANDOM_SELECTION_ID));
 
-        layout.slot(12, ItemStackCreator.getStack(
-            "§aRandom Favorite " + itemType,
-            Material.ENDER_CHEST,
-            1,
-            "§7Use a Random §6✯ Favorite §7" + itemType + "!",
-            "",
-            randomSelected(ctx.player(), BedWarsCollectibleStateService.RANDOM_FAVORITE_SELECTION_ID) ? "§aSELECTED!" : "§eClick to select!"
+        layout.slot(12, ItemStacks.item(Material.ENDER_CHEST, """
+                <a>Random Favorite {}
+                <7>Use a Random <6>✯ Favorite <7>{}!
+
+                {}""",
+            itemType,
+            itemType,
+            actionLine(randomSelected(ctx.player(), BedWarsCollectibleStateService.RANDOM_FAVORITE_SELECTION_ID))
         ), (click, context) -> selectSpecial(click, context, BedWarsCollectibleStateService.RANDOM_FAVORITE_SELECTION_ID));
 
         super.layoutCustom(layout, state, ctx);
@@ -168,15 +168,15 @@ public abstract class GUIPrestigeSelection extends CollectibleSelectionView {
 
     @Override
     protected void preview(HypixelPlayer player, CollectibleDefinition definition, State state) {
-        player.sendMessage("§7Preview: " + preview(player, definition));
+        player.sendMessage("<7>Preview: {}", preview(player, definition));
     }
 
     @Override
-    protected List<Component> previewLore(HypixelPlayer player, CollectibleDefinition definition) {
-        return List.of(legacy("§7Preview: " + preview(player, definition)));
+    protected List<Text> previewLore(HypixelPlayer player, CollectibleDefinition definition) {
+        return List.of(Text.of("<7>Preview: {}", preview(player, definition)));
     }
 
-    protected String preview(HypixelPlayer player, CollectibleDefinition definition) {
+    protected Text preview(HypixelPlayer player, CollectibleDefinition definition) {
         int level = bedWarsLevel(player);
         String scheme = selected(player, CollectibleCategory.PRESTIGE_SCHEMES);
         String star = selected(player, CollectibleCategory.PRESTIGE_STARS);
@@ -190,7 +190,8 @@ public abstract class GUIPrestigeSelection extends CollectibleSelectionView {
             bracket = definition.id();
         }
 
-        return BedWarsPrestigeRenderer.renderPreview(player, level, scheme, star, bracket) + " " + player.getFullDisplayName();
+        return BedWarsPrestigeRenderer.renderPreview(player, level, scheme, star, bracket)
+                .append(Text.of(" {}", player.getFullDisplayName()));
     }
 
     @Override
@@ -207,21 +208,23 @@ public abstract class GUIPrestigeSelection extends CollectibleSelectionView {
     }
 
     private ItemStack.Builder renderNoneScheme(HypixelPlayer player, CollectibleDefinition item) {
-        boolean selected = isSelected(player, item);
-        String action = selected ? "§aSELECTED!" : "§eClick to select!";
-        return ItemStackCreator.getStack(
-            "§aNone",
-            Material.NAME_TAG,
-            1,
-            "§8Prestige Scheme",
-            "",
-            "§7Select the None Prestige Scheme for",
-            "§7your level to display as.",
-            "",
-            "§7Preview: " + preview(player, item),
-            action,
-            "§eShift-click to toggle favorite!"
+        return ItemStacks.item(Material.NAME_TAG, """
+                <a>None
+                <8>Prestige Scheme
+
+                <7>Select the None Prestige Scheme for
+                <7>your level to display as.
+
+                <7>Preview: {}
+                {}
+                <e>Shift-click to toggle favorite!""",
+            preview(player, item),
+            actionLine(isSelected(player, item))
         );
+    }
+
+    private static Text actionLine(boolean selected) {
+        return selected ? Text.of("<a>SELECTED!") : Text.of("<e>Click to select!");
     }
 
     private String selected(HypixelPlayer player, CollectibleCategory category) {
@@ -246,9 +249,5 @@ public abstract class GUIPrestigeSelection extends CollectibleSelectionView {
         }
         long experience = dataHandler.get(BedWarsDataHandler.Data.EXPERIENCE, DatapointLeaderboardLong.class).getValue();
         return net.swofty.commons.bedwars.BedwarsLevelUtil.calculateLevel(experience);
-    }
-
-    protected Component legacy(String text) {
-        return LEGACY.deserialize(text);
     }
 }

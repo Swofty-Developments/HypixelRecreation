@@ -60,8 +60,8 @@ public class RavengardRoaming {
             int bx = (int) Math.floor(x);
             int by = (int) Math.floor(y);
             int bz = (int) Math.floor(z);
-            return !instance.getBlock(bx, by, bz).isSolid()
-                    && !instance.getBlock(bx, by + 1, bz).isSolid();
+            return !instance.getBlock(bx, by, bz).solid()
+                    && !instance.getBlock(bx, by + 1, bz).solid();
         } catch (Exception exception) {
             return false;
         }

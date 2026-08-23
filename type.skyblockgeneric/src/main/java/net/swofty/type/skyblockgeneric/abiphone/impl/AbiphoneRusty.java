@@ -41,18 +41,18 @@ public class AbiphoneRusty extends AbiphoneNPC {
 	public DialogueSet[] dialogues(HypixelPlayer player) {
 		return new DialogueSet[]{
 				DialogueSet.builder()
-						.key("abiphone").lines(new String[]{
-								"§fDid I find an Abiphone?",
-								"§fYes, sometimes I do find one lying around.",
-								"§fWhat?",
-								"§fYou?",
-								"§fYou want my contact?",
-								"§fMe?",
-								"§fThe janitor?",
-								"§fI...",
-						"§fI don't... don't know what to say...",
-								"§fYes of course you can have it!",
-						}).build()
+						.key("abiphone").lines(
+								"<f>Did I find an Abiphone?",
+								"<f>Yes, sometimes I do find one lying around.",
+								"<f>What?",
+								"<f>You?",
+								"<f>You want my contact?",
+								"<f>Me?",
+								"<f>The janitor?",
+								"<f>I...",
+						"<f>I don't... don't know what to say...",
+								"<f>Yes of course you can have it!"
+						).build()
 		};
 	}
 }

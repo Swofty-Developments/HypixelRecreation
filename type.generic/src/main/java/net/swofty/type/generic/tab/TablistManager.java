@@ -11,6 +11,8 @@ import net.minestom.server.timer.ExecutionType;
 import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.type.generic.HypixelGenericLoader;
+import net.swofty.type.generic.text.HypixelTextRenderer;
+import net.swofty.type.generic.text.RenderContext;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 import java.nio.charset.StandardCharsets;
@@ -101,7 +103,7 @@ public abstract class TablistManager {
                                     true,
                                     0,
                                     GameMode.CREATIVE,
-                                        entry.content(),
+                                        HypixelTextRenderer.render(entry.content().asComponent(), RenderContext.of(player)),
                                     null,
                                     1, true)))
                             );

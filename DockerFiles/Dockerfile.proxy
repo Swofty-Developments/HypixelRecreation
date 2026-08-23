@@ -7,9 +7,20 @@ RUN apt-get update && apt-get install -y jq netcat-traditional curl && apt-get c
 # Download Velocity proxy JAR
 RUN curl -fSL -o velocity.jar "https://fill-data.papermc.io/v1/objects/0ec616020166465dacca3b790d3db2b246f8f7c13b3aaacaae60c825744a66e0/velocity-3.5.0-SNAPSHOT-605.jar"
 
-# Download SkyBlockProxy.jar
-RUN mkdir -p plugins && \
-    curl -fSL -o plugins/SkyBlockProxy.jar "https://github.com/Swofty-Developments/HypixelSkyBlock/releases/download/latest/SkyBlockProxy.jar"
+# Locally built JARs, empty for a regular install
+COPY ./DockerFiles/jars /app/prebuilt_jars
+
+# Take SkyBlockProxy.jar from the local build when it is there, download it otherwise
+RUN set -eu; \
+    mkdir -p plugins; \
+    if [ -f /app/prebuilt_jars/SkyBlockProxy.jar ]; then \
+        echo "Using locally built SkyBlockProxy.jar"; \
+        cp /app/prebuilt_jars/SkyBlockProxy.jar plugins/SkyBlockProxy.jar; \
+    else \
+        echo "Downloading SkyBlockProxy.jar"; \
+        curl -fSL -o plugins/SkyBlockProxy.jar "https://github.com/Swofty-Developments/HypixelRecreation/releases/download/latest/SkyBlockProxy.jar"; \
+    fi; \
+    rm -rf /app/prebuilt_jars
 
 # Copy configuration data
 COPY ./configuration /app/configuration_files

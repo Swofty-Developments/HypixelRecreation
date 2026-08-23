@@ -12,7 +12,7 @@ public class NPCAlan extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bAlan", "§e§lCLICK"};
+                return new String[]{"<b>Alan", "<e><l>CLICK"};
             }
 
             @Override

@@ -1,7 +1,7 @@
 package net.swofty.type.skywarsgame.manager;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.utility.EntityUtility;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.attribute.Attribute;
@@ -50,7 +50,7 @@ public class DragonManager {
     private long idleStartTime = 0;
     private long diveStartTime = 0;
     private long lastExplosionTime = 0;
-    private Consumer<Component> broadcaster;
+    private Consumer<Text> broadcaster;
 
     public DragonManager(SkywarsGame game, Instance instance, Pos centerPos) {
         this.game = game;
@@ -58,13 +58,13 @@ public class DragonManager {
         this.centerPos = centerPos;
     }
 
-    public void spawnDragonNow(Consumer<Component> broadcaster) {
+    public void spawnDragonNow(Consumer<Text> broadcaster) {
         spawnDragon(broadcaster);
     }
 
-    public void scheduleDragonSpawn(Consumer<Component> broadcaster) {
+    public void scheduleDragonSpawn(Consumer<Text> broadcaster) {
         MinecraftServer.getSchedulerManager().buildTask(() -> {
-            broadcaster.accept(Component.text("The Ender Dragon will spawn in 1 minute!", NamedTextColor.RED));
+            broadcaster.accept(Text.of("<c>The Ender Dragon will spawn in 1 minute!"));
         }).delay(TaskSchedule.seconds(SkywarsGame.DRAGON_SPAWN_SECONDS - 60)).schedule();
 
         MinecraftServer.getSchedulerManager().buildTask(() -> {
@@ -72,17 +72,17 @@ public class DragonManager {
         }).delay(TaskSchedule.seconds(SkywarsGame.DRAGON_SPAWN_SECONDS)).schedule();
     }
 
-    private void spawnDragon(Consumer<Component> broadcaster) {
+    private void spawnDragon(Consumer<Text> broadcaster) {
         if (dragonSpawned) return;
         dragonSpawned = true;
         this.broadcaster = broadcaster;
 
-        broadcaster.accept(Component.text("The Ender Dragon has spawned!", NamedTextColor.DARK_PURPLE));
+        broadcaster.accept(Text.of("<5>The Ender Dragon has spawned!"));
 
         dragon = new DragonEntity();
         dragon.getAttribute(Attribute.MAX_HEALTH).setBaseValue(200);
         dragon.setHealth(200);
-        dragon.setCustomName(Component.text("Ender Dragon", NamedTextColor.DARK_PURPLE));
+        EntityUtility.nameEntity(dragon, "<5>Ender Dragon");
         dragon.setCustomNameVisible(true);
 
         Pos idleCenter = centerPos.add(0, IDLE_HEIGHT, 0);
@@ -144,7 +144,7 @@ public class DragonManager {
                     diveThroughPoint = playerPos.add(DIVE_THROUGH_DISTANCE, 0, 0);
                 }
 
-                broadcaster.accept(Component.text("The Ender Dragon is diving at " + target.getUsername() + "!", NamedTextColor.RED));
+                broadcaster.accept(Text.of("<c>The Ender Dragon is diving at {}!", target.getUsername()));
             }
         }
     }
@@ -168,7 +168,7 @@ public class DragonManager {
             double dist = dragon.getPosition().distance(diveTarget.getPosition());
             if (dist < ATTACK_RANGE) {
                 diveTarget.damage(DamageType.MOB_ATTACK, ATTACK_DAMAGE);
-                broadcaster.accept(Component.text(diveTarget.getUsername() + " was struck by the Ender Dragon!", NamedTextColor.RED));
+                broadcaster.accept(Text.of("<c>{} was struck by the Ender Dragon!", diveTarget.getUsername()));
                 hasHitPlayer = true;
             }
         }

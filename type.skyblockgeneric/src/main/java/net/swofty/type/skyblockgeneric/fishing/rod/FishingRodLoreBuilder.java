@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.DefaultSoulboundComponent;
 import net.swofty.type.skyblockgeneric.item.components.FishingRodMetadataComponent;
@@ -76,8 +78,13 @@ public final class FishingRodLoreBuilder {
             lore.add("* Co-op Soulbound *");
         }
 
-        lore.add(item.getAttributeHandler().getRarity().getLegacyDisplay() + " FISHING ROD");
+        lore.add(rarityLine(item.getAttributeHandler().getRarity()));
         return new FishingRodLore(item.getDisplayName(), lore);
+    }
+
+    private static String rarityLine(Rarity rarity) {
+        return Text.of("<color:{0}><l>{1} FISHING ROD",
+            rarity.getColor(), rarity.name().replace("_", " ")).serialize();
     }
 
     private static String renderGemSlots(GemstoneComponent gemstone) {
@@ -88,11 +95,8 @@ public final class FishingRodLoreBuilder {
     }
 
     private static String partLine(String prefix, @Nullable String itemId) {
-        if (itemId == null) {
-            return prefix + "NONE";
-        }
-        ItemType type = ItemType.get(itemId);
-        return prefix + (type == null ? "NONE" : type.getDisplayName().replace("§", ""));
+        ItemType type = itemId == null ? null : ItemType.get(itemId);
+        return prefix + (type == null ? "NONE" : type.getDisplayName());
     }
 
     private static String formatStatistic(ItemStatistic statistic, double amount) {

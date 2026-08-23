@@ -2,7 +2,6 @@ package net.swofty.type.spidersden.npcs;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
-import net.swofty.commons.ChatColor;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.NPCOption;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
@@ -18,8 +17,8 @@ public class NPCMichael extends HypixelNPC {
             @Override
             public String[] holograms(HypixelPlayer player) {
                 return new String[]{
-                        ChatColor.GOLD + "Michael",
-                        ChatColor.YELLOW + "" + ChatColor.BOLD + "CLICK"
+                        "<6>Michael",
+                        "<e><l>CLICK"
                 };
             }
 
@@ -82,34 +81,34 @@ public class NPCMichael extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("talk-to-ike-before-michael").lines(new String[] {
+                        .key("talk-to-ike-before-michael").lines(
                                 "Hey, come talk to me first!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("initial-hello").lines(new String[] {
+                        .key("initial-hello").lines(
                                 "Wassup! We're out here on a camping trip!",
-                                "I don't really know why we chose the " + ChatColor.GRAY + "⏣ " + ChatColor.RED + "Spider's Den" + ChatColor.WHITE + ", though...",
+                                "I don't really know why we chose the <7>⏣ <c>Spider's Den<f>, though...",
                                 "Still, I've been playing lots of games to pass the time.",
-                                "Quick! Trivia question! Do you know what " + ChatColor.RED + "Mob Types" + ChatColor.WHITE + " are?"
-                        }).build(),
+                                "Quick! Trivia question! Do you know what <c>Mob Types<f> are?"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("selected-know-mob-types").lines(new String[] {
+                        .key("selected-know-mob-types").lines(
                                 "Cool, cool...",
                                 "Well, I'm going to explain it anyways, otherwise my very existence lacks purpose!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("selected-dont-know-mob-types").lines(new String[] {
+                        .key("selected-dont-know-mob-types").lines(
                                 "No problem! Allow me to explain."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("explaining-mob-types").lines(new String[] {
-                                "So. " + ChatColor.RED + "Mob Types" + ChatColor.WHITE + ".",
-                                "Every Mob has at least " + ChatColor.GREEN + "one" + ChatColor.WHITE + " type, which you can see next to its name.",
-                                "For example,  Spiders are classified as " + ChatColor.DARK_RED + "Arthropods" + ChatColor.WHITE + ", which you can tell because of the symbol next to their name.",
-                                "Most mobs have " + ChatColor.GREEN + "one" + ChatColor.WHITE + " type, but some have " + ChatColor.RED + "more" + ChatColor.WHITE + ".",
-                                "My mate " + ChatColor.BLUE + "Ike" + ChatColor.WHITE + " knows which types all the different symbols represent.",
+                        .key("explaining-mob-types").lines(
+                                "So. <c>Mob Types<f>.",
+                                "Every Mob has at least <a>one<f> type, which you can see next to its name.",
+                                "For example,  Spiders are classified as <4>Arthropods<f>, which you can tell because of the symbol next to their name.",
+                                "Most mobs have <a>one<f> type, but some have <c>more<f>.",
+                                "My mate <9>Ike<f> knows which types all the different symbols represent.",
                                 "Go talk to him if you want to learn more!"
-                        }).build(),
+                        ).build(),
         };
     }
 }

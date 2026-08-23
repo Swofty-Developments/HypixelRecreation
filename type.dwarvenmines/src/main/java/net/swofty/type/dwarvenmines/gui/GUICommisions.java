@@ -4,13 +4,13 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.dwarvenmines.commission.Commission;
 import net.swofty.type.dwarvenmines.commission.CommissionMilestone;
 import net.swofty.type.dwarvenmines.commission.CommissionReward;
 import net.swofty.type.dwarvenmines.commission.Commissions;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
@@ -20,7 +20,6 @@ import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GUICommisions extends HypixelInventoryGUI {
@@ -100,42 +99,40 @@ public class GUICommisions extends HypixelInventoryGUI {
 
 				@Override
 				public ItemStack.Builder getItem(HypixelPlayer player) {
-					List<String> lore = new ArrayList<>();
-					lore.add("§7Commissions are tasks given directly");
-					lore.add("§7by the king which give bountiful");
-					lore.add("§7rewards.");
-					lore.add(" ");
+					List<Text> lore = new ArrayList<>();
+					lore.add(Text.of("<7>Commissions are tasks given directly"));
+					lore.add(Text.of("<7>by the king which give bountiful"));
+					lore.add(Text.of("<7>rewards."));
+					lore.add(Text.literal(" "));
 
 					if (commission != null) {
-						lore.add("§9" + commission.name);
-						lore.add("§7" + commission.generateDescription());
+						lore.add(Text.of("<9>{}", commission.name));
+						lore.add(Text.of("<7>{}", commission.generateDescription()));
 					} else {
-						lore.add("§9Unknown Commission");
-						lore.add("§7Complete this task for rewards.");
+						lore.add(Text.of("<9>Unknown Commission"));
+						lore.add(Text.of("<7>Complete this task for rewards."));
 					}
 
-					lore.add("");
-					lore.add("§9Rewards");
+					lore.add(Text.empty());
+					lore.add(Text.of("<9>Rewards"));
+					lore.addAll(CommissionReward.getRewardLore(hotmTier, isHotmMaxed, willGetDailyBonus));
 
-					String[] rewardLines = CommissionReward.getRewardLore(hotmTier, isHotmMaxed, willGetDailyBonus);
-                    lore.addAll(Arrays.asList(rewardLines));
-
-					lore.add(" ");
+					lore.add(Text.literal(" "));
 
 					if (activeCommission.isCompleted()) {
-						lore.add("§a§lCOMPLETED!");
-						lore.add("");
-						lore.add("§eClick to claim rewards!");
+						lore.add(Text.of("<a><l>COMPLETED!"));
+						lore.add(Text.empty());
+						lore.add(Text.of("<e>Click to claim rewards!"));
 					} else {
-						lore.add("§9Progress");
+						lore.add(Text.of("<9>Progress"));
 						int progress = activeCommission.getProgress();
 						int target = commission != null ? commission.objective.amount : 100;
 						int percentage = Math.min(100, (int) ((progress / (double) target) * 100));
-						String progressBar = buildProgressBar(percentage);
-						lore.add(progressBar + " §9" + percentage + "%");
+						lore.add(buildProgressBar(percentage).append("<9>{}%", percentage));
 					}
 
-					return ItemStackCreator.getStack("§6Commission #" + (index + 1), Material.WRITABLE_BOOK, 1, lore);
+					return ItemStacks.item(Material.WRITABLE_BOOK, 1,
+							Text.of("<6>Commission #{}", index + 1), lore);
 				}
 			});
 		}
@@ -151,30 +148,32 @@ public class GUICommisions extends HypixelInventoryGUI {
 				DatapointCommissions.PlayerCommissionData data = Commissions.getCommissionData((SkyBlockPlayer) player);
 				int totalCompleted = data.getTotalCompleted();
 
-				List<String> lore = new ArrayList<>();
-				lore.add("§7View milestone progress and rewards!");
-				lore.add(" ");
+				List<Text> lore = new ArrayList<>();
+				lore.add(Text.of("<7>View milestone progress and rewards!"));
+				lore.add(Text.literal(" "));
 
 				CommissionMilestone nextMilestone = CommissionMilestone.getNextMilestone(totalCompleted);
 				if (nextMilestone != null) {
 					double progress = data.getMilestoneProgress(nextMilestone.getTier());
-					String progressBar = buildMilestoneProgressBar(progress);
 
-					lore.add("§7Progress to milestone " + StringUtility.getAsRomanNumeral(nextMilestone.getTier()) + ": §e" + String.format("%.1f", progress) + "§6%");
-					lore.add(progressBar + " §e" + totalCompleted + "§6/§e" + nextMilestone.getCommissionsRequired());
-					lore.add(" ");
-					lore.add("§7Tier " + StringUtility.getAsRomanNumeral(nextMilestone.getTier()) + " Rewards:");
-					for (String reward : nextMilestone.getRewardDescriptions()) {
-						lore.add("  " + reward.replace("§7- ", ""));
+					lore.add(Text.of("<7>Progress to milestone {:roman}: <e>{}<6>%",
+							nextMilestone.getTier(), String.format("%.1f", progress)));
+					lore.add(buildMilestoneProgressBar(progress).append("<e>{}<6>/<e>{}",
+							totalCompleted, nextMilestone.getCommissionsRequired()));
+					lore.add(Text.literal(" "));
+					lore.add(Text.of("<7>Tier {:roman} Rewards:", nextMilestone.getTier()));
+					for (Text reward : nextMilestone.getRewardDescriptions()) {
+						lore.add(Text.of("  {}", reward));
 					}
 				} else {
-					lore.add("§a§lALL MILESTONES COMPLETED!");
+					lore.add(Text.of("<a><l>ALL MILESTONES COMPLETED!"));
 				}
 
-				lore.add(" ");
-				lore.add("§eClick to view!");
+				lore.add(Text.literal(" "));
+				lore.add(Text.of("<e>Click to view!"));
 
-				return ItemStackCreator.getStack("§eCommission Milestones", Material.FILLED_MAP, 1, lore);
+				return ItemStacks.item(Material.FILLED_MAP, 1,
+						Text.of("<e>Commission Milestones"), lore);
 			}
 		});
 
@@ -182,19 +181,21 @@ public class GUICommisions extends HypixelInventoryGUI {
 		updateItemStacks(getInventory(), getPlayer());
 	}
 
-	private String buildProgressBar(int percentage) {
+	private Text buildProgressBar(int percentage) {
 		int filled = percentage / 5; // 20 segments total
 		int empty = 20 - filled;
 
-        return "§f§l§m" + " ".repeat(Math.max(0, filled)) +
-            "§7§l§m" +
-            " ".repeat(Math.max(0, empty));
+		return Text.of("<l><m><f>{}<7>{} ",
+				" ".repeat(Math.max(0, filled)),
+				" ".repeat(Math.max(0, empty)));
 	}
 
-	private String buildMilestoneProgressBar(double percentage) {
+	private Text buildMilestoneProgressBar(double percentage) {
 		int filled = (int) (percentage / 5); // 20 segments total
 		int empty = 20 - filled;
-		return "§2§l§m" + " ".repeat(Math.max(0, filled)) + "§f§l§m" + " ".repeat(Math.max(0, empty));
+		return Text.of("<l><m><2>{}<f>{} ",
+				" ".repeat(Math.max(0, filled)),
+				" ".repeat(Math.max(0, empty)));
 	}
 
 	@Override

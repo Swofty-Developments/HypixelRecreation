@@ -1,10 +1,8 @@
 package net.swofty.type.hub.npcs.rabbits;
 
 import lombok.AllArgsConstructor;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.coordinate.Pos;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
@@ -39,36 +37,36 @@ public class RabbitConfiguration extends HumanConfiguration {
     }
 
     @Override
-    public Component[] hologramComponents(HypixelPlayer player) {
-        if (player instanceof SkyBlockPlayer skyBlockPlayer) {
-            DatapointChocolateFactory.ChocolateFactoryData data = skyBlockPlayer.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.CHOCOLATE_FACTORY, DatapointChocolateFactory.class).getValue();
-            DatapointChocolateFactory.EmployeeData employee = data.getEmployees().get(type);
-            if (employee != null) {
-                ChocolateFactoryRank rank = ChocolateFactoryRank.fromLevel(employee.getLevel());
-                return new Component[]{rank.getHologramLine(employee.getLevel()), Component.text(type.getName(), rank.getColor()), Component.text("CLICK", NamedTextColor.YELLOW).decorate(net.kyori.adventure.text.format.TextDecoration.BOLD)};
-            }
-        }
-        return new Component[]{Component.text(type.getName(), NamedTextColor.AQUA), Component.text("CLICK", NamedTextColor.YELLOW).decorate(net.kyori.adventure.text.format.TextDecoration.BOLD)};
-    }
-
-    @Override
     public String[] holograms(HypixelPlayer player) {
-        return java.util.Arrays.stream(hologramComponents(player))
-                .map(component -> LegacyComponentSerializer.legacySection().serialize(component))
-                .toArray(String[]::new);
-    }
-
-    @Override
-    public Component chatNameComponent(HypixelPlayer player) {
         if (player instanceof SkyBlockPlayer skyBlockPlayer) {
             DatapointChocolateFactory.ChocolateFactoryData data = skyBlockPlayer.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.CHOCOLATE_FACTORY, DatapointChocolateFactory.class).getValue();
             DatapointChocolateFactory.EmployeeData employee = data.getEmployees().get(type);
             if (employee != null) {
                 ChocolateFactoryRank rank = ChocolateFactoryRank.fromLevel(employee.getLevel());
-                return Component.text(type.getName(), rank.getColor());
+                return new String[]{
+                        rank.getHologramLine(employee.getLevel()).serialize(),
+                        Text.of("<color:{}>{}", rank.getColor(), type.getName()).serialize(),
+                        "<e><l>CLICK"
+                };
             }
         }
-        return Component.text(type.getName());
+        return new String[]{
+                Text.of("<b>{}", type.getName()).serialize(),
+                "<e><l>CLICK"
+        };
+    }
+
+    @Override
+    public String chatName(HypixelPlayer player) {
+        if (player instanceof SkyBlockPlayer skyBlockPlayer) {
+            DatapointChocolateFactory.ChocolateFactoryData data = skyBlockPlayer.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.CHOCOLATE_FACTORY, DatapointChocolateFactory.class).getValue();
+            DatapointChocolateFactory.EmployeeData employee = data.getEmployees().get(type);
+            if (employee != null) {
+                ChocolateFactoryRank rank = ChocolateFactoryRank.fromLevel(employee.getLevel());
+                return Text.of("<color:{}>{}", rank.getColor(), type.getName()).serialize();
+            }
+        }
+        return Text.of("{}", type.getName()).serialize();
     }
 
     @Override

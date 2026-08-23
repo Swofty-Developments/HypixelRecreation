@@ -3,8 +3,9 @@ package net.swofty.type.lobby.gui;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
 import net.swofty.commons.guild.GuildData;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.HypixelSignGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.View;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
@@ -23,16 +24,13 @@ public class GUIGuildSettings implements View<GUIGuildSettings.GuildSettingsStat
         GuildData guild = state.guild();
 
         String currentTag = guild.getTag() != null ? guild.getTag() : "None";
-        layout.slot(10, ItemStackCreator.getStack(
-            "§aGuild Tag",
-            Material.NAME_TAG,
-            1,
-            "§7Current: §6" + currentTag,
-            "§7Changes the tag next to your guild",
-            "§7members' names.",
-            "",
-            "§eClick to edit!"
-        ), (click, viewCtx) -> new HypixelSignGUI(viewCtx.player())
+        layout.slot(10, ItemStacks.item(Material.NAME_TAG, """
+                <a>Guild Tag
+                <7>Current: <6>{}
+                <7>Changes the tag next to your guild
+                <7>members' names.
+
+                <e>Click to edit!""", currentTag), (click, viewCtx) -> new HypixelSignGUI(viewCtx.player())
             .open(new String[]{"Guild Tag", "Enter new tag"})
             .thenAccept(value -> {
                 if (value == null || value.isBlank()) {
@@ -41,61 +39,46 @@ public class GUIGuildSettings implements View<GUIGuildSettings.GuildSettingsStat
                 GuildManager.changeSetting(viewCtx.player(), "tag", value.trim());
             }));
 
-        layout.slot(11, ItemStackCreator.getStack(
-            "§aGuild Tag Color",
-            Material.RED_DYE,
-            1,
-            "§7Changes the color of the tag next to",
-            "§7your guild members' names.",
-            "",
-            "§eClick to view available colors!"
-        ), (click, viewCtx) -> viewCtx.push(new GUIGuildTagColor()));
+        layout.slot(11, ItemStacks.item(Material.RED_DYE, """
+                <a>Guild Tag Color
+                <7>Changes the color of the tag next to
+                <7>your guild members' names.
 
-        layout.slot(12, ItemStackCreator.getStack(
-            "§aGuild Permissions",
-            Material.COMPARATOR,
-            1,
-            "§7Modify your guild's ranks & their",
-            "§7permissions.",
-            "",
-            "§eClick to edit!"
-        ), (click, viewCtx) -> viewCtx.player().sendMessage("§cGuild rank permission editor is not available yet."));
+                <e>Click to view available colors!"""), (click, viewCtx) -> viewCtx.push(new GUIGuildTagColor()));
 
-        String finderStatus = guild.isListedInFinder() ? "§aON" : "§cOFF";
-        layout.slot(13, ItemStackCreator.getStack(
-            "§aShown in Guild Finder",
-            Material.SUNFLOWER,
-            1,
-            "§7Whether or not players can find the",
-            "§7guild in Guild Finder and request to",
-            "§7join.",
-            "§7Currently " + finderStatus,
-            "",
-            "§eClick to toggle!"
-        ), (click, viewCtx) -> GuildManager.changeSetting(viewCtx.player(), "finder", "toggle"));
+        layout.slot(12, ItemStacks.item(Material.COMPARATOR, """
+                <a>Guild Permissions
+                <7>Modify your guild's ranks & their
+                <7>permissions.
 
-        layout.slot(14, ItemStackCreator.getStack(
-            "§aGuild Games",
-            Material.COMPASS,
-            1,
-            "§7Changes the Guild's list of games",
-            "§7used in the Guild Finder.",
-            "",
-            "§eClick to pick games!"
-        ), (click, viewCtx) -> viewCtx.player().sendMessage("§cGuild games selector is not available yet."));
+                <e>Click to edit!"""), (click, viewCtx) -> viewCtx.player().sendMessage("<c>Guild rank permission editor is not available yet."));
+
+        Text finderStatus = guild.isListedInFinder() ? Text.of("<a>ON") : Text.of("<c>OFF");
+        layout.slot(13, ItemStacks.item(Material.SUNFLOWER, """
+                <a>Shown in Guild Finder
+                <7>Whether or not players can find the
+                <7>guild in Guild Finder and request to
+                <7>join.
+                <7>Currently {}
+
+                <e>Click to toggle!""", finderStatus), (click, viewCtx) -> GuildManager.changeSetting(viewCtx.player(), "finder", "toggle"));
+
+        layout.slot(14, ItemStacks.item(Material.COMPASS, """
+                <a>Guild Games
+                <7>Changes the Guild's list of games
+                <7>used in the Guild Finder.
+
+                <e>Click to pick games!"""), (click, viewCtx) -> viewCtx.player().sendMessage("<c>Guild games selector is not available yet."));
 
         String description = guild.getDescription() != null && !guild.getDescription().isEmpty()
             ? guild.getDescription() : "Not set";
-        layout.slot(15, ItemStackCreator.getStack(
-            "§aGuild Description",
-            Material.WRITABLE_BOOK,
-            1,
-            "§7Current: §f" + description,
-            "§7Changes the Guild's description as",
-            "§7shown in the Guild Finder.",
-            "",
-            "§eClick to edit!"
-        ), (click, viewCtx) -> new HypixelSignGUI(viewCtx.player())
+        layout.slot(15, ItemStacks.item(Material.WRITABLE_BOOK, """
+                <a>Guild Description
+                <7>Current: <f>{}
+                <7>Changes the Guild's description as
+                <7>shown in the Guild Finder.
+
+                <e>Click to edit!""", description), (click, viewCtx) -> new HypixelSignGUI(viewCtx.player())
             .open(new String[]{"Description", "Enter description"})
             .thenAccept(value -> {
                 if (value == null || value.isBlank()) {
@@ -104,21 +87,15 @@ public class GUIGuildSettings implements View<GUIGuildSettings.GuildSettingsStat
                 GuildManager.changeSetting(viewCtx.player(), "description", value.trim());
             }));
 
-        String slowStatus = guild.isSlowChat() ? "§aON" : "§cOFF";
-        layout.slot(16, ItemStackCreator.getStack(
-            "§aPersonal Guild Settings",
-            Material.ORANGE_DYE,
-            1,
-            "§7Slow Chat: " + slowStatus,
-            "",
-            "§eClick to toggle!"
-        ), (click, viewCtx) -> GuildManager.changeSetting(viewCtx.player(), "slow", "toggle"));
+        Text slowStatus = guild.isSlowChat() ? Text.of("<a>ON") : Text.of("<c>OFF");
+        layout.slot(16, ItemStacks.item(Material.ORANGE_DYE, """
+                <a>Personal Guild Settings
+                <7>Slow Chat: {}
 
-        layout.slot(31, ItemStackCreator.getStack(
-            "§aGo Back",
-            Material.ARROW,
-            1
-        ), (click, viewCtx) -> viewCtx.navigator().pop());
+                <e>Click to toggle!""", slowStatus), (click, viewCtx) -> GuildManager.changeSetting(viewCtx.player(), "slow", "toggle"));
+
+        layout.slot(31, ItemStacks.item(Material.ARROW, "<a>Go Back"),
+            (click, viewCtx) -> viewCtx.navigator().pop());
     }
 
     public record GuildSettingsState(GuildData guild) {

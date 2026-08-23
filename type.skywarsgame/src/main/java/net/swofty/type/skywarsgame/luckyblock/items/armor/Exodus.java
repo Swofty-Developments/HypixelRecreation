@@ -1,14 +1,13 @@
 package net.swofty.type.skywarsgame.luckyblock.items.armor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -42,32 +41,23 @@ public class Exodus implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.DIAMOND_HELMET)
-                .customName(Component.text("Exodus", NamedTextColor.AQUA)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Grants ", NamedTextColor.GRAY)
-                                .append(Component.text("Regeneration II", NamedTextColor.RED))
-                                .append(Component.text(" on hit!", NamedTextColor.GRAY))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("The departure from", NamedTextColor.DARK_GRAY)
-                                .decoration(TextDecoration.ITALIC, true),
-                        Component.text("death itself.", NamedTextColor.DARK_GRAY)
-                                .decoration(TextDecoration.ITALIC, true),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.DIAMOND_HELMET,
+                        Text.of("<b>Exodus"),
+                        List.of(
+                                Text.empty(),
+                                Text.of("<7>Grants <c>Regeneration II<7> on hit!"),
+                                Text.empty(),
+                                Text.of("<8><o>The departure from"),
+                                Text.of("<8><o>death itself."),
+                                Text.empty(),
+                                Text.of("<6><l>LUCKY BLOCK ITEM")))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }
 
     @Override
     public void onEquip(SkywarsPlayer player) {
-        player.sendMessage(Component.text("You feel the power of Exodus!", NamedTextColor.AQUA));
+        player.sendMessage("<b>You feel the power of Exodus!");
     }
 
     @Override

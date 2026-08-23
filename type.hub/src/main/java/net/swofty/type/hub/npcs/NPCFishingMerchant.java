@@ -15,7 +15,7 @@ public class NPCFishingMerchant extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bFishing Merchant", "§e§lCLICK"};
+                return new String[]{"<b>Fishing Merchant", "<e><l>CLICK"};
             }
 
             @Override
@@ -60,11 +60,11 @@ public class NPCFishingMerchant extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[]{
             DialogueSet.builder()
-                .key("hello").lines(new String[]{
+                .key("hello").lines(
                     "Fishing is my trade.",
                     "I buy and sell any fish, rod, or treasure you can find!",
                     "Click me again to open the Fisherman Shop!"
-                }).build(),
+                ).build(),
         };
     }
 }

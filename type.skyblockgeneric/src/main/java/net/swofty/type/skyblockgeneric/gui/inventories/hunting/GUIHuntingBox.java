@@ -4,8 +4,9 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.HypixelSignGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulPaginatedView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -47,8 +48,8 @@ public class GUIHuntingBox extends StatefulPaginatedView<AttributeDefinition, GU
     }
 
     public ViewConfiguration<State> configuration() {
-        return ViewConfiguration.withString((state, ctx) -> "(" + (state.page() + 1) + "/" +
-                        Math.max(1, (state.items().size() + DEFAULT_SLOTS.length - 1) / DEFAULT_SLOTS.length) + ") Hunting Box",
+        return ViewConfiguration.withText((state, ctx) -> Text.of("({}/{}) Hunting Box", state.page() + 1,
+                        Math.max(1, (state.items().size() + DEFAULT_SLOTS.length - 1) / DEFAULT_SLOTS.length)),
                 InventoryType.CHEST_6_ROW);
     }
 
@@ -80,26 +81,47 @@ public class GUIHuntingBox extends StatefulPaginatedView<AttributeDefinition, GU
     protected void layoutCustom(ViewLayout<State> layout, State state, ViewContext ctx) {
         SkyBlockPlayer player = (SkyBlockPlayer) ctx.player();
         DatapointHunting.HuntingData data = player.getHuntingData();
-        layout.slot(4, ItemStackCreator.getStack("§aHunting Box", Material.CHEST, 1,
-                "§7This is where all your Shards are", "§7stored!", "", "§7From here you can Syphon shards,",
-                "§7or turn them into items!", "", "§7Shards: §2" + data.getShards().values().stream().mapToInt(Integer::intValue).sum(),
-                "", "§eClick to swap to the Attribute Menu!"), (_, c) -> c.push(new GUIAttributeMenu()));
-        layout.slot(46, ItemStackCreator.getStack("§aSearch Shards", Material.OAK_SIGN, 1,
-                "§7Search for specific shards in your", "§7Hunting Box. You can enter the", "§7Shard Name, ID, Family, or Attribute",
-                "§7Category!", "", "§eClick to search!"), (_, c) -> new HypixelSignGUI(c.player())
+        layout.slot(4, ItemStacks.item(Material.CHEST, """
+                <a>Hunting Box
+                <7>This is where all your Shards are
+                <7>stored!
+
+                <7>From here you can Syphon shards,
+                <7>or turn them into items!
+
+                <7>Shards: <2>{}
+
+                <e>Click to swap to the Attribute Menu!""",
+                data.getShards().values().stream().mapToInt(Integer::intValue).sum()), (_, c) -> c.push(new GUIAttributeMenu()));
+        layout.slot(46, ItemStacks.item(Material.OAK_SIGN, """
+                <a>Search Shards
+                <7>Search for specific shards in your
+                <7>Hunting Box. You can enter the
+                <7>Shard Name, ID, Family, or Attribute
+                <7>Category!
+
+                <e>Click to search!"""), (_, c) -> new HypixelSignGUI(c.player())
                 .open(new String[]{"Enter query", state.query()}).thenAccept(q -> {
                     if (q != null) refresh(c, state.sort(), q);
                 }));
-        layout.slot(48, ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To Hunting Skill"), (_, c) -> c.navigator().pop());
+        layout.slot(48, ItemStacks.item(Material.ARROW, """
+                <a>Go Back
+                <7>To Hunting Skill"""), (_, c) -> c.navigator().pop());
         layout.slot(50, sortItem(state.sort()), (click, c) -> {
             int direction = click.click() instanceof Click.Right || click.click() instanceof Click.RightShift ? -1 : 1;
             Sort next = Sort.values()[Math.floorMod(state.sort().ordinal() + direction, Sort.values().length)];
             refresh(c, next, state.query());
         });
         layout.slot(51, massSyphonItem(data), (_, c) -> massSyphon((SkyBlockPlayer) c.player(), c));
-        layout.slot(52, ItemStackCreator.getStack("§aHunting Toolkit", Material.IRON_HOE, 1,
-                "§7Store all of your Hunting Tools in", "§7one convenient place and swap", "§7between them with ease.", "",
-                "§8Also accessible via /huntingtoolkit", "", "§eClick to view!"));
+        layout.slot(52, ItemStacks.item(Material.IRON_HOE, """
+                <a>Hunting Toolkit
+                <7>Store all of your Hunting Tools in
+                <7>one convenient place and swap
+                <7>between them with ease.
+
+                <8>Also accessible via /huntingtoolkit
+
+                <e>Click to view!"""));
         Components.close(layout, 49);
     }
 
@@ -117,24 +139,33 @@ public class GUIHuntingBox extends StatefulPaginatedView<AttributeDefinition, GU
     }
 
     private ItemStack.Builder sortItem(Sort selected) {
-        List<String> lore = new ArrayList<>(List.of(""));
+        List<Text> lore = new ArrayList<>(List.of(Text.empty()));
         for (Sort sort : Sort.values())
-            lore.add((sort == selected ? "§b▶ " : "§7   ") + switch (sort) {
+            lore.add(Text.of(sort == selected ? "<b>▶ {}" : "<7>   {}", switch (sort) {
                 case ID_ASCENDING -> "ID (Lowest to Highest)";
                 case ID_DESCENDING -> "ID (Highest to Lowest)";
                 case NEW_SHARDS -> "New Shards";
-            });
-        lore.addAll(List.of("", "§bRight-click to go backwards!", "§eClick to switch sort!"));
-        return ItemStackCreator.getStack("§aSort", Material.HOPPER, 1, lore);
+            }));
+        lore.add(Text.empty());
+        lore.add(Text.of("<b>Right-click to go backwards!"));
+        lore.add(Text.of("<e>Click to switch sort!"));
+        return ItemStacks.item(Material.HOPPER, 1, Text.of("<a>Sort"), lore);
     }
 
     private ItemStack.Builder massSyphonItem(DatapointHunting.HuntingData data) {
         List<AttributeDefinition> usable = AttributeRegistry.values().stream().filter(d -> data.shardCount(d.id()) > 0 && data.level(d.id()) < 10).toList();
         int count = usable.stream().mapToInt(d -> data.shardCount(d.id())).sum();
-        List<String> lore = new ArrayList<>(List.of("§7You have §c" + count + " Shards §7from §a" + usable.size() + " §7Attributes", "§7that are not maxed out yet.", "§7Do you want to Syphon them all?", "", "§7Shards to Syphon:"));
-        usable.stream().limit(8).forEach(d -> lore.add("§8- " + data.shardCount(d.id()) + "x " + d.rarity().itemRarity().getLegacyColor() + d.shardName()));
-        lore.addAll(List.of("", "§eClick to mass Syphon!"));
-        return ItemStackCreator.getStack("§6Mass Syphon", Material.GOLDEN_APPLE, 1, lore);
+        List<Text> lore = new ArrayList<>(List.of(
+                Text.of("<7>You have <c>{} Shards <7>from <a>{} <7>Attributes", count, usable.size()),
+                Text.of("<7>that are not maxed out yet."),
+                Text.of("<7>Do you want to Syphon them all?"),
+                Text.empty(),
+                Text.of("<7>Shards to Syphon:")));
+        usable.stream().limit(8).forEach(d -> lore.add(Text.of("<8>- {}x <color:{}>{}", data.shardCount(d.id()),
+                d.rarity().itemRarity().getColor(), d.shardName())));
+        lore.add(Text.empty());
+        lore.add(Text.of("<e>Click to mass Syphon!"));
+        return ItemStacks.item(Material.GOLDEN_APPLE, 1, Text.of("<6>Mass Syphon"), lore);
     }
 
     private void handleShardClick(Click click, SkyBlockPlayer player, AttributeDefinition d, ViewContext ctx) {
@@ -147,7 +178,7 @@ public class GUIHuntingBox extends StatefulPaginatedView<AttributeDefinition, GU
             int used = data.syphon(d.id(), amount);
             if (used > 0) player.getSkills().increase(player, SkillCategories.HUNTING, used * syphonExperience(d));
         } else
-            player.sendMessage("§cYou need Hunting Level " + d.rarity().huntingRequirement() + " to Syphon this Attribute!");
+            player.sendMessage("<c>You need Hunting Level {} to Syphon this Attribute!", d.rarity().huntingRequirement());
         refresh(ctx, ctx.session(State.class).state().sort(), ctx.session(State.class).state().query());
     }
 

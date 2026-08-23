@@ -1,8 +1,6 @@
 package net.swofty.type.skyblockgeneric.entity;
 
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityType;
@@ -13,7 +11,8 @@ import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.particle.Particle;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.utility.MathUtility;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -48,13 +47,9 @@ public class PetEntityImpl extends LivingEntity {
         var petName = pet.getComponent(PetComponent.class).getPetName();
 
         editEntityMeta(ArmorStandMeta.class, meta -> {
-            meta.set(MetadataDef.CUSTOM_NAME, Component.text("[", NamedTextColor.DARK_GRAY)
-                    .append(Component.text("Lvl" + level, NamedTextColor.GRAY))
-                    .append(Component.text("] ", NamedTextColor.DARK_GRAY))
-                    .append(Component.text(
-                            player.getUsername() + "'s " + petName,
-                            rarity.getColor()
-                    )));
+            meta.set(MetadataDef.CUSTOM_NAME, Text.of("<8>[<7>Lvl{}<8>] <color:{}>{}'s {}",
+                    level, rarity.getColor(), player.getUsername(), petName
+            ).asComponent());
         });
     }
 
@@ -70,7 +65,7 @@ public class PetEntityImpl extends LivingEntity {
         meta.setHasNoGravity(true);
         getEntityMeta().setCustomNameVisible(true);
 
-        setHelmet(ItemStackCreator.getStackHead(url).build());
+        setHelmet(ItemStacks.head(url, "").build());
 
         upAndDownTask = MinecraftServer.getSchedulerManager().scheduleTask(() -> {
             if (isDead() || !player.isOnline()) {

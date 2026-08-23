@@ -14,7 +14,7 @@ public class NPCTalbot extends HypixelNPC { //only there if Finnegan is mayor
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Talbot", "§e§lCLICK"};
+                return new String[]{"Talbot", "<e><l>CLICK"};
             }
 
             @Override

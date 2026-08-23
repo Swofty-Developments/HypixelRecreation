@@ -9,7 +9,7 @@ import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.gui.GUICageKitSelector;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItem;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 
 public class KitSelectorBow extends SimpleInteractableItem {
 
@@ -19,12 +19,9 @@ public class KitSelectorBow extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStackCreator.getStack(
-                "§aKit Selector §7(Right Click)",
-                Material.BOW,
-                1,
-                "§7Right-click to select your kit!"
-        ).build();
+        return ItemStacks.item(Material.BOW, 1, """
+                <a>Kit Selector <7>(Right Click)
+                <7>Right-click to select your kit!""").build();
     }
 
     @Override

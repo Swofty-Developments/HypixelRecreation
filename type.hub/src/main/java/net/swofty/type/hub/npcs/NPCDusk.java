@@ -14,7 +14,7 @@ public class NPCDusk extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§5Dusk", "§e§lCLICK"};
+                return new String[]{"<5>Dusk", "<e><l>CLICK"};
             }
 
             @Override
@@ -49,10 +49,10 @@ public class NPCDusk extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
-                                "You can apply §drunes §fto weapons and armor with the §dRune Pedestal §fbehind me.",
+                        .key("hello").lines(
+                                "You can apply <d>runes <f>to weapons and armor with the <d>Rune Pedestal <f>behind me.",
                                 "You can also combine two runes for a chance to create a higher level rune with a better effect!"
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

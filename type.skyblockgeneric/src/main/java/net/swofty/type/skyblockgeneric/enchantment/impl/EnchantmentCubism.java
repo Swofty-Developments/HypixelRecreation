@@ -23,8 +23,7 @@ public class EnchantmentCubism implements Ench, EnchFromTable, EventBasedEnchant
 
     @Override
     public String getDescription(int level) {
-        return "Increases damage dealt to " + MobType.CUBIC.getFullDisplayName() + "§7 mobs by §a" +
-                DAMAGE_MULTIPLIERS[level - 1] + "%§7.";
+        return "Increases damage dealt to " + MobType.CUBIC.getFullDisplayName() + "<7> mobs by <a>" + DAMAGE_MULTIPLIERS[level - 1] + "%<7>.";
     }
 
     @Override

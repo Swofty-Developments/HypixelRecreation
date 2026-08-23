@@ -17,7 +17,7 @@ public class NPCCurator extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bCurator", "§e§lCLICK"};
+                return new String[]{"<b>Curator", "<e><l>CLICK"};
             }
 
             @Override
@@ -63,16 +63,14 @@ public class NPCCurator extends HypixelNPC {
         SkyBlockPlayer player = (SkyBlockPlayer) p;
         return Stream.of(
                 DialogueSet.builder()
-                        .key("initial-hello").lines(new String[]{
-                                "Welcome, " + player.getShortenedDisplayName() + "§f!",
-                                "After years of work, I finally opened the §9Museum§f!",
-                                "This world has an incredible amount of interesting gear and rare items, which I would like to showcase.",
-                                "Would you like to help me fill the Museum? My assistant, §6Madame Goldsworth§f, will even reward you!",
-                                "I'll show you the list of items that I'm currently looking for.",
-                                "You can donate any item from the list, and you'll still be able to use those items whenever you want!",
-                                "However - once you donate an item, it will be §dCo-op Soulbound §fto you, meaning that you won't be able to trade, auction or sell the item anymore.",
-                                "Choose carefully!"
-                        }).build()
+                        .key("initial-hello").line("Welcome, {}<f>!", player.getShortenedDisplayName())
+                                .line("After years of work, I finally opened the <9>Museum<f>!")
+                                .line("This world has an incredible amount of interesting gear and rare items, which I would like to showcase.")
+                                .line("Would you like to help me fill the Museum? My assistant, <6>Madame Goldsworth<f>, will even reward you!")
+                                .line("I'll show you the list of items that I'm currently looking for.")
+                                .line("You can donate any item from the list, and you'll still be able to use those items whenever you want!")
+                                .line("However - once you donate an item, it will be <d>Co-op Soulbound <f>to you, meaning that you won't be able to trade, auction or sell the item anymore.")
+                                .line("Choose carefully!").build()
         ).toArray(DialogueSet[]::new);
     }
 }

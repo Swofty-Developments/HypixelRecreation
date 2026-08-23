@@ -1,11 +1,10 @@
 package net.swofty.type.skywarsgame.luckyblock.items.armor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 
@@ -37,21 +36,15 @@ public class ElDoradoHelmet implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.GOLDEN_HELMET)
-                .customName(Component.text("El Dorado Helmet", NamedTextColor.GOLD)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Protection III", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("The legendary city of gold", NamedTextColor.DARK_GRAY)
-                                .decoration(TextDecoration.ITALIC, true),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.GOLDEN_HELMET,
+                        Text.of("<6>El Dorado Helmet"),
+                        List.of(
+                                Text.empty(),
+                                Text.of("<7>Protection III"),
+                                Text.empty(),
+                                Text.of("<8><o>The legendary city of gold"),
+                                Text.empty(),
+                                Text.of("<6><l>LUCKY BLOCK ITEM")))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }

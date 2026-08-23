@@ -1,5 +1,6 @@
 package net.swofty.type.generic.collectibles.bedwars;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.collectibles.CollectibleCategory;
 import net.swofty.type.generic.collectibles.CollectibleCurrency;
 import net.swofty.type.generic.collectibles.CollectibleDefinition;
@@ -28,21 +29,21 @@ public final class BedWarsCollectibleStateService {
         CollectibleSelectionCheck check = checkSelectable(player, state, definition);
         if (!check.selectable()) {
             String reason = check.reason() != null ? check.reason() : "Locked.";
-            return new SelectionResult(false, "§c" + reason);
+            return new SelectionResult(false, "<c>" + reason);
         }
 
         state.setSelected(definition.category(), definition.id());
         persist(player, state);
-        return new SelectionResult(true, "§aSelected " + definition.name() + "§a.");
+        return new SelectionResult(true, Text.of("<a>Selected {}<a>.", definition.name()).serialize());
     }
 
     public static SelectionResult selectSpecial(HypixelPlayer player, CollectibleCategory category, String selectionId) {
         if (!BedWarsCollectibleCatalog.categorySupportsRandom(category)) {
-            return new SelectionResult(false, "§cRandom mode is not supported for this category.");
+            return new SelectionResult(false, "<c>Random mode is not supported for this category.");
         }
 
         if (!RANDOM_SELECTION_ID.equals(selectionId) && !RANDOM_FAVORITE_SELECTION_ID.equals(selectionId)) {
-            return new SelectionResult(false, "§cInvalid random selection mode.");
+            return new SelectionResult(false, "<c>Invalid random selection mode.");
         }
 
         DatapointCollectibles.CollectiblesState state = state(player);
@@ -50,16 +51,16 @@ public final class BedWarsCollectibleStateService {
         persist(player, state);
 
         if (RANDOM_FAVORITE_SELECTION_ID.equals(selectionId)) {
-            return new SelectionResult(true, "§aSelected Random Favorite mode.");
+            return new SelectionResult(true, "<a>Selected Random Favorite mode.");
         }
-        return new SelectionResult(true, "§aSelected Random mode.");
+        return new SelectionResult(true, "<a>Selected Random mode.");
     }
 
     public static SelectionResult purchaseAndSelect(HypixelPlayer player, CollectibleDefinition definition) {
         DatapointCollectibles.CollectiblesState state = state(player);
         PurchaseCheck purchaseCheck = checkPurchase(player, state, definition);
         if (!purchaseCheck.purchasable()) {
-            return new SelectionResult(false, "§c" + purchaseCheck.reason());
+            return new SelectionResult(false, "<c>" + purchaseCheck.reason());
         }
 
         BedWarsDataHandler dataHandler = BedWarsDataHandler.getUser(player);
@@ -67,14 +68,14 @@ public final class BedWarsCollectibleStateService {
         long currentTokens = tokensDp.getValue();
         long cost = purchaseCheck.cost();
         if (currentTokens < cost) {
-            return new SelectionResult(false, "§cYou do not have enough BedWars Tokens.");
+            return new SelectionResult(false, "<c>You do not have enough BedWars Tokens.");
         }
 
         tokensDp.setValue(currentTokens - cost);
         state.unlock(definition.category(), definition.id());
         state.setSelected(definition.category(), definition.id());
         persist(player, state);
-        return new SelectionResult(true, "§6You purchased §a" + definition.name() + "§6!");
+        return new SelectionResult(true, Text.of("<6>You purchased <a>{}<6>!", definition.name()).serialize());
     }
 
     public static PurchaseCheck checkPurchase(HypixelPlayer player, CollectibleDefinition definition) {

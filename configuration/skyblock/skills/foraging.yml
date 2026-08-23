@@ -1,8 +1,8 @@
 name: "Foraging"
 displayIcon: "jungle_sapling"
 description:
-  - "§7Cut trees and forage for other"
-  - "§7plants to earn Foraging XP!"
+  - "<7>Cut trees and forage for other"
+  - "<7>plants to earn Foraging XP!"
 
 rewards:
   - level: 1

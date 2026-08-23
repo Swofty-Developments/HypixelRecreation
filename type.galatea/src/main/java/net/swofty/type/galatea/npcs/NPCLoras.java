@@ -12,7 +12,7 @@ public class NPCLoras extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bLoras", "§e§lCLICK"};
+                return new String[]{"<b>Loras", "<e><l>CLICK"};
             }
 
             @Override

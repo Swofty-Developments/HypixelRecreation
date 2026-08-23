@@ -3,6 +3,7 @@ package net.swofty.type.ravengarddungeon.game;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.swofty.type.ravengardgeneric.gui.RavengardFont;
 import net.swofty.type.ravengardgeneric.hud.RavengardHudComposer;
 import net.swofty.type.ravengardgeneric.hud.RavengardHudState;
 
@@ -42,6 +43,7 @@ public final class DungeonMinimapIcons {
         Component tiles = Component.empty();
         for (int index = 0; index < SEGMENT_TILES.length(); index++) {
             tiles = tiles.append(Component.text(SEGMENT_TILES.charAt(index))
+                    .font(RavengardFont.RAVENGARD)
                     .color(TextColor.color(packed))
                     .shadowColor(ShadowColor.shadowColor(0)));
         }
@@ -53,6 +55,7 @@ public final class DungeonMinimapIcons {
         }
         int rotation = ((int) Math.round(yaw / (360.0 / 64.0))) & 0x3F;
         tiles = tiles.append(Component.text(PLAYER_MARKER)
+                .font(RavengardFont.RAVENGARD)
                 .color(TextColor.color((256 << 15) | (256 << 6) | rotation))
                 .shadowColor(ShadowColor.shadowColor(0)));
         return tiles;

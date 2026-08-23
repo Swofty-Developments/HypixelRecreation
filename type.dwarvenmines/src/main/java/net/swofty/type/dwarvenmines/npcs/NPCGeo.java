@@ -1,7 +1,6 @@
 package net.swofty.type.dwarvenmines.npcs;
 
 import net.minestom.server.coordinate.Pos;
-import net.swofty.commons.ChatColor;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
@@ -17,8 +16,8 @@ public class NPCGeo extends HypixelNPC {
             @Override
             public String[] holograms(HypixelPlayer player) {
                 return new String[]{
-                        ChatColor.GREEN + "Geo",
-                        ChatColor.YELLOW + "" + ChatColor.BOLD + "CLICK"
+                        "<a>Geo",
+                        "<e><l>CLICK"
                 };
             }
 
@@ -64,35 +63,35 @@ public class NPCGeo extends HypixelNPC {
         return Stream.of(
                 DialogueSet.builder()
                         .key("initial-hello")
-                        .lines(new String[]{
-                                "§aGemstones §rhave magical properties and can be applied to some special items.",
-                                "There are §a12 §rdifferent Gemstones, all of them having their own unique properties!",
-                                "For example, adding §cRuby §rto armor will increase its §c❤ Health§r, while §dJasper §rincreases §c❁ Strength§r.",
+                        .lines(
+                                "<a>Gemstones <r>have magical properties and can be applied to some special items.",
+                                "There are <a>12 <r>different Gemstones, all of them having their own unique properties!",
+                                "For example, adding <c>Ruby <r>to armor will increase its <c>❤ Health<r>, while <d>Jasper <r>increases <c>❁ Strength<r>.",
                                 "The more pure the Gemstone - the stronger the effect!",
                                 "Only some items can have Gemstones applied, and you can remove them any time.",
-                                "Use the §dGemstone Grinder §rnext to me to apply Gemstones to items!"
-                        })
+                                "Use the <d>Gemstone Grinder <r>next to me to apply Gemstones to items!"
+                        )
                         .build(),
                 DialogueSet.builder()
                         .key("idle-1")
-                        .lines(new String[]{
+                        .lines(
                                 "The more pure the Gemstone - the stronger the effect!",
-                                "There are several qualities of Gemstone, including §fRough§r, §aFlawed§r, and §9Fine§r.",
-                                "The highest quality of Gemstone - §6Perfect §r- will increase your stats the most!"
-                        })
+                                "There are several qualities of Gemstone, including <f>Rough<r>, <a>Flawed<r>, and <9>Fine<r>.",
+                                "The highest quality of Gemstone - <6>Perfect <r>- will increase your stats the most!"
+                        )
                         .build(),
                 DialogueSet.builder()
                         .key("idle-2")
-                        .lines(new String[]{
+                        .lines(
                                 "Not all items can have Gemstones applied to them.",
-                                "Check out the §dGemstone Grinder §rmenu to check which items work with it!"
-                        })
+                                "Check out the <d>Gemstone Grinder <r>menu to check which items work with it!"
+                        )
                         .build(),
                 DialogueSet.builder()
                         .key("idle-3")
-                        .lines(new String[]{
-                                "Use the §dGemstone Grinder §rnext to me to apply Gemstones to items!"
-                        })
+                        .lines(
+                                "Use the <d>Gemstone Grinder <r>next to me to apply Gemstones to items!"
+                        )
                         .build()
         ).toArray(DialogueSet[]::new);
     }

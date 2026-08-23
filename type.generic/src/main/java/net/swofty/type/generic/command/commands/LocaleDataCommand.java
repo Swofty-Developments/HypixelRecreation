@@ -24,7 +24,7 @@ public class LocaleDataCommand extends HypixelCommand {
 
             if (!(sender instanceof HypixelPlayer player)) return;
 
-            player.sendMessage("§eYour locale is currently set to §c" + player.getLocale().getDisplayName() + "§e.");
+            player.sendMessage("<e>Your locale is currently set to <c>{}<e>.", player.getLocale().getDisplayName());
         });
 
         command.addSyntax((sender, context) -> {
@@ -37,7 +37,7 @@ public class LocaleDataCommand extends HypixelCommand {
             Locale loc = handler.get(HypixelDataHandler.Data.LOCALE, DatapointLocale.class).getValue().getCurrentLocale().getLocale();
             player.setLocale(loc);
 
-            player.sendMessage("§eYour locale is now set to §c" + loc.getDisplayName() + "§e.");
+            player.sendMessage("<e>Your locale is now set to <c>{}<e>.", loc.getDisplayName());
         }, ArgumentType.Literal("update"));
     }
 }

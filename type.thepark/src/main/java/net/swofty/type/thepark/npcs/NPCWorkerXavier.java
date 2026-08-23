@@ -17,7 +17,7 @@ public class NPCWorkerXavier extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Worker Xavier", "§e§lCLICK"};
+				return new String[]{"Worker Xavier", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -49,7 +49,7 @@ public class NPCWorkerXavier extends HypixelNPC {
 
 		MissionData data = player.getMissionData();
 		if (data.isCurrentlyActive(MissionCheckOnMelody.class)) {
-			sendNPCMessage(player, "Go and make sure §dMelody §fis okay! She's on a small plateau nearby!");
+			sendNPCMessage(player, "Go and make sure <d>Melody <f>is okay! She's on a small plateau nearby!");
 			return;
 		}
 
@@ -59,16 +59,16 @@ public class NPCWorkerXavier extends HypixelNPC {
 	@Override
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return List.of(
-				DialogueSet.builder().key("intro").lines(new String[]{
-						"§cWOAH WOAH! §fLook out there!",
-						"There's been a §3huge storm§f! It knocked down a bunch of trees - it's been a safety hazard!",
-						"Oh my goodness! I forgot about §dMelody§f! She's still over on §dMelody's Plateau§f",
+				DialogueSet.builder().key("intro").lines(
+						"<c>WOAH WOAH! <f>Look out there!",
+						"There's been a <3>huge storm<f>! It knocked down a bunch of trees - it's been a safety hazard!",
+						"Oh my goodness! I forgot about <d>Melody<f>! She's still over on <d>Melody's Plateau<f>",
 						"Can you go and make sure she's okay?"
-				}).build(),
-				DialogueSet.builder().key("idle").lines(new String[]{
-						"Acacia trees are native to the §aSavanna Woodland§f.",
+				).build(),
+				DialogueSet.builder().key("idle").lines(
+						"Acacia trees are native to the <a>Savanna Woodland<f>.",
 						"Don't feel bad about knocking them down - they regrow real fast!"
-				}).build()
+				).build()
 		).toArray(DialogueSet[]::new);
 	}
 }

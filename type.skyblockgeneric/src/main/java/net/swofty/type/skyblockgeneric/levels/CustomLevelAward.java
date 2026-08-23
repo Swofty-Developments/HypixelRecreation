@@ -3,7 +3,8 @@ package net.swofty.type.skyblockgeneric.levels;
 import lombok.Getter;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,31 +13,36 @@ import java.util.Map;
 
 @Getter
 public enum CustomLevelAward {
-    ACCESS_TO_COMMUNITY_SHOP(ItemStackCreator.getStackHead("4e495b103ddd47701449ad7a34d908e8d2f08e0bd9476653d433c3bfc7c1b055"),
-            "§bAccess to Community Shop"),
-    ACCESS_TO_GARDEN(ItemStackCreator.getStackHead("4778b434a258f7991825cabc965a56403c4d772e9628ce60164927e94b79d17"),
-            "§2Access to the Garden"),
+    ACCESS_TO_COMMUNITY_SHOP(ItemStacks.head("4e495b103ddd47701449ad7a34d908e8d2f08e0bd9476653d433c3bfc7c1b055", Text.empty(), List.of()),
+            "<b>Access to Community Shop"),
+    ACCESS_TO_GARDEN(ItemStacks.head("4778b434a258f7991825cabc965a56403c4d772e9628ce60164927e94b79d17", Text.empty(), List.of()),
+            "<2>Access to the Garden"),
     ACCESS_TO_WARDROBE(ItemStack.builder(Material.LEATHER_CHESTPLATE),
-            "§aAccess to Wardrobe"),
+            "<a>Access to Wardrobe"),
     AUTO_PICKUP_BLOCK_AND_MOB_DROPS(ItemStack.builder(Material.DIAMOND_SWORD),
-            "§aAuto-Pickup Block and Mob Drops"),
-    ACCESS_TO_BAZAAR(ItemStackCreator.getStackHead("c232e3820897429157619b0ee099fec0628f602fff12b695de54aef11d923ad7"),
-            "§6Access to Bazaar"),
-    ACCESS_TO_WIZARD_PORTAL(ItemStackCreator.getStackHead("838564e28aba98301dbda5fafd86d1da4e2eaeef12ea94dcf440b883e559311c"),
-            "§dAccess to Wizard Portal"),
-    DAILY_COINS_TRADE_LIMIT_OF_1B(ItemStackCreator.getStackHead("740d6e362bc7eee4f911dbd0446307e7458d1050d09aee538ebcb0273cf75742"),
-            "§aDaily Coins Trading Limit of 1B"),
-    DAILY_COINS_TRADE_LIMIT_OF_10B(ItemStackCreator.getStackHead("c43f12c8369f9c3888a45aaf6d7761578402b4241958f7d4ae4eceb56a867d2a"),
-            "§aDaily Coins Trading Limit of 10B")
+            "<a>Auto-Pickup Block and Mob Drops"),
+    ACCESS_TO_BAZAAR(ItemStacks.head("c232e3820897429157619b0ee099fec0628f602fff12b695de54aef11d923ad7", Text.empty(), List.of()),
+            "<6>Access to Bazaar"),
+    ACCESS_TO_WIZARD_PORTAL(ItemStacks.head("838564e28aba98301dbda5fafd86d1da4e2eaeef12ea94dcf440b883e559311c", Text.empty(), List.of()),
+            "<d>Access to Wizard Portal"),
+    DAILY_COINS_TRADE_LIMIT_OF_1B(ItemStacks.head("740d6e362bc7eee4f911dbd0446307e7458d1050d09aee538ebcb0273cf75742", Text.empty(), List.of()),
+            "<a>Daily Coins Trading Limit of 1B"),
+    DAILY_COINS_TRADE_LIMIT_OF_10B(ItemStacks.head("c43f12c8369f9c3888a45aaf6d7761578402b4241958f7d4ae4eceb56a867d2a", Text.empty(), List.of()),
+            "<a>Daily Coins Trading Limit of 10B")
     ;
     private static final Map<Integer, List<CustomLevelAward>> CACHE = new HashMap<>();
 
     private final ItemStack.Builder item;
+    @Getter(lombok.AccessLevel.NONE)
     private final String display;
 
     CustomLevelAward(ItemStack.Builder item, String display) {
         this.item = item;
         this.display = display;
+    }
+
+    public Text getDisplay() {
+        return Text.of(display);
     }
 
     public static int getTotalLevelAwards() {

@@ -111,17 +111,18 @@ public abstract class SkyBlockRecipe<T> {
         double unlockedRatio = allRecipes.isEmpty() ? 0D : allowedRecipes.size() / (double) allRecipes.size();
         String unlockedPercentage = String.format("%.2f", unlockedRatio * 100);
 
-        lore.add("§7Recipe Book Unlocked: §e" + unlockedPercentage + "§6%");
+        lore.add("<7>Recipe Book Unlocked: <e>" + unlockedPercentage + "<6>%");
 
         String baseLoadingBar = "─────────────────";
         int maxBarLength = baseLoadingBar.length();
         int completedLength = (int) Math.round(unlockedRatio * maxBarLength);
         completedLength = Math.max(0, Math.min(completedLength, maxBarLength));
 
-        String completedLoadingBar = "§2§m" + baseLoadingBar.substring(0, completedLength);
-        String uncompletedLoadingBar = "§7§m" + baseLoadingBar.substring(completedLength);
+        String completedLoadingBar = baseLoadingBar.substring(0, completedLength);
+        String uncompletedLoadingBar = baseLoadingBar.substring(completedLength);
 
-        lore.add(completedLoadingBar + uncompletedLoadingBar + "§r §e" + allowedRecipes.size() + "§6/§e" + allRecipes.size());
+        lore.add("<2><m>" + completedLoadingBar + "<7>" + uncompletedLoadingBar
+                + "<r> <e>" + allowedRecipes.size() + "<6>/<e>" + allRecipes.size());
 
         return lore;
     }

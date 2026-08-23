@@ -1,7 +1,5 @@
 package net.swofty.type.skyblockgeneric.commands;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.minestom.server.command.builder.arguments.ArgumentStringArray;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.proxyapi.ProxyPlayer;
@@ -34,9 +32,9 @@ public class CoopCommand extends HypixelCommand {
 
             if (checkIfAlreadyExisting(player)) return;
 
-            player.sendMessage("§cYou don't have an outgoing co-op invite!");
-            player.sendMessage("§eUse §b/coop <player 1> <player 2>... §eto create one!");
-            player.sendMessage("§eUse §a/coopadd <player> §eto add a player to your current co-op!");
+            player.sendMessage("<c>You don't have an outgoing co-op invite!");
+            player.sendMessage("<e>Use <b>/coop \\<player 1> \\<player 2>... <e>to create one!");
+            player.sendMessage("<e>Use <a>/coopadd \\<player> <e>to add a player to your current co-op!");
         });
 
         command.addSyntax((sender, context) -> {
@@ -45,10 +43,10 @@ public class CoopCommand extends HypixelCommand {
 
             if (checkIfAlreadyExisting(player)) return;
 
-            player.sendMessage("§7Validating invite...");
+            player.sendMessage("<7>Validating invite...");
 
             if (Arrays.stream(players).anyMatch(player1 -> player1.equalsIgnoreCase(player.getUsername()))) {
-                player.sendMessage("§cYou can't invite yourself to a co-op!");
+                player.sendMessage("<c>You can't invite yourself to a co-op!");
                 return;
             }
 
@@ -59,34 +57,34 @@ public class CoopCommand extends HypixelCommand {
                         ProfilesDatabase::fetchUUID
                 ).collect(Collectors.toList()));
             } catch (Exception e) {
-                player.sendMessage("§b[Co-op] §cOne or more of the players you specified are not online!");
+                player.sendMessage("<b>[Co-op] <c>One or more of the players you specified are not online!");
                 return;
             }
 
             if (chosenPlayers.getPlayers().stream().anyMatch(Objects::isNull)) {
-                player.sendMessage("§b[Co-op] §cOne or more of the players you specified are not online!");
+                player.sendMessage("<b>[Co-op] <c>One or more of the players you specified are not online!");
                 return;
             }
 
             if (chosenPlayers.asProxyPlayers().stream().anyMatch(player1 -> !player1.isOnline().join())) {
-                player.sendMessage("§b[Co-op] §cOne or more of the players you specified are not online!");
+                player.sendMessage("<b>[Co-op] <c>One or more of the players you specified are not online!");
                 return;
             }
 
             if (chosenPlayers.asProxyPlayers().stream().anyMatch(player1 -> CoopDatabase.getFromMember(player1.uuid()) != null)) {
-                player.sendMessage("§b[Co-op] §cOne or more of the players you specified already have a co-op or an invite pending!");
+                player.sendMessage("<b>[Co-op] <c>One or more of the players you specified already have a co-op or an invite pending!");
                 return;
             }
 
             // Check if player put same player name in twice
             if (Arrays.stream(players).distinct().count() != Arrays.stream(players).count()) {
-                player.sendMessage("§b[Co-op] §cYou can't invite the same player twice!");
+                player.sendMessage("<b>[Co-op] <c>You can't invite the same player twice!");
                 return;
             }
 
             // Check if there are more than 4 names
             if (players.length > 4) {
-                player.sendMessage("§b[Co-op] §cYou can't invite more than 4 players!");
+                player.sendMessage("<b>[Co-op] <c>You can't invite more than 4 players!");
                 return;
             }
 
@@ -95,22 +93,21 @@ public class CoopCommand extends HypixelCommand {
             int i = 0;
             for (ProxyPlayer invitedPlayer : chosenPlayers.asProxyPlayers()) {
                 coop.addInvite(invitedPlayer.uuid());
-                player.sendMessage("§b[Co-op] §eYou invited " + players[i] + " to a SkyBlock co-op!");
+                player.sendMessage("<b>[Co-op] <e>You invited {} to a SkyBlock co-op!", players[i]);
                 i++;
 
                 if (!invitedPlayer.isOnline().join()) continue;
 
-                invitedPlayer.sendMessage("§b----------------------------------------");
-                invitedPlayer.sendMessage(player.getFullDisplayName() + " §einvited you to a SkyBlock co-op!");
-                invitedPlayer.sendMessage(Component.text("§6Click here §eto view!")
-                        .hoverEvent(Component.text("§eClick here to view the invite"))
-                        .clickEvent(ClickEvent.runCommand("/coopcheck")));
-                invitedPlayer.sendMessage("§b----------------------------------------");
+                invitedPlayer.sendMessage("<b>----------------------------------------");
+                invitedPlayer.sendMessage("{} <e>invited you to a SkyBlock co-op!",
+                        player.getFullDisplayName());
+                invitedPlayer.sendMessage("<hover:'<e>Click here to view the invite'><click:run:'/coopcheck'>" +
+                        "<6>Click here <e>to view!</click></hover>");
+                invitedPlayer.sendMessage("<b>----------------------------------------");
             }
 
-            player.sendMessage(Component.text("§eUse §b/coop §eor §a§lCLICK THIS §efor status!")
-                    .hoverEvent(Component.text("§eClick here to view the invite"))
-                    .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/coopcheck")));
+            player.sendMessage("<hover:'<e>Click here to view the invite'><click:run:'/coopcheck'>" +
+                    "<e>Use <b>/coop <e>or <a><l>CLICK THIS </l><e>for status!</click></hover>");
 
             coop.save();
         }, args);
@@ -121,21 +118,19 @@ public class CoopCommand extends HypixelCommand {
 
         if (coop != null) {
             if (coop.members().contains(player.getUuid())) {
-                player.sendMessage("§cYou are already in a co-op!");
-                player.sendMessage("§eRun §a/coopleave §eto leave your current co-op.");
+                player.sendMessage("<c>You are already in a co-op!");
+                player.sendMessage("<e>Run <a>/coopleave <e>to leave your current co-op.");
                 return true;
             }
 
             boolean isOriginator = coop.isOriginator(player.getUuid());
 
             if (isOriginator) {
-                player.sendMessage(Component.text("§eYou already have an outgoing co-op invite! §a§lCLICK TO VIEW!")
-                        .hoverEvent(Component.text("§eClick here to view the invite"))
-                        .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/coopcheck")));
+                player.sendMessage("<hover:'<e>Click here to view the invite'><click:run:'/coopcheck'>" +
+                        "<e>You already have an outgoing co-op invite! <a><l>CLICK TO VIEW!</click></hover>");
             } else {
-                player.sendMessage(Component.text("§cYou already have an incoming co-op invite! §a§lCLICK TO VIEW!")
-                        .hoverEvent(Component.text("§eClick here to view the invite"))
-                        .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/coopcheck")));
+                player.sendMessage("<hover:'<e>Click here to view the invite'><click:run:'/coopcheck'>" +
+                        "<c>You already have an incoming co-op invite! <a><l>CLICK TO VIEW!</click></hover>");
             }
             return true;
         }

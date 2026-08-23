@@ -155,7 +155,7 @@ public class DefaultGameCountdown implements GameCountdownController {
         if (!canStartCheck.canContinue()) {
             terminate();
             onCancelled.run();
-            eventDispatcher.accept(new CountdownCancelledEvent(game, "§cWe don't have enough players! Start cancelled."));
+            eventDispatcher.accept(new CountdownCancelledEvent(game, "<c>We don't have enough players! Start cancelled."));
             return;
         }
 

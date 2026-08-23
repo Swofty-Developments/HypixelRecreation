@@ -15,7 +15,7 @@ public class NPCSilnar extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§fSilnar", "§e§lCLICK"};
+				return new String[]{"<f>Silnar", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -52,29 +52,29 @@ public class NPCSilnar extends HypixelNPC {
 		return Stream.of(
 				DialogueSet.builder()
 						.key("idle")
-						.lines(new String[]{
-								"§fSee that giant cliff with the §dgiant crystal§f?",
-								"§bAt night§f, my friends host a §5secret meeting §f in a nearby §5secret cave§f.",
-								"§fDrop by some time, our §5secret club §fis open!",
-								"§fIf my friends approve of you, they'll give you a special item.",
-								"§fCome back to me then and show it to me!"
-						})
+						.lines(
+								"<f>See that giant cliff with the <d>giant crystal<f>?",
+								"<b>At night<f>, my friends host a <5>secret meeting <f> in a nearby <5>secret cave<f>.",
+								"<f>Drop by some time, our <5>secret club <f>is open!",
+								"<f>If my friends approve of you, they'll give you a special item.",
+								"<f>Come back to me then and show it to me!"
+						)
 						.build(),
 				DialogueSet.builder()
 						.key("wearing-fallen-star-helmet")
-						.lines(new String[]{
-								"§fHurrah! A fellow member of the §5Cult of the Fallen Star§f!",
-								"§fHey, I've crafted new tech to let us locate §5Fallen Stars §feasily.",
-								"§fCheck it out!",
-						})
+						.lines(
+								"<f>Hurrah! A fellow member of the <5>Cult of the Fallen Star<f>!",
+								"<f>Hey, I've crafted new tech to let us locate <5>Fallen Stars <f>easily.",
+								"<f>Check it out!"
+						)
 						.build(),
 				DialogueSet.builder()
 						.key("after-claiming-fallen-star-lozenge")
-						.lines(new String[]{
-								"§fWith the §5Fallen Star Lozenge§f, you can find §5Fallen Stars §fmuch easier!",
-								"§fNow go find some stars, but don't forget about the next meeting of the §5Cult§f!",
-								"§fI expect to see you there!"
-						})
+						.lines(
+								"<f>With the <5>Fallen Star Lozenge<f>, you can find <5>Fallen Stars <f>much easier!",
+								"<f>Now go find some stars, but don't forget about the next meeting of the <5>Cult<f>!",
+								"<f>I expect to see you there!"
+						)
 						.build()
 		).toArray(DialogueSet[]::new);
 	}

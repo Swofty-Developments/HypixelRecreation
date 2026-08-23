@@ -25,7 +25,7 @@ public class SnowLayerPlacement extends PlacementRule {
         BlockFace blockFace = placementState.blockFace();
 
         Block block = instance.getBlock(blockPosition);
-        return (block.isAir() || block == block()) && blockFace == BlockFace.TOP;
+        return (block.air() || block == block()) && blockFace == BlockFace.TOP;
     }
 
     @Override

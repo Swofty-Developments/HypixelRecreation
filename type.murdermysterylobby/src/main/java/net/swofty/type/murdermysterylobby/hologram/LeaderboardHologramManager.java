@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.player.PlayerEntityInteractEvent;
 import net.minestom.server.instance.Instance;
 import net.swofty.commons.murdermystery.*;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointMurderMysteryLeaderboardPreferences;
 import net.swofty.type.generic.data.handlers.MurderMysteryDataHandler;
 import net.swofty.type.generic.entity.InteractionEntity;
@@ -127,7 +128,7 @@ public class LeaderboardHologramManager {
 
     public static void refreshHologramForPlayer(HypixelPlayer player, MurderMysteryLeaderboardHologram hologram) {
         PlayerLeaderboardState state = getState(player.getUuid());
-        String[] lines = hologram.getHologramLines(player, state);
+        String[] lines = serialize(hologram.getHologramLines(player, state));
 
         PlayerHolograms.ExternalPlayerHologram externalHologram = PlayerHolograms.ExternalPlayerHologram.builder()
                 .pos(hologram.getPosition())
@@ -137,7 +138,7 @@ public class LeaderboardHologramManager {
                 .spacing(0.42)
                 .displayFunction(p -> {
                     PlayerLeaderboardState s = getState(p.getUuid());
-                    return hologram.getHologramLines(p, s);
+                    return serialize(hologram.getHologramLines(p, s));
                 })
                 .build();
 
@@ -147,7 +148,7 @@ public class LeaderboardHologramManager {
 
     public static void refreshSettingsHologramForPlayer(HypixelPlayer player) {
         PlayerLeaderboardState state = getState(player.getUuid());
-        String[] lines = getSettingsHologramLines(state);
+        String[] lines = serialize(getSettingsHologramLines(state));
 
         PlayerHolograms.ExternalPlayerHologram externalHologram = PlayerHolograms.ExternalPlayerHologram.builder()
                 .pos(SETTINGS_HOLOGRAM_POS)
@@ -157,7 +158,7 @@ public class LeaderboardHologramManager {
                 .spacing(0.42)
                 .displayFunction(p -> {
                     PlayerLeaderboardState s = getState(p.getUuid());
-                    return getSettingsHologramLines(s);
+                    return serialize(getSettingsHologramLines(s));
                 })
                 .build();
 
@@ -165,16 +166,24 @@ public class LeaderboardHologramManager {
         PlayerHolograms.addExternalPlayerHologram(externalHologram);
     }
 
-    private static String[] getSettingsHologramLines(PlayerLeaderboardState state) {
+    private static List<Text> getSettingsHologramLines(PlayerLeaderboardState state) {
         String viewDisplay = state.view() == MurderMysteryLeaderboardView.TOP_10 ? "Top 10" : "Players Near";
-        return new String[] {
-                "§b§nLeaderboard Settings",
-                "§7Mode: §a" + state.mode().getDisplayName(),
-                "§7Time: §a" + state.period().getDisplayName(),
-                "§7View: §a" + viewDisplay,
-                "§7Players: §aAll",
-                "§6Click to change settings!"
-        };
+        return List.of(
+                Text.of("<b><n>Leaderboard Settings"),
+                Text.of("<7>Mode: <a>{}", state.mode().getDisplayName()),
+                Text.of("<7>Time: <a>{}", state.period().getDisplayName()),
+                Text.of("<7>View: <a>{}", viewDisplay),
+                Text.of("<7>Players: <a>All"),
+                Text.of("<6>Click to change settings!")
+        );
+    }
+
+    private static String[] serialize(List<Text> lines) {
+        String[] serialized = new String[lines.size()];
+        for (int index = 0; index < lines.size(); index++) {
+            serialized[index] = lines.get(index).serialize();
+        }
+        return serialized;
     }
 
     public static void refreshAllHologramsForPlayer(HypixelPlayer player) {

@@ -16,7 +16,7 @@ pool:
   - item: HUNTING_KNIFE
     price: 35
   - item: IRON_DAGGER
-    price: 19
+    price: 38
   - item: IRON_GREATSWORD
     price: 54
   - item: IRON_HALBERD
@@ -35,10 +35,6 @@ pool:
     price: 34
   - item: RUSTY_MACE
     price: 17
-  - item: SHORT_AXE
-    price: 10
-  - item: SHORT_SWORD
-    price: 24
   - item: SPIKED_MACE
     price: 28
   - item: STEEL_DAGGER
@@ -56,6 +52,40 @@ pool:
   - item: STILETTO_DAGGER
     price: 33
   - item: WAR_BOW
-    price: 30
+    price: 50
   - item: WAR_GREAT_AXE
     price: 55
+  - item: WEATHERED_ORB
+    price: 15
+  - item: WOODEN_STAFF
+    price: 18
+  - item: UNCOMMON_RUSTY_HALBERD
+    price: 34
+  - item: GOLD_KNIFE
+    price: 45
+  - item: UNCOMMON_IRON_HALBERD
+    price: 55
+  - item: KNIGHT_SWORD
+    price: 17
+  - item: SILVER_DAGGER
+    price: 28
+  - item: GOLD_MACE
+    price: 49
+  - item: GOLD_SWORD
+    price: 47
+  - item: BRONZE_HALBERD
+    price: 17
+  - item: BRONZE_GREATSWORD
+    price: 34
+  - item: BRONZE_DAGGER
+    price: 27
+  - item: GOLD_GREATSWORD
+    price: 54
+  - item: STEELBOUND_BOW
+    price: 50
+  - item: BRONZE_MACE
+    price: 19
+  - item: COMMON_SPIKED_MACE
+    price: 28
+  - item: UNCOMMON_IRON_SWORD
+    price: 34

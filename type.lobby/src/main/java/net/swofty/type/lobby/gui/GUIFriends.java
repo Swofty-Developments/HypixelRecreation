@@ -6,10 +6,10 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.friend.Friend;
 import net.swofty.commons.friend.FriendData;
 import net.swofty.commons.presence.PresenceInfo;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointFriendSort;
 import net.swofty.type.generic.data.datapoints.DatapointString;
@@ -17,7 +17,7 @@ import net.swofty.type.generic.experience.PlayerExperienceHandler;
 import net.swofty.type.generic.friend.FriendManager;
 import net.swofty.type.generic.gui.HypixelSignGUI;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -68,16 +68,14 @@ public class GUIFriends extends HypixelInventoryGUI {
             set(new GUIItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.createNamedItemStack(Material.MAGENTA_STAINED_GLASS_PANE);
+                    return ItemStacks.named(Material.MAGENTA_STAINED_GLASS_PANE, "");
                 }
             });
         }
 
-        // Get friend data
         FriendData friendData = FriendManager.getFriendData(player);
         List<Friend> allFriendsUnfiltered = friendData != null ? friendData.getFriends() : new ArrayList<>();
 
-        // Apply search filter if set
         List<Friend> allFriends;
         if (searchFilter != null && !searchFilter.isEmpty()) {
             String lowerFilter = searchFilter.toLowerCase();
@@ -95,40 +93,34 @@ public class GUIFriends extends HypixelInventoryGUI {
             allFriends = allFriendsUnfiltered;
         }
 
-        // Get presence data for all friends
         List<UUID> friendUuids = allFriends.stream().map(Friend::getUuid).collect(Collectors.toList());
         List<PresenceInfo> presenceList = FriendManager.getPresenceBulk(friendUuids);
         Map<UUID, PresenceInfo> presenceMap = presenceList.stream()
                 .collect(Collectors.toMap(PresenceInfo::getUuid, p -> p, (a, b) -> a));
 
-        // Get sort preferences
         DatapointFriendSort.FriendSortData sortData = player.getDataHandler()
                 .get(HypixelDataHandler.Data.FRIEND_SORT, DatapointFriendSort.class).getValue();
 
-        // Sort friends based on preferences
         List<FriendDisplayEntry> sortedFriends = sortFriends(allFriends, presenceMap, sortData);
 
-        // Calculate pagination
         int totalPages = Math.max(1, (int) Math.ceil((double) sortedFriends.size() / FRIENDS_PER_PAGE));
         currentPage = Math.min(currentPage, totalPages);
         int startIndex = (currentPage - 1) * FRIENDS_PER_PAGE;
         int endIndex = Math.min(startIndex + FRIENDS_PER_PAGE, sortedFriends.size());
         List<FriendDisplayEntry> pageEntries = sortedFriends.subList(startIndex, endIndex);
 
-        // Header Row - Player's own head (slot 2)
         set(new GUIClickableItem(2) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                String displayName = player.getFullDisplayName();
-                return ItemStackCreator.getStackHead(
-                        displayName,
+                return ItemStacks.head(
                         player.getSkin(),
-                        1,
-                        "§7Hypixel Level: §6" + level,
-                        "§7Achievement Points: §e" + StringUtility.commaify(achievementPoints),
-                        "§7Guild: §bNone",
-                        "",
-                        "§eClick to go back!"
+                        player.getFullDisplayName(),
+                        Text.of("""
+                                <7>Hypixel Level: <6>{}
+                                <7>Achievement Points: <e>{:,}
+                                <7>Guild: <b>None
+
+                                <e>Click to go back!""", level, achievementPoints).lines()
                 );
             }
 
@@ -138,36 +130,28 @@ public class GUIFriends extends HypixelInventoryGUI {
             }
         });
 
-        // Friends tab (slot 3) - current tab indicator
         set(new GUIItem(3) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.enchant(ItemStackCreator.getStackHead(
-                        "§aFriends",
-                        "e063eedb2184354bd43a19deffba51b53dd6b7222f8388caa239cabcdce84",
-                        1,
-                        "§7View your Hypixel friends' profiles,",
-                        "§7and interact with your online friends!",
-                        "",
-                        "§eCurrently viewing!"
-                ));
+                return ItemStacks.enchanted(ItemStacks.head("e063eedb2184354bd43a19deffba51b53dd6b7222f8388caa239cabcdce84", """
+                        <a>Friends
+                        <7>View your Hypixel friends' profiles,
+                        <7>and interact with your online friends!
+
+                        <e>Currently viewing!"""));
             }
         });
 
-        // Party tab (slot 4)
         set(new GUIClickableItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                        "§aParty",
-                        "667963ca1ffdc24a10b397ff8161d0da82d6a3f4788d5f67f1a9f9bfbc1eb1",
-                        1,
-                        "§7Create a party and join up with",
-                        "§7other players to play games",
-                        "§7together!",
-                        "",
-                        "§eClick to view!"
-                );
+                return ItemStacks.head("667963ca1ffdc24a10b397ff8161d0da82d6a3f4788d5f67f1a9f9bfbc1eb1", """
+                        <a>Party
+                        <7>Create a party and join up with
+                        <7>other players to play games
+                        <7>together!
+
+                        <e>Click to view!""");
             }
 
             @Override
@@ -176,53 +160,41 @@ public class GUIFriends extends HypixelInventoryGUI {
             }
         });
 
-        // Guild tab (slot 5) - non-functional per user request
         set(new GUIItem(5) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                        "§aGuild",
-                        "fe8b59f8cce510809427c3843cf575fae8fe6a8b7d1560dd46958d148563815",
-                        1,
-                        "§7Form a guild with other Hypixel",
-                        "§7players to conquer game modes and",
-                        "§7work towards common Hypixel",
-                        "§7rewards."
-                );
+                return ItemStacks.head("fe8b59f8cce510809427c3843cf575fae8fe6a8b7d1560dd46958d148563815", """
+                        <a>Guild
+                        <7>Form a guild with other Hypixel
+                        <7>players to conquer game modes and
+                        <7>work towards common Hypixel
+                        <7>rewards.""");
             }
         });
 
-        // Recent Players tab (slot 6) - non-functional per user request
         set(new GUIItem(6) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                        "§aRecent Players",
-                        "9993a356809532d696841a37a0549b81b159b79a7b2919cff4e5abdfea83d66",
-                        1,
-                        "§7View players you have played recent",
-                        "§7games with."
-                );
+                return ItemStacks.head("9993a356809532d696841a37a0549b81b159b79a7b2919cff4e5abdfea83d66", """
+                        <a>Recent Players
+                        <7>View players you have played recent
+                        <7>games with.""");
             }
         });
 
-        // Add Friend button (slot 18)
         set(new GUIClickableItem(18) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aAdd Friend",
-                        Material.WRITABLE_BOOK,
-                        1,
-                        "§7Click to add a friend to your friend",
-                        "§7list.",
-                        "",
-                        "§7Friends can see what each other",
-                        "§7are doing on the network, and can",
-                        "§7see when each other are online.",
-                        "",
-                        "§eClick to add a friend!"
-                );
+                return ItemStacks.item(Material.WRITABLE_BOOK, """
+                        <a>Add Friend
+                        <7>Click to add a friend to your friend
+                        <7>list.
+
+                        <7>Friends can see what each other
+                        <7>are doing on the network, and can
+                        <7>see when each other are online.
+
+                        <e>Click to add a friend!""");
             }
 
             @Override
@@ -237,10 +209,8 @@ public class GUIFriends extends HypixelInventoryGUI {
             }
         });
 
-        // Close button (slot 19)
         set(GUIClickableItem.getCloseItem(19));
 
-        // Change Sort button (slot 25)
         set(new GUIClickableItem(25) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
@@ -251,26 +221,23 @@ public class GUIFriends extends HypixelInventoryGUI {
                 };
                 String orderText = sortData.reversed ? "Reversed" : "Normal";
 
-                return ItemStackCreator.getStack(
-                        "§aChange Sort",
-                        Material.HOPPER,
-                        1,
-                        "§7Current sort: §b" + currentSort,
-                        "§7Sorting order: §b" + orderText,
-                        "",
-                        "§bDefault§7: Alphabetical order, but",
-                        "§7show online players first",
-                        "§bAlphabetical§7: Show everyone",
-                        "§7listed from A-Z",
-                        "§bLast Online§7: Sorts by who was",
-                        "§7most recently online",
-                        "",
-                        "§eLEFT CLICK§7 to change between",
-                        "§7all the available sorting options.",
-                        "",
-                        "§eRIGHT CLICK§7 to reverse the",
-                        "§7current order!"
-                );
+                return ItemStacks.item(Material.HOPPER, """
+                        <a>Change Sort
+                        <7>Current sort: <b>{}
+                        <7>Sorting order: <b>{}
+
+                        <b>Default<7>: Alphabetical order, but
+                        <7>show online players first
+                        <b>Alphabetical<7>: Show everyone
+                        <7>listed from A-Z
+                        <b>Last Online<7>: Sorts by who was
+                        <7>most recently online
+
+                        <e>LEFT CLICK<7> to change between
+                        <7>all the available sorting options.
+
+                        <e>RIGHT CLICK<7> to reverse the
+                        <7>current order!""", currentSort, orderText);
             }
 
             @Override
@@ -290,45 +257,36 @@ public class GUIFriends extends HypixelInventoryGUI {
             }
         });
 
-        // Search Players button (slot 26)
         int matchingCount = allFriends.size();
         set(new GUIClickableItem(26) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (searchFilter != null && !searchFilter.isEmpty()) {
-                    return ItemStackCreator.enchant(ItemStackCreator.getStack(
-                            "§aSearch: §e" + searchFilter,
-                            Material.OAK_SIGN,
-                            1,
-                            "§7Currently filtering by: §f" + searchFilter,
-                            "§7Showing §e" + matchingCount + "§7 matching friends",
-                            "",
-                            "§eLEFT CLICK§7 to search for a",
-                            "§7different player.",
-                            "",
-                            "§eRIGHT CLICK§7 to clear the",
-                            "§7search filter."
-                    ));
+                    return ItemStacks.enchanted(ItemStacks.item(Material.OAK_SIGN, """
+                            <a>Search: <e>{0}
+                            <7>Currently filtering by: <f>{0}
+                            <7>Showing <e>{1}<7> matching friends
+
+                            <e>LEFT CLICK<7> to search for a
+                            <7>different player.
+
+                            <e>RIGHT CLICK<7> to clear the
+                            <7>search filter.""", searchFilter, matchingCount));
                 } else {
-                    return ItemStackCreator.getStack(
-                            "§aSearch Players",
-                            Material.OAK_SIGN,
-                            1,
-                            "§7Search for a player by name",
-                            "§7in your friends list.",
-                            "",
-                            "§eClick to search!"
-                    );
+                    return ItemStacks.item(Material.OAK_SIGN, """
+                            <a>Search Players
+                            <7>Search for a player by name
+                            <7>in your friends list.
+
+                            <e>Click to search!""");
                 }
             }
 
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer player) {
                 if (e.getClick() instanceof Click.Right && searchFilter != null && !searchFilter.isEmpty()) {
-                    // Clear the search filter
                     new GUIFriends(1).open(player);
                 } else {
-                    // Open sign GUI to search
                     player.closeInventory();
                     new HypixelSignGUI(player).open(new String[]{"Enter player", "name to search"})
                             .thenAccept(name -> {
@@ -342,7 +300,6 @@ public class GUIFriends extends HypixelInventoryGUI {
             }
         });
 
-        // Display friends
         for (int i = 0; i < FRIEND_SLOTS.length; i++) {
             int slot = FRIEND_SLOTS[i];
             if (i < pageEntries.size()) {
@@ -351,17 +308,13 @@ public class GUIFriends extends HypixelInventoryGUI {
             }
         }
 
-        // Previous page arrow (slot 45)
         if (currentPage > 1) {
             set(new GUIClickableItem(45) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§aPrevious Page",
-                            Material.ARROW,
-                            1,
-                        "§7Page " + (currentPage - 1) + "/" + totalPages
-                    );
+                    return ItemStacks.item(Material.ARROW, """
+                            <a>Previous Page
+                            <7>Page {}/{}""", currentPage - 1, totalPages);
                 }
 
                 @Override
@@ -371,17 +324,13 @@ public class GUIFriends extends HypixelInventoryGUI {
             });
         }
 
-        // Next page arrow (slot 53)
         if (currentPage < totalPages) {
             set(new GUIClickableItem(53) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§aNext Page",
-                            Material.ARROW,
-                            1,
-                        "§7Page " + (currentPage + 1) + "/" + totalPages
-                    );
+                    return ItemStacks.item(Material.ARROW, """
+                            <a>Next Page
+                            <7>Page {}/{}""", currentPage + 1, totalPages);
                 }
 
                 @Override
@@ -391,26 +340,21 @@ public class GUIFriends extends HypixelInventoryGUI {
             });
         }
 
-        // Page indicator (slot 49)
         int totalFriendCount = allFriendsUnfiltered.size();
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (searchFilter != null && !searchFilter.isEmpty()) {
-                    return ItemStackCreator.getStack(
-                        "§aPage " + currentPage + "/" + totalPages,
-                            Material.BOOK,
-                            1,
-                            "§7Showing §e" + matchingCount + "§7 of §e" + totalFriendCount + "§7 friends",
-                            "§7Searching for: §f" + searchFilter
-                    );
+                    return ItemStacks.item(Material.BOOK, """
+                            <a>Page {}/{}
+                            <7>Showing <e>{}<7> of <e>{}<7> friends
+                            <7>Searching for: <f>{}""",
+                            currentPage, totalPages, matchingCount, totalFriendCount, searchFilter);
                 } else {
-                    return ItemStackCreator.getStack(
-                        "§aPage " + currentPage + "/" + totalPages,
-                            Material.BOOK,
-                            1,
-                            "§7Total friends: §e" + totalFriendCount
-                    );
+                    return ItemStacks.item(Material.BOOK, """
+                            <a>Page {}/{}
+                            <7>Total friends: <e>{}""",
+                            currentPage, totalPages, totalFriendCount);
                 }
             }
         });
@@ -427,8 +371,8 @@ public class GUIFriends extends HypixelInventoryGUI {
         Comparator<FriendDisplayEntry> comparator = switch (sortData.sortType) {
             case DEFAULT -> Comparator
                     .comparing((FriendDisplayEntry e) -> !e.isOnline())
-                    .thenComparing(e -> e.getDisplayName().toLowerCase());
-            case ALPHABETICAL -> Comparator.comparing(e -> e.getDisplayName().toLowerCase());
+                    .thenComparing(e -> e.getDisplayName().plain().toLowerCase());
+            case ALPHABETICAL -> Comparator.comparing(e -> e.getDisplayName().plain().toLowerCase());
             case LAST_ONLINE -> Comparator.comparing(FriendDisplayEntry::getLastSeen).reversed();
         };
 
@@ -444,72 +388,62 @@ public class GUIFriends extends HypixelInventoryGUI {
         return new GUIClickableItem(slot) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                List<String> lore = new ArrayList<>();
+                List<Text> lore = new ArrayList<>();
 
-                // Get friend's level and achievement points
                 try {
                     HypixelDataHandler friendData = HypixelDataHandler.getOfOfflinePlayer(entry.getUuid());
                     long friendLevel = friendData.get(HypixelDataHandler.Data.HYPIXEL_EXPERIENCE,
                             net.swofty.type.generic.data.datapoints.DatapointHypixelExperience.class).getValue();
-                    int friendLevelDisplay = (int) (friendLevel / 2500); // Approximate level calculation
-                    lore.add("§7Hypixel Level: §6" + friendLevelDisplay);
+                    int friendLevelDisplay = (int) (friendLevel / 2500);
+                    lore.add(Text.of("<7>Hypixel Level: <6>{}", friendLevelDisplay));
                 } catch (Exception e) {
-                    lore.add("§7Hypixel Level: §6?");
+                    lore.add(Text.of("<7>Hypixel Level: <6>?"));
                 }
 
-                lore.add("§7Guild: §bNone");
-                lore.add("");
+                lore.add(Text.of("<7>Guild: <b>None"));
+                lore.add(Text.empty());
 
                 if (entry.isOnline()) {
                     String server = entry.getServerInfo();
                     if (server != null && !server.isEmpty()) {
-                        lore.add("§aOnline: §e" + server);
+                        lore.add(Text.of("<a>Online: <e>{}", server));
                     } else {
-                        lore.add("§aOnline");
+                        lore.add(Text.of("<a>Online"));
                     }
                 } else {
-                    String lastSeenText = formatLastSeen(entry.getLastSeen());
-                    lore.add("§7Last Online: §b" + lastSeenText);
+                    lore.add(Text.of("<7>Last Online: <b>{}", formatLastSeen(entry.getLastSeen())));
                 }
 
                 if (entry.isBestFriend()) {
-                    lore.add("");
-                    lore.add("§6Best Friend");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<6>Best Friend"));
                 }
 
-                lore.add("");
-                lore.add("§eLeft-click to view profile");
-                lore.add("§eShift-click to remove friend");
+                lore.add(Text.empty());
+                lore.add(Text.of("<e>Left-click to view profile"));
+                lore.add(Text.of("<e>Shift-click to remove friend"));
 
-                String namePrefix = entry.isOnline() ? "§a" : "§7";
-                String displayName = namePrefix + entry.getDisplayName();
-                if (entry.isBestFriend()) {
-                    displayName = "§6" + displayName;
-                }
+                String namePrefix = entry.isOnline() ? "<a>" : "<7>";
+                Text displayName = Text.of((entry.isBestFriend() ? "<6>" : "") + namePrefix + "{}",
+                        entry.getDisplayName());
 
-                // Get skin for the friend
                 PlayerSkin skin = getFriendSkin(entry.getUuid());
                 if (skin != null) {
-                    return ItemStackCreator.getStackHead(displayName, skin, 1, lore);
+                    return ItemStacks.head(skin, displayName, lore);
                 } else {
-                    // Fallback to default Steve head
-                    return ItemStackCreator.getStackHead(displayName,
-                            "8667ba71b85a4004af54457a9734eed7e09dcc6abe4dd49f4c11d4c8e3c91cfe",
-                            1, lore);
+                    return ItemStacks.head("8667ba71b85a4004af54457a9734eed7e09dcc6abe4dd49f4c11d4c8e3c91cfe",
+                            displayName, lore);
                 }
             }
 
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer player) {
                 if (e.getClick() instanceof Click.LeftShift || e.getClick() instanceof Click.RightShift) {
-                    // Remove friend
                     FriendManager.removeFriend(player, entry.getRawName());
-                    player.sendMessage("§cRemoving friend...");
-                    // Refresh the GUI
+                    player.sendMessage("<c>Removing friend...");
                     new GUIFriends(currentPage, searchFilter).open(player);
                 } else {
-                    // View profile - for now just send a message
-                    player.sendMessage("§eViewing profile of §f" + entry.getRawName() + "§e...");
+                    player.sendMessage("<e>Viewing profile of <f>{}<e>...", entry.getRawName());
                 }
             }
         };
@@ -574,7 +508,7 @@ public class GUIFriends extends HypixelInventoryGUI {
     private static class FriendDisplayEntry {
         private final Friend friend;
         private final PresenceInfo presence;
-        private String cachedDisplayName;
+        private Text cachedDisplayName;
         private String cachedRawName;
 
         public FriendDisplayEntry(Friend friend, PresenceInfo presence) {
@@ -598,7 +532,7 @@ public class GUIFriends extends HypixelInventoryGUI {
             if (presence != null) {
                 return presence.getLastSeen();
             }
-            return friend.getAddedTimestamp(); // Fallback
+            return friend.getAddedTimestamp();
         }
 
         public String getServerInfo() {
@@ -613,15 +547,15 @@ public class GUIFriends extends HypixelInventoryGUI {
             return null;
         }
 
-        public String getDisplayName() {
+        public Text getDisplayName() {
             if (cachedDisplayName == null) {
                 try {
                     cachedDisplayName = HypixelPlayer.getDisplayName(friend.getUuid());
                     if (cachedDisplayName == null || cachedDisplayName.isEmpty()) {
-                        cachedDisplayName = getRawName();
+                        cachedDisplayName = Text.literal(getRawName());
                     }
                 } catch (Exception e) {
-                    cachedDisplayName = getRawName();
+                    cachedDisplayName = Text.literal(getRawName());
                 }
             }
             return cachedDisplayName;

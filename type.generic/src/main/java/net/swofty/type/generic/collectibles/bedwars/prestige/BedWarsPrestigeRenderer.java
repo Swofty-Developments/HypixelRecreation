@@ -3,6 +3,7 @@ package net.swofty.type.generic.collectibles.bedwars.prestige;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.swofty.commons.bedwars.BedwarsLevelUtil;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.collectibles.CollectibleCategory;
 import net.swofty.type.generic.collectibles.bedwars.BedWarsCollectibleStateService;
 import net.swofty.type.generic.data.datapoints.DatapointCollectibles;
@@ -13,27 +14,27 @@ import net.swofty.type.generic.user.HypixelPlayer;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BedWarsPrestigeRenderer {
 
-    public static String renderBrackets(HypixelPlayer player) {
+    public static Text renderBrackets(HypixelPlayer player) {
         return render(player, level(player), true);
     }
 
-    public static String renderString(HypixelPlayer player) {
+    public static Text renderString(HypixelPlayer player) {
         return render(player, level(player), false);
     }
 
-    public static String renderBrackets(HypixelPlayer player, int level) {
+    public static Text renderBrackets(HypixelPlayer player, int level) {
         return render(player, level, true);
     }
 
-    public static String renderString(HypixelPlayer player, int level) {
+    public static Text renderString(HypixelPlayer player, int level) {
         return render(player, level, false);
     }
 
-    public static String renderPreview(HypixelPlayer player, int level, String schemeId, String starId, String bracketId) {
+    public static Text renderPreview(HypixelPlayer player, int level, String schemeId, String starId, String bracketId) {
         return render(level, schemeId, starId, bracketId, true);
     }
 
-    public static String renderForData(BedWarsDataHandler dataHandler, int level, boolean brackets) {
+    public static Text renderForData(BedWarsDataHandler dataHandler, int level, boolean brackets) {
         DatapointCollectibles.CollectiblesState state = dataHandler
             .get(BedWarsDataHandler.Data.COLLECTIBLES, DatapointCollectibles.class)
             .getValue();
@@ -47,7 +48,7 @@ public final class BedWarsPrestigeRenderer {
         );
     }
 
-    private static String render(HypixelPlayer player, int level, boolean brackets) {
+    private static Text render(HypixelPlayer player, int level, boolean brackets) {
         BedWarsCollectibleStateService.reconcileSelected(player, CollectibleCategory.PRESTIGE_SCHEMES);
         BedWarsCollectibleStateService.reconcileSelected(player, CollectibleCategory.PRESTIGE_STARS);
         BedWarsCollectibleStateService.reconcileSelected(player, CollectibleCategory.PRESTIGE_BRACKETS);
@@ -58,11 +59,11 @@ public final class BedWarsPrestigeRenderer {
         return render(level, schemeId, starId, bracketId, brackets);
     }
 
-    private static String render(int level, String schemeId, String starId, String bracketId, boolean brackets) {
+    private static Text render(int level, String schemeId, String starId, String bracketId, boolean brackets) {
         BedWarsPrestigeDefinitions.Scheme scheme = BedWarsPrestigeDefinitions.scheme(schemeId);
         BedWarsPrestigeDefinitions.Star star = BedWarsPrestigeDefinitions.star(starId);
         BedWarsPrestigeDefinitions.Bracket bracket = BedWarsPrestigeDefinitions.bracket(bracketId);
-        return scheme.style().render(String.valueOf(level), star.symbol(), bracket, brackets);
+        return Text.parse(scheme.style().render(String.valueOf(level), star.symbol(), bracket, brackets));
     }
 
     private static int level(HypixelPlayer player) {

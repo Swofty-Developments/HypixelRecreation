@@ -34,7 +34,7 @@ public class LanternPlacement extends PlacementRule {
         BlockUtils block = new BlockUtils(instance, blockPosition);
 
         boolean hanging = blockState.get(HANGING);
-        boolean blockUp = block.above().getBlock().isSolid();
+        boolean blockUp = block.above().getBlock().solid();
 
         if (!hanging && blockUp)
             blockState.set(HANGING.setValue(true));

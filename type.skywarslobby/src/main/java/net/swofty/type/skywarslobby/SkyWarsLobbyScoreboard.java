@@ -1,8 +1,5 @@
 package net.swofty.type.skywarslobby;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
-import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.timer.Scheduler;
@@ -11,23 +8,26 @@ import net.swofty.commons.skywars.SkyWarsLevelColor;
 import net.swofty.commons.skywars.SkywarsLeaderboardMode;
 import net.swofty.commons.skywars.SkywarsLeaderboardPeriod;
 import net.swofty.commons.skywars.SkywarsModeStats;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsModeStats;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.scoreboard.HypixelScoreboard;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarslobby.level.SkywarsLevelRegistry;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class SkyWarsLobbyScoreboard {
+	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yy");
+	private static final Text BLANK = Text.literal(" ");
 	private static final HypixelScoreboard scoreboard = new HypixelScoreboard();
 	private static Integer animationFrame = 0;
 
@@ -65,29 +65,26 @@ public class SkyWarsLobbyScoreboard {
 
 				int level = SkywarsLevelRegistry.calculateLevel(experience);
 
-				List<Component> lines = new ArrayList<>();
-				lines.add(I18n.t("scoreboard.common.date_line", Argument.tagResolver(Formatter.date("date", LocalDateTime.now(ZoneId.systemDefault()))), Argument.string("id", HypixelConst.getServerName())));
-				lines.add(Component.space());
-				lines.add(I18n.t("scoreboard.skywars_lobby.your_level_line",
-					Component.text(SkyWarsLevelColor.getLevelDisplay(level))));
-				lines.add(Component.space());
-				lines.add(I18n.t("scoreboard.skywars_lobby.solo_kills_line", Component.text(String.valueOf(soloKills))));
-				lines.add(I18n.t("scoreboard.skywars_lobby.solo_wins_line", Component.text(String.valueOf(soloWins))));
-				lines.add(I18n.t("scoreboard.skywars_lobby.doubles_kills_line", Component.text(String.valueOf(doublesKills))));
-				lines.add(I18n.t("scoreboard.skywars_lobby.doubles_wins_line", Component.text(String.valueOf(doublesWins))));
-				lines.add(Component.space());
-				lines.add(I18n.t("scoreboard.skywars_lobby.coins_line", Component.text(String.valueOf(coins))));
-				lines.add(I18n.t("scoreboard.skywars_lobby.souls_line", Component.text(String.valueOf(souls))));
-				lines.add(I18n.t("scoreboard.skywars_lobby.tokens_line", Component.text(String.valueOf(tokens))));
-				lines.add(Component.space());
-				lines.add(I18n.t("scoreboard.common.footer"));
+				List<Text> lines = new ArrayList<>();
+				lines.add(Text.key("scoreboard.common.date_line",
+					DATE_FORMAT.format(LocalDateTime.now(ZoneId.systemDefault())),
+					HypixelConst.getServerName()));
+				lines.add(BLANK);
+				lines.add(Text.key("scoreboard.skywars_lobby.your_level_line",
+					SkyWarsLevelColor.getLevelDisplay(level)));
+				lines.add(BLANK);
+				lines.add(Text.key("scoreboard.skywars_lobby.solo_kills_line", soloKills));
+				lines.add(Text.key("scoreboard.skywars_lobby.solo_wins_line", soloWins));
+				lines.add(Text.key("scoreboard.skywars_lobby.doubles_kills_line", doublesKills));
+				lines.add(Text.key("scoreboard.skywars_lobby.doubles_wins_line", doublesWins));
+				lines.add(BLANK);
+				lines.add(Text.key("scoreboard.skywars_lobby.coins_line", coins));
+				lines.add(Text.key("scoreboard.skywars_lobby.souls_line", souls));
+				lines.add(Text.key("scoreboard.skywars_lobby.tokens_line", tokens));
+				lines.add(BLANK);
+				lines.add(Text.key("scoreboard.common.footer"));
 
-				if (!scoreboard.hasScoreboard(player)) {
-					scoreboard.createScoreboard(player, Component.text(getSidebarName(animationFrame, l)));
-				}
-
-				scoreboard.updateLines(player, lines);
-				scoreboard.updateTitle(player, Component.text(getSidebarName(animationFrame, l)));
+				scoreboard.update(player, getSidebarName(animationFrame, l), lines);
 			}
 			return TaskSchedule.tick(4);
 		});
@@ -97,19 +94,19 @@ public class SkyWarsLobbyScoreboard {
 		scoreboard.removeScoreboard(player);
 	}
 
-	private static String getSidebarName(int counter, Locale locale) {
-		String baseText = I18n.string("scoreboard.skywars_lobby.title_base", locale);
-		String[] colors = {"§f§l", "§e§l", "§6§l"};
+	private static Text getSidebarName(int counter, Locale locale) {
+		String baseText = Text.key("scoreboard.skywars_lobby.title_base").plain(locale);
 
 		if (counter > 0 && counter <= 7) {
-			return colors[0] + baseText.substring(0, counter - 1) +
-					colors[1] + baseText.charAt(counter - 1) +
-					colors[2] + baseText.substring(counter);
+			return Text.of("<f><l>{}<e>{}<6>{}",
+					baseText.substring(0, counter - 1),
+					String.valueOf(baseText.charAt(counter - 1)),
+					baseText.substring(counter));
 		} else if ((counter >= 8 && counter <= 18) ||
 				(counter >= 25 && counter <= 29)) {
-			return colors[0] + baseText;
+			return Text.of("<f><l>{}", baseText);
 		} else {
-			return colors[1] + baseText;
+			return Text.of("<e><l>{}", baseText);
 		}
 	}
 }

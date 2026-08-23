@@ -12,6 +12,7 @@ import net.minestom.server.particle.Particle;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.UnderstandableProxyServer;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyInformation;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
@@ -56,7 +57,7 @@ public class ActionPlayerLaunchPads implements HypixelEventClass {
         player.setInLaunchpad(true);
 
         boolean accepted = pad.getShouldAllow().apply(player);
-        String rejectionMessage = pad.getRejectionMessage();
+        Text rejectionMessage = Text.parse(pad.getRejectionMessage());
         if (!accepted && player.getRank().isStaff()) {
             accepted = true;
             player.getLogHandler().debug("As a staff member, you have bypassed the launchpad requirement.");
@@ -84,7 +85,8 @@ public class ActionPlayerLaunchPads implements HypixelEventClass {
                 proxyInfo.getServerInformation(targetServerType).join();
         if (informations.isEmpty()) {
             accepted = false;
-            rejectionMessage = "§cThere are no " + StringUtility.toNormalCase(targetServerType.name()) + " servers available at the moment. Please try again later.";
+            rejectionMessage = Text.of("<c>There are no {} servers available at the moment. Please try again later.",
+                    StringUtility.toNormalCase(targetServerType.name()));
         }
 
         if (!accepted) {
@@ -129,7 +131,7 @@ public class ActionPlayerLaunchPads implements HypixelEventClass {
                         // If player is still on the same server and instance, teleport them back
                         if (player.getInstance() != null && player.getInstance().equals(armorStand.getInstance())) {
                             player.teleport(originalPosition);
-                            player.sendMessage("§cFailed to connect to the server. You have been teleported back.");
+                            player.sendMessage("<c>Failed to connect to the server. You have been teleported back.");
                         }
                         try {
                             armorStand.remove();

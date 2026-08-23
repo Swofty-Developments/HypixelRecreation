@@ -2,10 +2,8 @@ package net.swofty.type.replayviewer.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.minestom.server.coordinate.Pos;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.playback.ReplaySession;
 
@@ -37,10 +35,8 @@ public final class ReplayShareUtil {
     public static void sendShareCommandMessage(HypixelPlayer player, ReplaySession session, int tick, Pos position) {
         String fullCommand = buildShareCommand(session, position, tick);
 
-        Component message = I18n.t("replays.share_command_message")
-            .clickEvent(ClickEvent.suggestCommand(fullCommand))
-                .hoverEvent(I18n.t("replays.share_command_hover"));
-
-        player.sendMessage(message);
+        player.sendMessage(Text.of("<hover:'{}'><click:suggest:'{}'>{}",
+                Text.key("replays.share_command_hover"), fullCommand,
+                Text.key("replays.share_command_message")));
     }
 }

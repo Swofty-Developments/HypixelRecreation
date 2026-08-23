@@ -8,6 +8,7 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.UnderstandableProxyServer;
 import net.swofty.commons.protocol.objects.proxy.to.PlayerHandlerProtocol;
 import net.swofty.commons.redis.RedisClient;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.impl.ProxyUnderstandableEvent;
 import org.json.JSONObject;
 
@@ -17,11 +18,13 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 public record ProxyPlayer(UUID uuid) {
     private static final PlayerHandlerProtocol PLAYER_HANDLER = new PlayerHandlerProtocol();
     private static volatile BiFunction<UUID, UUID, CompletableFuture<String>> transferPreparation =
             (player, server) -> CompletableFuture.completedFuture(null);
+    private static volatile Consumer<UUID> transferFailure = player -> {};
 
     public static Map<UUID, CompletableFuture<Void>> waitingForTransferComplete = new ConcurrentHashMap<>();
 
@@ -35,8 +38,16 @@ public record ProxyPlayer(UUID uuid) {
                         Map.of("message", JSONComponentSerializer.json().serialize(message))));
     }
 
+    public void sendMessage(Text message) {
+        sendMessage(message.asComponent());
+    }
+
     public void sendMessage(String message) {
-        sendMessage(Component.text(message));
+        sendMessage(Text.read(message));
+    }
+
+    public void sendMessage(String markup, Object... arguments) {
+        sendMessage(Text.of(markup, arguments));
     }
 
     public void teleport(Pos pos) {
@@ -83,30 +94,54 @@ public record ProxyPlayer(UUID uuid) {
     public CompletableFuture<Void> transferToWithIndication(UUID serverToTransferTo) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         waitingForTransferComplete.put(uuid, future);
-        transferPreparation.apply(uuid, serverToTransferTo).thenAccept(document -> RedisClient.requestProxy(PLAYER_HANDLER,
+        transferPreparation.apply(uuid, serverToTransferTo)
+                .thenAccept(document -> sendTransfer(serverToTransferTo, document, future))
+                .exceptionally(error -> {
+                    failTransfer(future, error);
+                    return null;
+                });
+        return future;
+    }
+
+    public CompletableFuture<Void> transferWithoutDataTo(UUID serverToTransferTo) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        waitingForTransferComplete.put(uuid, future);
+        sendTransfer(serverToTransferTo, null, future);
+        return future;
+    }
+
+    public CompletableFuture<Void> transferWithoutDataTo(ServerType serverType) {
+        return resolveServer(serverType).thenCompose(this::transferWithoutDataTo);
+    }
+
+    private void sendTransfer(UUID serverToTransferTo, String document, CompletableFuture<Void> future) {
+        RedisClient.requestProxy(PLAYER_HANDLER,
                         new PlayerHandlerProtocol.Request(uuid.toString(), PlayerHandlerProtocol.Action.TRANSFER_WITH_UUID,
                                 document == null
                                         ? Map.of("server_uuid", serverToTransferTo.toString())
                                         : Map.of("server_uuid", serverToTransferTo.toString(), "document", document)))
                 .thenAccept(response -> {
                     if (!response.success()) {
-                        waitingForTransferComplete.remove(uuid);
-                        future.completeExceptionally(new IllegalStateException(response.error()));
-                        sendMessage("§cUnable to transfer you: " + response.error());
+                        failTransfer(future, new IllegalStateException(response.error()));
                     }
-                })).exceptionally(error -> {
-            waitingForTransferComplete.remove(uuid);
-            future.completeExceptionally(error);
-            sendMessage("§cUnable to transfer you: " + rootMessage(error));
-            return null;
-        });
-        return future;
+                })
+                .exceptionally(error -> {
+                    failTransfer(future, error);
+                    return null;
+                });
+    }
+
+    private void failTransfer(CompletableFuture<Void> future, Throwable error) {
+        waitingForTransferComplete.remove(uuid);
+        notifyTransferFailed();
+        future.completeExceptionally(error);
+        sendMessage(Text.of("<c>Unable to transfer you: {}", rootMessage(error)));
     }
 
     public void transferTo(ServerType serverType) {
         resolveServer(serverType).thenAccept(this::transferToWithIndication)
                 .exceptionally(error -> {
-                    sendMessage("§cUnable to transfer you: " + rootMessage(error));
+                    sendMessage(Text.of("<c>Unable to transfer you: {}", rootMessage(error)));
                     return null;
                 });
     }
@@ -147,26 +182,21 @@ public record ProxyPlayer(UUID uuid) {
         transferPreparation = preparation;
     }
 
+    public static void setTransferFailure(Consumer<UUID> failure) {
+        transferFailure = failure == null ? player -> {} : failure;
+    }
+
+    private void notifyTransferFailed() {
+        try {
+            transferFailure.accept(uuid);
+        } catch (Exception ignored) {
+        }
+    }
+
     private static String rootMessage(Throwable error) {
         Throwable cause = error;
         while (cause.getCause() != null) cause = cause.getCause();
         return cause.getMessage() != null ? cause.getMessage() : cause.getClass().getSimpleName();
     }
 
-    public CompletableFuture<UUID> getBankHash() {
-        CompletableFuture<UUID> future = new CompletableFuture<>();
-        RedisClient.requestProxy(PLAYER_HANDLER,
-                        new PlayerHandlerProtocol.Request(uuid.toString(), PlayerHandlerProtocol.Action.BANK_HASH, Map.of()))
-                .thenAccept(response -> {
-                    Object bankHash = response.data().get("bankHash");
-                    future.complete(UUID.fromString((String) bankHash));
-                });
-        return future;
-    }
-
-    public void refreshCoopData(String datapoint) {
-        RedisClient.requestProxy(PLAYER_HANDLER,
-                new PlayerHandlerProtocol.Request(uuid.toString(), PlayerHandlerProtocol.Action.REFRESH_COOP_DATA,
-                        Map.of("datapoint", datapoint)));
-    }
 }

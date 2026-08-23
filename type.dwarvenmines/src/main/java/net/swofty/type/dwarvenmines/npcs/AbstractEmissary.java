@@ -2,6 +2,7 @@ package net.swofty.type.dwarvenmines.npcs;
 
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.dwarvenmines.gui.GUICommisions;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
@@ -14,7 +15,7 @@ public abstract class AbstractEmissary extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§6Emissary " + name, "§e§lCLICK"};
+				return new String[]{"<6>Emissary " + name, "<e><l>CLICK"};
 			}
 
 			@Override
@@ -39,7 +40,7 @@ public abstract class AbstractEmissary extends HypixelNPC {
 
 			@Override
 			public @NonNull String chatName(HypixelPlayer player) {
-				return "§6" + name;
+				return Text.of("<6>{}", name).serialize();
 			}
 		});
 	}

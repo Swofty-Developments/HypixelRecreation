@@ -45,7 +45,7 @@ public class ServiceAvailabilityChecker {
         }).exceptionally(ex -> {
             Logger.error(ex, "Error checking service {} availability for player {}",
                     serviceType, player.getUuid());
-            player.sendMessage("§cAn error occurred while connecting to the service.");
+            player.sendMessage("<c>An error occurred while connecting to the service.");
             if (onOffline != null) {
                 onOffline.run();
             }
@@ -123,7 +123,7 @@ public class ServiceAvailabilityChecker {
      */
     private static void notifyPlayerServiceOffline(SkyBlockPlayer player, ServiceType serviceType) {
         String serviceName = getServiceDisplayName(serviceType);
-        player.sendMessage("§c" + serviceName + " is currently offline. Please try again later.");
+        player.sendMessage("<c>{} is currently offline. Please try again later.", serviceName);
     }
 
     /**

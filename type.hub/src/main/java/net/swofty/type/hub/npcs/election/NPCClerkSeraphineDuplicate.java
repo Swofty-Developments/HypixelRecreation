@@ -4,7 +4,6 @@ import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 import java.util.stream.Stream;
@@ -16,8 +15,8 @@ public class NPCClerkSeraphineDuplicate extends HypixelNPC {
             @Override
             public String[] holograms(HypixelPlayer player) {
                 return new String[]{
-                    I18n.string("npcs_hub.election.clerk_seraphine", player.getLocale()),
-                    I18n.string("npcs_hub.election.click", player.getLocale())
+                    "<key:'npcs_hub.election.clerk_seraphine'>",
+                    "<key:'npcs_hub.election.click'>"
                 };
             }
 

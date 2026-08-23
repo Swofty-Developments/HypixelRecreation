@@ -2,8 +2,9 @@ package net.swofty.type.hub.npcs.rabbits;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.swofty.commons.text.Text;
 
 @Getter
 @AllArgsConstructor
@@ -19,18 +20,17 @@ public enum ChocolateFactoryRank {
 
     private final int level;
     private final String name;
-    private final NamedTextColor color;
+    private final TextColor color;
 
-    public Component getHologramLine() {
+    public Text getHologramLine() {
         return getHologramLine(level);
     }
 
-    public Component getHologramLine(int actualLevel) {
+    public Text getHologramLine(int actualLevel) {
         if (this == UNEMPLOYED) {
-            return Component.text(name, color);
+            return Text.of("<color:{}>{}", color, name);
         }
-        return Component.text("[" + actualLevel + "] ", NamedTextColor.GRAY)
-                .append(Component.text(name, color));
+        return Text.of("<7>[{}] <color:{}>{}", actualLevel, color, name);
     }
 
     public static ChocolateFactoryRank fromLevel(int level) {

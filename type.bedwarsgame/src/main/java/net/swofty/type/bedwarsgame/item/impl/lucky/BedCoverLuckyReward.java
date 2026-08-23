@@ -15,7 +15,7 @@ public class BedCoverLuckyReward extends LuckyReward {
     public void apply(BedWarsPlayer player, Pos openedAt) {
         BedWarsMapsConfig.MapTeam team = player.getGame().getMapEntry().getConfiguration().getTeams().get(player.getTeamKey());
         if (team == null || team.getBed() == null || team.getBed().feet() == null || !player.getGame().isBedAlive(player.getTeamKey())) {
-            player.sendMessage("§cYour bed cannot be covered.");
+            player.sendMessage("<c>Your bed cannot be covered.");
             return;
         }
         Pos bed = new Pos(team.getBed().feet().x(), team.getBed().feet().y(), team.getBed().feet().z());
@@ -30,6 +30,6 @@ public class BedCoverLuckyReward extends LuckyReward {
                 }
             }
         }
-        player.sendMessage("§aYour bed was covered.");
+        player.sendMessage("<a>Your bed was covered.");
     }
 }

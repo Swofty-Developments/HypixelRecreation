@@ -9,13 +9,13 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The rotating stock. Every fifteen minute cycle each shop rolls a fresh shelf from its pool,
+ * The rotating stock. Every thirty minute cycle each shop rolls a fresh shelf from its pool,
  * seeded by the cycle number so the roll is stable within the cycle, and purchases run the
  * shelf entry down until it greys out in place the way the captures show. Quantities per entry
  * are not observable from captures; one each matches how quickly the live shelves sell out.
  */
 public final class RavengardShopStock {
-    public static final long CYCLE_MILLIS = 15 * 60 * 1000;
+    public static final long CYCLE_MILLIS = 30 * 60 * 1000;
     private static final int STOCK_PER_ENTRY = 1;
 
     private static final Map<String, Shelf> SHELVES = new ConcurrentHashMap<>();

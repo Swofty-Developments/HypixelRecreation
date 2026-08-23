@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions;
 
+
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.skyblockgeneric.event.custom.ItemCraftEvent;

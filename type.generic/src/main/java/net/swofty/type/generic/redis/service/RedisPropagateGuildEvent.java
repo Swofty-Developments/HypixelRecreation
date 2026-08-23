@@ -1,15 +1,12 @@
 package net.swofty.type.generic.redis.service;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.swofty.commons.guild.GuildEvent;
 import net.swofty.commons.guild.events.response.*;
 import net.swofty.commons.protocol.objects.guild.GuildEventPushProtocol;
 import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.commons.redis.RedisMessageContext;
 import net.swofty.commons.protocol.RedisProtocol;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.user.HypixelPlayer;
 import org.tinylog.Logger;
@@ -84,114 +81,125 @@ public class RedisPropagateGuildEvent implements RedisMessageHandler<GuildEventP
     }
 
     private void handleCreated(HypixelPlayer player, GuildCreatedResponseEvent event) {
-        sendMessage(player, "§aYou created the guild §6" + event.getGuild().getName() + "§a!");
+        sendMessage(player, "<a>You created the guild <6>{}<a>!", event.getGuild().getName());
     }
 
     private void handleInviteSent(HypixelPlayer player, GuildInviteSentResponseEvent event) {
         if (event.getInvitee().equals(player.getUuid())) {
-            sendMessage(player, HypixelPlayer.getDisplayName(event.getInviter()) + " §ehas invited you to join their guild §6" + event.getGuild().getName() + "§e!");
-            TextComponent component = LegacyComponentSerializer.legacySection().deserialize("§eYou have §c60 §eseconds to accept. §6Click here to join!");
-            component = component.hoverEvent(Component.text("§eClick to accept!"));
-            component = component.clickEvent(ClickEvent.runCommand("/guild accept " + HypixelPlayer.getRawName(event.getInviter())));
-            player.sendMessage(component);
+            sendMessage(player, "{} <e>has invited you to join their guild <6>{}<e>!",
+                displayName(event.getInviter()), event.getGuild().getName());
+            player.sendMessage("""
+                <hover:'<e>Click to accept!'><click:run:'/guild accept {}'>\
+                <e>You have <c>60 <e>seconds to accept. <6>Click here to join!</click></hover>""",
+                HypixelPlayer.getRawName(event.getInviter()));
         } else if (event.getInviter().equals(player.getUuid())) {
-            sendMessage(player, "§eYou invited " + HypixelPlayer.getDisplayName(event.getInvitee()) + " §eto your guild. They have §c60 §eseconds to accept.");
+            sendMessage(player, "<e>You invited {} <e>to your guild. They have <c>60 <e>seconds to accept.",
+                displayName(event.getInvitee()));
         }
     }
 
     private void handleMemberJoined(HypixelPlayer player, GuildMemberJoinedResponseEvent event) {
         if (event.getJoiner().equals(player.getUuid())) {
-            sendMessage(player, "§aYou joined the guild §6" + event.getGuild().getName() + "§a!");
+            sendMessage(player, "<a>You joined the guild <6>{}<a>!", event.getGuild().getName());
         } else {
-            sendMessage(player, HypixelPlayer.getDisplayName(event.getJoiner()) + " §ejoined the guild!");
+            sendMessage(player, "{} <e>joined the guild!", displayName(event.getJoiner()));
         }
     }
 
     private void handleMemberLeft(HypixelPlayer player, GuildMemberLeftResponseEvent event) {
         if (event.getLeaver().equals(player.getUuid())) {
-            sendMessage(player, "§eYou left the guild.");
+            sendMessage(player, "<e>You left the guild.");
         } else {
-            sendMessage(player, HypixelPlayer.getDisplayName(event.getLeaver()) + " §eleft the guild.");
+            sendMessage(player, "{} <e>left the guild.", displayName(event.getLeaver()));
         }
     }
 
     private void handleMemberKicked(HypixelPlayer player, GuildMemberKickedResponseEvent event) {
         if (event.getKicked().equals(player.getUuid())) {
-            String reason = event.getReason() != null && !event.getReason().isEmpty()
-                ? " §7Reason: §f" + event.getReason() : "";
-            sendMessage(player, "§cYou have been kicked from the guild!" + reason);
+            if (event.getReason() != null && !event.getReason().isEmpty()) {
+                sendMessage(player, "<c>You have been kicked from the guild! <7>Reason: <f>{}", event.getReason());
+            } else {
+                sendMessage(player, "<c>You have been kicked from the guild!");
+            }
         } else {
-            sendMessage(player, HypixelPlayer.getDisplayName(event.getKicker()) + " §ekicked " + HypixelPlayer.getDisplayName(event.getKicked()) + " §efrom the guild!");
+            sendMessage(player, "{} <e>kicked {} <e>from the guild!",
+                displayName(event.getKicker()), displayName(event.getKicked()));
         }
     }
 
     private void handleDisbanded(HypixelPlayer player, GuildDisbandedResponseEvent event) {
-        sendMessage(player, HypixelPlayer.getDisplayName(event.getDisbander()) + " §edisbanded the guild!");
+        sendMessage(player, "{} <e>disbanded the guild!", displayName(event.getDisbander()));
     }
 
     private void handleRankChanged(HypixelPlayer player, GuildRankChangedResponseEvent event) {
         if (event.getTarget().equals(player.getUuid())) {
-            boolean promoted = isPrioritized(event.getFromRank(), event.getToRank());
-            String action = promoted ? "§apromoted" : "§cdemoted";
-            sendMessage(player, "§eYou were " + action + " §eto §6" + event.getToRank() + "§e!");
+            sendMessage(player, isPrioritized(event.getFromRank(), event.getToRank())
+                ? "<e>You were <a>promoted <e>to <6>{}<e>!"
+                : "<e>You were <c>demoted <e>to <6>{}<e>!", event.getToRank());
         } else {
-            sendMessage(player, HypixelPlayer.getDisplayName(event.getChanger()) + " §echanged " + HypixelPlayer.getDisplayName(event.getTarget()) + "'s §erank from §6" + event.getFromRank() + " §eto §6" + event.getToRank() + "§e.");
+            sendMessage(player, "{} <e>changed {}'s <e>rank from <6>{} <e>to <6>{}<e>.",
+                displayName(event.getChanger()), displayName(event.getTarget()),
+                event.getFromRank(), event.getToRank());
         }
     }
 
     private void handleTransferred(HypixelPlayer player, GuildTransferredResponseEvent event) {
         if (event.getNewOwner().equals(player.getUuid())) {
-            sendMessage(player, "§aYou are now the Guild Master!");
+            sendMessage(player, "<a>You are now the Guild Master!");
         } else {
-            sendMessage(player, HypixelPlayer.getDisplayName(event.getOldOwner()) + " §etransferred guild ownership to " + HypixelPlayer.getDisplayName(event.getNewOwner()) + "§e!");
+            sendMessage(player, "{} <e>transferred guild ownership to {}<e>!",
+                displayName(event.getOldOwner()), displayName(event.getNewOwner()));
         }
     }
 
     private void handleChat(HypixelPlayer player, GuildChatResponseEvent event) {
-        String prefix = event.isOfficerChat() ? "§3Officer" : "§2Guild";
-        String senderName = HypixelPlayer.getDisplayName(event.getSender());
-        player.sendMessage(prefix + " > " + senderName + "§f: " + event.getMessage());
+        player.sendMessage(event.isOfficerChat()
+                ? "<3>Officer > {}<f>: {}"
+                : "<2>Guild > {}<f>: {}",
+            displayName(event.getSender()), event.getMessage());
     }
 
     private void handleSettingChanged(HypixelPlayer player, GuildSettingChangedResponseEvent event) {
-        String changerName = HypixelPlayer.getDisplayName(event.getChanger());
-        String settingDisplay = switch (event.getSetting().toLowerCase()) {
-            case "tag" -> "guild tag to §6" + event.getValue();
-            case "tagcolor" -> "tag color to §6" + event.getValue();
-            case "motd" -> "the MOTD";
-            case "description" -> "the description";
-            case "discord" -> "the Discord link";
-            case "rename" -> "the guild name to §6" + event.getValue();
-            case "slow" -> "slow chat to §6" + event.getValue();
-            case "finder" -> "guild finder to §6" + event.getValue();
-            default -> event.getSetting() + " to " + event.getValue();
+        Text settingDisplay = switch (event.getSetting().toLowerCase()) {
+            case "tag" -> Text.of("guild tag to <6>{}", event.getValue());
+            case "tagcolor" -> Text.of("tag color to <6>{}", event.getValue());
+            case "motd" -> Text.of("the MOTD");
+            case "description" -> Text.of("the description");
+            case "discord" -> Text.of("the Discord link");
+            case "rename" -> Text.of("the guild name to <6>{}", event.getValue());
+            case "slow" -> Text.of("slow chat to <6>{}", event.getValue());
+            case "finder" -> Text.of("guild finder to <6>{}", event.getValue());
+            default -> Text.of("{} to {}", event.getSetting(), event.getValue());
         };
-        sendMessage(player, changerName + " §eupdated " + settingDisplay + "§e.");
+        sendMessage(player, "{} <e>updated {}<e>.", displayName(event.getChanger()), settingDisplay);
     }
 
     private void handleMuteChanged(HypixelPlayer player, GuildMuteChangedResponseEvent event) {
-        String muterName = HypixelPlayer.getDisplayName(event.getMuter());
+        Text muterName = displayName(event.getMuter());
+        boolean everyone = event.getTarget().equalsIgnoreCase("everyone");
         if (event.isUnmute()) {
-            if (event.getTarget().equalsIgnoreCase("everyone")) {
-                sendMessage(player, muterName + " §eunmuted the guild chat.");
+            if (everyone) {
+                sendMessage(player, "{} <e>unmuted the guild chat.", muterName);
             } else {
-                sendMessage(player, muterName + " §eunmuted " + HypixelPlayer.getDisplayName(UUID.fromString(event.getTarget())) + "§e.");
+                sendMessage(player, "{} <e>unmuted {}<e>.",
+                    muterName, displayName(UUID.fromString(event.getTarget())));
             }
         } else {
             long minutes = event.getDuration() / 60000;
-            if (event.getTarget().equalsIgnoreCase("everyone")) {
-                sendMessage(player, muterName + " §emuted the guild chat for §c" + minutes + " minutes§e.");
+            if (everyone) {
+                sendMessage(player, "{} <e>muted the guild chat for <c>{} minutes<e>.", muterName, minutes);
             } else {
-                sendMessage(player, muterName + " §emuted " + HypixelPlayer.getDisplayName(UUID.fromString(event.getTarget())) + " §efor §c" + minutes + " minutes§e.");
+                sendMessage(player, "{} <e>muted {} <e>for <c>{} minutes<e>.",
+                    muterName, displayName(UUID.fromString(event.getTarget())), minutes);
             }
         }
     }
 
     private void handleInviteExpired(HypixelPlayer player, GuildInviteExpiredResponseEvent event) {
         if (event.getInvitee().equals(player.getUuid())) {
-            sendMessage(player, "§eThe guild invite from " + HypixelPlayer.getDisplayName(event.getInviter()) + " §ehas expired.");
+            sendMessage(player, "<e>The guild invite from {} <e>has expired.", displayName(event.getInviter()));
         } else if (event.getInviter().equals(player.getUuid())) {
-            sendMessage(player, "§eThe guild invite to " + HypixelPlayer.getDisplayName(event.getInvitee()) + " §ehas expired.");
+            sendMessage(player, "<e>The guild invite to {} <e>has expired.", displayName(event.getInvitee()));
         }
     }
 
@@ -203,10 +211,14 @@ public class RedisPropagateGuildEvent implements RedisMessageHandler<GuildEventP
         };
     }
 
-    private void sendMessage(HypixelPlayer player, String message) {
-        player.sendMessage("§9§m-----------------------------------------------------");
-        player.sendMessage(message);
-        player.sendMessage("§9§m-----------------------------------------------------");
+    private Text displayName(UUID uuid) {
+        return HypixelPlayer.getDisplayName(uuid);
+    }
+
+    private void sendMessage(HypixelPlayer player, String markup, Object... arguments) {
+        player.sendMessage("<sep>");
+        player.sendMessage(markup, arguments);
+        player.sendMessage("<sep>");
     }
 
 }

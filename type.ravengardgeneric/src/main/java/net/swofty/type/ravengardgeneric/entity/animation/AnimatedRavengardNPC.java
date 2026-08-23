@@ -7,6 +7,7 @@ import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.metadata.display.ItemDisplayMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.ravengardgeneric.entity.RavengardNPC;
 import net.swofty.type.ravengardgeneric.user.RavengardPlayer;
 
@@ -17,11 +18,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AnimatedRavengardNPC extends RavengardNPC {
+    private static final Random TALK_RANDOM = new Random();
+
     private final RavengardAnimationClip clip;
     private final List<Entity> animatedParts = new ArrayList<>();
     private final Map<Integer, Pos> homePositions = new HashMap<>();
@@ -132,8 +136,9 @@ public class AnimatedRavengardNPC extends RavengardNPC {
             return;
         }
         if (clip.shopLine() != null && clip.dialogue() != null) {
-            player.sendMessage("§d" + clip.dialogue().speaker() + "§f: " + clip.shopLine());
+            player.sendMessage(speakerLine(clip.dialogue().speaker(), clip.shopLine()));
         }
+        talkSound(player);
         net.swofty.type.generic.gui.v2.ViewNavigator.get(player)
                 .push(new net.swofty.type.ravengardgeneric.gui.GUIShop(shop));
     }
@@ -167,6 +172,7 @@ public class AnimatedRavengardNPC extends RavengardNPC {
         }
 
         player.sendMessage(format(dialogue.speaker(), lines.get(index)));
+        talkSound(player);
 
         if (index == lines.size() - 1) {
             dialogueSessions.remove(player.getUuid());
@@ -204,13 +210,25 @@ public class AnimatedRavengardNPC extends RavengardNPC {
         }
     }
 
-    private static String format(String speaker, RavengardAnimationClip.Line line) {
-        String prefix = "";
+    private static Text format(String speaker, RavengardAnimationClip.Line line) {
+        Text prefix = Text.empty();
         if (line.index() != null && line.total() != null) {
-            String indexColor = line.index().equals(line.total()) ? "§a" : "§7";
-            prefix = "§7[" + indexColor + line.index() + "§7/§a" + line.total() + "§7] ";
+            String indexTag = line.index().equals(line.total()) ? "<a>" : "<7>";
+            prefix = Text.of("<7>[" + indexTag + "{}<7>/<a>{}<7>] ", line.index(), line.total());
         }
-        return prefix + "§d" + speaker + "§f: " + line.text();
+        return prefix.append(speakerLine(speaker, line.text()));
+    }
+
+    private static Text speakerLine(String speaker, String text) {
+        return Text.of("<d>{}<f>: ", speaker).append(Text.legacy(text));
+    }
+
+    private static void talkSound(RavengardPlayer player) {
+        player.playSound(net.kyori.adventure.sound.Sound.sound()
+                .type(net.kyori.adventure.key.Key.key("entity.villager.celebrate"))
+                .volume(1.0f)
+                .pitch(0.8f + TALK_RANDOM.nextFloat() * 0.4f)
+                .build());
     }
 
     public void play(RavengardAnimationPhase target) {

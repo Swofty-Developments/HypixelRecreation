@@ -3,11 +3,11 @@ items:
     material: player_head
     name: "Blood Rune"
     lore:
-      - "§7Create a blood effect when you"
-      - "§7kill mobs!"
+      - "<7>Create a blood effect when you"
+      - "<7>kill mobs!"
     components:
       - id: RUNE
         required_level: 1
-        color: §c
+        color: <c>
         applicable_to: WEAPONS
         skull_texture: e02677053dc54245dac4b399d14aae21ee71a010bd9c336c8ecee1a0dbe8f58b

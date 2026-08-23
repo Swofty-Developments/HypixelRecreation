@@ -15,7 +15,7 @@ import java.util.Map;
 public class EnchantmentTabasco implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Grants §6+" + (level * 5) + "% Trophy Fish Chance §7while fishing in §clava§7.";
+        return "Grants <6>+" + (level * 5) + "% Trophy Fish Chance <7>while fishing in <c>lava<7>.";
     }
 
     @Override

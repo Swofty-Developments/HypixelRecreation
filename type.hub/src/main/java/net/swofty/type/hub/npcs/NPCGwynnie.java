@@ -12,7 +12,7 @@ public class NPCGwynnie extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bGwynnie", "§e§lCLICK"};
+                return new String[]{"<b>Gwynnie", "<e><l>CLICK"};
             }
 
             @Override

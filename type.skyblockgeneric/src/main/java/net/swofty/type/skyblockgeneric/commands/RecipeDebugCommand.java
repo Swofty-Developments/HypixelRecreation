@@ -4,7 +4,7 @@ import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
 
-@CommandParameters(description = "Prints recipe debug", usage = "", permission = Rank.STAFF, allowsConsole = false)
+@CommandParameters(labels = "recipedebug", description = "Prints recipe debug", usage = "", permission = Rank.STAFF, allowsConsole = false)
 public class RecipeDebugCommand extends HypixelCommand {
     @Override
     public void registerUsage(MinestomCommand command) {

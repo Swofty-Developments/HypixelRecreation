@@ -15,7 +15,7 @@ public class VillagerBlacksmith extends HypixelNPC {
         super(new VillagerConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Blacksmith", "§e§lCLICK"};
+                return new String[]{"Blacksmith", "<e><l>CLICK"};
             }
 
             @Override

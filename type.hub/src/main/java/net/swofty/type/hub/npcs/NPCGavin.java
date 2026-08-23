@@ -15,7 +15,7 @@ public class NPCGavin extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bGavin", "§e§lCLICK"};
+                return new String[]{"<b>Gavin", "<e><l>CLICK"};
             }
 
             @Override
@@ -59,20 +59,20 @@ public class NPCGavin extends HypixelNPC {
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("first-interaction").lines(new String[]{
+                        .key("first-interaction").lines(
                                 "At the end of each year I bake cakes for everyone in town to celebrate the year.",
                                 "I made one especially for you, here you go.",
-                                "I've recently added a §dNew Year Cake Bag §fto my inventory. Sadly, it's not free! Click me again to open my shop!",
-                        }).build(),
+                                "I've recently added a <d>New Year Cake Bag <f>to my inventory. Sadly, it's not free! Click me again to open my shop!"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("idle-1").lines(new String[]{
-                                "You can open your §aSea Creature Guide §fthrough your §aFishing Skill §fmenu, or with §d/scg§f!"
-                        }).build(),
+                        .key("idle-1").lines(
+                                "You can open your <a>Sea Creature Guide <f>through your <a>Fishing Skill <f>menu, or with <d>/scg<f>!"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("idle-2").lines(new String[]{
-                                "I'd rather be out there fishing for §6Treasure§f.",
+                        .key("idle-2").lines(
+                                "I'd rather be out there fishing for <6>Treasure<f>.",
                                 "But mum insists I finish my studies first."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

@@ -13,7 +13,7 @@ public class NPCSkyWars extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§e§lCLICK TO PLAY", "§bSkyWars", "§e? Playing"};
+                return new String[]{"<e><l>CLICK TO PLAY", "<b>SkyWars", "<e>? Playing"};
             }
 
             @Override

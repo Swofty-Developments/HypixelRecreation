@@ -32,10 +32,10 @@ public class AdminMeCommand extends HypixelCommand {
     public void registerUsage(MinestomCommand command) {
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
+            HypixelPlayer player = (HypixelPlayer) sender;
 
-            sender.sendMessage("§8Running checks...");
+            player.sendMessage("<8>Running checks...");
             Thread.startVirtualThread(() -> {
-                HypixelPlayer player = (HypixelPlayer) sender;
                 UUID realUUID = player.getUuid();
                 UUID crackedUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + player.getUsername()).getBytes(StandardCharsets.UTF_8));
 
@@ -50,13 +50,13 @@ public class AdminMeCommand extends HypixelCommand {
                 });
 
                 if (!adminUUIDs.contains(realUUID) && !adminUUIDs.contains(crackedUUID)) {
-                    sender.sendMessage("§cYou are not allowed to use this command.");
+                    player.sendMessage("<c>You are not allowed to use this command.");
                     return;
                 }
 
                 player.getDataHandler().get(HypixelDataHandler.Data.RANK, DatapointRank.class).setValue(Rank.STAFF);
 
-                sender.sendMessage("§aSuccessfully set rank to " + Rank.STAFF.getPrefix() + "§a.");
+                player.sendMessage("<a>Successfully set rank to <rank>.");
             });
         });
     }

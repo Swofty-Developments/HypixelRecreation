@@ -16,7 +16,7 @@ public class EnchantmentSilkTouch implements Ench, EnchFromTable, ConflictingEnc
 
     @Override
     public String getDescription(int level) {
-        return "§7Allows you to collect normally unobtainable block drops.";
+        return "<7>Allows you to collect normally unobtainable block drops.";
     }
 
     @Override

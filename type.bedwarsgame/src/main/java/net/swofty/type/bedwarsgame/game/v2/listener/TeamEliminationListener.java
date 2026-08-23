@@ -1,6 +1,6 @@
 package net.swofty.type.bedwarsgame.game.v2.listener;
 
-import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsTeam;
 import net.swofty.type.bedwarsgame.replay.BedWarsReplayManager;
@@ -18,9 +18,6 @@ public class TeamEliminationListener implements HypixelEventClass {
     @PhasedEvent(node = EventNodes.CUSTOM, requireDataLoaded = false)
     public void run(TeamEliminatedEvent<BedWarsTeam> event) {
         BedWarsTeam team = event.team();
-        String teamColor = team.getColorCode();
-        String teamName = team.getName();
-
         BedWarsGame game = (BedWarsGame) event.game();
         team.getPlayerIds().stream()
             .map(game::getPlayer)
@@ -30,7 +27,7 @@ public class TeamEliminationListener implements HypixelEventClass {
                 BedWarsStatsRecorder.recordLoss(player, game.getGameType());
             });
 
-        game.broadcastMessage(Component.newline().append(BedWarsReplayMessages.teamEliminated(team.getTeamKey())).appendNewline());
+        game.broadcastMessage(Text.of("\n{}\n", BedWarsReplayMessages.teamEliminated(team.getTeamKey())));
 
         BedWarsReplayManager replayManager = game.getReplayManager();
 

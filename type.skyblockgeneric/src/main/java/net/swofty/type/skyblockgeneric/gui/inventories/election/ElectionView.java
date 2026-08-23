@@ -1,18 +1,17 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.election;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.calendar.SkyBlockCalendar;
 import net.swofty.type.skyblockgeneric.elections.ElectionData;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
@@ -20,7 +19,6 @@ import net.swofty.type.skyblockgeneric.elections.SkyBlockMayor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class ElectionView extends StatelessView {
@@ -38,15 +36,8 @@ public class ElectionView extends StatelessView {
         ElectionData data = ElectionManager.getElectionData();
 
         if (!data.isElectionOpen() || data.getCandidates().isEmpty()) {
-            layout.slot(13, (s, c) -> {
-                Locale l = c.player().getLocale();
-                return ItemStackCreator.getStack(
-                    I18n.string("gui_election.view.no_election", l),
-                    Material.BARRIER,
-                    1,
-                    I18n.iterable("gui_election.view.no_election.lore")
-                );
-            });
+            layout.slot(13, (s, c) -> ItemStacks.item(Material.BARRIER, 1, Text.key("gui_election.view.no_election"),
+                    Text.keyLines("gui_election.view.no_election.lore")));
             return;
         }
 
@@ -71,79 +62,74 @@ public class ElectionView extends StatelessView {
             String candidateName = candidate.getMayorName();
 
             layout.slot(slot, (s, c) -> {
-                Locale l = c.player().getLocale();
                 String playerVote = ElectionManager.getPlayerVote(c.player().getUuid());
                 boolean isVotedFor = candidateName.equals(playerVote);
 
-                List<String> lore = buildCandidateLore(
-                    l, mayor, candidate, data.getElectionYear(),
+                List<Text> lore = buildCandidateLore(
+                    mayor, candidate, data.getElectionYear(),
                     yearsSince, voteStr, pctStr, isVotedFor
                 );
-                return ItemStackCreator.getStackHead(
-                    candidate.getColoredName(),
+                return ItemStacks.head(
                     new PlayerSkin(mayor.getTexture(), mayor.getSignature()),
-                    1,
+                    candidate.getColoredName(),
                     lore
                 );
             }, (_, c) -> {
-                Locale l = c.player().getLocale();
                 ElectionManager.castVote(c.player().getUuid(), candidateName);
-                c.player().sendMessage(I18n.string("gui_election.view.vote_divider", l));
-                c.player().sendMessage(I18n.string("gui_election.view.vote_cast", l, Component.text(candidate.getColoredName()), Component.text(String.valueOf(data.getElectionYear()))));
-                c.player().sendMessage("  " + I18n.string("gui_election.view.vote_fame", l));
-                c.player().sendMessage(I18n.string("gui_election.view.vote_result", l, Component.text(candidate.getColoredName()), Component.text(pctStr), Component.text(voteStr)));
-                c.player().sendMessage(I18n.string("gui_election.view.vote_divider", l));
+                c.player().sendMessage(Text.key("gui_election.view.vote_divider"));
+                c.player().sendMessage(Text.key("gui_election.view.vote_cast", candidate.getColoredName(), data.getElectionYear()));
+                c.player().sendMessage(Text.literal("  ").append(Text.key("gui_election.view.vote_fame")));
+                c.player().sendMessage(Text.key("gui_election.view.vote_result", candidate.getColoredName(), pctStr, voteStr));
+                c.player().sendMessage(Text.key("gui_election.view.vote_divider"));
                 c.replace(new ElectionViewStatsView());
             });
         }
     }
 
-    private List<String> buildCandidateLore(Locale l, SkyBlockMayor mayor, ElectionData.CandidateData candidate,
+    private List<Text> buildCandidateLore(SkyBlockMayor mayor, ElectionData.CandidateData candidate,
                                             int electionYear, int yearsSince,
                                             String voteStr, String pctStr, boolean votedFor) {
-        String color = candidate.getColor();
-        List<String> lore = new ArrayList<>();
-        lore.add(I18n.string("gui_election.view.candidate.year", l, Component.text(String.valueOf(electionYear))));
-        lore.add("");
-        lore.add(I18n.string("gui_election.view.candidate.votes", l, Component.text(color), Component.text(voteStr), Component.text(pctStr)));
+        Text color = Text.of("<color:{}>", candidate.getColor());
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.key("gui_election.view.candidate.year", electionYear));
+        lore.add(Text.empty());
+        lore.add(Text.key("gui_election.view.candidate.votes", color, voteStr, pctStr));
         if (yearsSince >= 0) {
-            lore.add(I18n.string("gui_election.view.candidate.last_elected", l, Component.text(color), Component.text(String.valueOf(yearsSince))));
+            lore.add(Text.key("gui_election.view.candidate.last_elected", color, yearsSince));
         } else {
-            lore.add(I18n.string("gui_election.view.candidate.last_elected_never", l, Component.text(color)));
+            lore.add(Text.key("gui_election.view.candidate.last_elected_never", color));
         }
-        lore.add("");
-        lore.add("§8§m--------------------------");
+        lore.add(Text.empty());
+        lore.add(Text.of("<8><m>--------------------------"));
 
         List<SkyBlockMayor.Perk> activePerks = candidate.getActivePerkEnums();
         for (int j = 0; j < activePerks.size(); j++) {
             SkyBlockMayor.Perk perk = activePerks.get(j);
             if (j == 0) {
-                lore.add("§6✯ " + color + perk.getDisplayName());
+                lore.add(Text.of("<6>✯ ").append("<color:{0}>{1}", candidate.getColor(), perk.getDisplayName()));
             } else {
-                lore.addAll(StringUtility.splitByWordAndLengthKeepLegacyColor(
-                    color + perk.getDisplayName(), 35));
+                lore.addAll(Text.of("<color:{0}><wrap:35>{1}</wrap>", candidate.getColor(), perk.getDisplayName()).lines());
             }
-            lore.addAll(StringUtility.splitByWordAndLengthKeepLegacyColor(
-                perk.getDescription(), 35));
-            if (j < activePerks.size() - 1) lore.add("");
+            lore.addAll(Text.of("<wrap:35>{}</wrap>", perk.getDescription()).lines());
+            if (j < activePerks.size() - 1) lore.add(Text.empty());
         }
 
-        lore.add("§8§m--------------------------");
+        lore.add(Text.of("<8><m>--------------------------"));
 
         if (!mayor.isSpecial()) {
-            lore.add("");
-            lore.add(I18n.string("gui_election.view.candidate.minister_note_1", l, Component.text(color)));
-            lore.add(I18n.string("gui_election.view.candidate.minister_note_2", l));
+            lore.add(Text.empty());
+            lore.add(Text.key("gui_election.view.candidate.minister_note_1", color));
+            lore.add(Text.key("gui_election.view.candidate.minister_note_2"));
         }
 
-        lore.add("");
+        lore.add(Text.empty());
         if (votedFor) {
-            lore.add(I18n.string("gui_election.view.candidate.voted", l));
+            lore.add(Text.key("gui_election.view.candidate.voted"));
         } else {
-            lore.add(I18n.string("gui_election.view.candidate.change_vote_1", l));
-            lore.add(I18n.string("gui_election.view.candidate.change_vote_2", l));
-            lore.add("");
-            lore.add(I18n.string("gui_election.view.candidate.click_vote", l, Component.text(mayor.getDisplayName())));
+            lore.add(Text.key("gui_election.view.candidate.change_vote_1"));
+            lore.add(Text.key("gui_election.view.candidate.change_vote_2"));
+            lore.add(Text.empty());
+            lore.add(Text.key("gui_election.view.candidate.click_vote", mayor.getDisplayName()));
         }
 
         return lore;

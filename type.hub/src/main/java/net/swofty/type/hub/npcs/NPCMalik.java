@@ -14,7 +14,7 @@ public class NPCMalik extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§cMalik", "§e§lBLACKSMITH"};
+                return new String[]{"<c>Malik", "<e><l>BLACKSMITH"};
             }
 
             @Override

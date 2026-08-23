@@ -12,6 +12,7 @@ import net.swofty.commons.protocol.objects.friend.GetFriendDataProtocol;
 import net.swofty.commons.protocol.objects.friend.GetPendingFriendRequestsProtocol;
 import net.swofty.commons.protocol.objects.friend.SendFriendEventToServiceProtocol;
 import net.swofty.commons.protocol.objects.presence.GetPresenceBulkProtocol;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -164,14 +165,14 @@ public class FriendManager {
     }
 
     private static void sendError(HypixelPlayer player, String message) {
-        player.sendMessage("§9§m-----------------------------------------------------");
-        player.sendMessage("§c" + message);
-        player.sendMessage("§9§m-----------------------------------------------------");
+        player.sendMessage("<sep>");
+        player.sendMessage("<c>{}", message);
+        player.sendMessage("<sep>");
     }
 
     private static void sendSuccess(HypixelPlayer player, String message) {
-        player.sendMessage("§9§m-----------------------------------------------------");
+        player.sendMessage("<sep>");
         player.sendMessage(message);
-        player.sendMessage("§9§m-----------------------------------------------------");
+        player.sendMessage("<sep>");
     }
 }

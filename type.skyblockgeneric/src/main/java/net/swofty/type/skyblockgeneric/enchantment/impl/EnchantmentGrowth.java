@@ -18,7 +18,7 @@ public class EnchantmentGrowth implements Ench, EnchFromTable {
 
     @Override
     public String getDescription(int level) {
-        return "Grants §a+" + MULTIPLIERS[level - 1] + ItemStatistic.HEALTH.getFullDisplayName();
+        return "Grants <a>+" + MULTIPLIERS[level - 1] + "<stat:health>";
     }
 
     @Override

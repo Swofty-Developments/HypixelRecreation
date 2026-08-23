@@ -1,29 +1,32 @@
 package net.swofty.type.generic.collectibles;
 
 import lombok.Getter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.swofty.commons.text.Text;
 
 import java.util.Locale;
 
 @Getter
 public enum CollectibleRarity {
-    COMMON("COMMON", "§a", 1),
-    RARE("RARE", "§9", 2),
-    EPIC("EPIC", "§5", 3),
-    LEGENDARY("LEGENDARY", "§6", 4),
-    MYTHIC("MYTHIC", "§d", 5);
+    COMMON("COMMON", NamedTextColor.GREEN, 1),
+    RARE("RARE", NamedTextColor.BLUE, 2),
+    EPIC("EPIC", NamedTextColor.DARK_PURPLE, 3),
+    LEGENDARY("LEGENDARY", NamedTextColor.GOLD, 4),
+    MYTHIC("MYTHIC", NamedTextColor.LIGHT_PURPLE, 5);
 
     private final String displayName;
-    private final String colorCode;
+    private final TextColor color;
     private final int weight;
 
-    CollectibleRarity(String displayName, String colorCode, int weight) {
+    CollectibleRarity(String displayName, TextColor color, int weight) {
         this.displayName = displayName;
-        this.colorCode = colorCode;
+        this.color = color;
         this.weight = weight;
     }
 
-    public String formattedName() {
-        return colorCode + displayName;
+    public Text formattedName() {
+        return Text.of("<color:{}>{}", color, displayName);
     }
 
     public static CollectibleRarity fromString(String value, CollectibleRarity fallback) {

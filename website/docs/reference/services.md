@@ -1,25 +1,39 @@
 # Services Reference
 
-Services are microservices that handle specific features independently of game servers.
+Services are microservices that handle specific features independently of game servers. There are **13 services**; every service also depends on `service.generic`, the shared service base library (MongoDB connection, Redis manager, service initializer) — it is not a runnable service itself.
+
+The full list lives in `net.swofty.commons.ServiceType`.
 
 ## Architecture Overview
 
 ```
-┌─────────────────┐     ┌─────────────────┐
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │   Game Server   │────▶│      Redis      │◀────│   Game Server   │
 └─────────────────┘     └────────┬────────┘     └─────────────────┘
                                  │
-         ┌───────────────────────┼───────────────────────┐
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  Auction House  │     │     Bazaar      │     │      Party      │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                           MongoDB                                │
-└─────────────────────────────────────────────────────────────────┘
+         ┌───────────┬───────────┼───────────┬───────────┐
+         ▼           ▼           ▼           ▼           ▼
+┌─────────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
+│ AuctionHouse│ │ Bazaar  │ │  Party  │ │ Friend  │ │  Guild  │
+└─────────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘
+         ┌───────────┬───────────┬───────────┬───────────┐
+         ▼           ▼           ▼           ▼           ▼
+┌─────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌─────────┐
+│ Election│ │Punishment│ │  Replay  │ │   API    │ │  Store  │
+└─────────┘ └──────────┘ └──────────┘ └──────────┘ └─────────┘
+         ┌───────────┬───────────┐
+         ▼           ▼
+┌─────────────┐ ┌─────────────┐
+│ItemTracker  │ │DarkAuction  │
+└─────────────┘ └─────────────┘
+         ┌───────────┐
+         ▼
+┌─────────────┐
+│ Orchestrator│
+└─────────────┘
+         ┌─────────────────────────────────────────────────┐
+         │                           MongoDB                │
+         └─────────────────────────────────────────────────┘
 ```
 
 ## Service List
@@ -27,10 +41,10 @@ Services are microservices that handle specific features independently of game s
 ### ServiceAPI
 
 **JAR**: `ServiceAPI.jar`
-**Port**: 8080 (configurable)
-**Type**: `AUCTION_HOUSE`
+**Port**: 8080 (configurable via `--port=`)
+**ServiceType**: `API`
 
-REST API service for external integrations.
+REST API service for external integrations and the web forums.
 
 ```bash
 java -jar ServiceAPI.jar
@@ -38,19 +52,24 @@ java -jar ServiceAPI.jar --port=8081  # Custom port
 ```
 
 **Features**:
-- HTTP endpoints using Spark Framework
-- Session-based authentication
-- Admin panel at `/panel/authenticated`
+- HTTP endpoints under `/api/...` using Spark Framework
+- Session-cookie authentication with an admin panel at `/panel/authenticated`
+- API key management
 - User and profile database access
 
-**Dependencies**: MongoDB, Spark Framework
+**MongoDB Collections**:
+- `api-key` - API keys
+- `api-admin` - Admin sessions
+- `api-request-counts` - Per-key request counts used for rate limiting
+
+Accounts and profiles are not MongoDB collections; they live in Redis under the `hsb:acct` and `hsb:prof` prefixes.
 
 ---
 
 ### ServiceAuctionHouse
 
 **JAR**: `ServiceAuctionHouse.jar`
-**Type**: `AUCTION_HOUSE`
+**ServiceType**: `AUCTION_HOUSE`
 
 Manages auction house listings and transactions.
 
@@ -64,15 +83,15 @@ java -jar ServiceAuctionHouse.jar
 - Auction caching for performance
 
 **MongoDB Collections**:
-- `auction_active` - Current listings
-- `auction_inactive` - Completed/expired auctions
+- `active-auctions` - Current listings
+- `inactive-auctions` - Completed/expired auctions
 
 ---
 
 ### ServiceBazaar
 
 **JAR**: `ServiceBazaar.jar`
-**Type**: `BAZAAR`
+**ServiceType**: `BAZAAR`
 
 Handles the bazaar marketplace system.
 
@@ -82,20 +101,21 @@ java -jar ServiceBazaar.jar
 
 **Features**:
 - Buy and sell order management
-- Market state tracking
 - Order matching and execution
+- Pending transaction queue
 
 **MongoDB Collections**:
-- `orders` - Buy/sell orders
+- `bazaarOrders` - Buy/sell orders
+- `pendingTransactions` - Transactions awaiting processing
 
 ---
 
 ### ServiceParty
 
 **JAR**: `ServiceParty.jar`
-**Type**: `PARTY`
+**ServiceType**: `PARTY`
 
-Manages player parties across servers.
+Manages player parties across servers. This service is required for any deployment.
 
 ```bash
 java -jar ServiceParty.jar
@@ -110,14 +130,16 @@ java -jar ServiceParty.jar
 **Endpoints**:
 - `GetPartyEndpoint` - Retrieve party info
 - `IsPlayerInPartyEndpoint` - Check membership
-- `PartyEventToServiceEndpoint` - Handle party events
+- `PartyActionEndpoint` - Party actions (create, invite, join, leave, etc.)
+
+Parties are cached in memory (`PartyCache`) and synchronized through Redis.
 
 ---
 
 ### ServiceItemTracker
 
 **JAR**: `ServiceItemTracker.jar`
-**Type**: `ITEM_TRACKER`
+**ServiceType**: `ITEM_TRACKER`
 
 Tracks valuable items across the server network.
 
@@ -131,41 +153,14 @@ java -jar ServiceItemTracker.jar
 - Cross-server item queries
 
 **MongoDB Collections**:
-- `tracked_items` - Item tracking data
-
----
-
-### ServiceDataMutex
-
-**JAR**: `ServiceDataMutex.jar`
-**Type**: `DATA_MUTEX`
-
-Provides distributed locking for data synchronization.
-
-```bash
-java -jar ServiceDataMutex.jar
-```
-
-**Features**:
-- Prevents data corruption during server transfers
-- Distributed lock management
-- Atomic data operations
-
-**Endpoints**:
-- `SynchronizeDataEndpoint` - Acquire locks
-- `UnlockDataEndpoint` - Release locks
-- `UpdateSynchronizedDataEndpoint` - Update locked data
-
-:::alert warning
-This service is essential for data integrity. Always run it in production.
-:::
+- `tracked-items` - Item tracking data
 
 ---
 
 ### ServiceDarkAuction
 
 **JAR**: `ServiceDarkAuction.jar`
-**Type**: `DARK_AUCTION`
+**ServiceType**: `DARK_AUCTION`
 
 Manages periodic dark auction events.
 
@@ -176,20 +171,27 @@ java -jar ServiceDarkAuction.jar
 **Features**:
 - Scheduled events based on SkyBlock time
 - Auction state management
-- Prize pool handling
+- Prize pool handling (item and book pools)
 
 **Components**:
 - `DarkAuctionScheduler` - Event timing
 - `DarkAuctionState` - State management
+- `loot/` - Prize pools
+
+**Endpoints**:
+- `EndpointGetAuctionState` - Current auction state
+- `EndpointPlaceBid` - Place a bid
+- `EndpointPlayerLeftAuction` - Player left event
+- `EndpointTriggerAuction` - Force-trigger an auction
 
 ---
 
 ### ServiceOrchestrator
 
 **JAR**: `ServiceOrchestrator.jar`
-**Type**: `ORCHESTRATOR`
+**ServiceType**: `ORCHESTRATOR`
 
-Orchestrates game server management, primarily for BedWars.
+Orchestrates minigame server management (BedWars, SkyWars, Murder Mystery).
 
 ```bash
 java -jar ServiceOrchestrator.jar
@@ -207,13 +209,158 @@ java -jar ServiceOrchestrator.jar
 - `GetServerForMapEndpoint` - Server assignment
 - `RejoinGameEndpoint` - Rejoin requests
 - `GameChooseEndpoint` - Game selection
+- `ListGamesEndpoint` - Active games per server
+- `GetGameCountsEndpoint` - Game counts
+
+---
+
+### ServiceFriend
+
+**JAR**: `ServiceFriend.jar`
+**ServiceType**: `FRIEND`
+
+Manages the friend system across the network.
+
+```bash
+java -jar ServiceFriend.jar
+```
+
+**Features**:
+- Friend lists and pending friend requests
+- Presence (online status) tracking across servers
+- Friend request caching with expiration
+
+**MongoDB Collections**:
+- `friend-data` - Friend lists
+- `pending-friend-requests` - Pending requests
+
+**Endpoints**:
+- `GetFriendDataEndpoint` - Friend list for a player
+- `GetPendingRequestsEndpoint` - Pending requests
+- `AreFriendsEndpoint` - Friendship check
+- `FriendEventToServiceEndpoint` - Friend events (request, accept, remove)
+- `GetPresenceEndpoint` / `UpdatePresenceEndpoint` - Presence queries and updates
+
+---
+
+### ServiceElection
+
+**JAR**: `ServiceElection.jar`
+**ServiceType**: `ELECTION`
+
+Runs SkyBlock elections (e.g. the annual mayor election).
+
+```bash
+java -jar ServiceElection.jar
+```
+
+**Features**:
+- Election lifecycle management
+- Voting with one vote per player
+- Candidate lists and vote tallies
+- Election resolution
+
+**MongoDB Collections**:
+- `elections` - Election definitions and state
+- `election-votes` - Cast votes
+- `election-tallies` - Vote tallies
+
+**Endpoints**:
+- `StartElectionEndpoint` - Start an election
+- `GetElectionDataEndpoint` - Election state and data
+- `GetCandidatesEndpoint` - Candidate list
+- `CastVoteEndpoint` - Cast a vote
+- `GetPlayerVoteEndpoint` - Player's vote status
+- `ResolveElectionEndpoint` - Resolve/finish an election
+
+---
+
+### ServiceGuild
+
+**JAR**: `ServiceGuild.jar`
+**ServiceType**: `GUILD`
+
+Manages player guilds.
+
+```bash
+java -jar ServiceGuild.jar
+```
+
+**Features**:
+- Guild creation, membership and management
+- Guild settings and events
+- Cross-server guild synchronization
+
+**MongoDB Collections**:
+- `guilds` - Guild definitions
+- `player-guilds` - Player-to-guild membership
+
+**Endpoints**:
+- `GetGuildEndpoint` - Guild info
+- `IsPlayerInGuildEndpoint` - Membership check
+- `GuildEventToServiceEndpoint` - Guild events
+
+---
+
+### ServicePunishment
+
+**JAR**: `ServicePunishment.jar`
+**ServiceType**: `PUNISHMENT`
+
+Handles bans and mutes across the network.
+
+```bash
+java -jar ServicePunishment.jar
+```
+
+**Features**:
+- Active punishment tracking
+- Punish / unpunish players
+- Punishment events pushed to the proxy and game servers
+
+**MongoDB Collections**:
+- `punishments` - Punishment records
+
+**Endpoints**:
+- `PunishPlayerEndpoint` - Punish a player
+- `UnpunishPlayerEndpoint` - Remove a punishment
+- `GetActivePunishmentEndpoint` - Active punishment for a player
+
+---
+
+### ServiceReplay
+
+**JAR**: `ServiceReplay.jar`
+**ServiceType**: `REPLAY`
+
+Stores and serves recorded game replays.
+
+```bash
+java -jar ServiceReplay.jar
+```
+
+**Features**:
+- Recording session management (with cleanup task)
+- Replay metadata, data and map storage
+- Streaming replay data to Replay Viewer servers
+
+**MongoDB Collections**:
+- `replays` - Replay metadata
+- `replay_data` - Recorded replay data
+- `replay_maps` - Uploaded replay maps
+
+**Endpoints**:
+- `ReplayStartEndpoint` / `ReplayEndEndpoint` - Session lifecycle
+- `ReplayDataBatchEndpoint` - Recorded data batches
+- `ReplayLoadEndpoint` / `ReplayListEndpoint` / `ReplayChooseEndpoint` - Loading and browsing
+- `ReplayMapUploadEndpoint` / `ReplayMapLoadEndpoint` - Map storage
 
 ---
 
 ### ServiceStore
 
 **JAR**: `ServiceStore.jar`
-**Type**: `STORE`
+**ServiceType**: `STORE`
 
 Fulfills paid web-store purchases.
 
@@ -276,26 +423,32 @@ ServiceInitializer.register(
 | Bazaar        | 256 MB      | 512 MB          |
 | Party         | 128 MB      | 256 MB          |
 | Item Tracker  | 128 MB      | 256 MB          |
-| Data Mutex    | 128 MB      | 256 MB          |
 | Dark Auction  | 128 MB      | 256 MB          |
 | Orchestrator  | 128 MB      | 256 MB          |
+| Friend        | 128 MB      | 256 MB          |
+| Election      | 128 MB      | 256 MB          |
+| Guild         | 128 MB      | 256 MB          |
+| Punishment    | 128 MB      | 256 MB          |
+| Replay        | 256 MB      | 512 MB          |
 | Store         | 128 MB      | 256 MB          |
 
 ## Docker Reference
 
+The Docker deployment lists every service; enable the ones you need in the installer's service selection screen:
+
 ```yaml
 service_api:
-  image: service_prepared
+  image: game_server_prepared
   environment:
     SERVICE_CMD: java -jar ServiceAPI.jar
 
-service_auction:
-  image: service_prepared
+service_auctionhouse:
+  image: game_server_prepared
   environment:
     SERVICE_CMD: java -jar ServiceAuctionHouse.jar
 
 service_bazaar:
-  image: service_prepared
+  image: game_server_prepared
   environment:
     SERVICE_CMD: java -jar ServiceBazaar.jar
 ```

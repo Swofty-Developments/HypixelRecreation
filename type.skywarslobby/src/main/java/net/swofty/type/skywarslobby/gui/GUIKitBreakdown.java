@@ -1,14 +1,17 @@
 package net.swofty.type.skywarslobby.gui;
 
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -28,7 +31,7 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
     private final String mode;
 
     public GUIKitBreakdown(SkywarsKit kit, String mode) {
-        super(kit.getName() + " Kit", InventoryType.CHEST_6_ROW);
+        super(Text.of("{} Kit", kit.getName()), InventoryType.CHEST_6_ROW);
         this.kit = kit;
         this.mode = mode;
     }
@@ -54,32 +57,32 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
         set(new GUIItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                List<String> lore = new ArrayList<>();
-                lore.add("§7Rarity: " + kit.getRarity().getFormattedName());
-                lore.add("");
-                lore.add("§7Starting Items (" + mode + "):");
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<7>Rarity: {}", kit.getRarity().getFormattedName()));
+                lore.add(Text.empty());
+                lore.add(Text.of("<7>Starting Items ({}):", mode));
                 lore.addAll(kit.getItemsLore(mode));
 
                 if (kit.getSpecialAbility() != null && !kit.getSpecialAbility().isEmpty()) {
-                    lore.add("");
-                    lore.add("§6Special: §e" + kit.getSpecialAbility());
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<6>Special: <e>{}", kit.getSpecialAbility()));
                 }
 
-                lore.add("");
+                lore.add(Text.empty());
                 if (owned) {
-                    lore.add("§a§lOWNED");
-                    lore.add("§7Kit XP: §e" + kitXP);
-                    lore.add("§7Prestige: §d" + PRESTIGE_NAMES[prestigeLevel]);
+                    lore.add(Text.of("<a><l>OWNED"));
+                    lore.add(Text.of("<7>Kit XP: <e>{}", kitXP));
+                    lore.add(Text.of("<7>Prestige: <d>{}", PRESTIGE_NAMES[prestigeLevel]));
                 } else {
-                    lore.add("§c§lNOT OWNED");
-                    lore.add("§7Cost: " + kit.getFormattedCost());
+                    lore.add(Text.of("<c><l>NOT OWNED"));
+                    lore.add(Text.of("<7>Cost: {}", kit.getFormattedCost()));
                 }
 
-                String name = (owned ? "§a" : "§c") + kit.getName() + " Kit";
+                Text name = Text.of((owned ? "<a>" : "<c>") + "{} Kit", kit.getName());
                 if (kit.hasCustomTexture()) {
-                    return ItemStackCreator.getStackHead(name, kit.getIconTexture(), 1, lore);
+                    return ItemStacks.head(kit.getIconTexture(), name, lore);
                 } else {
-                    return ItemStackCreator.getStack(name, kit.getIconMaterial(), 1, lore);
+                    return ItemStacks.item(kit.getIconMaterial(), 1, name, lore);
                 }
             }
         });
@@ -96,9 +99,9 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
                     int xpRequired = PRESTIGE_THRESHOLDS[level];
                     int xpForPrevious = level > 1 ? PRESTIGE_THRESHOLDS[level - 1] : 0;
 
-                    List<String> lore = new ArrayList<>();
-                    lore.add("§7Earn §dSkyWars XP §7with this kit to prestige it.");
-                    lore.add("");
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.of("<7>Earn <d>SkyWars XP</d> with this kit to prestige it."));
+                    lore.add(Text.empty());
 
                     // Progress bar
                     int progress = Math.max(0, kitXP - xpForPrevious);
@@ -106,68 +109,65 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
                     double percent = owned ? Math.min(100.0, (progress * 100.0) / needed) : 0;
                     int filled = (int) (percent / 10);
 
-                    lore.add("§7Progress: §e" + (int) percent + "§6%");
-                    lore.add("§7§m                              §e " + String.format("%,d", owned ? progress : 0) + "§6/§e" + String.format("%,d", needed) + " XP");
-                    lore.add("");
+                    lore.add(Text.of("<7>Progress: <e>{}<6>%", (int) percent));
+                    lore.add(Text.of("<7><m>                              </m><e> {:,}<6>/<e>{:,} XP",
+                            owned ? progress : 0, needed));
+                    lore.add(Text.empty());
 
                     // Rewards based on level
-                    lore.add("§7Rewards:");
+                    lore.add(Text.of("<7>Rewards:"));
                     switch (level) {
                         case 1 -> {
-                            lore.add(" §8+§650,000 §7SkyWars Coins");
-                            lore.add(" §8+§fSilver §7Particle Trail");
+                            lore.add(Text.of(" <8>+<6>50,000 <7>SkyWars Coins"));
+                            lore.add(Text.of(" <8>+<f>Silver <7>Particle Trail"));
                         }
                         case 2 -> {
-                            lore.add(" §8+§6100,000 §7SkyWars Coins");
-                            lore.add(" §8+§2Green §7Particle Trail");
+                            lore.add(Text.of(" <8>+<6>100,000 <7>SkyWars Coins"));
+                            lore.add(Text.of(" <8>+<2>Green <7>Particle Trail"));
                         }
                         case 3 -> {
-                            lore.add(" §8+§6250,000 §7SkyWars Coins");
-                            lore.add(" §8+§9Blue §7Particle Trail");
+                            lore.add(Text.of(" <8>+<6>250,000 <7>SkyWars Coins"));
+                            lore.add(Text.of(" <8>+<9>Blue <7>Particle Trail"));
                         }
                         case 4 -> {
-                            lore.add(" §8+§91 §7Opal");
-                            lore.add(" §8+§5Purple §7Particle Trail");
+                            lore.add(Text.of(" <8>+<9>1 <7>Opal"));
+                            lore.add(Text.of(" <8>+<5>Purple <7>Particle Trail"));
                         }
                         case 5 -> {
-                            lore.add(" §8+§91 §7Opal");
-                            lore.add(" §8+§6Gold §7Particle Trail");
+                            lore.add(Text.of(" <8>+<9>1 <7>Opal"));
+                            lore.add(Text.of(" <8>+<6>Gold <7>Particle Trail"));
                         }
                         case 6 -> {
-                            lore.add(" §8+§91 §7Opal");
-                            lore.add(" §8+§dPink §7Particle Trail");
+                            lore.add(Text.of(" <8>+<9>1 <7>Opal"));
+                            lore.add(Text.of(" <8>+<d>Pink <7>Particle Trail"));
                         }
                         case 7 -> {
-                            lore.add(" §8+§91 §7Opal");
-                            lore.add(" §8+§cR§6a§ei§an§bb§9o§5w §7Particle Trail");
-                            lore.add(" §8+§3[§e9§4✯] §5Prestige §7Scheme");
+                            lore.add(Text.of(" <8>+<9>1 <7>Opal"));
+                            lore.add(Text.of(" <8>+<c>R<6>a<e>i<a>n<b>b<9>o<5>w <7>Particle Trail"));
+                            lore.add(Text.of(" <8>+<3>[<e>9<4>✯] <5>Prestige <7>Scheme"));
                         }
                     }
-                    lore.add("");
-                    lore.add("§8Earn Coins, Opals, Movement Trails");
-                    lore.add("§8and an exclusive Prestige Scheme at");
-                    lore.add("§8max level.");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<8>Earn Coins, Opals, Movement Trails"));
+                    lore.add(Text.of("<8>and an exclusive Prestige Scheme at"));
+                    lore.add(Text.of("<8>max level."));
 
                     // Determine material and name color
                     Material mat;
-                    String nameColor;
+                    TextColor nameColor;
                     if (unlocked) {
                         mat = Material.LIME_STAINED_GLASS_PANE;
-                        nameColor = "§a";
+                        nameColor = NamedTextColor.GREEN;
                     } else if (isNextLevel && owned) {
                         mat = Material.YELLOW_STAINED_GLASS_PANE;
-                        nameColor = "§e";
+                        nameColor = NamedTextColor.YELLOW;
                     } else {
                         mat = Material.RED_STAINED_GLASS_PANE;
-                        nameColor = "§c";
+                        nameColor = NamedTextColor.RED;
                     }
 
-                    return ItemStackCreator.getStack(
-                            nameColor + "Prestige " + PRESTIGE_NAMES[level],
-                            mat,
-                            level,
-                            lore
-                    );
+                    return ItemStacks.item(mat, level,
+                            Text.of("<color:{}>Prestige {}", nameColor, PRESTIGE_NAMES[level]), lore);
                 }
             });
         }
@@ -176,15 +176,12 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
         set(new GUIClickableItem(30) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aKit Stats",
-                        Material.FILLED_MAP,
-                        1,
-                        "§7Access your statistics and challenge",
-                        "§7completions for this Kit!",
-                        "",
-                        "§eClick to open!"
-                );
+                return ItemStacks.item(Material.FILLED_MAP, 1, """
+                        <a>Kit Stats
+                        <7>Access your statistics and challenge
+                        <7>completions for this Kit!
+
+                        <e>Click to open!""");
             }
 
             @Override
@@ -198,23 +195,17 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (owned) {
-                    return ItemStackCreator.getStack(
-                            "§cKit Customizer",
-                            Material.BLAZE_POWDER,
-                            1,
-                            "§7Customize the layout of this kit.",
-                            "",
-                            "§c§lCOMING SOON!"
-                    );
+                    return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                            <c>Kit Customizer
+                            <7>Customize the layout of this kit.
+
+                            <c><l>COMING SOON!""");
                 } else {
-                    return ItemStackCreator.getStack(
-                            "§cKit Customizer",
-                            Material.BLAZE_POWDER,
-                            1,
-                            "§7Customize the layout of this kit.",
-                            "",
-                            "§cYou don't own this kit!"
-                    );
+                    return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                            <c>Kit Customizer
+                            <7>Customize the layout of this kit.
+
+                            <c>You don't own this kit!""");
                 }
             }
         });
@@ -224,12 +215,9 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 String modeName = mode.equals("NORMAL") ? "Normal" : "Insane";
-                return ItemStackCreator.getStack(
-                        "§aGo Back",
-                        Material.ARROW,
-                        1,
-                        "§7To " + modeName + " Kits"
-                );
+                return ItemStacks.item(Material.ARROW, 1, """
+                        <a>Go Back
+                        <7>To {} Kits""", modeName);
             }
 
             @Override
@@ -242,12 +230,9 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§7Total Coins: §6" + String.format("%,d", coins),
-                        Material.EMERALD,
-                        1,
-                        "§6https://store.hypixel.net"
-                );
+                return ItemStacks.item(Material.EMERALD, 1, """
+                        <7>Total Coins: <6>{:,}
+                        <6>https://store.hypixel.net""", coins);
             }
         });
 
@@ -256,47 +241,41 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (isFavorite) {
-                    return ItemStackCreator.getStack(
-                            "§aFavorite Kit Toggle",
-                            Material.LIME_DYE,
-                            1,
-                            "§7Kits that have been favorited show",
-                            "§7up at the top of the Kit Selection",
-                            "§7menu.",
-                            "",
-                            "§a§lFAVORITED",
-                            "",
-                            "§eClick to unfavorite!"
-                    );
+                    return ItemStacks.item(Material.LIME_DYE, 1, """
+                            <a>Favorite Kit Toggle
+                            <7>Kits that have been favorited show
+                            <7>up at the top of the Kit Selection
+                            <7>menu.
+
+                            <a><l>FAVORITED
+</l>
+                            <e>Click to unfavorite!""");
                 } else {
-                    return ItemStackCreator.getStack(
-                            "§cFavorite Kit Toggle",
-                            Material.GRAY_DYE,
-                            1,
-                            "§7Kits that have been favorited show",
-                            "§7up at the top of the Kit Selection",
-                            "§7menu.",
-                            "",
-                            "§c§lNOT FAVORITED",
-                            "",
-                            "§eClick to favorite!"
-                    );
+                    return ItemStacks.item(Material.GRAY_DYE, 1, """
+                            <c>Favorite Kit Toggle
+                            <7>Kits that have been favorited show
+                            <7>up at the top of the Kit Selection
+                            <7>menu.
+
+                            <c><l>NOT FAVORITED
+</l>
+                            <e>Click to favorite!""");
                 }
             }
 
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer player) {
                 if (!owned) {
-                    player.sendMessage("§cYou must own this kit to favorite it!");
+                    player.sendMessage("<c>You must own this kit to favorite it!");
                     return;
                 }
 
                 unlocks.toggleFavorite(kit.getId());
                 boolean nowFavorite = unlocks.isFavorite(kit.getId());
                 if (nowFavorite) {
-                    player.sendMessage("§e★ §aFavorited §e" + kit.getName() + " §akit!");
+                    player.sendMessage("<e>★ <a>Favorited <e>{} <a>kit!", kit.getName());
                 } else {
-                    player.sendMessage("§7☆ §7Unfavorited §e" + kit.getName() + " §7kit.");
+                    player.sendMessage("<7>☆ Unfavorited <e>{} <7>kit.", kit.getName());
                 }
                 // Refresh GUI
                 new GUIKitBreakdown(kit, mode).open(player);

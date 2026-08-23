@@ -2,7 +2,7 @@ package net.swofty.type.bedwarsconfigurator.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.builder.arguments.ArgumentString;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -65,22 +65,22 @@ public class AutoSetupCommand extends HypixelCommand {
     }
 
     private void sendHelp(CommandSender sender) {
-        sender.sendMessage(Component.text("§6§l=== BedWars Auto Setup ==="));
-        sender.sendMessage(Component.text("§e/autosetup scan §7- Scan world for beds, generators, etc."));
-        sender.sendMessage(Component.text("§e/autosetup bounds <min|max> [x y z] §7- Set map bounds"));
-        sender.sendMessage(Component.text("§e/autosetup type <add|remove> <type> §7- Configure game types"));
-        sender.sendMessage(Component.text("§e/autosetup team <team> <spawn|bed|generator|itemshop|teamshop> [x y z] §7- Set team positions"));
-        sender.sendMessage(Component.text("§e/autosetup global <diamond|emerald> <add|remove> [x y z] §7- Manage global generators"));
-        sender.sendMessage(Component.text("§e/autosetup waiting [x y z] §7- Set waiting spawn"));
-        sender.sendMessage(Component.text("§e/autosetup waitinglobby <min|max> [x y z] §7- Select the removable waiting lobby"));
-        sender.sendMessage(Component.text("§e/autosetup spectator [x y z] §7- Set spectator spawn"));
-        sender.sendMessage(Component.text("§e/autosetup show §7- Show debug markers"));
-        sender.sendMessage(Component.text("§e/autosetup hide §7- Hide debug markers"));
-        sender.sendMessage(Component.text("§e/autosetup snap §7- Snap team spawns and shops to the nearest compass direction"));
-        sender.sendMessage(Component.text("§e/autosetup status §7- Show current configuration status"));
-        sender.sendMessage(Component.text("§e/autosetup name <name> §7- Set map display name"));
-        sender.sendMessage(Component.text("§e/autosetup generator <slow|medium|fast|very_fast> §7- Configure generator speed"));
-        sender.sendMessage(Component.text("§e/autosetup save §7- Save configuration to maps.json"));
+        sender.sendMessage(Text.parseLenient("<6><l>=== BedWars Auto Setup ==="));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup scan <7>- Scan world for beds, generators, etc."));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup bounds <min|max> [x y z] <7>- Set map bounds"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup type <add|remove> <type> <7>- Configure game types"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup team <team> <spawn|bed|generator|itemshop|teamshop> [x y z] <7>- Set team positions"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup global <diamond|emerald> <add|remove> [x y z] <7>- Manage global generators"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup waiting [x y z] <7>- Set waiting spawn"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup waitinglobby <min|max> [x y z] <7>- Select the removable waiting lobby"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup spectator [x y z] <7>- Set spectator spawn"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup show <7>- Show debug markers"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup hide <7>- Hide debug markers"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup snap <7>- Snap team spawns and shops to the nearest compass direction"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup status <7>- Show current configuration status"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup name <name> <7>- Set map display name"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup generator <slow|medium|fast|very_fast> <7>- Configure generator speed"));
+        sender.sendMessage(Text.parseLenient("<e>/autosetup save <7>- Save configuration to maps.json"));
     }
 
     private void registerScanCommand(MinestomCommand command) {
@@ -90,35 +90,35 @@ public class AutoSetupCommand extends HypixelCommand {
 
             Instance instance = player.getInstance();
             if (instance == null) {
-                player.sendMessage(Component.text("§cYou must be in a map instance to scan."));
+                player.sendMessage(Text.parseLenient("<c>You must be in a map instance to scan."));
                 return;
             }
 
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), instance);
 
             if (!session.hasBounds()) {
-                player.sendMessage(Component.text("§cPlease set bounds first using /autosetup bounds min and /autosetup bounds max"));
+                player.sendMessage(Text.parseLenient("<c>Please set bounds first using /autosetup bounds min and /autosetup bounds max"));
                 return;
             }
 
-            player.sendMessage(Component.text("§eScanning world... This may take a moment."));
+            player.sendMessage(Text.parseLenient("<e>Scanning world... This may take a moment."));
 
             WorldScanner scanner = new WorldScanner(instance, session);
             WorldScanner.ScanResult result = scanner.fullScan();
 
             // Send results
             for (String msg : result.getMessages()) {
-                player.sendMessage(Component.text("§a✔ " + msg));
+                player.sendMessage(Text.parseLenient("<a>✔ " + msg));
             }
             for (String warning : result.getWarnings()) {
-                player.sendMessage(Component.text("§6⚠ " + warning));
+                player.sendMessage(Text.parseLenient("<6>⚠ " + warning));
             }
             for (String error : result.getErrors()) {
-                player.sendMessage(Component.text("§c✖ " + error));
+                player.sendMessage(Text.parseLenient("<c>✖ " + error));
             }
 
             if (!result.hasErrors()) {
-                player.sendMessage(Component.text("§aScan complete! Use /autosetup show to visualize, /autosetup status to review."));
+                player.sendMessage(Text.parseLenient("<a>Scan complete! Use /autosetup show to visualize, /autosetup status to review."));
             }
 
             // Refresh markers if shown
@@ -146,12 +146,12 @@ public class AutoSetupCommand extends HypixelCommand {
 
             if (corner.equalsIgnoreCase("min")) {
                 session.setBoundsMin(pos.x(), pos.y(), pos.z());
-                player.sendMessage(Component.text("§aSet bounds minimum to " + formatPos(pos)));
+                player.sendMessage(Text.parseLenient("<a>Set bounds minimum to " + formatPos(pos)));
             } else if (corner.equalsIgnoreCase("max")) {
                 session.setBoundsMax(pos.x(), pos.y(), pos.z());
-                player.sendMessage(Component.text("§aSet bounds maximum to " + formatPos(pos)));
+                player.sendMessage(Text.parseLenient("<a>Set bounds maximum to " + formatPos(pos)));
             } else {
-                player.sendMessage(Component.text("§cInvalid corner. Use 'min' or 'max'."));
+                player.sendMessage(Text.parseLenient("<c>Invalid corner. Use 'min' or 'max'."));
             }
 
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
@@ -176,10 +176,10 @@ public class AutoSetupCommand extends HypixelCommand {
 
             if (corner.equalsIgnoreCase("min")) {
                 session.setBoundsMin(x, y, z);
-                player.sendMessage(Component.text("§aSet bounds minimum to " + x + ", " + y + ", " + z));
+                player.sendMessage(Text.parseLenient("<a>Set bounds minimum to " + x + ", " + y + ", " + z));
             } else if (corner.equalsIgnoreCase("max")) {
                 session.setBoundsMax(x, y, z);
-                player.sendMessage(Component.text("§aSet bounds maximum to " + x + ", " + y + ", " + z));
+                player.sendMessage(Text.parseLenient("<a>Set bounds maximum to " + x + ", " + y + ", " + z));
             }
 
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
@@ -209,7 +209,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             BedWarsGameType gameType = BedWarsGameType.from(typeName);
             if (gameType == null) {
-                player.sendMessage(Component.text("§cInvalid game type: " + typeName));
+                player.sendMessage(Text.parseLenient("<c>Invalid game type: " + typeName));
                 return;
             }
 
@@ -218,15 +218,15 @@ public class AutoSetupCommand extends HypixelCommand {
             if (action.equalsIgnoreCase("add")) {
                 if (!session.getGameTypes().contains(gameType)) {
                     session.getGameTypes().add(gameType);
-                    player.sendMessage(Component.text("§aAdded game type: " + gameType.getDisplayName()));
+                    player.sendMessage(Text.parseLenient("<a>Added game type: " + gameType.getDisplayName()));
                 } else {
-                    player.sendMessage(Component.text("§eGame type already added: " + gameType.getDisplayName()));
+                    player.sendMessage(Text.parseLenient("<e>Game type already added: " + gameType.getDisplayName()));
                 }
             } else if (action.equalsIgnoreCase("remove")) {
                 if (session.getGameTypes().remove(gameType)) {
-                    player.sendMessage(Component.text("§cRemoved game type: " + gameType.getDisplayName()));
+                    player.sendMessage(Text.parseLenient("<c>Removed game type: " + gameType.getDisplayName()));
                 } else {
-                    player.sendMessage(Component.text("§eGame type not in list: " + gameType.getDisplayName()));
+                    player.sendMessage(Text.parseLenient("<e>Game type not in list: " + gameType.getDisplayName()));
                 }
             }
         }, ArgumentType.Literal("type"), actionArg, typeArg);
@@ -284,7 +284,7 @@ public class AutoSetupCommand extends HypixelCommand {
             try {
                 teamKey = TeamKey.valueOf(teamName.toUpperCase());
             } catch (IllegalArgumentException e) {
-                player.sendMessage(Component.text("§cInvalid team: " + teamName));
+                player.sendMessage(Text.parseLenient("<c>Invalid team: " + teamName));
                 return;
             }
 
@@ -315,7 +315,7 @@ public class AutoSetupCommand extends HypixelCommand {
             try {
                 teamKey = TeamKey.valueOf(teamName.toUpperCase());
             } catch (IllegalArgumentException e) {
-                player.sendMessage(Component.text("§cInvalid team: " + teamName));
+                player.sendMessage(Text.parseLenient("<c>Invalid team: " + teamName));
                 return;
             }
 
@@ -334,7 +334,7 @@ public class AutoSetupCommand extends HypixelCommand {
         switch (property.toLowerCase()) {
             case "spawn" -> {
                 teamConfig.setSpawn(currentPosition);
-                player.sendMessage(Component.text("§aSet team spawn to " + formatPos(pos)));
+                player.sendMessage(Text.parseLenient("<a>Set team spawn to " + formatPos(pos)));
             }
             case "bed" -> {
                 Optional<Tuple<Vec3i, Vec3i>> positions = calculateBedHead(player);
@@ -344,26 +344,26 @@ public class AutoSetupCommand extends HypixelCommand {
 
                     teamConfig.setBedFeet(feet);
                     teamConfig.setBedHead(head);
-                    player.sendMessage(Component.text("§aSet team bed (feet: " + formatPosition(feet) + ", head: " + formatPosition(head) + ")"));
-                }, () -> player.sendMessage(Component.text("§cYou must be looking at a bed block to set the bed position.")));
+                    player.sendMessage(Text.parseLenient("<a>Set team bed (feet: " + formatPosition(feet) + ", head: " + formatPosition(head) + ")"));
+                }, () -> player.sendMessage(Text.parseLenient("<c>You must be looking at a bed block to set the bed position.")));
             }
             case "generator" -> {
                 teamConfig.setGenerator(new HypixelPosition(pos.x(), pos.y(), pos.z()));
-                player.sendMessage(Component.text("§aSet team generator to " + formatPos(pos)));
+                player.sendMessage(Text.parseLenient("<a>Set team generator to " + formatPos(pos)));
             }
             case "itemshop" -> {
                 teamConfig.setItemShop(currentPosition);
-                player.sendMessage(Component.text("§aSet item shop to " + formatPos(pos)));
+                player.sendMessage(Text.parseLenient("<a>Set item shop to " + formatPos(pos)));
             }
             case "teamshop" -> {
                 teamConfig.setTeamShop(currentPosition);
-                player.sendMessage(Component.text("§aSet team shop to " + formatPos(pos)));
+                player.sendMessage(Text.parseLenient("<a>Set team shop to " + formatPos(pos)));
             }
             case "remove" -> {
                 AutoSetupSession.get(player.getUuid()).removeTeam(key);
-                player.sendMessage(Component.text("§cRemoved all properties for team"));
+                player.sendMessage(Text.parseLenient("<c>Removed all properties for team"));
             }
-            default -> player.sendMessage(Component.text("§cUnknown property: " + property));
+            default -> player.sendMessage(Text.parseLenient("<c>Unknown property: " + property));
         }
     }
 
@@ -483,7 +483,7 @@ public class AutoSetupCommand extends HypixelCommand {
             case "add" -> {
                 HypixelPosition newPos = new HypixelPosition(pos.x(), pos.y(), pos.z());
                 generators.add(newPos);
-                player.sendMessage(Component.text("§aAdded " + genType + " generator at " + formatPos(pos) + " (Total: " + generators.size() + ")"));
+                player.sendMessage(Text.parseLenient("<a>Added " + genType + " generator at " + formatPos(pos) + " (Total: " + generators.size() + ")"));
             }
             case "remove" -> {
                 // Remove nearest generator within 2 blocks
@@ -500,17 +500,17 @@ public class AutoSetupCommand extends HypixelCommand {
 
                 if (toRemove != null) {
                     generators.remove(toRemove);
-                    player.sendMessage(Component.text("§cRemoved nearest " + genType + " generator (Total: " + generators.size() + ")"));
+                    player.sendMessage(Text.parseLenient("<c>Removed nearest " + genType + " generator (Total: " + generators.size() + ")"));
                 } else {
-                    player.sendMessage(Component.text("§cNo " + genType + " generator found within 2 blocks"));
+                    player.sendMessage(Text.parseLenient("<c>No " + genType + " generator found within 2 blocks"));
                 }
             }
             case "clear" -> {
                 int count = generators.size();
                 generators.clear();
-                player.sendMessage(Component.text("§cCleared all " + count + " " + genType + " generators"));
+                player.sendMessage(Text.parseLenient("<c>Cleared all " + count + " " + genType + " generators"));
             }
-            default -> player.sendMessage(Component.text("§cUnknown action: " + action));
+            default -> player.sendMessage(Text.parseLenient("<c>Unknown action: " + action));
         }
     }
 
@@ -533,7 +533,7 @@ public class AutoSetupCommand extends HypixelCommand {
             Pos pos = player.getPosition();
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
             session.setWaitingLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch()));
-            player.sendMessage(Component.text("§aSet waiting spawn to " + formatPos(pos)));
+            player.sendMessage(Text.parseLenient("<a>Set waiting spawn to " + formatPos(pos)));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("waiting"));
@@ -545,7 +545,7 @@ public class AutoSetupCommand extends HypixelCommand {
             Pos pos = player.getPosition();
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
             session.setSpectatorLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch()));
-            player.sendMessage(Component.text("§aSet spectator spawn to " + formatPos(pos)));
+            player.sendMessage(Text.parseLenient("<a>Set spectator spawn to " + formatPos(pos)));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("spectator"));
@@ -571,7 +571,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
             session.setWaitingLocation(new HypixelPosition(x, y, z, 0, 0));
-            player.sendMessage(Component.text("§aSet waiting spawn to " + x + ", " + y + ", " + z));
+            player.sendMessage(Text.parseLenient("<a>Set waiting spawn to " + x + ", " + y + ", " + z));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("waiting"), xArg, yArg, zArg);
@@ -586,7 +586,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
             session.setSpectatorLocation(new HypixelPosition(x, y, z, 0, 0));
-            player.sendMessage(Component.text("§aSet spectator spawn to " + x + ", " + y + ", " + z));
+            player.sendMessage(Text.parseLenient("<a>Set spectator spawn to " + x + ", " + y + ", " + z));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("spectator"), xArg, yArg, zArg);
@@ -598,10 +598,10 @@ public class AutoSetupCommand extends HypixelCommand {
         if (corner.equalsIgnoreCase("min")) session.setWaitingLobbyMin(block);
         else if (corner.equalsIgnoreCase("max")) session.setWaitingLobbyMax(block);
         else {
-            player.sendMessage(Component.text("§cUse min or max."));
+            player.sendMessage(Text.parseLenient("<c>Use min or max."));
             return;
         }
-        player.sendMessage(Component.text("§aSet waiting lobby " + corner.toLowerCase() + " to " + formatPosition(block)));
+        player.sendMessage(Text.parseLenient("<a>Set waiting lobby " + corner.toLowerCase() + " to " + formatPosition(block)));
         DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
     }
 
@@ -612,12 +612,12 @@ public class AutoSetupCommand extends HypixelCommand {
 
             AutoSetupSession session = AutoSetupSession.get(player.getUuid());
             if (session == null) {
-                player.sendMessage(Component.text("§cNo configuration session active. Use /autosetup scan or set bounds first."));
+                player.sendMessage(Text.parseLenient("<c>No configuration session active. Use /autosetup scan or set bounds first."));
                 return;
             }
 
             DebugMarkerManager.showMarkers(player.getUuid(), session, player.getInstance());
-            player.sendMessage(Component.text("§aShowing debug markers"));
+            player.sendMessage(Text.parseLenient("<a>Showing debug markers"));
 
         }, ArgumentType.Literal("show"));
     }
@@ -628,7 +628,7 @@ public class AutoSetupCommand extends HypixelCommand {
             if (!permissionCheck(sender)) return;
 
             DebugMarkerManager.hideMarkers(player.getUuid());
-            player.sendMessage(Component.text("§cHidden debug markers"));
+            player.sendMessage(Text.parseLenient("<c>Hidden debug markers"));
 
         }, ArgumentType.Literal("hide"));
     }
@@ -640,33 +640,33 @@ public class AutoSetupCommand extends HypixelCommand {
 
             AutoSetupSession session = AutoSetupSession.get(player.getUuid());
             if (session == null) {
-                player.sendMessage(Component.text("§cNo configuration session active."));
+                player.sendMessage(Text.parseLenient("<c>No configuration session active."));
                 return;
             }
 
-            player.sendMessage(Component.text("§6§l=== Configuration Status ==="));
-            player.sendMessage(Component.text("§eMap ID: §f" + (session.getMapId() != null ? session.getMapId() : "§c(not set)")));
-            player.sendMessage(Component.text("§eMap Name: §f" + (session.getMapName() != null ? session.getMapName() : "§c(not set)")));
-            player.sendMessage(Component.text("§eBounds: §f" + (session.hasBounds() ? "✔ Set" : "§c✖ Not set")));
-            player.sendMessage(Component.text("§eGame Types: §f" + (session.getGameTypes().isEmpty() ? "§c(none)" : session.getGameTypes().toString())));
-            player.sendMessage(Component.text("§eTeams Configured: §f" + session.getTeams().size()));
+            player.sendMessage(Text.parseLenient("<6><l>=== Configuration Status ==="));
+            player.sendMessage(Text.parseLenient("<e>Map ID: <f>" + (session.getMapId() != null ? session.getMapId() : "<c>(not set)")));
+            player.sendMessage(Text.parseLenient("<e>Map Name: <f>" + (session.getMapName() != null ? session.getMapName() : "<c>(not set)")));
+            player.sendMessage(Text.parseLenient("<e>Bounds: <f>" + (session.hasBounds() ? "✔ Set" : "<c>✖ Not set")));
+            player.sendMessage(Text.parseLenient("<e>Game Types: <f>" + (session.getGameTypes().isEmpty() ? "<c>(none)" : session.getGameTypes().toString())));
+            player.sendMessage(Text.parseLenient("<e>Teams Configured: <f>" + session.getTeams().size()));
 
             for (var entry : session.getTeams().entrySet()) {
                 TeamKey team = entry.getKey();
                 AutoSetupSession.TeamConfig config = entry.getValue();
-                String status = team.chatColor() + team.getName() + "§7: ";
-                status += (config.getSpawn() != null ? "§aS" : "§cS") + " ";
-                status += (config.getBedFeet() != null ? "§aB" : "§cB") + " ";
-                status += (config.getGenerator() != null ? "§aG" : "§cG") + " ";
-                status += (config.getItemShop() != null ? "§aIS" : "§cIS") + " ";
-                status += (config.getTeamShop() != null ? "§aTS" : "§cTS");
-                player.sendMessage(Component.text("  " + status));
+                Text status = Text.of("  <color:{}>{}<7>: ", team.chatColor(), team.getName())
+                    .append(config.getSpawn() != null ? "<a>S " : "<c>S ")
+                    .append(config.getBedFeet() != null ? "<a>B " : "<c>B ")
+                    .append(config.getGenerator() != null ? "<a>G " : "<c>G ")
+                    .append(config.getItemShop() != null ? "<a>IS " : "<c>IS ")
+                    .append(config.getTeamShop() != null ? "<a>TS" : "<c>TS");
+                player.sendMessage(status);
             }
 
-            player.sendMessage(Component.text("§eDiamond Generators: §f" + session.getDiamondGenerators().size()));
-            player.sendMessage(Component.text("§eEmerald Generators: §f" + session.getEmeraldGenerators().size()));
-            player.sendMessage(Component.text("§eWaiting Location: §f" + (session.getWaitingLocation() != null ? "✔" : "§c✖")));
-            player.sendMessage(Component.text("§eSpectator Location: §f" + (session.getSpectatorLocation() != null ? "✔" : "§c✖")));
+            player.sendMessage(Text.parseLenient("<e>Diamond Generators: <f>" + session.getDiamondGenerators().size()));
+            player.sendMessage(Text.parseLenient("<e>Emerald Generators: <f>" + session.getEmeraldGenerators().size()));
+            player.sendMessage(Text.parseLenient("<e>Waiting Location: <f>" + (session.getWaitingLocation() != null ? "✔" : "<c>✖")));
+            player.sendMessage(Text.parseLenient("<e>Spectator Location: <f>" + (session.getSpectatorLocation() != null ? "✔" : "<c>✖")));
 
         }, ArgumentType.Literal("status"));
     }
@@ -678,7 +678,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             AutoSetupSession session = AutoSetupSession.get(player.getUuid());
             if (session == null) {
-                player.sendMessage(Component.text("§cNo configuration session active."));
+                player.sendMessage(Text.parseLenient("<c>No configuration session active."));
                 return;
             }
 
@@ -699,7 +699,7 @@ public class AutoSetupCommand extends HypixelCommand {
             }
 
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
-            player.sendMessage(Component.text("§aSnapped " + snapped + " spawn and shop positions to the nearest of 8 compass directions."));
+            player.sendMessage(Text.parseLenient("<a>Snapped " + snapped + " spawn and shop positions to the nearest of 8 compass directions."));
         }, ArgumentType.Literal("snap"));
     }
 
@@ -719,14 +719,14 @@ public class AutoSetupCommand extends HypixelCommand {
 
             AutoSetupSession session = AutoSetupSession.get(player.getUuid());
             if (session == null || session.getMapId() == null) {
-                player.sendMessage(Component.text("§cNo map selected. Use /choosemap <map> first."));
+                player.sendMessage(Text.parseLenient("<c>No map selected. Use /choosemap <map> first."));
                 return;
             }
 
             String name = context.get(nameArg);
             session.setMapName(name);
 
-            player.sendMessage(Component.text("§aSet map name to '" + name + "' (ID: " + session.getMapId() + ")"));
+            player.sendMessage(Text.parseLenient("<a>Set map name to '" + name + "' (ID: " + session.getMapId() + ")"));
 
         }, ArgumentType.Literal("name"), nameArg);
     }
@@ -751,9 +751,9 @@ public class AutoSetupCommand extends HypixelCommand {
             try {
                 GeneratorSpeed speed = GeneratorSpeed.valueOf(speedStr.toUpperCase());
                 session.setGeneratorSpeed(speed);
-                player.sendMessage(Component.text("§aSet generator speed to " + speed.name() + " (" + speed.getIronAmount() + " iron/" + speed.getIronDelaySeconds() + "s, " + speed.getGoldAmount() + " gold/" + speed.getGoldDelaySeconds() + "s)"));
+                player.sendMessage(Text.parseLenient("<a>Set generator speed to " + speed.name() + " (" + speed.getIronAmount() + " iron/" + speed.getIronDelaySeconds() + "s, " + speed.getGoldAmount() + " gold/" + speed.getGoldDelaySeconds() + "s)"));
             } catch (IllegalArgumentException e) {
-                player.sendMessage(Component.text("§cInvalid speed: " + speedStr));
+                player.sendMessage(Text.parseLenient("<c>Invalid speed: " + speedStr));
             }
 
         }, ArgumentType.Literal("generator"), ArgumentType.Literal("speed"), speedArg);
@@ -766,26 +766,26 @@ public class AutoSetupCommand extends HypixelCommand {
 
             AutoSetupSession session = AutoSetupSession.get(player.getUuid());
             if (session == null) {
-                player.sendMessage(Component.text("§cNo configuration session active."));
+                player.sendMessage(Text.parseLenient("<c>No configuration session active."));
                 return;
             }
 
             // Validate required fields
             List<String> errors = validateSession(session);
             if (!errors.isEmpty()) {
-                player.sendMessage(Component.text("§cCannot save - missing required configuration:"));
+                player.sendMessage(Text.parseLenient("<c>Cannot save - missing required configuration:"));
                 for (String error : errors) {
-                    player.sendMessage(Component.text("§c  • " + error));
+                    player.sendMessage(Text.parseLenient("<c>  • " + error));
                 }
                 return;
             }
 
             try {
                 saveToConfig(session);
-                player.sendMessage(Component.text("§a✔ Configuration saved to maps.json!"));
-                player.sendMessage(Component.text("§7Map ID: " + session.getMapId()));
+                player.sendMessage(Text.parseLenient("<a>✔ Configuration saved to maps.json!"));
+                player.sendMessage(Text.parseLenient("<7>Map ID: " + session.getMapId()));
             } catch (Exception e) {
-                player.sendMessage(Component.text("§cFailed to save: " + e.getMessage()));
+                player.sendMessage(Text.parseLenient("<c>Failed to save: " + e.getMessage()));
                 Logger.error("Failed to save map configuration", e);
             }
 

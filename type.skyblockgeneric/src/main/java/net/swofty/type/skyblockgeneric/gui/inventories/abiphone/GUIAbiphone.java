@@ -1,21 +1,18 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.abiphone;
 
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelPaginatedGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.PaginationList;
 import net.swofty.type.skyblockgeneric.abiphone.AbiphoneNPC;
@@ -23,7 +20,6 @@ import net.swofty.type.skyblockgeneric.abiphone.AbiphoneRegistry;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 
 import java.util.List;
-import java.util.Locale;
 
 public class GUIAbiphone extends HypixelPaginatedGUI<AbiphoneNPC> {
 	@Setter
@@ -65,16 +61,17 @@ public class GUIAbiphone extends HypixelPaginatedGUI<AbiphoneNPC> {
 		set(new GUIItem(50) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				return TranslatableItemStackCreator.getStack("gui_abiphone.sort_button", Material.HOPPER, 1, "gui_abiphone.sort_button.lore");
+				return ItemStacks.item(Material.HOPPER, 1, Text.key("gui_abiphone.sort_button"),
+					Text.keyLines("gui_abiphone.sort_button.lore"));
 			}
 		});
 		set(new GUIItem(51) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				return TranslatableItemStackCreator.getStack("gui_abiphone.contacts_directory", Material.BOOK, 1,
-					"gui_abiphone.contacts_directory.lore",
-					Component.text(String.valueOf(contacts.size())),
-					Component.text(String.valueOf(AbiphoneRegistry.getRegisteredContactNPCs().size())));
+				return ItemStacks.item(Material.BOOK, 1, Text.key("gui_abiphone.contacts_directory"),
+					Text.keyLines("gui_abiphone.contacts_directory.lore",
+						contacts.size(),
+						AbiphoneRegistry.getRegisteredContactNPCs().size()));
 			}
 		});
 
@@ -99,11 +96,11 @@ public class GUIAbiphone extends HypixelPaginatedGUI<AbiphoneNPC> {
 				Click click = e.getClick();
 				if (click instanceof Click.Left) {
 					player.closeInventory();
-					player.sendMessage(I18n.t("gui_abiphone.ring_1"));
+					player.sendMessage(Text.key("gui_abiphone.ring_1"));
 					MinecraftServer.getSchedulerManager().buildTask(() -> {
-						player.sendMessage(I18n.t("gui_abiphone.ring_2"));
+						player.sendMessage(Text.key("gui_abiphone.ring_2"));
 						MinecraftServer.getSchedulerManager().buildTask(() -> {
-							player.sendMessage(I18n.t("gui_abiphone.ring_3"));
+							player.sendMessage(Text.key("gui_abiphone.ring_3"));
 							MinecraftServer.getSchedulerManager().buildTask(() -> {
 								npc.onCall(player);
 							}).delay(TaskSchedule.seconds(1)).schedule();
@@ -116,14 +113,13 @@ public class GUIAbiphone extends HypixelPaginatedGUI<AbiphoneNPC> {
 
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				Locale l = player.getLocale();
-				return ItemStackCreator.updateLore(
-						npc.getIcon().set(DataComponents.CUSTOM_NAME, Component.text("§f" + npc.getName())),
+				return ItemStacks.lore(
+						ItemStacks.name(npc.getIcon(), "<f>{}", npc.getName()),
 						List.of(
-								"§7" + npc.getDescription(),
-								"",
-								I18n.string("gui_abiphone.contact_manage_hint", l),
-								I18n.string("gui_abiphone.contact_call_hint", l)
+								Text.of("<7>{}", npc.getDescription()),
+								Text.empty(),
+								Text.key("gui_abiphone.contact_manage_hint"),
+								Text.key("gui_abiphone.contact_call_hint")
 						)
 				);
 			}

@@ -27,7 +27,7 @@ public class ViewCollectionCommand extends HypixelCommand {
             final ItemType itemTypeLinker = context.get(itemArgument);
 
             if (CollectionCategories.getCategory(itemTypeLinker) == null) {
-                sender.sendMessage("§cThis item does not have a collection!");
+                sender.sendMessage("<c>This item does not have a collection!");
                 return;
             }
 

@@ -265,8 +265,8 @@ public class BazaarConnector {
 
     private CompletableFuture<TransactionProcessResult> processTransactions(List<PendingTransaction> transactions) {
 
-            player.sendMessage("§6[Bazaar] §7Processing " + transactions.size() + " pending transaction" +
-                    (transactions.size() == 1 ? "" : "s") + "...");
+            player.sendMessage("<6>[Bazaar] <7>Processing {} pending transaction{}...",
+                    transactions.size(), transactions.size() == 1 ? "" : "s");
 
             List<String> successfulIds = new ArrayList<>();
             List<String> failedIds = new ArrayList<>();
@@ -307,14 +307,14 @@ public class BazaarConnector {
 
             return result.thenApply(finalResult -> {
                 if (finalResult.isFullySuccessful()) {
-                    player.sendMessage("§6[Bazaar] §aAll pending transactions processed successfully!");
+                    player.sendMessage("<6>[Bazaar] <a>All pending transactions processed successfully!");
                 } else if (finalResult.hasFailures()) {
-                    player.sendMessage("§6[Bazaar] §eProcessed " + finalResult.processedCount() +
-                            " transaction" + (finalResult.processedCount() == 1 ? "" : "s") +
-                            ", " + finalResult.failedCount() + " failed.");
+                    player.sendMessage("<6>[Bazaar] <e>Processed {} transaction{}, {} failed.",
+                            finalResult.processedCount(), finalResult.processedCount() == 1 ? "" : "s",
+                            finalResult.failedCount());
                 } else if (finalResult.processedCount() > 0) {
-                    player.sendMessage("§6[Bazaar] §aProcessed " + finalResult.processedCount() +
-                            " pending transaction" + (finalResult.processedCount() == 1 ? "" : "s") + "!");
+                    player.sendMessage("<6>[Bazaar] <a>Processed {} pending transaction{}!",
+                            finalResult.processedCount(), finalResult.processedCount() == 1 ? "" : "s");
                 }
                 return finalResult;
             });

@@ -118,9 +118,7 @@ public class SkywarsPerkHandler {
                 case "lucky_charm" -> {
                     if (Math.random() < 0.30) {
                         killer.getInventory().addItemStack(ItemStack.of(Material.GOLDEN_APPLE, 1));
-                        killer.sendMessage(net.kyori.adventure.text.Component.text(
-                                "Lucky Charm! You found a Golden Apple!",
-                                net.kyori.adventure.text.format.NamedTextColor.GOLD));
+                        killer.sendMessage("<6>Lucky Charm! You found a Golden Apple!");
                     }
                 }
             }
@@ -137,9 +135,7 @@ public class SkywarsPerkHandler {
             if ("black_magic".equals(perkId)) {
                 if (Math.random() < 0.30) {
                     killer.getInventory().addItemStack(ItemStack.of(Material.ENDER_PEARL, 1));
-                    killer.sendMessage(net.kyori.adventure.text.Component.text(
-                            "Black Magic! You found an Ender Pearl!",
-                            net.kyori.adventure.text.format.NamedTextColor.DARK_PURPLE));
+                    killer.sendMessage("<5>Black Magic! You found an Ender Pearl!");
                 }
             }
         }

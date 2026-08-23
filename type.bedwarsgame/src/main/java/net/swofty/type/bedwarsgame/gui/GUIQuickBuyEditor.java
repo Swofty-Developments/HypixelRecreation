@@ -1,14 +1,13 @@
 package net.swofty.type.bedwarsgame.gui;
 
-import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.shop.ShopItem;
 import net.swofty.type.bedwarsgame.shop.ShopManager;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -37,17 +36,20 @@ public class GUIQuickBuyEditor extends StatelessView {
     @Override
     public void layout(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         layout.slot(4, (s, c) -> {
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Cost: " + shopItem.getCurrency().getColor() + shopItem.getPrice().apply(game.getGameType()) + " " + shopItem.getCurrency().getName());
-            lore.add(" ");
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.of("<7>Cost: {}", Text.of("<color:{}>{} {}", shopItem.getCurrency().getColor(),
+                    shopItem.getPrice().apply(game.getGameType()), shopItem.getCurrency().getName())));
+            lore.add(Text.literal(" "));
             if (shopItem.getDescription() != null && !shopItem.getDescription().isEmpty()) {
-                lore.addAll(StringUtility.splitByNewLine(shopItem.getDescription(), "§7"));
-                lore.add(" ");
+                for (String line : StringUtility.splitByNewLine(shopItem.getDescription())) {
+                    lore.add(Text.of("<7>{}", Text.parse(line)));
+                }
+                lore.add(Text.literal(" "));
             }
-            lore.add("§eAdding item to Quick Slot!");
+            lore.add(Text.of("<e>Adding item to Quick Slot!"));
 
-            return ItemStackCreator.updateLore(
-                    shopItem.getDisplay().builder().set(DataComponents.CUSTOM_NAME, Component.text("§a" + shopItem.getName())),
+            return ItemStacks.lore(
+                    ItemStacks.customName(shopItem.getDisplay().builder(), "<a>{}", shopItem.getName()),
                     lore
             );
         });

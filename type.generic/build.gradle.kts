@@ -39,6 +39,10 @@ dependencies {
     implementation(libs.polar)
     implementation(libs.snakeyaml)
     implementation(libs.fastutil)
+
+    testImplementation(libs.minestom) {
+        exclude(group = "org.jboss.shrinkwrap.resolver", module = "shrinkwrap-resolver-depchain")
+    }
 }
 
 tasks.test {

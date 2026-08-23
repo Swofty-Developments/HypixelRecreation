@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.hunting;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.entity.mob.BestiaryMob;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
@@ -21,8 +22,8 @@ public final class CharmingService {
         int amount = AttributeEffectService.fortunateAmount(player, definition);
         player.getHuntingData().addShards(definition.id(), amount);
         player.getSkills().increase(player, SkillCategories.HUNTING, huntingExperience(definition));
-        player.sendMessage("§d§lCHARM! §aCaptured §e" + amount + "x §a" + definition.shardName()
-                + " §7from §c" + mob.getDisplayName() + "§7!");
+        player.sendMessage("<d><l>CHARM! </l><a>Captured <e>{}x <a>{} <7>from <c>{}<7>!",
+                amount, definition.shardName(), mob.getDisplayName());
         return true;
     }
 

@@ -4,7 +4,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.skyblock.item.ItemType;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -37,9 +37,9 @@ public class GUIFishingRodParts extends StatelessView {
     public void layout(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         Components.close(layout, 49);
 
-        layout.editable(21, (_, _) -> ItemStackCreator.createNamedItemStack(
+        layout.editable(21, (_, _) -> ItemStacks.named(
             Material.FISHING_ROD,
-            "§7Place your §aFishing Rod §7here!"
+            "<7>Place your <a>Fishing Rod <7>here!"
         ), (_, oldItem, newItem, _) -> {
             if (newItem.isAir()) {
                 return;
@@ -49,7 +49,7 @@ public class GUIFishingRodParts extends StatelessView {
             var metadata = type == null ? null : FishingItemSupport.getRodMetadata(type.name());
             if (metadata == null || !metadata.isRodPartsEnabled() || metadata.getLegacyConversionTarget() != null) {
                 SkyBlockPlayer player = (SkyBlockPlayer) ctx.player();
-                player.sendMessage("§cThat fishing rod does not support rod parts.");
+                player.sendMessage("<c>That fishing rod does not support rod parts.");
                 ctx.inventory().setItemStack(21, oldItem);
                 if (!newItem.isAir()) {
                     player.addAndUpdateItem(new SkyBlockItem(newItem));
@@ -57,45 +57,33 @@ public class GUIFishingRodParts extends StatelessView {
             }
         });
 
-        layout.slot(22, ItemStackCreator.getStack(
-            "§9ථ Hook",
-            Material.LIGHT_BLUE_STAINED_GLASS_PANE,
-            1,
-            "§7Place a §aFishing Rod §7in the slot to the",
-            "§7left to view and modify its §9Hook§7!",
-            "",
-            "§eClick to browse Hooks!"
-        ), (_, viewCtx) -> viewCtx.push(new GUIHookGuide()));
+        layout.slot(22, ItemStacks.item(Material.LIGHT_BLUE_STAINED_GLASS_PANE, """
+                <9>ථ Hook
+                <7>Place a <a>Fishing Rod <7>in the slot to the
+                <7>left to view and modify its <9>Hook<7>!
 
-        layout.slot(23, ItemStackCreator.getStack(
-            "§9ꨃ Line",
-            Material.LIGHT_BLUE_STAINED_GLASS_PANE,
-            1,
-            "§7Place a §aFishing Rod §7in the slot to the",
-            "§7left to view and modify its §9Line§7!",
-            "",
-            "§eClick to browse Lines!"
-        ), (_, viewCtx) -> viewCtx.push(new GUILineGuide()));
+                <e>Click to browse Hooks!"""), (_, viewCtx) -> viewCtx.push(new GUIHookGuide()));
 
-        layout.slot(24, ItemStackCreator.getStack(
-            "§9࿉ Sinker",
-            Material.LIGHT_BLUE_STAINED_GLASS_PANE,
-            1,
-            "§7Place a §aFishing Rod §7in the slot to the",
-            "§7left to view and modify its §9Sinker§7!",
-            "",
-            "§eClick to browse Sinkers!"
-        ), (_, viewCtx) -> viewCtx.push(new GUISinkerGuide()));
+        layout.slot(23, ItemStacks.item(Material.LIGHT_BLUE_STAINED_GLASS_PANE, """
+                <9>ꨃ Line
+                <7>Place a <a>Fishing Rod <7>in the slot to the
+                <7>left to view and modify its <9>Line<7>!
 
-        layout.slot(50, ItemStackCreator.getStack(
-            "§9Rod Part Guide",
-            Material.BOOK,
-            1,
-            "§7View all of the §9Rod Parts §7that can be",
-            "§7applied to §aFishing Rods§7! Can also be",
-            "§7accessed with §a/rodparts§7!",
-            "",
-            "§eClick to view!"
-        ), (_, viewCtx) -> viewCtx.push(new GUIRodPartGuide()));
+                <e>Click to browse Lines!"""), (_, viewCtx) -> viewCtx.push(new GUILineGuide()));
+
+        layout.slot(24, ItemStacks.item(Material.LIGHT_BLUE_STAINED_GLASS_PANE, """
+                <9>࿉ Sinker
+                <7>Place a <a>Fishing Rod <7>in the slot to the
+                <7>left to view and modify its <9>Sinker<7>!
+
+                <e>Click to browse Sinkers!"""), (_, viewCtx) -> viewCtx.push(new GUISinkerGuide()));
+
+        layout.slot(50, ItemStacks.item(Material.BOOK, """
+                <9>Rod Part Guide
+                <7>View all of the <9>Rod Parts <7>that can be
+                <7>applied to <a>Fishing Rods<7>! Can also be
+                <7>accessed with <a>/rodparts<7>!
+
+                <e>Click to view!"""), (_, viewCtx) -> viewCtx.push(new GUIRodPartGuide()));
     }
 }

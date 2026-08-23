@@ -31,7 +31,7 @@ public class EnchantmentCleave implements Ench, EnchFromTable, DamageEventEnchan
     public String getDescription(int level) {
         int damagePercent = (int) (DAMAGE_PERCENTAGES[level - 1] * 100);
         double radius = RADIUS[level - 1];
-        return "Deals §a" + damagePercent + "%§7 of your damage to other monsters within §a" + radius + " blocks§7.";
+        return "Deals <a>" + damagePercent + "%<7> of your damage to other monsters within <a>" + radius + " blocks<7>.";
     }
 
     @Override

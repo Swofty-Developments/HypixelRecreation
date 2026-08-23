@@ -7,7 +7,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.hub.gui.elizabeth.GUICityProjects;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
@@ -23,81 +23,88 @@ public class GUIPreviousCityProjects extends HypixelInventoryGUI {
     };
 
     private enum CityProjects {
-        FARM_MERCHANTS_DWELLING(ItemStackCreator.getStack("§aCity project: §eFarm Merchant's Dwelling", Material.HAY_BLOCK, 1,
-                "§8Released November 2020",
-                " ",
-                "§7Upgrade the farm merchant's",
-                "§7dwelling, adding new tools both to",
-                "§7build farms and harvest them quicker!",
-                " ",
-                "§7Bonuses:",
-                "§7▶ §b4§7: 1 day headstart",
-                "§7▶ §b8§7: 2 days headstart",
-                "§7▶ §b16§7: §65% discount §7at farm merchant",
-                "§7▶ §b24§7: §610% discount §7at farm merchant")),
-        BARTENDERS_BREWERY(ItemStackCreator.getStackHead("§aCity project: §eBartender's Brewery", "d672c57f4c7b9e962b45b55dd7bd7886880d7eef26db6c2cce03c8ff8c48", 1,
-                "§8Released March 2021",
-                " ",
-                "§7Upgrade the Bartender's brewery,",
-                "§7offering new drinks and a new tier",
-                "§7of Zombie slayer.",
-                " ",
-                "§7Bonuses:",
-                "§7▶ §b4§7: §65% discount §7at bartender",
-                "§7▶ §b8§7: §610% discount §7at bartender",
-                "§7▶ §b16§7: §615% discount §7at bartender",
-                "§7▶ §b24§7: §65% discount §7at Maddox")),
-        BLACKSMITH_WORKSPACE(ItemStackCreator.getStack("§aCity project: §eBlacksmith Workspace", Material.ANVIL, 1,
-                "§8Released October 2020",
-                " ",
-                "§7Add §a3 §7new reforges to the",
-                "§7Blacksmith and make his workspace",
-                "§7more comfortable.",
-                " ",
-                "§7Bonuses:",
-                "§7▶ §b1§7: 1 day headstart",
-                "§7▶ §b2§7: 3 days headstart",
-                "§7▶ §b3§7: 5 days headstart",
-                "§7▶ §b4§7: 1 week headstart")),
-        BUILDERS_HOUSE(ItemStackCreator.getStack("§aCity project: §eBuilder's House", Material.BRICKS, 1,
-                "§8Released October 2020",
-                " ",
-                "§7The Builder shop NPC will move from",
-                "§7a stall to its own house, with §etons §7of",
-                "§7new blocks for sale without a daily",
-                "§7limit.",
-                " ",
-                "§7Bonuses:",
-                "§7▶ §b1§7: §65% discount §7at builder",
-                "§7▶ §b2§7: §610% discount §7at builder",
-                "§7▶ §b3§7: §615% discount §7at builder",
-                "§7▶ §b4§7: §630% discount §7at builder")),
-        WEAPONSMITH_WORKSHOP(ItemStackCreator.getStack("§aCity project: §eWeaponsmith Workshop", Material.BOW, 1,
-                "§8Released September 2021",
-                " ",
-                "§7Upgrade the Weaponsmith Workshop,",
-                "§7offering brand new arrow items and",
-                "§7starter gear for beginner players!",
-                " ",
-                "§7Bonuses:",
-                "§7▶ §b4§7: 1 day headstart",
-                "§7▶ §b8§7: 2 days headstart",
-                "§7▶ §b16§7: §65% discount §7at Jax",
-                "§7▶ §b24§7: §610% discount §7at Jax")),
-        REPAIR_WIZARD_PORTAL(ItemStackCreator.getStack("§aCity project: §eRepair Wizard Portal", Material.END_PORTAL_FRAME, 1,
-                "§8Released June 2023",
-                " ",
-                "§7Help out §9Barry §7with the last efforts",
-                "§7to open the §dWizard Portal§7.",
-                " ",
-                "§7Bonuses:")),
-        PET_CARE_EXPANSION(ItemStackCreator.getStack("§aCity project: §ePet Care Expansion", Material.EGG, 1,
-                "§8Released December 2023",
-                " ",
-                "§7§7Introduces §dPet Care§7, adding ways to",
-                "§7train and level up your §apets§7!",
-                " ",
-                "§7Bonuses:")),
+        FARM_MERCHANTS_DWELLING(ItemStacks.item(Material.HAY_BLOCK, """
+                <a>City project: <e>Farm Merchant's Dwelling
+                <8>Released November 2020
+
+                <7>Upgrade the farm merchant's
+                <7>dwelling, adding new tools both to
+                <7>build farms and harvest them quicker!
+
+                <7>Bonuses:
+                <7>▶ <b>4<7>: 1 day headstart
+                <7>▶ <b>8<7>: 2 days headstart
+                <7>▶ <b>16<7>: <6>5% discount <7>at farm merchant
+                <7>▶ <b>24<7>: <6>10% discount <7>at farm merchant""")),
+        BARTENDERS_BREWERY(ItemStacks.head("d672c57f4c7b9e962b45b55dd7bd7886880d7eef26db6c2cce03c8ff8c48", """
+                <a>City project: <e>Bartender's Brewery
+                <8>Released March 2021
+
+                <7>Upgrade the Bartender's brewery,
+                <7>offering new drinks and a new tier
+                <7>of Zombie slayer.
+
+                <7>Bonuses:
+                <7>▶ <b>4<7>: <6>5% discount <7>at bartender
+                <7>▶ <b>8<7>: <6>10% discount <7>at bartender
+                <7>▶ <b>16<7>: <6>15% discount <7>at bartender
+                <7>▶ <b>24<7>: <6>5% discount <7>at Maddox""")),
+        BLACKSMITH_WORKSPACE(ItemStacks.item(Material.ANVIL, """
+                <a>City project: <e>Blacksmith Workspace
+                <8>Released October 2020
+
+                <7>Add <a>3 <7>new reforges to the
+                <7>Blacksmith and make his workspace
+                <7>more comfortable.
+
+                <7>Bonuses:
+                <7>▶ <b>1<7>: 1 day headstart
+                <7>▶ <b>2<7>: 3 days headstart
+                <7>▶ <b>3<7>: 5 days headstart
+                <7>▶ <b>4<7>: 1 week headstart""")),
+        BUILDERS_HOUSE(ItemStacks.item(Material.BRICKS, """
+                <a>City project: <e>Builder's House
+                <8>Released October 2020
+
+                <7>The Builder shop NPC will move from
+                <7>a stall to its own house, with <e>tons <7>of
+                <7>new blocks for sale without a daily
+                <7>limit.
+
+                <7>Bonuses:
+                <7>▶ <b>1<7>: <6>5% discount <7>at builder
+                <7>▶ <b>2<7>: <6>10% discount <7>at builder
+                <7>▶ <b>3<7>: <6>15% discount <7>at builder
+                <7>▶ <b>4<7>: <6>30% discount <7>at builder""")),
+        WEAPONSMITH_WORKSHOP(ItemStacks.item(Material.BOW, """
+                <a>City project: <e>Weaponsmith Workshop
+                <8>Released September 2021
+
+                <7>Upgrade the Weaponsmith Workshop,
+                <7>offering brand new arrow items and
+                <7>starter gear for beginner players!
+
+                <7>Bonuses:
+                <7>▶ <b>4<7>: 1 day headstart
+                <7>▶ <b>8<7>: 2 days headstart
+                <7>▶ <b>16<7>: <6>5% discount <7>at Jax
+                <7>▶ <b>24<7>: <6>10% discount <7>at Jax""")),
+        REPAIR_WIZARD_PORTAL(ItemStacks.item(Material.END_PORTAL_FRAME, """
+                <a>City project: <e>Repair Wizard Portal
+                <8>Released June 2023
+
+                <7>Help out <9>Barry <7>with the last efforts
+                <7>to open the <d>Wizard Portal<7>.
+
+                <7>Bonuses:""")),
+        PET_CARE_EXPANSION(ItemStacks.item(Material.EGG, """
+                <a>City project: <e>Pet Care Expansion
+                <8>Released December 2023
+
+                <7>Introduces <d>Pet Care<7>, adding ways to
+                <7>train and level up your <a>pets<7>!
+
+                <7>Bonuses:""")),
         ;
 
         private final ItemStack.Builder item;
@@ -112,7 +119,7 @@ public class GUIPreviousCityProjects extends HypixelInventoryGUI {
     }
 
     public void onOpen(InventoryGUIOpenEvent e) {
-        border(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        border(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(GUIClickableItem.getGoBackItem(40, new GUICityProjects()));
 
         CityProjects[] cityProjects = CityProjects.values();

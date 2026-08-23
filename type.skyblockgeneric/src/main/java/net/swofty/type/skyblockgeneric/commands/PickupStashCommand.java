@@ -2,6 +2,7 @@ package net.swofty.type.skyblockgeneric.commands;
 
 import net.minestom.server.command.builder.arguments.ArgumentWord;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -50,7 +51,7 @@ public class PickupStashCommand extends HypixelCommand {
         DatapointStash.PlayerStash stash = player.getStash();
 
         if (stash.getItemStashCount() == 0) {
-            player.sendMessage("§cYour item stash is already empty!");
+            player.sendMessage("<c>Your item stash is already empty!");
             return;
         }
 
@@ -59,17 +60,17 @@ public class PickupStashCommand extends HypixelCommand {
             SkyBlockItem removed = stash.removeFromItemStash(0);
             if (removed != null) {
                 player.addAndUpdateItem(removed);
-                player.sendMessage("§aFrom stash: §f" + removed.getDisplayName());
+                player.sendMessage("<a>From stash: <f>{}", removed.getDisplayName());
                 pickedUp++;
             }
         }
 
         if (pickedUp == 0) {
-            player.sendMessage("§cCouldn't unstash your item stash! Your inventory is full!");
+            player.sendMessage("<c>Couldn't unstash your item stash! Your inventory is full!");
         } else if (stash.getItemStashCount() == 0) {
-            player.sendMessage("§aYou picked up all items from your item stash!");
+            player.sendMessage("<a>You picked up all items from your item stash!");
         } else {
-            player.sendMessage("§eYou still have §c" + stash.getItemStashCount() + " §eitems in there!");
+            player.sendMessage("<e>You still have <c>{} <e>items in there!", stash.getItemStashCount());
         }
     }
 
@@ -77,7 +78,7 @@ public class PickupStashCommand extends HypixelCommand {
         DatapointStash.PlayerStash stash = player.getStash();
 
         if (stash.getMaterialStashCount() == 0) {
-            player.sendMessage("§cYour material stash is already empty!");
+            player.sendMessage("<c>Your material stash is already empty!");
             return;
         }
 
@@ -95,7 +96,7 @@ public class PickupStashCommand extends HypixelCommand {
                     SkyBlockItem newItem = new SkyBlockItem(type);
                     newItem.setAmount(removed);
                     player.addAndUpdateItem(newItem);
-                    player.sendMessage("§aFrom stash: §f" + type.getDisplayName() + " §7x" + removed);
+                    player.sendMessage("<a>From stash: <f>{} <7>x{}", type.getDisplayName(), removed);
                     pickedUp += removed;
                     amount -= removed;
                 } else {
@@ -107,13 +108,12 @@ public class PickupStashCommand extends HypixelCommand {
         }
 
         if (pickedUp == 0) {
-            player.sendMessage("§cCouldn't unstash your material stash! Your inventory is full!");
+            player.sendMessage("<c>Couldn't unstash your material stash! Your inventory is full!");
         } else if (stash.getMaterialStashCount() == 0) {
-            player.sendMessage("§aYou picked up all items from your material stash!");
+            player.sendMessage("<a>You picked up all items from your material stash!");
         } else {
-            player.sendMessage("§eYou still have §c" + stash.getMaterialStashCount() +
-                    " §ematerials totalling §c" + stash.getMaterialTypeCount() +
-                    " §etypes of materials in there!");
+            player.sendMessage("<e>You still have <c>{} <e>materials totalling <c>{} <e>types of materials in there!",
+                    stash.getMaterialStashCount(), stash.getMaterialTypeCount());
         }
     }
 }

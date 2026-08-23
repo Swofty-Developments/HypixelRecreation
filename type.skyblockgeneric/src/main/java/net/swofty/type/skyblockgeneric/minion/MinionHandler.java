@@ -84,7 +84,7 @@ public record MinionHandler(Scheduler scheduler) {
                 ServerHolograms.ExternalHologram hologram = ServerHolograms.ExternalHologram.builder()
                         .pos(minionEntity.getPosition())
                         .instance(instance)
-                        .text(new String[]{"§c>!<", "§cThis location isn't perfect! :("})
+                        .text(new String[]{"<c>>!\\<", "<c>This location isn't perfect! :("})
                         .build();
 
                 tags.setState(InternalMinionTags.State.BAD_LOCATION);
@@ -110,7 +110,7 @@ public record MinionHandler(Scheduler scheduler) {
                 ServerHolograms.ExternalHologram hologram = ServerHolograms.ExternalHologram.builder()
                         .pos(minionEntity.getPosition())
                         .instance(instance)
-                        .text(new String[]{"§c>!<", "§cMy storage is full! :("})
+                        .text(new String[]{"<c>>!\\<", "<c>My storage is full! :("})
                         .build();
 
                 tags.setState(InternalMinionTags.State.BAD_FULL);

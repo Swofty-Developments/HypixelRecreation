@@ -1,10 +1,10 @@
 package net.swofty.type.hub.npcs.election;
 
 import net.minestom.server.coordinate.Pos;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.elections.ElectionData;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
@@ -30,17 +30,17 @@ public abstract class AbstractCandidateNPC extends HypixelNPC {
             public String[] holograms(HypixelPlayer player) {
                 ElectionData.CandidateData candidateData = getCandidateData(index);
                 if (candidateData == null) return new String[]{
-                    I18n.string("npcs_hub.election.mayor_unknown", player.getLocale()),
-                    I18n.string("npcs_hub.election.candidate_label", player.getLocale()),
-                    I18n.string("npcs_hub.election.click", player.getLocale())
+                    "<key:'npcs_hub.election.mayor_unknown'>",
+                    "<key:'npcs_hub.election.candidate_label'>",
+                    "<key:'npcs_hub.election.click'>"
                 };
-                String color = candidateData.getColor();
+                String color = Text.colorTag(candidateData.getColor());
                 SkyBlockMayor mayor = candidateData.getMayorEnum();
                 String name = mayor != null ? mayor.getDisplayName() : candidateData.getMayorName();
                 return new String[]{
                     color + name,
-                    color + I18n.string("npcs_hub.election.candidate_label", player.getLocale()),
-                    I18n.string("npcs_hub.election.click", player.getLocale())
+                    color + "<key:'npcs_hub.election.candidate_label'>",
+                    "<key:'npcs_hub.election.click'>"
                 };
             }
 
@@ -79,7 +79,7 @@ public abstract class AbstractCandidateNPC extends HypixelNPC {
             public @NonNull String chatName(HypixelPlayer player) {
                 ElectionData.CandidateData candidateData = getCandidateData(index);
                 if (candidateData == null) return "Mayor ???";
-                String color = candidateData.getColor();
+                String color = Text.colorTag(candidateData.getColor());
                 SkyBlockMayor mayor = candidateData.getMayorEnum();
                 String name = mayor != null ? mayor.getDisplayName() : candidateData.getMayorName();
                 return color + "Mayor " + name;
@@ -91,6 +91,6 @@ public abstract class AbstractCandidateNPC extends HypixelNPC {
     @Override
     public void onClick(NPCInteractEvent event) {
         if (getCandidateData(index) == null) return;
-        sendNPCMessage(event.player(), I18n.string("npcs_hub.election.running", event.player().getLocale()));
+        sendNPCMessage(event.player(), "<key:'npcs_hub.election.running'>");
     }
 }

@@ -1,12 +1,12 @@
 package net.swofty.type.skyblockgeneric.event.actions.player;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.scoreboard.Team;
 import net.minestom.server.scoreboard.TeamBuilder;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.TeamColorUtil;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
@@ -35,9 +35,11 @@ public class ActionAddSkyBlockXPToNametag implements HypixelEventClass {
         Rank rank = player.getRank();
 
         String teamName = StringUtility.limitStringLength(rank.getPriorityCharacter() + player.getUsername(), 15);
+        Text levelPrefix = Text.of("<8>[")
+                .append(Text.parse(experience.getLevel().getColor() + experience.getLevel()))
+                .append("<8>] ");
         Team team = new TeamBuilder("Z" + teamName, MinecraftServer.getTeamManager())
-            .prefix(Component.text("§8[" + experience.getLevel().getColor() + experience.getLevel() + "§8] ")
-                .append(player.getRankPrefix()))
+            .prefix(levelPrefix.asComponent().append(player.getRankPrefix()))
                 .teamColor(TeamColorUtil.fromNamedColor(rank.getTextColor()))
                 .build();
         player.setTeam(team);

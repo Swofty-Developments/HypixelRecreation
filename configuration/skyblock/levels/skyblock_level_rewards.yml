@@ -2,14 +2,14 @@ levels:
 - level: 0
   experience: 0
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks: []
 - level: 1
   experience: 100
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -21,7 +21,7 @@ levels:
 - level: 2
   experience: 200
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -33,7 +33,7 @@ levels:
 - level: 3
   experience: 300
   isMilestone: true
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -48,7 +48,7 @@ levels:
 - level: 4
   experience: 400
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -60,7 +60,7 @@ levels:
 - level: 5
   experience: 500
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -78,7 +78,7 @@ levels:
 - level: 6
   experience: 600
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -93,7 +93,7 @@ levels:
 - level: 7
   experience: 700
   isMilestone: true
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -108,7 +108,7 @@ levels:
 - level: 8
   experience: 800
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -120,7 +120,7 @@ levels:
 - level: 9
   experience: 900
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -132,7 +132,7 @@ levels:
 - level: 10
   experience: 1000
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -149,7 +149,7 @@ levels:
 - level: 11
   experience: 1100
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -161,7 +161,7 @@ levels:
 - level: 12
   experience: 1200
   isMilestone: true
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -176,7 +176,7 @@ levels:
 - level: 13
   experience: 1300
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -188,7 +188,7 @@ levels:
 - level: 14
   experience: 1400
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -200,7 +200,7 @@ levels:
 - level: 15
   experience: 1500
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -217,7 +217,7 @@ levels:
 - level: 16
   experience: 1600
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -229,7 +229,7 @@ levels:
 - level: 17
   experience: 1700
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -241,7 +241,7 @@ levels:
 - level: 18
   experience: 1800
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -253,7 +253,7 @@ levels:
 - level: 19
   experience: 1900
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -265,7 +265,7 @@ levels:
 - level: 20
   experience: 2000
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -282,7 +282,7 @@ levels:
 - level: 21
   experience: 2100
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -294,7 +294,7 @@ levels:
 - level: 22
   experience: 2200
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -306,7 +306,7 @@ levels:
 - level: 23
   experience: 2300
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -318,7 +318,7 @@ levels:
 - level: 24
   experience: 2400
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -330,7 +330,7 @@ levels:
 - level: 25
   experience: 2500
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -347,7 +347,7 @@ levels:
 - level: 26
   experience: 2600
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -359,7 +359,7 @@ levels:
 - level: 27
   experience: 2700
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -371,7 +371,7 @@ levels:
 - level: 28
   experience: 2800
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -383,7 +383,7 @@ levels:
 - level: 29
   experience: 2900
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -395,7 +395,7 @@ levels:
 - level: 30
   experience: 3000
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -412,7 +412,7 @@ levels:
 - level: 31
   experience: 3100
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -424,7 +424,7 @@ levels:
 - level: 32
   experience: 3200
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -436,7 +436,7 @@ levels:
 - level: 33
   experience: 3300
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -448,7 +448,7 @@ levels:
 - level: 34
   experience: 3400
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -460,7 +460,7 @@ levels:
 - level: 35
   experience: 3500
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -477,7 +477,7 @@ levels:
 - level: 36
   experience: 3600
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -489,7 +489,7 @@ levels:
 - level: 37
   experience: 3700
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -501,7 +501,7 @@ levels:
 - level: 38
   experience: 3800
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -513,7 +513,7 @@ levels:
 - level: 39
   experience: 3900
   isMilestone: false
-  prefix: §7
+  prefix: <7>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -525,7 +525,7 @@ levels:
 - level: 40
   experience: 4000
   isMilestone: true
-  prefix: §f
+  prefix: <f>
   prefixDisplay: White Level Prefix
   prefixItem: Material.BONE_MEAL
   unlocks:
@@ -542,7 +542,7 @@ levels:
 - level: 41
   experience: 4100
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -554,7 +554,7 @@ levels:
 - level: 42
   experience: 4200
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -566,7 +566,7 @@ levels:
 - level: 43
   experience: 4300
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -578,7 +578,7 @@ levels:
 - level: 44
   experience: 4400
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -590,7 +590,7 @@ levels:
 - level: 45
   experience: 4500
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -607,7 +607,7 @@ levels:
 - level: 46
   experience: 4600
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -619,7 +619,7 @@ levels:
 - level: 47
   experience: 4700
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -631,7 +631,7 @@ levels:
 - level: 48
   experience: 4800
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -643,7 +643,7 @@ levels:
 - level: 49
   experience: 4900
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -655,7 +655,7 @@ levels:
 - level: 50
   experience: 5000
   isMilestone: true
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -675,7 +675,7 @@ levels:
 - level: 51
   experience: 5100
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -687,7 +687,7 @@ levels:
 - level: 52
   experience: 5200
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -699,7 +699,7 @@ levels:
 - level: 53
   experience: 5300
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -711,7 +711,7 @@ levels:
 - level: 54
   experience: 5400
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -723,7 +723,7 @@ levels:
 - level: 55
   experience: 5500
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -740,7 +740,7 @@ levels:
 - level: 56
   experience: 5600
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -752,7 +752,7 @@ levels:
 - level: 57
   experience: 5700
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -764,7 +764,7 @@ levels:
 - level: 58
   experience: 5800
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -776,7 +776,7 @@ levels:
 - level: 59
   experience: 5900
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -788,7 +788,7 @@ levels:
 - level: 60
   experience: 6000
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -805,7 +805,7 @@ levels:
 - level: 61
   experience: 6100
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -817,7 +817,7 @@ levels:
 - level: 62
   experience: 6200
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -829,7 +829,7 @@ levels:
 - level: 63
   experience: 6300
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -841,7 +841,7 @@ levels:
 - level: 64
   experience: 6400
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -853,7 +853,7 @@ levels:
 - level: 65
   experience: 6500
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -870,7 +870,7 @@ levels:
 - level: 66
   experience: 6600
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -882,7 +882,7 @@ levels:
 - level: 67
   experience: 6700
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -894,7 +894,7 @@ levels:
 - level: 68
   experience: 6800
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -906,7 +906,7 @@ levels:
 - level: 69
   experience: 6900
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -918,7 +918,7 @@ levels:
 - level: 70
   experience: 7000
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -935,7 +935,7 @@ levels:
 - level: 71
   experience: 7100
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -947,7 +947,7 @@ levels:
 - level: 72
   experience: 7200
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -959,7 +959,7 @@ levels:
 - level: 73
   experience: 7300
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -971,7 +971,7 @@ levels:
 - level: 74
   experience: 7400
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -983,7 +983,7 @@ levels:
 - level: 75
   experience: 7500
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1000,7 +1000,7 @@ levels:
 - level: 76
   experience: 7600
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1012,7 +1012,7 @@ levels:
 - level: 77
   experience: 7700
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1024,7 +1024,7 @@ levels:
 - level: 78
   experience: 7800
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1036,7 +1036,7 @@ levels:
 - level: 79
   experience: 7900
   isMilestone: false
-  prefix: §f
+  prefix: <f>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1048,7 +1048,7 @@ levels:
 - level: 80
   experience: 8000
   isMilestone: true
-  prefix: §e
+  prefix: <e>
   prefixDisplay: Yellow Level Prefix
   prefixItem: Material.YELLOW_DYE
   unlocks:
@@ -1065,7 +1065,7 @@ levels:
 - level: 81
   experience: 8100
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1077,7 +1077,7 @@ levels:
 - level: 82
   experience: 8200
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1089,7 +1089,7 @@ levels:
 - level: 83
   experience: 8300
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1101,7 +1101,7 @@ levels:
 - level: 84
   experience: 8400
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1113,7 +1113,7 @@ levels:
 - level: 85
   experience: 8500
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1130,7 +1130,7 @@ levels:
 - level: 86
   experience: 8600
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1142,7 +1142,7 @@ levels:
 - level: 87
   experience: 8700
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1154,7 +1154,7 @@ levels:
 - level: 88
   experience: 8800
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1166,7 +1166,7 @@ levels:
 - level: 89
   experience: 8900
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1178,7 +1178,7 @@ levels:
 - level: 90
   experience: 9000
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1195,7 +1195,7 @@ levels:
 - level: 91
   experience: 9100
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1207,7 +1207,7 @@ levels:
 - level: 92
   experience: 9200
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1219,7 +1219,7 @@ levels:
 - level: 93
   experience: 9300
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1231,7 +1231,7 @@ levels:
 - level: 94
   experience: 9400
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1243,7 +1243,7 @@ levels:
 - level: 95
   experience: 9500
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1260,7 +1260,7 @@ levels:
 - level: 96
   experience: 9600
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1272,7 +1272,7 @@ levels:
 - level: 97
   experience: 9700
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1284,7 +1284,7 @@ levels:
 - level: 98
   experience: 9800
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1296,7 +1296,7 @@ levels:
 - level: 99
   experience: 9900
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1308,7 +1308,7 @@ levels:
 - level: 100
   experience: 10000
   isMilestone: true
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1328,7 +1328,7 @@ levels:
 - level: 101
   experience: 10100
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1340,7 +1340,7 @@ levels:
 - level: 102
   experience: 10200
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1352,7 +1352,7 @@ levels:
 - level: 103
   experience: 10300
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1364,7 +1364,7 @@ levels:
 - level: 104
   experience: 10400
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1376,7 +1376,7 @@ levels:
 - level: 105
   experience: 10500
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1393,7 +1393,7 @@ levels:
 - level: 106
   experience: 10600
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1405,7 +1405,7 @@ levels:
 - level: 107
   experience: 10700
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1417,7 +1417,7 @@ levels:
 - level: 108
   experience: 10800
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1429,7 +1429,7 @@ levels:
 - level: 109
   experience: 10900
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1441,7 +1441,7 @@ levels:
 - level: 110
   experience: 11000
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1458,7 +1458,7 @@ levels:
 - level: 111
   experience: 11100
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1470,7 +1470,7 @@ levels:
 - level: 112
   experience: 11200
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1482,7 +1482,7 @@ levels:
 - level: 113
   experience: 11300
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1494,7 +1494,7 @@ levels:
 - level: 114
   experience: 11400
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1506,7 +1506,7 @@ levels:
 - level: 115
   experience: 11500
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1523,7 +1523,7 @@ levels:
 - level: 116
   experience: 11600
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1535,7 +1535,7 @@ levels:
 - level: 117
   experience: 11700
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1547,7 +1547,7 @@ levels:
 - level: 118
   experience: 11800
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1559,7 +1559,7 @@ levels:
 - level: 119
   experience: 11900
   isMilestone: false
-  prefix: §e
+  prefix: <e>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1571,7 +1571,7 @@ levels:
 - level: 120
   experience: 12000
   isMilestone: true
-  prefix: §a
+  prefix: <a>
   prefixDisplay: Green Level Prefix
   prefixItem: Material.LIME_DYE
   unlocks:
@@ -1588,7 +1588,7 @@ levels:
 - level: 121
   experience: 12100
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1600,7 +1600,7 @@ levels:
 - level: 122
   experience: 12200
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1612,7 +1612,7 @@ levels:
 - level: 123
   experience: 12300
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1624,7 +1624,7 @@ levels:
 - level: 124
   experience: 12400
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1636,7 +1636,7 @@ levels:
 - level: 125
   experience: 12500
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1653,7 +1653,7 @@ levels:
 - level: 126
   experience: 12600
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1665,7 +1665,7 @@ levels:
 - level: 127
   experience: 12700
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1677,7 +1677,7 @@ levels:
 - level: 128
   experience: 12800
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1689,7 +1689,7 @@ levels:
 - level: 129
   experience: 12900
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1701,7 +1701,7 @@ levels:
 - level: 130
   experience: 13000
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1718,7 +1718,7 @@ levels:
 - level: 131
   experience: 13100
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1730,7 +1730,7 @@ levels:
 - level: 132
   experience: 13200
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1742,7 +1742,7 @@ levels:
 - level: 133
   experience: 13300
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1754,7 +1754,7 @@ levels:
 - level: 134
   experience: 13400
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1766,7 +1766,7 @@ levels:
 - level: 135
   experience: 13500
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1783,7 +1783,7 @@ levels:
 - level: 136
   experience: 13600
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1795,7 +1795,7 @@ levels:
 - level: 137
   experience: 13700
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1807,7 +1807,7 @@ levels:
 - level: 138
   experience: 13800
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1819,7 +1819,7 @@ levels:
 - level: 139
   experience: 13900
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1831,7 +1831,7 @@ levels:
 - level: 140
   experience: 14000
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1848,7 +1848,7 @@ levels:
 - level: 141
   experience: 14100
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1860,7 +1860,7 @@ levels:
 - level: 142
   experience: 14200
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1872,7 +1872,7 @@ levels:
 - level: 143
   experience: 14300
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1884,7 +1884,7 @@ levels:
 - level: 144
   experience: 14400
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1896,7 +1896,7 @@ levels:
 - level: 145
   experience: 14500
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1913,7 +1913,7 @@ levels:
 - level: 146
   experience: 14600
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1925,7 +1925,7 @@ levels:
 - level: 147
   experience: 14700
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1937,7 +1937,7 @@ levels:
 - level: 148
   experience: 14800
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1949,7 +1949,7 @@ levels:
 - level: 149
   experience: 14900
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1961,7 +1961,7 @@ levels:
 - level: 150
   experience: 15000
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1978,7 +1978,7 @@ levels:
 - level: 151
   experience: 15100
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -1990,7 +1990,7 @@ levels:
 - level: 152
   experience: 15200
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2002,7 +2002,7 @@ levels:
 - level: 153
   experience: 15300
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2014,7 +2014,7 @@ levels:
 - level: 154
   experience: 15400
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2026,7 +2026,7 @@ levels:
 - level: 155
   experience: 15500
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2043,7 +2043,7 @@ levels:
 - level: 156
   experience: 15600
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2055,7 +2055,7 @@ levels:
 - level: 157
   experience: 15700
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2067,7 +2067,7 @@ levels:
 - level: 158
   experience: 15800
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2079,7 +2079,7 @@ levels:
 - level: 159
   experience: 15900
   isMilestone: false
-  prefix: §a
+  prefix: <a>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2091,7 +2091,7 @@ levels:
 - level: 160
   experience: 16000
   isMilestone: true
-  prefix: §2
+  prefix: <2>
   prefixDisplay: Dark Green Level Prefix
   prefixItem: Material.GREEN_DYE
   unlocks:
@@ -2108,7 +2108,7 @@ levels:
 - level: 161
   experience: 16100
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2120,7 +2120,7 @@ levels:
 - level: 162
   experience: 16200
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2132,7 +2132,7 @@ levels:
 - level: 163
   experience: 16300
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2144,7 +2144,7 @@ levels:
 - level: 164
   experience: 16400
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2156,7 +2156,7 @@ levels:
 - level: 165
   experience: 16500
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2173,7 +2173,7 @@ levels:
 - level: 166
   experience: 16600
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2185,7 +2185,7 @@ levels:
 - level: 167
   experience: 16700
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2197,7 +2197,7 @@ levels:
 - level: 168
   experience: 16800
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2209,7 +2209,7 @@ levels:
 - level: 169
   experience: 16900
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2221,7 +2221,7 @@ levels:
 - level: 170
   experience: 17000
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2238,7 +2238,7 @@ levels:
 - level: 171
   experience: 17100
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2250,7 +2250,7 @@ levels:
 - level: 172
   experience: 17200
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2262,7 +2262,7 @@ levels:
 - level: 173
   experience: 17300
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2274,7 +2274,7 @@ levels:
 - level: 174
   experience: 17400
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2286,7 +2286,7 @@ levels:
 - level: 175
   experience: 17500
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2303,7 +2303,7 @@ levels:
 - level: 176
   experience: 17600
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2315,7 +2315,7 @@ levels:
 - level: 177
   experience: 17700
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2327,7 +2327,7 @@ levels:
 - level: 178
   experience: 17800
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2339,7 +2339,7 @@ levels:
 - level: 179
   experience: 17900
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2351,7 +2351,7 @@ levels:
 - level: 180
   experience: 18000
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2368,7 +2368,7 @@ levels:
 - level: 181
   experience: 18100
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2380,7 +2380,7 @@ levels:
 - level: 182
   experience: 18200
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2392,7 +2392,7 @@ levels:
 - level: 183
   experience: 18300
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2404,7 +2404,7 @@ levels:
 - level: 184
   experience: 18400
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2416,7 +2416,7 @@ levels:
 - level: 185
   experience: 18500
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2433,7 +2433,7 @@ levels:
 - level: 186
   experience: 18600
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2445,7 +2445,7 @@ levels:
 - level: 187
   experience: 18700
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2457,7 +2457,7 @@ levels:
 - level: 188
   experience: 18800
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2469,7 +2469,7 @@ levels:
 - level: 189
   experience: 18900
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2481,7 +2481,7 @@ levels:
 - level: 190
   experience: 19000
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2498,7 +2498,7 @@ levels:
 - level: 191
   experience: 19100
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2510,7 +2510,7 @@ levels:
 - level: 192
   experience: 19200
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2522,7 +2522,7 @@ levels:
 - level: 193
   experience: 19300
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2534,7 +2534,7 @@ levels:
 - level: 194
   experience: 19400
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2546,7 +2546,7 @@ levels:
 - level: 195
   experience: 19500
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2563,7 +2563,7 @@ levels:
 - level: 196
   experience: 19600
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2575,7 +2575,7 @@ levels:
 - level: 197
   experience: 19700
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2587,7 +2587,7 @@ levels:
 - level: 198
   experience: 19800
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2599,7 +2599,7 @@ levels:
 - level: 199
   experience: 19900
   isMilestone: false
-  prefix: §2
+  prefix: <2>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2611,7 +2611,7 @@ levels:
 - level: 200
   experience: 20000
   isMilestone: true
-  prefix: §b
+  prefix: <b>
   prefixDisplay: Aqua Level Prefix
   prefixItem: Material.LIGHT_BLUE_DYE
   unlocks:
@@ -2628,7 +2628,7 @@ levels:
 - level: 201
   experience: 20100
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2640,7 +2640,7 @@ levels:
 - level: 202
   experience: 20200
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2652,7 +2652,7 @@ levels:
 - level: 203
   experience: 20300
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2664,7 +2664,7 @@ levels:
 - level: 204
   experience: 20400
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2676,7 +2676,7 @@ levels:
 - level: 205
   experience: 20500
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2693,7 +2693,7 @@ levels:
 - level: 206
   experience: 20600
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2705,7 +2705,7 @@ levels:
 - level: 207
   experience: 20700
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2717,7 +2717,7 @@ levels:
 - level: 208
   experience: 20800
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2729,7 +2729,7 @@ levels:
 - level: 209
   experience: 20900
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2741,7 +2741,7 @@ levels:
 - level: 210
   experience: 21000
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2758,7 +2758,7 @@ levels:
 - level: 211
   experience: 21100
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2770,7 +2770,7 @@ levels:
 - level: 212
   experience: 21200
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2782,7 +2782,7 @@ levels:
 - level: 213
   experience: 21300
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2794,7 +2794,7 @@ levels:
 - level: 214
   experience: 21400
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2806,7 +2806,7 @@ levels:
 - level: 215
   experience: 21500
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2823,7 +2823,7 @@ levels:
 - level: 216
   experience: 21600
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2835,7 +2835,7 @@ levels:
 - level: 217
   experience: 21700
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2847,7 +2847,7 @@ levels:
 - level: 218
   experience: 21800
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2859,7 +2859,7 @@ levels:
 - level: 219
   experience: 21900
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2871,7 +2871,7 @@ levels:
 - level: 220
   experience: 22000
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2888,7 +2888,7 @@ levels:
 - level: 221
   experience: 22100
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2900,7 +2900,7 @@ levels:
 - level: 222
   experience: 22200
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2912,7 +2912,7 @@ levels:
 - level: 223
   experience: 22300
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2924,7 +2924,7 @@ levels:
 - level: 224
   experience: 22400
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2936,7 +2936,7 @@ levels:
 - level: 225
   experience: 22500
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2953,7 +2953,7 @@ levels:
 - level: 226
   experience: 22600
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2965,7 +2965,7 @@ levels:
 - level: 227
   experience: 22700
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2977,7 +2977,7 @@ levels:
 - level: 228
   experience: 22800
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -2989,7 +2989,7 @@ levels:
 - level: 229
   experience: 22900
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3001,7 +3001,7 @@ levels:
 - level: 230
   experience: 23000
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3018,7 +3018,7 @@ levels:
 - level: 231
   experience: 23100
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3030,7 +3030,7 @@ levels:
 - level: 232
   experience: 23200
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3042,7 +3042,7 @@ levels:
 - level: 233
   experience: 23300
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3054,7 +3054,7 @@ levels:
 - level: 234
   experience: 23400
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3066,7 +3066,7 @@ levels:
 - level: 235
   experience: 23500
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3083,7 +3083,7 @@ levels:
 - level: 236
   experience: 23600
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3095,7 +3095,7 @@ levels:
 - level: 237
   experience: 23700
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3107,7 +3107,7 @@ levels:
 - level: 238
   experience: 23800
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3119,7 +3119,7 @@ levels:
 - level: 239
   experience: 23900
   isMilestone: false
-  prefix: §b
+  prefix: <b>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3131,7 +3131,7 @@ levels:
 - level: 240
   experience: 24000
   isMilestone: true
-  prefix: §3
+  prefix: <3>
   prefixDisplay: Cyan Level Prefix
   prefixItem: Material.CYAN_DYE
   unlocks:
@@ -3148,7 +3148,7 @@ levels:
 - level: 241
   experience: 24100
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3160,7 +3160,7 @@ levels:
 - level: 242
   experience: 24200
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3172,7 +3172,7 @@ levels:
 - level: 243
   experience: 24300
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3184,7 +3184,7 @@ levels:
 - level: 244
   experience: 24400
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3196,7 +3196,7 @@ levels:
 - level: 245
   experience: 24500
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3213,7 +3213,7 @@ levels:
 - level: 246
   experience: 24600
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3225,7 +3225,7 @@ levels:
 - level: 247
   experience: 24700
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3237,7 +3237,7 @@ levels:
 - level: 248
   experience: 24800
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3249,7 +3249,7 @@ levels:
 - level: 249
   experience: 24900
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3261,7 +3261,7 @@ levels:
 - level: 250
   experience: 25000
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3278,7 +3278,7 @@ levels:
 - level: 251
   experience: 25100
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3290,7 +3290,7 @@ levels:
 - level: 252
   experience: 25200
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3302,7 +3302,7 @@ levels:
 - level: 253
   experience: 25300
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3314,7 +3314,7 @@ levels:
 - level: 254
   experience: 25400
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3326,7 +3326,7 @@ levels:
 - level: 255
   experience: 25500
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3343,7 +3343,7 @@ levels:
 - level: 256
   experience: 25600
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3355,7 +3355,7 @@ levels:
 - level: 257
   experience: 25700
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3367,7 +3367,7 @@ levels:
 - level: 258
   experience: 25800
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3379,7 +3379,7 @@ levels:
 - level: 259
   experience: 25900
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3391,7 +3391,7 @@ levels:
 - level: 260
   experience: 26000
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3408,7 +3408,7 @@ levels:
 - level: 261
   experience: 26100
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3420,7 +3420,7 @@ levels:
 - level: 262
   experience: 26200
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3432,7 +3432,7 @@ levels:
 - level: 263
   experience: 26300
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3444,7 +3444,7 @@ levels:
 - level: 264
   experience: 26400
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3456,7 +3456,7 @@ levels:
 - level: 265
   experience: 26500
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3473,7 +3473,7 @@ levels:
 - level: 266
   experience: 26600
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3485,7 +3485,7 @@ levels:
 - level: 267
   experience: 26700
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3497,7 +3497,7 @@ levels:
 - level: 268
   experience: 26800
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3509,7 +3509,7 @@ levels:
 - level: 269
   experience: 26900
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3521,7 +3521,7 @@ levels:
 - level: 270
   experience: 27000
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3538,7 +3538,7 @@ levels:
 - level: 271
   experience: 27100
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3550,7 +3550,7 @@ levels:
 - level: 272
   experience: 27200
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3562,7 +3562,7 @@ levels:
 - level: 273
   experience: 27300
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3574,7 +3574,7 @@ levels:
 - level: 274
   experience: 27400
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3586,7 +3586,7 @@ levels:
 - level: 275
   experience: 27500
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3603,7 +3603,7 @@ levels:
 - level: 276
   experience: 27600
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3615,7 +3615,7 @@ levels:
 - level: 277
   experience: 27700
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3627,7 +3627,7 @@ levels:
 - level: 278
   experience: 27800
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3639,7 +3639,7 @@ levels:
 - level: 279
   experience: 27900
   isMilestone: false
-  prefix: §3
+  prefix: <3>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3651,7 +3651,7 @@ levels:
 - level: 280
   experience: 28000
   isMilestone: true
-  prefix: §9
+  prefix: <9>
   prefixDisplay: Blue Level Prefix
   prefixItem: Material.LAPIS_LAZULI
   unlocks:
@@ -3668,7 +3668,7 @@ levels:
 - level: 281
   experience: 28100
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3680,7 +3680,7 @@ levels:
 - level: 282
   experience: 28200
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3692,7 +3692,7 @@ levels:
 - level: 283
   experience: 28300
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3704,7 +3704,7 @@ levels:
 - level: 284
   experience: 28400
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3716,7 +3716,7 @@ levels:
 - level: 285
   experience: 28500
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3733,7 +3733,7 @@ levels:
 - level: 286
   experience: 28600
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3745,7 +3745,7 @@ levels:
 - level: 287
   experience: 28700
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3757,7 +3757,7 @@ levels:
 - level: 288
   experience: 28800
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3769,7 +3769,7 @@ levels:
 - level: 289
   experience: 28900
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3781,7 +3781,7 @@ levels:
 - level: 290
   experience: 29000
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3798,7 +3798,7 @@ levels:
 - level: 291
   experience: 29100
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3810,7 +3810,7 @@ levels:
 - level: 292
   experience: 29200
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3822,7 +3822,7 @@ levels:
 - level: 293
   experience: 29300
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3834,7 +3834,7 @@ levels:
 - level: 294
   experience: 29400
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3846,7 +3846,7 @@ levels:
 - level: 295
   experience: 29500
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3863,7 +3863,7 @@ levels:
 - level: 296
   experience: 29600
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3875,7 +3875,7 @@ levels:
 - level: 297
   experience: 29700
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3887,7 +3887,7 @@ levels:
 - level: 298
   experience: 29800
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3899,7 +3899,7 @@ levels:
 - level: 299
   experience: 29900
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3911,7 +3911,7 @@ levels:
 - level: 300
   experience: 30000
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3928,7 +3928,7 @@ levels:
 - level: 301
   experience: 30100
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3940,7 +3940,7 @@ levels:
 - level: 302
   experience: 30200
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3952,7 +3952,7 @@ levels:
 - level: 303
   experience: 30300
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3964,7 +3964,7 @@ levels:
 - level: 304
   experience: 30400
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3976,7 +3976,7 @@ levels:
 - level: 305
   experience: 30500
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -3993,7 +3993,7 @@ levels:
 - level: 306
   experience: 30600
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4005,7 +4005,7 @@ levels:
 - level: 307
   experience: 30700
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4017,7 +4017,7 @@ levels:
 - level: 308
   experience: 30800
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4029,7 +4029,7 @@ levels:
 - level: 309
   experience: 30900
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4041,7 +4041,7 @@ levels:
 - level: 310
   experience: 31000
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4058,7 +4058,7 @@ levels:
 - level: 311
   experience: 31100
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4070,7 +4070,7 @@ levels:
 - level: 312
   experience: 31200
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4082,7 +4082,7 @@ levels:
 - level: 313
   experience: 31300
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4094,7 +4094,7 @@ levels:
 - level: 314
   experience: 31400
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4106,7 +4106,7 @@ levels:
 - level: 315
   experience: 31500
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4123,7 +4123,7 @@ levels:
 - level: 316
   experience: 31600
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4135,7 +4135,7 @@ levels:
 - level: 317
   experience: 31700
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4147,7 +4147,7 @@ levels:
 - level: 318
   experience: 31800
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4159,7 +4159,7 @@ levels:
 - level: 319
   experience: 31900
   isMilestone: false
-  prefix: §9
+  prefix: <9>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4171,7 +4171,7 @@ levels:
 - level: 320
   experience: 32000
   isMilestone: true
-  prefix: §d
+  prefix: <d>
   prefixDisplay: Pink Level Prefix
   prefixItem: Material.PINK_DYE
   unlocks:
@@ -4188,7 +4188,7 @@ levels:
 - level: 321
   experience: 32100
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4200,7 +4200,7 @@ levels:
 - level: 322
   experience: 32200
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4212,7 +4212,7 @@ levels:
 - level: 323
   experience: 32300
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4224,7 +4224,7 @@ levels:
 - level: 324
   experience: 32400
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4236,7 +4236,7 @@ levels:
 - level: 325
   experience: 32500
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4253,7 +4253,7 @@ levels:
 - level: 326
   experience: 32600
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4265,7 +4265,7 @@ levels:
 - level: 327
   experience: 32700
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4277,7 +4277,7 @@ levels:
 - level: 328
   experience: 32800
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4289,7 +4289,7 @@ levels:
 - level: 329
   experience: 32900
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4301,7 +4301,7 @@ levels:
 - level: 330
   experience: 33000
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4318,7 +4318,7 @@ levels:
 - level: 331
   experience: 33100
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4330,7 +4330,7 @@ levels:
 - level: 332
   experience: 33200
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4342,7 +4342,7 @@ levels:
 - level: 333
   experience: 33300
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4354,7 +4354,7 @@ levels:
 - level: 334
   experience: 33400
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4366,7 +4366,7 @@ levels:
 - level: 335
   experience: 33500
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4383,7 +4383,7 @@ levels:
 - level: 336
   experience: 33600
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4395,7 +4395,7 @@ levels:
 - level: 337
   experience: 33700
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4407,7 +4407,7 @@ levels:
 - level: 338
   experience: 33800
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4419,7 +4419,7 @@ levels:
 - level: 339
   experience: 33900
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4431,7 +4431,7 @@ levels:
 - level: 340
   experience: 34000
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4448,7 +4448,7 @@ levels:
 - level: 341
   experience: 34100
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4460,7 +4460,7 @@ levels:
 - level: 342
   experience: 34200
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4472,7 +4472,7 @@ levels:
 - level: 343
   experience: 34300
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4484,7 +4484,7 @@ levels:
 - level: 344
   experience: 34400
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4496,7 +4496,7 @@ levels:
 - level: 345
   experience: 34500
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4513,7 +4513,7 @@ levels:
 - level: 346
   experience: 34600
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4525,7 +4525,7 @@ levels:
 - level: 347
   experience: 34700
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4537,7 +4537,7 @@ levels:
 - level: 348
   experience: 34800
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4549,7 +4549,7 @@ levels:
 - level: 349
   experience: 34900
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4561,7 +4561,7 @@ levels:
 - level: 350
   experience: 35000
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4578,7 +4578,7 @@ levels:
 - level: 351
   experience: 35100
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4590,7 +4590,7 @@ levels:
 - level: 352
   experience: 35200
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4602,7 +4602,7 @@ levels:
 - level: 353
   experience: 35300
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4614,7 +4614,7 @@ levels:
 - level: 354
   experience: 35400
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4626,7 +4626,7 @@ levels:
 - level: 355
   experience: 35500
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4643,7 +4643,7 @@ levels:
 - level: 356
   experience: 35600
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4655,7 +4655,7 @@ levels:
 - level: 357
   experience: 35700
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4667,7 +4667,7 @@ levels:
 - level: 358
   experience: 35800
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4679,7 +4679,7 @@ levels:
 - level: 359
   experience: 35900
   isMilestone: false
-  prefix: §d
+  prefix: <d>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4691,7 +4691,7 @@ levels:
 - level: 360
   experience: 36000
   isMilestone: true
-  prefix: §5
+  prefix: <5>
   prefixDisplay: Purple Level Prefix
   prefixItem: Material.PURPLE_DYE
   unlocks:
@@ -4708,7 +4708,7 @@ levels:
 - level: 361
   experience: 36100
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4720,7 +4720,7 @@ levels:
 - level: 362
   experience: 36200
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4732,7 +4732,7 @@ levels:
 - level: 363
   experience: 36300
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4744,7 +4744,7 @@ levels:
 - level: 364
   experience: 36400
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4756,7 +4756,7 @@ levels:
 - level: 365
   experience: 36500
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4773,7 +4773,7 @@ levels:
 - level: 366
   experience: 36600
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4785,7 +4785,7 @@ levels:
 - level: 367
   experience: 36700
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4797,7 +4797,7 @@ levels:
 - level: 368
   experience: 36800
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4809,7 +4809,7 @@ levels:
 - level: 369
   experience: 36900
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4821,7 +4821,7 @@ levels:
 - level: 370
   experience: 37000
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4838,7 +4838,7 @@ levels:
 - level: 371
   experience: 37100
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4850,7 +4850,7 @@ levels:
 - level: 372
   experience: 37200
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4862,7 +4862,7 @@ levels:
 - level: 373
   experience: 37300
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4874,7 +4874,7 @@ levels:
 - level: 374
   experience: 37400
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4886,7 +4886,7 @@ levels:
 - level: 375
   experience: 37500
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4903,7 +4903,7 @@ levels:
 - level: 376
   experience: 37600
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4915,7 +4915,7 @@ levels:
 - level: 377
   experience: 37700
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4927,7 +4927,7 @@ levels:
 - level: 378
   experience: 37800
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4939,7 +4939,7 @@ levels:
 - level: 379
   experience: 37900
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4951,7 +4951,7 @@ levels:
 - level: 380
   experience: 38000
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4968,7 +4968,7 @@ levels:
 - level: 381
   experience: 38100
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4980,7 +4980,7 @@ levels:
 - level: 382
   experience: 38200
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -4992,7 +4992,7 @@ levels:
 - level: 383
   experience: 38300
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5004,7 +5004,7 @@ levels:
 - level: 384
   experience: 38400
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5016,7 +5016,7 @@ levels:
 - level: 385
   experience: 38500
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5033,7 +5033,7 @@ levels:
 - level: 386
   experience: 38600
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5045,7 +5045,7 @@ levels:
 - level: 387
   experience: 38700
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5057,7 +5057,7 @@ levels:
 - level: 388
   experience: 38800
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5069,7 +5069,7 @@ levels:
 - level: 389
   experience: 38900
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5081,7 +5081,7 @@ levels:
 - level: 390
   experience: 39000
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5098,7 +5098,7 @@ levels:
 - level: 391
   experience: 39100
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5110,7 +5110,7 @@ levels:
 - level: 392
   experience: 39200
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5122,7 +5122,7 @@ levels:
 - level: 393
   experience: 39300
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5134,7 +5134,7 @@ levels:
 - level: 394
   experience: 39400
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5146,7 +5146,7 @@ levels:
 - level: 395
   experience: 39500
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5163,7 +5163,7 @@ levels:
 - level: 396
   experience: 39600
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5175,7 +5175,7 @@ levels:
 - level: 397
   experience: 39700
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5187,7 +5187,7 @@ levels:
 - level: 398
   experience: 39800
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5199,7 +5199,7 @@ levels:
 - level: 399
   experience: 39900
   isMilestone: false
-  prefix: §5
+  prefix: <5>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5211,7 +5211,7 @@ levels:
 - level: 400
   experience: 40000
   isMilestone: true
-  prefix: §6
+  prefix: <6>
   prefixDisplay: Gold Level Prefix
   prefixItem: Material.ORANGE_DYE
   unlocks:
@@ -5228,7 +5228,7 @@ levels:
 - level: 401
   experience: 40100
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5240,7 +5240,7 @@ levels:
 - level: 402
   experience: 40200
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5252,7 +5252,7 @@ levels:
 - level: 403
   experience: 40300
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5264,7 +5264,7 @@ levels:
 - level: 404
   experience: 40400
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5276,7 +5276,7 @@ levels:
 - level: 405
   experience: 40500
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5293,7 +5293,7 @@ levels:
 - level: 406
   experience: 40600
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5305,7 +5305,7 @@ levels:
 - level: 407
   experience: 40700
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5317,7 +5317,7 @@ levels:
 - level: 408
   experience: 40800
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5329,7 +5329,7 @@ levels:
 - level: 409
   experience: 40900
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5341,7 +5341,7 @@ levels:
 - level: 410
   experience: 41000
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5358,7 +5358,7 @@ levels:
 - level: 411
   experience: 41100
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5370,7 +5370,7 @@ levels:
 - level: 412
   experience: 41200
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5382,7 +5382,7 @@ levels:
 - level: 413
   experience: 41300
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5394,7 +5394,7 @@ levels:
 - level: 414
   experience: 41400
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5406,7 +5406,7 @@ levels:
 - level: 415
   experience: 41500
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5423,7 +5423,7 @@ levels:
 - level: 416
   experience: 41600
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5435,7 +5435,7 @@ levels:
 - level: 417
   experience: 41700
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5447,7 +5447,7 @@ levels:
 - level: 418
   experience: 41800
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5459,7 +5459,7 @@ levels:
 - level: 419
   experience: 41900
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5471,7 +5471,7 @@ levels:
 - level: 420
   experience: 42000
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5488,7 +5488,7 @@ levels:
 - level: 421
   experience: 42100
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5500,7 +5500,7 @@ levels:
 - level: 422
   experience: 42200
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5512,7 +5512,7 @@ levels:
 - level: 423
   experience: 42300
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5524,7 +5524,7 @@ levels:
 - level: 424
   experience: 42400
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5536,7 +5536,7 @@ levels:
 - level: 425
   experience: 42500
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5553,7 +5553,7 @@ levels:
 - level: 426
   experience: 42600
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5565,7 +5565,7 @@ levels:
 - level: 427
   experience: 42700
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5577,7 +5577,7 @@ levels:
 - level: 428
   experience: 42800
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5589,7 +5589,7 @@ levels:
 - level: 429
   experience: 42900
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5601,7 +5601,7 @@ levels:
 - level: 430
   experience: 43000
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5618,7 +5618,7 @@ levels:
 - level: 431
   experience: 43100
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5630,7 +5630,7 @@ levels:
 - level: 432
   experience: 43200
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5642,7 +5642,7 @@ levels:
 - level: 433
   experience: 43300
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5654,7 +5654,7 @@ levels:
 - level: 434
   experience: 43400
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5666,7 +5666,7 @@ levels:
 - level: 435
   experience: 43500
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5683,7 +5683,7 @@ levels:
 - level: 436
   experience: 43600
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5695,7 +5695,7 @@ levels:
 - level: 437
   experience: 43700
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5707,7 +5707,7 @@ levels:
 - level: 438
   experience: 43800
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5719,7 +5719,7 @@ levels:
 - level: 439
   experience: 43900
   isMilestone: false
-  prefix: §6
+  prefix: <6>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5731,7 +5731,7 @@ levels:
 - level: 440
   experience: 44000
   isMilestone: true
-  prefix: §c
+  prefix: <c>
   prefixDisplay: Red Level Prefix
   prefixItem: Material.RED_DYE
   unlocks:
@@ -5748,7 +5748,7 @@ levels:
 - level: 441
   experience: 44100
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5760,7 +5760,7 @@ levels:
 - level: 442
   experience: 44200
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5772,7 +5772,7 @@ levels:
 - level: 443
   experience: 44300
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5784,7 +5784,7 @@ levels:
 - level: 444
   experience: 44400
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5796,7 +5796,7 @@ levels:
 - level: 445
   experience: 44500
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5813,7 +5813,7 @@ levels:
 - level: 446
   experience: 44600
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5825,7 +5825,7 @@ levels:
 - level: 447
   experience: 44700
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5837,7 +5837,7 @@ levels:
 - level: 448
   experience: 44800
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5849,7 +5849,7 @@ levels:
 - level: 449
   experience: 44900
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5861,7 +5861,7 @@ levels:
 - level: 450
   experience: 45000
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5878,7 +5878,7 @@ levels:
 - level: 451
   experience: 45100
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5890,7 +5890,7 @@ levels:
 - level: 452
   experience: 45200
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5902,7 +5902,7 @@ levels:
 - level: 453
   experience: 45300
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5914,7 +5914,7 @@ levels:
 - level: 454
   experience: 45400
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5926,7 +5926,7 @@ levels:
 - level: 455
   experience: 45500
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5943,7 +5943,7 @@ levels:
 - level: 456
   experience: 45600
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5955,7 +5955,7 @@ levels:
 - level: 457
   experience: 45700
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5967,7 +5967,7 @@ levels:
 - level: 458
   experience: 45800
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5979,7 +5979,7 @@ levels:
 - level: 459
   experience: 45900
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -5991,7 +5991,7 @@ levels:
 - level: 460
   experience: 46000
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6008,7 +6008,7 @@ levels:
 - level: 461
   experience: 46100
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6020,7 +6020,7 @@ levels:
 - level: 462
   experience: 46200
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6032,7 +6032,7 @@ levels:
 - level: 463
   experience: 46300
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6044,7 +6044,7 @@ levels:
 - level: 464
   experience: 46400
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6056,7 +6056,7 @@ levels:
 - level: 465
   experience: 46500
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6073,7 +6073,7 @@ levels:
 - level: 466
   experience: 46600
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6085,7 +6085,7 @@ levels:
 - level: 467
   experience: 46700
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6097,7 +6097,7 @@ levels:
 - level: 468
   experience: 46800
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6109,7 +6109,7 @@ levels:
 - level: 469
   experience: 46900
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6121,7 +6121,7 @@ levels:
 - level: 470
   experience: 47000
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6138,7 +6138,7 @@ levels:
 - level: 471
   experience: 47100
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6150,7 +6150,7 @@ levels:
 - level: 472
   experience: 47200
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6162,7 +6162,7 @@ levels:
 - level: 473
   experience: 47300
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6174,7 +6174,7 @@ levels:
 - level: 474
   experience: 47400
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6186,7 +6186,7 @@ levels:
 - level: 475
   experience: 47500
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6203,7 +6203,7 @@ levels:
 - level: 476
   experience: 47600
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6215,7 +6215,7 @@ levels:
 - level: 477
   experience: 47700
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6227,7 +6227,7 @@ levels:
 - level: 478
   experience: 47800
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6239,7 +6239,7 @@ levels:
 - level: 479
   experience: 47900
   isMilestone: false
-  prefix: §c
+  prefix: <c>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6251,7 +6251,7 @@ levels:
 - level: 480
   experience: 48000
   isMilestone: true
-  prefix: §4
+  prefix: <4>
   prefixDisplay: Dark Red Level Prefix
   prefixItem: Material.REDSTONE
   unlocks:
@@ -6268,7 +6268,7 @@ levels:
 - level: 481
   experience: 48100
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6280,7 +6280,7 @@ levels:
 - level: 482
   experience: 48200
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6292,7 +6292,7 @@ levels:
 - level: 483
   experience: 48300
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6304,7 +6304,7 @@ levels:
 - level: 484
   experience: 48400
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6316,7 +6316,7 @@ levels:
 - level: 485
   experience: 48500
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6333,7 +6333,7 @@ levels:
 - level: 486
   experience: 48600
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6345,7 +6345,7 @@ levels:
 - level: 487
   experience: 48700
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6357,7 +6357,7 @@ levels:
 - level: 488
   experience: 48800
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6369,7 +6369,7 @@ levels:
 - level: 489
   experience: 48900
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6381,7 +6381,7 @@ levels:
 - level: 490
   experience: 49000
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6398,7 +6398,7 @@ levels:
 - level: 491
   experience: 49100
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6410,7 +6410,7 @@ levels:
 - level: 492
   experience: 49200
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6422,7 +6422,7 @@ levels:
 - level: 493
   experience: 49300
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6434,7 +6434,7 @@ levels:
 - level: 494
   experience: 49400
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6446,7 +6446,7 @@ levels:
 - level: 495
   experience: 49500
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6463,7 +6463,7 @@ levels:
 - level: 496
   experience: 49600
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6475,7 +6475,7 @@ levels:
 - level: 497
   experience: 49700
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6487,7 +6487,7 @@ levels:
 - level: 498
   experience: 49800
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6499,7 +6499,7 @@ levels:
 - level: 499
   experience: 49900
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:
@@ -6511,7 +6511,7 @@ levels:
 - level: 500
   experience: 50000
   isMilestone: false
-  prefix: §4
+  prefix: <4>
   prefixDisplay: null
   prefixItem: null
   unlocks:

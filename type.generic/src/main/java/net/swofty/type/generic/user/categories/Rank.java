@@ -3,8 +3,9 @@ package net.swofty.type.generic.user.categories;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.swofty.commons.StringUtility;
+
+import java.util.Locale;
 
 @Getter
 public enum Rank {
@@ -17,6 +18,8 @@ public enum Rank {
     VIP("VIP", false, NamedTextColor.GREEN),
     DEFAULT("Default", false, NamedTextColor.GRAY),
     ;
+
+    public static final String TAG = "rank";
 
     private final String title;
     private final boolean isStaff;
@@ -60,8 +63,34 @@ public enum Rank {
             .append(Component.text("] ", bracketColor));
     }
 
-    @Deprecated
-    public String getPrefix() {
-        return LegacyComponentSerializer.legacySection().serialize(prefixComponent(RankColor.RED, NamedTextColor.GOLD));
+    public Component prefixComponent() {
+        return prefixComponent(RankColor.RED, NamedTextColor.GOLD);
+    }
+
+    public Component displayName(RankColor plusColor, NamedTextColor mvpPlusPlusColor, String username) {
+        if (this == DEFAULT) return Component.text(username);
+        NamedTextColor bracketColor = this == MVP_PLUS || this == MVP_PLUS_PLUS ? mvpPlusPlusColor : textColor;
+        return prefixComponent(plusColor, mvpPlusPlusColor).append(Component.text(username, bracketColor));
+    }
+
+    public Component displayName(String username) {
+        return displayName(RankColor.RED, NamedTextColor.GOLD, username);
+    }
+
+    public String prefixMarkup() {
+        return "<" + TAG + ":" + name().toLowerCase(Locale.ROOT) + ">";
+    }
+
+    public static Component resolveTag(String name) {
+        Rank rank = byTag(name);
+        return rank == null ? null : rank.prefixComponent();
+    }
+
+    private static Rank byTag(String name) {
+        try {
+            return valueOf(name.trim().toUpperCase(Locale.ROOT).replace('-', '_').replace(' ', '_'));
+        } catch (IllegalArgumentException exception) {
+            return null;
+        }
     }
 }

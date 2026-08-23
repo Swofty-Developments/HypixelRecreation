@@ -30,7 +30,7 @@ public class SetSkywarsLevelCommand extends HypixelCommand {
 
             SkywarsDataHandler handler = SkywarsDataHandler.getUser(player);
             if (handler == null) {
-                player.sendMessage("§cCould not find your SkyWars data. Please try again.");
+                player.sendMessage("<c>Could not find your SkyWars data. Please try again.");
                 return;
             }
 
@@ -41,8 +41,8 @@ public class SetSkywarsLevelCommand extends HypixelCommand {
             DatapointLong experienceDatapoint = handler.get(SkywarsDataHandler.Data.EXPERIENCE, DatapointLong.class);
             experienceDatapoint.setValue(requiredXP);
 
-            player.sendMessage("§aSuccessfully set your SkyWars level to §e" + targetLevel + "§a!");
-            player.sendMessage("§7Total XP: §b" + String.format("%,d", requiredXP));
+            player.sendMessage("<a>Successfully set your SkyWars level to <e>{}<a>!", targetLevel);
+            player.sendMessage("<7>Total XP: <b>{:,}", requiredXP);
         }, levelArgument);
     }
 }

@@ -1,6 +1,7 @@
 package net.swofty.type.skyblockgeneric.museum.rewards;
 
 import lombok.Getter;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.levels.SkyBlockLevelCause;
 import net.swofty.type.skyblockgeneric.museum.MuseumReward;
 import net.swofty.type.skyblockgeneric.museum.MuseumRewards;
@@ -19,7 +20,7 @@ public class MuseumXPReward extends MuseumReward {
     }
 
     @Override
-    public String loreDisplay() {
-        return "§b" + xp + " SkyBlock XP";
+    public Text loreDisplay() {
+        return Text.of("<b>{} SkyBlock XP", xp);
     }
 }

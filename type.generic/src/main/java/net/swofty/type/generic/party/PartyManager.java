@@ -40,21 +40,21 @@ public class PartyManager {
     public static void invitePlayer(HypixelPlayer inviter, String targetName) {
         @Nullable UUID targetUUID = HypixelDataHandler.getPotentialUUIDFromName(targetName);
         if (targetUUID == null) {
-            sendError(inviter, "§cCouldn't find a player with that name!");
+            sendError(inviter, "<c>Couldn't find a player with that name!");
             return;
         }
         if (!new ProxyPlayer(targetUUID).isOnline().join()) {
-            sendError(inviter, "§cThat player is not online!");
+            sendError(inviter, "<c>That player is not online!");
             return;
         }
         if (targetUUID.equals(inviter.getUuid())) {
-            sendError(inviter, "§cYou cannot invite yourself!");
+            sendError(inviter, "<c>You cannot invite yourself!");
             return;
         }
         if (isInParty(inviter)) {
             FullParty party = getPartyFromPlayer(inviter);
             if (party != null && party.getMembers().stream().anyMatch(m -> m.getUuid().equals(targetUUID))) {
-                sendError(inviter, "§cThat player is already in your party!");
+                sendError(inviter, "<c>That player is already in your party!");
                 return;
             }
         }
@@ -65,11 +65,11 @@ public class PartyManager {
     public static void acceptInvite(HypixelPlayer player, String inviterName) {
         @Nullable UUID inviterUUID = HypixelDataHandler.getPotentialUUIDFromName(inviterName);
         if (inviterUUID == null) {
-            sendError(player, "§cCouldn't find a player with that name!");
+            sendError(player, "<c>Couldn't find a player with that name!");
             return;
         }
         if (isInParty(player)) {
-            sendError(player, "§cYou must leave your current party before accepting an invite!");
+            sendError(player, "<c>You must leave your current party before accepting an invite!");
             return;
         }
         send(new PartyAction.AcceptInvite(player.getUuid(), inviterUUID));
@@ -131,16 +131,16 @@ public class PartyManager {
 
     public static void hijackParty(HypixelPlayer hijacker, String targetName) {
         if (!hijacker.getRank().isEqualOrHigherThan(Rank.STAFF)) {
-            hijacker.sendMessage("§cYou need STAFF to do this command");
+            hijacker.sendMessage("<c>You need STAFF to do this command");
             return;
         }
         @Nullable UUID targetUUID = HypixelDataHandler.getPotentialUUIDFromName(targetName);
         if (targetUUID == null) {
-            sendError(hijacker, "§cCouldn't find a player with that name!");
+            sendError(hijacker, "<c>Couldn't find a player with that name!");
             return;
         }
         if (!new ProxyPlayer(targetUUID).isOnline().join()) {
-            sendError(hijacker, "§cThat player is not online!");
+            sendError(hijacker, "<c>That player is not online!");
             return;
         }
         send(new PartyAction.Hijack(hijacker.getUuid(), targetUUID));
@@ -149,7 +149,7 @@ public class PartyManager {
     private static @Nullable UUID resolveTarget(HypixelPlayer caller, String targetName) {
         @Nullable UUID targetUUID = HypixelDataHandler.getPotentialUUIDFromName(targetName);
         if (targetUUID == null) {
-            sendError(caller, "§cCouldn't find a player with that name!");
+            sendError(caller, "<c>Couldn't find a player with that name!");
         }
         return targetUUID;
     }
@@ -158,9 +158,9 @@ public class PartyManager {
         partyService.handleRequest(new SendPartyActionProtocol.Request(action));
     }
 
-    private static void sendError(HypixelPlayer player, String message) {
-        player.sendMessage("§9§m-----------------------------------------------------");
-        player.sendMessage(message);
-        player.sendMessage("§9§m-----------------------------------------------------");
+    private static void sendError(HypixelPlayer player, String markup) {
+        player.sendMessage("<sep>");
+        player.sendMessage(markup);
+        player.sendMessage("<sep>");
     }
 }

@@ -12,6 +12,8 @@ import net.minestom.server.entity.metadata.display.ItemDisplayMeta;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.tag.Tag;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.ravengardgeneric.user.RavengardPlayer;
 
 import java.io.File;
@@ -47,8 +49,9 @@ public final class AnimReviewService {
             session.spawn();
             ensureTicking();
         }
-        player.sendMessage("§aReviewing §f" + clipName + "§a (" + clip.frames().size()
-                + " ticks). Swing or use the hotbar controls; §f/animreview mark <name>§a saves a range.");
+        player.sendMessage("<a>Reviewing <f>{}<a> ({} ticks). Swing or use the hotbar controls; "
+                        + "<f>/animreview mark \\<name><a> saves a range.",
+                clipName, clip.frames().size());
     }
 
     public static void stop(RavengardPlayer player) {
@@ -204,21 +207,19 @@ public final class AnimReviewService {
                 savedInventory[i] = inventory.getItemStack(i);
                 inventory.setItemStack(i, ItemStack.AIR);
             }
-            inventory.setItemStack(0, control(Material.CLOCK, "pause", "§ePause / Play"));
-            inventory.setItemStack(1, control(Material.ARROW, "back1", "§f◀ 1 tick"));
-            inventory.setItemStack(2, control(Material.ARROW, "fwd1", "§f1 tick ▶"));
-            inventory.setItemStack(3, control(Material.SPECTRAL_ARROW, "back10", "§f◀◀ 10 ticks"));
-            inventory.setItemStack(4, control(Material.SPECTRAL_ARROW, "fwd10", "§f10 ticks ▶▶"));
-            inventory.setItemStack(5, control(Material.SLIME_BALL, "speed", "§bCycle speed"));
-            inventory.setItemStack(6, control(Material.COMPASS, "rotate", "§dRotate rig 45°"));
-            inventory.setItemStack(7, control(Material.EMERALD, "markstart", "§aSet mark start here"));
-            inventory.setItemStack(8, control(Material.NETHER_STAR, "picker", "§dPick mob / capture"));
+            inventory.setItemStack(0, control(Material.CLOCK, "pause", "<e>Pause / Play"));
+            inventory.setItemStack(1, control(Material.ARROW, "back1", "<f>◀ 1 tick"));
+            inventory.setItemStack(2, control(Material.ARROW, "fwd1", "<f>1 tick ▶"));
+            inventory.setItemStack(3, control(Material.SPECTRAL_ARROW, "back10", "<f>◀◀ 10 ticks"));
+            inventory.setItemStack(4, control(Material.SPECTRAL_ARROW, "fwd10", "<f>10 ticks ▶▶"));
+            inventory.setItemStack(5, control(Material.SLIME_BALL, "speed", "<b>Cycle speed"));
+            inventory.setItemStack(6, control(Material.COMPASS, "rotate", "<d>Rotate rig 45°"));
+            inventory.setItemStack(7, control(Material.EMERALD, "markstart", "<a>Set mark start here"));
+            inventory.setItemStack(8, control(Material.NETHER_STAR, "picker", "<d>Pick mob / capture"));
         }
 
-        private static ItemStack control(Material material, String action, String name) {
-            ItemStack.Builder builder = ItemStack.builder(material)
-                    .customName(Component.text(name)
-                            .decoration(net.kyori.adventure.text.format.TextDecoration.ITALIC, false));
+        private static ItemStack control(Material material, String action, String markup) {
+            ItemStack.Builder builder = ItemStacks.named(material, markup);
             builder.setTag(CONTROL, action);
             return builder.build();
         }
@@ -237,8 +238,9 @@ public final class AnimReviewService {
                 }
                 case "markstart" -> {
                     markStart = tick;
-                    player.sendMessage("§aMark start set at tick §f" + tick
-                            + "§a. Scrub to the end and run §f/animreview mark <name>§a.");
+                    player.sendMessage("<a>Mark start set at tick <f>{}<a>. Scrub to the end and run "
+                                    + "<f>/animreview mark \\<name><a>.",
+                            tick);
                 }
                 case "marks" -> listMarks();
                 case "picker" -> net.swofty.type.generic.gui.v2.ViewNavigator.get(player)
@@ -248,29 +250,29 @@ public final class AnimReviewService {
 
         public void listMarks() {
             if (marks.isEmpty()) {
-                player.sendMessage("§7No marks yet on " + clip.name() + ".");
+                player.sendMessage("<7>No marks yet on {}.", clip.name());
                 return;
             }
             marks.forEach((name, range) -> player.sendMessage(
-                    "§f" + name + "§7: " + range[0] + " - " + range[1]));
+                    "<f>{}<7>: {} - {}", name, range[0], range[1]));
         }
 
         public void mark(String name) {
             if (markStart < 0) {
-                player.sendMessage("§cSet a mark start first (emerald or /animreview markstart).");
+                player.sendMessage("<c>Set a mark start first (emerald or /animreview markstart).");
                 return;
             }
             int from = Math.min(markStart, tick), to = Math.max(markStart, tick);
             marks.put(name, new int[]{from, to});
             markStart = -1;
             save();
-            player.sendMessage("§aMarked §f" + name + "§a as " + from + " - " + to + " and saved.");
+            player.sendMessage("<a>Marked <f>{}<a> as {} - {} and saved.", name, from, to);
         }
 
         public void unmark(String name) {
             if (marks.remove(name) != null) {
                 save();
-                player.sendMessage("§aRemoved mark §f" + name + "§a.");
+                player.sendMessage("<a>Removed mark <f>{}<a>.", name);
             }
         }
 
@@ -296,7 +298,7 @@ public final class AnimReviewService {
             try (FileWriter writer = new FileWriter(new File(MARKS_DIR, clip.name() + ".json"))) {
                 writer.write(json.toString());
             } catch (Exception exception) {
-                player.sendMessage("§cFailed to save marks: " + exception.getMessage());
+                player.sendMessage("<c>Failed to save marks: {}", exception.getMessage());
             }
         }
 
@@ -431,20 +433,20 @@ public final class AnimReviewService {
         }
 
         private void actionBar() {
-            StringBuilder bar = new StringBuilder("§e").append(clip.name())
-                    .append(" §f").append(tick).append("§7/").append(clip.frames().size() - 1)
-                    .append(paused ? " §c⏸" : " §a▶").append(" §bx").append(speed);
+            Text bar = Text.of("<e>{} <f>{}<7>/{}", clip.name(), tick, clip.frames().size() - 1)
+                    .append(paused ? " <c>⏸" : " <a>▶")
+                    .append(" <b>x{}", speed);
             if (markStart >= 0) {
-                bar.append(" §astart=").append(markStart);
+                bar = bar.append(" <a>start={}", markStart);
             }
             List<Integer> flashes = clip.flashes();
             for (int flash : flashes) {
                 if (Math.abs(flash - tick) <= 2) {
-                    bar.append(" §c[hit]");
+                    bar = bar.append(" <c>[hit]");
                     break;
                 }
             }
-            player.sendActionBar(Component.text(bar.toString()));
+            player.sendActionBar(bar);
         }
 
         private static Vec vec(float[] values) {

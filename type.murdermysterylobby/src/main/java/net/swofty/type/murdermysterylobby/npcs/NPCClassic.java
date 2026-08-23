@@ -2,8 +2,8 @@ package net.swofty.type.murdermysterylobby.npcs;
 
 import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.ServerType;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.murdermystery.MurderMysteryGameType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -27,11 +27,10 @@ public class NPCClassic extends HypixelNPC {
                 );
                 int amountOnline = classicPlayers + doubleUpPlayers;
 
-                String commaified = StringUtility.commaify(amountOnline);
                 return new String[]{
-                        "§e§lCLICK TO PLAY",
-                        "§bClassic / Double Up",
-                        "§e" + commaified + " Players",
+                        "<e><l>CLICK TO PLAY",
+                        "<b>Classic / Double Up",
+                        Text.of("<e>{:,} Players", amountOnline).serialize()
                 };
             }
 

@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.commands;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
@@ -22,8 +23,8 @@ public class ToggleDropAlertCommand extends HypixelCommand {
 
             toggles.inverse(DatapointToggles.Toggles.ToggleType.DISABLE_DROP_MESSAGES);
 
-            sender.sendMessage("§aDrop alerts toggled " + (toggles.get(DatapointToggles.Toggles.ToggleType.DISABLE_DROP_MESSAGES)
-                    ? "§cOFF" : "§aON") + "§a!");
+            sender.sendMessage(Text.of(toggles.get(DatapointToggles.Toggles.ToggleType.DISABLE_DROP_MESSAGES)
+                    ? "<a>Drop alerts toggled <c>OFF<a>!" : "<a>Drop alerts toggled <a>ON<a>!"));
         });
     }
 }

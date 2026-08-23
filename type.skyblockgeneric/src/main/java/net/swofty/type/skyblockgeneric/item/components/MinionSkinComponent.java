@@ -5,7 +5,8 @@ import net.minestom.server.color.Color;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItemComponent;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,12 +40,12 @@ public class MinionSkinComponent extends SkyBlockItemComponent {
 
     public List<String> getSkinLore(String name) {
         return new ArrayList<>(List.of(
-                "§7This Minion skin changes your",
-                "§7minion's appearance to a",
-                "§e" + name + "§7.",
+                "<7>This Minion skin changes your",
+                "<7>minion's appearance to a",
+                "<e>" + name + "<7>.",
                 " ",
-                "§7You can place this item in any",
-                "§7minion of your choice!"
+                "<7>You can place this item in any",
+                "<7>minion of your choice!"
         ));
     }
 
@@ -69,12 +70,12 @@ public class MinionSkinComponent extends SkyBlockItemComponent {
             ItemStack.Builder builder = ItemStack.builder(material);
 
             if (skullTexture != null && material == Material.PLAYER_HEAD) {
-                return ItemStackCreator.getStackHead(skullTexture).build();
+                return ItemStacks.head(skullTexture, Text.empty(), List.of()).build();
             }
 
             if (leatherColor != null && material.name().startsWith("LEATHER_")) {
                 builder.set(DataComponents.DYED_COLOR, leatherColor);
-                builder = ItemStackCreator.clearAttributes(builder);
+                builder = ItemStacks.clearAttributes(builder);
             }
 
             return builder.build();

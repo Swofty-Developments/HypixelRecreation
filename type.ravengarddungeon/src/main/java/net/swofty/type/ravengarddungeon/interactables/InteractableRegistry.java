@@ -9,6 +9,7 @@ import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.Player;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 
 import java.util.Map;
 import java.util.UUID;
@@ -140,8 +141,7 @@ public final class InteractableRegistry {
             player.showBossBar(created);
             return created;
         });
-        bar.name(net.kyori.adventure.text.Component.text(target.castLabel(),
-                net.kyori.adventure.text.format.TextColor.color(0xFEFD02)));
+        bar.name(Text.of("<#fefd02>{}", target.castLabel()));
         bar.progress(Math.min(1f, progress));
     }
 

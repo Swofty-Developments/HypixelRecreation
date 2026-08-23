@@ -1,9 +1,9 @@
 package net.swofty.type.skyblockgeneric.abiphone;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 import java.util.HashMap;
@@ -67,7 +67,7 @@ public class AbiphoneDialogueController {
     private void handleLineSendingLoop(HypixelPlayer player, AbiphoneNPC.DialogueSet dialogueSet) {
         npc.sendNPCMessage(player, dialogueSet.lines()[0]);
 
-        Component[] newLines = new Component[dialogueSet.lines().length - 1];
+        Text[] newLines = new Text[dialogueSet.lines().length - 1];
         System.arraycopy(dialogueSet.lines(), 1, newLines, 0, dialogueSet.lines().length - 1);
 
         if (newLines.length == 0) {
@@ -83,10 +83,8 @@ public class AbiphoneDialogueController {
         scheduler.buildTask(() -> {
             // Check if the player is still in dialogue (might have been canceled)
             if (activeDialogues.containsKey(player)) {
-                handleLineSendingLoop(player, AbiphoneNPC.DialogueSet.builder()
-                        .key(dialogueSet.key())
-                        .lines(newLines)
-                        .build());
+                handleLineSendingLoop(player, new AbiphoneNPC.DialogueSet(
+                        dialogueSet.key(), newLines, false));
             }
         }).delay(TaskSchedule.seconds(2)).schedule();
     }

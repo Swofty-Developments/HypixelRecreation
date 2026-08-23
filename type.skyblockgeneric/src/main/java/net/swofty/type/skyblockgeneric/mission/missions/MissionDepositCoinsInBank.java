@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions;
 
+
 import net.swofty.type.generic.data.datapoints.DatapointDouble;
 import net.swofty.type.skyblockgeneric.mission.MissionData;
 import net.swofty.type.skyblockgeneric.mission.SkyBlockMission;
@@ -27,8 +28,7 @@ public class MissionDepositCoinsInBank extends SkyBlockMission {
 
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§610 §7Coins")))
-                .forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<6>10 <7>Coins"))).forEach(player::sendMessage);
         player.getSkyblockDataHandler().get(net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler.Data.COINS, DatapointDouble.class).setValue(
                 player.getSkyblockDataHandler().get(net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler.Data.COINS, DatapointDouble.class).getValue() + 10
         );

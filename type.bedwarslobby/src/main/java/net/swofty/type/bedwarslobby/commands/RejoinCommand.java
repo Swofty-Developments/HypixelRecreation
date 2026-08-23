@@ -34,7 +34,7 @@ public class RejoinCommand extends HypixelCommand {
                 if (response instanceof RejoinGameProtocol.RejoinGameResponse resp) {
                     if (resp.hasActiveGame() && resp.server() != null) {
                         // Send the player to the game
-                        player.sendMessage("§aRejoining your game...");
+                        player.sendMessage("<a>Rejoining your game...");
 
                         // Notify the game server about this player
                         ChooseGameProtocol.ChooseGameMessage chooseMsg =
@@ -49,13 +49,13 @@ public class RejoinCommand extends HypixelCommand {
                         player.asProxyPlayer().transferToWithIndication(resp.server().uuid());
                         player.getAchievementHandler().completeAchievement("bedwars.rejoining_the_dream");
                     } else {
-                        player.sendMessage("§cYou don't have an active game to rejoin!");
+                        player.sendMessage("<c>You don't have an active game to rejoin!");
                     }
                 } else {
-                    player.sendMessage("§cFailed to check for active games. Please try again.");
+                    player.sendMessage("<c>Failed to check for active games. Please try again.");
                 }
             }).exceptionally(throwable -> {
-                player.sendMessage("§cFailed to rejoin: " + throwable.getMessage());
+                player.sendMessage("<c>Failed to rejoin: {}", throwable.getMessage());
                 return null;
             });
         });

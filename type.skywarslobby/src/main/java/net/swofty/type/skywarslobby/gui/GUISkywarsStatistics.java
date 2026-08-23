@@ -10,22 +10,15 @@ import net.swofty.commons.skywars.SkywarsModeStats;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsModeStats;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 
-import java.text.DecimalFormat;
-
 public class GUISkywarsStatistics extends HypixelInventoryGUI {
-    private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("#,###");
 
     public GUISkywarsStatistics() {
         super("SkyWars Statistics", InventoryType.CHEST_6_ROW);
-    }
-
-    private static String fmt(long value) {
-        return NUMBER_FORMAT.format(value);
     }
 
     @Override
@@ -57,53 +50,49 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
                 long souls = stats.getTotalSoulsGathered(SkywarsLeaderboardPeriod.LIFETIME);
                 long heads = stats.getTotalHeads(SkywarsLeaderboardPeriod.LIFETIME);
 
-                return ItemStackCreator.getStack(
-                        "§aAll Mode Statistics",
-                        Material.PAPER,
-                        1,
-                        "§7Wins: §a" + fmt(wins),
-                        "§7Losses: §a" + fmt(losses),
-                        "",
-                        "§7Kills: §a" + fmt(kills),
-                        "§7Assists: §a" + fmt(assists),
-                        "§7Deaths: §a" + fmt(deaths),
-                        "",
-                        "§7Melee Kills: §a" + fmt(meleeKills),
-                        "§7Bow Kills: §a" + fmt(bowKills),
-                        "§7Void Kills: §a" + fmt(voidKills),
-                        "",
-                        "§7Arrows Shot: §a" + fmt(arrowsShot),
-                        "§7Arrows Hit: §a" + fmt(arrowsHit),
-                        "",
-                        "§7Chests Opened: §a" + fmt(chests),
-                        "§7Enderpearls Thrown: §a0",
-                        "§7Souls Gathered: §a" + fmt(souls),
-                        "§7Heads: §a" + fmt(heads)
-                );
+                return ItemStacks.item(Material.PAPER, 1, """
+                        <a>All Mode Statistics
+                        <7>Wins: <a>{:,}
+                        <7>Losses: <a>{:,}
+
+                        <7>Kills: <a>{:,}
+                        <7>Assists: <a>{:,}
+                        <7>Deaths: <a>{:,}
+
+                        <7>Melee Kills: <a>{:,}
+                        <7>Bow Kills: <a>{:,}
+                        <7>Void Kills: <a>{:,}
+
+                        <7>Arrows Shot: <a>{:,}
+                        <7>Arrows Hit: <a>{:,}
+
+                        <7>Chests Opened: <a>{:,}
+                        <7>Enderpearls Thrown: <a>0
+                        <7>Souls Gathered: <a>{:,}
+                        <7>Heads: <a>{:,}""",
+                        wins, losses, kills, assists, deaths, meleeKills, bowKills, voidKills,
+                        arrowsShot, arrowsHit, chests, souls, heads);
             }
         });
 
         set(new GUIItem(18) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aMini Statistics",
-                        Material.PAPER,
-                        1,
-                        "§7Wins: §a0",
-                        "",
-                        "§7Kills: §a0",
-                        "§7Assists: §a0",
-                        "",
-                        "§7Melee Kills: §a0",
-                        "§7Bow Kills: §a0",
-                        "§7Void Kills: §a0",
-                        "",
-                        "§7Arrows Shot: §a0",
-                        "§7Arrows Hit: §a0",
-                        "",
-                        "§7Chests Opened: §a0"
-                );
+                return ItemStacks.item(Material.PAPER, 1, """
+                        <a>Mini Statistics
+                        <7>Wins: <a>0
+
+                        <7>Kills: <a>0
+                        <7>Assists: <a>0
+
+                        <7>Melee Kills: <a>0
+                        <7>Bow Kills: <a>0
+                        <7>Void Kills: <a>0
+
+                        <7>Arrows Shot: <a>0
+                        <7>Arrows Hit: <a>0
+
+                        <7>Chests Opened: <a>0""");
             }
         });
 
@@ -135,28 +124,27 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
                 long heads = stats.getHeads(SkywarsLeaderboardMode.SOLO_NORMAL, SkywarsLeaderboardPeriod.LIFETIME)
                         + stats.getHeads(SkywarsLeaderboardMode.SOLO_INSANE, SkywarsLeaderboardPeriod.LIFETIME);
 
-                return ItemStackCreator.getStack(
-                        "§aSolo Statistics",
-                        Material.PAPER,
-                        1,
-                        "§7Wins: §a" + fmt(wins),
-                        "§7Losses: §a" + fmt(losses),
-                        "",
-                        "§7Kills: §a" + fmt(kills),
-                        "§7Assists: §a" + fmt(assists),
-                        "§7Deaths: §a" + fmt(deaths),
-                        "",
-                        "§7Melee Kills: §a" + fmt(meleeKills),
-                        "§7Bow Kills: §a" + fmt(bowKills),
-                        "§7Void Kills: §a" + fmt(voidKills),
-                        "",
-                        "§7Arrows Shot: §a" + fmt(arrowsShot),
-                        "§7Arrows Hit: §a" + fmt(arrowsHit),
-                        "",
-                        "§7Chests Opened: §a" + fmt(chests),
-                        "",
-                        "§7Heads: §a" + fmt(heads)
-                );
+                return ItemStacks.item(Material.PAPER, 1, """
+                        <a>Solo Statistics
+                        <7>Wins: <a>{:,}
+                        <7>Losses: <a>{:,}
+
+                        <7>Kills: <a>{:,}
+                        <7>Assists: <a>{:,}
+                        <7>Deaths: <a>{:,}
+
+                        <7>Melee Kills: <a>{:,}
+                        <7>Bow Kills: <a>{:,}
+                        <7>Void Kills: <a>{:,}
+
+                        <7>Arrows Shot: <a>{:,}
+                        <7>Arrows Hit: <a>{:,}
+
+                        <7>Chests Opened: <a>{:,}
+
+                        <7>Heads: <a>{:,}""",
+                        wins, losses, kills, assists, deaths, meleeKills, bowKills, voidKills,
+                        arrowsShot, arrowsHit, chests, heads);
             }
         });
 
@@ -176,125 +164,112 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
                 long chests = stats.getChestsOpened(SkywarsLeaderboardMode.DOUBLES, SkywarsLeaderboardPeriod.LIFETIME);
                 long heads = stats.getHeads(SkywarsLeaderboardMode.DOUBLES, SkywarsLeaderboardPeriod.LIFETIME);
 
-                return ItemStackCreator.getStack(
-                        "§aDoubles Statistics",
-                        Material.PAPER,
-                        1,
-                        "§7Wins: §a" + fmt(wins),
-                        "§7Losses: §a" + fmt(losses),
-                        "",
-                        "§7Kills: §a" + fmt(kills),
-                        "§7Assists: §a" + fmt(assists),
-                        "§7Deaths: §a" + fmt(deaths),
-                        "",
-                        "§7Melee Kills: §a" + fmt(meleeKills),
-                        "§7Bow Kills: §a" + fmt(bowKills),
-                        "§7Void Kills: §a" + fmt(voidKills),
-                        "",
-                        "§7Arrows Shot: §a" + fmt(arrowsShot),
-                        "§7Arrows Hit: §a" + fmt(arrowsHit),
-                        "",
-                        "§7Chests Opened: §a" + fmt(chests),
-                        "",
-                        "§7Heads: §a" + fmt(heads)
-                );
+                return ItemStacks.item(Material.PAPER, 1, """
+                        <a>Doubles Statistics
+                        <7>Wins: <a>{:,}
+                        <7>Losses: <a>{:,}
+
+                        <7>Kills: <a>{:,}
+                        <7>Assists: <a>{:,}
+                        <7>Deaths: <a>{:,}
+
+                        <7>Melee Kills: <a>{:,}
+                        <7>Bow Kills: <a>{:,}
+                        <7>Void Kills: <a>{:,}
+
+                        <7>Arrows Shot: <a>{:,}
+                        <7>Arrows Hit: <a>{:,}
+
+                        <7>Chests Opened: <a>{:,}
+
+                        <7>Heads: <a>{:,}""",
+                        wins, losses, kills, assists, deaths, meleeKills, bowKills, voidKills,
+                        arrowsShot, arrowsHit, chests, heads);
             }
         });
 
         set(new GUIItem(24) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aMega Statistics",
-                        Material.PAPER,
-                        1,
-                        "§7Wins: §a0",
-                        "§7Losses: §a0",
-                        "",
-                        "§7Kills: §a0",
-                        "§7Assists: §a0",
-                        "§7Deaths: §a0",
-                        "",
-                        "§7Melee Kills: §a0",
-                        "§7Bow Kills: §a0",
-                        "§7Void Kills: §a0",
-                        "",
-                        "§7Arrows Shot: §a0",
-                        "§7Arrows Hit: §a0",
-                        "",
-                        "§7Chests Opened: §a0"
-                );
+                return ItemStacks.item(Material.PAPER, 1, """
+                        <a>Mega Statistics
+                        <7>Wins: <a>0
+                        <7>Losses: <a>0
+
+                        <7>Kills: <a>0
+                        <7>Assists: <a>0
+                        <7>Deaths: <a>0
+
+                        <7>Melee Kills: <a>0
+                        <7>Bow Kills: <a>0
+                        <7>Void Kills: <a>0
+
+                        <7>Arrows Shot: <a>0
+                        <7>Arrows Hit: <a>0
+
+                        <7>Chests Opened: <a>0""");
             }
         });
 
         set(new GUIItem(26) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aRanked Statistics",
-                        Material.PAPER,
-                        1,
-                        "§7Wins: §a0",
-                        "§7Losses: §a0",
-                        "",
-                        "§7Kills: §a0",
-                        "§7Assists: §a0",
-                        "§7Deaths: §a0",
-                        "",
-                        "§7Melee Kills: §a0",
-                        "§7Bow Kills: §a0",
-                        "§7Void Kills: §a0",
-                        "",
-                        "§7Arrows Shot: §a0",
-                        "§7Arrows Hit: §a0",
-                        "",
-                        "§7Chests Opened: §a0"
-                );
+                return ItemStacks.item(Material.PAPER, 1, """
+                        <a>Ranked Statistics
+                        <7>Wins: <a>0
+                        <7>Losses: <a>0
+
+                        <7>Kills: <a>0
+                        <7>Assists: <a>0
+                        <7>Deaths: <a>0
+
+                        <7>Melee Kills: <a>0
+                        <7>Bow Kills: <a>0
+                        <7>Void Kills: <a>0
+
+                        <7>Arrows Shot: <a>0
+                        <7>Arrows Hit: <a>0
+
+                        <7>Chests Opened: <a>0""");
             }
         });
 
         set(new GUIItem(30) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aSkyWars Challenge Statistics",
-                        Material.BLAZE_POWDER,
-                        1,
-                        "§7Total Challenge Wins: §a0",
-                        "",
-                        "§7Archer Wins: §a0",
-                        "§7Half Health Wins: §a0",
-                        "§7No Block Wins: §a0",
-                        "§7No Chest Wins: §a0",
-                        "§7Paper Wins: §a0",
-                        "§7Rookie Wins: §a0",
-                        "§7UHC Wins: §a0",
-                        "§7Ultimate Warrior Wins: §a0",
-                        "",
-                        "§7Wins with 2 Challenges: §a0",
-                        "§7Wins with 3 Challenges: §a0",
-                        "§7Wins with 4 Challenges: §a0",
-                        "§7Wins with 5 Challenges: §a0",
-                        "§7Wins with 6 Challenges: §a0",
-                        "§7Wins with 7 Challenges: §a0",
-                        "§7Wins with 8 Challenges: §a0"
-                );
+                return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                        <a>SkyWars Challenge Statistics
+                        <7>Total Challenge Wins: <a>0
+
+                        <7>Archer Wins: <a>0
+                        <7>Half Health Wins: <a>0
+                        <7>No Block Wins: <a>0
+                        <7>No Chest Wins: <a>0
+                        <7>Paper Wins: <a>0
+                        <7>Rookie Wins: <a>0
+                        <7>UHC Wins: <a>0
+                        <7>Ultimate Warrior Wins: <a>0
+
+                        <7>Wins with 2 Challenges: <a>0
+                        <7>Wins with 3 Challenges: <a>0
+                        <7>Wins with 4 Challenges: <a>0
+                        <7>Wins with 5 Challenges: <a>0
+                        <7>Wins with 6 Challenges: <a>0
+                        <7>Wins with 7 Challenges: <a>0
+                        <7>Wins with 8 Challenges: <a>0""");
             }
         });
 
         set(new GUIItem(32) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aLab Statistics",
-                        Material.BREWING_STAND,
-                        1,
-                        "§7Hunters vs Beasts Wins: §a0",
-                        "§7Lucky Blocks Wins: §a0",
-                        "§7TNT Madness Wins: §a0",
-                        "§7Slime Wins: §a0",
-                        "§7Rush Wins: §a0"
-                );
+                return ItemStacks.item(Material.BREWING_STAND, 1, """
+                        <a>Lab Statistics
+                        <7>Hunters vs Beasts Wins: <a>0
+                        <7>Lucky Blocks Wins: <a>0
+                        <7>TNT Madness Wins: <a>0
+                        <7>Slime Wins: <a>0
+                        <7>Rush Wins: <a>0""");
             }
         });
 

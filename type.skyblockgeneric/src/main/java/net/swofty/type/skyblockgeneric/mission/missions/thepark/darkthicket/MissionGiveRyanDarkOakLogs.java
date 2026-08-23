@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.thepark.darkthicket;
 
+
 import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.skyblockgeneric.levels.SkyBlockLevelCause;
@@ -50,10 +51,10 @@ public class MissionGiveRyanDarkOakLogs extends SkyBlockMission implements Locat
 		player.removeItemFromPlayer(ItemType.DARK_OAK_LOG, 256);
 		mission.getQuestCompleteText(
 				new ArrayList<>(List.of(
-						"§fCampfire Initiate Badge I",
-						"§8+§62,000 §7Coins",
-						"§8+§31,000 §7Foraging Experience",
-						"§8+§b5 SkyBlock XP"
+						"<f>Campfire Initiate Badge I",
+						"<8>+<6>2,000 <7>Coins",
+						"<8>+<3>1,000 <7>Foraging Experience",
+						"<8>+<b>5 SkyBlock XP"
 				))
 		).forEach(player::sendMessage);
 

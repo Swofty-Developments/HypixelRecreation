@@ -11,7 +11,7 @@ import net.swofty.type.skyblockgeneric.slayer.SlayerTierDefinition;
 import net.swofty.type.skyblockgeneric.slayer.SlayerType;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-@CommandParameters(description = "Starts and manages Slayer quests",
+@CommandParameters(labels = "slayer", description = "Starts and manages Slayer quests",
     usage = "/slayer <start|status|cancel>",
     permission = Rank.DEFAULT,
     allowsConsole = false)
@@ -31,7 +31,7 @@ public class SlayerCommand extends HypixelCommand {
                 context.get(tierArgument)
             );
             if (!result.success()) {
-                player.sendMessage("§c" + result.message());
+                player.sendMessage("<c>{}", result.message());
             }
         }, ArgumentType.Literal("start"), typeArgument, tierArgument);
 
@@ -41,20 +41,20 @@ public class SlayerCommand extends HypixelCommand {
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
             SlayerService.QuestStatus status = SlayerService.status(player);
             if (!status.active()) {
-                player.sendMessage("§cYou do not have an active Slayer quest.");
+                player.sendMessage("<c>You do not have an active Slayer quest.");
                 return;
             }
 
             SlayerTierDefinition tier = status.tier();
             if (tier == null) {
-                player.sendMessage("§cYour active Slayer quest is no longer configured.");
+                player.sendMessage("<c>Your active Slayer quest is no longer configured.");
                 return;
             }
 
-            player.sendMessage("§5§lSLAYER QUEST");
-            player.sendMessage("§7Boss: §c" + tier.displayName(status.quest().type()));
-            player.sendMessage("§7Progress: §e" + status.quest().combatXp() + "§8/§e" + tier.requiredCombatXp() + " Combat XP");
-            player.sendMessage(status.quest().bossSpawned() ? "§cBoss spawned!" : "§7Kill matching mobs to summon your boss.");
+            player.sendMessage("<5><l>SLAYER QUEST");
+            player.sendMessage("<7>Boss: <c>{}", tier.displayName(status.quest().type()));
+            player.sendMessage("<7>Progress: <e>{}<8>/<e>{} Combat XP", status.quest().combatXp(), tier.requiredCombatXp());
+            player.sendMessage(status.quest().bossSpawned() ? "<c>Boss spawned!" : "<7>Kill matching mobs to summon your boss.");
         }, ArgumentType.Literal("status"));
 
         command.addSyntax((sender, context) -> {

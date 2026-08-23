@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.instance.block.BlockFace;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointInteger;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -103,11 +104,9 @@ public class RegisteredAbility {
         public void onUse(@NonNull SkyBlockPlayer player, @NonNull RegisteredAbility ability) {
             SkyBlockActionBar.getFor(player).addReplacement(
                     SkyBlockActionBar.BarSection.MANA,
-                    new SkyBlockActionBar.DisplayReplacement(
-                            "§b-" + cost + " (§6" + ability.getName() + "§b)",
-                            20,
-                            2
-                    )
+                    Text.of("<b>-{} (<6>{}</6>)", cost, ability.getName()),
+                    20,
+                    2
             );
             player.setMana(player.getMana() - cost);
         }
@@ -116,17 +115,15 @@ public class RegisteredAbility {
         public void onFail(@NonNull SkyBlockPlayer player) {
             SkyBlockActionBar.getFor(player).addReplacement(
                     SkyBlockActionBar.BarSection.MANA,
-                    new SkyBlockActionBar.DisplayReplacement(
-                            "§c§lNOT ENOUGH MANA",
-                            20 * 2,
-                            2
-                    )
+                    Text.of("<c><l>NOT ENOUGH MANA"),
+                    20 * 2,
+                    2
             );
         }
 
         @Override
         public String getLoreDisplay() {
-            return "§8Mana Cost: §3" + cost;
+            return "<8>Mana Cost: <3>" + cost;
         }
     }
 
@@ -148,11 +145,9 @@ public class RegisteredAbility {
         public void onUse(@NonNull SkyBlockPlayer player, @NonNull RegisteredAbility ability) {
             SkyBlockActionBar.getFor(player).addReplacement(
                     SkyBlockActionBar.BarSection.MANA,
-                    new SkyBlockActionBar.DisplayReplacement(
-                            "§b-" + cost + " (§6" + ability.getName() + "§b)",
-                            20,
-                            2
-                    )
+                    Text.of("<b>-{} (<6>{}</6>)", cost, ability.getName()),
+                    20,
+                    2
             );
             player.setMana(player.getMana() - cost);
             player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.SOULFLOW, DatapointInteger.class).setValue(
@@ -165,27 +160,23 @@ public class RegisteredAbility {
             if (player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.SOULFLOW, DatapointInteger.class).getValue() < soulflow) {
                 SkyBlockActionBar.getFor(player).addReplacement(
                         SkyBlockActionBar.BarSection.MANA,
-                        new SkyBlockActionBar.DisplayReplacement(
-                                "§c§lNOT ENOUGH SOULFLOW",
-                                20 * 2,
-                                2
-                        )
+                        Text.of("<c><l>NOT ENOUGH SOULFLOW"),
+                        20 * 2,
+                        2
                 );
                 return;
             }
             SkyBlockActionBar.getFor(player).addReplacement(
                     SkyBlockActionBar.BarSection.MANA,
-                    new SkyBlockActionBar.DisplayReplacement(
-                            "§c§lNOT ENOUGH MANA",
-                            20 * 2,
-                            2
-                    )
+                    Text.of("<c><l>NOT ENOUGH MANA"),
+                    20 * 2,
+                    2
             );
         }
 
         @Override
         public String getLoreDisplay() {
-            return "§8Soulflow Cost: §3" + soulflow + "\n§8Mana Cost: §3" + cost;
+            return "<8>Soulflow Cost: <3>" + soulflow + "\n<8>Mana Cost: <3>" + cost;
         }
     }
 

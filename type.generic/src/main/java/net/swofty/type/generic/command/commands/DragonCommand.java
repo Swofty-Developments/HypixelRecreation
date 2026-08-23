@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@CommandParameters(description = "Dragon management commands",
+@CommandParameters(labels = "dragon", description = "Dragon management commands",
         usage = "/dragon <spawn|follow|stop|remove>",
         permission = Rank.STAFF,
         allowsConsole = false)
@@ -62,7 +62,7 @@ public class DragonCommand extends HypixelCommand {
     private void spawnDragon(HypixelPlayer player, double speed) {
         DragonEntity existing = playerDragons.get(player.getUuid());
         if (existing != null && !existing.isDead()) {
-            player.sendMessage("§cYou already have a dragon spawned! Use /dragon remove first.");
+            player.sendMessage("<c>You already have a dragon spawned! Use /dragon remove first.");
             return;
         }
 
@@ -71,64 +71,64 @@ public class DragonCommand extends HypixelCommand {
         dragon.addViewer(player);
         playerDragons.put(player.getUuid(), dragon);
 
-        player.sendMessage("§aDragon spawned!");
+        player.sendMessage("<a>Dragon spawned!");
     }
 
     private void followPlayer(HypixelPlayer player, double speed) {
         DragonEntity dragon = playerDragons.get(player.getUuid());
         if (dragon == null || dragon.isDead()) {
-            player.sendMessage("§cYou don't have a dragon! Use /dragon spawn first.");
+            player.sendMessage("<c>You don't have a dragon! Use /dragon spawn first.");
             return;
         }
 
         dragon.followPlayer(player, speed);
-        player.sendMessage("§aDragon is now following you at speed " + speed + "!");
+        player.sendMessage("<a>Dragon is now following you at speed {}!", speed);
     }
 
     private void setIdle(HypixelPlayer player, double distance, double speed) {
         DragonEntity dragon = playerDragons.get(player.getUuid());
         if (dragon == null || dragon.isDead()) {
-            player.sendMessage("§cYou don't have a dragon! Use /dragon spawn first.");
+            player.sendMessage("<c>You don't have a dragon! Use /dragon spawn first.");
             return;
         }
 
         dragon.setIdle(player.getPosition().add(0, 10, 0), distance, speed);
-        player.sendMessage("§aDragon is now idling around your position with distance " + distance + "!");
+        player.sendMessage("<a>Dragon is now idling around your position with distance {}!", distance);
     }
 
     private void stopFollowing(HypixelPlayer player) {
         DragonEntity dragon = playerDragons.get(player.getUuid());
         if (dragon == null || dragon.isDead()) {
-            player.sendMessage("§cYou don't have a dragon!");
+            player.sendMessage("<c>You don't have a dragon!");
             return;
         }
 
         dragon.clearTarget();
-        player.sendMessage("§aDragon stopped.");
+        player.sendMessage("<a>Dragon stopped.");
     }
 
     private void removeDragon(HypixelPlayer player) {
         DragonEntity dragon = playerDragons.remove(player.getUuid());
         if (dragon == null) {
-            player.sendMessage("§cYou don't have a dragon!");
+            player.sendMessage("<c>You don't have a dragon!");
             return;
         }
 
         if (!dragon.isDead()) {
             dragon.remove();
         }
-        player.sendMessage("§aDragon removed!");
+        player.sendMessage("<a>Dragon removed!");
     }
 
     private void showHelp(HypixelPlayer player) {
-        player.sendMessage("§9§m-----------------------------------------------------");
-        player.sendMessage("§6Dragon Commands");
-        player.sendMessage("§e/dragon spawn [speed] §8- §7Spawn a dragon at your location");
-        player.sendMessage("§e/dragon follow [speed] §8- §7Make the dragon follow you");
-        player.sendMessage("§e/dragon idle [distance] §8- §7Make the dragon idle around your position");
-        player.sendMessage("§e/dragon stop §8- §7Stop the dragon");
-        player.sendMessage("§e/dragon remove §8- §7Remove your dragon");
-        player.sendMessage("§9§m-----------------------------------------------------");
+        player.sendMessage("<sep>");
+        player.sendMessage("<6>Dragon Commands");
+        player.sendMessage("<e>/dragon spawn [speed] <8>- <7>Spawn a dragon at your location");
+        player.sendMessage("<e>/dragon follow [speed] <8>- <7>Make the dragon follow you");
+        player.sendMessage("<e>/dragon idle [distance] <8>- <7>Make the dragon idle around your position");
+        player.sendMessage("<e>/dragon stop <8>- <7>Stop the dragon");
+        player.sendMessage("<e>/dragon remove <8>- <7>Remove your dragon");
+        player.sendMessage("<sep>");
     }
 
     public static void cleanupDragon(UUID playerUuid) {

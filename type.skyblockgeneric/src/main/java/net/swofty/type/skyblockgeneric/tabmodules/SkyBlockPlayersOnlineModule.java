@@ -1,9 +1,9 @@
 package net.swofty.type.skyblockgeneric.tabmodules;
 
 import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointRank;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.generic.tab.TablistSkinRegistry;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -28,7 +28,7 @@ public class SkyBlockPlayersOnlineModule extends TablistModule {
         List<SkyBlockPlayer> players = SkyBlockGenericLoader.getLoadedPlayers();
 
         ArrayList<TablistEntry> entries = new ArrayList<>(List.of(
-                new TablistEntry(Component.text(getCentered(I18n.string("tablist.module.players", l, Component.text(String.valueOf(players.size()))))), TablistSkinRegistry.GREEN)
+                centered(Text.key("tablist.module.players", players.size()), l, TablistSkinRegistry.GREEN)
         ));
 
         List<SkyBlockPlayer> toShow = new ArrayList<>();
@@ -54,7 +54,7 @@ public class SkyBlockPlayersOnlineModule extends TablistModule {
             }
 
             SkyBlockPlayer tablistPlayer = toShow.get(x);
-            entries.add(new TablistEntry(tablistPlayer.getRankDisplayName(), TablistSkinRegistry.GRAY));
+            entries.add(new TablistEntry(Text.of("{}", tablistPlayer.getRankDisplayName()), TablistSkinRegistry.GRAY));
         }
 
         return entries;

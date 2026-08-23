@@ -12,7 +12,7 @@ public class NPCFann extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Fann", "§e§lCLICK"};
+                return new String[]{"Fann", "<e><l>CLICK"};
             }
 
             @Override

@@ -1,17 +1,15 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.auction.view;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.auctions.AuctionItem;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointDouble;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointUUIDList;
 import net.swofty.type.skyblockgeneric.gui.inventories.auction.GUIAuctionViewItem;
@@ -20,7 +18,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 public class AuctionViewSelfNormal implements AuctionView {
@@ -29,9 +26,8 @@ public class AuctionViewSelfNormal implements AuctionView {
         gui.set(new GUIItem(33) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                Locale l = p.getLocale();
-                List<String> lore = new ArrayList<>();
-                lore.add(I18n.string("gui_auction.view_self_normal.bid_history_total", l, Component.text(String.valueOf(item.getBids().size()))));
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.key("gui_auction.view_self_normal.bid_history_total", item.getBids().size()));
 
                 List<AuctionItem.Bid> bids = new ArrayList<>(item.getBids());
                 bids.sort(Comparator.comparingLong(AuctionItem.Bid::value).reversed());
@@ -41,13 +37,14 @@ public class AuctionViewSelfNormal implements AuctionView {
                         break;
                     AuctionItem.Bid bid = bids.get(i);
 
-                    lore.add(I18n.string("gui_auction.view_self_normal.bid_separator", l));
-                    lore.add(I18n.string("gui_auction.view_self_normal.bid_value", l, Component.text(String.valueOf(bid.value()))));
-                    lore.add(I18n.string("gui_auction.view_self_normal.bid_by", l, Component.text(SkyBlockPlayer.getDisplayName(bid.uuid()))));
-                    lore.add("§b" + StringUtility.formatTimeAsAgo(bid.timestamp()));
+                    lore.add(Text.key("gui_auction.view_self_normal.bid_separator"));
+                    lore.add(Text.key("gui_auction.view_self_normal.bid_value", bid.value()));
+                    lore.add(Text.key("gui_auction.view_self_normal.bid_by", SkyBlockPlayer.getDisplayName(bid.uuid())));
+                    lore.add(Text.of("<b>{}", StringUtility.formatTimeAsAgo(bid.timestamp())));
                 }
 
-                return ItemStackCreator.getStack(I18n.string("gui_auction.view_self_normal.bid_history", l), Material.FILLED_MAP, 1, lore);
+                return ItemStacks.item(Material.FILLED_MAP, 1,
+                        Text.key("gui_auction.view_self_normal.bid_history"), lore);
             }
         });
 
@@ -73,8 +70,9 @@ public class AuctionViewSelfNormal implements AuctionView {
                         @Override
                         public ItemStack.Builder getItem(HypixelPlayer p) {
                             SkyBlockPlayer player = (SkyBlockPlayer) p;
-                            return TranslatableItemStackCreator.getStack("gui_auction.view_self_normal.collect_auction", Material.GOLD_BLOCK, 1,
-                                "gui_auction.view_self_normal.collect_no_bids.lore");
+                            return ItemStacks.item(Material.GOLD_BLOCK, 1,
+                                Text.key("gui_auction.view_self_normal.collect_auction"),
+                                Text.keyLines("gui_auction.view_self_normal.collect_no_bids.lore"));
                         }
                     });
                 } else {
@@ -82,7 +80,6 @@ public class AuctionViewSelfNormal implements AuctionView {
                         @Override
                         public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                             SkyBlockPlayer player = (SkyBlockPlayer) p;
-                            Locale l = p.getLocale();
                             double coins = player.getSkyblockDataHandler().get(net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler.Data.COINS, DatapointDouble.class).getValue();
                             long highestBid = item.getBids().stream().max(Comparator.comparingLong(AuctionItem.Bid::value)).map(AuctionItem.Bid::value).orElse(0L);
                             player.getSkyblockDataHandler().get(net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler.Data.COINS, DatapointDouble.class).setValue(coins + highestBid);
@@ -92,15 +89,16 @@ public class AuctionViewSelfNormal implements AuctionView {
                             ownedInactive.add(item.getUuid());
                             player.getSkyblockDataHandler().get(net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler.Data.AUCTION_INACTIVE_OWNED, DatapointUUIDList.class).setValue(ownedInactive);
 
-                            player.sendMessage(I18n.t("gui_auction.view_self_normal.collected_coins", Component.text(String.valueOf(highestBid))));
+                            player.sendMessage(Text.key("gui_auction.view_self_normal.collected_coins", highestBid));
                             player.closeInventory();
                         }
 
                         @Override
                         public ItemStack.Builder getItem(HypixelPlayer p) {
-                            return TranslatableItemStackCreator.getStack("gui_auction.view_self_normal.collect_auction", Material.GOLD_BLOCK, 1,
-                                "gui_auction.view_self_normal.collect_with_bids.lore", Component.text(String.valueOf(item.getBids().stream().max(Comparator.comparingLong(AuctionItem.Bid::value)).map(AuctionItem.Bid::value).orElse(0L))
-                                ));
+                            return ItemStacks.item(Material.GOLD_BLOCK, 1,
+                                Text.key("gui_auction.view_self_normal.collect_auction"),
+                                Text.keyLines("gui_auction.view_self_normal.collect_with_bids.lore",
+                                    item.getBids().stream().max(Comparator.comparingLong(AuctionItem.Bid::value)).map(AuctionItem.Bid::value).orElse(0L)));
                         }
                     });
                 }
@@ -108,9 +106,10 @@ public class AuctionViewSelfNormal implements AuctionView {
                 gui.set(new GUIItem(29) {
                     @Override
                     public ItemStack.Builder getItem(HypixelPlayer p) {
-                        return TranslatableItemStackCreator.getStack("gui_auction.view_self_normal.auction_ended", Material.BARRIER, 1,
-                            "gui_auction.view_self_normal.auction_ended_claimed.lore",
-                            Component.text(String.valueOf(item.getBids().stream().max(Comparator.comparingLong(AuctionItem.Bid::value)).map(AuctionItem.Bid::value).orElse(0L))));
+                        return ItemStacks.item(Material.BARRIER, 1,
+                            Text.key("gui_auction.view_self_normal.auction_ended"),
+                            Text.keyLines("gui_auction.view_self_normal.auction_ended_claimed.lore",
+                                item.getBids().stream().max(Comparator.comparingLong(AuctionItem.Bid::value)).map(AuctionItem.Bid::value).orElse(0L)));
                     }
                 });
             }
@@ -120,8 +119,9 @@ public class AuctionViewSelfNormal implements AuctionView {
         gui.set(new GUIItem(29) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return TranslatableItemStackCreator.getStack("gui_auction.view_self_normal.own_auction", Material.BEDROCK, 1,
-                    "gui_auction.view_self_normal.own_auction.lore");
+                return ItemStacks.item(Material.BEDROCK, 1,
+                    Text.key("gui_auction.view_self_normal.own_auction"),
+                    Text.keyLines("gui_auction.view_self_normal.own_auction.lore"));
             }
         });
     }

@@ -74,12 +74,12 @@ public class CardinalPlacement extends PlacementRule {
         BlockUtils block = new BlockUtils(instance, blockPosition);
 
         if (noDown.contains(blockState.block().name())) {
-            boolean blockNorth = block.north().getBlock().isSolid();
-            boolean blockSouth = block.south().getBlock().isSolid();
-            boolean blockEast = block.east().getBlock().isSolid();
-            boolean blockWest = block.west().getBlock().isSolid();
-            boolean blockUp = block.above().getBlock().isSolid();
-            boolean blockDown = block.below().getBlock().isSolid();
+            boolean blockNorth = block.north().getBlock().solid();
+            boolean blockSouth = block.south().getBlock().solid();
+            boolean blockEast = block.east().getBlock().solid();
+            boolean blockWest = block.west().getBlock().solid();
+            boolean blockUp = block.above().getBlock().solid();
+            boolean blockDown = block.below().getBlock().solid();
 
             return blockNorth || blockSouth || blockEast || blockWest || blockUp || blockDown;
         }
@@ -131,12 +131,12 @@ public class CardinalPlacement extends PlacementRule {
 
         if (hasUp(blockState.block())) {
             BlockUtils blockUp = block.above();
-            blockState.set(Directional.UP, BooleanState.Of(isMushroom != blockUp.getBlock().isSolid()));
+            blockState.set(Directional.UP, BooleanState.Of(isMushroom != blockUp.getBlock().solid()));
         }
 
         if (hasDown(blockState.block())) {
             BlockUtils blockDown = block.below();
-            blockState.set(Directional.DOWN, BooleanState.Of(isMushroom != blockDown.getBlock().isSolid()));
+            blockState.set(Directional.DOWN, BooleanState.Of(isMushroom != blockDown.getBlock().solid()));
         }
     }
 
@@ -153,6 +153,6 @@ public class CardinalPlacement extends PlacementRule {
     }
 
     public boolean canAttach(Block block) {
-        return block() == Block.VINE ? (block != Block.VINE && block.isSolid()) : !block.isAir() && block.isSolid();
+        return block() == Block.VINE ? (block != Block.VINE && block.solid()) : !block.air() && block.solid();
     }
 }

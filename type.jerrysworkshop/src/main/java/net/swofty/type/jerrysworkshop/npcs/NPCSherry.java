@@ -18,7 +18,10 @@ public class NPCSherry extends HypixelNPC {
 
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§cSherry", "§e§lCLICK"};
+				return new String[]{
+						"<c>Sherry",
+						"<e><l>CLICK"
+				};
 			}
 
 			@Override

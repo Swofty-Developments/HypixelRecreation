@@ -1,37 +1,28 @@
 package net.swofty.type.skyblockgeneric.entity;
 
 import lombok.Getter;
-import net.minestom.server.entity.Entity;
-import net.minestom.server.entity.EntityType;
-import net.minestom.server.entity.metadata.item.ItemEntityMeta;
+import net.swofty.type.generic.entity.drop.VanillaItemEntity;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.NonPlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Getter
-public class DroppedItemEntityImpl extends Entity {
+public class DroppedItemEntityImpl extends VanillaItemEntity {
     @Getter
     private static final Map<SkyBlockPlayer, List<DroppedItemEntityImpl>> droppedItems = new HashMap<>();
     private final SkyBlockPlayer player;
-    private final long endPickupDelay;
 
     public DroppedItemEntityImpl(SkyBlockItem item, SkyBlockPlayer player) {
-        super(EntityType.ITEM);
+        super(new NonPlayerItemUpdater(item.getItemStack()).getUpdatedItem().build());
 
         this.player = player;
-        this.endPickupDelay = System.currentTimeMillis() + 500;
-
-        ItemEntityMeta meta = (ItemEntityMeta) this.entityMeta;
-        meta.setItem(new NonPlayerItemUpdater(item.getItemStack()).getUpdatedItem().build());
 
         setAutoViewable(false);
-        this.scheduleRemove(Duration.ofSeconds(60));
 
         droppedItems.computeIfPresent(player, (key, value) -> {
             if (value.size() > 50) {
@@ -49,7 +40,12 @@ public class DroppedItemEntityImpl extends Entity {
         addViewer(player);
     }
 
+    @Override
+    protected boolean canMergeWith(VanillaItemEntity other) {
+        return other instanceof DroppedItemEntityImpl dropped && dropped.player == this.player;
+    }
+
     public SkyBlockItem getItem() {
-        return new SkyBlockItem(((ItemEntityMeta) this.entityMeta).getItem());
+        return new SkyBlockItem(getItemStack());
     }
 }

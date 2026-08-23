@@ -1,12 +1,11 @@
 package net.swofty.type.skywarsgame.luckyblock;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skywarsgame.luckyblock.effects.LuckyBlockEnvironmentEffect;
 import net.swofty.type.skywarsgame.luckyblock.items.armor.*;
 import net.swofty.type.skywarsgame.luckyblock.items.consumables.AbsorptionHearts;
@@ -61,52 +60,52 @@ public class LuckyBlockLootTable {
             Potion potion,
             EntityType mobType,
             int mobCount,
-            Component message,
+            Text message,
             boolean isGood,
             LuckyBlockEnvironmentEffect environmentEffect
     ) {
         public static LuckyBlockReward items(ItemStack... items) {
             return new LuckyBlockReward(RewardType.ITEMS, items, null, null, 0,
-                    Component.text("Lucky!", NamedTextColor.GOLD), true, null);
+                    Text.of("<6>Lucky!"), true, null);
         }
 
-        public static LuckyBlockReward itemsWithMessage(Component message, ItemStack... items) {
+        public static LuckyBlockReward itemsWithMessage(Text message, ItemStack... items) {
             return new LuckyBlockReward(RewardType.ITEMS, items, null, null, 0, message, true, null);
         }
 
         public static LuckyBlockReward potion(Potion potion, String effectName) {
             return new LuckyBlockReward(RewardType.POTION, null, potion, null, 0,
-                    Component.text("You got " + effectName + "!", NamedTextColor.GREEN), true, null);
+                    Text.of("<a>You got {}!", effectName), true, null);
         }
 
         public static LuckyBlockReward badPotion(Potion potion, String effectName) {
             return new LuckyBlockReward(RewardType.BAD_EFFECT, null, potion, null, 0,
-                    Component.text("Unlucky! " + effectName + "!", NamedTextColor.RED), false, null);
+                    Text.of("<c>Unlucky! {}!", effectName), false, null);
         }
 
         public static LuckyBlockReward spawnMob(EntityType mobType, int count) {
             return new LuckyBlockReward(RewardType.SPAWN_MOB, null, null, mobType, count,
-                    Component.text("Unlucky! Enemies spawned!", NamedTextColor.RED), false, null);
+                    Text.of("<c>Unlucky! Enemies spawned!"), false, null);
         }
 
         public static LuckyBlockReward explosion() {
             return new LuckyBlockReward(RewardType.EXPLOSION, null, null, null, 0,
-                    Component.text("BOOM!", NamedTextColor.DARK_RED), false, null);
+                    Text.of("<4>BOOM!"), false, null);
         }
 
         public static LuckyBlockReward nothing() {
             return new LuckyBlockReward(RewardType.NOTHING, null, null, null, 0,
-                    Component.text("Nothing happened...", NamedTextColor.GRAY), true, null);
+                    Text.of("<7>Nothing happened..."), true, null);
         }
 
         public static LuckyBlockReward opRule() {
             return new LuckyBlockReward(RewardType.OP_RULE, null, null, null, 0,
-                    Component.text("OP RULE ACTIVATED!", NamedTextColor.AQUA), true, null);
+                    Text.of("<b>OP RULE ACTIVATED!"), true, null);
         }
 
         public static LuckyBlockReward environmentEffect(LuckyBlockEnvironmentEffect effect) {
             return new LuckyBlockReward(RewardType.ENVIRONMENT_EFFECT, null, null, null, 0,
-                    effect.getMessageComponent(), effect.isGood(), effect);
+                    effect.getMessageText(), effect.isGood(), effect);
         }
 
         public static LuckyBlockReward randomGoodEnvironmentEffect() {
@@ -232,21 +231,21 @@ public class LuckyBlockLootTable {
     private static LuckyBlockReward generateArmorReward() {
         return switch (RANDOM.nextInt(16)) {
             case 0 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("El Dorado Armor!", NamedTextColor.GOLD),
+                    Text.of("<6>El Dorado Armor!"),
                     new ElDoradoHelmet().createItemStack(),
                     new ElDoradoChestplate().createItemStack(),
                     new ElDoradoLeggings().createItemStack(),
                     new ElDoradoBoots().createItemStack()
             );
             case 1 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Disco Armor!", NamedTextColor.LIGHT_PURPLE),
+                    Text.of("<d>Disco Armor!"),
                     new DiscoHelmet().createItemStack(),
                     new DiscoChestplate().createItemStack(),
                     new DiscoLeggings().createItemStack(),
                     new DiscoBoots().createItemStack()
             );
             case 2 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Exodus!", NamedTextColor.DARK_PURPLE),
+                    Text.of("<5>Exodus!"),
                     new Exodus().createItemStack()
             );
             case 3 -> LuckyBlockReward.items(new FrogHelmet().createItemStack());
@@ -304,25 +303,25 @@ public class LuckyBlockLootTable {
     private static LuckyBlockReward generateRareDefensiveItems() {
         return switch (RANDOM.nextInt(4)) {
             case 0 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Full Iron Armor!", NamedTextColor.WHITE),
+                    Text.of("<f>Full Iron Armor!"),
                     ItemStack.of(Material.IRON_HELMET),
                     ItemStack.of(Material.IRON_CHESTPLATE),
                     ItemStack.of(Material.IRON_LEGGINGS),
                     ItemStack.of(Material.IRON_BOOTS)
             );
             case 1 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Diamond Armor Set!", NamedTextColor.AQUA),
+                    Text.of("<b>Diamond Armor Set!"),
                     ItemStack.of(Material.DIAMOND_HELMET),
                     ItemStack.of(Material.DIAMOND_CHESTPLATE),
                     ItemStack.of(Material.DIAMOND_LEGGINGS),
                     ItemStack.of(Material.DIAMOND_BOOTS)
             );
             case 2 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Totem of Undying!", NamedTextColor.GOLD),
+                    Text.of("<6>Totem of Undying!"),
                     ItemStack.of(Material.TOTEM_OF_UNDYING)
             );
             default -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Netherite Armor!", NamedTextColor.DARK_PURPLE),
+                    Text.of("<5>Netherite Armor!"),
                     ItemStack.of(Material.NETHERITE_HELMET),
                     ItemStack.of(Material.NETHERITE_CHESTPLATE),
                     ItemStack.of(Material.NETHERITE_LEGGINGS),
@@ -370,15 +369,15 @@ public class LuckyBlockLootTable {
     private static LuckyBlockReward generateRareWeapons() {
         return switch (RANDOM.nextInt(4)) {
             case 0 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Netherite Sword!", NamedTextColor.DARK_RED),
+                    Text.of("<4>Netherite Sword!"),
                     ItemStack.of(Material.NETHERITE_SWORD)
             );
             case 1 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Trident!", NamedTextColor.AQUA),
+                    Text.of("<b>Trident!"),
                     ItemStack.of(Material.TRIDENT)
             );
             case 2 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Netherite Axe!", NamedTextColor.DARK_RED),
+                    Text.of("<4>Netherite Axe!"),
                     ItemStack.of(Material.NETHERITE_AXE)
             );
             default -> LuckyBlockReward.items(new SelfAttackingSword().createItemStack());
@@ -426,7 +425,7 @@ public class LuckyBlockLootTable {
     private static LuckyBlockReward generateLegendaryReward() {
         return switch (RANDOM.nextInt(4)) {
             case 0 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Full Netherite!", NamedTextColor.DARK_PURPLE),
+                    Text.of("<5>Full Netherite!"),
                     ItemStack.of(Material.NETHERITE_HELMET),
                     ItemStack.of(Material.NETHERITE_CHESTPLATE),
                     ItemStack.of(Material.NETHERITE_LEGGINGS),
@@ -434,16 +433,16 @@ public class LuckyBlockLootTable {
                     ItemStack.of(Material.NETHERITE_SWORD)
             );
             case 1 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Elytra!", NamedTextColor.LIGHT_PURPLE),
+                    Text.of("<d>Elytra!"),
                     ItemStack.of(Material.ELYTRA),
                     ItemStack.of(Material.FIREWORK_ROCKET, 16)
             );
             case 2 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Golden Apples x32!", NamedTextColor.GOLD),
+                    Text.of("<6>Golden Apples x32!"),
                     ItemStack.of(Material.GOLDEN_APPLE, 32)
             );
             default -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Enchanted Golden Apples!", NamedTextColor.GOLD),
+                    Text.of("<6>Enchanted Golden Apples!"),
                     ItemStack.of(Material.ENCHANTED_GOLDEN_APPLE, 3)
             );
         };
@@ -522,35 +521,35 @@ public class LuckyBlockLootTable {
     private static LuckyBlockReward generateRareItems() {
         return switch (RANDOM.nextInt(8)) {
             case 0 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Full Iron Armor!", NamedTextColor.WHITE),
+                    Text.of("<f>Full Iron Armor!"),
                     ItemStack.of(Material.IRON_HELMET),
                     ItemStack.of(Material.IRON_CHESTPLATE),
                     ItemStack.of(Material.IRON_LEGGINGS),
                     ItemStack.of(Material.IRON_BOOTS)
             );
             case 1 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Full Diamond Armor!", NamedTextColor.AQUA),
+                    Text.of("<b>Full Diamond Armor!"),
                     ItemStack.of(Material.DIAMOND_HELMET),
                     ItemStack.of(Material.DIAMOND_CHESTPLATE),
                     ItemStack.of(Material.DIAMOND_LEGGINGS),
                     ItemStack.of(Material.DIAMOND_BOOTS)
             );
             case 2 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Netherite Sword!", NamedTextColor.DARK_PURPLE),
+                    Text.of("<5>Netherite Sword!"),
                     ItemStack.of(Material.NETHERITE_SWORD)
             );
             case 3 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Enchanted Golden Apple!", NamedTextColor.GOLD),
+                    Text.of("<6>Enchanted Golden Apple!"),
                     ItemStack.of(Material.ENCHANTED_GOLDEN_APPLE)
             );
             case 4 -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Totem of Undying!", NamedTextColor.GOLD),
+                    Text.of("<6>Totem of Undying!"),
                     ItemStack.of(Material.TOTEM_OF_UNDYING)
             );
             case 5 -> LuckyBlockReward.environmentEffect(LuckyBlockEnvironmentEffect.BRIDGE_BUILD);
             case 6 -> LuckyBlockReward.environmentEffect(LuckyBlockEnvironmentEffect.BLESSING);
             default -> LuckyBlockReward.itemsWithMessage(
-                    Component.text("Elytra!", NamedTextColor.LIGHT_PURPLE),
+                    Text.of("<d>Elytra!"),
                     ItemStack.of(Material.ELYTRA),
                     ItemStack.of(Material.FIREWORK_ROCKET, 8)
             );

@@ -18,7 +18,7 @@ public class NPCCarpenter extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Carpenter", "§e§lCLICK"};
+                return new String[]{"Carpenter", "<e><l>CLICK"};
             }
 
             @Override
@@ -75,26 +75,24 @@ public class NPCCarpenter extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("initial-hello").lines(new String[]{
-                                "Hi, " + player.getUsername() + "! Welcome to the §aFurniture Shop§f.",
-                                "Sales are too good right now, I can't keep up with the demand!",
-                                "Could you bring a §astack of White Wool§f to help replenish my stock?",
-                                "Sheep over in The Barn drop wool, but you can also purchase it from the §dWool Weaver§f.",
-                                "She lives in a house not far from here - it's over by the water fountain."
-                        }).build(),
+                        .key("initial-hello").line("Hi, {}! Welcome to the <a>Furniture Shop<f>.", player.getUsername())
+                                .line("Sales are too good right now, I can't keep up with the demand!")
+                                .line("Could you bring a <a>stack of White Wool<f> to help replenish my stock?")
+                                .line("Sheep over in The Barn drop wool, but you can also purchase it from the <d>Wool Weaver<f>.")
+                                .line("She lives in a house not far from here - it's over by the water fountain.").build(),
                 DialogueSet.builder()
-                        .key("completed-quest").lines(new String[]{
+                        .key("completed-quest").lines(
                                 "Wow, thanks so much for the help!",
                                 "Carpentry is my passion, I always love to teach others.",
-                                "Here's the recipe for the §aCarpentry Table§f. You can place it in your world and craft furniture that you've unlocked!",
-                                "You can now gain Carpentry XP by crafting items. Leveling your §aCarpentry Skill§f unlocks new furniture recipes!",
+                                "Here's the recipe for the <a>Carpentry Table<f>. You can place it in your world and craft furniture that you've unlocked!",
+                                "You can now gain Carpentry XP by crafting items. Leveling your <a>Carpentry Skill<f> unlocks new furniture recipes!",
                                 "Some furniture is available exclusively in the Furniture Shop downstairs. Check it out!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("spoke-again").lines(new String[]{
+                        .key("spoke-again").lines(
                                 "Check out the Furniture Shop downstairs!",
                                 "The Furniture Shop is downstairs. Purchase cool furniture down there!"
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

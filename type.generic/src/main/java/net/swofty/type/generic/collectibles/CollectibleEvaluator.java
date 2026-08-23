@@ -3,6 +3,7 @@ package net.swofty.type.generic.collectibles;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.swofty.commons.bedwars.BedwarsLevelUtil;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLeaderboardLong;
 import net.swofty.type.generic.data.handlers.BedWarsDataHandler;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -33,7 +34,8 @@ public final class CollectibleEvaluator {
 
         Rank requiredRank = requirement.requiredRank();
         if (requiredRank != null && !player.getRank().isEqualOrHigherThan(requiredRank)) {
-            return CollectibleSelectionCheck.blocked("§cRequires " + requiredRank.getPrefix() + "§c.");
+            return CollectibleSelectionCheck.blocked("<c>Requires "
+                + requiredRank.prefixMarkup() + "<c>.");
         }
 
         return switch (requirement.method()) {
@@ -59,8 +61,8 @@ public final class CollectibleEvaluator {
                 if (bedWarsLevel(player) >= requiredLevel) {
                     yield CollectibleSelectionCheck.allowed();
                 }
-                yield CollectibleSelectionCheck.blocked(defaultReason(requirement, "§c§l!! §r§cYou must be level "
-                    + NUMBER_FORMAT.format(requiredLevel) + " to use this\n§cprestige!"));
+                yield CollectibleSelectionCheck.blocked(defaultReason(requirement, "<c><l>!! </l><c>You must be level "
+                    + NUMBER_FORMAT.format(requiredLevel) + " to use this\n<c>prestige!"));
             }
         };
     }
@@ -76,12 +78,12 @@ public final class CollectibleEvaluator {
 
     private static String defaultReason(CollectibleUnlockRequirement requirement, String fallback) {
         if (requirement.customDisplayText() != null && !requirement.customDisplayText().isBlank()) {
-            return "§c" + requirement.customDisplayText();
+            return "<c>" + requirement.customDisplayText();
         }
         if (requirement.method() == CollectibleUnlockMethod.CURRENCY
             && requirement.cost() != null
             && requirement.cost() > 0) {
-            return "§7Cost: " + requirement.currency().getColor() + NUMBER_FORMAT.format(requirement.cost()) + " " + requirement.currency().getDisplayName() + "§7.";
+            return "<7>Cost: " + requirement.currency().getColor() + NUMBER_FORMAT.format(requirement.cost()) + " " + requirement.currency().getDisplayName() + "<7>.";
         }
         return fallback;
     }
@@ -89,14 +91,14 @@ public final class CollectibleEvaluator {
     private static String unavailableReason(CollectibleUnlockRequirement requirement, CollectibleEvent event) {
         String customText = requirement.customDisplayText();
         if (event != null) {
-            return "§cAvailable during the " + event.displayName() + " Event.";
+            return "<c>Available during the " + event.displayName() + " Event.";
         }
 
         if (customText != null && !customText.isBlank()) {
-            return "§c" + customText;
+            return "<c>" + customText;
         }
 
-        return "§cUnavailable right now.";
+        return "<c>Unavailable right now.";
     }
 
     private static String formatTimestamp(Long timestampMs) {

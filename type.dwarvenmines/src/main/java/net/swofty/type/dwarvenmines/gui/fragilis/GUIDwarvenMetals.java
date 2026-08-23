@@ -6,7 +6,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -30,17 +30,14 @@ public class GUIDwarvenMetals extends HypixelInventoryGUI {
         set(new GUIItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aDwarven Metals",
-                        Material.BOOK,
-                        1,
-                        "§8Block Classification",
-                        "",
-                        "§7These blocks are affected by: ",
-                        "§8 - §6☘ Dwarven Metal Fortune",
-                        "§8 - §6☘ Mining Fortune",
-                        "§8 - §e▚ Mining Spread"
-                );
+                return ItemStacks.item(Material.BOOK, """
+                        <a>Dwarven Metals
+                        <8>Block Classification
+
+                        <7>These blocks are affected by:\s
+                        <8> - <6>☘ Dwarven Metal Fortune
+                        <8> - <6>☘ Mining Fortune
+                        <8> - <e>▚ Mining Spread""");
             }
         });
 
@@ -53,20 +50,14 @@ public class GUIDwarvenMetals extends HypixelInventoryGUI {
             set(new GUIItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    List<String> lore = Arrays.asList(
-                            "§8Dwarven Metal",
-                            "",
-                            "§7Properties",
-                            "§7 Breaking Power: §2" + metal.getBreakingPower(),
-                            "§7 Block Strength: §e" + String.format("%,d", metal.getBlockStrength())
-                    );
+                    return ItemStacks.item(metal.getMaterial(), 1, """
+                            <a>{}
+                            <8>Dwarven Metal
 
-                    return ItemStackCreator.getStack(
-                            "§a" + metal.getDisplayName(),
-                            metal.getMaterial(),
-                            1,
-                            lore.toArray(new String[0])
-                    );
+                            <7>Properties
+                            <7> Breaking Power: <2>{}
+                            <7> Block Strength: <e>{:,}""",
+                            metal.getDisplayName(), metal.getBreakingPower(), metal.getBlockStrength());
                 }
             });
         }

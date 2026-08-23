@@ -20,7 +20,7 @@ public class LobbyPlayerMove implements HypixelEventClass {
 		Player player = event.getPlayer();
 		if (player.getPosition().y() < 0) {
 			player.teleport(spawnPoint);
-			player.sendMessage("§cYou are not allowed to leave this area!");
+			player.sendMessage("<c>You are not allowed to leave this area!");
 		}
 	}
 }

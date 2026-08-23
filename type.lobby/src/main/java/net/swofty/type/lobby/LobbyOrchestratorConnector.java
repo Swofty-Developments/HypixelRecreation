@@ -57,25 +57,25 @@ public record LobbyOrchestratorConnector(HypixelPlayer player) {
                 })
                 .exceptionally(throwable -> {
                     PLAYERS_SEARCHING.remove(player.getUuid());
-                    player.sendMessage("§cFailed to find server: " + throwable.getMessage());
+                    player.sendMessage("<c>Failed to find server: {}", throwable.getMessage());
                     return null;
                 });
     }
 
     public void sendToGame(ServerType targetServerType, String gameType, @Nullable String map) {
         if (PLAYERS_SEARCHING.contains(player.getUuid())) {
-            player.sendMessage("§cAlready searching for a game!");
+            player.sendMessage("<c>Already searching for a game!");
             return;
         }
 
         if (PartyManager.isInParty(player)) {
             FullParty party = PartyManager.getPartyFromPlayer(player);
             if (party == null) {
-                player.sendMessage("§cFailed to read your party state. Please try again.");
+                player.sendMessage("<c>Failed to read your party state. Please try again.");
                 return;
             }
             if (!party.getLeader().getUuid().equals(player.getUuid())) {
-                player.sendMessage("§cYou are in a party! Ask your leader to start the game, or /p leave");
+                player.sendMessage("<c>You are in a party! Ask your leader to start the game, or /p leave");
                 return;
             }
 
@@ -91,14 +91,14 @@ public record LobbyOrchestratorConnector(HypixelPlayer player) {
 
                 PROXY_SERVICE.handleRequest(message)
                         .exceptionally(throwable -> {
-                            player.sendMessage("§cFailed to choose game: " + throwable.getMessage());
+                            player.sendMessage("<c>Failed to choose game: {}", throwable.getMessage());
                             return null;
                         });
 
-                player.sendMessage("§aSending you to " + pair.first().shortName() + "!");
+                player.sendMessage("<a>Sending you to {}!", pair.first().shortName());
                 player.asProxyPlayer().transferToWithIndication(pair.first().uuid());
             } else {
-                player.sendMessage("§cNo available servers found! Please try again later.");
+                player.sendMessage("<c>No available servers found! Please try again later.");
             }
         });
     }
@@ -106,7 +106,7 @@ public record LobbyOrchestratorConnector(HypixelPlayer player) {
     public void sendPartyToGame(ServerType targetServerType, String gameType, @Nullable String map, FullParty party) {
         int partySize = party.getMembers().size();
 
-        player.sendMessage("§aSearching for a game for your party (" + partySize + " players)...");
+        player.sendMessage("<a>Searching for a game for your party ({} players)...", partySize);
 
         findGameServer(targetServerType, gameType, map, partySize).thenAccept(pair -> {
             if (pair != null && pair.first() != null) {
@@ -140,7 +140,7 @@ public record LobbyOrchestratorConnector(HypixelPlayer player) {
                     Logger.warn("Some party member registrations timed out, proceeding with transfer anyway");
                 }
 
-                player.sendMessage("§aSending your party to " + server.shortName() + "!");
+                player.sendMessage("<a>Sending your party to {}!", server.shortName());
 
                 player.asProxyPlayer().transferToWithIndication(server.uuid());
 
@@ -148,13 +148,13 @@ public record LobbyOrchestratorConnector(HypixelPlayer player) {
                     if (!memberUuid.equals(player.getUuid())) {
                         ProxyPlayer memberProxy = new ProxyPlayer(memberUuid);
                         if (memberProxy.isOnline().join()) {
-                            memberProxy.sendMessage("§eYour party leader is starting a game! Joining...");
+                            memberProxy.sendMessage("<e>Your party leader is starting a game! Joining...");
                             memberProxy.transferToWithIndication(server.uuid());
                         }
                     }
                 }
             } else {
-                player.sendMessage("§cNo available servers found with enough space for your party! Please try again later.");
+                player.sendMessage("<c>No available servers found with enough space for your party! Please try again later.");
             }
         });
     }

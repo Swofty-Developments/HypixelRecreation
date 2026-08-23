@@ -2,6 +2,7 @@ package net.swofty.type.skyblockgeneric.commands;
 
 import net.minestom.server.command.builder.arguments.ArgumentEnum;
 import net.minestom.server.command.builder.arguments.ArgumentType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.skyblockgeneric.mission.MissionSet;
@@ -31,7 +32,7 @@ public class FinishMissionSetCommand extends HypixelCommand {
                 } catch (Exception e) {}
             });
 
-            sender.sendMessage("§aSuccessfully finished mission set §e" + missionSet.name());
+            sender.sendMessage(Text.of("<a>Successfully finished mission set <e>{}", missionSet.name()));
         }, set);
     }
 }

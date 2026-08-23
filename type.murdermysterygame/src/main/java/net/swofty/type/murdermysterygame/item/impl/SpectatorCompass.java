@@ -8,7 +8,7 @@ import net.swofty.type.murdermysterygame.game.Game;
 import net.swofty.type.murdermysterygame.gui.GUITeleporter;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 import net.swofty.type.murdermysterygame.item.SimpleInteractableItem;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 
 public class SpectatorCompass extends SimpleInteractableItem {
 
@@ -18,8 +18,9 @@ public class SpectatorCompass extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStackCreator.getStack("§aTeleporter §7(Right Click)", Material.COMPASS, 1,
-                "§7Right-click to teleport to players!").build();
+        return ItemStacks.item(Material.COMPASS, """
+                <a>Teleporter <7>(Right Click)
+                <7>Right-click to teleport to players!""").build();
     }
 
     @Override

@@ -1,8 +1,5 @@
 package net.swofty.type.skywarsgame.luckyblock.items.armor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.color.Color;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.entity.EquipmentSlot;
@@ -10,11 +7,10 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class FrogHelmet implements LuckyBlockArmor {
 
@@ -43,24 +39,16 @@ public class FrogHelmet implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.LEATHER_HELMET)
-                .customName(Component.text("Frog Helmet", NamedTextColor.GREEN)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Protection I", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Feather Falling X", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Grants ", NamedTextColor.GRAY)
-                                .append(Component.text("Jump Boost III", NamedTextColor.GREEN))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.LEATHER_HELMET, """
+                        <a>Frog Helmet
+
+                        <7>Protection I
+                        <7>Feather Falling X
+
+                        <7>Grants <a>Jump Boost III
+
+                        <6><l>LUCKY BLOCK ITEM
+                        """)
                 .set(DataComponents.DYED_COLOR, new Color(0, 128, 0))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
@@ -68,7 +56,7 @@ public class FrogHelmet implements LuckyBlockArmor {
 
     @Override
     public void onEquip(SkywarsPlayer player) {
-        player.sendMessage(Component.text("Ribbit! You feel light on your feet!", NamedTextColor.GREEN));
+        player.sendMessage("<a>Ribbit! You feel light on your feet!");
         applyJumpBoost(player);
     }
 

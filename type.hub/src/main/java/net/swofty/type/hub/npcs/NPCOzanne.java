@@ -12,7 +12,7 @@ public class NPCOzanne extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Ozanne", "§e§lCLICK"};
+                return new String[]{"Ozanne", "<e><l>CLICK"};
             }
 
             @Override

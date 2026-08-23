@@ -1,9 +1,9 @@
 package net.swofty.type.ravengardgeneric.gui;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.ViewNavigator;
@@ -51,9 +51,9 @@ public class GUIAnimReview extends RavengardView {
                 if (slot >= 54) break;
                 String mobName = entry.getKey();
                 int captures = entry.getValue().size();
-                layout.slot(slot++, item(Material.SKELETON_SKULL, "§e" + mobName,
-                                "§7" + captures + (captures == 1 ? " capture" : " captures"),
-                                "§eClick to browse!"),
+                layout.slot(slot++, item(Material.SKELETON_SKULL, Text.of("<e>{}", mobName),
+                                Text.of("<7>{}{}", captures, captures == 1 ? " capture" : " captures"),
+                                Text.of("<e>Click to browse!")),
                         (click, viewContext) -> {
                             if (viewContext.player() instanceof RavengardPlayer player) {
                                 ViewNavigator.get(player).push(new GUIAnimReview(mobName));
@@ -63,7 +63,7 @@ public class GUIAnimReview extends RavengardView {
             return;
         }
 
-        layout.slot(53, item(Material.BARRIER, "§cAll mobs", "§eClick to go back!"),
+        layout.slot(53, item(Material.BARRIER, Text.of("<c>All mobs"), Text.of("<e>Click to go back!")),
                 (click, viewContext) -> {
                     if (viewContext.player() instanceof RavengardPlayer player) {
                         ViewNavigator.get(player).push(new GUIAnimReview(null));
@@ -73,9 +73,9 @@ public class GUIAnimReview extends RavengardView {
         int slot = 0;
         for (String clipName : clips) {
             if (slot >= 45) break;
-            layout.slot(slot++, item(Material.PAPER, "§f" + clipName,
-                            "§7Raw capture replay.",
-                            "§eClick to review on the stage!"),
+            layout.slot(slot++, item(Material.PAPER, Text.of("<f>{}", clipName),
+                            Text.of("<7>Raw capture replay."),
+                            Text.of("<e>Click to review on the stage!")),
                     (click, viewContext) -> {
                         if (viewContext.player() instanceof RavengardPlayer player) {
                             player.closeInventory();
@@ -85,13 +85,7 @@ public class GUIAnimReview extends RavengardView {
         }
     }
 
-    private static ItemStack.Builder item(Material material, String name, String... lore) {
-        List<Component> lines = new ArrayList<>();
-        for (String line : lore) {
-            lines.add(Component.text(line).decoration(TextDecoration.ITALIC, false));
-        }
-        return ItemStack.builder(material)
-                .customName(Component.text(name).decoration(TextDecoration.ITALIC, false))
-                .lore(lines);
+    private static ItemStack.Builder item(Material material, Text name, Text... lore) {
+        return ItemStacks.raw(material, name, List.of(lore));
     }
 }

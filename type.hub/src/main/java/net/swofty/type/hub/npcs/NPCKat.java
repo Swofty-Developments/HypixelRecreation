@@ -18,7 +18,7 @@ public class NPCKat extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bKat", "§e§lCLICK"};
+                return new String[]{"<b>Kat", "<e><l>CLICK"};
             }
 
             @Override

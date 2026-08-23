@@ -3,13 +3,13 @@ package net.swofty.type.skyblockgeneric.gui.inventories.fishing;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skyblockgeneric.fishing.FishingMedium;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.FishingBaitComponent;
@@ -35,106 +35,102 @@ public final class FishingGuideStackFactory {
 
     public static net.minestom.server.item.ItemStack.Builder buildBaitStack(SkyBlockItem baitItem) {
         FishingBaitComponent bait = baitItem.getComponent(FishingBaitComponent.class);
-        List<String> lore = new ArrayList<>();
-        lore.add("§8Fishing Bait");
-        lore.add("§8Consumes on Cast");
-        lore.add("");
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<8>Fishing Bait"));
+        lore.add(Text.of("<8>Consumes on Cast"));
+        lore.add(Text.empty());
         appendStatistics(lore, baitItem.getAttributeHandler().getStatistics());
         appendTagBonuses(lore, bait.getTagBonuses());
 
         if (bait.getTreasureChanceBonus() > 0) {
-            lore.add("§7Grants §6+" + format(bait.getTreasureChanceBonus()) + " Treasure Chance§7.");
+            lore.add(Text.of("<7>Grants <6>+{} Treasure Chance<7>.", format(bait.getTreasureChanceBonus())));
         }
         if (bait.getTreasureQualityBonus() > 0) {
-            lore.add("§7Increases treasure quality by §a" + format(bait.getTreasureQualityBonus()) + "%§7.");
+            lore.add(Text.of("<7>Increases treasure quality by <a>{}%<7>.", format(bait.getTreasureQualityBonus())));
         }
         if (bait.getTrophyFishChanceBonus() > 0) {
-            lore.add("§7Grants §6+" + format(bait.getTrophyFishChanceBonus()) + " Trophy Fish Chance§7.");
+            lore.add(Text.of("<7>Grants <6>+{} Trophy Fish Chance<7>.", format(bait.getTrophyFishChanceBonus())));
         }
         if (bait.getDoubleHookChanceBonus() > 0) {
-            lore.add("§7Grants §9+" + format(bait.getDoubleHookChanceBonus()) + " Double Hook Chance§7.");
+            lore.add(Text.of("<7>Grants <9>+{} Double Hook Chance<7>.", format(bait.getDoubleHookChanceBonus())));
         }
         if (bait.getMediums().size() == 1) {
-            lore.add("§7Usable in " + (bait.getMediums().getFirst() == FishingMedium.WATER ? "§bWater" : "§cLava") + "§7.");
+            lore.add(Text.of("<7>Usable in {}<7>.", bait.getMediums().getFirst() == FishingMedium.WATER
+                ? Text.of("<b>Water")
+                : Text.of("<c>Lava")));
         }
         finishFooter(lore, bait.getItemId(), "BAIT");
 
-        return ItemStackCreator.getStackHead(
-            coloredName(bait.getItemId(), bait.getDisplayName()),
-            bait.getTexture(),
-            1,
-            lore.toArray(String[]::new)
-        );
+        return ItemStacks.head(bait.getTexture(), colouredName(bait.getItemId(), bait.getDisplayName()), lore);
     }
 
     public static net.minestom.server.item.ItemStack.Builder buildRodPartStack(SkyBlockItem partItem) {
         FishingRodPartComponent part = partItem.getComponent(FishingRodPartComponent.class);
-        List<String> lore = new ArrayList<>();
-        lore.add("§8" + StringUtility.toNormalCase(part.getCategory().name()) + " Rod Part");
-        lore.add("");
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<8>{} Rod Part", StringUtility.toNormalCase(part.getCategory().name())));
+        lore.add(Text.empty());
         appendStatistics(lore, partItem.getAttributeHandler().getStatistics());
         appendTagBonuses(lore, part.getTagBonuses());
 
         if (part.isTreasureOnly()) {
-            lore.add("§7Only allows you to catch items and §6Treasure§7.");
+            lore.add(Text.of("<7>Only allows you to catch items and <6>Treasure<7>."));
         }
         if (part.isBayouTreasureToJunk()) {
-            lore.add("§7Replaces §6Treasure §7catches with §2Junk §7in the §2Backwater Bayou§7.");
+            lore.add(Text.of("<7>Replaces <6>Treasure <7>catches with <2>Junk <7>in the <2>Backwater Bayou<7>."));
         }
         if (part.getMaterializedItemId() != null) {
             String itemName = ItemType.valueOf(part.getMaterializedItemId()).getDisplayName();
             if (part.getMaterializedChance() >= 1.0D) {
-                lore.add("§7Materializes §f" + itemName + " §7in your inventory whenever you catch something.");
+                lore.add(Text.of("<7>Materializes <f>{} <7>in your inventory whenever you catch something.", itemName));
             } else {
-                lore.add("§7Has a §a" + format(part.getMaterializedChance() * 100.0D) + "% §7chance to materialize §f" + itemName + "§7.");
+                lore.add(Text.of("<7>Has a <a>{}% <7>chance to materialize <f>{}<7>.",
+                    format(part.getMaterializedChance() * 100.0D), itemName));
             }
         }
         if (part.getBaitPreservationChance() > 0) {
-            lore.add("§7Grants a §a" + format(part.getBaitPreservationChance()) + "% §7chance to not consume Bait.");
+            lore.add(Text.of("<7>Grants a <a>{}% <7>chance to not consume Bait.", format(part.getBaitPreservationChance())));
         }
         if (part.getHotspotBuffMultiplier() > 1.0D) {
-            lore.add("§7Increases the bonuses of §dFishing Hotspots §7by §a" + format((part.getHotspotBuffMultiplier() - 1.0D) * 100.0D) + "%§7.");
+            lore.add(Text.of("<7>Increases the bonuses of <d>Fishing Hotspots <7>by <a>{}%<7>.",
+                format((part.getHotspotBuffMultiplier() - 1.0D) * 100.0D)));
         }
         if (part.getRequiredFishingLevel() > 0) {
-            lore.add("");
-            lore.add("§4❣ §cRequires §aFishing Skill " + part.getRequiredFishingLevel() + "§c.");
+            lore.add(Text.empty());
+            lore.add(Text.of("<4>❣ <c>Requires <a>Fishing Skill {}<c>.", part.getRequiredFishingLevel()));
         }
         finishFooter(lore, part.getItemId(), "ROD PART");
 
-        return ItemStackCreator.getStackHead(
-            coloredName(part.getItemId(), part.getDisplayName()),
-            part.getTexture(),
-            1,
-            lore.toArray(String[]::new)
-        );
+        return ItemStacks.head(part.getTexture(), colouredName(part.getItemId(), part.getDisplayName()), lore);
     }
 
-    private static void appendStatistics(List<String> lore, ItemStatistics statistics) {
+    private static void appendStatistics(List<Text> lore, ItemStatistics statistics) {
         for (ItemStatistic statistic : GUIDE_STAT_ORDER) {
             double amount = statistics.getOverall(statistic);
             if (amount == 0) {
                 continue;
             }
-            lore.add("§7" + statistic.getDisplayName() + ": " + statistic.getLoreColor()
-                + statistic.getPrefix() + format(amount) + statistic.getSuffix());
+            lore.add(Text.of("<7>{}: <color:{}>{}{}{}", statistic.getDisplayName(),
+                statistic.getLoreColor(), statistic.getPrefix(), format(amount), statistic.getSuffix()));
         }
     }
 
-    private static void appendTagBonuses(List<String> lore, Map<String, Double> bonuses) {
+    private static void appendTagBonuses(List<Text> lore, Map<String, Double> bonuses) {
         for (Map.Entry<String, Double> entry : bonuses.entrySet()) {
-            lore.add("§7Increases the chance to catch §e" + describeTag(entry.getKey()) + " §7by §a" + format(entry.getValue()) + "%§7.");
+            lore.add(Text.of("<7>Increases the chance to catch <e>{} <7>by <a>{}%<7>.",
+                describeTag(entry.getKey()), format(entry.getValue())));
         }
     }
 
-    private static void finishFooter(List<String> lore, String itemId, String suffix) {
+    private static void finishFooter(List<Text> lore, String itemId, String suffix) {
         if (!lore.isEmpty() && !lore.getLast().isEmpty()) {
-            lore.add("");
+            lore.add(Text.empty());
         }
-        lore.add(ItemType.valueOf(itemId).rarity.getLegacyDisplay() + " " + suffix);
+        Rarity rarity = ItemType.valueOf(itemId).rarity;
+        lore.add(Text.of("<color:{}><l>{} {}", rarity.getColor(), rarity.name().replace("_", " "), suffix));
     }
 
-    private static String coloredName(String itemId, String displayName) {
-        return LegacyComponentSerializer.legacySection().serialize(Component.text(displayName, ItemType.valueOf(itemId).rarity.getColor())); // TODO: components :)
+    private static Text colouredName(String itemId, String displayName) {
+        return Text.of("<color:{}>{}", ItemType.valueOf(itemId).rarity.getColor(), displayName);
     }
 
     private static String describeTag(String tag) {

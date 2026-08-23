@@ -15,7 +15,7 @@ import (
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/Swofty-Developments/HypixelSkyBlock/setup/internal/installer"
+	"github.com/Swofty-Developments/HypixelRecreation/setup/internal/installer"
 )
 
 type screen int
@@ -888,11 +888,7 @@ func dashboardItems() []list.Item {
 }
 
 func allServerOptions() []string {
-	options := make([]string, 0, len(installer.RequiredServers)+len(installer.SkyBlockServers)+len(installer.MinigameServers))
-	options = append(options, installer.RequiredServers...)
-	options = append(options, installer.SkyBlockServers...)
-	options = append(options, installer.MinigameServers...)
-	return options
+	return installer.AllServers()
 }
 
 func selectedTitle(l list.Model) string {

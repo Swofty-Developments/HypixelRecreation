@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.thepark.jungle;
 
+
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.skyblockgeneric.levels.SkyBlockLevelCause;
 import net.swofty.type.skyblockgeneric.mission.LocationAssociatedMission;
@@ -41,10 +42,10 @@ public class MissionTalkToMolbertFourth extends SkyBlockMission implements Locat
 	public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
 		mission.getQuestCompleteText(
 				new ArrayList<>(List.of(
-						"§8+§61,500 §7Coins",
-						"§8+§3500 §7Foraging Experience",
-						"§8+§b5 SkyBlock XP",
-						"§fMole Hat"
+						"<8>+<6>1,500 <7>Coins",
+						"<8>+<3>500 <7>Foraging Experience",
+						"<8>+<b>5 SkyBlock XP",
+						"<f>Mole Hat"
 				))
 		).forEach(player::sendMessage);
 

@@ -12,7 +12,7 @@ public class NPCAchievementGuide extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bAchievement Guide", "§e§lCLICK"};
+                return new String[]{"<b>Achievement Guide", "<e><l>CLICK"};
             }
 
             @Override

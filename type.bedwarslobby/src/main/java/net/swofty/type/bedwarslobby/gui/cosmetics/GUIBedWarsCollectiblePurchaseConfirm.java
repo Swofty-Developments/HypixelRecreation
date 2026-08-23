@@ -1,16 +1,15 @@
 package net.swofty.type.bedwarslobby.gui.cosmetics;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
+import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.collectibles.CollectibleDefinition;
 import net.swofty.type.generic.collectibles.CollectibleDescriptionService;
 import net.swofty.type.generic.collectibles.bedwars.BedWarsCollectibleCatalog;
 import net.swofty.type.generic.collectibles.bedwars.BedWarsCollectibleStateService;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.View;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -23,8 +22,6 @@ import java.util.Optional;
 
 public class GUIBedWarsCollectiblePurchaseConfirm implements View<GUIBedWarsCollectiblePurchaseConfirm.State> {
 
-    private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacySection();
-
     @Override
     public ViewConfiguration<State> configuration() {
         return new ViewConfiguration<>("Confirm Purchase", InventoryType.CHEST_3_ROW);
@@ -36,14 +33,11 @@ public class GUIBedWarsCollectiblePurchaseConfirm implements View<GUIBedWarsColl
 
         Optional<CollectibleDefinition> optionalDefinition = BedWarsCollectibleCatalog.findItemById(state.collectibleId());
         if (optionalDefinition.isEmpty()) {
-            layout.slot(13, ItemStackCreator.getStack(
-                "§cCollectible Missing",
-                Material.BARRIER,
-                1,
-                "§7Unable to resolve this collectible.",
-                "§7Please reopen the cosmetics menu."
-            ));
-            layout.slot(15, ItemStackCreator.getStack("§cClose", Material.BARRIER, 1), (click, context) -> context.backOrClose());
+            layout.slot(13, ItemStacks.item(Material.BARRIER, """
+                    <c>Collectible Missing
+                    <7>Unable to resolve this collectible.
+                    <7>Please reopen the cosmetics menu."""));
+            layout.slot(15, ItemStacks.item(Material.BARRIER, "<c>Close"), (click, context) -> context.backOrClose());
             return;
         }
 
@@ -52,16 +46,13 @@ public class GUIBedWarsCollectiblePurchaseConfirm implements View<GUIBedWarsColl
         layout.slot(13, (s, c) -> buildDisplayStack(definition, state.cost()));
 
         layout.slot(11,
-            (s, c) -> ItemStackCreator.getStack(
-                "§aConfirm Purchase",
-                Material.LIME_TERRACOTTA,
-                1,
-                "§7Unlocks the §f" + definition.name() + " §7 using §2Tokens§7!",
-                "",
-                "§7Cost: §2" + StringUtility.commaify(state.cost()) + " Tokens",
-                "",
-                "§eClick to purchase with Tokens!"
-            ),
+            (s, c) -> ItemStacks.item(Material.LIME_TERRACOTTA, """
+                    <a>Confirm Purchase
+                    <7>Unlocks the <f>{} <7> using <2>Tokens<7>!
+
+                    <7>Cost: <2>{:,} Tokens
+
+                    <e>Click to purchase with Tokens!""", definition.name(), state.cost()),
             (click, context) -> {
                 if (!(click.click() instanceof Click.Left || click.click() instanceof Click.Right)) {
                     return;
@@ -69,8 +60,9 @@ public class GUIBedWarsCollectiblePurchaseConfirm implements View<GUIBedWarsColl
 
                 BedWarsCollectibleStateService.SelectionResult result =
                     BedWarsCollectibleStateService.purchaseAndSelect(context.player(), definition);
-                String message = result.success() ? result.message() : bottomLineFailureMessage(result.message());
-                context.player().sendMessage(message);
+                context.player().sendMessage(result.success()
+                    ? Text.parse(result.message())
+                    : bottomLineFailureMessage(result.message()));
 
                 if (result.success()) {
                     context.pop();
@@ -79,39 +71,32 @@ public class GUIBedWarsCollectiblePurchaseConfirm implements View<GUIBedWarsColl
         );
 
         layout.slot(15,
-            ItemStackCreator.getStack(
-                "§cCancel",
-                Material.RED_TERRACOTTA,
-                1,
-                "§7Return to the cosmetics menu."
-            ),
+            ItemStacks.item(Material.RED_TERRACOTTA, """
+                    <c>Cancel
+                    <7>Return to the cosmetics menu."""),
             (click, context) -> context.pop()
         );
     }
 
-    private static net.minestom.server.item.ItemStack.Builder buildDisplayStack(CollectibleDefinition definition, long cost) {
-        List<Component> lore = new ArrayList<>(CollectibleDescriptionService.resolveLore(definition));
+    private static ItemStack.Builder buildDisplayStack(CollectibleDefinition definition, long cost) {
+        List<Text> lore = new ArrayList<>(CollectibleDescriptionService.resolveLore(definition));
         if (!lore.isEmpty()) {
-            lore.add(Component.empty());
+            lore.add(Text.empty());
         }
-        lore.add(legacy("§7Cost: §2" + StringUtility.commaify(cost) + " Tokens"));
+        lore.add(Text.of("<7>Cost: <2>{:,} Tokens", cost));
 
-        Component title = legacy("§a" + definition.name() + " ");
+        Text title = Text.of("<a>{} ", definition.name());
 
         if (definition.iconTexture() != null && !definition.iconTexture().isBlank()) {
-            return ItemStackCreator.getStackHead(title, definition.iconTexture(), 1, lore);
+            return ItemStacks.head(definition.iconTexture(), 1, title, lore);
         }
         Material material = definition.iconMaterial() != null ? definition.iconMaterial() : Material.BARRIER;
-        return ItemStackCreator.getStack(title, material, 1, lore);
+        return ItemStacks.item(material, 1, title, lore);
     }
 
-    private static Component legacy(String text) {
-        return LEGACY.deserialize(text);
-    }
-
-    private static String bottomLineFailureMessage(String message) {
+    private static Text bottomLineFailureMessage(String message) {
         if (message == null || message.isBlank()) {
-            return "§cAction failed.";
+            return Text.of("<c>Action failed.");
         }
 
         String normalized = message.replace("\r\n", "\n").replace('\r', '\n');
@@ -122,13 +107,16 @@ public class GUIBedWarsCollectiblePurchaseConfirm implements View<GUIBedWarsColl
                 continue;
             }
 
-            if (line.indexOf('§') == -1) {
-                return "§c" + line;
+            if (line.indexOf('§') >= 0) {
+                return Text.legacy(line);
             }
-            return line;
+            if (line.indexOf('<') >= 0) {
+                return Text.parse(line);
+            }
+            return Text.of("<c>{}", line);
         }
 
-        return "§cAction failed.";
+        return Text.of("<c>Action failed.");
     }
 
     public record State(String collectibleId, long cost) {

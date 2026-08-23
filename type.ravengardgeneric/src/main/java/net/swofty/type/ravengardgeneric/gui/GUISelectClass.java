@@ -1,5 +1,6 @@
 package net.swofty.type.ravengardgeneric.gui;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
@@ -11,15 +12,16 @@ public class GUISelectClass extends RavengardView {
     private static final int PANEL_ICON = 0xF238;
 
     /**
-     * Origin slot and captured offset per class. The offsets are taken verbatim from the capture
-     * because Hypixel authors them per menu -- these statues all share one vertical position (green
-     * 73) even though their click slots are on different rows, so the slot grid does not predict them.
+     * Origin slot and captured offset per class, taken verbatim from the 0.2 capture because
+     * Hypixel authors them per menu. The menu holds two statue rows: the classes launch trio on
+     * top, then Assassin, the new Sorcerer and a coming-soon placeholder below.
      */
     private enum Option {
-        KNIGHT(RavengardClass.KNIGHT, RavengardButton.STATUE_KNIGHT, 10, 0x3D4900),
-        WARRIOR(RavengardClass.WARRIOR, RavengardButton.STATUE_WARRIOR, 12, 0x604900),
-        HUNTER(RavengardClass.HUNTER, RavengardButton.STATUE_HUNTER, 14, 0x844900),
-        ASSASSIN(RavengardClass.ASSASSIN, RavengardButton.STATUE_ASSASSIN, 16, 0xA84900);
+        KNIGHT(RavengardClass.KNIGHT, RavengardButton.STATUE_KNIGHT, 2, 0x4D1C00),
+        WARRIOR(RavengardClass.WARRIOR, RavengardButton.STATUE_WARRIOR, 4, 0x721C00),
+        HUNTER(RavengardClass.HUNTER, RavengardButton.STATUE_HUNTER, 6, 0x961C00),
+        ASSASSIN(RavengardClass.ASSASSIN, RavengardButton.STATUE_ASSASSIN, 29, 0x4E5300),
+        SORCERER(RavengardClass.SORCERER, RavengardButton.STATUE_SORCERER, 31, 0x735300);
 
         private final RavengardClass value;
         private final RavengardButton statue;
@@ -44,15 +46,19 @@ public class GUISelectClass extends RavengardView {
         return PANEL_ICON;
     }
 
+    private static final int SLOT_UNAVAILABLE = 33;
+    private static final int OFFSET_UNAVAILABLE = 0x965300;
+
     @Override
     protected void content(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         for (Option option : Option.values()) {
             RavengardItems.Builder button = RavengardItems.button(option.statue)
+                    .footprint(1, 2)
                     .hoverColor(option.offset)
-                    .label("§a" + option.value.getDisplayName())
+                    .label(Text.of("<a>{}", option.value.getDisplayName()))
                     .lore(option.value.selectLore())
                     .blankLine()
-                    .lore("§eClick to select!");
+                    .lore("<e>Click to select!");
 
             interactive(layout, option.slot, button, (click, viewContext) -> {
                 if (click.player() instanceof RavengardPlayer player) {
@@ -60,5 +66,14 @@ public class GUISelectClass extends RavengardView {
                 }
             });
         }
+
+        place(layout, SLOT_UNAVAILABLE, RavengardItems.button(RavengardButton.STATUE_DEFAULT)
+                .footprint(1, 2)
+                .hoverColor(OFFSET_UNAVAILABLE)
+                .font(RavengardFont.ILLAGERALT)
+                .label("<c>Unavailable")
+                .lore("<7>This class is currently unavailable.")
+                .lore("<7>")
+                .lore("<7><c>Coming Soon."));
     }
 }

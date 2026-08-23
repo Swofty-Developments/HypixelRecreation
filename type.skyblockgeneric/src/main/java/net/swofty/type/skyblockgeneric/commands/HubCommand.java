@@ -23,7 +23,7 @@ public class HubCommand extends HypixelCommand {
             SkyBlockPlayer player = ((SkyBlockPlayer) sender);
 
             if (!MissionSet.GETTING_STARTED.hasCompleted(player)) {
-                player.sendMessage("§cYou must complete your starting missions!");
+                player.sendMessage("<c>You must complete your starting missions!");
                 return;
             }
 

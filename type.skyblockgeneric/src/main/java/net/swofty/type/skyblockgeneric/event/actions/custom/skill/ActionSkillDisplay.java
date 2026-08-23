@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.event.actions.custom.skill;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
@@ -24,12 +25,10 @@ public class ActionSkillDisplay implements HypixelEventClass {
 
         SkyBlockActionBar.getFor(event.getPlayer()).addReplacement(
                 SkyBlockActionBar.BarSection.DEFENSE,
-                new SkyBlockActionBar.DisplayReplacement(
-                        "§3+" + difference + " " + event.getSkillCategory() + " (" + event.getNewValueCumulative()
-                                + "/" + currentRequirement + ")",
-                        20,
-                        2
-                )
+                Text.of("<3>+{} {} ({}/{})", difference, event.getSkillCategory(),
+                        event.getNewValueCumulative(), currentRequirement),
+                20,
+                2
         );
     }
 }

@@ -82,11 +82,11 @@ public class BuildersWandAbility extends RegisteredAbility {
             blockLimit--;
         }
         if (blocksPlaced == 0) {
-            player.sendMessage("§cYou cannot place any blocks! You do not have enough blocks to place with your Builder's wand!");
+            player.sendMessage("<c>You cannot place any blocks! You do not have enough blocks to place with your Builder's wand!");
             return false;
         }
         player.takeItem(ItemType.fromMaterial(fillMaterial), blocksPlaced);
-        player.sendMessage("&eYou built &a" + blocksPlaced + "&e blocks!");
+        player.sendMessage("<e>You built <a>{}<e> blocks!", blocksPlaced);
         return true;
     }
 }

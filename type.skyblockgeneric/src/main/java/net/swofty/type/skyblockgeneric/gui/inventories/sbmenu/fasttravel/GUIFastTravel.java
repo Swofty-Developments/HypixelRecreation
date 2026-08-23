@@ -3,10 +3,10 @@ package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.fasttravel;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointStringList;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -43,13 +43,14 @@ public class GUIFastTravel extends StatelessView {
 
         layout.slot(53, (s, c) -> {
             boolean isPaper = ((SkyBlockPlayer) c.player()).getToggles().get(DatapointToggles.Toggles.ToggleType.PAPER_ICONS);
-            return ItemStackCreator.getStack("§aPaper Icons", isPaper ? Material.FILLED_MAP : Material.MAP, 1,
-                    "§7Use paper icons, which may load this menu",
-                    "§7faster on your computer.",
-                    " ",
-                    "§7Enabled: " + (isPaper ? "§aON" : "§cOFF"),
-                    " ",
-                    "§eClick to toggle!");
+            return ItemStacks.item(isPaper ? Material.FILLED_MAP : Material.MAP, 1, """
+                    <a>Paper Icons
+                    <7>Use paper icons, which may load this menu
+                    <7>faster on your computer.
+
+                    <7>Enabled: {}
+
+                    <e>Click to toggle!""", isPaper ? Text.of("<a>ON") : Text.of("<c>OFF"));
         }, (click, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             p.getToggles().inverse(DatapointToggles.Toggles.ToggleType.PAPER_ICONS);
@@ -70,39 +71,37 @@ public class GUIFastTravel extends StatelessView {
                         .contains(island.getInternalName());
                 boolean isPaper = p.getToggles().get(DatapointToggles.Toggles.ToggleType.PAPER_ICONS);
 
-                List<String> lore = new ArrayList<>();
-                lore.add("§8/warp " + island.getInternalName());
-                lore.add(" ");
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<8>/warp {}", island.getInternalName()));
+                lore.add(Text.literal(" "));
 
-                StringUtility.splitByWordAndLength(island.getDescription().apply(hasUnlockedIsland), 30).forEach(line -> {
-                    lore.add("§7" + line);
-                });
-                lore.add(" ");
+                lore.addAll(Text.of("<7><wrap:30>{}</wrap>", island.getDescription().apply(hasUnlockedIsland)).lines());
+                lore.add(Text.literal(" "));
 
                 if (island.getAssociatedSkill() != null) {
-                    lore.add("§7Main skill: §b" + island.getAssociatedSkill());
-                    lore.add("§7Island tier: §e" + island.getIslandTier());
-                    lore.add(" ");
+                    lore.add(Text.of("<7>Main skill: <b>{}", island.getAssociatedSkill()));
+                    lore.add(Text.of("<7>Island tier: <e>{}", island.getIslandTier()));
+                    lore.add(Text.literal(" "));
                 }
 
                 if (!hasUnlockedIsland) {
-                    lore.add("§cWarp not unlocked!");
+                    lore.add(Text.of("<c>Warp not unlocked!"));
                 } else {
                     if (hasSubMenu) {
-                        lore.add("§8Right-Click to warp!");
-                        lore.add("§eLeft-Click to open!");
+                        lore.add(Text.of("<8>Right-Click to warp!"));
+                        lore.add(Text.of("<e>Left-Click to open!"));
                     } else {
-                        lore.add("§eClick to warp!");
+                        lore.add(Text.of("<e>Click to warp!"));
                     }
                 }
 
+                Text name = island.getDescriptiveName();
                 if (isPaper) {
-                    return ItemStackCreator.getStack(island.getDescriptiveName(),
-                            hasUnlockedIsland ? Material.PAPER : Material.BEDROCK, 1, lore);
+                    return ItemStacks.item(hasUnlockedIsland ? Material.PAPER : Material.BEDROCK, 1, name, lore);
                 } else {
-                    return ItemStackCreator.getStackHead(island.getDescriptiveName(),
+                    return ItemStacks.head(
                             hasUnlockedIsland ? island.getTexture() : "da99b05b9a1db4d29b5e673d77ae54a77eab66818586035c8a2005aeb810602a",
-                            1, lore);
+                            1, name, lore);
                 }
             }, (click, c) -> {
                 SkyBlockPlayer p = (SkyBlockPlayer) c.player();
@@ -112,24 +111,24 @@ public class GUIFastTravel extends StatelessView {
                         .contains(island.getInternalName());
 
                 if (!hasUnlockedIsland) {
-                    p.sendMessage("§cYou haven't unlocked this fast travel destination!");
+                    p.sendMessage("<c>You haven't unlocked this fast travel destination!");
                     return;
                 }
 
                 if (!hasSubMenu) {
                     p.closeInventory();
-                    p.sendMessage("§7Warping you to " + island.getDescriptiveName() + "§7...");
+                    p.sendMessage("<7>Warping you to {}<7>...", island.getDescriptiveName());
                     p.asProxyPlayer().transferToWithIndication(island.getServerType()).thenRun(() -> {
-                        p.asProxyPlayer().sendMessage("§7You have been warped to " + island.getDescriptiveName() + "§7!");
+                        p.asProxyPlayer().sendMessage("<7>You have been warped to {}<7>!", island.getDescriptiveName());
                     });
                     return;
                 }
 
                 if (click.click() instanceof Click.Right) {
                     p.closeInventory();
-                    p.sendMessage("§7Warping you to " + island.getDescriptiveName() + "§7...");
+                    p.sendMessage("<7>Warping you to {}<7>...", island.getDescriptiveName());
                     p.asProxyPlayer().transferToWithIndication(island.getServerType()).thenRun(() -> {
-                        p.asProxyPlayer().sendMessage("§7You have been warped to " + island.getDescriptiveName() + "§7!");
+                        p.asProxyPlayer().sendMessage("<7>You have been warped to {}<7>!", island.getDescriptiveName());
                     });
                 } else {
                     c.push(new GUIFastTravelSubMenu(island));

@@ -28,14 +28,14 @@ public class SetBestiaryCommand extends HypixelCommand {
             BestiaryMob mob = MobRegistry.getMobById(mobId);
 
             if (mob == null) {
-                player.sendMessage("§cUnknown mob: " + mobId);
+                player.sendMessage("<c>Unknown mob: {}", mobId);
                 return;
             }
 
             int amount = context.get(amountArgument);
             player.getBestiaryData().set(mob, amount);
 
-            player.sendMessage("§aSet bestiary kills for §e" + mob.getDisplayName() + "§a to §e" + amount + "§a.");
+            player.sendMessage("<a>Set bestiary kills for <e>{}<a> to <e>{}<a>.", mob.getDisplayName(), amount);
         }, mobArgument, amountArgument);
     }
 }

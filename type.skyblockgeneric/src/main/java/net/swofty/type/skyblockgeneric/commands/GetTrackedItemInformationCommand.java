@@ -27,13 +27,13 @@ public class GetTrackedItemInformationCommand extends HypixelCommand {
 
             SkyBlockItem item = new SkyBlockItem(((SkyBlockPlayer) sender).getItemInMainHand());
             if (item.getAttributeHandler().getUniqueTrackedID() == null) {
-                sender.sendMessage("§cThis item is not tracked.");
+                sender.sendMessage("<c>This item is not tracked.");
                 return;
             }
 
             ProxyService service = new ProxyService(ServiceType.ITEM_TRACKER);
             if (!service.isOnline().join()) {
-                sender.sendMessage("§cThe item tracker service is currently offline.");
+                sender.sendMessage("<c>The item tracker service is currently offline.");
                 return;
             }
             long start = System.currentTimeMillis();
@@ -46,21 +46,21 @@ public class GetTrackedItemInformationCommand extends HypixelCommand {
             TrackedItem trackedItem = trackedItemFuture.join().trackedItem();
 
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
-            player.sendMessage("§aInformation for tracked item in hand:");
-            player.sendMessage("§7- §eItem Type: §7" + trackedItem.getItemType());
-            player.sendMessage("§7- §eItem UUID: §7" + trackedItem.getItemUUID());
-            player.sendMessage("§7- §eNumber Made: §7" + trackedItem.getNumberMade());
-            player.sendMessage("§7- §eMade: §7" + StringUtility.formatTimeAsAgo(trackedItem.getCreated()));
-            player.sendMessage("§8Attached Players: §7" + trackedItem.getAttachedPlayers().size());
+            player.sendMessage("<a>Information for tracked item in hand:");
+            player.sendMessage("<7>- <e>Item Type: <7>{}", trackedItem.getItemType());
+            player.sendMessage("<7>- <e>Item UUID: <7>{}", trackedItem.getItemUUID());
+            player.sendMessage("<7>- <e>Number Made: <7>{}", trackedItem.getNumberMade());
+            player.sendMessage("<7>- <e>Made: <7>{}", StringUtility.formatTimeAsAgo(trackedItem.getCreated()));
+            player.sendMessage("<8>Attached Players: <7>{}", trackedItem.getAttachedPlayers().size());
 
             trackedItem.getAttachedPlayers().forEach(log -> {
-                player.sendMessage("§7- §ePlayer UUID: §7" + log.playerUUID());
-                player.sendMessage("§7- §eProfile UUID: §7" + log.playerProfileUUID());
-                player.sendMessage("§7- §eFirst Seen: §7" + StringUtility.formatTimeAsAgo(log.firstSeen()));
-                player.sendMessage("§7- §eLast Seen: §7" + StringUtility.formatTimeAsAgo(log.lastSeen()));
+                player.sendMessage("<7>- <e>Player UUID: <7>{}", log.playerUUID());
+                player.sendMessage("<7>- <e>Profile UUID: <7>{}", log.playerProfileUUID());
+                player.sendMessage("<7>- <e>First Seen: <7>{}", StringUtility.formatTimeAsAgo(log.firstSeen()));
+                player.sendMessage("<7>- <e>Last Seen: <7>{}", StringUtility.formatTimeAsAgo(log.lastSeen()));
             });
 
-            player.sendMessage("§cTook " + (System.currentTimeMillis() - start) + "ms to get information.");
+            player.sendMessage("<c>Took {}ms to get information.", System.currentTimeMillis() - start);
         });
     }
 }

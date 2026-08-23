@@ -1,9 +1,7 @@
 package net.swofty.type.skyblockgeneric.data.monogdb;
 
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
+import net.swofty.commons.skyblock.CoopStorage;
 import net.swofty.proxyapi.ProxyPlayerSet;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
@@ -12,55 +10,36 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class CoopDatabase {
-    public static MongoDatabase database;
-    public static MongoCollection<Document> collection;
 
     public static void connect(MongoClient client) {
-        database = client.getDatabase("Minestom");
-        collection = database.getCollection("coop");
     }
 
     public void save(Coop coop) {
-        if (coop.members.isEmpty() && coop.memberInvites.isEmpty()) {
-            collection.deleteOne(Filters.eq("_id", coop.coopUUID.toString()));
-            return;
-        }
+        CoopStorage.write(coop.serialize());
+    }
 
-        Document document = coop.serialize();
-        if (collection.find(Filters.eq("_id", coop.coopUUID.toString())).first() != null) {
-            collection.replaceOne(Filters.eq("_id", coop.coopUUID.toString()), document);
-        } else {
-            collection.insertOne(document);
-        }
+    public static Coop update(UUID coopId, Consumer<Coop> mutation) {
+        Document mutated = CoopStorage.update(coopId, stored -> {
+            Coop coop = Coop.deserialize(stored);
+            mutation.accept(coop);
+            return coop.serialize();
+        });
+        return mutated == null ? null : Coop.deserialize(mutated);
     }
 
     public static Coop getFromMember(UUID member) {
-        // Search through all coop documents and find the one that contains the UUID the list Members or MembersInvited
-        for (Document document : collection.find()) {
-            List<String> members = (List<String>) document.get("members");
-            List<String> memberInvites = (List<String>) document.get("memberInvites");
-
-            if (members.contains(member.toString()) || memberInvites.contains(member.toString())) {
-                return Coop.deserialize(document);
-            }
-        }
-
-        return null;
+        return deserialize(CoopStorage.readByMember(member));
     }
 
     public static Coop getFromMemberProfile(UUID memberProfile) {
-        // Search through all coop documents and find the one that contains the UUID in the memberProfiles list
-        for (Document document : collection.find()) {
-            List<String> memberProfiles = (List<String>) document.get("memberProfiles");
+        return deserialize(CoopStorage.readByProfile(memberProfile));
+    }
 
-            if (memberProfiles.contains(memberProfile.toString())) {
-                return Coop.deserialize(document);
-            }
-        }
-
-        return null;
+    private static Coop deserialize(Document roster) {
+        return roster == null ? null : Coop.deserialize(roster);
     }
 
     public static Coop getClean(UUID originator) {
@@ -91,7 +70,6 @@ public class CoopDatabase {
             Document document = new Document("_id", coopUUID.toString());
             document.put("originator", originator.toString());
 
-            // Convert UUIDs to strings
             List<String> members = new ArrayList<>();
             this.members.forEach(uuid -> members.add(uuid.toString()));
             document.put("members", members);

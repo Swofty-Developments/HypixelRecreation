@@ -27,7 +27,7 @@ public class NPCBaker extends HypixelNPC {
                 if (!events.contains(CalendarEvent.NEW_YEAR)) {
                     return new String[]{""};
                 }
-                return new String[]{"§fBaker", "§e§lCLICK"};
+                return new String[]{"<f>Baker", "<e><l>CLICK"};
             }
 
             @Override

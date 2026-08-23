@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.shop.ShopPrice;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
@@ -19,8 +20,8 @@ public class CoinShopPrice implements ShopPrice {
     double amount;
 
     @Override
-    public List<String> getGUIDisplay() {
-        return List.of("§6" + StringUtility.decimalify(amount, 1) + " Coin" + (amount != 1 ? "s" : ""));
+    public List<Text> getGUIDisplay() {
+        return List.of(Text.of("<6>{} Coin{}", StringUtility.decimalify(amount, 1), amount != 1 ? "s" : ""));
     }
 
     @Override

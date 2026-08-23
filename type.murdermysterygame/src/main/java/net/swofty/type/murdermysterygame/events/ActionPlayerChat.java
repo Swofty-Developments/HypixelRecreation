@@ -1,9 +1,7 @@
 package net.swofty.type.murdermysterygame.events;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.event.player.PlayerChatEvent;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.chat.StaffChat;
 import net.swofty.type.generic.data.datapoints.DatapointChatType;
 import net.swofty.type.generic.event.EventNodes;
@@ -40,7 +38,7 @@ public class ActionPlayerChat implements HypixelEventClass {
         DatapointChatType.Chats chatType = player.getChatType().currentChatType;
         if (chatType == DatapointChatType.Chats.STAFF) {
             if (!rank.isStaff()) {
-                player.sendMessage("§cUnknown chat type.");
+                player.sendMessage("<c>Unknown chat type.");
                 player.getChatType().switchTo(DatapointChatType.Chats.ALL);
                 return;
             }
@@ -52,9 +50,7 @@ public class ActionPlayerChat implements HypixelEventClass {
         if (player.isEliminated() && game.getGameStatus() == GameStatus.IN_PROGRESS) {
             for (MurderMysteryPlayer gamePlayer : game.getPlayers()) {
                 if (gamePlayer.isEliminated()) {
-                    gamePlayer.sendMessage(Component.text("[DEAD] ", NamedTextColor.GRAY)
-                            .append(Component.text(player.getUsername() + ": ", NamedTextColor.WHITE))
-                            .append(Component.text(finalMessage, NamedTextColor.GRAY)));
+                    gamePlayer.sendMessage("<7>[DEAD] <f>{}: <7>{}", player.getUsername(), finalMessage);
                 }
             }
             return;
@@ -62,8 +58,10 @@ public class ActionPlayerChat implements HypixelEventClass {
 
         // Normal chat
         for (MurderMysteryPlayer gamePlayer : game.getPlayers()) {
-            gamePlayer.sendMessage(Component.text(player.getLegacyRankPrefix() + StringUtility.getTextFromComponent(player.getName()) + ": ", NamedTextColor.WHITE)
-                    .append(Component.text(finalMessage, NamedTextColor.WHITE)));
+            gamePlayer.sendMessage("{}<f>{}: {}",
+                    player.getRankPrefix(),
+                    player.getUsername(),
+                    finalMessage);
         }
     }
 }

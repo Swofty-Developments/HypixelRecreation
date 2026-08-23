@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
+import net.swofty.type.ravengardgeneric.gui.RavengardFont;
 import net.swofty.type.ravengardgeneric.hud.RavengardHudComposer;
 import net.swofty.type.ravengardgeneric.hud.RavengardHudState;
 
@@ -68,6 +69,7 @@ public final class DungeonTabMap {
                     double tileCenterX = placement.originX() + col * TILE + TILE / 2.0;
                     double tileCenterZ = placement.originZ() + row * TILE + TILE / 2.0;
                     header = header.append(Component.text(Character.toString(codepoint))
+                            .font(RavengardFont.RAVENGARD)
                             .color(TextColor.color(packed(tileCenterX, tileCenterZ, centerX, centerZ, 0)))
                             .shadowColor(ShadowColor.shadowColor(0)));
                 }
@@ -87,6 +89,7 @@ public final class DungeonTabMap {
             }
             int rotation = ((int) Math.round(yaw / YAW_PER_STEP)) & 0x3F;
             header = header.append(Component.text(self ? PLAYER_MARKER : TEAMMATE_MARKER)
+                    .font(RavengardFont.RAVENGARD)
                     .color(TextColor.color(packed(member.getPosition().x(), member.getPosition().z(),
                             centerX, centerZ, rotation)))
                     .shadowColor(ShadowColor.shadowColor(0)));

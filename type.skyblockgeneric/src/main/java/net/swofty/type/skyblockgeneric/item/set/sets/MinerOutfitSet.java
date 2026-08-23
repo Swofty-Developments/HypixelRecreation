@@ -20,8 +20,8 @@ public class MinerOutfitSet implements ArmorSet, SetEvents, MuseumableSet {
     @Override
     public ArrayList<String> getDescription() {
         return new ArrayList<>(List.of(
-                "§7Grants the wearer with §apermanent",
-                "§aHaste II §7while worn."
+                "<7>Grants the wearer with <a>permanent",
+                "<a>Haste II <7>while worn."
         ));
     }
 

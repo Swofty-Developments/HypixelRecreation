@@ -1,7 +1,5 @@
 package net.swofty.type.murdermysterygame.events;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.event.item.PickupItemEvent;
@@ -62,7 +60,7 @@ public class ActionGoldPickup implements HypixelEventClass {
                 // Cancel default pickup, use our collection system
                 event.setCancelled(true);
                 game.getGoldManager().collectGold(player, itemEntity);
-                player.sendMessage(Component.text("+1 Gold", NamedTextColor.GOLD));
+                player.sendMessage("<6>+1 Gold");
                 return;
             }
 
@@ -70,7 +68,7 @@ public class ActionGoldPickup implements HypixelEventClass {
             // Track achievement for picked up gold
             int amount = meta.getItem().amount();
             player.addGoldCollectedThisGame(amount);
-            player.sendMessage(Component.text("+" + amount + " Gold", NamedTextColor.GOLD));
+            player.sendMessage("<6>+{} Gold", amount);
 
             // Check if player now has enough gold for bow
             game.getGoldManager().checkPlayerGoldForBow(player);

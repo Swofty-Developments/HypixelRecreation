@@ -3,9 +3,9 @@ package net.swofty.type.skyblockgeneric.slayer;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.Instance;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSlayer;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
@@ -50,20 +50,20 @@ public final class SlayerService {
         SlayerQuest quest = new SlayerQuest(type, tier, System.currentTimeMillis(), 0, false, null);
         data.setActiveQuest(quest);
         save(player, data);
-        player.sendMessage("§5§lSLAYER QUEST STARTED!");
-        player.sendMessage("§7Slay " + type.categoryName() + " mobs to summon §c" + tierDefinition.displayName(type) + "§7.");
+        player.sendMessage("<5><l>SLAYER QUEST STARTED!");
+        player.sendMessage("<7>Slay {} mobs to summon <c>{}<7>.", type.categoryName(), tierDefinition.displayName(type));
         return StartResult.started(quest);
     }
 
     public static void cancelQuest(SkyBlockPlayer player) {
         DatapointSlayer.SlayerData data = data(player);
         if (data.getActiveQuest() == null) {
-            player.sendMessage("§cYou do not have an active Slayer quest.");
+            player.sendMessage("<c>You do not have an active Slayer quest.");
             return;
         }
         data.setActiveQuest(null);
         save(player, data);
-        player.sendMessage("§cSlayer quest cancelled!");
+        player.sendMessage("<c>Slayer quest cancelled!");
     }
 
     public static void handleMobKill(SkyBlockPlayer player, SkyBlockMob mob) {
@@ -98,13 +98,13 @@ public final class SlayerService {
             SlayerBossMob boss = spawnBoss(player, definition, tierDefinition, mob.getPosition());
             if (boss != null) {
                 progressedQuest = progressedQuest.markBossSpawned(boss.getUuid());
-                player.sendMessage("§c§lSLAYER BOSS SPAWNED!");
-                player.sendMessage("§7Kill §c" + tierDefinition.displayName(quest.type()) + "§7 to complete your quest.");
+                player.sendMessage("<c><l>SLAYER BOSS SPAWNED!");
+                player.sendMessage("<7>Kill <c>{}<7> to complete your quest.", tierDefinition.displayName(quest.type()));
             }
         } else {
             int remaining = tierDefinition.requiredCombatXp() - progressedQuest.combatXp();
-            player.sendMessage("§5Slayer Quest §7" + progressedQuest.combatXp() + "§8/§7"
-                + tierDefinition.requiredCombatXp() + " Combat XP §8(§e" + remaining + " left§8)");
+            player.sendMessage("<5>Slayer Quest <7>{}<8>/<7>{} Combat XP <8>(<e>{} left<8>)",
+                progressedQuest.combatXp(), tierDefinition.requiredCombatXp(), remaining);
         }
 
         data.setActiveQuest(progressedQuest);
@@ -142,9 +142,10 @@ public final class SlayerService {
         save(player, data);
 
         int level = definition.levelForXp(progress.getXp());
-        player.sendMessage("§a§lSLAYER QUEST COMPLETE!");
-        player.sendMessage("§7You gained §d" + slayerXp + " " + quest.type().categoryName() + " Slayer XP§7.");
-        player.sendMessage("§7" + quest.type().categoryName() + " Slayer Level: §e" + level + " §8(§d" + progress.getXp() + " XP§8)");
+        player.sendMessage("<a><l>SLAYER QUEST COMPLETE!");
+        player.sendMessage("<7>You gained <d>{} {} Slayer XP<7>.", slayerXp, quest.type().categoryName());
+        player.sendMessage("<7>{} Slayer Level: <e>{} <8>(<d>{} XP<8>)",
+            quest.type().categoryName(), level, progress.getXp());
     }
 
     private static int questCost(SlayerTierDefinition tierDefinition) {
@@ -180,7 +181,8 @@ public final class SlayerService {
     }
 
     private static void broadcastSpawn(SkyBlockPlayer player, String bossName, Instance instance, Pos position) {
-        Component message = Component.text("§c§lSLAYER BOSS! §7" + player.getUsername() + " spawned §c" + bossName + "§7!");
+        Text message = Text.of("<c><l>SLAYER BOSS! </l><7>{} spawned <c>{}<7>!",
+            player.getUsername(), bossName);
         instance.getPlayers().stream()
             .filter(nearby -> nearby.getPosition().distance(position) <= 32)
             .forEach(nearby -> nearby.sendMessage(message));

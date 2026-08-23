@@ -13,7 +13,7 @@ import java.util.Map;
 public class EnchantmentMagnet implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Instantly pulls nearby items to you within §a" + (level * 2) + " §7blocks.";
+        return "Instantly pulls nearby items to you within <a>" + level * 2 + " <7>blocks.";
     }
 
     @Override

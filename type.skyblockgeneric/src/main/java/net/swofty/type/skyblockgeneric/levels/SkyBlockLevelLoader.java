@@ -123,7 +123,7 @@ public class SkyBlockLevelLoader {
                 entry.experience,
                 entry.isMilestone,
                 unlocks,
-                entry.prefix != null ? entry.prefix : "§7",
+                entry.prefix != null ? entry.prefix : "<7>",
                 entry.prefixDisplay,
                 prefixItem
         );

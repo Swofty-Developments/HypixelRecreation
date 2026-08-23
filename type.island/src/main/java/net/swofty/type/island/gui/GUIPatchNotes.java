@@ -1,7 +1,5 @@
 package net.swofty.type.island.gui;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.Inventory;
@@ -9,7 +7,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
@@ -21,7 +19,7 @@ public class GUIPatchNotes extends HypixelInventoryGUI {
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(FILLER_ITEM);
 
         set(new GUIClickableItem(31) {
             @Override
@@ -32,9 +30,9 @@ public class GUIPatchNotes extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1,
-                    "§7To Jerry the Assistant"
-                );
+                return ItemStacks.item(Material.ARROW, """
+                        <a>Go Back
+                        <7>To Jerry the Assistant""");
             }
         });
 
@@ -42,16 +40,16 @@ public class GUIPatchNotes extends HypixelInventoryGUI {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                player.sendMessage(Component.text("§fView Patch Notes §e§lCLICK HERE")
-                    .clickEvent(ClickEvent.openUrl("https://discord.com/channels/830345347867476000/849739331278733332/1225968992909525056")));
+                player.sendMessage("<click:url:'https://discord.com/channels/830345347867476000/849739331278733332/1225968992909525056'><f>View Patch Notes <e><l>CLICK HERE");
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aSkyBlock v1.0.2", Material.BOOK, 1,
-                    "§76th April 2024",
-                    "",
-                    "§eClick to view!");
+                return ItemStacks.item(Material.BOOK, """
+                        <a>SkyBlock v1.0.2
+                        <7>6th April 2024
+
+                        <e>Click to view!""");
             }
         });
 
@@ -59,16 +57,16 @@ public class GUIPatchNotes extends HypixelInventoryGUI {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                player.sendMessage(Component.text("§fView Patch Notes §e§lCLICK HERE")
-                    .clickEvent(ClickEvent.openUrl("https://discord.com/channels/830345347867476000/849739331278733332/1226864370122887229")));
+                player.sendMessage("<click:url:'https://discord.com/channels/830345347867476000/849739331278733332/1226864370122887229'><f>View Patch Notes <e><l>CLICK HERE");
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aSkyBlock v1.0.3", Material.STICK, 1,
-                    "§78th April 2024",
-                    "",
-                    "§eClick to view!");
+                return ItemStacks.item(Material.STICK, """
+                        <a>SkyBlock v1.0.3
+                        <7>8th April 2024
+
+                        <e>Click to view!""");
             }
         });
 
@@ -76,16 +74,16 @@ public class GUIPatchNotes extends HypixelInventoryGUI {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                player.sendMessage(Component.text("§fView Patch Notes §e§lCLICK HERE")
-                    .clickEvent(ClickEvent.openUrl("https://discord.com/channels/830345347867476000/849739331278733332/1227143736669114459")));
+                player.sendMessage("<click:url:'https://discord.com/channels/830345347867476000/849739331278733332/1227143736669114459'><f>View Patch Notes <e><l>CLICK HERE");
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aSkyBlock v1.1.0", Material.BLAZE_POWDER, 1,
-                    "§79th April 2024",
-                    "",
-                    "§eClick to view!");
+                return ItemStacks.item(Material.BLAZE_POWDER, """
+                        <a>SkyBlock v1.1.0
+                        <7>9th April 2024
+
+                        <e>Click to view!""");
             }
         });
 
@@ -93,16 +91,16 @@ public class GUIPatchNotes extends HypixelInventoryGUI {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                player.sendMessage(Component.text("§fView Patch Notes §e§lCLICK HERE")
-                    .clickEvent(ClickEvent.openUrl("https://discord.com/channels/830345347867476000/849739331278733332/1227909009336569906")));
+                player.sendMessage("<click:url:'https://discord.com/channels/830345347867476000/849739331278733332/1227909009336569906'><f>View Patch Notes <e><l>CLICK HERE");
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aSkyBlock v1.1.1", Material.HOPPER, 1,
-                    "§711th April 2024",
-                    "",
-                    "§eClick to view!");
+                return ItemStacks.item(Material.HOPPER, """
+                        <a>SkyBlock v1.1.1
+                        <7>11th April 2024
+
+                        <e>Click to view!""");
             }
         });
 
@@ -110,16 +108,16 @@ public class GUIPatchNotes extends HypixelInventoryGUI {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                player.sendMessage(Component.text("§fView Patch Notes §e§lCLICK HERE")
-                    .clickEvent(ClickEvent.openUrl("https://discord.com/channels/830345347867476000/849739331278733332/1229007700302495765")));
+                player.sendMessage("<click:url:'https://discord.com/channels/830345347867476000/849739331278733332/1229007700302495765'><f>View Patch Notes <e><l>CLICK HERE");
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aSkyBlock v1.1.3", Material.GOLD_INGOT, 1,
-                    "§715th April 2024",
-                    "",
-                    "§eClick to view!");
+                return ItemStacks.item(Material.GOLD_INGOT, """
+                        <a>SkyBlock v1.1.3
+                        <7>15th April 2024
+
+                        <e>Click to view!""");
             }
         });
 
@@ -127,16 +125,16 @@ public class GUIPatchNotes extends HypixelInventoryGUI {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                player.sendMessage(Component.text("§fView Patch Notes §e§lCLICK HERE")
-                    .clickEvent(ClickEvent.openUrl("https://discord.com/channels/830345347867476000/849739331278733332/1230477957764612146")));
+                player.sendMessage("<click:url:'https://discord.com/channels/830345347867476000/849739331278733332/1230477957764612146'><f>View Patch Notes <e><l>CLICK HERE");
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aSkyBlock v1.1.4", Material.DISPENSER, 1,
-                    "§718th April 2024",
-                    "",
-                    "§eClick to view!");
+                return ItemStacks.item(Material.DISPENSER, """
+                        <a>SkyBlock v1.1.4
+                        <7>18th April 2024
+
+                        <e>Click to view!""");
             }
         });
 
@@ -144,16 +142,16 @@ public class GUIPatchNotes extends HypixelInventoryGUI {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                player.sendMessage(Component.text("§fView Patch Notes §e§lCLICK HERE")
-                    .clickEvent(ClickEvent.openUrl("https://discord.com/channels/830345347867476000/849739331278733332/1231214757114282065")));
+                player.sendMessage("<click:url:'https://discord.com/channels/830345347867476000/849739331278733332/1231214757114282065'><f>View Patch Notes <e><l>CLICK HERE");
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aSkyBlock v1.1.5", Material.DIAMOND, 1,
-                    "§720th April 2024",
-                    "",
-                    "§eClick to view!");
+                return ItemStacks.item(Material.DIAMOND, """
+                        <a>SkyBlock v1.1.5
+                        <7>20th April 2024
+
+                        <e>Click to view!""");
             }
         });
         updateItemStacks(getInventory(), getPlayer());

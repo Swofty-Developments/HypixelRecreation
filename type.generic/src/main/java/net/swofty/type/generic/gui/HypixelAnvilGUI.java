@@ -1,12 +1,12 @@
 package net.swofty.type.generic.gui;
 
-import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.network.packet.server.play.WindowPropertyPacket;
+import net.swofty.type.generic.gui.inventory.Inventories;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 import java.util.HashMap;
@@ -22,12 +22,10 @@ public class HypixelAnvilGUI {
     }
 
     public CompletableFuture<String> open(String text) {
-        Inventory inventory = new Inventory(InventoryType.ANVIL, Component.text("Insert Data: " + text));
-        inventory.setItemStack(0, ItemStack.builder(Material.PAPER)
-                .set(DataComponents.CUSTOM_NAME, Component.text("")).build());
+        Inventory inventory = Inventories.of(InventoryType.ANVIL, "Insert Data: {}", text);
+        inventory.setItemStack(0, ItemStacks.named(Material.PAPER, "").build());
         inventory.setItemStack(1, ItemStack.of(Material.AIR));
-        inventory.setItemStack(2, ItemStack.builder(Material.PAPER)
-                .set(DataComponents.CUSTOM_NAME, Component.text("")).build());
+        inventory.setItemStack(2, ItemStacks.named(Material.PAPER, "").build());
 
         player.openInventory(inventory);
 

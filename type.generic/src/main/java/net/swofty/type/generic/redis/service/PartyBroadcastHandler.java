@@ -1,9 +1,5 @@
 package net.swofty.type.generic.redis.service;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.UnderstandableProxyServer;
 import net.swofty.commons.party.FullParty;
@@ -12,6 +8,7 @@ import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.party.PartyBroadcastPushProtocol;
 import net.swofty.commons.protocol.objects.party.PartyBroadcastPushProtocol.Request;
 import net.swofty.commons.protocol.objects.party.PartyBroadcastPushProtocol.Response;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyPlayer;
 import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.type.generic.HypixelConst;
@@ -29,7 +26,6 @@ import net.swofty.commons.redis.RedisMessageContext;
 
 public class PartyBroadcastHandler implements RedisMessageHandler<Request, Response> {
 
-    private static final String SEPARATOR = "§9§m-----------------------------------------------------";
     private static final PartyBroadcastPushProtocol PROTOCOL = new PartyBroadcastPushProtocol();
 
     @Override
@@ -94,27 +90,25 @@ public class PartyBroadcastHandler implements RedisMessageHandler<Request, Respo
         UUID invitee = b.party().invitee();
         if (invitee.equals(player.getUuid())) {
             String inviterName = HypixelPlayer.getRawName(inviter);
-            player.sendMessage(SEPARATOR);
-            player.sendMessage(HypixelPlayer.getDisplayName(inviter) + " §ehas invited you to join their party!");
-            TextComponent component = LegacyComponentSerializer.legacySection()
-                    .deserialize("§eYou have §c60 §eseconds to accept. §6Click here to join!");
-            component = component.hoverEvent(Component.text("§eClick here to join!"));
-            component = component.clickEvent(ClickEvent.runCommand("/p accept " + inviterName));
-            player.sendMessage(component);
-            player.sendMessage(SEPARATOR);
+            player.sendMessage("<sep>");
+            player.sendMessage("{} <e>has invited you to join their party!", displayName(inviter));
+            player.sendMessage("""
+                    <hover:'<e>Click here to join!'><click:run:'/p accept {}'>\
+                    <e>You have <c>60 <e>seconds to accept. <6>Click here to join!</click></hover>""",
+                    inviterName);
+            player.sendMessage("<sep>");
         } else {
-            sendBoxed(player, HypixelPlayer.getDisplayName(inviter)
-                    + " §einvited " + HypixelPlayer.getDisplayName(invitee)
-                    + " §eto join the party! They have §c60 §eseconds to accept.");
+            sendBoxed(player, "{} <e>invited {} <e>to join the party! They have <c>60 <e>seconds to accept.",
+                    displayName(inviter), displayName(invitee));
         }
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderInviteExpired(HypixelPlayer player, PartyBroadcast.InviteExpired b) {
         if (b.invitee().equals(player.getUuid())) {
-            sendBoxed(player, "§eThe party invite from " + HypixelPlayer.getDisplayName(b.inviter()) + " §ehas expired!");
+            sendBoxed(player, "<e>The party invite from {} <e>has expired!", displayName(b.inviter()));
         } else if (b.inviter().equals(player.getUuid())) {
-            sendBoxed(player, "§eThe party invite to " + HypixelPlayer.getDisplayName(b.invitee()) + " §ehas expired.");
+            sendBoxed(player, "<e>The party invite to {} <e>has expired.", displayName(b.invitee()));
         }
         return DispatchResult.ok();
     }
@@ -123,44 +117,44 @@ public class PartyBroadcastHandler implements RedisMessageHandler<Request, Respo
         UUID leaderUUID = b.party().getLeader().getUuid();
         if (!b.joiner().equals(player.getUuid())) {
             if (leaderUUID.equals(b.inviter())) {
-                sendBoxed(player, HypixelPlayer.getDisplayName(b.joiner()) + " §ejoined the party.");
+                sendBoxed(player, "{} <e>joined the party.", displayName(b.joiner()));
             } else {
-                sendBoxed(player, HypixelPlayer.getDisplayName(b.joiner())
-                        + " §ejoined the party using an invite from " + HypixelPlayer.getDisplayName(b.inviter()) + "!");
+                sendBoxed(player, "{} <e>joined the party using an invite from {}!",
+                        displayName(b.joiner()), displayName(b.inviter()));
             }
         } else if (leaderUUID.equals(b.inviter())) {
-            sendBoxed(player, "§eYou have joined " + HypixelPlayer.getDisplayName(leaderUUID) + "'s §eparty!");
+            sendBoxed(player, "<e>You have joined {}'s <e>party!", displayName(leaderUUID));
         } else {
-            sendBoxed(player, "§eYou have joined " + HypixelPlayer.getDisplayName(leaderUUID)
-                    + "'s §eparty using an invite from " + HypixelPlayer.getDisplayName(b.inviter()) + "!");
+            sendBoxed(player, "<e>You have joined {}'s <e>party using an invite from {}!",
+                    displayName(leaderUUID), displayName(b.inviter()));
         }
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderLeft(HypixelPlayer player, PartyBroadcast.MemberLeft b) {
         if (b.leaver().equals(player.getUuid())) {
-            sendBoxed(player, "§eYou left the party.");
+            sendBoxed(player, "<e>You left the party.");
         } else {
-            sendBoxed(player, HypixelPlayer.getDisplayName(b.leaver()) + " §ehas left the party.");
+            sendBoxed(player, "{} <e>has left the party.", displayName(b.leaver()));
         }
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderKicked(HypixelPlayer player, PartyBroadcast.MemberKicked b) {
         if (b.kicked().equals(player.getUuid())) {
-            sendBoxed(player, "§cYou have been kicked from the party!");
+            sendBoxed(player, "<c>You have been kicked from the party!");
         } else {
-            sendBoxed(player, HypixelPlayer.getDisplayName(b.kicker())
-                    + " §ehas kicked " + HypixelPlayer.getDisplayName(b.kicked()) + " §efrom the party!");
+            sendBoxed(player, "{} <e>has kicked {} <e>from the party!",
+                    displayName(b.kicker()), displayName(b.kicked()));
         }
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderTransferred(HypixelPlayer player, PartyBroadcast.LeaderTransferred b) {
         if (b.newLeader().equals(player.getUuid())) {
-            sendBoxed(player, "§eYou are now the party leader!");
+            sendBoxed(player, "<e>You are now the party leader!");
         } else {
-            sendBoxed(player, "§eThe party was transferred to " + HypixelPlayer.getDisplayName(b.newLeader()));
+            sendBoxed(player, "<e>The party was transferred to {}", displayName(b.newLeader()));
         }
         return DispatchResult.ok();
     }
@@ -169,40 +163,44 @@ public class PartyBroadcastHandler implements RedisMessageHandler<Request, Respo
         boolean isDemotion = b.newRole() == FullParty.Role.MEMBER;
         String roleName = b.newRole().name().toLowerCase();
         if (b.promoted().equals(player.getUuid())) {
-            sendBoxed(player, isDemotion ? "§cYou have been demoted to member!" : "§aYou have been promoted to " + roleName + "!");
+            if (isDemotion) {
+                sendBoxed(player, "<c>You have been demoted to member!");
+            } else {
+                sendBoxed(player, "<a>You have been promoted to {}!", roleName);
+            }
         } else {
-            String verb = isDemotion ? "demoted" : "promoted";
-            sendBoxed(player, HypixelPlayer.getDisplayName(b.promoter()) + " §e" + verb + " "
-                    + HypixelPlayer.getDisplayName(b.promoted()) + " §eto " + roleName + "!");
+            sendBoxed(player, "{} <e>{} {} <e>to {}!", displayName(b.promoter()),
+                    isDemotion ? "demoted" : "promoted", displayName(b.promoted()), roleName);
         }
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderDisbanded(HypixelPlayer player, PartyBroadcast.Disbanded b) {
-        sendBoxed(player, HypixelPlayer.getDisplayName(b.disbander()) + " §ehas disbanded the party!");
+        sendBoxed(player, "{} <e>has disbanded the party!", displayName(b.disbander()));
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderChat(HypixelPlayer player, PartyBroadcast.Chat b) {
-        player.sendMessage("§9Party §8> " + HypixelPlayer.getDisplayName(b.sender()) + "§f: " + b.message());
+        player.sendMessage("<9>Party <8>> {}<f>: {}", displayName(b.sender()), b.message());
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderWarp(HypixelPlayer player, PartyBroadcast.Warp b) {
         if (b.warper().equals(player.getUuid())) {
-            player.sendMessage("§7Warping party...");
+            player.sendMessage("<7>Warping party...");
             return DispatchResult.ok();
         }
 
         UUID warper = b.warper();
-        String warperName = HypixelPlayer.getDisplayName(warper);
+        Text warperName = displayName(warper);
         FullParty.Member warperMember = b.party().getFromUuid(warper);
 
-        sendBoxed(player, "§eParty " + warperMember.getRole() + ", " + warperName + "§e, summoned you to their server.");
+        sendBoxed(player, "<e>Party {}, {}<e>, summoned you to their server.",
+                warperMember.getRole(), warperName);
 
         ProxyPlayer warperProxy = new ProxyPlayer(warper);
         if (!warperProxy.isOnline().join()) {
-            player.sendMessage("§cCouldn't find a proxy for " + warperName + "!");
+            player.sendMessage("<c>Couldn't find a proxy for {}!", warperName);
             return DispatchResult.rejected("Warper offline");
         }
 
@@ -225,20 +223,21 @@ public class PartyBroadcastHandler implements RedisMessageHandler<Request, Respo
     private static DispatchResult renderWarpOverview(HypixelPlayer player, PartyBroadcast.WarpOverview b) {
         if (!b.warper().equals(player.getUuid())) return DispatchResult.ok();
         int total = b.warped().size() + b.failed().size();
-        boolean plural = total > 1;
-        String label = HypixelConst.getTypeLoader().getType().isSkyBlock() ? "§eSkyBlock Party Warp" : "§eParty Warp";
-        player.sendMessage(SEPARATOR);
-        player.sendMessage(label + " §7(" + total + (plural ? " players" : " player") + ")");
+        player.sendMessage("<sep>");
+        player.sendMessage(HypixelConst.getTypeLoader().getType().isSkyBlock()
+                        ? "<e>SkyBlock Party Warp <7>({} {})"
+                        : "<e>Party Warp <7>({} {})",
+                total, total > 1 ? "players" : "player");
         for (UUID uuid : b.warped()) {
-            player.sendMessage("§a§l✔ " + HypixelPlayer.getDisplayName(uuid) + " §awarped to your server");
+            player.sendMessage("<a><l>✔ </l>{} <a>warped to your server", displayName(uuid));
         }
         for (UUID uuid : b.failed()) {
             String reason = b.failureReasons() != null
                     ? b.failureReasons().getOrDefault(uuid, "Unable to warp")
                     : "Unable to warp";
-            player.sendMessage("§c§l✖ " + HypixelPlayer.getDisplayName(uuid) + " §c- " + reason);
+            player.sendMessage("<c><l>✖ </l>{} <c>- {}", displayName(uuid), reason);
         }
-        player.sendMessage(SEPARATOR);
+        player.sendMessage("<sep>");
         return DispatchResult.ok();
     }
 
@@ -248,52 +247,54 @@ public class PartyBroadcastHandler implements RedisMessageHandler<Request, Respo
         ProxyPlayer mover = new ProxyPlayer(b.mover());
         if (!mover.isOnline().join()) return DispatchResult.ok();
 
-        String moverName = HypixelPlayer.getDisplayName(b.mover());
         UnderstandableProxyServer moverServer = mover.getServer().join();
         ServerType moverServerType = moverServer.type();
-        String displayName = "§e" + (moverServerType.isSkyBlock() ? "SkyBlock Travel" : "Hypixel Travel");
+        Text hover = Text.of("""
+                <e>{}
+                <9>Party Member
+                \s
+                <e>Click to follow!""",
+                moverServerType.isSkyBlock() ? "SkyBlock Travel" : "Hypixel Travel");
 
-        TextComponent component = LegacyComponentSerializer.legacySection()
-                .deserialize("§9§l» " + moverName + " §eis traveling to §a" + moverServerType.formatName() + " §e§lFOLLOW");
-        Component hover = LegacyComponentSerializer.legacySection().deserialize(displayName).appendNewline()
-                .append(LegacyComponentSerializer.legacySection().deserialize("§9Party Member")).appendNewline()
-                .append(LegacyComponentSerializer.legacySection().deserialize(" ")).appendNewline()
-                .append(LegacyComponentSerializer.legacySection().deserialize("§eClick to follow!"));
-
-        component = component.hoverEvent(hover);
-        component = component.clickEvent(ClickEvent.runCommand("/p movetoserver " + moverServer.uuid()));
-        player.sendMessage(component);
+        player.sendMessage("""
+                <hover:'{2}'><click:run:'/p movetoserver {3}'>\
+                <9><l>» </l>{0} <e>is traveling to <a>{1} <e><l>FOLLOW""",
+                displayName(b.mover()), moverServerType.formatName(), hover, moverServer.uuid());
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderDisconnected(HypixelPlayer player, PartyBroadcast.MemberDisconnected b) {
         if (b.disconnectedPlayer().equals(player.getUuid())) return DispatchResult.ok();
         int minutes = (int) (b.timeoutSeconds() / 60);
-        sendBoxed(player, HypixelPlayer.getDisplayName(b.disconnectedPlayer())
-                + " §ehas disconnected. They have §c" + minutes + " minutes §eto rejoin before being removed.");
+        sendBoxed(player, "{} <e>has disconnected. They have <c>{} minutes <e>to rejoin before being removed.",
+                displayName(b.disconnectedPlayer()), minutes);
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderRejoined(HypixelPlayer player, PartyBroadcast.MemberRejoined b) {
         if (b.rejoinedPlayer().equals(player.getUuid())) return DispatchResult.ok();
-        sendBoxed(player, HypixelPlayer.getDisplayName(b.rejoinedPlayer()) + " §ehas reconnected to the party.");
+        sendBoxed(player, "{} <e>has reconnected to the party.", displayName(b.rejoinedPlayer()));
         return DispatchResult.ok();
     }
 
     private static DispatchResult renderDisconnectTimedOut(HypixelPlayer player, PartyBroadcast.MemberDisconnectTimedOut b) {
-        String name = HypixelPlayer.getDisplayName(b.timedOutPlayer());
+        Text name = displayName(b.timedOutPlayer());
         if (b.wasLeader()) {
-            sendBoxed(player, "§cThe party leader " + name + " §ctimed out. The party has been disbanded.");
+            sendBoxed(player, "<c>The party leader {} <c>timed out. The party has been disbanded.", name);
         } else if (!b.timedOutPlayer().equals(player.getUuid())) {
-            sendBoxed(player, name + " §ehas been removed from the party due to disconnect timeout.");
+            sendBoxed(player, "{} <e>has been removed from the party due to disconnect timeout.", name);
         }
         return DispatchResult.ok();
     }
 
-    private static void sendBoxed(HypixelPlayer player, String message) {
-        player.sendMessage(SEPARATOR);
-        player.sendMessage(message);
-        player.sendMessage(SEPARATOR);
+    private static Text displayName(UUID uuid) {
+        return HypixelPlayer.getDisplayName(uuid);
+    }
+
+    private static void sendBoxed(HypixelPlayer player, String markup, Object... arguments) {
+        player.sendMessage("<sep>");
+        player.sendMessage(markup, arguments);
+        player.sendMessage("<sep>");
     }
 
     private record DispatchResult(boolean handled, String rejection) {

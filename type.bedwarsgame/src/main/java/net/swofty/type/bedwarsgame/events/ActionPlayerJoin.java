@@ -41,14 +41,14 @@ public class ActionPlayerJoin implements HypixelEventClass {
 				return;
 			}
 			Logger.error("Failed to find game assignment for player " + player.getUsername());
-			player.sendMessage("§cNo game assignment found! Returning to lobby...");
+			player.sendMessage("<c>No game assignment found! Returning to lobby...");
 			player.sendTo(ServerType.BEDWARS_LOBBY);
 			return;
 		}
 
 		BedWarsGame preferred = TypeBedWarsGameLoader.getGameById(preferredGameId);
 		if (preferred == null) {
-			player.sendMessage("§cThe assigned game no longer exists! Returning to lobby...");
+			player.sendMessage("<c>The assigned game no longer exists! Returning to lobby...");
 			player.sendTo(ServerType.BEDWARS_LOBBY);
 			return;
 		}
@@ -57,21 +57,21 @@ public class ActionPlayerJoin implements HypixelEventClass {
 			if (!player.isOnline()) return;
 			if (preferred.hasDisconnectedPlayer(player.getUuid())) {
 				if (!preferred.handleRejoin(player)) {
-					player.sendMessage("§cFailed to rejoin your previous game! Returning to lobby...");
+					player.sendMessage("<c>Failed to rejoin your previous game! Returning to lobby...");
 					player.sendTo(ServerType.BEDWARS_LOBBY);
 				}
 				return;
 			}
 
 			if (preferred.getState() != GameState.WAITING && preferred.getState() != GameState.COUNTDOWN) {
-				player.sendMessage("§cThe assigned game is no longer joinable! Returning to lobby...");
+				player.sendMessage("<c>The assigned game is no longer joinable! Returning to lobby...");
 				player.sendTo(ServerType.BEDWARS_LOBBY);
 				return;
 			}
 
 			JoinResult joinResult = preferred.join(player);
 			if (joinResult instanceof JoinResult.Denied(String reason)) {
-				player.sendMessage("§cFailed to join assigned game (" + reason + ")! Returning to lobby...");
+				player.sendMessage("<c>Failed to join assigned game ({})! Returning to lobby...", reason);
 				player.sendTo(ServerType.BEDWARS_LOBBY);
 			}
 		}, 15);

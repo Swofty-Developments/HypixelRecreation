@@ -50,10 +50,10 @@ public class NPCDreams extends HypixelNPC {
 				String commaified = StringUtility.commaify(amountOnline);
 				long days = Math.max(0, ChronoUnit.DAYS.between(LocalDate.now(), current.endsAt()));
 				return new String[]{
-					"§7Changes in " + days + " days!",
-						"§e§lCLICK TO PLAY",
-					"§b" + current.mode().displayName() + " §7[v" + VersionConst.BED_WARS_VERSION + "]",
-					"§e§l" + commaified + " Players",
+					"<7>Changes in " + days + " days!",
+						"<e><l>CLICK TO PLAY",
+					"<b>" + current.mode().displayName() + " <7>[v" + VersionConst.BED_WARS_VERSION + "]",
+					"<e><l>" + commaified + " Players",
 				};
 			}
 

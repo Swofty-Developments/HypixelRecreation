@@ -28,22 +28,21 @@ public class RuneComponent extends SkyBlockItemComponent {
         addInheritedComponent(new ExtraUnderNameComponent(getExtraDisplay()));
         addInheritedComponent(new SkullHeadComponent((item) -> skullTexture));
         addInheritedComponent(new LoreUpdateComponent(List.of(
-                "§7Apply this rune to weapons or",
-                "§7fuse two together at the Runic",
-                "§7Pedestal!"
+                "<7>Apply this rune to weapons or",
+                "<7>fuse two together at the Runic",
+                "<7>Pedestal!"
         ), false));
     }
 
     private List<String> getExtraDisplay() {
         return List.of(
-                "§8Requires level " + requiredLevel,
+                "<8>Requires level " + requiredLevel,
                 StringUtility.toNormalCase(applicableTo.name())
         );
     }
 
     public String getDisplayName(ItemType type, int level) {
         return getColor() + "◆ " + StringUtility.toNormalCase(type.toString())
-                + " " +
-                StringUtility.getAsRomanNumeral(level);
+                + " " + StringUtility.getAsRomanNumeral(level);
     }
 }

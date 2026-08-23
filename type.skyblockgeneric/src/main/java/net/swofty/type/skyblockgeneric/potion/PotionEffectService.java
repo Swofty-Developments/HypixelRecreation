@@ -96,10 +96,10 @@ public class PotionEffectService {
      */
     private static void sendPotionMessage(SkyBlockPlayer player, PotionEffectType effectType, int level, long durationMs) {
         String effectName = effectType.getLevelDisplay(level);
-        String color = effectType.getColor();
+        String colorToken = effectType.getCategory().getColorToken();
 
         if (effectType.getCategory() == PotionEffectCategory.INSTANT) {
-            player.sendMessage(color + "You drank a " + effectName + " Potion!");
+            player.sendMessage("<color:'{}'>You drank a {} Potion!", colorToken, effectName);
         } else {
             int totalSeconds = (int) (durationMs / 1000);
             int minutes = totalSeconds / 60;
@@ -112,7 +112,7 @@ public class PotionEffectService {
                 durationStr = seconds + "s";
             }
 
-            player.sendMessage(color + "You drank a " + effectName + " Potion! §7(" + durationStr + ")");
+            player.sendMessage("<color:'{}'>You drank a {} Potion! <7>({})", colorToken, effectName, durationStr);
         }
     }
 }

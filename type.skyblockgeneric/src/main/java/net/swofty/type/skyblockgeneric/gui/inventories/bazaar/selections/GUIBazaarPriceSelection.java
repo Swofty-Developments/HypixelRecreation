@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.bazaar.selections;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.Inventory;
@@ -9,19 +8,18 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.RefreshingGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIQueryItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 public class GUIBazaarPriceSelection extends HypixelInventoryGUI implements RefreshingGUI {
@@ -36,7 +34,7 @@ public class GUIBazaarPriceSelection extends HypixelInventoryGUI implements Refr
     public GUIBazaarPriceSelection(HypixelInventoryGUI previousGUI, Integer amount,
                                    Double lowestPrice, Double highestPrice,
                                    ItemType itemTypeLinker, boolean isSellOrder) {
-        super(isSellOrder ? I18n.t("gui_bazaar.price_selection.title_sell") : I18n.t("gui_bazaar.price_selection.title_buy"), InventoryType.CHEST_4_ROW);
+        super(Text.key(isSellOrder ? "gui_bazaar.price_selection.title_sell" : "gui_bazaar.price_selection.title_buy"), InventoryType.CHEST_4_ROW);
 
         this.lowestPrice = lowestPrice;
         this.highestPrice = highestPrice;
@@ -44,7 +42,7 @@ public class GUIBazaarPriceSelection extends HypixelInventoryGUI implements Refr
         this.isSellOrder = isSellOrder;
         this.amount = amount;
 
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
         set(GUIClickableItem.getGoBackItem(31, previousGUI));
     }
 
@@ -65,21 +63,25 @@ public class GUIBazaarPriceSelection extends HypixelInventoryGUI implements Refr
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
                     SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    Locale l = p.getLocale();
-                    return ItemStackCreator.getStack(I18n.string("gui_bazaar.price_selection.spread_10pct", l),
-                            Material.GOLDEN_HORSE_ARMOR, 1,
-                            isSellOrder ? I18n.string("gui_bazaar.price_selection.offer_setup_sell", l) : I18n.string("gui_bazaar.price_selection.offer_setup_buy", l),
-                            " ",
-                        I18n.string("gui_bazaar.price_selection.lowest_price", l, Component.text(lowestPrice)),
-                        I18n.string("gui_bazaar.price_selection.highest_price", l, Component.text(highestPrice)),
-                        I18n.string("gui_bazaar.price_selection.spread", l, Component.text(highestPrice), Component.text(lowestPrice), Component.text(spread)),
-                            " ",
-                        isSellOrder ? I18n.string("gui_bazaar.price_selection.selling_amount", l, Component.text(amount)) : I18n.string("gui_bazaar.price_selection.buying_amount", l, Component.text(amount)),
-                        I18n.string("gui_bazaar.price_selection.unit_price", l, Component.text(spreadPrice)),
-                            " ",
-                        I18n.string("gui_bazaar.price_selection.total", l, Component.text(spreadPrice * amount)),
-                            " ",
-                            I18n.string("gui_bazaar.price_selection.click_to_use", l));
+                    return ItemStacks.item(Material.GOLDEN_HORSE_ARMOR, 1,
+                            Text.key("gui_bazaar.price_selection.spread_10pct"),
+                            List.of(
+                                    Text.key(isSellOrder
+                                            ? "gui_bazaar.price_selection.offer_setup_sell"
+                                            : "gui_bazaar.price_selection.offer_setup_buy"),
+                                    Text.literal(" "),
+                                    Text.key("gui_bazaar.price_selection.lowest_price", lowestPrice),
+                                    Text.key("gui_bazaar.price_selection.highest_price", highestPrice),
+                                    Text.key("gui_bazaar.price_selection.spread", highestPrice, lowestPrice, spread),
+                                    Text.literal(" "),
+                                    Text.key(isSellOrder
+                                            ? "gui_bazaar.price_selection.selling_amount"
+                                            : "gui_bazaar.price_selection.buying_amount", amount),
+                                    Text.key("gui_bazaar.price_selection.unit_price", spreadPrice),
+                                    Text.literal(" "),
+                                    Text.key("gui_bazaar.price_selection.total", spreadPrice * amount),
+                                    Text.literal(" "),
+                                    Text.key("gui_bazaar.price_selection.click_to_use")));
                 }
             });
 
@@ -94,20 +96,26 @@ public class GUIBazaarPriceSelection extends HypixelInventoryGUI implements Refr
 
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                    Locale l = p.getLocale();
-                    List<Component> lore = new ArrayList<>();
-                    lore.add(isSellOrder ? I18n.t("gui_bazaar.price_selection.offer_setup_sell") : I18n.t("gui_bazaar.price_selection.offer_setup_buy"));
-                    lore.add(Component.space());
-                    lore.addAll(List.of(I18n.iterable("gui_bazaar.price_selection.best_offer_beat")));
-                    lore.add(Component.space());
-                    lore.add(isSellOrder ? I18n.t("gui_bazaar.price_selection.selling_amount", Component.text(amount)) : I18n.t("gui_bazaar.price_selection.buying_amount", Component.text(amount)));
-                    lore.add(I18n.t("gui_bazaar.price_selection.unit_price", Component.text(incrementedOffer)));
-                    lore.add(Component.space());
-                    lore.add(I18n.t("gui_bazaar.price_selection.total", Component.text(incrementedOffer * amount)));
-                    lore.add(Component.space());
-                    lore.add(I18n.t("gui_bazaar.price_selection.click_to_use"));
-                    return ItemStackCreator.getStack(isSellOrder ? I18n.t("gui_bazaar.price_selection.best_offer_minus") : I18n.t("gui_bazaar.price_selection.best_offer_plus"),
-                            Material.GOLD_NUGGET, 1, lore);
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.key(isSellOrder
+                            ? "gui_bazaar.price_selection.offer_setup_sell"
+                            : "gui_bazaar.price_selection.offer_setup_buy"));
+                    lore.add(Text.literal(" "));
+                    lore.addAll(Text.keyLines("gui_bazaar.price_selection.best_offer_beat"));
+                    lore.add(Text.literal(" "));
+                    lore.add(Text.key(isSellOrder
+                            ? "gui_bazaar.price_selection.selling_amount"
+                            : "gui_bazaar.price_selection.buying_amount", amount));
+                    lore.add(Text.key("gui_bazaar.price_selection.unit_price", incrementedOffer));
+                    lore.add(Text.literal(" "));
+                    lore.add(Text.key("gui_bazaar.price_selection.total", incrementedOffer * amount));
+                    lore.add(Text.literal(" "));
+                    lore.add(Text.key("gui_bazaar.price_selection.click_to_use"));
+                    return ItemStacks.item(Material.GOLD_NUGGET, 1,
+                            Text.key(isSellOrder
+                                    ? "gui_bazaar.price_selection.best_offer_minus"
+                                    : "gui_bazaar.price_selection.best_offer_plus"),
+                            lore);
                 }
             });
 
@@ -121,20 +129,23 @@ public class GUIBazaarPriceSelection extends HypixelInventoryGUI implements Refr
 
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                    Locale l = p.getLocale();
-                    List<Object> lore = new java.util.ArrayList<>();
-                    lore.add(isSellOrder ? I18n.string("gui_bazaar.price_selection.offer_setup_sell", l) : I18n.string("gui_bazaar.price_selection.offer_setup_buy", l));
-                    lore.add(" ");
-                    lore.addAll(List.of(I18n.iterable("gui_bazaar.price_selection.same_as_best.lore")));
-                    lore.add(" ");
-                    lore.add(isSellOrder ? I18n.string("gui_bazaar.price_selection.selling_amount", l, Component.text(amount)) : I18n.string("gui_bazaar.price_selection.buying_amount", l, Component.text(amount)));
-                    lore.add(I18n.string("gui_bazaar.price_selection.unit_price", l, Component.text(bestOffer)));
-                    lore.add(" ");
-                    lore.add(I18n.string("gui_bazaar.price_selection.total", l, Component.text(bestOffer * amount)));
-                    lore.add(" ");
-                    lore.add(I18n.string("gui_bazaar.price_selection.click_to_use", l));
-                    return ItemStackCreator.getStack(I18n.string("gui_bazaar.price_selection.same_as_best", l),
-                            itemTypeLinker.material, 1, lore);
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.key(isSellOrder
+                            ? "gui_bazaar.price_selection.offer_setup_sell"
+                            : "gui_bazaar.price_selection.offer_setup_buy"));
+                    lore.add(Text.literal(" "));
+                    lore.addAll(Text.keyLines("gui_bazaar.price_selection.same_as_best.lore"));
+                    lore.add(Text.literal(" "));
+                    lore.add(Text.key(isSellOrder
+                            ? "gui_bazaar.price_selection.selling_amount"
+                            : "gui_bazaar.price_selection.buying_amount", amount));
+                    lore.add(Text.key("gui_bazaar.price_selection.unit_price", bestOffer));
+                    lore.add(Text.literal(" "));
+                    lore.add(Text.key("gui_bazaar.price_selection.total", bestOffer * amount));
+                    lore.add(Text.literal(" "));
+                    lore.add(Text.key("gui_bazaar.price_selection.click_to_use"));
+                    return ItemStacks.item(itemTypeLinker.material, 1,
+                            Text.key("gui_bazaar.price_selection.same_as_best"), lore);
                 }
             });
             set(new GUIQueryItem(16) {
@@ -148,24 +159,25 @@ public class GUIBazaarPriceSelection extends HypixelInventoryGUI implements Refr
                         future.complete(price);
                         return null;
                     } catch (NumberFormatException e) {
-                        player.sendMessage(I18n.t("gui_bazaar.price_selection.invalid_price"));
+                        player.sendMessage(Text.key("gui_bazaar.price_selection.invalid_price"));
                         return null;
                     }
                 }
 
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                    Locale l = p.getLocale();
-                    List<Object> lore = new java.util.ArrayList<>();
-                    lore.add(isSellOrder ? I18n.string("gui_bazaar.price_selection.offer_setup_sell", l) : I18n.string("gui_bazaar.price_selection.offer_setup_buy", l));
-                    lore.add(" ");
-                    lore.addAll(List.of(I18n.iterable("gui_bazaar.price_selection.custom_price.lore")));
-                    lore.add(" ");
-                    lore.add(I18n.string("gui_bazaar.price_selection.ordering_amount", l, Component.text(amount)));
-                    lore.add(" ");
-                    lore.add(I18n.string("gui_bazaar.price_selection.custom_click", l));
-                    return ItemStackCreator.getStack(I18n.string("gui_bazaar.price_selection.custom_price", l),
-                            Material.OAK_SIGN, 1, lore);
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.key(isSellOrder
+                            ? "gui_bazaar.price_selection.offer_setup_sell"
+                            : "gui_bazaar.price_selection.offer_setup_buy"));
+                    lore.add(Text.literal(" "));
+                    lore.addAll(Text.keyLines("gui_bazaar.price_selection.custom_price.lore"));
+                    lore.add(Text.literal(" "));
+                    lore.add(Text.key("gui_bazaar.price_selection.ordering_amount", amount));
+                    lore.add(Text.literal(" "));
+                    lore.add(Text.key("gui_bazaar.price_selection.custom_click"));
+                    return ItemStacks.item(Material.OAK_SIGN, 1,
+                            Text.key("gui_bazaar.price_selection.custom_price"), lore);
                 }
             });
 
@@ -199,7 +211,7 @@ public class GUIBazaarPriceSelection extends HypixelInventoryGUI implements Refr
     @Override
     public void refreshItems(HypixelPlayer player) {
         if (!new ProxyService(ServiceType.BAZAAR).isOnline().join()) {
-            player.sendMessage(I18n.t("gui_bazaar.price_selection.offline_message"));
+            player.sendMessage(Text.key("gui_bazaar.price_selection.offline_message"));
             player.closeInventory();
         }
     }

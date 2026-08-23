@@ -36,7 +36,7 @@ public class AnimReviewCommand extends HypixelCommand {
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
             AnimReviewService.stop((RavengardPlayer) sender);
-            sender.sendMessage("§aReview stopped.");
+            ((RavengardPlayer) sender).sendMessage("<a>Review stopped.");
         }, ArgumentType.Literal("stop"));
 
         var tickArg = ArgumentType.Integer("tick").min(0);
@@ -76,7 +76,7 @@ public class AnimReviewCommand extends HypixelCommand {
                                     java.util.function.Consumer<AnimReviewService.Session> action) {
         AnimReviewService.Session session = AnimReviewService.session(player);
         if (session == null) {
-            player.sendMessage("§cNo review session running. Use /animreview to pick a capture.");
+            player.sendMessage("<c>No review session running. Use /animreview to pick a capture.");
             return;
         }
         action.accept(session);

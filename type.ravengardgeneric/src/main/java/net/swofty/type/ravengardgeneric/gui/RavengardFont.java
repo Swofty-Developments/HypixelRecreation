@@ -4,8 +4,9 @@ import net.kyori.adventure.key.Key;
 
 public final class RavengardFont {
     public static final Key DEFAULT = Key.key("minecraft", "default");
-    public static final Key HALF = Key.key("minecraft", "-half");
-    public static final Key FULL = Key.key("minecraft", "-full");
+    public static final Key RAVENGARD = Key.key("hypixel_ravengard", "ravengard");
+    public static final Key HALF = Key.key("hypixel_ravengard", "-half");
+    public static final Key FULL = Key.key("hypixel_ravengard", "-full");
     /** Vanilla Illager runes. Unreleased buttons render their whole tooltip in this so it reads as gibberish. */
     public static final Key ILLAGERALT = Key.key("minecraft", "illageralt");
 

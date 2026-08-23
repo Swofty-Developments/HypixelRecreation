@@ -1,15 +1,18 @@
 package net.swofty.type.skywarslobby.gui;
 
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointBoolean;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -84,12 +87,9 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aGo Back",
-                        Material.ARROW,
-                        1,
-                        "§7To SkyWars Menu"
-                );
+                return ItemStacks.item(Material.ARROW, 1, """
+                        <a>Go Back
+                        <7>To SkyWars Menu""");
             }
 
             @Override
@@ -106,25 +106,19 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (hideLevel) {
-                    return ItemStackCreator.getStack(
-                            "§aShow Level",
-                            Material.GRAY_DYE,
-                            1,
-                            "§7Toggles whether your SkyWars Level",
-                            "§7and Emblem show next to your name.",
-                            "",
-                            "§eClick to show!"
-                    );
+                    return ItemStacks.item(Material.GRAY_DYE, 1, """
+                            <a>Show Level
+                            <7>Toggles whether your SkyWars Level
+                            <7>and Emblem show next to your name.
+
+                            <e>Click to show!""");
                 } else {
-                    return ItemStackCreator.getStack(
-                            "§cHide Level",
-                            Material.LIME_DYE,
-                            1,
-                            "§7Toggles whether your SkyWars Level",
-                            "§7and Emblem show next to your name.",
-                            "",
-                            "§eClick to hide!"
-                    );
+                    return ItemStacks.item(Material.LIME_DYE, 1, """
+                            <c>Hide Level
+                            <7>Toggles whether your SkyWars Level
+                            <7>and Emblem show next to your name.
+
+                            <e>Click to hide!""");
                 }
             }
 
@@ -142,14 +136,11 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
             set(new GUIClickableItem(45) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§aPrevious Page",
-                            Material.ARROW,
-                            1,
-                            "§ePage " + (page - 1),
-                            "",
-                            "§6Right-click to jump to the start"
-                    );
+                    return ItemStacks.item(Material.ARROW, 1, """
+                            <a>Previous Page
+                            <e>Page {}
+
+                            <6>Right-click to jump to the start""", page - 1);
                 }
 
                 @Override
@@ -169,14 +160,11 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
             set(new GUIClickableItem(53) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§aNext Page",
-                            Material.ARROW,
-                            1,
-                            "§ePage " + (page + 1),
-                            "",
-                            "§6Right-click to jump to the end"
-                    );
+                    return ItemStacks.item(Material.ARROW, 1, """
+                            <a>Next Page
+                            <e>Page {}
+
+                            <6>Right-click to jump to the end""", page + 1);
                 }
 
                 @Override
@@ -219,33 +207,34 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
                 boolean isPrestige = levelData.isPrestige();
 
                 // Determine display color
-                String nameColor;
+                TextColor nameColor;
                 Material displayMaterial;
 
                 if (isUnlocked) {
-                    nameColor = "§a"; // Green for unlocked
+                    nameColor = NamedTextColor.GREEN; // Green for unlocked
                     displayMaterial = levelData.material();
                 } else if (isCurrentLevel) {
-                    nameColor = "§e"; // Yellow for current progress
+                    nameColor = NamedTextColor.YELLOW; // Yellow for current progress
                     displayMaterial = levelData.material();
                 } else {
-                    nameColor = "§c"; // Red for locked
+                    nameColor = NamedTextColor.RED; // Red for locked
                     displayMaterial = Material.RED_STAINED_GLASS_PANE;
                 }
 
                 // Build lore
-                List<String> lore = new ArrayList<>();
-                lore.add("§8" + levelData.getLevelType());
-                lore.add("");
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<8>{}", levelData.getLevelType()));
+                lore.add(Text.empty());
 
                 // Show progress if not level 1
                 if (level > 1) {
                     if (isUnlocked) {
                         // Show completed progress
                         long requirement = levelData.requirement();
-                        lore.add("§7Progress: §b" + SkywarsLevelCategory.formatXPRequirement(requirement) +
-                                "§7/§a" + SkywarsLevelCategory.formatXPRequirement(requirement));
-                        lore.add("§8[§b" + "\u25A0".repeat(10) + "§8]");
+                        lore.add(Text.of("<7>Progress: <b>{}<7>/<a>{}",
+                                SkywarsLevelCategory.formatXPRequirement(requirement),
+                                SkywarsLevelCategory.formatXPRequirement(requirement)));
+                        lore.add(Text.of("<8>[<b>{}<8>]", "■".repeat(10)));
                     } else if (isCurrentLevel) {
                         // Show current progress
                         long progressXP = SkywarsLevelRegistry.getXPIntoCurrentLevel(playerXP);
@@ -253,47 +242,40 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
                         double progress = SkywarsLevelRegistry.getProgressToNextLevel(playerXP);
                         int filled = (int) (progress * 10);
 
-                        lore.add("§7Progress: §b" + SkywarsLevelCategory.formatXPRequirement(progressXP) +
-                                "§7/§a" + SkywarsLevelCategory.formatXPRequirement(requirement));
-                        lore.add("§8[§b" + "\u25A0".repeat(filled) + "§7" + "\u25A0".repeat(10 - filled) + "§8]");
+                        lore.add(Text.of("<7>Progress: <b>{}<7>/<a>{}",
+                                SkywarsLevelCategory.formatXPRequirement(progressXP),
+                                SkywarsLevelCategory.formatXPRequirement(requirement)));
+                        lore.add(Text.of("<8>[<b>{}<7>{}<8>]",
+                                "■".repeat(filled), "■".repeat(10 - filled)));
                     } else {
                         // Show empty progress
                         long requirement = levelData.requirement();
-                        lore.add("§7Progress: §b0§7/§a" + SkywarsLevelCategory.formatXPRequirement(requirement));
-                        lore.add("§8[§7" + "\u25A0".repeat(10) + "§8]");
+                        lore.add(Text.of("<7>Progress: <b>0<7>/<a>{}",
+                                SkywarsLevelCategory.formatXPRequirement(requirement)));
+                        lore.add(Text.of("<8>[<7>{}<8>]", "■".repeat(10)));
                     }
-                    lore.add("");
+                    lore.add(Text.empty());
                 }
 
                 // Show rewards
-                lore.add("§7Rewards:");
+                lore.add(Text.of("<7>Rewards:"));
                 for (SkywarsLevelCategory.Reward reward : levelData.rewards()) {
                     lore.add(reward.getDisplayLine());
                 }
 
                 // Show unlock status
                 if (isUnlocked) {
-                    lore.add("");
-                    lore.add("§a§lUNLOCKED");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<a><l>UNLOCKED"));
                 }
 
-                String displayName = nameColor + "SkyWars Level " + level;
+                Text displayName = Text.of("<color:{}>SkyWars Level {}", nameColor, level);
 
                 if (levelData.headTexture() != null && (isUnlocked || isCurrentLevel)) {
-                    return ItemStackCreator.getStackHead(
-                            displayName,
-                            levelData.headTexture(),
-                            1,
-                            lore.toArray(new String[0])
-                    );
+                    return ItemStacks.head(levelData.headTexture(), displayName, lore);
                 }
 
-                return ItemStackCreator.getStack(
-                        displayName,
-                        displayMaterial,
-                        1,
-                        lore.toArray(new String[0])
-                );
+                return ItemStacks.item(displayMaterial, 1, displayName, lore);
             }
         };
     }

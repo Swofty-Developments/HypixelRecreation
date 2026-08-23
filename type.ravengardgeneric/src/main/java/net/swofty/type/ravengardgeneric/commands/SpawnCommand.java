@@ -29,13 +29,13 @@ public class SpawnCommand extends HypixelCommand {
             String name = context.get(mobArg);
             List<String> available = RavengardMobClip.available();
             if (!available.contains(name)) {
-                player.sendMessage("§cUnknown mob. Options: " + String.join(", ", available));
+                player.sendMessage("<c>Unknown mob. Options: {}", String.join(", ", available));
                 return;
             }
             RavengardMobClip clip = RavengardMobClip.load(name);
             RavengardMob mob = new RavengardMob(clip, player.getPosition());
             mob.spawnMob(player.getInstance());
-            player.sendMessage("§aSpawned §f" + name + "§a.");
+            player.sendMessage("<a>Spawned <f>{}<a>.", name);
         }, mobArg);
     }
 }

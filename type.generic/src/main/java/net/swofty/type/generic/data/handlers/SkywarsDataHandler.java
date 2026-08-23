@@ -68,9 +68,9 @@ public class SkywarsDataHandler extends DataHandler implements GameDataHandler {
     }
 
     public static SkywarsDataHandler getOfOfflinePlayer(UUID uuid) throws RuntimeException {
-        UserDatabase userDatabase = new UserDatabase(uuid.toString());
-        Document doc = userDatabase.getHypixelData();
-        return createFromDocument(doc);
+        SkywarsDataHandler handler = initUserWithDefaultData(uuid);
+        handler.loadBackedData();
+        return handler;
     }
 
     @Override

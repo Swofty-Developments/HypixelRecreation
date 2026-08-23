@@ -12,7 +12,7 @@ public class NPCHypixelStore extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§bHypixel Store", "§e§lRIGHT CLICK"};
+				return new String[]{"<b>Hypixel Store", "<e><l>RIGHT CLICK"};
 			}
 
 			@Override

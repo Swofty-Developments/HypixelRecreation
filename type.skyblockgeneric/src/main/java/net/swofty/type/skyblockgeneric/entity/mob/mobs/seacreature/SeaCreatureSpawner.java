@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.Instance;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import org.jetbrains.annotations.Nullable;
 import org.tinylog.Logger;
@@ -53,11 +53,10 @@ public final class SeaCreatureSpawner {
     }
 
     private static void broadcastCatch(SkyBlockPlayer angler, SeaCreatureProfile profile, Instance instance, Pos position) {
-        Component selfMessage = Component.text("§3§lSEA CREATURE! §bA " + profile.displayName().toUpperCase() + " has spawned!");
-        angler.sendMessage(selfMessage);
+        angler.sendMessage("<3><l>SEA CREATURE! </l><b>A {} has spawned!", profile.displayName().toUpperCase());
 
-        Component nearbyMessage = Component.text("§3§lSEA CREATURE! §b" + angler.getUsername()
-                + " caught §a" + profile.displayName() + "§b!");
+        Text nearbyMessage = Text.of("<3><l>SEA CREATURE! </l><b>{} caught <a>{}<b>!",
+                angler.getUsername(), profile.displayName());
         instance.getPlayers().stream()
                 .filter(player -> player.getPosition().distance(position) <= 32)
                 .filter(player -> !player.getUuid().equals(angler.getUuid()))

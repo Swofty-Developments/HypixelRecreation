@@ -2,18 +2,17 @@ package net.swofty.type.skyblockgeneric.event.actions.custom.collection;
 
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
-import net.swofty.proxyapi.ProxyPlayerSet;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.event.HypixelEventHandler;
 import net.swofty.type.generic.utility.ScheduleUtility;
-import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategories;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategory;
+import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCollection;
-import net.swofty.type.skyblockgeneric.data.monogdb.CoopDatabase;
 import net.swofty.type.skyblockgeneric.event.custom.CollectionUpdateEvent;
 import net.swofty.type.skyblockgeneric.event.custom.CustomBlockBreakEvent;
 import net.swofty.type.skyblockgeneric.user.SkyBlockActionBar;
@@ -37,31 +36,11 @@ public class ActionCollectionAdd implements HypixelEventClass {
             int dropAmount = drop.getAmount();
             player.getCollection().increase(type, dropAmount);
 
-            HypixelEventHandler.callCustomEvent(new CollectionUpdateEvent(player, type, oldAmount));
-
-            player.getSkyblockDataHandler().get(net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler.Data.COLLECTION, DatapointCollection.class).setValue(
+            player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.COLLECTION, DatapointCollection.class).setValue(
                     player.getCollection()
             );
 
-            if (player.isCoop()) {
-                CoopDatabase.Coop coop = player.getCoop();
-
-                coop.getOnlineMembers().forEach(member -> {
-                    if (member.getUuid().equals(player.getUuid())) return;
-                    HypixelEventHandler.callCustomEvent(new CollectionUpdateEvent(member, type, oldAmount));
-                });
-
-                coop.members().removeIf(
-                        uuid -> SkyBlockGenericLoader.getFromUUID(uuid) != null
-                );
-
-                ProxyPlayerSet proxyPlayerSet = new ProxyPlayerSet(coop.members());
-                proxyPlayerSet.asProxyPlayers().forEach(proxyPlayer -> {
-                    if (!proxyPlayer.isOnline().join()) return;
-
-                    proxyPlayer.runEvent(new CollectionUpdateEvent(null, type, oldAmount));
-                });
-            }
+            HypixelEventHandler.callCustomEvent(new CollectionUpdateEvent(player, type, oldAmount));
 
             CollectionCategory category = CollectionCategories.getCategory(type);
             if (category == null) continue;
@@ -77,31 +56,34 @@ public class ActionCollectionAdd implements HypixelEventClass {
                 SkyBlockActionBar.DisplayReplacement existingReplacement = bar.getReplacement(SkyBlockActionBar.BarSection.DEFENSE);
                 if (existingReplacement != null) {
                     startingPriority = existingReplacement.priority() + 1;
-                    try {
-                        addedAmount = Integer.parseInt(existingReplacement.display().substring(2, existingReplacement.display().indexOf(" "))) + finalDropAmount;
-                    } catch (NumberFormatException ignored) {}
+                    String plain = existingReplacement.display().plain();
+                    int separator = plain.indexOf(' ');
+                    if (separator > 0) {
+                        try {
+                            addedAmount = Integer.parseInt(plain.substring(0, separator)) + finalDropAmount;
+                        } catch (NumberFormatException ignored) {}
+                    }
                 }
                 if (player.getCollection().getReward(collection) != null) {
                     bar.addReplacement(
                             SkyBlockActionBar.BarSection.DEFENSE,
-                            new SkyBlockActionBar.DisplayReplacement(
-                                    "§2+" + addedAmount + " " + finalType.getDisplayName() +
-                                            " §7(" + StringUtility.commaify(player.getCollection().get(finalType)) +
-                                            "/" +
-                                            StringUtility.shortenNumber(player.getCollection().getReward(collection).requirement()) + ")",
-                                    20,
-                                    startingPriority
-                            )
+                            Text.of("<2>+{} {} <7>({}/{})",
+                                    addedAmount,
+                                    finalType.getDisplayName(),
+                                    StringUtility.commaify(player.getCollection().get(finalType)),
+                                    StringUtility.shortenNumber(player.getCollection().getReward(collection).requirement())),
+                            20,
+                            startingPriority
                     );
                 } else { //if Collection is maxed
                     bar.addReplacement(
                             SkyBlockActionBar.BarSection.DEFENSE,
-                            new SkyBlockActionBar.DisplayReplacement(
-                                    "§2+" + addedAmount + " " + finalType.getDisplayName() +
-                                            " §7(" + StringUtility.commaify(player.getCollection().get(finalType)) + ")",
-                                    20,
-                                    startingPriority
-                            )
+                            Text.of("<2>+{} {} <7>({})",
+                                    addedAmount,
+                                    finalType.getDisplayName(),
+                                    StringUtility.commaify(player.getCollection().get(finalType))),
+                            20,
+                            startingPriority
                     );
                 }
             }, 5);

@@ -71,20 +71,20 @@ public class Present {
 				dataHandler.get(SkyBlockDataHandler.Data.LATEST_YEAR_PRESENT_PICKUP,
 						DatapointPresentYear.class
 				).setValue(new DatapointPresentYear.YearData(currentYear, List.of(index)));
-				player.sendMessage("§2§lGIFT! §aYou found a §fWhite Gift§a! §7(§f1§7/§a20§7)");
+				player.sendMessage("<2><l>GIFT! </l><a>You found a <f>White Gift<a>! <7>(<f>1<7>/<a>20<7>)");
 				((SkyBlockPlayer) player).addAndUpdateItem(ItemType.WHITE_GIFT);
 				return;
 			}
 			List<Integer> value = new ArrayList<>(presents.value());
 
 			if (value.contains(index)) {
-				player.sendMessage("§cYou have already found this Gift this year!");
+				player.sendMessage("<c>You have already found this Gift this year!");
 			} else {
 				value.add(index);
 				dataHandler.get(SkyBlockDataHandler.Data.LATEST_YEAR_PRESENT_PICKUP,
 						DatapointPresentYear.class
 				).setValue(new DatapointPresentYear.YearData(currentYear, value));
-				player.sendMessage("§2§lGIFT! §aYou found a §fWhite Gift§a! §7(§f" + value.size() + "§7/§a20§7)");
+				player.sendMessage("<2><l>GIFT! </l><a>You found a <f>White Gift<a>! <7>(<f>{}<7>/<a>20<7>)", value.size());
 				((SkyBlockPlayer) player).addAndUpdateItem(ItemType.WHITE_GIFT);
 			}
 		});

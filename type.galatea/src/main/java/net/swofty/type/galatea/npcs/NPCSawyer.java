@@ -12,7 +12,7 @@ public class NPCSawyer extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bSawyer", "§e§lCLICK"};
+                return new String[]{"<b>Sawyer", "<e><l>CLICK"};
             }
 
             @Override

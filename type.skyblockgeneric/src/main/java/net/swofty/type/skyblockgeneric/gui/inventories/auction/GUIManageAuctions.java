@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.auction;
 
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.Inventory;
@@ -8,17 +7,15 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.ServiceType;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.protocol.objects.auctions.AuctionFetchItemProtocol;
 import net.swofty.commons.skyblock.auctions.AuctionItem;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.RefreshingGUI;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.PaginationList;
 import net.swofty.type.skyblockgeneric.auction.AuctionItemLoreHandler;
@@ -34,9 +31,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class GUIManageAuctions extends HypixelInventoryGUI implements RefreshingGUI {
     public GUIManageAuctions() {
-        super(I18n.t("gui_auction.manage.title"), InventoryType.CHEST_3_ROW);
+        super(Text.key("gui_auction.manage.title"), InventoryType.CHEST_3_ROW);
 
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
         set(GUIClickableItem.getGoBackItem(22, new GUIAuctionHouse()));
         set(new GUIClickableItem(23) {
             @Override
@@ -48,8 +45,9 @@ public class GUIManageAuctions extends HypixelInventoryGUI implements Refreshing
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return TranslatableItemStackCreator.getStack("gui_auction.manage.create_button", Material.GOLDEN_HORSE_ARMOR, 1,
-                        "gui_auction.manage.create_button.lore");
+                return ItemStacks.item(Material.GOLDEN_HORSE_ARMOR, 1,
+                        Text.key("gui_auction.manage.create_button"),
+                        Text.keyLines("gui_auction.manage.create_button.lore"));
             }
         });
     }
@@ -113,10 +111,9 @@ public class GUIManageAuctions extends HypixelInventoryGUI implements Refreshing
                     @Override
                     public ItemStack.Builder getItem(HypixelPlayer p) {
                         SkyBlockPlayer player = (SkyBlockPlayer) p;
-                        return ItemStackCreator.getStack(
-                                StringUtility.getTextFromComponent(new NonPlayerItemUpdater(item.getItem()).getUpdatedItem().build()
-                                        .get(DataComponents.CUSTOM_NAME)),
-                                item.getItem().material(), item.getItem().amount(), new AuctionItemLoreHandler(item).getLore(player));
+                        return ItemStacks.item(item.getItem().material(), item.getItem().amount(),
+                                ItemStacks.nameText(new NonPlayerItemUpdater(item.getItem()).getUpdatedItem()),
+                                new AuctionItemLoreHandler(item).getLoreTexts(player));
                     }
                 });
             }
@@ -147,7 +144,7 @@ public class GUIManageAuctions extends HypixelInventoryGUI implements Refreshing
     public void refreshItems(HypixelPlayer player) {
         new ProxyService(ServiceType.AUCTION_HOUSE).isOnline().thenAccept(online -> {
             if (!online) {
-                player.sendMessage(I18n.t("gui_auction.manage.offline_message"));
+                player.sendMessage(Text.key("gui_auction.manage.offline_message"));
                 player.closeInventory();
                 return;
             }

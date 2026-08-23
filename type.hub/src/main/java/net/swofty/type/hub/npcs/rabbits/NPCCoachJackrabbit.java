@@ -1,9 +1,5 @@
 package net.swofty.type.hub.npcs.rabbits;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
@@ -16,15 +12,8 @@ public class NPCCoachJackrabbit extends HypixelNPC {
     public NPCCoachJackrabbit() {
         super(new HumanConfiguration() {
             @Override
-            public Component[] hologramComponents(HypixelPlayer player) {
-                return new Component[]{Component.text("Coach Jackrabbit", NamedTextColor.LIGHT_PURPLE), Component.text("CLICK", NamedTextColor.YELLOW).decorate(TextDecoration.BOLD)};
-            }
-
-            @Override
             public String[] holograms(HypixelPlayer player) {
-                return java.util.Arrays.stream(hologramComponents(player))
-                        .map(component -> LegacyComponentSerializer.legacySection().serialize(component))
-                        .toArray(String[]::new);
+                return new String[]{"<d>Coach Jackrabbit", "<e><l>CLICK"};
             }
 
             @Override

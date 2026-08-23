@@ -27,7 +27,7 @@ public final class EnchantmentWoodsplitter implements Ench, EnchFromTable, MobTy
 
     @Override
     public String getDescription(int level) {
-        return "Increases damage dealt to " + MobType.WOODLAND.getFullDisplayName() + "§7 mobs by §a" + BONUSES[level - 1] + "%§7.";
+        return "Increases damage dealt to " + MobType.WOODLAND.getFullDisplayName() + "<7> mobs by <a>" + BONUSES[level - 1] + "%<7>.";
     }
 
     @Override

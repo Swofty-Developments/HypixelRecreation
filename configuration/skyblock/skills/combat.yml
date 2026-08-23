@@ -1,8 +1,8 @@
 name: "Combat"
 displayIcon: "stone_sword"
 description:
-  - "§7Fight mobs and special bosses to"
-  - "§7earn Combat XP!"
+  - "<7>Fight mobs and special bosses to"
+  - "<7>earn Combat XP!"
 
 rewards:
   - level: 1

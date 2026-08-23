@@ -8,10 +8,11 @@ import net.swofty.commons.murdermystery.MurderMysteryGameType;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.protocol.objects.orchestrator.GetMapsProtocol;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.lobby.LobbyOrchestratorConnector;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.GameCountCache;
@@ -28,7 +29,7 @@ public class GUIMapSelection extends HypixelInventoryGUI {
     private boolean mapsLoaded = false;
 
     public GUIMapSelection(MurderMysteryGameType gameType) {
-        super("Map Selection - " + gameType.getDisplayName(), InventoryType.CHEST_4_ROW);
+        super(Text.of("Map Selection - {}", gameType.getDisplayName()), InventoryType.CHEST_4_ROW);
         this.gameType = gameType;
     }
 
@@ -41,10 +42,10 @@ public class GUIMapSelection extends HypixelInventoryGUI {
             set(new GUIClickableItem(13) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack("§eLoading maps...",
-                            Material.CLOCK, 1,
-                            "§7Please wait while we fetch",
-                            "§7available maps for " + gameType.getDisplayName());
+                    return ItemStacks.item(Material.CLOCK, """
+                            <e>Loading maps...
+                            <7>Please wait while we fetch
+                            <7>available maps for {}""", gameType.getDisplayName());
                 }
 
                 @Override
@@ -80,7 +81,7 @@ public class GUIMapSelection extends HypixelInventoryGUI {
                 })
                 .exceptionally(throwable -> {
                     throwable.printStackTrace();
-                    player.sendMessage("§cFailed to load maps: " + throwable.getMessage());
+                    player.sendMessage("<c>Failed to load maps: {}", throwable.getMessage());
                     player.closeInventory();
                     return null;
                 });
@@ -91,12 +92,12 @@ public class GUIMapSelection extends HypixelInventoryGUI {
             set(new GUIClickableItem(13) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack("§cNo maps available",
-                            Material.BARRIER, 1,
-                            "§7No maps are currently available",
-                            "§7for " + gameType.getDisplayName(),
-                            "",
-                            "§eClick to go back");
+                    return ItemStacks.item(Material.BARRIER, """
+                            <c>No maps available
+                            <7>No maps are currently available
+                            <7>for {}
+
+                            <e>Click to go back""", gameType.getDisplayName());
                 }
 
                 @Override
@@ -111,9 +112,9 @@ public class GUIMapSelection extends HypixelInventoryGUI {
         set(new GUIClickableItem(31) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack("§cBack",
-                        Material.ARROW, 1,
-                        "§7Go back to game selection");
+                return ItemStacks.item(Material.ARROW, """
+                        <c>Back
+                        <7>Go back to game selection""");
             }
 
             @Override
@@ -137,14 +138,13 @@ public class GUIMapSelection extends HypixelInventoryGUI {
                             gameType.toString(),
                             mapName
                     );
-                    return ItemStackCreator.getStack("§a" + mapName,
-                            Material.PAPER, 1,
-                            "§7" + gameType.getDisplayName(),
-                            "",
-                            "§7Available Games: §a" + gameCount,
-                            "",
-                            "§eClick to Play!"
-                    );
+                    return ItemStacks.item(Material.PAPER, """
+                            <a>{}
+                            <7>{}
+
+                            <7>Available Games: <a>{}
+
+                            <e>Click to Play!""", mapName, gameType.getDisplayName(), gameCount);
                 }
 
                 @Override
@@ -152,7 +152,7 @@ public class GUIMapSelection extends HypixelInventoryGUI {
                     player.closeInventory();
 
                     if (LobbyOrchestratorConnector.isSearching(player.getUuid())) {
-                        player.sendMessage("§cYou are already searching for a game!");
+                        player.sendMessage("<c>You are already searching for a game!");
                         return;
                     }
 
@@ -160,7 +160,7 @@ public class GUIMapSelection extends HypixelInventoryGUI {
                     if (PartyManager.isInParty(player)) {
                         FullParty party = PartyManager.getPartyFromPlayer(player);
                         if (party != null && !party.getLeader().getUuid().equals(player.getUuid())) {
-                            player.sendMessage("§cYou are in a party! Ask your leader to start the game, or /p leave");
+                            player.sendMessage("<c>You are in a party! Ask your leader to start the game, or /p leave");
                             return;
                         }
                     }

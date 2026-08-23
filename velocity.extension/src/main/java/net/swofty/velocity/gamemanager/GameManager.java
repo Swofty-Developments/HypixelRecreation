@@ -19,10 +19,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameManager {
     public static final int SLEEP_TIME = 300;
+    public static final int MISSED_PINGS_BEFORE_REMOVAL = 5;
     @Getter
     private static Map<ServerType, ArrayList<GameServer>> servers = new HashMap<>();
+    private static final ServerPingTracker pingTracker = new ServerPingTracker(MISSED_PINGS_BEFORE_REMOVAL);
 
     public static GameServer addServer(ServerType type, UUID serverID, String host, int port, int maxPlayers) {
+        pingTracker.forget(serverID);
         port = port == -1 ? getNextAvailablePort() : port;    // if port is -1 then get next available port
         host = (host == null || host.isEmpty()) ? ConfigProvider.settings().getHostName() : host; // if host is null then get from config
         RegisteredServer registeredServer = SkyBlockVelocity.getServer().registerServer(
@@ -98,8 +101,8 @@ public class GameManager {
 
     public static void loopServers(ProxyServer server) {
         server.getScheduler().buildTask(SkyBlockVelocity.getPlugin(), () -> {
-            servers.forEach((serverType, registeredServers) -> {
-                registeredServers.forEach(registeredServer -> {
+            new HashMap<>(servers).forEach((serverType, registeredServers) -> {
+                new ArrayList<>(registeredServers).forEach(registeredServer -> {
                     RegisteredServer givenServer = registeredServer.registeredServer();
                     AtomicBoolean pingSuccess = new AtomicBoolean(false);
                     long startTime = System.currentTimeMillis();
@@ -108,20 +111,35 @@ public class GameManager {
                             new PingServerProtocol(), new PingServerProtocol.Request()
                     ).thenRun(() -> {
                         pingSuccess.set(true);
+                        pingTracker.recordSuccess(registeredServer.internalID());
                     });
 
                     server.getScheduler().buildTask(SkyBlockVelocity.getPlugin(), () -> {
-                        if (!pingSuccess.get()) {
+                        if (pingSuccess.get()) return;
+
+                        if (!pingTracker.recordFailure(registeredServer.internalID())) {
                             org.tinylog.Logger.warn(
-                                "Server {} is offline! Removing from list (ping sent at {}, deadline {}ms)",
+                                "Server {} missed a ping ({}/{}, sent at {}, deadline {}ms)",
                                 givenServer.getServerInfo().getName(),
+                                pingTracker.missed(registeredServer.internalID()),
+                                MISSED_PINGS_BEFORE_REMOVAL,
                                 startTime,
                                 System.currentTimeMillis() - startTime
                             );
-                            servers.get(serverType).remove(registeredServer);
-
-                            TestFlowManager.handleServerDisconnect(registeredServer.internalID);
+                            return;
                         }
+
+                        org.tinylog.Logger.warn(
+                            "Server {} is offline! Removing from list after {} missed pings (last ping sent at {}, deadline {}ms)",
+                            givenServer.getServerInfo().getName(),
+                            MISSED_PINGS_BEFORE_REMOVAL,
+                            startTime,
+                            System.currentTimeMillis() - startTime
+                        );
+                        ArrayList<GameServer> currentServers = servers.get(serverType);
+                        if (currentServers == null || !currentServers.remove(registeredServer)) return;
+
+                        TestFlowManager.handleServerDisconnect(registeredServer.internalID);
                     }).delay(Duration.ofMillis(SLEEP_TIME)).schedule();
                 });
             });

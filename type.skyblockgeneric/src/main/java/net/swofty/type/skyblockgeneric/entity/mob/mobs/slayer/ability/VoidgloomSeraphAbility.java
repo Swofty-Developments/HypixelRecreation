@@ -43,7 +43,7 @@ final class VoidgloomSeraphAbility extends SlayerAbilitySupport {
             repeating(boss, 120, 120, () -> {
                 if (healthRatio(boss) <= 0.33D && fixationHeads < 6) {
                     fixationHeads++;
-                    nearbyPlayers(boss, 12).forEach(player -> player.sendMessage("§5Nukekubi Fixation spawned!"));
+                    nearbyPlayers(boss, 12).forEach(player -> player.sendMessage("<5>Nukekubi Fixation spawned!"));
                 }
             });
             repeating(boss, 20, 20, () -> {
@@ -63,9 +63,9 @@ final class VoidgloomSeraphAbility extends SlayerAbilitySupport {
 
         shieldHits--;
         if (shieldHits == 0) {
-            nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§dMalevolent Hitshield broken!"));
+            nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<d>Malevolent Hitshield broken!"));
         } else {
-            nearbyPlayers(boss, 12).forEach(player -> player.sendMessage("§5Hitshield: §d" + shieldHits + " hits left"));
+            nearbyPlayers(boss, 12).forEach(player -> player.sendMessage("<5>Hitshield: <d>{} hits left", shieldHits));
         }
         boss.teleport(boss.getPosition().add((Math.random() - 0.5D) * 1.5D, 0, (Math.random() - 0.5D) * 1.5D));
         return 0F;
@@ -82,7 +82,7 @@ final class VoidgloomSeraphAbility extends SlayerAbilitySupport {
             case III -> 60;
             case IV, V -> 100;
         };
-        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§5Malevolent Hitshield! §d" + shieldHits + " hits required."));
+        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<5>Malevolent Hitshield! <d>{} hits required.", shieldHits));
     }
 
     private void startGlyphs(SlayerBossMob boss) {
@@ -93,12 +93,12 @@ final class VoidgloomSeraphAbility extends SlayerAbilitySupport {
             }
 
             Pos glyph = owner.getPosition().add((Math.random() - 0.5D) * 7D, 0, (Math.random() - 0.5D) * 7D);
-            nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§eYang Glyph! §7Stand on it before it detonates."));
+            nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<e>Yang Glyph! <7>Stand on it before it detonates."));
             delayed(boss, 100, () -> {
                 if (owner.getPosition().distance(glyph) > 1.5D) {
                     trueDamage(boss, owner, owner.getMaxHealth() * 1000D, "Yang Glyph");
                 } else {
-                    owner.sendMessage("§aYang Glyph shattered!");
+                    owner.sendMessage("<a>Yang Glyph shattered!");
                 }
             });
         });

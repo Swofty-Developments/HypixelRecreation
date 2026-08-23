@@ -1,10 +1,8 @@
 package net.swofty.type.generic.command.commands;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.arguments.Argument;
 import net.minestom.server.command.builder.arguments.ArgumentString;
 import net.minestom.server.command.builder.arguments.ArgumentType;
-import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 import net.minestom.server.utils.mojang.MojangUtils;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.StringUtility;
@@ -13,6 +11,7 @@ import net.swofty.commons.punishment.PunishmentReason;
 import net.swofty.commons.punishment.PunishmentTag;
 import net.swofty.commons.punishment.PunishmentType;
 import net.swofty.commons.punishment.template.BanType;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyPlayer;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.command.CommandParameters;
@@ -43,12 +42,13 @@ public class BanCommand extends HypixelCommand {
         ArgumentString durationArg = ArgumentType.String("duration");
         Argument<String> reasonArg = ArgumentType.String("reason").setSuggestionCallback((sender, context, suggestion) -> {
             for (BanType type : BanType.values()) {
-                suggestion.addEntry(new SuggestionEntry(type.name(), Component.text("§c" + type.getReason() + " §7| Wipe: " + type.isWipe())));
+                suggest(suggestion, type.name(), "<c>{} <7>| Wipe: {}", type.getReason(), type.isWipe());
             }
         });
         Argument<String[]> extraArg = ArgumentType.StringArray("extra").setSuggestionCallback((sender, context, suggestion) -> {
             for (PunishmentTag tag : PunishmentTag.values()) {
-                suggestion.addEntry(new SuggestionEntry("-" + tag.getShortCode(), Component.text("§e" + tag.getShortCode() + " §7| " + (tag.getDescription() != null ? tag.getDescription() : "No description"))));
+                suggest(suggestion, "-" + tag.getShortCode(), "<e>{} <7>| {}", tag.getShortCode(),
+                        tag.getDescription() != null ? tag.getDescription() : "No description");
             }
         });
 
@@ -61,7 +61,7 @@ public class BanCommand extends HypixelCommand {
             try {
                 type = BanType.valueOf(context.get(reasonArg));
             } catch (IllegalArgumentException e) {
-                player.sendTranslated("commands.ban.invalid_reason");
+                player.sendMessage(Text.key("commands.ban.invalid_reason"));
                 return;
             }
 
@@ -72,7 +72,7 @@ public class BanCommand extends HypixelCommand {
                     long expiryTime = System.currentTimeMillis() + actualTime;
                     banPlayer(player, targetUuid, type, player.getUuid(), actualTime, expiryTime, playerName, null);
                 } catch (IOException e) {
-                    player.sendTranslated("commands.common.player_not_found_short", Component.text(playerName));
+                    player.sendMessage(Text.key("commands.common.player_not_found_short", playerName));
                 }
             });
         }, playerArg, durationArg, reasonArg);
@@ -85,7 +85,7 @@ public class BanCommand extends HypixelCommand {
             try {
                 reason = BanType.valueOf(context.get(reasonArg));
             } catch (IllegalArgumentException e) {
-                player.sendTranslated("commands.ban.invalid_reason");
+                player.sendMessage(Text.key("commands.ban.invalid_reason"));
                 return;
             }
 
@@ -94,7 +94,7 @@ public class BanCommand extends HypixelCommand {
                     banPlayer(player, MojangUtils.getUUID(playerName), reason,
                             player.getUuid(), 0, -1, playerName, null);
                 } catch (IOException e) {
-                    player.sendTranslated("commands.common.player_not_found_short", Component.text(playerName));
+                    player.sendMessage(Text.key("commands.common.player_not_found_short", playerName));
                 }
             });
         }, playerArg, reasonArg);
@@ -107,7 +107,7 @@ public class BanCommand extends HypixelCommand {
             try {
                 reason = BanType.valueOf(context.get(reasonArg));
             } catch (IllegalArgumentException e) {
-                player.sendTranslated("commands.ban.invalid_reason");
+                player.sendMessage(Text.key("commands.ban.invalid_reason"));
                 return;
             }
 
@@ -118,7 +118,7 @@ public class BanCommand extends HypixelCommand {
                     banPlayer(player, MojangUtils.getUUID(playerName), reason,
                             player.getUuid(), 0, -1, playerName, tags);
                 } catch (IOException e) {
-                    player.sendTranslated("commands.common.player_not_found_short", Component.text(playerName));
+                    player.sendMessage(Text.key("commands.common.player_not_found_short", playerName));
                 }
             });
         }, playerArg, reasonArg, extraArg);
@@ -161,15 +161,15 @@ public class BanCommand extends HypixelCommand {
             )) {
                 if (success) {
                     new ProxyPlayer(targetUuid).transferToLimbo();
-                    sender.sendTranslated("commands.ban.success", Component.text(playerName), Component.text(punishmentId));
+                    sender.sendMessage(Text.key("commands.ban.success", playerName, punishmentId));
                 } else if (errorCode == PunishPlayerServiceProtocol.ErrorCode.ALREADY_PUNISHED) {
-                    sender.sendTranslated("commands.ban.already_banned", Component.text(errorMessage));
+                    sender.sendMessage(Text.key("commands.ban.already_banned", errorMessage));
                 } else {
-                    sender.sendTranslated("commands.ban.failed", Component.text(errorMessage));
+                    sender.sendMessage(Text.key("commands.ban.failed", errorMessage));
                 }
             }
         }).orTimeout(5, TimeUnit.SECONDS).exceptionally(_ -> {
-            sender.sendTranslated("commands.ban.service_offline");
+            sender.sendMessage(Text.key("commands.ban.service_offline"));
             return null;
         });
     }

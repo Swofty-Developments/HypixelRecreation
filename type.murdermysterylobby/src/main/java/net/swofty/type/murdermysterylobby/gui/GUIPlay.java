@@ -8,7 +8,7 @@ import net.swofty.commons.murdermystery.MurderMysteryGameType;
 import net.swofty.commons.ServerType;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
 import net.swofty.type.lobby.LobbyOrchestratorConnector;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 
@@ -26,11 +26,13 @@ public class GUIPlay extends HypixelInventoryGUI {
         set(new GUIClickableItem(12) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getSingleLoreStackLineSplit(
-                        "§aMurder Mystery " + type.getDisplayName(), "§7",
-                        Material.IRON_SWORD, 1,
-                        "§7Play a game of Murder Mystery " + type.getDisplayName() + "\n\n" + lore() + "\n\n§eClick to play!"
-                );
+                return ItemStacks.item(Material.IRON_SWORD, """
+                        <a>Murder Mystery {}
+                        <7>Play a game of Murder Mystery {0}
+
+                        <7>{}
+
+                        <e>Click to play!""", type.getDisplayName(), lore());
             }
 
             @Override
@@ -38,7 +40,7 @@ public class GUIPlay extends HypixelInventoryGUI {
                 player.closeInventory();
 
                 if (LobbyOrchestratorConnector.isSearching(player.getUuid())) {
-                    player.sendMessage("§cYou are already searching for a game!");
+                    player.sendMessage("<c>You are already searching for a game!");
                     return;
                 }
 
@@ -50,12 +52,12 @@ public class GUIPlay extends HypixelInventoryGUI {
         set(new GUIClickableItem(14) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack("§aMap Selector " + type.getDisplayName(),
-                        Material.OAK_SIGN, 1,
-                        "§7Pick which map you want to play from",
-                        "§7a list of available maps.",
-                        "",
-                        "§eClick to browse!");
+                return ItemStacks.item(Material.OAK_SIGN, """
+                        <a>Map Selector {}
+                        <7>Pick which map you want to play from
+                        <7>a list of available maps.
+
+                        <e>Click to browse!""", type.getDisplayName());
             }
 
             @Override
@@ -79,12 +81,19 @@ public class GUIPlay extends HypixelInventoryGUI {
 
     private String lore() {
         return switch (type) {
-            case CLASSIC ->
-                    "One player is the Murderer!\nFind out who it is before\nthey kill everyone. One player\nis the Detective with a bow.";
-            case DOUBLE_UP ->
-                    "Two Murderers hunt the innocents!\nTwo Detectives must stop them!\nMore chaos, more fun!";
-            case ASSASSINS ->
-                    "Everyone has a target to eliminate!\nKill your target and inherit theirs.\nLast one standing wins!";
+            case CLASSIC -> """
+                    One player is the Murderer!
+                    Find out who it is before
+                    they kill everyone. One player
+                    is the Detective with a bow.""";
+            case DOUBLE_UP -> """
+                    Two Murderers hunt the innocents!
+                    Two Detectives must stop them!
+                    More chaos, more fun!""";
+            case ASSASSINS -> """
+                    Everyone has a target to eliminate!
+                    Kill your target and inherit theirs.
+                    Last one standing wins!""";
         };
     }
 }

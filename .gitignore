@@ -37,11 +37,17 @@ build/
 
 ### Worlds / Maps ###
 /configuration/world/
+/configuration/world
 /configuration/skyblock/islands/
+/configuration/skyblock/islands
 /configuration/hypixel_prototype_lobby/
+/configuration/hypixel_prototype_lobby
 /configuration/hypixel_bedwars_lobby/
+/configuration/hypixel_bedwars_lobby
 /configuration/hypixel_murder_mystery_lobby/
+/configuration/hypixel_murder_mystery_lobby
 /configuration/hypixel_skywars_lobby/
+/configuration/hypixel_skywars_lobby
 /configuration/skyblock/garden/
 *.polar
 *.schem
@@ -64,6 +70,8 @@ build/
 /server/forwarding.secret
 /configuration/config.yml
 /server/proxy/configuration/config.yml
+.claude/
+server/proxy/ViaLoader/
 /configuration/resourcepacks/skyblockpack
 /configuration/resourcepacks/ravengard
 store/.next

@@ -10,11 +10,12 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.protocol.objects.orchestrator.GetMapsProtocol;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.data.datapoints.DatapointMapStringLong;
 import net.swofty.type.generic.data.datapoints.DatapointStringList;
 import net.swofty.type.generic.data.handlers.BedWarsDataHandler;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulPaginatedView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -45,8 +46,8 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 
 	@Override
 	public ViewConfiguration<State> configuration() {
-		return ViewConfiguration.withString(
-			(_, __) -> "Map Selection - " + gameType.getDisplayName(),
+		return ViewConfiguration.withText(
+			(_, __) -> Text.of("Map Selection - {}", gameType.getDisplayName()),
 			InventoryType.CHEST_6_ROW
 		);
 	}
@@ -99,7 +100,7 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 							return;
 						}
 						session.update(current -> current.failed(throwable.getMessage(), requestId));
-						ctx.player().sendMessage("§cFailed to load maps: " + throwable.getMessage());
+						ctx.player().sendMessage("<c>Failed to load maps: {}", throwable.getMessage());
 					});
 					return null;
 				});
@@ -134,8 +135,9 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 	protected void layoutCustom(ViewLayout<State> layout, State state, ViewContext ctx) {
 		if (!Components.back(layout, 49, ctx)) {
 			layout.slot(49,
-				(_, __) -> ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1,
-					"§7Go back to Play Bed Wars"),
+				(_, __) -> ItemStacks.item(Material.ARROW, """
+					<a>Go Back
+					<7>Go back to Play Bed Wars"""),
 				(_, viewCtx) -> {
 					viewCtx.player().openView(new GUIPlay(gameType));
 				}
@@ -143,28 +145,38 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 		}
 
 		layout.autoUpdating(39, (s, c) -> {
-			return ItemStackCreator.getStack("§aRandom Map", Material.FIREWORK_ROCKET, 1, "", "§7Map Selections: §aUnlimited", "", "§a" + (showArrowPulse() ? "►" : "") + "  Click to Play");
+			return ItemStacks.item(Material.FIREWORK_ROCKET, 1, Text.of("<a>Random Map"), List.of(
+				Text.empty(),
+				Text.of("<7>Map Selections: <a>Unlimited"),
+				Text.empty(),
+				Text.of("<a>{}  Click to Play", showArrowPulse() ? "►" : "")
+			));
 		}, (click, viewCtx) -> playRandomMap(click.state(), viewCtx), Duration.ofSeconds(1));
 
 		layout.autoUpdating(41, (s, _) -> {
-			return ItemStackCreator.getStack("§aRandom Favorite", Material.DIAMOND, 1, "", "§7Map Selections: §aUnlimited", "", "§a" + (showArrowPulse() ? "►" : "") + "  Click to Play");
+			return ItemStacks.item(Material.DIAMOND, 1, Text.of("<a>Random Favorite"), List.of(
+				Text.empty(),
+				Text.of("<7>Map Selections: <a>Unlimited"),
+				Text.empty(),
+				Text.of("<a>{}  Click to Play", showArrowPulse() ? "►" : "")
+			));
 		}, (click, viewCtx) -> playRandomFavorite(click.state(), viewCtx), Duration.ofSeconds(1));
 
 		if (state.loading()) {
-			layout.slot(22, (_, __) -> ItemStackCreator.getStack("§eLoading maps...",
-				Material.CLOCK, 1,
-				"§7Please wait while we fetch",
-				"§7available maps for " + gameType.getDisplayName()));
+			layout.slot(22, (_, __) -> ItemStacks.item(Material.CLOCK, 1, Text.of("<e>Loading maps..."), List.of(
+				Text.of("<7>Please wait while we fetch"),
+				Text.of("<7>available maps for {}", gameType.getDisplayName())
+			)));
 			return;
 		}
 
 		if (state.errorMessage() != null) {
 			layout.slot(22,
-				(_, __) -> ItemStackCreator.getStack("§cFailed to load maps",
-					Material.BARRIER, 1,
-					"§7" + state.errorMessage(),
-					"",
-					"§eClick to retry"),
+				(_, __) -> ItemStacks.item(Material.BARRIER, 1, Text.of("<c>Failed to load maps"), List.of(
+					Text.of("<7>{}", state.errorMessage()),
+					Text.empty(),
+					Text.of("<e>Click to retry")
+				)),
 				(_, viewCtx) -> loadMaps(viewCtx)
 			);
 			return;
@@ -172,12 +184,12 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 
 		if (state.items().isEmpty()) {
 			layout.slot(22,
-				(_, _) -> ItemStackCreator.getStack("§cNo maps available",
-					Material.BARRIER, 1,
-					"§7No maps are currently available",
-					"§7for " + gameType.getDisplayName(),
-					"",
-					"§eClick to refresh"),
+				(_, _) -> ItemStacks.item(Material.BARRIER, 1, Text.of("<c>No maps available"), List.of(
+					Text.of("<7>No maps are currently available"),
+					Text.of("<7>for {}", gameType.getDisplayName()),
+					Text.empty(),
+					Text.of("<e>Click to refresh")
+				)),
 				(_, viewCtx) -> loadMaps(viewCtx)
 			);
 		}
@@ -202,16 +214,18 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 			}
 		}
 
-		return ItemStackCreator.getStack((isFavorite ? "§b✯ " : "") + "§a" + mapName,
-			Material.FIREWORK_STAR, 1,
-			"§7" + gameType.getDisplayName(),
-			"",
-			"§7Available Games: §a" + 0,
-			"§7Times Joined: §a" + joins,
-			"§7Map Selections: §aUnlimited", // TODO: limited unless MVP+
-			"",
-			"§aLeft click to Play",
-			"§eRight click to toggle favorite!");
+		return ItemStacks.item(Material.FIREWORK_STAR, 1,
+			Text.of((isFavorite ? "<b>✯ " : "") + "<a>{}", mapName),
+			List.of(
+				Text.of("<7>{}", gameType.getDisplayName()),
+				Text.empty(),
+				Text.of("<7>Available Games: <a>{}", 0),
+				Text.of("<7>Times Joined: <a>{}", joins),
+				Text.of("<7>Map Selections: <a>Unlimited"),
+				Text.empty(),
+				Text.of("<a>Left click to Play"),
+				Text.of("<e>Right click to toggle favorite!")
+			));
 	}
 
 	@Override
@@ -228,7 +242,7 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 
 	private void playRandomMap(State state, ViewContext ctx) {
 		if (state.items().isEmpty()) {
-			ctx.player().sendMessage("§cNo maps are currently available.");
+			ctx.player().sendMessage("<c>No maps are currently available.");
 			return;
 		}
         queueMap(ctx.player(), null);
@@ -238,13 +252,13 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 		HypixelPlayer player = ctx.player();
 		BedWarsDataHandler data = BedWarsDataHandler.getUser(player);
 		if (data == null) {
-			player.sendMessage("§cFailed to read favorite maps.");
+			player.sendMessage("<c>Failed to read favorite maps.");
 			return;
 		}
 
 		List<String> favoriteIds = data.get(BedWarsDataHandler.Data.FAVORITE_MAPS, DatapointStringList.class).getValue();
 		if (favoriteIds == null || favoriteIds.isEmpty()) {
-			player.sendMessage("§cYou do not have any favorite maps.");
+			player.sendMessage("<c>You do not have any favorite maps.");
 			return;
 		}
 
@@ -252,7 +266,7 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 			.filter(mapName -> favoriteIds.contains(mapId(mapName)))
 			.toList();
 		if (availableFavorites.isEmpty()) {
-			player.sendMessage("§cNone of your favorite maps are currently available.");
+			player.sendMessage("<c>None of your favorite maps are currently available.");
 			return;
 		}
 
@@ -283,7 +297,7 @@ public class GUIMapSelection extends StatefulPaginatedView<String, GUIMapSelecti
 	private void toggleFavorite(HypixelPlayer player, String mapName) {
 		BedWarsDataHandler data = BedWarsDataHandler.getUser(player);
 		if (data == null) {
-			player.sendMessage("§cFailed to update favorite maps.");
+			player.sendMessage("<c>Failed to update favorite maps.");
 			return;
 		}
 

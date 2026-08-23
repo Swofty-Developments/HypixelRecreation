@@ -45,11 +45,27 @@ public class DarkAuctionScheduler {
         auction.setPhase(DarkAuctionPhase.QUEUE);
         DarkAuctionService.setCurrentAuction(auction);
 
-        // Broadcast AUCTION_START to all hubs
-        broadcastEvent(DarkAuctionEventProtocol.EventType.AUCTION_START, auction, 0);
+        try {
+            // Broadcast AUCTION_START to all hubs
+            broadcastEvent(DarkAuctionEventProtocol.EventType.AUCTION_START, auction, 0);
 
-        // Schedule auction begin after queue duration
-        executor.schedule(() -> beginAuction(auction), QUEUE_DURATION_SECONDS, TimeUnit.SECONDS);
+            // Schedule auction begin after queue duration
+            executor.schedule(() -> beginAuction(auction), QUEUE_DURATION_SECONDS, TimeUnit.SECONDS);
+        } catch (RuntimeException exception) {
+            abortAuction(auction);
+            throw exception;
+        }
+    }
+
+    private static void abortAuction(DarkAuctionState auction) {
+        if (auction != DarkAuctionService.getCurrentAuction()) {
+            return;
+        }
+
+        Logger.warn("Dark Auction failed to start, rolling it back");
+        auction.setPhase(DarkAuctionPhase.COMPLETE);
+        DarkAuctionService.setCurrentAuction(null);
+        broadcastEvent(DarkAuctionEventProtocol.EventType.AUCTION_END, auction, 0);
     }
 
     private static void beginAuction(DarkAuctionState auction) {

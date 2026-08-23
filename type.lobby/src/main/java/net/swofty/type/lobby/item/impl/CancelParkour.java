@@ -5,7 +5,7 @@ import net.minestom.server.event.trait.PlayerInstanceEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.HypixelConst;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.lobby.LobbyTypeLoader;
 import net.swofty.type.lobby.item.LobbyItem;
@@ -19,7 +19,7 @@ public class CancelParkour extends LobbyItem {
 
 	@Override
 	public ItemStack getBlandItem() {
-		return ItemStackCreator.createNamedItemStack(Material.RED_BED, "§cCancel").build();
+		return ItemStacks.named(Material.RED_BED, "<c>Cancel").build();
 	}
 
 	@Override

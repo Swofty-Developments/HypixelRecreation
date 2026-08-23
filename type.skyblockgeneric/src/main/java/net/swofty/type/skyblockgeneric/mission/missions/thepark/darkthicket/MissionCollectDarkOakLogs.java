@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.thepark.darkthicket;
 
+
 import net.minestom.server.event.player.PlayerTickEvent;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.event.EventNodes;

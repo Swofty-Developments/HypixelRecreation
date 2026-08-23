@@ -16,7 +16,7 @@ public class EnchantmentLooting implements Ench, EnchFromTable {
 
     @Override
     public String getDescription(int level) {
-        return "Increases the chance of a Monster dropping an item by §a" + MULTIPLIERS[level - 1] + "%§7.";
+        return "Increases the chance of a Monster dropping an item by <a>" + MULTIPLIERS[level - 1] + "%<7>.";
     }
 
     @Override

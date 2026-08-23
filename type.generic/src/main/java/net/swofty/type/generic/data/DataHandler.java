@@ -2,20 +2,24 @@ package net.swofty.type.generic.data;
 
 import lombok.Getter;
 import lombok.NonNull;
+import net.swofty.PlayerField;
+import net.swofty.codec.Codecs;
+import net.swofty.commons.data.SwoftyData;
+import net.swofty.type.generic.data.domain.AccountDomain;
+import net.swofty.type.generic.data.domain.PlayerDataService;
 import net.swofty.type.generic.user.HypixelPlayer;
 import org.bson.Document;
 import org.jetbrains.annotations.Nullable;
+import org.tinylog.Logger;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.LockSupport;
+import java.util.function.Predicate;
 
 @Getter
 public abstract class DataHandler {
-    public static Map<UUID, DataHandler> userCache = new ConcurrentHashMap<>();
-
     protected UUID uuid;
     protected final Map<String, Datapoint<?>> datapoints = new ConcurrentHashMap<>();
 
@@ -24,50 +28,63 @@ public abstract class DataHandler {
 
     public Datapoint<?> getDatapoint(String key) { return this.datapoints.get(key); }
 
+    private static final Map<String, PlayerField<String>> gameFields = new ConcurrentHashMap<>();
+
+    private static PlayerField<String> gameField(String key) {
+        return gameFields.computeIfAbsent(key, k -> PlayerField.create("game", k, Codecs.STRING, null));
+    }
+
+    public void loadBackedData() {
+        for (Datapoint<?> datapoint : datapoints.values()) {
+            String stored = datapoint.getData() instanceof BackedField field
+                    ? field.readData(this)
+                    : SwoftyData.account().get(getUuid(), gameField(datapoint.getKey()));
+            if (stored != null) datapoint.deserializeValue(stored);
+        }
+    }
+
+    public void saveBackedData() {
+        saveBackedData(datapoint -> true);
+    }
+
+    public void saveBackedData(Predicate<Datapoint<?>> filter) {
+        DataWriteQueue.drain(getUuid());
+        for (Datapoint<?> datapoint : datapoints.values()) {
+            if (!filter.test(datapoint)) continue;
+            try {
+                String serialized = datapoint.getSerializedValue();
+                writeBackedValue(datapoint.getData(), datapoint.getKey(), serialized);
+                datapoint.markPersisted(serialized);
+            } catch (Exception e) {
+                Logger.error(e, "Failed to save datapoint {} for user {}", datapoint.getKey(), getUuid());
+            }
+        }
+    }
+
+    public void writeBackedValue(Enum<?> data, String key, String serialized) {
+        if (data instanceof BackedField field) {
+            field.writeData(this, serialized);
+        } else {
+            SwoftyData.account().set(getUuid(), gameField(key), serialized);
+        }
+    }
+
     public static @NonNull DataHandler getUser(UUID uuid) {
-        DataHandler handler = userCache.get(uuid);
-        if (handler == null) throw new RuntimeException("User " + uuid + " does not exist!");
-        return handler;
+        return PlayerDataService.get(AccountDomain.KEY, uuid);
     }
 
     public static DataHandler getUser(HypixelPlayer player) { return getUser(player.getUuid()); }
 
-    /**
-     * Non-throwing lookup. Prefer this in code paths that may run before
-     * {@code ActionPlayerDataLoad} has populated the cache, e.g. early
-     * disconnect handling or events flagged {@code requireDataLoaded = false}.
-     */
     public static Optional<DataHandler> findUser(UUID uuid) {
-        return Optional.ofNullable(userCache.get(uuid));
+        return PlayerDataService.find(AccountDomain.KEY, uuid).map(handler -> (DataHandler) handler);
     }
 
     public static Optional<DataHandler> findUser(HypixelPlayer player) {
         return findUser(player.getUuid());
     }
 
-    /**
-     * Brief polling wait for the cache entry to appear. Addresses the race
-     * where a downstream listener fires between {@code AsyncPlayerConfiguration}
-     * and the moment {@code ActionPlayerDataLoad} writes into {@code userCache}.
-     * Returns empty if the data is still missing after the timeout.
-     */
     public static Optional<DataHandler> awaitUser(UUID uuid, long timeoutMillis) {
-        DataHandler handler = userCache.get(uuid);
-        if (handler != null) return Optional.of(handler);
-
-        final long deadline = System.nanoTime() + timeoutMillis * 1_000_000L;
-        long sleepNanos = 1_000_000L; // 1ms, grows up to ~16ms
-        while (System.nanoTime() < deadline) {
-            LockSupport.parkNanos(sleepNanos);
-            if (Thread.currentThread().isInterrupted()) {
-                Thread.currentThread().interrupt();
-                return Optional.empty();
-            }
-            handler = userCache.get(uuid);
-            if (handler != null) return Optional.of(handler);
-            sleepNanos = Math.min(sleepNanos * 2, 16_000_000L);
-        }
-        return Optional.empty();
+        return Optional.ofNullable(PlayerDataService.await(AccountDomain.KEY, uuid, timeoutMillis));
     }
 
     public abstract DataHandler fromDocument(Document document);

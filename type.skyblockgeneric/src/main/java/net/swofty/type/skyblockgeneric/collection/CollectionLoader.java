@@ -4,6 +4,7 @@ import lombok.Data;
 import net.minestom.server.item.Material;
 import net.swofty.commons.YamlFileUtils;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.EnchantedComponent;
 import net.swofty.type.skyblockgeneric.item.crafting.SkyBlockRecipe;
@@ -89,9 +90,10 @@ public class CollectionLoader {
                 }
 
                 @Override
-                public String getName() {
-                    return (config.displayColor == null ? "" : "§" + config.displayColor) +
-                            config.name;
+                public Text getName() {
+                    return config.displayColor == null
+                            ? Text.literal(config.name)
+                            : Text.of("<" + config.displayColor + ">{}", config.name);
                 }
 
                 @Override

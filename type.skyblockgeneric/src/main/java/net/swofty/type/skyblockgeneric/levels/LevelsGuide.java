@@ -4,8 +4,9 @@ import lombok.Getter;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.v2.View;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels.starter.GUIStarterAccessories;
 import net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels.starter.GUIStarterSkills;
 import net.swofty.type.skyblockgeneric.levels.abstr.SkyBlockLevelCauseAbstr;
@@ -20,24 +21,24 @@ import java.util.function.Function;
 
 @Getter
 public enum LevelsGuide {
-    STARTER("§8New Player", "§7You are starting on your journey through SkyBlock. Complete these tasks to get acquainted with the game",
+    STARTER(Text.of("<8>New Player"), Text.of("<7>You are starting on your journey through SkyBlock. Complete these tasks to get acquainted with the game"),
             Material.LIME_STAINED_GLASS_PANE, List.of(
-            TasksSet.builder(ItemStackCreator.getStack("Skills", Material.DIAMOND_SWORD, 1, ""), new GUIStarterSkills(), (player) -> List.of(
-                    "§7Level up your Skills.",
+            TasksSet.builder(ItemStacks.item(Material.DIAMOND_SWORD, 1, "Skills"), new GUIStarterSkills(), (player) -> List.of(
+                    "<7>Level up your Skills.",
                     " ",
-                    player.getSkills().getCurrentLevel(SkillCategories.FARMING) >= 4 ? "§a✔ §8Farming Skill IV" : "§c✖ §fFarming Skill IV",
-                    player.getSkills().getCurrentLevel(SkillCategories.MINING) >= 4 ? "§a✔ §8Mining Skill IV" : "§c✖ §fMining Skill IV",
-                    player.getSkills().getCurrentLevel(SkillCategories.COMBAT) >= 4 ? "§a✔ §8Combat Skill IV" : "§c✖ §fCombat Skill IV",
-                    player.getSkills().getCurrentLevel(SkillCategories.FORAGING) >= 4 ? "§a✔ §8Foraging Skill IV" : "§c✖ §fForaging Skill IV",
-                    player.getSkills().getCurrentLevel(SkillCategories.FISHING) >= 4 ? "§a✔ §8Fishing Skill IV" : "§c✖ §fFishing Skill IV",
-                    player.getSkills().getCurrentLevel(SkillCategories.ENCHANTING) >= 4 ? "§a✔ §8Enchanting Skill IV" : "§c✖ §fEnchanting Skill IV"
+                    player.getSkills().getCurrentLevel(SkillCategories.FARMING) >= 4 ? "<a>✔ <8>Farming Skill IV" : "<c>✖ <f>Farming Skill IV",
+                    player.getSkills().getCurrentLevel(SkillCategories.MINING) >= 4 ? "<a>✔ <8>Mining Skill IV" : "<c>✖ <f>Mining Skill IV",
+                    player.getSkills().getCurrentLevel(SkillCategories.COMBAT) >= 4 ? "<a>✔ <8>Combat Skill IV" : "<c>✖ <f>Combat Skill IV",
+                    player.getSkills().getCurrentLevel(SkillCategories.FORAGING) >= 4 ? "<a>✔ <8>Foraging Skill IV" : "<c>✖ <f>Foraging Skill IV",
+                    player.getSkills().getCurrentLevel(SkillCategories.FISHING) >= 4 ? "<a>✔ <8>Fishing Skill IV" : "<c>✖ <f>Fishing Skill IV",
+                    player.getSkills().getCurrentLevel(SkillCategories.ENCHANTING) >= 4 ? "<a>✔ <8>Enchanting Skill IV" : "<c>✖ <f>Enchanting Skill IV"
                     ))
                     .cause(SkyBlockLevelCause.getSkillCauses(SkillCategories.COMBAT, 6), null)
                     .cause(SkyBlockLevelCause.getSkillCause(SkillCategories.COMBAT, 7), "Combat Skill IV")
                     .build(),
-            TasksSet.builder(ItemStackCreator.getStackHead("Accessories", "1a11a7f11bcd5784903c5201d08261c4df8379109d6e611c1cd3ededf031afed"), new GUIStarterAccessories(), (player) -> List.of(
-                    "§7Obtain unique §aAccessories §7in your",
-                    "§aAccessory Bag§7."
+            TasksSet.builder(ItemStacks.head("1a11a7f11bcd5784903c5201d08261c4df8379109d6e611c1cd3ededf031afed", "Accessories"), new GUIStarterAccessories(), (player) -> List.of(
+                    "<7>Obtain unique <a>Accessories <7>in your",
+                    "<a>Accessory Bag<7>."
                     ))
                     .cause(SkyBlockLevelCause.getAccessoryCause(ItemType.FARMING_TALISMAN), null)
                     .cause(SkyBlockLevelCause.getAccessoryCause(ItemType.ZOMBIE_TALISMAN), null)
@@ -48,12 +49,12 @@ public enum LevelsGuide {
     )),
     ;
 
-    private final String title;
-    private final String description;
+    private final Text title;
+    private final Text description;
     private final Material glassMaterial;
     private final List<TasksSet> tasksSets;
 
-    LevelsGuide(String title, String description, Material glassMaterial, List<TasksSet> tasksSets) {
+    LevelsGuide(Text title, Text description, Material glassMaterial, List<TasksSet> tasksSets) {
         this.title = title;
         this.description = description;
         this.glassMaterial = glassMaterial;

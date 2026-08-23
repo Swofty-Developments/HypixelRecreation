@@ -1,7 +1,7 @@
 package net.swofty.type.replayviewer.playback.scoreboard;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.entity.Player;
+import net.swofty.commons.text.Text;
 import net.swofty.type.game.replay.api.ReplayPlaybackContext;
 import net.swofty.type.replayviewer.playback.ReplaySession;
 
@@ -40,7 +40,7 @@ public interface ReplayScoreboard extends net.swofty.type.game.replay.api.Replay
      *
      * @return the scoreboard title
      */
-    Component getTitle();
+    Text getTitle();
 
     /**
      * Gets the current lines to display.
@@ -48,6 +48,6 @@ public interface ReplayScoreboard extends net.swofty.type.game.replay.api.Replay
      * @param session the replay session
      * @return list of lines for the scoreboard
      */
-    List<Component> getLines(ReplaySession session);
+    List<Text> getLines(ReplaySession session);
 
 }

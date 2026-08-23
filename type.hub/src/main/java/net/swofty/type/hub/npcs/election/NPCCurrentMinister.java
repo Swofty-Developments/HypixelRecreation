@@ -4,7 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
 import net.swofty.type.skyblockgeneric.elections.SkyBlockMayor;
@@ -18,12 +18,12 @@ public class NPCCurrentMinister extends HypixelNPC {
             public String[] holograms(HypixelPlayer player) {
                 SkyBlockMayor minister = ElectionManager.getCurrentMinister();
                 if (minister == null) return new String[]{
-                    I18n.string("npcs_hub.election.minister_unknown", player.getLocale()),
-                    I18n.string("npcs_hub.election.click", player.getLocale())
+                    "<key:'npcs_hub.election.minister_unknown'>",
+                    "<key:'npcs_hub.election.click'>"
                 };
                 return new String[]{
-                    "Minister " + minister.getDisplayName(),
-                    I18n.string("npcs_hub.election.click", player.getLocale())
+                    Text.of("Minister {}", minister.getDisplayName()).serialize(),
+                    "<key:'npcs_hub.election.click'>"
                 };
             }
 
@@ -55,7 +55,7 @@ public class NPCCurrentMinister extends HypixelNPC {
     public void onClick(NPCInteractEvent event) {
         SkyBlockMayor minister = ElectionManager.getCurrentMinister();
         if (minister == null) {
-            event.player().sendMessage(I18n.string("npcs_hub.election.hello", event.player().getLocale()));
+            event.player().sendMessage(Text.key("npcs_hub.election.hello"));
             return;
         }
         event.player().openView(new MinisterMenuView());

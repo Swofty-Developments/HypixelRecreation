@@ -1,14 +1,14 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.builder;
 
 import net.swofty.commons.skyblock.item.ItemType;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.gui.ShopView;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.shop.type.CoinShopPrice;
 
 public class GUIShopBuilderWoodworking extends ShopView {
     public GUIShopBuilderWoodworking() {
-        super(I18n.t("gui_builder.woodworking.title"), UPPER5ROWS);
+        super(Text.key("gui_builder.woodworking.title"), UPPER5ROWS);
     }
 
     @Override

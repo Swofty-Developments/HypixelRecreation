@@ -1,8 +1,5 @@
 package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.damage.Damage;
@@ -11,13 +8,12 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.particle.Particle;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class BerserkersRock implements LuckyBlockConsumable {
 
@@ -38,24 +34,15 @@ public class BerserkersRock implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.COBBLESTONE)
-                .customName(Component.text(getDisplayName(), NamedTextColor.RED)
-                        .decoration(TextDecoration.ITALIC, false)
-                        .decoration(TextDecoration.BOLD, true))
-                .lore(List.of(
-                        Component.text("Unleash a devastating", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("ground slam!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Damages and knocks back", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("all nearby enemies!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to use!", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                ))
+        return ItemStacks.item(Material.COBBLESTONE, """
+                <c><l>Berserker's Rock</l>
+                <7>Unleash a devastating
+                <7>ground slam!
+
+                <7>Damages and knocks back
+                <7>all nearby enemies!
+
+                <e>Right-click to use!""")
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
@@ -93,9 +80,9 @@ public class BerserkersRock implements LuckyBlockConsumable {
             Vec knockback = direction.mul(KNOCKBACK_POWER).add(0, UPWARD_POWER, 0);
             target.setVelocity(knockback);
 
-            target.sendMessage(Component.text("You were hit by a ground slam!", NamedTextColor.RED));
+            target.sendMessage("<c>You were hit by a ground slam!");
         }
 
-        player.sendMessage(Component.text("Ground Slam!", NamedTextColor.RED));
+        player.sendMessage("<c>Ground Slam!");
     }
 }

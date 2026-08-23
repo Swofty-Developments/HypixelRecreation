@@ -5,9 +5,9 @@ import lombok.Setter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.TitlePart;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.PlayerSkin;
@@ -15,6 +15,7 @@ import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
 import net.minestom.server.scoreboard.BelowNameTag;
 import net.swofty.commons.ServerType;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyPlayer;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
@@ -23,11 +24,13 @@ import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.*;
 import net.swofty.type.generic.experience.PlayerExperienceHandler;
 import net.swofty.type.generic.gui.v2.*;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.quest.PlayerQuestHandler;
+import net.swofty.type.generic.text.HypixelTextRenderer;
+import net.swofty.type.generic.text.RenderContext;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.generic.user.categories.RankColor;
 import net.swofty.type.generic.utility.ScheduleUtility;
+import net.swofty.type.generic.utility.Titles;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -67,17 +70,17 @@ public class HypixelPlayer extends Player {
 	}
 
 	public void notImplemented() {
-		sendMessage(I18n.t("general.not_implemented"));
+		sendMessage(Text.key("general.not_implemented"));
 	}
 
-	public static String getDisplayName(UUID uuid) {
+	public static Text getDisplayName(UUID uuid) {
 		if (HypixelGenericLoader.getLoadedPlayers().stream().anyMatch(player -> player.getUuid().equals(uuid))) {
 			return HypixelGenericLoader.getLoadedPlayers().stream().filter(player -> player.getUuid().equals(uuid)).findFirst().get().getFullDisplayName();
 		} else {
 			// Fallback for offline name display: use Hypixel account data (rank + ign)
 			HypixelDataHandler account = HypixelDataHandler.getOfOfflinePlayer(uuid);
-			return account.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().getPrefix() +
-					account.get(HypixelDataHandler.Data.IGN, DatapointString.class).getValue();
+			return Text.of("{}", account.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue()
+					.displayName(account.get(HypixelDataHandler.Data.IGN, DatapointString.class).getValue()));
 		}
 	}
 
@@ -124,10 +127,6 @@ public class HypixelPlayer extends Player {
 
 	public Component getRankTitle() {
 		return getRank().titleComponent(getRankColor(), isMvpPlusPlusAqua() ? NamedTextColor.AQUA : NamedTextColor.GOLD);
-	}
-
-	public String getLegacyRankPrefix() {
-		return LegacyComponentSerializer.legacySection().serialize(getRankPrefix());
 	}
 
 	public DatapointChatType.ChatType getChatType() {
@@ -194,8 +193,9 @@ public class HypixelPlayer extends Player {
 			getViewers().forEach(this.belowNameTag::addViewer); // this is missing from the super method (bug most likely)
 	}
 
-	public String getFullDisplayName() {
-		return getLegacyRankPrefix() + getUsername();
+	public Text getFullDisplayName() {
+		return Text.of("{}", getRank().displayName(getRankColor(),
+				isMvpPlusPlusAqua() ? NamedTextColor.AQUA : NamedTextColor.GOLD, getUsername()));
 	}
 
     public Component getRankDisplayName() {
@@ -223,12 +223,96 @@ public class HypixelPlayer extends Player {
 		return new PlayerQuestHandler(this);
 	}
 
-	public void sendTranslated(String key) {
-		sendMessage(I18n.t(key));
+
+	@Override
+	public void sendMessage(@NotNull String markup) {
+		sendMessage(Text.read(markup));
 	}
 
-	public void sendTranslated(String key, ComponentLike... placeholders) {
-		sendMessage(I18n.t(key, placeholders));
+	public void sendMessage(@NotNull String markup, Object... arguments) {
+		sendMessage(Text.of(markup, arguments));
+	}
+
+	@Override
+	public void sendMessage(@NotNull Component message) {
+		super.sendMessage(HypixelTextRenderer.render(message, RenderContext.of(this)));
+	}
+
+	@Override
+	public void sendActionBar(@NotNull Component message) {
+		super.sendActionBar(HypixelTextRenderer.render(message, RenderContext.of(this)));
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> void sendTitlePart(@NotNull TitlePart<T> part, @NotNull T value) {
+		if (value instanceof Component component) {
+			super.sendTitlePart(part, (T) HypixelTextRenderer.render(component, RenderContext.of(this)));
+			return;
+		}
+		super.sendTitlePart(part, value);
+	}
+
+	public void sendTitlePart(@NotNull TitlePart<Component> part, @NotNull Text value) {
+		sendTitlePart(part, value.asComponent());
+	}
+
+	public void sendTitlePart(@NotNull TitlePart<Component> part, @NotNull String markup, Object... arguments) {
+		sendTitlePart(part, Text.of(markup, arguments));
+	}
+
+	public void showTitle(@NotNull Text title, @NotNull Text subtitle, @NotNull Title.Times times) {
+		showTitle(Titles.title(title, subtitle, times));
+	}
+
+	public void showTitle(@NotNull Text title, @NotNull Text subtitle) {
+		showTitle(title, subtitle, Title.DEFAULT_TIMES);
+	}
+
+	public void showTitle(@NotNull String titleMarkup, @NotNull String subtitleMarkup, @NotNull Title.Times times,
+	                      Object... arguments) {
+		showTitle(Text.of(titleMarkup, arguments), Text.of(subtitleMarkup, arguments), times);
+	}
+
+	public void showTitle(@NotNull String titleMarkup, @NotNull String subtitleMarkup) {
+		showTitle(titleMarkup, subtitleMarkup, Title.DEFAULT_TIMES);
+	}
+
+	@Override
+	public void kick(@NotNull String markup) {
+		kick(Text.read(markup));
+	}
+
+	public void kick(@NotNull String markup, Object... arguments) {
+		kick(Text.of(markup, arguments));
+	}
+
+	public void kick(@NotNull Text reason) {
+		kick(reason.asComponent());
+	}
+
+	public static BelowNameTag belowNameTag(String objective, Text display) {
+		return new BelowNameTag(objective, display.asComponent());
+	}
+
+	public static BelowNameTag belowNameTag(String objective, String markup, Object... arguments) {
+		return belowNameTag(objective, Text.of(markup, arguments));
+	}
+
+	public void setBelowNameTag(String objective, Text display) {
+		setBelowNameTag(belowNameTag(objective, display));
+	}
+
+	public void setBelowNameTag(String objective, String markup, Object... arguments) {
+		setBelowNameTag(belowNameTag(objective, markup, arguments));
+	}
+
+	public void setDisplayName(Text displayName) {
+		setDisplayName(displayName.asComponent());
+	}
+
+	public void setDisplayName(String markup, Object... arguments) {
+		setDisplayName(Text.of(markup, arguments));
 	}
 
 	public PlayerSkin getPlayerSkin() {

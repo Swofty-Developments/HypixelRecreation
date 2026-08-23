@@ -1,7 +1,5 @@
 package net.swofty.type.murdermysterygame.maphandler;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.event.player.PlayerBlockInteractEvent;
@@ -70,9 +68,7 @@ public abstract class MapHandler {
             int playerGold = game.getGoldManager().countGoldInInventory(player);
 
             if (playerGold < goldRequired) {
-                player.sendMessage(Component.text(
-                        "This action requires " + goldRequired + " gold",
-                        NamedTextColor.RED));
+                player.sendMessage("<c>This action requires {} gold", goldRequired);
                 return true;
             }
 

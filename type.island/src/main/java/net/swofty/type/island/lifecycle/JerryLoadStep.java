@@ -48,7 +48,7 @@ public class JerryLoadStep implements IslandLifecycleStep {
         jerryInformation.setJerry(jerry);
 
         ServerHolograms.ExternalHologram hologram = ServerHolograms.ExternalHologram.builder()
-                .text(new String[]{"§6§lNEW UPDATE", "Jerry", "§e§lCLICK"})
+                .text(new String[]{"<6><l>NEW UPDATE", "Jerry", "<e><l>CLICK"})
                 .instance(context.island().getIslandInstance())
                 .pos(jerryInformation.getJerryPosition().add(0, 1.8, 0))
                 .build();

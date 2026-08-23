@@ -3,15 +3,14 @@ package net.swofty.type.skyblockgeneric.item.components;
 import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.particle.Particle;
-import net.swofty.commons.ChatColor;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributePetData;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointPetData;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItemComponent;
@@ -62,7 +61,7 @@ public class PetComponent extends SkyBlockItemComponent {
                 new LoreConfig((item, player) -> getAbsoluteLore(player, item), (item, player) -> {
                     Rarity rarity = item.getAttributeHandler().getRarity();
                     int level = item.getAttributeHandler().getPetData().getAsLevel(rarity);
-                    return "§7[Lvl " + level + "] " + rarity.getLegacyColor() + petName;
+                    return Text.of("<7>[Lvl {}] <color:{}>{}", level, rarity.getColor(), petName).serialize();
                 }), true)
         );
     }
@@ -73,13 +72,13 @@ public class PetComponent extends SkyBlockItemComponent {
         Rarity rarity = item.getAttributeHandler().getRarity();
 
         if (petData.getPet(type) != null) {
-            player.sendMessage("§cYou already have a pet of this type.");
+            player.sendMessage("<c>You already have a pet of this type.");
             return;
         }
 
         petData.addPet(item);
         player.setItemInHand(null);
-        player.sendMessage(Component.text("§aSuccessfully added ").append(Component.text(item.getDisplayName(), rarity.getColor()).append(Component.text(" §ato your pet menu!"))));
+        player.sendMessage("<a>Successfully added {} <a>to your pet menu!", item.getDisplayName());
         player.playSound(Sound.sound()
                 .type(Key.key("minecraft", "entity.experience_orb.pickup"))
                 .volume(1f)
@@ -95,7 +94,7 @@ public class PetComponent extends SkyBlockItemComponent {
 
         List<PetAbility> abilities = PetHandler.valueOf(handlerId.toUpperCase()).getAbilities(item);
 
-        lore.add("§8" + skillCategory.asCategory().getName() + " Pet");
+        lore.add("<8>" + skillCategory.asCategory().getName() + " Pet");
         lore.add(" ");
 
         for (ItemStatistic stat : ItemStatistic.values()) {
@@ -110,10 +109,9 @@ public class PetComponent extends SkyBlockItemComponent {
             }
         }
 
-
         for (PetAbility ability : abilities) {
             lore.add(" ");
-            lore.add("§6" + ability.getName());
+            lore.add("<6>" + ability.getName());
             lore.addAll(ability.getDescription(item));
         }
 
@@ -123,14 +121,12 @@ public class PetComponent extends SkyBlockItemComponent {
             long nextLevelExperience = petData.getExperienceForLevel(nextLevel, rarity);
 
             lore.add(" ");
-            lore.add(StringUtility.createProgressText("Progress to Level " + nextLevel,
-                    experience, nextLevelExperience));
-            lore.add(StringUtility.createLineProgressBar(20, ChatColor.DARK_GREEN, experience,
-                    nextLevelExperience));
+            lore.add(progressText("Progress to Level " + nextLevel, experience, nextLevelExperience));
+            lore.add(Text.of("<bar:{}:{}>", experience, nextLevelExperience).serialize());
         }
 
         lore.add(" ");
-        lore.add(rarity.getLegacyDisplay());
+        lore.add(Text.of("<rarity:{}>", rarity.name()).serialize());
 
         return lore;
     }
@@ -139,15 +135,23 @@ public class PetComponent extends SkyBlockItemComponent {
         return perLevelStatistics.getForRarity(rarity);
     }
 
+    private static String progressText(String label, double current, double max) {
+        double percent = max != 0 ? (current / max) * 100.0 : 0.0;
+        percent = StringUtility.roundTo(percent, 1);
+        return percent < 100.0
+                ? "<7>" + label + ": <e>" + StringUtility.commaify(percent) + "<6>%"
+                : "<7>" + label + ": <a>100.0%";
+    }
+
     private static void addPropertyInt(String name, double value, List<String> lore) {
         if (value != 0.0) {
-            lore.add("§7" + name + ": §a" + (value >= 0 ? "+" : "") + value);
+            lore.add("<7>" + name + ": <a>" + (value >= 0 ? "+" : "") + value);
         }
     }
 
     private static void addPropertyPercent(String name, double value, List<String> lore) {
         if (value != 0.0) {
-            lore.add("§7" + name + ": §a" + (value >= 0 ? "+" : "") + value + "%");
+            lore.add("<7>" + name + ": <a>" + (value >= 0 ? "+" : "") + value + "%");
         }
     }
 }

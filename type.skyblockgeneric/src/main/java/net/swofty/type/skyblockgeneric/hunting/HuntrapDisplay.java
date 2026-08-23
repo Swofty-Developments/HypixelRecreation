@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.hunting;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -8,6 +7,7 @@ import net.minestom.server.entity.LivingEntity;
 import net.minestom.server.entity.metadata.display.ItemDisplayMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.BlockDisplayEntity;
 import net.swofty.type.generic.entity.InteractionEntity;
 import net.swofty.type.skyblockgeneric.entity.TextDisplayEntity;
@@ -56,9 +56,10 @@ public final class HuntrapDisplay {
             shard.setInstance(instance, position.add(0, 0.18, 0));
             entities.add(shard);
         }
-        String status = caught == null ? "§fStatus: §cEmpty" : "§fStatus: §aCaught!";
-        String timer = caught == null ? "§fMassive Time: §a" + remaining(catchAt) : "§eClick to collect!";
-        TextDisplayEntity text = new TextDisplayEntity(Component.text(status + "\n" + timer), meta -> {
+        Text message = caught == null
+                ? Text.of("<f>Status: <c>Empty\n<f>Massive Time: <a>{}", remaining(catchAt))
+                : Text.of("<f>Status: <a>Caught!\n<e>Click to collect!");
+        TextDisplayEntity text = new TextDisplayEntity(message, meta -> {
         });
         owned(text, owner);
         text.setInstance(instance, position.add(0.5, 1.15, 0.5));

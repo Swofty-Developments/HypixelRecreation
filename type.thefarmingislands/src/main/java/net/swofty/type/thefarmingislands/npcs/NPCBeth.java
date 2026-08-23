@@ -14,7 +14,7 @@ public class NPCBeth extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Beth", "§e§lCLICK"};
+                return new String[]{"Beth", "<e><l>CLICK"};
             }
 
             @Override

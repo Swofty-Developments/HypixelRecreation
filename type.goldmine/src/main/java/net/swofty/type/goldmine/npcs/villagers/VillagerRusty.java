@@ -20,7 +20,7 @@ public class VillagerRusty extends HypixelNPC implements NPCAbiphoneTrait {
 		super(new VillagerConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Rusty", "§e§lCLICK"};
+				return new String[]{"Rusty", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -77,27 +77,27 @@ public class VillagerRusty extends HypixelNPC implements NPCAbiphoneTrait {
 	public DialogueSet[] dialogues(HypixelPlayer player) {
 		return Stream.of(
 				DialogueSet.builder()
-						.key("found-pickaxe").lines(new String[]{
+						.key("found-pickaxe").lines(
 								"You found the Lazy Miner's pickaxe!",
 								"I'll have to put it in my stores.",
 								"Click me again!"
-						}).build(),
+						).build(),
 				DialogueSet.builder()
-						.key("first-interaction-over-sb-6").lines(new String[]{
+						.key("first-interaction-over-sb-6").lines(
 								"Hi, I’m the janitor of this mine.",
 								"You would not believe how many people leave ingots and stones behind them!",
-								"It drives me insane, but at least you unlocked §aAuto-pickup§f.",
+								"It drives me insane, but at least you unlocked <a>Auto-pickup<f>.",
 								"It makes my job a lot easier, but despite that, I still find so many items on the ground.",
 								"Maybe some of those items are yours? In which case I'll let you buy them back."
-						}).build(),
+						).build(),
 				DialogueSet.builder()
-						.key("first-interaction-below-sb-6").lines(new String[]{
+						.key("first-interaction-below-sb-6").lines(
 								"Hi, I’m the janitor of this mine.",
 								"You would not believe how many people leave ingots and stones behind them!",
-								"It drives me insane, but at least you'll unlock §aAuto-pickup §fat §3SkyBlock Level 6.",
+								"It drives me insane, but at least you'll unlock <a>Auto-pickup <f>at <3>SkyBlock Level 6.",
 								"It makes my job a lot easier, but despite that, I still find so many items on the ground.",
 								"Maybe some of those items are yours? In which case I'll let you buy them back."
-						}).build()
+						).build()
 		).toArray(DialogueSet[]::new);
 	}
 

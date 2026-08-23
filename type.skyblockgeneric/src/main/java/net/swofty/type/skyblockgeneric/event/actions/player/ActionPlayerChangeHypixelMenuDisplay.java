@@ -1,17 +1,17 @@
 package net.swofty.type.skyblockgeneric.event.actions.player;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.player.PlayerChangeHeldSlotEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skyblockgeneric.collection.CustomCollectionAward;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointQuiver;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -48,9 +48,9 @@ public class ActionPlayerChangeHypixelMenuDisplay implements HypixelEventClass {
                 for (int index = 0; index < player.getInventory().getSize(); index++) {
                     SkyBlockItem item = new SkyBlockItem(player.getInventory().getItemStack(index));
                     if (item.hasComponent(ArrowComponent.class)) {
-                        player.getInventory().setItemStack(index, ItemStack.builder(Material.FEATHER)
-                                .set(DataComponents.CUSTOM_DATA, item.getItemStack().get(DataComponents.CUSTOM_DATA))
-                                .set(DataComponents.CUSTOM_NAME, Component.text("§cSwitch your held item for this item!"))
+                        player.getInventory().setItemStack(index, ItemStacks.name(ItemStack.builder(Material.FEATHER)
+                                .set(DataComponents.CUSTOM_DATA, item.getItemStack().get(DataComponents.CUSTOM_DATA)),
+                                "<c>Switch your held item for this item!")
                                 .amount(item.getAmount()).build());
                     }
                 }
@@ -62,33 +62,36 @@ public class ActionPlayerChangeHypixelMenuDisplay implements HypixelEventClass {
 
             ItemStack.Builder builder;
             if (player.getQuiver().isEmpty()) {
-                builder = ItemStackCreator.getStack("§8Empty Quiver", Material.FEATHER, 1, List.of(
-                        "§7This item is in your inventory",
-                        "§7because you are currently holding a",
-                        "§7Bow",
-                        " ",
-                        "§cQuiver is empty",
-                        " ",
-                        "§7Switch away from your Bow to see",
-                        "§7the item that was here before."
-                ));
+                builder = ItemStacks.item(Material.FEATHER, 1, """
+                        <8>Empty Quiver
+                        <7>This item is in your inventory
+                        <7>because you are currently holding a
+                        <7>Bow
+
+                        <c>Quiver is empty
+
+                        <7>Switch away from your Bow to see
+                        <7>the item that was here before.""");
             } else {
                 SkyBlockItem item = quiver.getFirstItemInQuiver();
-                builder = ItemStackCreator.getStack("§8Quiver " + StringUtility.stripColor(item.getDisplayName()),
-                        quiverDisplay.isShouldBeArrow() ? Material.ARROW : Material.FEATHER,
-                        Math.min(64, quiver.getAmountOfArrows(item.getAttributeHandler().getPotentialType())),
-                        "§7This item is in your inventory",
-                        "§7because you are currently holding a",
-                        "§7Bow",
-                        " ",
-                        "§7Active Arrow: " + item.getDisplayName()
-                                + " §7(§e" + quiver.getAmountOfArrows(item.getAttributeHandler().getPotentialType()) + "§7)",
-                        " ",
-                        "§7Switch away from your Bow to see",
-                        "§7the item that was here before.");
+                int arrowCount = quiver.getAmountOfArrows(item.getAttributeHandler().getPotentialType());
+                builder = ItemStacks.item(quiverDisplay.isShouldBeArrow() ? Material.ARROW : Material.FEATHER,
+                        Math.min(64, arrowCount), """
+                        <8>Quiver {}
+                        <7>This item is in your inventory
+                        <7>because you are currently holding a
+                        <7>Bow
+
+                        <7>Active Arrow: {} <7>(<e>{}<7>)
+
+                        <7>Switch away from your Bow to see
+                        <7>the item that was here before.""",
+                        StringUtility.stripColor(item.getDisplayName()),
+                        item.getDisplayName(),
+                        arrowCount);
             }
 
-            player.getInventory().setItemStack(8, ItemStackCreator.setNotEditable(builder).build());
+            player.getInventory().setItemStack(8, ItemStacks.notEditable(builder).build());
             return;
         }
 

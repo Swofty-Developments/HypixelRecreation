@@ -1,7 +1,6 @@
 package net.swofty.type.replayviewer.event;
 
 import lombok.SneakyThrows;
-import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
@@ -26,7 +25,7 @@ import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.ScheduleUtility;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
@@ -108,20 +107,20 @@ public class PlayerJoinEvent implements HypixelEventClass {
 
             if (!response.success()) {
                 Logger.error("Response failed: " + response.errorMessage());
-                player.sendMessage(I18n.t("replays.replay_load_failed"));
+                player.sendMessage(Text.key("replays.replay_load_failed"));
                 return;
             }
 
             if (response.metadata() == null) {
                 Logger.error("Response is missing metadata.");
-                player.sendMessage(I18n.t("replays.replay_incomplete"));
+                player.sendMessage(Text.key("replays.replay_incomplete"));
                 return;
             }
 
             var protocolMetadata = response.metadata();
             var protocolDescriptor = protocolMetadata.descriptor();
             if (protocolDescriptor.formatVersion() != ReplayVersion.CURRENT_VERSION) {
-                player.sendMessage(I18n.t("replays.replay_unsupported_format"));
+                player.sendMessage(Text.key("replays.replay_unsupported_format"));
                 Logger.warn("Rejected replay {} with format version {}", replayId, protocolDescriptor.formatVersion());
                 return;
             }
@@ -164,10 +163,10 @@ public class PlayerJoinEvent implements HypixelEventClass {
                 if (shareData != null) {
                     spawnPos = shareData.position();
                     startTick = Math.min(shareData.tick(), Math.max(0, descriptor.durationTicks() - 1));
-                    player.sendMessage(I18n.t("replays.shared_position_restored"));
+                    player.sendMessage(Text.key("replays.shared_position_restored"));
                 } else {
                     spawnPos = new Pos(descriptor.mapCenterX(), 100, descriptor.mapCenterZ());
-                    player.sendMessage(I18n.t("replays.invalid_share_code"));
+                    player.sendMessage(Text.key("replays.invalid_share_code"));
                 }
             } else {
                 spawnPos = new Pos(descriptor.mapCenterX(), 100, descriptor.mapCenterZ());
@@ -186,7 +185,7 @@ public class PlayerJoinEvent implements HypixelEventClass {
             session.play();
         } catch (Exception e) {
             Logger.error(e, "Failed to load replay {}", replayId);
-            player.sendMessage(I18n.t("replays.replay_corrupt"));
+            player.sendMessage(Text.key("replays.replay_corrupt"));
             if (player instanceof HypixelPlayer hp) {
                 hp.sendTo(ServerType.PROTOTYPE_LOBBY);
             }
@@ -209,7 +208,7 @@ public class PlayerJoinEvent implements HypixelEventClass {
 
             if (!response.success() || !response.found()) {
                 Logger.warn("Map {} not found in replay service", mapHash);
-                player.sendMessage(I18n.t("replays.map_unavailable"));
+                player.sendMessage(Text.key("replays.map_unavailable"));
                 return CompletableFuture.completedFuture(null);
             }
 
@@ -230,7 +229,7 @@ public class PlayerJoinEvent implements HypixelEventClass {
                     });
         } catch (Exception e) {
             Logger.error(e, "Failed to load map {}", mapHash);
-            player.sendMessage(I18n.t("replays.map_load_failed", Argument.string("error", String.valueOf(e.getMessage()))));
+            player.sendMessage(Text.key("replays.map_load_failed", String.valueOf(e.getMessage())));
             return CompletableFuture.failedFuture(e);
         }
     }

@@ -16,7 +16,7 @@ public class EnchantmentSmeltingTouch implements Ench, EnchFromTable, Conflictin
 
     @Override
     public String getDescription(int level) {
-        return "§7Automatically smelts broken blocks into their smelted form.";
+        return "<7>Automatically smelts broken blocks into their smelted form.";
     }
 
     @Override

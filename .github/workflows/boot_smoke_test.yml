@@ -1,0 +1,386 @@
+name: Full Stack Boot Smoke Test
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: boot-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  WORLD_ASSETS_URL: https://files.catbox.moe/flri48.zip
+  INSTALL_DIR: /home/runner/hypixel-skyblock
+  LOG_DIR: ${{ github.workspace }}/smoke-logs
+  COMPOSE_PROJECT_NAME: hypixel-skyblock
+  BATCH_SIZE: '5'
+  PROXY_TIMEOUT: '240'
+  PROXY_SETTLE: '15'
+  SERVICE_TIMEOUT: '240'
+  SERVER_TIMEOUT: '300'
+  BATCH_SETTLE: '20'
+  LOG_TAIL: '80'
+
+jobs:
+  boot:
+    name: Install through the installer and boot every server type
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          check-latest: false
+
+      - name: Grant Gradlew Permissions
+        run: chmod +x gradlew
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build with Gradle
+        run: ./gradlew shadowJar --no-daemon
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: setup/go.mod
+          check-latest: false
+          cache-dependency-path: |
+            setup/go.mod
+            setup/go.sum
+
+      - name: Build the installer
+        working-directory: setup
+        run: go build -o "$RUNNER_TEMP/skyblock-installer" ./cmd/skyblock-installer
+
+      - name: Stage the freshly built jars for the Docker build
+        run: |
+          set -eu
+          mkdir -p DockerFiles/jars
+          find . -type f -path '*/build/libs/*.jar' -exec cp -f {} DockerFiles/jars/ \;
+          required=$(sed -n 's/^[[:space:]]*\([A-Za-z0-9._]*\.jar\)[[:space:]]*\\$/\1/p' DockerFiles/Dockerfile.game_server)
+          required="$required SkyBlockProxy.jar"
+          if [ -z "$(printf '%s' "$required" | tr -d '[:space:]')" ]; then
+            echo "::error::could not read the jar list out of DockerFiles/Dockerfile.game_server"
+            exit 1
+          fi
+          missing=0
+          for jar in $required; do
+            if [ ! -f "DockerFiles/jars/$jar" ]; then
+              echo "::error::the Gradle build did not produce $jar"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ]
+          ls -1 DockerFiles/jars
+
+      - name: Cache world assets
+        id: world-assets
+        uses: actions/cache@v4
+        with:
+          path: ~/world-assets
+          key: world-assets-flri48
+
+      - name: Download world assets
+        if: steps.world-assets.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/world-assets
+          curl -fSL --retry 3 --retry-delay 10 -o ~/world-assets/assets.zip "$WORLD_ASSETS_URL"
+
+      - name: Run the installer headless
+        env:
+          SKYBLOCK_WORLD_ASSETS: /home/runner/world-assets/assets.zip
+        run: |
+          "$RUNNER_TEMP/skyblock-installer" \
+            --headless \
+            --dir "$INSTALL_DIR" \
+            --source "$GITHUB_WORKSPACE" \
+            --servers all \
+            --services all \
+            --online-mode=false \
+            --no-start
+
+      - name: Check the installer covered every server type
+        run: |
+          set -eu
+          cd "$INSTALL_DIR"
+          declared=$(sed -n 's/^[[:space:]]*\([A-Z][A-Z0-9_]*\)(\(true\|false\)).*/\1/p' \
+            "$GITHUB_WORKSPACE/commons/src/main/java/net/swofty/commons/ServerType.java")
+          generated=$(docker compose config --services)
+          missing=0
+          for type in $declared; do
+            lower=$(printf '%s' "$type" | tr '[:upper:]' '[:lower:]')
+            if ! printf '%s\n' "$generated" | grep -qx "hypixelcore_$lower"; then
+              echo "::error::the generated Compose file has no container for $type"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ]
+
+      - name: Boot the stack and verify every server type
+        run: |
+          set -uo pipefail
+          set +e
+          cd "$INSTALL_DIR"
+          mkdir -p "$LOG_DIR"
+
+          SERVER_READY='Received server name'
+          SERVICE_READY='initialized!'
+          PROXY_PLUGIN_READY='Loaded plugin skyblock'
+          FATAL_PATTERN='Exception in thread|ExceptionInInitializerError|NoClassDefFoundError|NoSuchMethodError|OutOfMemoryError|Couldn.t connect to proxy|No TypeLoader found|Error occurred during initialization of VM|Could not create the Java Virtual Machine|A fatal error has been detected by the Java Runtime Environment|Unable to load plugin|Failed to load plugin'
+          IGNORED_PATTERN='is not online!'
+
+          FAILURES=0
+          BOOTED=0
+          BATCH_INDEX=0
+
+          container() { docker compose ps -aq "$1" 2>/dev/null | head -n 1; }
+
+          fail() {
+            FAILURES=$((FAILURES + 1))
+            printf '::error::%s\n' "$1"
+            if [ -n "${2:-}" ]; then
+              printf '::group::last %s log lines\n' "$LOG_TAIL"
+              docker logs --tail "$LOG_TAIL" "$2" 2>&1
+              printf '::endgroup::\n'
+            fi
+          }
+
+          fatal_line() {
+            docker logs "$1" 2>&1 | grep -Ev "$IGNORED_PATTERN" | grep -E "$FATAL_PATTERN" | head -n 1
+          }
+
+          save_logs() {
+            id=$(container "$1")
+            [ -n "$id" ] && docker logs "$id" > "$LOG_DIR/$1.log" 2>&1
+            return 0
+          }
+
+          wait_healthy() {
+            waited=0
+            while :; do
+              id=$(container "$1")
+              if [ -z "$id" ]; then
+                fail "$1 has no container"
+                return 1
+              fi
+              health=$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$id")
+              case "$health" in
+                healthy|running) return 0 ;;
+                unhealthy) fail "$1 is unhealthy" "$id"; return 1 ;;
+              esac
+              if [ "$(docker inspect -f '{{.State.Status}}' "$id")" = exited ]; then
+                fail "$1 exited while starting" "$id"
+                return 1
+              fi
+              if [ "$waited" -ge "$2" ]; then
+                fail "$1 was not healthy within ${2}s" "$id"
+                return 1
+              fi
+              sleep 5
+              waited=$((waited + 5))
+            done
+          }
+
+          wait_ready() {
+            name=$1
+            needle=$2
+            timeout=$3
+            waited=0
+            while :; do
+              id=$(container "$name")
+              if [ -z "$id" ]; then
+                fail "$name has no container"
+                return 1
+              fi
+              logs=$(docker logs "$id" 2>&1)
+              excerpt=$(printf '%s\n' "$logs" | grep -Ev "$IGNORED_PATTERN" | grep -E "$FATAL_PATTERN" | head -n 1)
+              if [ -n "$excerpt" ]; then
+                fail "$name hit a fatal error while booting: $excerpt" "$id"
+                return 1
+              fi
+              if printf '%s\n' "$logs" | grep -qF "$needle"; then
+                return 0
+              fi
+              status=$(docker inspect -f '{{.State.Status}}' "$id")
+              restarts=$(docker inspect -f '{{.RestartCount}}' "$id")
+              if [ "$status" = exited ] || [ "$restarts" -gt 0 ]; then
+                fail "$name died before it finished booting (status $status, $restarts restarts)" "$id"
+                return 1
+              fi
+              if [ "$waited" -ge "$timeout" ]; then
+                fail "$name never logged '$needle' within ${timeout}s" "$id"
+                return 1
+              fi
+              sleep 5
+              waited=$((waited + 5))
+            done
+          }
+
+          check_alive() {
+            id=$(container "$1")
+            if [ -z "$id" ]; then
+              fail "$1 has no container"
+              return 1
+            fi
+            status=$(docker inspect -f '{{.State.Status}}' "$id")
+            restarts=$(docker inspect -f '{{.RestartCount}}' "$id")
+            excerpt=$(fatal_line "$id")
+            if [ "$status" != running ] || [ "$restarts" -gt 0 ]; then
+              fail "$1 did not stay up (status $status, $restarts restarts)" "$id"
+              return 1
+            fi
+            if [ -n "$excerpt" ]; then
+              fail "$1 hit a fatal error after booting: $excerpt" "$id"
+              return 1
+            fi
+            return 0
+          }
+
+          all_services=$(docker compose config --services | sort)
+          game_servers=$(printf '%s\n' "$all_services" | grep '^hypixelcore_')
+          backends=$(printf '%s\n' "$all_services" | grep -Ev '^(hypixelcore_|mongodb$|redis$|proxy$)')
+          services=$(printf '%s\n' "$backends" | grep '^service_')
+          total=$(printf '%s\n' "$game_servers" | wc -l | tr -d ' ')
+
+          echo "::group::Starting MongoDB and Redis"
+          docker compose up -d mongodb redis
+          wait_healthy mongodb 120 || exit 1
+          wait_healthy redis 60 || exit 1
+          echo '::endgroup::'
+
+          echo "::group::Starting the proxy"
+          docker compose up -d proxy
+          wait_healthy proxy "$PROXY_TIMEOUT" || exit 1
+          if ! docker logs "$(container proxy)" 2>&1 | grep -qF "$PROXY_PLUGIN_READY"; then
+            fail "the proxy came up without loading the SkyBlock plugin" "$(container proxy)"
+            exit 1
+          fi
+          echo "proxy is up, settling for ${PROXY_SETTLE}s"
+          sleep "$PROXY_SETTLE"
+          echo '::endgroup::'
+
+          echo "::group::Starting the services"
+          docker compose up -d $backends
+          for name in $services; do
+            wait_ready "$name" "$SERVICE_READY" "$SERVICE_TIMEOUT" && echo "$name is up"
+          done
+          for name in $backends; do
+            id=$(container "$name")
+            [ -n "$id" ] || continue
+            status=$(docker inspect -f '{{.State.Status}}' "$id")
+            code=$(docker inspect -f '{{.State.ExitCode}}' "$id")
+            if [ "$status" = exited ] && [ "$code" -ne 0 ]; then
+              fail "$name exited with code $code" "$id"
+            fi
+            excerpt=$(fatal_line "$id")
+            if [ -n "$excerpt" ]; then
+              fail "$name hit a fatal error: $excerpt" "$id"
+            fi
+          done
+          echo '::endgroup::'
+
+          echo "booting $total server types in batches of $BATCH_SIZE"
+
+          run_batch() {
+            BATCH_INDEX=$((BATCH_INDEX + 1))
+            ready=
+            echo "::group::Batch $BATCH_INDEX:$1"
+            if ! docker compose up -d $1; then
+              fail "docker compose up failed for batch $BATCH_INDEX"
+            fi
+            for name in $1; do
+              if wait_ready "$name" "$SERVER_READY" "$SERVER_TIMEOUT"; then
+                BOOTED=$((BOOTED + 1))
+                ready="$ready $name"
+                echo "$name registered with the proxy"
+              fi
+            done
+            if [ -n "$ready" ]; then
+              sleep "$BATCH_SETTLE"
+              for name in $ready; do
+                check_alive "$name"
+              done
+            fi
+            for name in $1; do
+              save_logs "$name"
+            done
+            docker compose rm -sf $1 > /dev/null 2>&1
+            echo '::endgroup::'
+            if ! check_alive proxy; then
+              echo "::error::the proxy died during batch $BATCH_INDEX"
+              return 1
+            fi
+          }
+
+          batch=
+          count=0
+          for name in $game_servers; do
+            batch="$batch $name"
+            count=$((count + 1))
+            if [ "$count" -eq "$BATCH_SIZE" ]; then
+              run_batch "$batch" || exit 1
+              batch=
+              count=0
+            fi
+          done
+          if [ -n "$batch" ]; then
+            run_batch "$batch" || exit 1
+          fi
+
+          echo "::group::Rechecking the proxy and the services"
+          check_alive proxy
+          for name in $services; do
+            check_alive "$name" && echo "$name is still up"
+          done
+          echo '::endgroup::'
+
+          echo "$BOOTED of $total server types booted cleanly"
+          if [ "$FAILURES" -gt 0 ]; then
+            echo "::error::$FAILURES failure(s) detected"
+            exit 1
+          fi
+          echo "full stack boot smoke test passed"
+
+      - name: Collect container logs
+        if: always()
+        run: |
+          set -u
+          cd "$INSTALL_DIR" || exit 0
+          mkdir -p "$LOG_DIR"
+          docker compose ps -a > "$LOG_DIR/containers.txt" 2>&1 || true
+          cp docker-compose.yml "$LOG_DIR/docker-compose.yml" 2>/dev/null || true
+          for name in $(docker compose config --services 2>/dev/null); do
+            id=$(docker compose ps -aq "$name" 2>/dev/null | head -n 1)
+            if [ -n "$id" ]; then
+              docker logs "$id" > "$LOG_DIR/$name.log" 2>&1 || true
+            fi
+          done
+
+      - name: Upload container logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: boot-smoke-logs
+          path: smoke-logs
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Tear down
+        if: always()
+        run: |
+          cd "$INSTALL_DIR" || exit 0
+          docker compose down --volumes --remove-orphans || true

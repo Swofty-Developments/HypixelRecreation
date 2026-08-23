@@ -1,7 +1,5 @@
 package net.swofty.type.skywarsgame.luckyblock.spawns;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
@@ -13,6 +11,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.utils.time.TimeUnit;
+import net.swofty.type.generic.utility.EntityUtility;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 import java.time.Duration;
@@ -38,7 +37,7 @@ public class LuckyBlockSpawnHandler {
      * Spawn a zombie army to assist the player.
      */
     public void spawnZombieArmy(SkywarsPlayer player, Instance instance, Pos position) {
-        player.sendMessage(Component.text("A zombie army rises to help you!", NamedTextColor.GREEN));
+        player.sendMessage("<a>A zombie army rises to help you!");
 
         for (int i = 0; i < 5; i++) {
             double offsetX = RANDOM.nextDouble() * 4 - 2;
@@ -47,8 +46,7 @@ public class LuckyBlockSpawnHandler {
 
             EntityCreature zombie = new EntityCreature(EntityType.ZOMBIE);
             zombie.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.23);
-            zombie.setCustomName(Component.text(player.getUsername() + "'s Zombie", NamedTextColor.GREEN));
-            zombie.setCustomNameVisible(true);
+            EntityUtility.nameEntityVisible(zombie, "<a>{}'s Zombie", player.getUsername());
 
             // Add AI to target enemies (not the owner)
             zombie.addAIGroup(
@@ -71,7 +69,7 @@ public class LuckyBlockSpawnHandler {
      * Spawn three friendly wolves.
      */
     public void spawnWolves(SkywarsPlayer player, Instance instance, Pos position) {
-        player.sendMessage(Component.text("Three loyal wolves join you!", NamedTextColor.GREEN));
+        player.sendMessage("<a>Three loyal wolves join you!");
 
         String[] names = {"Fido", "Rex", "Buddy"};
 
@@ -82,8 +80,7 @@ public class LuckyBlockSpawnHandler {
 
             EntityCreature wolf = new EntityCreature(EntityType.WOLF);
             wolf.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.3);
-            wolf.setCustomName(Component.text(names[i], NamedTextColor.WHITE));
-            wolf.setCustomNameVisible(true);
+            EntityUtility.nameEntityVisible(wolf, "<f>{}", names[i]);
 
             // Add AI to target enemies
             wolf.addAIGroup(
@@ -105,7 +102,7 @@ public class LuckyBlockSpawnHandler {
      * Spawn multiple hostile slimes to make up for inability to set size.
      */
     public void spawnBigSlime(SkywarsPlayer player, Instance instance, Pos position) {
-        player.sendMessage(Component.text("SLIMES ARE ATTACKING!", NamedTextColor.RED));
+        player.sendMessage("<c>SLIMES ARE ATTACKING!");
 
         // Spawn multiple slimes since we can't modify size easily
         for (int i = 0; i < 4; i++) {
@@ -115,8 +112,7 @@ public class LuckyBlockSpawnHandler {
 
             EntityCreature slime = new EntityCreature(EntityType.SLIME);
             slime.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.2);
-            slime.setCustomName(Component.text("Slime", NamedTextColor.GREEN));
-            slime.setCustomNameVisible(true);
+            EntityUtility.nameEntityVisible(slime, "<a>Slime");
 
             // Target the player who opened the block
             slime.addAIGroup(
@@ -137,13 +133,12 @@ public class LuckyBlockSpawnHandler {
      * Spawn the Golden Child - a baby zombie in gold armor.
      */
     public void spawnGoldenChild(SkywarsPlayer player, Instance instance, Pos position) {
-        player.sendMessage(Component.text("THE GOLDEN CHILD HAS ARRIVED!", NamedTextColor.GOLD));
+        player.sendMessage("<6>THE GOLDEN CHILD HAS ARRIVED!");
 
         EntityCreature babyZombie = new EntityCreature(EntityType.ZOMBIE);
         // Baby zombies are faster than adults (0.46 vs 0.23)
         babyZombie.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.46);
-        babyZombie.setCustomName(Component.text("The Golden Child", NamedTextColor.GOLD));
-        babyZombie.setCustomNameVisible(true);
+        EntityUtility.nameEntityVisible(babyZombie, "<6>The Golden Child");
 
         if (babyZombie.getEntityMeta() instanceof ZombieMeta zombieMeta) {
             zombieMeta.setBaby(true);

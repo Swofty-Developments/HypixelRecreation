@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.item.components;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.hunting.AttributeDefinition;
 import net.swofty.type.skyblockgeneric.hunting.AttributeRegistry;
 import net.swofty.type.skyblockgeneric.hunting.AttributeText;
@@ -23,20 +24,19 @@ public class AttributeShardComponent extends SkyBlockItemComponent {
         this.presetId = presetId;
         addInheritedComponent(new CustomDisplayNameComponent(item -> {
             AttributeDefinition definition = definition(item);
-            return definition == null ? "Attribute Shard" : definition.rarity().itemRarity().getLegacyColor()
-                    + definition.shardName();
+            return definition == null ? Text.literal("Attribute Shard") : Text.of("<color:{}>{}",
+                    definition.rarity().itemRarity().getColor(), definition.shardName());
         }));
         addInheritedComponent(new LoreUpdateComponent(new LoreConfig((item, player) -> lore(item), null), false));
         addInheritedComponent(new ExtraRarityComponent(item -> {
             AttributeDefinition definition = definition(item);
-            return definition == null ? "SHARD" : definition.category().name() + " SHARD §r§8(ID " + definition.id() + ")";
+            return definition == null ? "SHARD" : definition.category().name() + " SHARD <r><8>(ID " + definition.id() + ")";
         }));
         addInheritedComponent(new InteractableComponent((player, item) -> {
             AttributeDefinition definition = definition(item);
             if (definition == null) return;
             player.getHuntingData().addShards(definition.id(), item.getAmount());
-            player.sendMessage("§aAdded §e" + item.getAmount() + "x §a" + definition.shardName()
-                    + " to your Hunting Box!");
+            player.sendMessage("<a>Added <e>{}x <a>{} to your Hunting Box!", item.getAmount(), definition.shardName());
             item.setAmount(0);
         }, null, null));
     }
@@ -64,19 +64,20 @@ public class AttributeShardComponent extends SkyBlockItemComponent {
 
     private List<String> lore(SkyBlockItem item) {
         AttributeDefinition definition = definition(item);
-        if (definition == null) return List.of("§7An unknown Attribute Shard.");
+        if (definition == null) return List.of("<7>An unknown Attribute Shard.");
         List<String> lore = new ArrayList<>();
-        lore.add("§6" + definition.name() + " I");
-        // A physical shard always previews level I, rather than the full I-X range used by menus.
+        lore.add("<6>" + definition.name() + " I");
         String levelOneEffect = definition.effect().replaceAll(
                 "([+-]?\\d+(?:\\.\\d+)?%?)[–-][+-]?\\d+(?:\\.\\d+)?%?", "$1");
-        lore.addAll(AttributeText.wrap(levelOneEffect, "§7", 34));
+        for (Text line : AttributeText.wrapTexts(levelOneEffect, 34)) {
+            lore.add("<7>" + line.serialize());
+        }
         lore.add("");
-        lore.add("§7You can Syphon this shard from");
-        lore.add("§7your §aHunting Box§7.");
+        lore.add("<7>You can Syphon this shard from");
+        lore.add("<7>your <a>Hunting Box</a>.");
         lore.add("");
-        lore.add("§eRight-click to send to Hunting Box!");
-        lore.add("§eShift Right-click to move all!");
+        lore.add("<e>Right-click to send to Hunting Box!");
+        lore.add("<e>Shift Right-click to move all!");
         return lore;
     }
 }

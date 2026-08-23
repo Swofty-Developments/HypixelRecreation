@@ -14,7 +14,7 @@ public class NPCGladiator extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bGladiator", "§e§lCLICK"};
+                return new String[]{"<b>Gladiator", "<e><l>CLICK"};
             }
 
             @Override
@@ -50,11 +50,11 @@ public class NPCGladiator extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
-                                "Welcome to the §bColosseum§f!",
+                        .key("hello").lines(
+                                "Welcome to the <b>Colosseum<f>!",
                                 "Oh...wait. Nevermind.",
                                 "Here you can join me in drinking away your sorrows."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

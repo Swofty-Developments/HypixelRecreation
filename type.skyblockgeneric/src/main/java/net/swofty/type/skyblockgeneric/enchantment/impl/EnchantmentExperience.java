@@ -18,7 +18,7 @@ public class EnchantmentExperience implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
         double chance = CHANCE_PERCENTAGES[level - 1] * 100;
-        return "Grants a §a" + chance + "%§7 chance for mobs and ores to drop double experience.";
+        return "Grants a <a>" + chance + "%<7> chance for mobs and ores to drop double experience.";
     }
 
     @Override

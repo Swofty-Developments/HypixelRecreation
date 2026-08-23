@@ -12,7 +12,7 @@ public class NPCJacobus extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Jacobus", "§e§lCLICK"};
+                return new String[]{"Jacobus", "<e><l>CLICK"};
             }
 
             @Override

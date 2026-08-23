@@ -1,12 +1,9 @@
 package net.swofty.type.generic.gui.v2;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.minestom.server.item.component.TooltipDisplay;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 
 import java.util.*;
@@ -16,14 +13,10 @@ import java.util.function.Function;
 public final class Components {
 
     // use Components#fill(ViewLayout) instead which uses this
-    static final ItemStack.Builder FILLER = ItemStack.builder(Material.BLACK_STAINED_GLASS_PANE)
-            .set(DataComponents.CUSTOM_NAME, Component.space())
-            .set(DataComponents.TOOLTIP_DISPLAY, new TooltipDisplay(true, Set.of()));
-    public static final ItemStack.Builder CLOSE_BUTTON = ItemStack.builder(Material.BARRIER)
-            .set(DataComponents.CUSTOM_NAME, Component.text("§cClose"));
+    static final ItemStack.Builder FILLER = ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE);
+    public static final ItemStack.Builder CLOSE_BUTTON = ItemStacks.named(Material.BARRIER, "<c>Close");
 
-    public static final ItemStack.Builder BACK_BUTTON = ItemStack.builder(Material.ARROW)
-            .set(DataComponents.CUSTOM_NAME, Component.text("§aGo Back"));
+    public static final ItemStack.Builder BACK_BUTTON = ItemStacks.named(Material.ARROW, "<a>Go Back");
 
     public static ItemStack.Builder asFiller(Material material) {
         return FILLER.material(material);
@@ -43,13 +36,10 @@ public final class Components {
             return false;
         }
         Optional<ViewNavigator.NavigationEntry<Object>> prev = context.navigator().peekPrevious();
-        Component prevTitle = prev
+        Text prevTitle = prev
                 .map(entry -> entry.view().configuration().getTitleFunction().apply(entry.state(), context))
-                .orElse(Component.text("§r§7previous page"));
-        layout.slot(slot, (s, c) -> BACK_BUTTON.lore(
-                Component.text("§7To ").append(prevTitle)
-                        .color(NamedTextColor.GRAY).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-        ), (_, ctx) -> {
+                .orElse(Text.of("<7>previous page"));
+        layout.slot(slot, (s, c) -> ItemStacks.lore(BACK_BUTTON, "<7>To {}", prevTitle), (_, ctx) -> {
             ViewNavigator.get(ctx.player()).pop();
         });
         return true;
@@ -119,7 +109,7 @@ public final class Components {
         layout.slot(slot, (s, c) -> {
             int page = currentPageGetter.apply(s);
             if (page > 0) {
-                return ItemStack.builder(Material.ARROW).set(DataComponents.CUSTOM_NAME, Component.text("§ePrevious Page"));
+                return ItemStacks.named(Material.ARROW, "<e>Previous Page");
             }
             return FILLER;
         }, (click, ctx) -> {
@@ -135,7 +125,7 @@ public final class Components {
             int page = currentPageGetter.apply(s);
             int total = totalPagesGetter.apply(s);
             if (page < total - 1) {
-                return ItemStack.builder(Material.ARROW).set(DataComponents.CUSTOM_NAME, Component.text("§eNext Page"));
+                return ItemStacks.named(Material.ARROW, "<e>Next Page");
             }
             return FILLER;
         }, (click, ctx) -> {

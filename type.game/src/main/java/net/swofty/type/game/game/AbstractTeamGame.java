@@ -1,8 +1,8 @@
 package net.swofty.type.game.game;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.instance.InstanceContainer;
+import net.swofty.commons.text.Text;
 import net.swofty.type.game.game.event.GameTeamWinConditionEvent;
 import net.swofty.type.game.game.event.PlayerAssignedTeamEvent;
 import net.swofty.type.game.game.event.TeamEliminatedEvent;
@@ -93,8 +93,12 @@ public abstract class AbstractTeamGame<P extends GameParticipant, T extends Game
         ));
     }
 
-    public void broadcastMessage(Component message) {
+    public void broadcastMessage(Text message) {
         Audience.audience(getPlayers().stream().map(GameParticipant::getServerPlayer).toList()).sendMessage(message);
+    }
+
+    public void broadcastMessage(String markup, Object... arguments) {
+        broadcastMessage(Text.of(markup, arguments));
     }
 
     /**

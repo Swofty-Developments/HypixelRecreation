@@ -7,25 +7,19 @@ import net.minestom.server.item.Material;
 import net.swofty.commons.murdermystery.MurderMysteryLeaderboardMode;
 import net.swofty.commons.murdermystery.MurderMysteryLeaderboardPeriod;
 import net.swofty.commons.murdermystery.MurderMysteryModeStats;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointMurderMysteryModeStats;
 import net.swofty.type.generic.data.handlers.MurderMysteryDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 
-import java.text.DecimalFormat;
-
 public class GUIMurderMysteryStatistics extends HypixelInventoryGUI {
-    private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("#,###");
 
     public GUIMurderMysteryStatistics() {
         super("Murder Mystery Statistics", InventoryType.CHEST_5_ROW);
-    }
-
-    private static String formatNumber(long value) {
-        return NUMBER_FORMAT.format(value);
     }
 
     private static String formatTime(long millis) {
@@ -87,38 +81,49 @@ public class GUIMurderMysteryStatistics extends HypixelInventoryGUI {
                     if (mur > 0 && mur < quickestMurderer) quickestMurderer = mur;
                 }
 
-                return ItemStackCreator.getStack(
-                        "§aTotal Statistics",
-                        Material.PAPER,
-                        1,
-                        "§7Bow Kills: §a" + formatNumber(lifetimeBowKills) + " §8(Weekly: " + formatNumber(weeklyBowKills) + ")",
-                        "§7Knife Kills: §a" + formatNumber(lifetimeKnifeKills) + " §8(Weekly: " + formatNumber(weeklyKnifeKills) + ")",
-                        "§7Thrown Knife Kills: §a" + formatNumber(lifetimeThrownKnifeKills) + " §8(Weekly: " + formatNumber(weeklyThrownKnifeKills) + ")",
-                        "§7Trap Kills: §a" + formatNumber(lifetimeTrapKills) + " §8(Weekly: " + formatNumber(weeklyTrapKills) + ")",
-                        "§7Lifetime Kills: §a" + formatNumber(lifetimeKills),
-                        "§7Weekly Kills: §a" + formatNumber(weeklyKills),
-                        "",
-                        "§7Games: §a" + formatNumber(lifetimeGames),
-                        "§7Detective Wins: §a" + formatNumber(lifetimeDetectiveWins) + " §8(Weekly: " + formatNumber(weeklyDetectiveWins) + ")",
-                        "§7Murderer Wins: §a" + formatNumber(lifetimeMurdererWins) + " §8(Weekly: " + formatNumber(weeklyMurdererWins) + ")",
-                        "§7Kills as Hero: §a" + formatNumber(lifetimeKillsAsHero) + " §8(Weekly: " + formatNumber(weeklyKillsAsHero) + ")",
-                        "§7Lifetime Wins: §a" + formatNumber(lifetimeWins),
-                        "§7Weekly Wins: §a" + formatNumber(weeklyWins),
-                        "",
-                        "§7Quickest Detective Win Time: §a" + (quickestDetective == Long.MAX_VALUE ? "N/A" : formatTime(quickestDetective)),
-                        "§7Quickest Murderer Win Time: §a" + (quickestMurderer == Long.MAX_VALUE ? "N/A" : formatTime(quickestMurderer))
-                );
+                return ItemStacks.item(Material.PAPER, """
+                                <a>Total Statistics
+                                <7>Bow Kills: <a>{:,} <8>(Weekly: {:,})
+                                <7>Knife Kills: <a>{:,} <8>(Weekly: {:,})
+                                <7>Thrown Knife Kills: <a>{:,} <8>(Weekly: {:,})
+                                <7>Trap Kills: <a>{:,} <8>(Weekly: {:,})
+                                <7>Lifetime Kills: <a>{:,}
+                                <7>Weekly Kills: <a>{:,}
+
+                                <7>Games: <a>{:,}
+                                <7>Detective Wins: <a>{:,} <8>(Weekly: {:,})
+                                <7>Murderer Wins: <a>{:,} <8>(Weekly: {:,})
+                                <7>Kills as Hero: <a>{:,} <8>(Weekly: {:,})
+                                <7>Lifetime Wins: <a>{:,}
+                                <7>Weekly Wins: <a>{:,}
+
+                                <7>Quickest Detective Win Time: <a>{}
+                                <7>Quickest Murderer Win Time: <a>{}""",
+                        lifetimeBowKills, weeklyBowKills,
+                        lifetimeKnifeKills, weeklyKnifeKills,
+                        lifetimeThrownKnifeKills, weeklyThrownKnifeKills,
+                        lifetimeTrapKills, weeklyTrapKills,
+                        lifetimeKills,
+                        weeklyKills,
+                        lifetimeGames,
+                        lifetimeDetectiveWins, weeklyDetectiveWins,
+                        lifetimeMurdererWins, weeklyMurdererWins,
+                        lifetimeKillsAsHero, weeklyKillsAsHero,
+                        lifetimeWins,
+                        weeklyWins,
+                        quickestDetective == Long.MAX_VALUE ? "N/A" : formatTime(quickestDetective),
+                        quickestMurderer == Long.MAX_VALUE ? "N/A" : formatTime(quickestMurderer));
             }
         });
 
         // Classic Mode Statistics
-        set(createModeStatsItem(19, "§aClassic Mode Statistics", MurderMysteryLeaderboardMode.CLASSIC, stats, true));
+        set(createModeStatsItem(19, Text.of("<a>Classic Mode Statistics"), MurderMysteryLeaderboardMode.CLASSIC, stats, true));
 
         // Double Up! Mode Statistics
-        set(createModeStatsItem(21, "§aDouble Up! Mode Statistics", MurderMysteryLeaderboardMode.DOUBLE_UP, stats, true));
+        set(createModeStatsItem(21, Text.of("<a>Double Up! Mode Statistics"), MurderMysteryLeaderboardMode.DOUBLE_UP, stats, true));
 
         // Assassins Mode Statistics
-        set(createModeStatsItem(23, "§aAssassins Mode Statistics", MurderMysteryLeaderboardMode.ASSASSINS, stats, false));
+        set(createModeStatsItem(23, Text.of("<a>Assassins Mode Statistics"), MurderMysteryLeaderboardMode.ASSASSINS, stats, false));
 
         // Infection Mode Statistics
         set(new GUIItem(25) {
@@ -136,22 +141,27 @@ public class GUIMurderMysteryStatistics extends HypixelInventoryGUI {
                 long lifetimeTimeSurvived = stats.getTimeSurvived(mode, MurderMysteryLeaderboardPeriod.LIFETIME);
                 long weeklyTimeSurvived = stats.getTimeSurvived(mode, MurderMysteryLeaderboardPeriod.WEEKLY);
 
-                return ItemStackCreator.getStack(
-                        "§aInfection Mode Statistics",
-                        Material.PAPER,
-                        1,
-                        "§7Survivor Wins: §a" + formatNumber(lifetimeSurvivorWins) + " §8(Weekly: " + formatNumber(weeklySurvivorWins) + ")",
-                        "§7Alpha Wins: §a" + formatNumber(lifetimeAlphaWins) + " §8(Weekly: " + formatNumber(weeklyAlphaWins) + ")",
-                        "",
-                        "§7Lifetime Kills as Infected: §a" + formatNumber(lifetimeKillsAsInfected),
-                        "§7Weekly Kills as Infected: §a" + formatNumber(weeklyKillsAsInfected),
-                        "",
-                        "§7Lifetime Kills as Survivor: §a" + formatNumber(lifetimeKillsAsSurvivor),
-                        "§7Weekly Kills as Survivor: §a" + formatNumber(weeklyKillsAsSurvivor),
-                        "",
-                        "§7Total Time Survived: §a" + formatTime(lifetimeTimeSurvived),
-                        "§7Weekly Time Survived: §a" + formatTime(weeklyTimeSurvived)
-                );
+                return ItemStacks.item(Material.PAPER, """
+                                <a>Infection Mode Statistics
+                                <7>Survivor Wins: <a>{:,} <8>(Weekly: {:,})
+                                <7>Alpha Wins: <a>{:,} <8>(Weekly: {:,})
+
+                                <7>Lifetime Kills as Infected: <a>{:,}
+                                <7>Weekly Kills as Infected: <a>{:,}
+
+                                <7>Lifetime Kills as Survivor: <a>{:,}
+                                <7>Weekly Kills as Survivor: <a>{:,}
+
+                                <7>Total Time Survived: <a>{}
+                                <7>Weekly Time Survived: <a>{}""",
+                        lifetimeSurvivorWins, weeklySurvivorWins,
+                        lifetimeAlphaWins, weeklyAlphaWins,
+                        lifetimeKillsAsInfected,
+                        weeklyKillsAsInfected,
+                        lifetimeKillsAsSurvivor,
+                        weeklyKillsAsSurvivor,
+                        formatTime(lifetimeTimeSurvived),
+                        formatTime(weeklyTimeSurvived));
             }
         });
 
@@ -159,7 +169,7 @@ public class GUIMurderMysteryStatistics extends HypixelInventoryGUI {
         updateItemStacks(getInventory(), getPlayer());
     }
 
-    private GUIItem createModeStatsItem(int slot, String title, MurderMysteryLeaderboardMode mode, MurderMysteryModeStats stats, boolean includeRoleStats) {
+    private GUIItem createModeStatsItem(int slot, Text title, MurderMysteryLeaderboardMode mode, MurderMysteryModeStats stats, boolean includeRoleStats) {
         return new GUIItem(slot) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
@@ -187,43 +197,57 @@ public class GUIMurderMysteryStatistics extends HypixelInventoryGUI {
                     long quickestDetective = stats.getQuickestDetectiveWin(mode);
                     long quickestMurderer = stats.getQuickestMurdererWin(mode);
 
-                    return ItemStackCreator.getStack(
-                            title,
-                            Material.PAPER,
-                            1,
-                            "§7Bow Kills: §a" + formatNumber(lifetimeBowKills) + " §8(Weekly: " + formatNumber(weeklyBowKills) + ")",
-                            "§7Knife Kills: §a" + formatNumber(lifetimeKnifeKills) + " §8(Weekly: " + formatNumber(weeklyKnifeKills) + ")",
-                            "§7Thrown Knife Kills: §a" + formatNumber(lifetimeThrownKnifeKills) + " §8(Weekly: " + formatNumber(weeklyThrownKnifeKills) + ")",
-                            "§7Trap Kills: §a" + formatNumber(lifetimeTrapKills) + " §8(Weekly: " + formatNumber(weeklyTrapKills) + ")",
-                            "§7Lifetime Kills: §a" + formatNumber(lifetimeKills),
-                            "§7Weekly Kills: §a" + formatNumber(weeklyKills),
-                            "",
-                            "§7Games: §a" + formatNumber(lifetimeGames),
-                            "§7Detective Wins: §a" + formatNumber(lifetimeDetectiveWins) + " §8(Weekly: " + formatNumber(weeklyDetectiveWins) + ")",
-                            "§7Murderer Wins: §a" + formatNumber(lifetimeMurdererWins) + " §8(Weekly: " + formatNumber(weeklyMurdererWins) + ")",
-                            "§7Kills as Hero: §a" + formatNumber(lifetimeKillsAsHero) + " §8(Weekly: " + formatNumber(weeklyKillsAsHero) + ")",
-                            "§7Lifetime Wins: §a" + formatNumber(lifetimeWins),
-                            "§7Weekly Wins: §a" + formatNumber(weeklyWins),
-                            "",
-                            "§7Quickest Detective Win Time: §a" + (quickestDetective <= 0 ? "N/A" : formatTime(quickestDetective)),
-                            "§7Quickest Murderer Win Time: §a" + (quickestMurderer <= 0 ? "N/A" : formatTime(quickestMurderer))
-                    );
+                    return ItemStacks.item(Material.PAPER, 1, title, Text.of("""
+                                    <7>Bow Kills: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Knife Kills: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Thrown Knife Kills: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Trap Kills: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Lifetime Kills: <a>{:,}
+                                    <7>Weekly Kills: <a>{:,}
+
+                                    <7>Games: <a>{:,}
+                                    <7>Detective Wins: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Murderer Wins: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Kills as Hero: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Lifetime Wins: <a>{:,}
+                                    <7>Weekly Wins: <a>{:,}
+
+                                    <7>Quickest Detective Win Time: <a>{}
+                                    <7>Quickest Murderer Win Time: <a>{}""",
+                            lifetimeBowKills, weeklyBowKills,
+                            lifetimeKnifeKills, weeklyKnifeKills,
+                            lifetimeThrownKnifeKills, weeklyThrownKnifeKills,
+                            lifetimeTrapKills, weeklyTrapKills,
+                            lifetimeKills,
+                            weeklyKills,
+                            lifetimeGames,
+                            lifetimeDetectiveWins, weeklyDetectiveWins,
+                            lifetimeMurdererWins, weeklyMurdererWins,
+                            lifetimeKillsAsHero, weeklyKillsAsHero,
+                            lifetimeWins,
+                            weeklyWins,
+                            quickestDetective <= 0 ? "N/A" : formatTime(quickestDetective),
+                            quickestMurderer <= 0 ? "N/A" : formatTime(quickestMurderer)).lines());
                 } else {
                     // Assassins mode - no role-specific stats
-                    return ItemStackCreator.getStack(
-                            title,
-                            Material.PAPER,
-                            1,
-                            "§7Bow Kills: §a" + formatNumber(lifetimeBowKills) + " §8(Weekly: " + formatNumber(weeklyBowKills) + ")",
-                            "§7Knife Kills: §a" + formatNumber(lifetimeKnifeKills) + " §8(Weekly: " + formatNumber(weeklyKnifeKills) + ")",
-                            "§7Thrown Knife Kills: §a" + formatNumber(lifetimeThrownKnifeKills) + " §8(Weekly: " + formatNumber(weeklyThrownKnifeKills) + ")",
-                            "§7Trap Kills: §a" + formatNumber(lifetimeTrapKills) + " §8(Weekly: " + formatNumber(weeklyTrapKills) + ")",
-                            "§7Lifetime Kills: §a" + formatNumber(lifetimeKills),
-                            "§7Weekly Kills: §a" + formatNumber(weeklyKills),
-                            "",
-                            "§7Lifetime Wins: §a" + formatNumber(lifetimeWins),
-                            "§7Weekly Wins: §a" + formatNumber(weeklyWins)
-                    );
+                    return ItemStacks.item(Material.PAPER, 1, title, Text.of("""
+                                    <7>Bow Kills: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Knife Kills: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Thrown Knife Kills: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Trap Kills: <a>{:,} <8>(Weekly: {:,})
+                                    <7>Lifetime Kills: <a>{:,}
+                                    <7>Weekly Kills: <a>{:,}
+
+                                    <7>Lifetime Wins: <a>{:,}
+                                    <7>Weekly Wins: <a>{:,}""",
+                            lifetimeBowKills, weeklyBowKills,
+                            lifetimeKnifeKills, weeklyKnifeKills,
+                            lifetimeThrownKnifeKills, weeklyThrownKnifeKills,
+                            lifetimeTrapKills, weeklyTrapKills,
+                            lifetimeKills,
+                            weeklyKills,
+                            lifetimeWins,
+                            weeklyWins).lines());
                 }
             }
         };

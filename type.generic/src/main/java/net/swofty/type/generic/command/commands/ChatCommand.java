@@ -3,6 +3,7 @@ package net.swofty.type.generic.command.commands;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.arguments.ArgumentWord;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.data.datapoints.DatapointChatType;
@@ -42,28 +43,28 @@ public class ChatCommand extends HypixelCommand {
 
             if ((raw.equals("staffview") || raw.equals("sv"))) {
                 if (!player.getRank().isStaff()) {
-                    sender.sendMessage("§cUnknown chat type.");
+                    player.sendMessage("<c>Unknown chat type.");
                     return;
                 }
                 boolean enabled = staffView.getOrDefault(player.getUuid(), true);
                 staffView.put(player.getUuid(), !enabled);
-                sender.sendMessage("§aStaff chat viewing is now " + (!enabled ? "§aenabled" : "§cdisabled"));
+                player.sendMessage("<a>Staff chat viewing is now {}", !enabled ? Text.of("<a>enabled") : Text.of("<c>disabled"));
                 return;
             }
 
             PickerChatType type = PickerChatType.fromString(raw);
             if (type == null) {
-                sender.sendMessage("§cUnknown chat type.");
+                player.sendMessage("<c>Unknown chat type.");
                 return;
             }
 
             if (type.getChatType() == DatapointChatType.Chats.STAFF && !player.getRank().isStaff()) {
-                sender.sendMessage("§cUnknown chat type.");
+                player.sendMessage("<c>Unknown chat type.");
                 return;
             }
 
             player.getChatType().switchTo(type.getChatType());
-            sender.sendMessage("§aYou are now in the §6" + type.chatType.name() + " §achannel");
+            player.sendMessage("<a>You are now in the <6>{} <a>channel", type.chatType.name());
         }, chatType);
     }
 

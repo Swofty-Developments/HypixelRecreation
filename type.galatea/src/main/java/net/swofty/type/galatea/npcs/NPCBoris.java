@@ -12,7 +12,7 @@ public class NPCBoris extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bBoris", "§e§lCLICK"};
+                return new String[]{"<b>Boris", "<e><l>CLICK"};
             }
 
             @Override

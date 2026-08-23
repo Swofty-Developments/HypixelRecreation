@@ -15,7 +15,7 @@ public class NPCIronForger extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Iron Forger", "§e§lCLICK"};
+				return new String[]{"Iron Forger", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -60,11 +60,11 @@ public class NPCIronForger extends HypixelNPC {
 	public DialogueSet[] dialogues(HypixelPlayer player) {
 		return new DialogueSet[] {
 				DialogueSet.builder()
-						.key("hello").lines(new String[]{
+						.key("hello").lines(
 						"For my wares, you'll have to pay the iron price!",
 						"Seriously though, I accept Coins.",
 						"Click me again to open the Iron Forger Shop!"
-						}).build(),
+						).build(),
 		};
 	}
 }

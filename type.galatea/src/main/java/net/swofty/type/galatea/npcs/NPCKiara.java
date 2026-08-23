@@ -12,7 +12,7 @@ public class NPCKiara extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bKiara", "§e§lCLICK"};
+                return new String[]{"<b>Kiara", "<e><l>CLICK"};
             }
 
             @Override

@@ -1,7 +1,10 @@
 package net.swofty.service.election.endpoints;
 
 import com.google.gson.Gson;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.swofty.commons.protocol.RedisProtocol;
+import net.swofty.commons.text.Text;
 import net.swofty.commons.protocol.objects.election.ResolveElectionProtocol;
 import net.swofty.service.election.ElectionDatabase;
 import net.swofty.commons.redis.RedisMessageHandler;
@@ -21,6 +24,10 @@ public class ResolveElectionEndpoint implements RedisMessageHandler
     private static final Gson GSON = new Gson();
 
     private static final List<String> SPECIAL_MAYORS = List.of("SCORPIUS", "DERPY", "JERRY");
+
+    private static final List<NamedTextColor> CANDIDATE_COLORS = List.of(
+            NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.AQUA,
+            NamedTextColor.YELLOW, NamedTextColor.LIGHT_PURPLE);
 
     @Override
     public RedisProtocol<ResolveElectionProtocol.ResolveElectionMessage,
@@ -85,7 +92,7 @@ public class ResolveElectionEndpoint implements RedisMessageHandler
             boolean isSpecialWinner = SPECIAL_MAYORS.contains(winnerName);
 
             data.put("currentMayor", winnerName);
-            data.put("currentMayorColor", colorForIndex(winnerIndex));
+            data.put("currentMayorColor", wireColorForIndex(winnerIndex));
 
             if (winnerCandidate != null && winnerCandidate.get("activePerks") != null) {
                 data.put("currentMayorPerks", winnerCandidate.get("activePerks"));
@@ -117,7 +124,7 @@ public class ResolveElectionEndpoint implements RedisMessageHandler
                             : 1;
 
                     data.put("currentMinister", secondPlace);
-                    data.put("currentMinisterColor", colorForIndex(ministerIndex));
+                    data.put("currentMinisterColor", wireColorForIndex(ministerIndex));
 
                     List<String> ministerPerks = ministerCandidate != null
                             ? (List<String>) ministerCandidate.get("activePerks")
@@ -223,14 +230,11 @@ public class ResolveElectionEndpoint implements RedisMessageHandler
         };
     }
 
-    private static String colorForIndex(int index) {
-        return switch (index) {
-            case 0 -> "§c";
-            case 1 -> "§a";
-            case 2 -> "§b";
-            case 3 -> "§e";
-            case 4 -> "§d";
-            default -> "§f";
-        };
+    private static TextColor colorForIndex(int index) {
+        return index >= 0 && index < CANDIDATE_COLORS.size() ? CANDIDATE_COLORS.get(index) : NamedTextColor.WHITE;
+    }
+
+    private static String wireColorForIndex(int index) {
+        return Text.colorTag(colorForIndex(index));
     }
 }

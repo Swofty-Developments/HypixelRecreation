@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.protocol.Serializer;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.leaderboard.MapLeaderboardTracked;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategories;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategory;
@@ -149,20 +150,16 @@ public class DatapointCollection extends SkyBlockDatapoint<DatapointCollection.P
             int unlockedCollections = (int) items.keySet().stream().filter(this::unlocked).count();
 
             String unlockedPercentage = String.format("%.2f", (unlockedCollections / (double) allCollections) * 100);
-            lore.add("§7Collections Unlocked: §e" + unlockedPercentage + "§6%");
+            lore.add("<7>Collections Unlocked: <e>" + unlockedPercentage + "<6>%");
 
             String baseLoadingBar = "─────────────────";
             int maxBarLength = baseLoadingBar.length();
             int completedLength = (int) ((unlockedCollections / (double) allCollections) * maxBarLength);
 
-            String completedLoadingBar = "§2§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-            int formattingCodeLength = 4;  // Adjust this if you add or remove formatting codes
-            String uncompletedLoadingBar = "§7§m" + baseLoadingBar.substring(Math.min(
-                    completedLoadingBar.length() - formattingCodeLength, // Adjust for added formatting codes
-                    maxBarLength
-            ));
+            String completedLoadingBar = baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
+            String uncompletedLoadingBar = baseLoadingBar.substring(Math.min(completedLoadingBar.length(), maxBarLength));
 
-            lore.add(completedLoadingBar + uncompletedLoadingBar + "§r §e" + unlockedCollections + "§6/§e" + allCollections);
+            lore.add("<2><m>" + completedLoadingBar + "<7>" + uncompletedLoadingBar + "<r> <e>" + unlockedCollections + "<6>/<e>" + allCollections);
 
             return lore;
         }
@@ -173,27 +170,23 @@ public class DatapointCollection extends SkyBlockDatapoint<DatapointCollection.P
             int required = reward == null ? 0 : reward.requirement();
 
             if (reward == null) {
-                lore.add("§cMaxed out!");
+                lore.add("<c>Maxed out!");
                 return lore;
             }
 
             String collectedPercentage = String.format("%.2f", (collected / (double) required) * 100);
-            lore.add("§7Progress to " + collection.type().getDisplayName() + " " +
-                    StringUtility.getAsRomanNumeral(collection.getPlacementOf(reward) + 1) +
-                    ": §e" + collectedPercentage + "§6%");
+            lore.add(Text.of("<7>Progress to {} {:roman}: <e>{}<6>%",
+                    collection.type().getDisplayName(), collection.getPlacementOf(reward) + 1,
+                    collectedPercentage).serialize());
 
             String baseLoadingBar = "─────────────────";
             int maxBarLength = baseLoadingBar.length();
             int completedLength = (int) ((collected / (double) required) * maxBarLength);
 
-            String completedLoadingBar = "§2§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-            int formattingCodeLength = 4;  // Adjust this if you add or remove formatting codes
-            String uncompletedLoadingBar = "§7§m" + baseLoadingBar.substring(Math.min(
-                    completedLoadingBar.length() - formattingCodeLength, // Adjust for added formatting codes
-                    maxBarLength
-            ));
+            String completedLoadingBar = baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
+            String uncompletedLoadingBar = baseLoadingBar.substring(Math.min(completedLoadingBar.length(), maxBarLength));
 
-            lore.add(completedLoadingBar + uncompletedLoadingBar + "§r §e" + collected + "§6/§e" + required);
+            lore.add("<2><m>" + completedLoadingBar + "<7>" + uncompletedLoadingBar + "<r> <e>" + collected + "<6>/<e>" + required);
 
             if (reward.unlocks().length > 0) {
                 lore.add(" ");
@@ -210,23 +203,20 @@ public class DatapointCollection extends SkyBlockDatapoint<DatapointCollection.P
             int collected = get(collection.type());
 
             String collectedPercentage = String.format("%.2f", Math.min(((collected / (double) reward.requirement()) * 100), 100));
-            lore.add("§7Progress to " + collection.type().getDisplayName() + " " +
-                    StringUtility.getAsRomanNumeral(collection.getPlacementOf(reward) + 1) +
-                    ": §e" + collectedPercentage + "§6%");
+            lore.add(Text.of("<7>Progress to {} {:roman}: <e>{}<6>%",
+                    collection.type().getDisplayName(), collection.getPlacementOf(reward) + 1,
+                    collectedPercentage).serialize());
 
             String baseLoadingBar = "─────────────────";
             int maxBarLength = baseLoadingBar.length();
 
             int completedLength = (int) ((collected / (double) reward.requirement()) * maxBarLength);
 
-            String completedLoadingBar = "§2§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-            int formattingCodeLength = 4;  // Adjust this if you add or remove formatting codes
-            String uncompletedLoadingBar = "§7§m" + baseLoadingBar.substring(Math.min(
-                    completedLoadingBar.length() - formattingCodeLength, // Adjust for added formatting codes
-                    maxBarLength
-            ));
+            String completedLoadingBar = baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
+            String uncompletedLoadingBar = baseLoadingBar.substring(Math.min(completedLoadingBar.length(), maxBarLength));
 
-            lore.add(completedLoadingBar + uncompletedLoadingBar + "§r §e" + StringUtility.commaify(collected) + "§6/§e" + StringUtility.shortenNumber(reward.requirement()));
+            lore.add(Text.of("<2><m>{}<7>{}<r> <e>{:,}<6>/<e>{:short}",
+                    completedLoadingBar, uncompletedLoadingBar, collected, reward.requirement()).serialize());
 
             if (reward.unlocks().length > 0) {
                 lore.add(" ");
@@ -245,20 +235,16 @@ public class DatapointCollection extends SkyBlockDatapoint<DatapointCollection.P
             ).filter(this::unlocked).count();
 
             String unlockedPercentage = String.format("%.2f", (unlockedCollections / (double) allCollections) * 100);
-            lore.add("§7Collections Unlocked: §e" + unlockedPercentage + "§6%");
+            lore.add("<7>Collections Unlocked: <e>" + unlockedPercentage + "<6>%");
 
             String baseLoadingBar = "─────────────────";
             int maxBarLength = baseLoadingBar.length();
             int completedLength = (int) ((unlockedCollections / (double) allCollections) * maxBarLength);
 
-            String completedLoadingBar = "§2§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-            int formattingCodeLength = 4;  // Adjust this if you add or remove formatting codes
-            String uncompletedLoadingBar = "§7§m" + baseLoadingBar.substring(Math.min(
-                    completedLoadingBar.length() - formattingCodeLength, // Adjust for added formatting codes
-                    maxBarLength
-            ));
+            String completedLoadingBar = baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
+            String uncompletedLoadingBar = baseLoadingBar.substring(Math.min(completedLoadingBar.length(), maxBarLength));
 
-            lore.add(completedLoadingBar + uncompletedLoadingBar + "§r §e" + unlockedCollections + "§6/§e" + allCollections);
+            lore.add("<2><m>" + completedLoadingBar + "<7>" + uncompletedLoadingBar + "<r> <e>" + unlockedCollections + "<6>/<e>" + allCollections);
 
             return lore;
         }

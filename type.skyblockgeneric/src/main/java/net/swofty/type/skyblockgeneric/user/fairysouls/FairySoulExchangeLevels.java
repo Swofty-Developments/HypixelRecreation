@@ -79,10 +79,10 @@ public enum FairySoulExchangeLevels {
         List<String> toReturn = new ArrayList<>();
 
         if (skyBlockXP > 0) {
-            toReturn.add("§8+§b" + skyBlockXP + " SkyBlock XP");
+            toReturn.add("<8>+<b>" + skyBlockXP + " SkyBlock XP");
         }
         for (int i = 0; i < backpackSlots; i++) {
-            toReturn.add("§6Backpack Slot #" + (previousAmountOfUnlockedSlots(1) + i + 1));
+            toReturn.add("<6>Backpack Slot #" + (previousAmountOfUnlockedSlots(1) + i + 1));
         }
 
         return toReturn;

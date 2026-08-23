@@ -16,7 +16,7 @@ public class NPCCastleGuardSix extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§6Castle Guard", "§e§lCLICK"};
+				return new String[]{"<6>Castle Guard", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -53,9 +53,9 @@ public class NPCCastleGuardSix extends HypixelNPC {
 		return Stream.of(
 				DialogueSet.builder()
 						.key("idle")
-						.lines(new String[]{
-								"§fI, Murdohr, son of Murdohr the Third, Commander of the Phoenix Forge, and Warden of the Holy Pickaxe, am guarding this wall."
-						})
+						.lines(
+								"<f>I, Murdohr, son of Murdohr the Third, Commander of the Phoenix Forge, and Warden of the Holy Pickaxe, am guarding this wall."
+						)
 						.build()
 		).toArray(DialogueSet[]::new);
 	}

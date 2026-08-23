@@ -8,7 +8,7 @@ import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarslobby.kit.SkywarsKit;
@@ -36,12 +36,9 @@ public class GUIKitPurchaseConfirm extends HypixelInventoryGUI {
         set(new GUIClickableItem(11) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aConfirm",
-                        Material.GREEN_TERRACOTTA,
-                        1,
-                        "§7Purchase " + kit.getName() + " for " + String.format("%,d", kit.getCost()) + " coins."
-                );
+                return ItemStacks.item(Material.GREEN_TERRACOTTA, 1, """
+                        <a>Confirm
+                        <7>Purchase {} for {:,} coins.""", kit.getName(), kit.getCost());
             }
 
             @Override
@@ -63,12 +60,12 @@ public class GUIKitPurchaseConfirm extends HypixelInventoryGUI {
                     ).getValue();
                     unlocks.unlockKit(kit.getId());
 
-                    player.sendMessage("§aYou purchased the §e" + kit.getName() + " §akit!");
+                    player.sendMessage("<a>You purchased the <e>{} <a>kit!", kit.getName());
 
                     // Return to kit selector
                     new GUIKitSelector(mode, returnPage).open(player);
                 } else {
-                    player.sendMessage("§cYou don't have enough coins!");
+                    player.sendMessage("<c>You don't have enough coins!");
                     new GUIKitSelector(mode, returnPage).open(player);
                 }
             }
@@ -78,12 +75,9 @@ public class GUIKitPurchaseConfirm extends HypixelInventoryGUI {
         set(new GUIClickableItem(15) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§cCancel",
-                        Material.RED_TERRACOTTA,
-                        1,
-                        "§7Return to previous menu."
-                );
+                return ItemStacks.item(Material.RED_TERRACOTTA, 1, """
+                        <c>Cancel
+                        <7>Return to previous menu.""");
             }
 
             @Override

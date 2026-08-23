@@ -5,7 +5,7 @@ import net.minestom.server.event.trait.CancellableEvent;
 import net.minestom.server.event.trait.PlayerInstanceEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.lobby.item.LobbyItem;
 
@@ -17,7 +17,7 @@ public class Collectibles extends LobbyItem {
 
 	@Override
 	public ItemStack getBlandItem() {
-		return ItemStackCreator.createNamedItemStack(Material.CHEST, "§aCollectibles §7(Right Click)").build();
+		return ItemStacks.named(Material.CHEST, "<a>Collectibles <7>(Right Click)").build();
 	}
 
 	@Override

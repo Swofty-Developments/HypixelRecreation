@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.rusty;
 
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
@@ -10,7 +9,7 @@ import java.util.function.Function;
 public class GUIRustyWeaponsAndGear extends GUIRustySubMenu<GUIRustyWeaponsAndGear.RustyItem> {
     public GUIRustyWeaponsAndGear() {
         super(
-                () -> I18n.string("gui_rusty.weapons.title"),
+                "gui_rusty.weapons.title",
                 () -> List.of(RustyItem.values())
         );
     }

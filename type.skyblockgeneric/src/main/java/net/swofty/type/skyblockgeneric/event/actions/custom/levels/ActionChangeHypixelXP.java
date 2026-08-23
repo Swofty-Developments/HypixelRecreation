@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.event.actions.custom.levels;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
@@ -26,7 +27,7 @@ public class ActionChangeHypixelXP implements HypixelEventClass {
 
         if (oldLevel == newLevel) {
             if (event.getCause().shouldDisplayMessage(player))
-                player.sendMessage("§b+§3" + (event.getNewXP() - event.getOldXP()) + " §bSkyBlock XP");
+                player.sendMessage("<b>+<3>{} <b>SkyBlock XP", event.getNewXP() - event.getOldXP());
         } else {
             ActionAddSkyBlockXPToNametag.updatePlayerNametag(player);
             if (!(event.getCause() instanceof LevelCause)) {
@@ -36,18 +37,18 @@ public class ActionChangeHypixelXP implements HypixelEventClass {
             }
             List<SkyBlockLevelUnlock> unlocks = newLevel.getUnlocks();
 
-            player.sendMessage("§3§m---------------------------------");
-            player.sendMessage("  §b§lSKYBLOCK LEVEL UP! §7" + oldLevel.asInt() + " §8§l-> §3" + newLevel.asInt());
+            player.sendMessage("<3><m>---------------------------------");
+            player.sendMessage("  <b><l>SKYBLOCK LEVEL UP! </l><7>{} <8><l>-> </l><3>{}", oldLevel.asInt(), newLevel.asInt());
             if (!unlocks.isEmpty()) {
                 player.sendMessage(" ");
-                player.sendMessage("  §a§lREWARDS");
+                player.sendMessage("  <a><l>REWARDS");
                 unlocks.forEach(unlock -> {
                     unlock.getDisplay(player, newLevel.asInt()).forEach(line -> {
-                        player.sendMessage("  §8" + line);
+                        player.sendMessage(Text.of("  <8>").append(line));
                     });
                 });
             }
-            player.sendMessage("§3§m---------------------------------");
+            player.sendMessage("<3><m>---------------------------------");
         }
     }
 }

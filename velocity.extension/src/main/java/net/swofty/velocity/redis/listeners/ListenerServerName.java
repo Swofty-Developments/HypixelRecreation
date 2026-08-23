@@ -20,6 +20,11 @@ public class ListenerServerName implements RedisMessageHandler<
     @Override
     public RequestServerNameProtocol.Response handle(RequestServerNameProtocol.Request message, RedisMessageContext context) {
         GameManager.GameServer server = GameManager.getFromUUID(UUID.fromString(context.origin().id()));
+        if (server == null) {
+            return new RequestServerNameProtocol.Response(null, null, false,
+                    "Server " + context.origin().id() + " is not registered with the proxy");
+        }
+
         return new RequestServerNameProtocol.Response(server.displayName(), server.shortDisplayName(), true, null);
     }
 }

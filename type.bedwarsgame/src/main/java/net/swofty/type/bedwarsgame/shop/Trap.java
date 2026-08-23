@@ -3,9 +3,6 @@ package net.swofty.type.bedwarsgame.shop;
 import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.TitlePart;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
@@ -46,9 +43,7 @@ public abstract class Trap {
 		game.getPlayers().stream()
 				.filter(p -> teamKey.equals(p.getTeamKey()))
 				.forEach(player -> {
-					player.sendTitlePart(TitlePart.TITLE, Component.text("TRAP TRIGGERED")
-							.color(NamedTextColor.RED)
-							.decoration(TextDecoration.BOLD, true));
+					player.sendTitlePart(TitlePart.TITLE, "<c><l>TRAP TRIGGERED");
 					player.playSound(Sound.sound(Key.key("minecraft:entity.enderman.death"), Sound.Source.MASTER, 1.0f, 0.6f));
 				});
 		onTrigger(game, teamKey, triggerer);

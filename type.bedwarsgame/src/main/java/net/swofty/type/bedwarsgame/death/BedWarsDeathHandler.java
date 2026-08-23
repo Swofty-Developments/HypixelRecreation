@@ -1,10 +1,10 @@
 package net.swofty.type.bedwarsgame.death;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.replay.BedWarsReplayMessages;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +57,7 @@ public final class BedWarsDeathHandler {
             || weapon == Material.TRIDENT;
     }
 
-    public static Component createDeathMessage(@NotNull BedWarsDeathResult result) {
+    public static Text createDeathMessage(@NotNull BedWarsDeathResult result) {
         return BedWarsReplayMessages.death(result);
     }
 }

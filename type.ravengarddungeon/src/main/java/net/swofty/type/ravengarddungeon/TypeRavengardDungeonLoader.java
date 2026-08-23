@@ -2,7 +2,6 @@ package net.swofty.type.ravengarddungeon;
 
 import com.google.gson.Gson;
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.Instance;
@@ -11,6 +10,7 @@ import net.swofty.commons.CustomWorlds;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.Tuple;
+import net.swofty.commons.text.Text;
 import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.type.generic.HypixelTypeLoader;
 import net.swofty.type.generic.RavengardTypeLoader;
@@ -182,7 +182,7 @@ public class TypeRavengardDungeonLoader implements RavengardTypeLoader {
     }
 
     @Override
-    public @NonNull Optional<Tuple<Component, Component>> headerFooter() {
-        return Optional.of(new Tuple<>(Component.empty(), Component.empty()));
+    public @NonNull Optional<Tuple<Text, Text>> headerFooter() {
+        return Optional.of(new Tuple<>(Text.empty(), Text.empty()));
     }
 }

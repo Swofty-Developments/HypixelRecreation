@@ -1,9 +1,9 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.collection;
 
 import net.minestom.server.inventory.InventoryType;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -19,7 +19,6 @@ import net.swofty.type.skyblockgeneric.item.components.MinionComponent;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +51,7 @@ public class GUICollectionReward extends StatelessView {
 
     @Override
     public ViewConfiguration<DefaultState> configuration() {
-        return new ViewConfiguration<>(item.getDisplayName() + " " +
-                StringUtility.getAsRomanNumeral(placement + 1) + " Rewards", InventoryType.CHEST_6_ROW);
+        return new ViewConfiguration<>(Text.of("{} {:roman} Rewards", item.getDisplayName(), placement + 1), InventoryType.CHEST_6_ROW);
     }
 
     @Override
@@ -64,13 +62,16 @@ public class GUICollectionReward extends StatelessView {
 
         layout.slot(4, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-            List<String> lore = new ArrayList<>(Arrays.asList(
-                    "§7View your " + item.getDisplayName() + " " + StringUtility.getAsRomanNumeral(placement + 1) + " Collection rewards!",
-                    " "
-            ));
-            player.getCollection().getDisplay(lore, category, reward);
-            return ItemStackCreator.getStack("§a" + item.getDisplayName() + " " + StringUtility.getAsRomanNumeral(placement + 1),
-                    item.material, 1, lore);
+            List<String> rendered = new ArrayList<>();
+            player.getCollection().getDisplay(rendered, category, reward);
+
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.of("<7>View your {} {:roman} Collection rewards!", item.getDisplayName(), placement + 1));
+            lore.add(Text.empty());
+            lore.addAll(rendered.stream().map(Text::parse).toList());
+
+            return ItemStacks.item(item.material, 1,
+                    Text.of("<a>{} {:roman}", item.getDisplayName(), placement + 1), lore);
         });
 
         int[] slots = SLOTS.getOrDefault(reward.unlocks().length, new int[]{});

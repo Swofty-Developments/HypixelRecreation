@@ -4,16 +4,16 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 public class GUIRusty extends HypixelInventoryGUI {
     public GUIRusty() {
-        super(I18n.t("gui_rusty.main.title"), InventoryType.CHEST_4_ROW);
+        super(Text.key("gui_rusty.main.title"), InventoryType.CHEST_4_ROW);
     }
 
 
@@ -29,8 +29,8 @@ public class GUIRusty extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return TranslatableItemStackCreator.getStack("gui_rusty.main.weapons_button", Material.IRON_SWORD, 1,
-                        "gui_rusty.main.weapons_button.lore");
+                return ItemStacks.item(Material.IRON_SWORD, 1, Text.key("gui_rusty.main.weapons_button"),
+                        Text.keyLines("gui_rusty.main.weapons_button.lore"));
             }
         });
 
@@ -42,8 +42,8 @@ public class GUIRusty extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return TranslatableItemStackCreator.getStackHead("gui_rusty.main.pets_button", "4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884", 1,
-                        "gui_rusty.main.pets_button.lore");
+                return ItemStacks.head("4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884",
+                        Text.key("gui_rusty.main.pets_button"), Text.keyLines("gui_rusty.main.pets_button.lore"));
             }
         });
 
@@ -55,8 +55,9 @@ public class GUIRusty extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return TranslatableItemStackCreator.getStackHead("gui_rusty.main.accessories_button", "3ada666715bfd2aa9fbd81daef59b9fe1c96c4fa0d08dbc72eae5633177dbf88", 1,
-                        "gui_rusty.main.accessories_button.lore");
+                return ItemStacks.head("3ada666715bfd2aa9fbd81daef59b9fe1c96c4fa0d08dbc72eae5633177dbf88",
+                        Text.key("gui_rusty.main.accessories_button"),
+                        Text.keyLines("gui_rusty.main.accessories_button.lore"));
             }
         });
 
@@ -68,16 +69,16 @@ public class GUIRusty extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return TranslatableItemStackCreator.getStack("gui_rusty.main.miscellaneous_button", Material.FILLED_MAP, 1,
-                        "gui_rusty.main.miscellaneous_button.lore");
+                return ItemStacks.item(Material.FILLED_MAP, 1, Text.key("gui_rusty.main.miscellaneous_button"),
+                        Text.keyLines("gui_rusty.main.miscellaneous_button.lore"));
             }
         });
 
         set(new GUIItem(32) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return TranslatableItemStackCreator.getStack("gui_rusty.main.janitor_info", Material.REDSTONE_TORCH, 1,
-                        "gui_rusty.main.janitor_info.lore");
+                return ItemStacks.item(Material.REDSTONE_TORCH, 1, Text.key("gui_rusty.main.janitor_info"),
+                        Text.keyLines("gui_rusty.main.janitor_info.lore"));
             }
         });
 

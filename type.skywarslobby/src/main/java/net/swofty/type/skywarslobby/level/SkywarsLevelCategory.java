@@ -1,6 +1,7 @@
 package net.swofty.type.skywarslobby.level;
 
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -115,16 +116,6 @@ public interface SkywarsLevelCategory {
             List<Reward> rewards
     ) {
         /**
-         * Get the display name color code for this level
-         */
-        public String getDisplayColor() {
-            if (isPrestige && prestigeColor != null) {
-                return "§" + prestigeColor;
-            }
-            return "§a"; // Default green for normal unlocked levels
-        }
-
-        /**
          * Get the level type description
          */
         public String getLevelType() {
@@ -134,11 +125,11 @@ public interface SkywarsLevelCategory {
         /**
          * Format the level emblem for display
          */
-        public String getEmblem() {
+        public Text getEmblem() {
             if (isPrestige && prestigeColor != null) {
-                return "§" + prestigeColor + "[" + level + "\u272F]";
+                return Text.of("<color:{}>[{}\u272F]", prestigeColor, level);
             }
-            return "§7[" + level + "\u272F]";
+            return Text.of("<7>[{}\u272F]", level);
         }
     }
 
@@ -146,7 +137,7 @@ public interface SkywarsLevelCategory {
      * Base interface for all reward types
      */
     sealed interface Reward permits CoinReward, HypixelXPReward, TokenReward, OpalReward, PrestigeSchemeReward, FeatureUnlockReward {
-        String getDisplayLine();
+        Text getDisplayLine();
     }
 
     /**
@@ -154,8 +145,8 @@ public interface SkywarsLevelCategory {
      */
     record CoinReward(int amount) implements Reward {
         @Override
-        public String getDisplayLine() {
-            return " §8+§6" + formatNumber(amount) + " §7SkyWars Coins";
+        public Text getDisplayLine() {
+            return Text.of(" <8>+<6>{} <7>SkyWars Coins", formatNumber(amount));
         }
     }
 
@@ -164,8 +155,8 @@ public interface SkywarsLevelCategory {
      */
     record HypixelXPReward(int amount) implements Reward {
         @Override
-        public String getDisplayLine() {
-            return " §8+§3" + formatNumber(amount) + "§7 Hypixel Experience";
+        public Text getDisplayLine() {
+            return Text.of(" <8>+<3>{}<7> Hypixel Experience", formatNumber(amount));
         }
     }
 
@@ -174,8 +165,8 @@ public interface SkywarsLevelCategory {
      */
     record TokenReward(int amount) implements Reward {
         @Override
-        public String getDisplayLine() {
-            return " §8+§2" + formatNumber(amount) + " §7SkyWars Tokens";
+        public Text getDisplayLine() {
+            return Text.of(" <8>+<2>{} <7>SkyWars Tokens", formatNumber(amount));
         }
     }
 
@@ -184,8 +175,8 @@ public interface SkywarsLevelCategory {
      */
     record OpalReward(int amount) implements Reward {
         @Override
-        public String getDisplayLine() {
-            return " §8+§9" + amount + " §7Opal";
+        public Text getDisplayLine() {
+            return Text.of(" <8>+<9>{} <7>Opal", amount);
         }
     }
 
@@ -194,8 +185,8 @@ public interface SkywarsLevelCategory {
      */
     record PrestigeSchemeReward(String name, String colorCode, int level) implements Reward {
         @Override
-        public String getDisplayLine() {
-            return " §8+§" + colorCode + "[" + level + "\u272F] §a" + name + " §7Prestige Scheme";
+        public Text getDisplayLine() {
+            return Text.of(" <8>+<color:{}>[{}\u272F] <a>{} <7>Prestige Scheme", colorCode, level, name);
         }
     }
 
@@ -204,11 +195,11 @@ public interface SkywarsLevelCategory {
      */
     record FeatureUnlockReward(String feature) implements Reward {
         @Override
-        public String getDisplayLine() {
+        public Text getDisplayLine() {
             return switch (feature) {
-                case "ANGELS_DESCENT" -> " §8+§bAccess to the Angel's Descent";
-                case "ANGELS_BREWERY" -> " §8+§cAccess to Angel's Brewery";
-                default -> " §8+§7" + feature;
+                case "ANGELS_DESCENT" -> Text.of(" <8>+<b>Access to the Angel's Descent");
+                case "ANGELS_BREWERY" -> Text.of(" <8>+<c>Access to Angel's Brewery");
+                default -> Text.of(" <8>+<7>{}", feature);
             };
         }
     }

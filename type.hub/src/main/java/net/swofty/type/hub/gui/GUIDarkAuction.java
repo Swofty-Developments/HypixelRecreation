@@ -1,6 +1,5 @@
 package net.swofty.type.hub.gui;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
@@ -12,9 +11,10 @@ import net.swofty.commons.ServiceType;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.protocol.objects.darkauction.PlaceBidProtocol;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.RefreshingGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
@@ -24,6 +24,8 @@ import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.NonPlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI {
     private static final ProxyService darkAuctionService = new ProxyService(ServiceType.DARK_AUCTION);
@@ -53,7 +55,7 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         updateItems((SkyBlockPlayer) e.player());
     }
 
@@ -61,11 +63,9 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
         DarkAuctionHandler.DarkAuctionLocalState state = DarkAuctionHandler.getLocalState();
 
         if (state == null) {
-            set(22, ItemStackCreator.getStack(
-                    "§cNo Active Auction",
-                    Material.BARRIER, 1,
-                    "§7The Dark Auction is not currently active."
-            ));
+            set(22, ItemStacks.item(Material.BARRIER, """
+                    <c>No Active Auction
+                    <7>The Dark Auction is not currently active."""));
             return;
         }
 
@@ -86,10 +86,10 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
         // Update title to show item and round (strip color codes for clean title)
         String itemName = StringUtility.stripColor(getFormattedItemName(state.getCurrentItemType()));
         int round = state.getCurrentRound() + 1;
-        getInventory().setTitle(Component.text(itemName + " - Round " + round));
+        setTitle("{} - Round {}", itemName, round);
 
         // Fill with glass
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
 
         // Item display in slot 22 using NonPlayerItemUpdater
         set(new GUIItem(22) {
@@ -97,7 +97,7 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 String itemTypeName = state.getCurrentItemType();
                 if (itemTypeName == null) {
-                    return ItemStackCreator.getStack("§cWaiting...", Material.HOPPER, 1);
+                    return ItemStacks.item(Material.HOPPER, "<c>Waiting...");
                 }
 
                 try {
@@ -105,11 +105,9 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
                     SkyBlockItem item = new SkyBlockItem(itemType);
                     return new NonPlayerItemUpdater(item).getUpdatedItem();
                 } catch (Exception ex) {
-                    return ItemStackCreator.getStack(
-                            "§e" + formatItemName(itemTypeName),
-                            Material.CHEST, 1,
-                            "§7Current auction item"
-                    );
+                    return ItemStacks.item(Material.CHEST, """
+                            <e>{}
+                            <7>Current auction item""", formatItemName(itemTypeName));
                 }
             }
         });
@@ -123,25 +121,23 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
                 // Check if player is highest bidder
                 if (state.getHighestBidderId() != null &&
                         state.getHighestBidderId().equals(sp.getUuid())) {
-                    sp.sendMessage("§cYou cannot leave while you are the highest bidder!");
+                    sp.sendMessage("<c>You cannot leave while you are the highest bidder!");
                     return;
                 }
 
                 DarkAuctionHandler.removePlayerFromAuction(sp.getUuid());
                 sp.closeInventory();
-                sp.sendMessage("§7You left the Dark Auction.");
+                sp.sendMessage("<7>You left the Dark Auction.");
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack(
-                        "§cClose",
-                        Material.BARRIER, 1,
-                        "§7Click to close this menu",
-                        "",
-                        "§cWarning: §7You cannot leave if",
-                        "§7you are the highest bidder!"
-                );
+                return ItemStacks.item(Material.BARRIER, """
+                        <c>Close
+                        <7>Click to close this menu
+
+                        <c>Warning: <7>You cannot leave if
+                        <7>you are the highest bidder!""");
             }
         });
     }
@@ -150,10 +146,10 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
         // Update title to match countdown phase format
         String itemName = StringUtility.stripColor(getFormattedItemName(state.getCurrentItemType()));
         int round = state.getCurrentRound() + 1;
-        getInventory().setTitle(Component.text(itemName + " - Round " + round));
+        setTitle("{} - Round {}", itemName, round);
 
         // Fill with glass
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
 
         // Item display in slot 4 using NonPlayerItemUpdater
         set(new GUIItem(4) {
@@ -161,7 +157,7 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 String itemTypeName = state.getCurrentItemType();
                 if (itemTypeName == null) {
-                    return ItemStackCreator.getStack("§cWaiting...", Material.HOPPER, 1);
+                    return ItemStacks.item(Material.HOPPER, "<c>Waiting...");
                 }
 
                 try {
@@ -169,11 +165,9 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
                     SkyBlockItem item = new SkyBlockItem(itemType);
                     return new NonPlayerItemUpdater(item).getUpdatedItem();
                 } catch (Exception ex) {
-                    return ItemStackCreator.getStack(
-                            "§e" + formatItemName(itemTypeName),
-                            Material.CHEST, 1,
-                            "§7Current auction item"
-                    );
+                    return ItemStacks.item(Material.CHEST, """
+                            <e>{}
+                            <7>Current auction item""", formatItemName(itemTypeName));
                 }
             }
         });
@@ -183,14 +177,14 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
         set(new GUIItem(5) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack(
-                        "§eTime Left",
-                        Material.CLOCK, Math.max(1, Math.min(64, timeLeft)),
-                        "§7Time remaining: §b" + timeLeft + " seconds",
-                        "",
-                        "§7Current bid: §6" + StringUtility.commaify(state.getCurrentBid()) + " coins",
-                        "§7Highest bidder: §e" + (state.getHighestBidderName() != null ? state.getHighestBidderName() : "None")
-                );
+                return ItemStacks.item(Material.CLOCK, Math.max(1, Math.min(64, timeLeft)), """
+                        <e>Time Left
+                        <7>Time remaining: <b>{} seconds
+
+                        <7>Current bid: <6>{:,} coins
+                        <7>Highest bidder: <e>{}""",
+                        timeLeft, state.getCurrentBid(),
+                        state.getHighestBidderName() != null ? state.getHighestBidderName() : "None");
             }
         });
 
@@ -237,26 +231,25 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
 
                     // Only allow bidding on future values (iron ingots)
                     if (bidValue <= currentBid) {
-                        sp.sendMessage("§cThis bid amount has already been passed!");
+                        sp.sendMessage("<c>This bid amount has already been passed!");
                         return;
                     }
 
                     // Check if player has enough coins
                     if (sp.getCoins() < bidValue) {
-                        sp.sendMessage("§cYou don't have enough coins! You need §6" +
-                                StringUtility.commaify(bidValue) + " coins§c.");
+                        sp.sendMessage("<c>You don't have enough coins! You need <6>{:,} coins</6>.", bidValue);
                         return;
                     }
 
                     // Check if already highest bidder
                     if (state.getHighestBidderId() != null &&
                             state.getHighestBidderId().equals(sp.getUuid())) {
-                        sp.sendMessage("§cYou are already the highest bidder!");
+                        sp.sendMessage("<c>You are already the highest bidder!");
                         return;
                     }
 
                     // Send bid to service
-                    sp.sendMessage("§7Placing bid of §6" + StringUtility.commaify(bidValue) + " coins§7...");
+                    sp.sendMessage("<7>Placing bid of <6>{:,} coins</6>...", bidValue);
 
                     PlaceBidProtocol.PlaceBidMessage bidMessage = new PlaceBidProtocol.PlaceBidMessage(
                             state.getAuctionId(),
@@ -269,13 +262,13 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
                             .thenAccept(response -> {
                                 if (response instanceof PlaceBidProtocol.PlaceBidResponse(boolean success, String message, String error)) {
                                     if (!success) {
-                                        sp.sendMessage("§c" + message);
+                                        sp.sendMessage("<c>{}", message);
                                     }
                                 }
                             })
                             .exceptionally(throwable -> {
                                 Logger.error(throwable, "Error placing bid");
-                                sp.sendMessage("§cFailed to place bid. Please try again.");
+                                sp.sendMessage("<c>Failed to place bid. Please try again.");
                                 return null;
                             });
                 }
@@ -287,36 +280,31 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
 
                     if (bidValue < currentBid) {
                         // Past bid - barrier
-                        return ItemStackCreator.getStack(
-                                "§c" + formatCoins(bidValue),
-                                Material.BARRIER, 1,
-                                "§7This bid has already been passed",
-                                "",
-                                "§cBid amount: §6" + StringUtility.commaify(bidValue) + " coins"
-                        );
+                        return ItemStacks.item(Material.BARRIER, """
+                                <c>{}
+                                <7>This bid has already been passed
+
+                                <c>Bid amount: <6>{:,} coins""", formatCoins(bidValue), bidValue);
                     } else if (bidValue == currentBid) {
                         // Current bid - gold block
-                        return ItemStackCreator.getStack(
-                                "§6" + formatCoins(bidValue) + " §7(Current Bid)",
-                                Material.GOLD_BLOCK, 1,
-                                "§7This is the current highest bid",
-                                "",
-                                "§eBid amount: §6" + StringUtility.commaify(bidValue) + " coins",
-                                "§7Bidder: §e" + (state.getHighestBidderName() != null ? state.getHighestBidderName() : "None")
-                        );
+                        return ItemStacks.item(Material.GOLD_BLOCK, """
+                                <6>{} <7>(Current Bid)
+                                <7>This is the current highest bid
+
+                                <e>Bid amount: <6>{:,} coins
+                                <7>Bidder: <e>{}""", formatCoins(bidValue), bidValue,
+                                state.getHighestBidderName() != null ? state.getHighestBidderName() : "None");
                     } else {
                         // Future bid - enchanted iron ingot
-                        ItemStack.Builder builder = ItemStackCreator.getStack(
-                                (canAfford ? "§a" : "§c") + formatCoins(bidValue),
-                                Material.IRON_INGOT, 1,
-                                "§7Click to place this bid",
-                                "",
-                                "§eBid amount: §6" + StringUtility.commaify(bidValue) + " coins",
-                                "",
-                                canAfford ? "§eClick to bid!" : "§cNot enough coins!"
-                        );
-                        builder.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
-                        return builder;
+                        return ItemStacks.enchanted(ItemStacks.item(Material.IRON_INGOT, 1,
+                                Text.of((canAfford ? "<a>" : "<c>") + "{}", formatCoins(bidValue)),
+                                List.of(
+                                        Text.of("<7>Click to place this bid"),
+                                        Text.empty(),
+                                        Text.of("<e>Bid amount: <6>{:,} coins", bidValue),
+                                        Text.empty(),
+                                        Text.of(canAfford ? "<e>Click to bid!" : "<c>Not enough coins!")
+                                )));
                     }
                 }
             });
@@ -346,7 +334,7 @@ public class GUIDarkAuction extends HypixelInventoryGUI implements RefreshingGUI
     }
 
     private String getFormattedItemName(String itemTypeName) {
-        if (itemTypeName == null) return "§fUnknown Item";
+        if (itemTypeName == null) return "Unknown Item";
         try {
             ItemType itemType = ItemType.valueOf(itemTypeName);
             SkyBlockItem item = new SkyBlockItem(itemType);

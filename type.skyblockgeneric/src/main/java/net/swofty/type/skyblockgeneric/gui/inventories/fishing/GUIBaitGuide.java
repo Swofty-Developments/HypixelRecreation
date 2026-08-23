@@ -2,7 +2,7 @@ package net.swofty.type.skyblockgeneric.gui.inventories.fishing;
 
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -23,13 +23,10 @@ public class GUIBaitGuide extends StatelessView {
     public void layout(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         Components.close(layout, 49);
 
-        layout.slot(4, ItemStackCreator.getStack(
-            "§6Bait Guide",
-            Material.BOOK,
-            1,
-            "§7View §6Baits§7 and the effects they add",
-            "§7to your fishing catches."
-        ));
+        layout.slot(4, ItemStacks.item(Material.BOOK, """
+                <6>Bait Guide
+                <7>View <6>Baits</6> and the effects they add
+                <7>to your fishing catches."""));
 
         int index = 0;
         for (var bait : FishingItemSupport.getBaits()) {

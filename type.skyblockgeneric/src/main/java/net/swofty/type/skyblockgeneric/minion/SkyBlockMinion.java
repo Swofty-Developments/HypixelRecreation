@@ -66,11 +66,11 @@ public abstract class SkyBlockMinion {
             }
 
             for (Pos pos : verticalPositions) {
-                if (container.getBlock(pos).isAir()) {
+                if (container.getBlock(pos).air()) {
                     // Check if the gap is big enough above
                     boolean isBigEnough = true;
                     for (int i = 0; i < yGap; i++) {
-                        if (!container.getBlock(pos.add(0, i, 0)).isAir()) {
+                        if (!container.getBlock(pos.add(0, i, 0)).air()) {
                             isBigEnough = false;
                             break;
                         }

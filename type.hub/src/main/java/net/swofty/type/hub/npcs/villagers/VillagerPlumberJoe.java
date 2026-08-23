@@ -12,7 +12,7 @@ public class VillagerPlumberJoe extends HypixelNPC {
         super(new VillagerConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§fPlumber Joe", "§e§lCLICK"};
+                return new String[]{"<f>Plumber Joe", "<e><l>CLICK"};
             }
 
             @Override

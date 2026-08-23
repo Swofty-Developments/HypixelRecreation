@@ -1,9 +1,10 @@
 package net.swofty.type.bedwarsgame.events;
 
-import net.kyori.adventure.text.Component;
-
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.event.player.PlayerChatEvent;
 import net.swofty.commons.bedwars.BedWarsGameType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.generic.chat.StaffChat;
@@ -32,7 +33,7 @@ public class ActionPlayerChat implements HypixelEventClass {
 
 		BedWarsDataHandler bedWarsDataHandler = BedWarsDataHandler.getUser(player);
 		if (bedWarsDataHandler == null) {
-			player.sendMessage("§cAn error occurred while processing your chat message. Please try again later.");
+			player.sendMessage("<c>An error occurred while processing your chat message. Please try again later.");
 			return;
 		}
 
@@ -48,7 +49,7 @@ public class ActionPlayerChat implements HypixelEventClass {
 		DatapointChatType.Chats chatType = player.getChatType().currentChatType;
 		if (chatType == DatapointChatType.Chats.STAFF) {
 			if (!rank.isStaff()) {
-				player.sendMessage("§cUnknown chat type.");
+				player.sendMessage("<c>Unknown chat type.");
 				player.getChatType().switchTo(DatapointChatType.Chats.ALL);
 				return;
 			}
@@ -58,7 +59,7 @@ public class ActionPlayerChat implements HypixelEventClass {
 
 		if (chatType == DatapointChatType.Chats.PARTY) {
 			if (!PartyManager.isInParty(player)) {
-				player.sendMessage("§cYou are not in a party and were moved to the ALL channel.");
+				player.sendMessage("<c>You are not in a party and were moved to the ALL channel.");
 				player.getChatType().switchTo(DatapointChatType.Chats.ALL);
 				return;
 			}
@@ -68,14 +69,14 @@ public class ActionPlayerChat implements HypixelEventClass {
 		}
 
 		if (game.getState().isWaiting()) {
-			String textColor = rank.equals(Rank.DEFAULT) ? "§7" : "§f";
-
-			game.getPlayers().forEach(onlinePlayer -> onlinePlayer.sendMessage(player.getLegacyRankPrefix() + player.getUsername() + textColor + ": " + finalMessage));
+			TextColor messageColor = rank.equals(Rank.DEFAULT) ? NamedTextColor.GRAY : NamedTextColor.WHITE;
+			game.getPlayers().forEach(onlinePlayer -> onlinePlayer.sendMessage(
+					"{}<color:{}>: {}", player.getFullDisplayName(), messageColor, finalMessage));
 			return;
 		}
 
 		if (game.getReplayManager().isRecording()) {
-			game.getReplayManager().recordPlayerChat(player, Component.text(finalMessage), false);
+			game.getReplayManager().recordPlayerChat(player, Text.literal(finalMessage), false);
 		}
 
 		List<BedWarsPlayer> receivers;
@@ -85,9 +86,9 @@ public class ActionPlayerChat implements HypixelEventClass {
 			receivers = game.getPlayersOnTeam(player.getTeamKey());
 		}
 
-		String levelPrefix = BedWarsPrestigeRenderer.renderBrackets(player) + " ";
-		String textColor = rank.equals(Rank.DEFAULT) ? "§7" : "§f";
-
-		receivers.forEach(onlinePlayer -> onlinePlayer.sendMessage(levelPrefix + player.getLegacyRankPrefix() + player.getUsername() + textColor + ": " + finalMessage));
+		Text levelPrefix = BedWarsPrestigeRenderer.renderBrackets(player).append(" ");
+		TextColor messageColor = rank.equals(Rank.DEFAULT) ? NamedTextColor.GRAY : NamedTextColor.WHITE;
+		receivers.forEach(onlinePlayer -> onlinePlayer.sendMessage(
+				"{}{}<color:{}>: {}", levelPrefix, player.getFullDisplayName(), messageColor, finalMessage));
 	}
 }

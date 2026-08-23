@@ -23,8 +23,10 @@ public class EnchantmentSmite implements Ench, EnchFromTable, EventBasedEnchant 
 
     @Override
     public String getDescription(int level) {
-        return "Increases damage dealt to " + MobType.WITHER.getFullDisplayName() + ", " + MobType.SKELETAL.getFullDisplayName() +
-                " and " + MobType.UNDEAD.getFullDisplayName() + "§7 mobs by " + MULTIPLIERS[level - 1] + "%§7.";
+        return "Increases damage dealt to " + MobType.WITHER.getFullDisplayName()
+                + ", " + MobType.SKELETAL.getFullDisplayName()
+                + " and " + MobType.UNDEAD.getFullDisplayName()
+                + "<7> mobs by " + MULTIPLIERS[level - 1] + "%.";
     }
 
     @Override

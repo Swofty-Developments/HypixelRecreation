@@ -1,7 +1,7 @@
 name: "Taming"
 displayIcon: "ghast_spawn_egg"
 description:
-  - "§7Level up pets to earn Taming XP!"
+  - "<7>Level up pets to earn Taming XP!"
 
 rewards:
   - level: 1

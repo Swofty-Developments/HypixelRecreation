@@ -7,11 +7,10 @@ import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.type.generic.data.datapoints.DatapointDouble;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -32,7 +31,7 @@ public class GUIGeorge extends HypixelInventoryGUI {
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(GUIClickableItem.getCloseItem(40));
 
         updateFromItem(null);
@@ -69,18 +68,15 @@ public class GUIGeorge extends HypixelInventoryGUI {
             set(new GUIClickableItem(22) {
                 @Override
                 public void run(InventoryPreClickEvent e, HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    player.sendMessage("§cPlace a pet in the empty slot for George to evaluate it!");
+                    p.sendMessage("<c>Place a pet in the empty slot for George to evaluate it!");
                 }
 
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    return ItemStackCreator.getStack(
-                            "§eOffer a Pet", Material.RED_TERRACOTTA, 1,
-                            "§7Place a pet above and George will",
-                            "§7tell you what he's willing to pay for it!"
-                    );
+                    return ItemStacks.item(Material.RED_TERRACOTTA, """
+                            <e>Offer a Pet
+                            <7>Place a pet above and George will
+                            <7>tell you what he's willing to pay for it!""");
                 }
             });
             updateItemStacks(getInventory(), getPlayer());
@@ -110,11 +106,9 @@ public class GUIGeorge extends HypixelInventoryGUI {
             set(new GUIItem(22) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    return ItemStackCreator.getStack(
-                            "§cError!", Material.BARRIER, 1,
-                            "§7George only wants to buy pets!"
-                    );
+                    return ItemStacks.item(Material.BARRIER, """
+                            <c>Error!
+                            <7>George only wants to buy pets!""");
                 }
             });
             updateItemStacks(getInventory(), getPlayer());
@@ -138,20 +132,20 @@ public class GUIGeorge extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.getStack(
-                        "§aAccept Offer", Material.GREEN_TERRACOTTA, 1,
-                        "§7George is willing to make an offer on",
-                        "§7your pet!",
-                        "",
-                        "§9Offer:",
-                        "§6" + StringUtility.commaify(item.getComponent(PetComponent.class).getGeorgePrice().getForRarity(item.getAttributeHandler().getRarity())),
-                        "",
-                        "§7§cWARNING: This will permanently",
-                        "§cremove your pet.",
-                        "",
-                        "§eClick to accept offer!"
-                );
+                return ItemStacks.item(Material.GREEN_TERRACOTTA, """
+                        <a>Accept Offer
+                        <7>George is willing to make an offer on
+                        <7>your pet!
+
+                        <9>Offer:
+                        <6>{:,}
+
+                        <c>WARNING: This will permanently
+                        <c>remove your pet.
+
+                        <e>Click to accept offer!""",
+                        item.getComponent(PetComponent.class).getGeorgePrice()
+                                .getForRarity(item.getAttributeHandler().getRarity()));
             }
         });
         updateItemStacks(getInventory(), getPlayer());

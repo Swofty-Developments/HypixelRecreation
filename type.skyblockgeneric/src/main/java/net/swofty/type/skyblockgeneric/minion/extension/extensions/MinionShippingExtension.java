@@ -5,9 +5,9 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.gui.inventories.GUIMinion;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
@@ -19,6 +19,7 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MinionShippingExtension extends MinionExtension {
     private double heldCoins = 0;
@@ -49,7 +50,7 @@ public class MinionShippingExtension extends MinionExtension {
                     SkyBlockItem shippingItem = new SkyBlockItem(p.getInventory().getCursorItem());
 
                     if (!shippingItem.hasComponent(MinionShippingComponent.class)) {
-                        player.sendMessage("§cThis item is not a valid Minion Shipping item.");
+                        player.sendMessage("<c>This item is not a valid Minion Shipping item.");
                         e.setCancelled(true);
                         return;
                     }
@@ -63,12 +64,13 @@ public class MinionShippingExtension extends MinionExtension {
 
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                    return ItemStackCreator.getStack("§aAutomated Shipping", Material.BLUE_STAINED_GLASS_PANE, 1,
-                            "§7Add a §aBudget Hopper §7or",
-                            "§9Enchanted Hopper §7here to make",
-                            "§7your minion automatically sell",
-                            "§7generated items after its",
-                            "§7inventory is full.");
+                    return ItemStacks.item(Material.BLUE_STAINED_GLASS_PANE, 1, """
+                            <a>Automated Shipping
+                            <7>Add a <a>Budget Hopper <7>or
+                            <9>Enchanted Hopper <7>here to make
+                            <7>your minion automatically sell
+                            <7>generated items after its
+                            <7>inventory is full.""");
                 }
             };
         } else {
@@ -77,7 +79,7 @@ public class MinionShippingExtension extends MinionExtension {
                 public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                     SkyBlockPlayer player = (SkyBlockPlayer) p;
                     if (!p.getInventory().getCursorItem().isAir()) {
-                        player.sendMessage("§cYour cursor must be empty to pick this item up!");
+                        player.sendMessage("<c>Your cursor must be empty to pick this item up!");
                         e.setCancelled(true);
                         return;
                     }
@@ -89,7 +91,7 @@ public class MinionShippingExtension extends MinionExtension {
                             return;
 
                         player.addCoins(heldCoins);
-                        player.sendMessage("§aYou have received §6" + StringUtility.commaify(heldCoins) + " coins§a from your Minion!");
+                        player.sendMessage("<a>You have received <6>{:,} coins<a> from your Minion!", heldCoins);
                         heldCoins = 0;
                         return;
                     }
@@ -97,8 +99,7 @@ public class MinionShippingExtension extends MinionExtension {
                     player.addAndUpdateItem(getItemTypePassedIn());
                     if (heldCoins > 0) {
                         player.addCoins(heldCoins);
-                        player.sendMessage("§aYou have received §6" + StringUtility.commaify(heldCoins)
-                                + " coins§a from your Minion!");
+                        player.sendMessage("<a>You have received <6>{:,} coins<a> from your Minion!", heldCoins);
                     }
                     setItemTypePassedIn(null);
                     itemsSold = 0;
@@ -112,16 +113,19 @@ public class MinionShippingExtension extends MinionExtension {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
                     SkyBlockItem shippingItem = new SkyBlockItem(getItemTypePassedIn());
-                    ArrayList<String> lore = new ArrayList<>(shippingItem.getLore());
 
-                    lore.add(" ");
-                    lore.add("§7Items Sold: §b" + StringUtility.commaify(itemsSold));
-                    lore.add("§7Held Coins: §b" + StringUtility.commaify(heldCoins));
-                    lore.add(" ");
-                    lore.add("§bRight-click to get held coins.");
-                    lore.add("§eClick to remove.");
+                    List<Text> lore = new ArrayList<>();
+                    for (String line : shippingItem.getLore()) {
+                        lore.add(Text.literal(line));
+                    }
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>Items Sold: <b>{:,}", itemsSold));
+                    lore.add(Text.of("<7>Held Coins: <b>{:,}", heldCoins));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<b>Right-click to get held coins."));
+                    lore.add(Text.of("<e>Click to remove."));
 
-                    return ItemStackCreator.getStack(shippingItem.getDisplayName(), shippingItem.getMaterial(), 1, lore);
+                    return ItemStacks.item(shippingItem.getMaterial(), 1, Text.literal(shippingItem.getDisplayName()), lore);
                 }
             };
         }

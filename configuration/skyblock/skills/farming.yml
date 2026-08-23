@@ -1,8 +1,8 @@
 name: "Farming"
 displayIcon: "golden_hoe"
 description:
-  - "§7Harvest crops and shear sheep to"
-  - "§7earn Farming XP!"
+  - "<7>Harvest crops and shear sheep to"
+  - "<7>earn Farming XP!"
 
 rewards:
   - level: 1

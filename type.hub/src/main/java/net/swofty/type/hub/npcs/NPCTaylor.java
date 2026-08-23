@@ -14,7 +14,7 @@ public class NPCTaylor extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bTaylor", "§e§lCLICK"};
+                return new String[]{"<b>Taylor", "<e><l>CLICK"};
             }
 
             @Override

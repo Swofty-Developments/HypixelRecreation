@@ -13,7 +13,7 @@ public class NPCRosetta extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§aStarter Gear", "Rosetta", "§e§lCLICK"};
+                return new String[]{"<a>Starter Gear", "Rosetta", "<e><l>CLICK"};
             }
 
             @Override

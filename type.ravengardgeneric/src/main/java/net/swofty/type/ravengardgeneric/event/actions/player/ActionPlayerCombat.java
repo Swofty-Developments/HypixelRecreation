@@ -28,7 +28,7 @@ public class ActionPlayerCombat implements HypixelEventClass {
         RavengardItemAttributeHandler handler = new RavengardItemAttributeHandler(held);
         RavengardItemType type = handler.getType();
         if (type != null && !type.usableBy(player.getRavengardClass())) {
-            player.sendMessage("§cYour class cannot use this item!");
+            player.sendMessage("<c>Your class cannot use this item!");
             return;
         }
 

@@ -17,7 +17,7 @@ public class SlabPlacement extends PlacementRule {
     @Override
     public boolean canPlace(BlockState blockState, BlockPlacementRule.PlacementState placementState) {
         Block currentBlock = placementState.instance().getBlock(placementState.placePosition());
-        return currentBlock.isAir() || currentBlock == block();
+        return currentBlock.air() || currentBlock == block();
     }
 
     @Override

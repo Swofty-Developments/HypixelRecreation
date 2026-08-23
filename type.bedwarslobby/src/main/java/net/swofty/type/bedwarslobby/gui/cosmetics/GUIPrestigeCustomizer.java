@@ -2,7 +2,6 @@ package net.swofty.type.bedwarslobby.gui.cosmetics;
 
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.type.bedwarslobby.gui.cosmetics.prestige.GUIPrestigeBrackets;
 import net.swofty.type.bedwarslobby.gui.cosmetics.prestige.GUIPrestigeSchemes;
 import net.swofty.type.bedwarslobby.gui.cosmetics.prestige.GUIPrestigeStars;
@@ -12,7 +11,7 @@ import net.swofty.type.generic.collectibles.bedwars.BedWarsCollectibleCatalog;
 import net.swofty.type.generic.collectibles.bedwars.BedWarsCollectibleStateService;
 import net.swofty.type.generic.data.datapoints.DatapointLeaderboardLong;
 import net.swofty.type.generic.data.handlers.BedWarsDataHandler;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -39,65 +38,53 @@ public class GUIPrestigeCustomizer extends StatelessView {
 
         Components.backOrClose(layout, 48, ctx);
 
-        layout.slot(19, ItemStackCreator.getStack(
-            "§aPrestige Schemes ",
-            Material.ORANGE_DYE,
-            1,
-            "§7Customize what colors are in your",
-            "§7prestige.",
-            "",
-            schemes.unlockedLine(),
-            "§7Currently Selected:",
-            "§a" + schemes.selectedName(),
-            "",
-            "§eClick to view!"
+        layout.slot(19, ItemStacks.item(Material.ORANGE_DYE, """
+                <a>Prestige Schemes\s
+                <7>Customize what colors are in your
+                <7>prestige.
+
+                <7>Unlocked: <a>{}/{} <8>({}%)
+                <7>Currently Selected:
+                <a>{}
+
+                <e>Click to view!""",
+            schemes.unlocked(), schemes.total(), schemes.percent(), schemes.selectedName()
         ), (_, context) -> context.push(new GUIPrestigeSchemes()));
-        layout.slot(21, ItemStackCreator.getStack(
-            "§aPrestige Stars ",
-            Material.NETHER_STAR,
-            1,
-            "§7Customize what star icon is within",
-            "§7your prestige.",
-            "",
-            stars.unlockedLine(),
-            "§7Currently Selected:",
-            "§a" + stars.selectedName(),
-            "",
-            "§eClick to view!"
+        layout.slot(21, ItemStacks.item(Material.NETHER_STAR, """
+                <a>Prestige Stars\s
+                <7>Customize what star icon is within
+                <7>your prestige.
+
+                <7>Unlocked: <a>{}/{} <8>({}%)
+                <7>Currently Selected:
+                <a>{}
+
+                <e>Click to view!""",
+            stars.unlocked(), stars.total(), stars.percent(), stars.selectedName()
         ), (_, context) -> context.push(new GUIPrestigeStars()));
-        layout.slot(23, ItemStackCreator.getStack(
-            "§aPrestige Brackets ",
-            Material.OAK_FENCE,
-            1,
-            "§7Customize what brackets surround",
-            "§7your prestige.",
-            "",
-            brackets.unlockedLine(),
-            "§7Currently Selected:",
-            "§a" + brackets.selectedName(),
-            "",
-            "§eClick to view!"
+        layout.slot(23, ItemStacks.item(Material.OAK_FENCE, """
+                <a>Prestige Brackets\s
+                <7>Customize what brackets surround
+                <7>your prestige.
+
+                <7>Unlocked: <a>{}/{} <8>({}%)
+                <7>Currently Selected:
+                <a>{}
+
+                <e>Click to view!""",
+            brackets.unlocked(), brackets.total(), brackets.percent(), brackets.selectedName()
         ), (_, context) -> context.push(new GUIPrestigeBrackets()));
-        layout.slot(25, ItemStackCreator.getStack(
-            "§cPrestige Formatting",
-            Material.RED_STAINED_GLASS,
-            1,
-            "§8You'll need to talk to the Hotel Owner",
-            "§8first..."
-        ));
-        layout.slot(49, ItemStackCreator.getStack(
-            "§7Total Tokens: §2" + StringUtility.commaify(tokenBalance(ctx.player())),
-            Material.EMERALD,
-            1,
-            "§6https://store.hypixel.net"
-        ));
-        layout.slot(50, ItemStackCreator.getStack(
-            "§aSearch",
-            Material.COMPASS,
-            1,
-            "§7Use this feature to easily find a",
-            "§7specific cosmetic item."
-        ));
+        layout.slot(25, ItemStacks.item(Material.RED_STAINED_GLASS, """
+                <c>Prestige Formatting
+                <8>You'll need to talk to the Hotel Owner
+                <8>first..."""));
+        layout.slot(49, ItemStacks.item(Material.EMERALD, """
+                <7>Total Tokens: <2>{:,}
+                <6>https://store.hypixel.net""", tokenBalance(ctx.player())));
+        layout.slot(50, ItemStacks.item(Material.COMPASS, """
+                <a>Search
+                <7>Use this feature to easily find a
+                <7>specific cosmetic item."""));
     }
 
     private CategorySummary summarize(HypixelPlayer player, CollectibleCategory category) {
@@ -124,9 +111,8 @@ public class GUIPrestigeCustomizer extends StatelessView {
     }
 
     private record CategorySummary(int unlocked, int total, String selectedName) {
-        private String unlockedLine() {
-            int percent = total == 0 ? 0 : (int) Math.floor(unlocked * 100.0 / total);
-            return "§7Unlocked: §a" + unlocked + "/" + total + " §8(" + percent + "%)";
+        private int percent() {
+            return total == 0 ? 0 : (int) Math.floor(unlocked * 100.0 / total);
         }
     }
 }

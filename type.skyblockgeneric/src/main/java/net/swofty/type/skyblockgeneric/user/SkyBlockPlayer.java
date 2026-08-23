@@ -5,7 +5,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.PlayerHand;
@@ -20,13 +19,13 @@ import net.minestom.server.network.packet.server.play.UpdateHealthPacket;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
 import net.minestom.server.tag.Tag;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.PlayerShopData;
 import net.swofty.commons.skyblock.SkyBlockPlayerProfiles;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.item.UnderstandableSkyBlockItem;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.*;
@@ -150,18 +149,18 @@ public class SkyBlockPlayer extends HypixelPlayer {
     }
 
     @Override
-    public String getFullDisplayName() {
+    public Text getFullDisplayName() {
         DatapointSkyBlockExperience.PlayerSkyBlockExperience experience = getSkyBlockExperience();
         SkyBlockEmblems.SkyBlockEmblem emblem = experience.getEmblem();
         return getFullDisplayName(emblem, experience.getLevel().getColor());
     }
 
-    public String getFullDisplayName(String levelColor) {
+    public Text getFullDisplayName(String levelColor) {
         DatapointSkyBlockExperience.PlayerSkyBlockExperience experience = getSkyBlockExperience();
         return getFullDisplayName(experience.getEmblem(), levelColor);
     }
 
-    public String getFullDisplayName(SkyBlockEmblems.SkyBlockEmblem displayEmblem) {
+    public Text getFullDisplayName(SkyBlockEmblems.SkyBlockEmblem displayEmblem) {
         DatapointSkyBlockExperience.PlayerSkyBlockExperience experience = getSkyBlockExperience();
         return getFullDisplayName(displayEmblem, experience.getLevel().getColor());
     }
@@ -170,13 +169,14 @@ public class SkyBlockPlayer extends HypixelPlayer {
         return getSkyblockDataHandler().get(SkyBlockDataHandler.Data.ARCHERY_PRACTICE, DatapointArcheryPractice.class).getValue();
     }
 
-    public String getFullDisplayName(SkyBlockEmblems.SkyBlockEmblem displayEmblem, String levelColor) {
+    public Text getFullDisplayName(SkyBlockEmblems.SkyBlockEmblem displayEmblem, String levelColor) {
         DatapointSkyBlockExperience.PlayerSkyBlockExperience experience = getSkyBlockExperience();
 
-        return "§8[" + levelColor + experience.getLevel() + "§8] " +
-                (displayEmblem == null ? "" : displayEmblem.emblem() + " ") +
-                getDataHandler().get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().getPrefix() +
-                this.getUsername();
+        Text prefix = Text.of("<8>[" + levelColor + "{}<8>] ", experience.getLevel());
+        if (displayEmblem != null) {
+            prefix = prefix.append("{} ", displayEmblem.emblem());
+        }
+        return prefix.append("{}", getRank().displayName(getUsername()));
     }
 
     public PlayerShopData getShoppingData() {
@@ -639,14 +639,14 @@ public class SkyBlockPlayer extends HypixelPlayer {
             if (!added) {
                 // Stash is full - item is lost
                 int overflowCount = 1;
-                sendMessage("§cUh oh! §e" + overflowCount + " §citem" + (overflowCount > 1 ? "s" : "") +
-                        " couldn't be stashed because you hit the item stash limit!");
+                sendMessage("<c>Uh oh! <e>{} <c>item{} couldn't be stashed because you hit the item stash limit!",
+                        overflowCount, overflowCount > 1 ? "s" : "");
                 return;
             }
 
             // Check for near-full warning
             if (stash.isItemStashNearFull()) {
-                sendMessage("§cYOUR STASH IS ALMOST AT MAX CAPACITY!");
+                sendMessage("<c>YOUR STASH IS ALMOST AT MAX CAPACITY!");
             }
         }
 
@@ -658,11 +658,8 @@ public class SkyBlockPlayer extends HypixelPlayer {
      * Send a clickable notification that an item was added to the stash.
      */
     private void sendStashNotification(String stashType) {
-        Component message = Component.text("§eOne or more items didn't fit in your inventory and were added to your " +
-                stashType + " stash! ")
-                .append(Component.text("§6Click here §eto pick them up!")
-                        .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/pickupstash " + stashType)));
-        sendMessage(message);
+        sendMessage("<e>One or more items didn't fit in your inventory and were added to your {0} stash! "
+                + "<click:run:'/pickupstash {0}'><6>Click here <e>to pick them up!</click>", stashType);
     }
 
     public BazaarConnector getBazaarConnector() {
@@ -743,9 +740,7 @@ public class SkyBlockPlayer extends HypixelPlayer {
     }
 
     public String getShortenedDisplayName() {
-        return StringUtility.getTextFromComponent(Component.text(this.getUsername(),
-                getDataHandler().get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().getTextColor())
-        );
+        return getUsername();
     }
 
     public float getMaxMana() {
@@ -990,7 +985,7 @@ public class SkyBlockPlayer extends HypixelPlayer {
         sendTo(HypixelConst.getTypeLoader().getType());
 
         DeathMessageCreator creator = new DeathMessageCreator(this.lastDamage);
-        sendMessage("§c☠ §7You " + creator.createPersonal());
+        sendMessage("<c>☠ <7>You {}", creator.createPersonal());
 
         getDeathData().increase(this.lastDamage, 1);
 
@@ -999,7 +994,7 @@ public class SkyBlockPlayer extends HypixelPlayer {
         if (HypixelConst.isIslandServer()) return;
 
         if (!isBoosterCookieActive()) {
-            sendMessage("§cYou died and lost " + StringUtility.decimalify(getCoins() / 2, 1) + " coins!");
+            sendMessage("<c>You died and lost {:.1} coins!", getCoins() / 2);
             setCoins(getCoins() / 2);
         }
 
@@ -1009,7 +1004,7 @@ public class SkyBlockPlayer extends HypixelPlayer {
             if (player.getUuid().equals(getUuid())) return;
             if (player.getInstance() != getInstance()) return;
 
-            player.sendMessage("§c☠ §7" + getFullDisplayName() + " §7" + creator.createOther());
+            player.sendMessage("<c>☠ <7>{} <7>{}", getFullDisplayName(), creator.createOther());
         });
     }
 
@@ -1038,11 +1033,6 @@ public class SkyBlockPlayer extends HypixelPlayer {
     }
 
     @Override
-    public void sendMessage(@NotNull String message) {
-        super.sendMessage(message.replace("&", "§"));
-    }
-
-    @Override
     public void closeInventory() {
         Inventory tempInv = (Inventory) this.getOpenInventory();
         super.closeInventory();
@@ -1056,14 +1046,14 @@ public class SkyBlockPlayer extends HypixelPlayer {
         }
     }
 
-    public static String getDisplayName(UUID uuid) {
+    public static Text getDisplayName(UUID uuid) {
         if (SkyBlockGenericLoader.getLoadedPlayers().stream().anyMatch(player -> player.getUuid().equals(uuid))) {
             return SkyBlockGenericLoader.getLoadedPlayers().stream().filter(player -> player.getUuid().equals(uuid)).findFirst().get().getFullDisplayName();
         } else {
             // Fallback for offline name display: use Hypixel account data (rank + ign)
             HypixelDataHandler account = HypixelDataHandler.getOfOfflinePlayer(uuid);
-            return account.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().getPrefix() +
-                    account.get(HypixelDataHandler.Data.IGN, DatapointString.class).getValue();
+            return Text.of("{}", account.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue()
+                    .displayName(account.get(HypixelDataHandler.Data.IGN, DatapointString.class).getValue()));
         }
     }
 

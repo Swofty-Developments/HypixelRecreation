@@ -2,8 +2,6 @@ package net.swofty.commons.skyblock;
 
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.Tag;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -152,26 +150,4 @@ public enum PackSprite {
                     sprite -> sprite.name().toLowerCase(Locale.ROOT),
                     Function.identity()
             ));
-
-    public static final TagResolver TAG_RESOLVER = TagResolver.resolver(
-            "sbglyph",
-            (arguments, context) -> {
-                String name = arguments.popOr(
-                        "Expected a sprite name, for example <sbglyph:gui_deny>"
-                ).value();
-
-                PackSprite sprite = BY_TAG_NAME.get(
-                        name.toLowerCase(Locale.ROOT)
-                );
-
-                if (sprite == null) {
-                    throw context.newException(
-                            "Unknown SkyBlock glyph '" + name + "'",
-                            arguments
-                    );
-                }
-
-                return Tag.inserting(sprite.getSprite());
-            }
-    );
 }

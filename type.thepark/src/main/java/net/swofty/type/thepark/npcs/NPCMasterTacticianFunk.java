@@ -16,7 +16,7 @@ public class NPCMasterTacticianFunk extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Master Tactician Funk", "§e§lCLICK"};
+				return new String[]{"Master Tactician Funk", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -58,11 +58,11 @@ public class NPCMasterTacticianFunk extends HypixelNPC {
 	@Override
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return List.of(
-				DialogueSet.builder().key("intro").lines(new String[]{
+				DialogueSet.builder().key("intro").lines(
 						"Welcome to the Woodlands!",
 						"I use all sorts of wood types to create strong and useful items!",
 						"Here. Check theme out!"
-				}).build()
+				).build()
 		).toArray(DialogueSet[]::new);
 	}
 }

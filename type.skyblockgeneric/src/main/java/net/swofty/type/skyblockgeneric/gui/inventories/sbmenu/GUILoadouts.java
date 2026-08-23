@@ -1,13 +1,11 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -35,7 +33,7 @@ public class GUILoadouts implements StatefulView<GUILoadouts.LoadoutsState> {
 
     @Override
     public ViewConfiguration<LoadoutsState> configuration() {
-        return ViewConfiguration.withString((state, _) -> "(" + (state.page + 1) + "/3) Loadouts", InventoryType.CHEST_6_ROW);
+        return ViewConfiguration.withText((state, _) -> Text.of("({}/3) Loadouts", state.page + 1), InventoryType.CHEST_6_ROW);
     }
 
     @Override
@@ -70,14 +68,20 @@ public class GUILoadouts implements StatefulView<GUILoadouts.LoadoutsState> {
         }
 
         if (state.page > 0) {
-            layout.slot(17, ItemStackCreator.getStack("§aPrevious Page", Material.ARROW, 1, "§ePage " + state.page),
+            layout.slot(17, ItemStacks.item(Material.ARROW, 1, """
+                            <a>Previous Page
+                            <e>Page {}""", state.page),
                     (_, c) -> c.session(LoadoutsState.class).update(s -> new LoadoutsState(s.page - 1)));
         }
         if (state.page < 2) {
-            layout.slot(44, ItemStackCreator.getStack("§aNext Page", Material.ARROW, 1, "§ePage " + (state.page + 2)),
+            layout.slot(44, ItemStacks.item(Material.ARROW, 1, """
+                            <a>Next Page
+                            <e>Page {}""", state.page + 2),
                     (_, c) -> c.session(LoadoutsState.class).update(s -> new LoadoutsState(s.page + 1)));
         }
-        layout.slot(48, ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To SkyBlock Menu"), (_, c) -> c.pop());
+        layout.slot(48, ItemStacks.item(Material.ARROW, 1, """
+                <a>Go Back
+                <7>To SkyBlock Menu"""), (_, c) -> c.pop());
     }
 
     private static void loadout(ViewLayout<LoadoutsState> layout, int slot, int index) {
@@ -94,85 +98,93 @@ public class GUILoadouts implements StatefulView<GUILoadouts.LoadoutsState> {
     }
 
     private static void locked(ViewLayout<LoadoutsState> layout, int slot, int number) {
-        layout.slot(slot, ItemStackCreator.getStack("§cLoadout " + number + " Locked", Material.RED_DYE, 1,
-                "§7Unlock more slots from:", "§8▶ §aAccount Upgrades §8- §69 Slots", "",
-                "§cUnlock more slots from §dElizabeth §cat", "§cthe §bCommunity Center"));
+        layout.slot(slot, ItemStacks.item(Material.RED_DYE, 1, """
+                <c>Loadout {} Locked
+                <7>Unlock more slots from:
+                <8>▶ <a>Account Upgrades <8>- <6>9 Slots
+
+                <c>Unlock more slots from <d>Elizabeth <c>at
+                <c>the <b>Community Center""", number));
     }
 
     static ItemStack.Builder icon(SkyBlockPlayer player, int index) {
         DatapointLoadouts.LoadoutsData data = LoadoutManager.data(player);
         DatapointLoadouts.Loadout loadout = data.getLoadouts()[index];
         boolean equipped = data.getEquipped() == index;
-        List<String> lore = new ArrayList<>();
+        List<Text> lore = new ArrayList<>();
         for (int i = 0; i < 4; i++)
-            lore.add("§7" + ARMOR_NAMES[i] + ": " + name(LoadoutManager.loadoutArmor(player, loadout, i), equipped));
-        lore.add("");
-        for (int i = 0; i < 4; i++) lore.add("§7" + EQUIPMENT_NAMES[i] + ": " + name(loadout.getEquipment()[i], false));
-        lore.add("");
-        lore.add("§7Pet: " + petName(player, loadout.getPetType()));
-        lore.add("§7HOTM: " + treeName(loadout.getHotmSlot(), data.getHotmNames()));
-        lore.add("§7HOTF: " + treeName(loadout.getHotfSlot(), data.getHotfNames()));
-        lore.add("§7Power Stone: §8None");
-        lore.add("§7Tuning Template Slot: §8None");
-        lore.add("");
-        if (!equipped && !loadout.isEmpty()) lore.add("§eLeft-click to equip!");
-        lore.add("§eRight-click to edit");
+            lore.add(Text.of("<7>{}: {}", ARMOR_NAMES[i], name(LoadoutManager.loadoutArmor(player, loadout, i), equipped)));
+        lore.add(Text.empty());
+        for (int i = 0; i < 4; i++) lore.add(Text.of("<7>{}: {}", EQUIPMENT_NAMES[i], name(loadout.getEquipment()[i], false)));
+        lore.add(Text.empty());
+        lore.add(Text.of("<7>Pet: {}", petName(player, loadout.getPetType())));
+        lore.add(Text.of("<7>HOTM: {}", treeName(loadout.getHotmSlot(), data.getHotmNames())));
+        lore.add(Text.of("<7>HOTF: {}", treeName(loadout.getHotfSlot(), data.getHotfNames())));
+        lore.add(Text.of("<7>Power Stone: <8>None"));
+        lore.add(Text.of("<7>Tuning Template Slot: <8>None"));
+        lore.add(Text.empty());
+        if (!equipped && !loadout.isEmpty()) lore.add(Text.of("<e>Left-click to equip!"));
+        lore.add(Text.of("<e>Right-click to edit"));
         if (loadout.isEmpty()) {
-            lore.add("");
-            lore.add("§cYou must customize this loadout");
-            lore.add("§cbefore you can equip it!");
+            lore.add(Text.empty());
+            lore.add(Text.of("<c>You must customize this loadout"));
+            lore.add(Text.of("<c>before you can equip it!"));
         }
         SkyBlockItem helmet = LoadoutManager.loadoutArmor(player, loadout, 0);
         if (helmet == null || helmet.isNA()) {
-            return ItemStackCreator.getStack("§a" + loadout.getName(), equipped ? Material.LIME_DYE : Material.GRAY_DYE, 1, lore);
+            return ItemStacks.item(equipped ? Material.LIME_DYE : Material.GRAY_DYE, 1,
+                    Text.of("<a>{}", loadout.getName()), lore);
         }
-        List<Component> componentLore = lore.stream().<Component>map(
-                line -> Component.text(line).decoration(TextDecoration.ITALIC, false)).toList();
-        return PlayerItemUpdater.playerUpdate(player, helmet.getItemStack())
-                .set(DataComponents.CUSTOM_NAME, Component.text("§a" + loadout.getName()).decoration(TextDecoration.ITALIC, false))
-                .set(DataComponents.LORE, componentLore);
+        return ItemStacks.lore(ItemStacks.name(PlayerItemUpdater.playerUpdate(player, helmet.getItemStack()),
+                "<a>{}", loadout.getName()), lore);
     }
 
-    static String name(SkyBlockItem item, boolean equipped) {
-        if (item == null || item.isNA()) return equipped ? "§8Empty" : "§8None";
-        return item.getDisplayName();
+    static Text name(SkyBlockItem item, boolean equipped) {
+        if (item == null || item.isNA()) return equipped ? Text.of("<8>Empty") : Text.of("<8>None");
+        return Text.literal(item.getDisplayName());
     }
 
-    private static String petName(SkyBlockPlayer player, String type) {
-        if (type == null) return "§8None";
+    private static Text petName(SkyBlockPlayer player, String type) {
+        if (type == null) return Text.of("<8>None");
         try {
             SkyBlockItem pet = player.getPetData().getPet(net.swofty.commons.skyblock.item.ItemType.valueOf(type));
-            return pet == null ? "§a" + type.replace('_', ' ') : pet.getDisplayName();
+            return pet == null ? Text.of("<a>{}", type.replace('_', ' ')) : Text.literal(pet.getDisplayName());
         } catch (IllegalArgumentException ignored) {
-            return "§a" + type.replace('_', ' ');
+            return Text.of("<a>{}", type.replace('_', ' '));
         }
     }
 
-    private static String treeName(int slot, String[] names) {
-        return slot < 0 ? "§8None" : "§a" + names[slot];
+    private static Text treeName(int slot, String[] names) {
+        return slot < 0 ? Text.of("<8>None") : Text.of("<a>{}", names[slot]);
     }
 
     private static ItemStack.Builder currentArmor(SkyBlockPlayer player, int component) {
         SkyBlockItem item = LoadoutManager.currentArmor(player, component);
         if (item != null) return PlayerItemUpdater.playerUpdate(player, item.getItemStack());
-        return ItemStackCreator.getStack("§7Empty " + ARMOR_NAMES[component] + " Slot", Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, "", "§eClick to select!");
+        return ItemStacks.item(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, """
+                <7>Empty {} Slot
+
+                <e>Click to select!""", ARMOR_NAMES[component]);
     }
 
     private static ItemStack.Builder currentEquipment(SkyBlockPlayer player, int component) {
         SkyBlockItem item = LoadoutManager.currentEquipment(player, component);
         if (!item.isNA()) return PlayerItemUpdater.playerUpdate(player, item.getItemStack());
-        List<String> lore = new ArrayList<>();
-        lore.add("§8> " + (component == 3 ? "Gloves" : EQUIPMENT_NAMES[component]));
-        if (component == 3) lore.add("§8> Bracelet");
-        lore.add("");
-        lore.add("§eClick to select!");
-        return ItemStackCreator.getStack("§7Empty Equipment Slot", Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, lore);
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<8>> {}", component == 3 ? "Gloves" : EQUIPMENT_NAMES[component]));
+        if (component == 3) lore.add(Text.of("<8>> Bracelet"));
+        lore.add(Text.empty());
+        lore.add(Text.of("<e>Click to select!"));
+        return ItemStacks.item(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1,
+                Text.of("<7>Empty Equipment Slot"), lore);
     }
 
     private static ItemStack.Builder currentPet(SkyBlockPlayer player) {
         SkyBlockItem pet = player.getPetData().getEnabledPet();
         return pet == null
-                ? ItemStackCreator.getStack("§aPet", Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, "§7Current: §8None")
+                ? ItemStacks.item(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, """
+                        <a>Pet
+                        <7>Current: <8>None""")
                 : PlayerItemUpdater.playerUpdate(player, pet.getItemStack());
     }
 
@@ -183,23 +195,49 @@ public class GUILoadouts implements StatefulView<GUILoadouts.LoadoutsState> {
         String title = hotm ? "Heart of the Mountain" : "Heart of the Forest";
         String texture = hotm ? "86f06eaa3004aeed09b3d5b45d976de584e691c0e9cade133635de93d23b9edb"
                 : "5ef539b165125cfa46b06ffb9659e7cf89084bbd3ede1b314edc8f443343d61c";
-        return ItemStackCreator.getStackHead("§a" + title + " Slot", texture, 1,
-                "§7Quickly swap between saved trees.", "", "§7Current: §a" + names[active], "",
-                "§cSwapping trees has a 10m cooldown!", "", "§eClick to view!");
+        return ItemStacks.head(texture, Text.of("<a>{} Slot", title), List.of(
+                Text.of("<7>Quickly swap between saved trees."),
+                Text.empty(),
+                Text.of("<7>Current: <a>{}", names[active]),
+                Text.empty(),
+                Text.of("<c>Swapping trees has a 10m cooldown!"),
+                Text.empty(),
+                Text.of("<e>Click to view!")));
     }
 
     private static ItemStack.Builder powerStone() {
-        return ItemStackCreator.getStack("§aPower Stone", Material.LAPIS_LAZULI, 1,
-                "§7Choose your selected Power Stone.", "", "§7Current: §aInspired", "", "§7Stats:",
-                "§c+31.02 Health", "§a+22.15 Defense", "§c+88.62 Strength", "§9+17.72 Crit Chance",
-                "§9+66.46 Crit Damage", "§b+299.09 Intelligence", "", "§eClick to view!");
+        return ItemStacks.item(Material.LAPIS_LAZULI, 1, """
+                <a>Power Stone
+                <7>Choose your selected Power Stone.
+
+                <7>Current: <a>Inspired
+
+                <7>Stats:
+                <c>+31.02 Health
+                <a>+22.15 Defense
+                <c>+88.62 Strength
+                <9>+17.72 Crit Chance
+                <9>+66.46 Crit Damage
+                <b>+299.09 Intelligence
+
+                <e>Click to view!""");
     }
 
     private static ItemStack.Builder statsTuning() {
-        return ItemStackCreator.getStack("§aStats Tuning", Material.COMPARATOR, 1,
-                "§7Optimize your build to your liking by using", "§eTuning Points§7.", "",
-                "§7Every §610 MP §7grants §e1 Tuning Point§7.", "", "§7Magical Power: §6425",
-                "§7Tuning Points: §e42", "", "§7Your tuning:", "§b+84 Intelligence", "", "§eClick to view!");
+        return ItemStacks.item(Material.COMPARATOR, 1, """
+                <a>Stats Tuning
+                <7>Optimize your build to your liking by using
+                <e>Tuning Points<7>.
+
+                <7>Every <6>10 MP <7>grants <e>1 Tuning Point<7>.
+
+                <7>Magical Power: <6>425
+                <7>Tuning Points: <e>42
+
+                <7>Your tuning:
+                <b>+84 Intelligence
+
+                <e>Click to view!""");
     }
 
     public record LoadoutsState(int page) {

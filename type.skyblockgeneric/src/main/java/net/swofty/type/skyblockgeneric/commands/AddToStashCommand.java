@@ -51,7 +51,7 @@ public class AddToStashCommand extends HypixelCommand {
         // Check if stackable (maxStackSize > 1 means material stash)
         if (item.getMaterial().maxStackSize() > 1) {
             stash.addToMaterialStash(itemType, amount);
-            player.sendMessage("§aAdded §e" + amount + "x " + itemType.getDisplayName() + " §ato your material stash.");
+            player.sendMessage("<a>Added <e>{}x {} <a>to your material stash.", amount, itemType.getDisplayName());
         } else {
             // Non-stackable items go to item stash
             int added = 0;
@@ -63,10 +63,10 @@ public class AddToStashCommand extends HypixelCommand {
                 }
             }
             if (added > 0) {
-                player.sendMessage("§aAdded §e" + added + "x " + itemType.getDisplayName() + " §ato your item stash.");
+                player.sendMessage("<a>Added <e>{}x {} <a>to your item stash.", added, itemType.getDisplayName());
             }
             if (added < amount) {
-                player.sendMessage("§cCouldn't add " + (amount - added) + " items - item stash is at limit (720).");
+                player.sendMessage("<c>Couldn't add {} items - item stash is at limit (720).", amount - added);
             }
         }
     }

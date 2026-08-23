@@ -1,6 +1,7 @@
 package net.swofty.type.skyblockgeneric.warps.unlocks;
 
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.warps.ScrollUnlockReason;
 
 public class ScrollUnlockPurchase extends ScrollUnlockReason {
@@ -11,12 +12,12 @@ public class ScrollUnlockPurchase extends ScrollUnlockReason {
     }
 
     @Override
-    public String getTitleReason() {
-        return "§cScroll bought from NPC!";
+    public Text getTitleReason() {
+        return Text.of("<c>Scroll bought from NPC!");
     }
 
     @Override
-    public String getSubReason() {
-        return "§7Purchase the scroll from the " + StringUtility.toNormalCase(npc) + ".";
+    public Text getSubReason() {
+        return Text.of("<7>Purchase the scroll from the {}.", StringUtility.toNormalCase(npc));
     }
 }

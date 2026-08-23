@@ -3,6 +3,7 @@ package net.swofty.type.skywarslobby.perk;
 import lombok.Getter;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,11 +83,11 @@ public class SkywarsPerk {
      */
     public String getFormattedCost() {
         if (opalCost > 0) {
-            return "§9" + opalCost + " Opal" + (opalCost > 1 ? "s" : "");
+            return Text.of("<9>{} Opal{}", opalCost, opalCost > 1 ? "s" : "").serialize();
         } else if (cost > 0) {
-            return "§6" + String.format("%,d", cost);
+            return Text.of("<6>{:,}", cost).serialize();
         }
-        return "§aFREE";
+        return "<a>FREE";
     }
 
     /**
@@ -94,11 +95,11 @@ public class SkywarsPerk {
      */
     public List<String> getLore() {
         List<String> lore = new ArrayList<>();
-        lore.add("§7" + description);
+        lore.add(Text.of("<7>{}", description).serialize());
         lore.add("");
-        lore.add("§7Effect: " + effectDescription);
+        lore.add(Text.of("<7>Effect: {}", effectDescription).serialize());
         lore.add("");
-        lore.add("§7Rarity: " + rarity.getFormattedName());
+        lore.add(Text.of("<7>Rarity: {}", rarity.getFormattedName()).serialize());
         return lore;
     }
 

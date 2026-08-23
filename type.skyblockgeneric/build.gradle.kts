@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":type.generic"))
     implementation(libs.mongodb.bson)
     implementation(libs.mongodb.driver.sync)
+    implementation(libs.jedis)
     implementation(libs.tinylog.api)
     implementation(libs.tinylog.impl)
     implementation(libs.minestom) {
@@ -35,4 +36,10 @@ dependencies {
     implementation(libs.fastutil)
     implementation(libs.snakeyaml)
     implementation(libs.kotlin.stdlib)
+}
+
+tasks.processResources {
+    from(rootProject.file("configuration/skyblock/Minestom.fairysouls.yml"))
+    from(rootProject.file("configuration/skyblock/Minestom.regions.yml"))
+    from(rootProject.file("configuration/skyblock/Minestom.crystals.yml"))
 }

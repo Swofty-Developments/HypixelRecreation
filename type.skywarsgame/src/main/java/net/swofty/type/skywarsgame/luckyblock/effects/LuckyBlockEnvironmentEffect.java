@@ -1,18 +1,18 @@
 package net.swofty.type.skywarsgame.luckyblock.effects;
 
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityProjectile;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.damage.Damage;
+import net.minestom.server.entity.metadata.other.PrimedTntMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -26,8 +26,7 @@ import java.util.function.BiConsumer;
 public enum LuckyBlockEnvironmentEffect {
     COBWEB_TRAP(
             "Cobweb Trap",
-            "You're stuck in cobwebs!",
-            NamedTextColor.WHITE,
+            "<f>You're stuck in cobwebs!",
             false,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -38,7 +37,7 @@ public enum LuckyBlockEnvironmentEffect {
                         for (int dy = 0; dy <= 1; dy++) {
                             Pos webPos = pos.add(dx, dy, dz);
                             Block current = instance.getBlock(webPos);
-                            if (current.isAir()) {
+                            if (current.air()) {
                                 instance.setBlock(webPos, Block.COBWEB);
                             }
                         }
@@ -63,8 +62,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     ANVIL_RAIN(
             "Anvil Rain",
-            "Watch out above!",
-            NamedTextColor.GRAY,
+            "<7>Watch out above!",
             false,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -92,8 +90,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     LAVA_PIT(
             "Lava Pit",
-            "The floor is lava!",
-            NamedTextColor.RED,
+            "<c>The floor is lava!",
             false,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -102,7 +99,7 @@ public enum LuckyBlockEnvironmentEffect {
                 Pos underPos = pos.add(0, -1, 0);
                 Block underBlock = instance.getBlock(underPos);
 
-                if (underBlock.isSolid() && !underBlock.compare(Block.BEDROCK)) {
+                if (underBlock.solid() && !underBlock.compare(Block.BEDROCK)) {
                     instance.setBlock(underPos, Block.LAVA);
 
                     player.scheduler().buildTask(() -> {
@@ -120,8 +117,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     LIGHTNING_STRIKE(
             "Lightning Strike",
-            "ZAP!",
-            NamedTextColor.YELLOW,
+            "<e>ZAP!",
             false,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -143,8 +139,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     TNT_SURROUND(
             "TNT Trap",
-            "Run! TNT everywhere!",
-            NamedTextColor.DARK_RED,
+            "<4>Run! TNT everywhere!",
             false,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -161,7 +156,7 @@ public enum LuckyBlockEnvironmentEffect {
                     Entity tnt = new Entity(EntityType.TNT);
                     tnt.setInstance(instance, tntPos);
 
-                    if (tnt.getEntityMeta() instanceof net.minestom.server.entity.metadata.other.PrimedTntMeta tntMeta) {
+                    if (tnt.getEntityMeta() instanceof PrimedTntMeta tntMeta) {
                         tntMeta.setFuseTime(60 + random.nextInt(20));
                     }
                 }
@@ -170,8 +165,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     RANDOM_TELEPORT(
             "Random Teleport",
-            "Whoooosh!",
-            NamedTextColor.LIGHT_PURPLE,
+            "<d>Whoooosh!",
             false,
             (player, pos) -> {
                 Random random = new Random();
@@ -189,8 +183,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     BRIDGE_BUILD(
             "Instant Bridge",
-            "A bridge appears before you!",
-            NamedTextColor.GOLD,
+            "<6>A bridge appears before you!",
             true,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -205,7 +198,7 @@ public enum LuckyBlockEnvironmentEffect {
                 for (int i = 1; i <= 10; i++) {
                     Pos bridgePos = startPos.add(dx * i, 0, dz * i);
                     Block current = instance.getBlock(bridgePos);
-                    if (current.isAir()) {
+                    if (current.air()) {
                         instance.setBlock(bridgePos, Block.OAK_PLANKS);
                     }
                 }
@@ -214,8 +207,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     PROTECTIVE_WALL(
             "Protective Wall",
-            "A wall rises to protect you!",
-            NamedTextColor.GRAY,
+            "<7>A wall rises to protect you!",
             true,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -230,7 +222,7 @@ public enum LuckyBlockEnvironmentEffect {
                     for (int dy = 0; dy < 3; dy++) {
                         Pos wallPos = pos.add(dx, dy, dz);
                         Block current = instance.getBlock(wallPos);
-                        if (current.isAir()) {
+                        if (current.air()) {
                             instance.setBlock(wallPos, Block.COBBLESTONE);
                         }
                     }
@@ -240,8 +232,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     LAUNCH_PAD(
             "Launch Pad",
-            "WEEEEE!",
-            NamedTextColor.GREEN,
+            "<a>WEEEEE!",
             true,
             (player, pos) -> {
                 player.setVelocity(player.getVelocity().add(0, 35, 0));
@@ -252,8 +243,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     ARROW_RAIN(
             "Arrow Rain",
-            "Arrows from the sky!",
-            NamedTextColor.DARK_GRAY,
+            "<8>Arrows from the sky!",
             false,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -282,8 +272,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     BLESSING(
             "Lucky Blessing",
-            "You feel incredibly lucky!",
-            NamedTextColor.LIGHT_PURPLE,
+            "<d>You feel incredibly lucky!",
             true,
             (player, pos) -> {
                 player.addEffect(new Potion(PotionEffect.SPEED, (byte) 1, 600));
@@ -295,8 +284,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     CURSE(
             "Cursed",
-            "You feel incredibly unlucky!",
-            NamedTextColor.DARK_PURPLE,
+            "<5>You feel incredibly unlucky!",
             false,
             (player, pos) -> {
                 player.addEffect(new Potion(PotionEffect.SLOWNESS, (byte) 1, 200));
@@ -308,8 +296,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     FIREWORKS(
             "Fireworks",
-            "Celebration time!",
-            NamedTextColor.AQUA,
+            "<b>Celebration time!",
             true,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -329,8 +316,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     INSTA_HOLE(
             "Insta Hole",
-            "The ground disappears beneath you!",
-            NamedTextColor.DARK_GRAY,
+            "<8>The ground disappears beneath you!",
             false,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -344,7 +330,7 @@ public enum LuckyBlockEnvironmentEffect {
                             Pos blockPos = new Pos(pos.x() + dx, y, pos.z() + dz);
                             Block current = instance.getBlock(blockPos);
                             boolean isChest = game != null && game.getChestManager().isChestPosition(blockPos);
-                            if (!current.compare(Block.BEDROCK) && !current.isAir() && !isChest) {
+                            if (!current.compare(Block.BEDROCK) && !current.air() && !isChest) {
                                 instance.setBlock(blockPos, Block.AIR);
                             }
                         }
@@ -355,8 +341,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     IRON_POLE(
             "Iron Pole",
-            "A tower of iron rises!",
-            NamedTextColor.WHITE,
+            "<f>A tower of iron rises!",
             true,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -371,8 +356,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     NINJA_MODE(
             "Ninja Mode",
-            "You vanish into the shadows!",
-            NamedTextColor.DARK_GRAY,
+            "<8>You vanish into the shadows!",
             true,
             (player, pos) -> {
                 player.addEffect(new Potion(PotionEffect.INVISIBILITY, (byte) 127, 600));
@@ -381,8 +365,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     SWAPPING_PLACE(
             "Swapping Places",
-            "You're about to swap places with someone!",
-            NamedTextColor.LIGHT_PURPLE,
+            "<d>You're about to swap places with someone!",
             false,
             (player, pos) -> {
                 SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(player);
@@ -397,8 +380,8 @@ public enum LuckyBlockEnvironmentEffect {
                 Random random = new Random();
                 SkywarsPlayer target = alivePlayers.get(random.nextInt(alivePlayers.size()));
 
-                player.sendMessage(Component.text("Swapping in 3 seconds...", NamedTextColor.YELLOW));
-                target.sendMessage(Component.text("You're being swapped in 3 seconds!", NamedTextColor.YELLOW));
+                player.sendMessage("<e>Swapping in 3 seconds...");
+                target.sendMessage("<e>You're being swapped in 3 seconds!");
 
                 Pos playerPos = player.getPosition();
                 Pos targetPos = target.getPosition();
@@ -412,8 +395,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     SPAWN_LARGE_TREE(
             "Spawn Large Tree",
-            "A mighty oak grows!",
-            NamedTextColor.DARK_GREEN,
+            "<2>A mighty oak grows!",
             true,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -433,7 +415,7 @@ public enum LuckyBlockEnvironmentEffect {
                             if (distance <= leafRadius + 0.5 && distance > 0) {
                                 Pos leafPos = topPos.add(dx, dy, dz);
                                 Block current = instance.getBlock(leafPos);
-                                if (current.isAir()) {
+                                if (current.air()) {
                                     instance.setBlock(leafPos, Block.OAK_LEAVES);
                                 }
                             }
@@ -445,8 +427,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     KABOOM(
             "KABOOM",
-            "Everyone goes flying!",
-            NamedTextColor.RED,
+            "<c>Everyone goes flying!",
             false,
             (player, pos) -> {
                 SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(player);
@@ -461,8 +442,7 @@ public enum LuckyBlockEnvironmentEffect {
 
     INSTANT_WALL(
             "Instant Wall",
-            "A brick wall rises before you!",
-            NamedTextColor.RED,
+            "<c>A brick wall rises before you!",
             true,
             (player, pos) -> {
                 Instance instance = player.getInstance();
@@ -482,7 +462,7 @@ public enum LuckyBlockEnvironmentEffect {
                     for (int h = 0; h < 4; h++) {
                         Pos wallPos = wallCenter.add(perpX * w, h, perpZ * w);
                         Block current = instance.getBlock(wallPos);
-                        if (current.isAir()) {
+                        if (current.air()) {
                             instance.setBlock(wallPos, Block.BRICKS);
                         }
                     }
@@ -494,26 +474,24 @@ public enum LuckyBlockEnvironmentEffect {
 
     private final String displayName;
     private final String message;
-    private final NamedTextColor color;
     private final boolean isGood;
     private final BiConsumer<SkywarsPlayer, Pos> effectAction;
 
-    LuckyBlockEnvironmentEffect(String displayName, String message, NamedTextColor color,
+    LuckyBlockEnvironmentEffect(String displayName, String message,
                                 boolean isGood, BiConsumer<SkywarsPlayer, Pos> effectAction) {
         this.displayName = displayName;
         this.message = message;
-        this.color = color;
         this.isGood = isGood;
         this.effectAction = effectAction;
     }
 
     public void apply(SkywarsPlayer player, Pos position) {
-        player.sendMessage(Component.text(message, color));
+        player.sendMessage(message);
         effectAction.accept(player, position);
     }
 
-    public Component getMessageComponent() {
-        return Component.text(message, color);
+    public Text getMessageText() {
+        return Text.of(message);
     }
 
     public static LuckyBlockEnvironmentEffect randomGood() {

@@ -1,15 +1,13 @@
 package net.swofty.type.hub.gui.elizabeth.subguis;
 
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.hub.gui.elizabeth.CommunityShopItem;
@@ -17,7 +15,6 @@ import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.NonPlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GUIBitsSubCategorys extends HypixelInventoryGUI {
@@ -33,14 +30,14 @@ public class GUIBitsSubCategorys extends HypixelInventoryGUI {
     private final HypixelInventoryGUI previousGUI;
 
     public GUIBitsSubCategorys(List<CommunityShopItem> items, String guiName, HypixelInventoryGUI previousGUI) {
-        super("Bits Shop - " + guiName, InventoryType.CHEST_5_ROW);
+        super("Bits Shop - {}", InventoryType.CHEST_5_ROW, guiName);
         this.items = items;
         this.guiName = guiName;
         this.previousGUI = previousGUI;
     }
 
     public void onOpen(InventoryGUIOpenEvent e) {
-        border(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        border(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(GUIClickableItem.getGoBackItem(40, previousGUI));
         int index = 0;
         for (int slot : displaySlots) {
@@ -66,7 +63,7 @@ public class GUIBitsSubCategorys extends HypixelInventoryGUI {
                                     new GUIBitsConfirmBuy(finalItem, price).open(player);
                                 }
                             } else {
-                                player.sendMessage("§cYou don't have enough Bits to buy that!");
+                                player.sendMessage("<c>You don't have enough Bits to buy that!");
                             }
                         }
 
@@ -75,13 +72,12 @@ public class GUIBitsSubCategorys extends HypixelInventoryGUI {
                             SkyBlockItem skyBlockItem = new SkyBlockItem(item);
                             ItemStack.Builder itemStack = new NonPlayerItemUpdater(skyBlockItem).getUpdatedItem();
                             itemStack.amount(amount);
-                            ArrayList<String> lore = new ArrayList<>(itemStack.build().get(DataComponents.LORE).stream().map(StringUtility::getTextFromComponent).toList());
-                            lore.add(" ");
-                            lore.add("§7Cost");
-                            lore.add("§b" + StringUtility.commaify(price) + " Bits");
-                            lore.add(" ");
-                            lore.add("§eClick to trade!");
-                            return ItemStackCreator.updateLore(itemStack, lore);
+                            return ItemStacks.appendLore(itemStack, """
+                                    \s
+                                    <7>Cost
+                                    <b>{:,} Bits
+                                    <r>\s
+                                    <e>Click to trade!""", price);
                         }
                     });
                 });

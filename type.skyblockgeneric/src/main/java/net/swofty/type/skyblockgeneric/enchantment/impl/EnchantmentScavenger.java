@@ -20,7 +20,7 @@ import java.util.Map;
 public class EnchantmentScavenger implements Ench, EnchFromTable, HypixelEventClass {
     @Override
     public String getDescription(int level) {
-        return "§7Scavenges §6+" + MathUtility.formatDecimals(0.3 + ((level - 1) * 0.3)) + " Coins §7per monster level on kill.";
+        return "<7>Scavenges <6>+" + MathUtility.formatDecimals(0.3 + ((level - 1) * 0.3)) + " Coins <7>per monster level on kill.";
     }
 
     @Override

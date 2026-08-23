@@ -12,7 +12,10 @@ public class NPCStJerry extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§cSt. Jerry", "§e§lCLICK"};
+				return new String[]{
+						"<c>St. Jerry",
+						"<e><l>CLICK"
+				};
 			}
 
 			@Override

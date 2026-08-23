@@ -3,15 +3,13 @@ package net.swofty.type.bedwarsgame.game.v2;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.translation.Argument;
-import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
-import net.swofty.type.generic.i18n.I18n;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -88,11 +86,8 @@ public class SwappageManager {
                 }
 
                 var teamName = Component.text(team.getName(), TextColor.color(team.getTeamKey().rgb()));
-                player.showTitle(Title.title(
-                    Component.translatable("bedwars.swap_title"),
-                    I18n.t("bedwars.swap_subtitle", Argument.component("team", teamName))
-                ));
-                player.sendMessage(I18n.t("bedwars.swap_team_changed", Argument.component("team", teamName)));
+                player.showTitle(Text.key("bedwars.swap_title"), Text.key("bedwars.swap_subtitle", teamName));
+                player.sendMessage(Text.key("bedwars.swap_team_changed", teamName));
             });
         }
     }

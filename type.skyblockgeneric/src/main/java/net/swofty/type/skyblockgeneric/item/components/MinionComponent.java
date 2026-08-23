@@ -2,6 +2,7 @@ package net.swofty.type.skyblockgeneric.item.components;
 
 import lombok.Getter;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributeMinionData;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -45,10 +46,8 @@ public class MinionComponent extends SkyBlockItemComponent {
                         percentageSpeed += 10;
 
                     return getLore(item, percentageSpeed);
-                }, (item, player) -> {
-                    return "§9" + getMinionRegistry().getDisplay() + " " +
-                            StringUtility.getAsRomanNumeral(item.getAttributeHandler().getMinionData().tier());
-                }), true
+                }, (item, player) -> Text.of("<9>{} {:roman}", getMinionRegistry().getDisplay(),
+                        item.getAttributeHandler().getMinionData().tier()).serialize()), true
         ));
 
         List<SkyBlockRecipe<?>> toReturn = new ArrayList<>();
@@ -91,11 +90,11 @@ public class MinionComponent extends SkyBlockItemComponent {
         MinionRegistry minionRegistry = item.getComponent(MinionComponent.class).getMinionRegistry();
 
         List<String> lore = new ArrayList<>(Arrays.asList(
-                "§7Place this minion and it will start",
-                "§7generating and mining " + StringUtility.toNormalCase(minionRegistry.name()) + "!",
-                "§7Requires an open area to place",
-                "§7" + StringUtility.toNormalCase(minionRegistry.name()) + ". Minions also work",
-                "§7you are offline!",
+                "<7>Place this minion and it will start",
+                "<7>generating and mining " + StringUtility.toNormalCase(minionRegistry.name()) + "!",
+                "<7>Requires an open area to place",
+                "<7>" + StringUtility.toNormalCase(minionRegistry.name()) + ". Minions also work",
+                "<7>you are offline!",
                 ""
         ));
 
@@ -107,12 +106,12 @@ public class MinionComponent extends SkyBlockItemComponent {
 
         final DecimalFormat formattter = new DecimalFormat("#.##");
 
-        lore.add("§7Time Between Actions: §a" + formattter.format(timeBetweenActions) + "s");
-        lore.add("§7Max Storage: §e" + tier.storage());
-        lore.add("§7Resources Generated: §b" + data.generatedResources());
+        lore.add("<7>Time Between Actions: <a>" + formattter.format(timeBetweenActions) + "s");
+        lore.add("<7>Max Storage: <e>" + tier.storage());
+        lore.add("<7>Resources Generated: <b>" + data.generatedResources());
 
         lore.add(" ");
-        lore.add("§9§lRARE");
+        lore.add("<9><l>RARE");
         return lore;
     }
 }

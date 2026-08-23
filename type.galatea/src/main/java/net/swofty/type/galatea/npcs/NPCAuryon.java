@@ -12,7 +12,7 @@ public class NPCAuryon extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bAuryon", "§e§lCLICK"};
+                return new String[]{"<b>Auryon", "<e><l>CLICK"};
             }
 
             @Override

@@ -12,8 +12,8 @@ public class BackpackComponent extends SkyBlockItemComponent {
         addInheritedComponent(new SkullHeadComponent((item) -> skullTexture));
         addInheritedComponent(new InteractableComponent(
                 (player, item) -> {
-                    player.sendMessage("§cBackpacks cannot be opened on their own.");
-                    player.sendMessage("§cInstead, use the §6Storage §cmenu in your §aSkyBlock Menu §cto store backpacks.");
+                    player.sendMessage("<c>Backpacks cannot be opened on their own.");
+                    player.sendMessage("<c>Instead, use the <6>Storage <c>menu in your <a>SkyBlock Menu <c>to store backpacks.");
                 },
                 null,
                 null

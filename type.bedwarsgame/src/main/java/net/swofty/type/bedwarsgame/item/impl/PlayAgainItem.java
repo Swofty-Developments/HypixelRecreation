@@ -1,12 +1,11 @@
 package net.swofty.type.bedwarsgame.item.impl;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.minestom.server.event.trait.PlayerInstanceEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.bedwarsgame.item.SimpleInteractableItem;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.user.HypixelPlayer;
 
 public class PlayAgainItem extends SimpleInteractableItem {
 
@@ -17,12 +16,14 @@ public class PlayAgainItem extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStackCreator.getStack("§b§lPlay Again §7(Right Click)", Material.COMPASS, 1, "§7Right-click to play another game!").build();
+        return ItemStacks.item(Material.COMPASS, """
+                <b><l>Play Again </l><7>(Right Click)
+                <7>Right-click to play another game!""").build();
     }
 
     @Override
     public void onItemInteract(PlayerInstanceEvent event) {
-        event.getPlayer().sendMessage(Component.text("§cThis Feature is not there yet. §aOpen a Pull request HERE to get it added quickly!")
-            .clickEvent(ClickEvent.openUrl("https://github.com/Swofty-Developments/HypixelSkyBlock")));
+        HypixelPlayer player = (HypixelPlayer) event.getPlayer();
+        player.sendMessage("<click:url:'https://github.com/Swofty-Developments/HypixelRecreation'><c>This Feature is not there yet. <a>Open a Pull request HERE to get it added quickly!");
     }
 }

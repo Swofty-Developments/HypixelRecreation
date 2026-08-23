@@ -28,6 +28,7 @@ public class StandardItemComponent extends SkyBlockItemComponent {
     @Getter
     public enum StandardItemType {
         SWORD("SWORD", ReforgeType.SWORDS, List.of(EnchantItemGroups.SWORD), RuneableComponent.RuneApplicableTo.WEAPONS, PotatoType.WEAPONS),
+        BOW("BOW", ReforgeType.BOWS, List.of(EnchantItemGroups.BOW), RuneableComponent.RuneApplicableTo.WEAPONS, PotatoType.WEAPONS),
         PICKAXE("PICKAXE", ReforgeType.PICKAXES, List.of(EnchantItemGroups.TOOLS), RuneableComponent.RuneApplicableTo.WEAPONS, null),
         HOE("HOE", ReforgeType.HOES, List.of(EnchantItemGroups.TOOLS), RuneableComponent.RuneApplicableTo.HOES, null),
         HELMET("HELMET", ReforgeType.ARMOR, List.of(EnchantItemGroups.ARMOR), RuneableComponent.RuneApplicableTo.HELMETS, PotatoType.ARMOR),

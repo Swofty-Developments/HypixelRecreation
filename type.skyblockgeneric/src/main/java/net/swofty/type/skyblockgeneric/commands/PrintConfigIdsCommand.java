@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.commands;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.skyblockgeneric.item.ConfigurableSkyBlockItem;
@@ -18,10 +19,10 @@ public class PrintConfigIdsCommand extends HypixelCommand {
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
 
-            sender.sendMessage("§aAvailable Item IDs:");
+            sender.sendMessage("<a>Available Item IDs:");
             for (String id : ConfigurableSkyBlockItem.getIDs()) {
-                sender.sendMessage("§7" + id);
-                Logger.info("§7" + id);
+                sender.sendMessage(Text.of("<7>{}", id));
+                Logger.info(id);
             }
         });
     }

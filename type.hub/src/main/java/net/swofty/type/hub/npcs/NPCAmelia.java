@@ -12,7 +12,7 @@ public class NPCAmelia extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Amelia", "§e§lCLICK"};
+                return new String[]{"Amelia", "<e><l>CLICK"};
             }
 
             @Override

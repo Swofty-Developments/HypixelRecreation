@@ -39,9 +39,7 @@ public class ActionPlayerMenuItem implements HypixelEventClass {
         event.setCancelled(true);
 
         if (player.getRavengardClass() == null) {
-            player.sendMessage(net.kyori.adventure.text.Component
-                    .text("You must select a class to use this menu!")
-                    .color(net.kyori.adventure.text.format.NamedTextColor.RED));
+            player.sendMessage("<c>You must select a class to use this menu!");
             return;
         }
 

@@ -1,21 +1,24 @@
 package net.swofty.type.generic.achievement;
 
 import lombok.Getter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.swofty.commons.text.Text;
 
 @Getter
 public enum SeasonType {
-    HOLIDAY("Holiday", "§c", "Christmas/Winter event"),
-    EASTER("Easter", "§b", "Easter/Spring event"),
-    SUMMER("Summer", "§e", "Summer event"),
-    HALLOWEEN("Halloween", "§6", "Halloween event");
+    HOLIDAY("Holiday", NamedTextColor.RED, "Christmas/Winter event"),
+    EASTER("Easter", NamedTextColor.AQUA, "Easter/Spring event"),
+    SUMMER("Summer", NamedTextColor.YELLOW, "Summer event"),
+    HALLOWEEN("Halloween", NamedTextColor.GOLD, "Halloween event");
 
     private final String displayName;
-    private final String colorCode;
+    private final TextColor color;
     private final String description;
 
-    SeasonType(String displayName, String colorCode, String description) {
+    SeasonType(String displayName, TextColor color, String description) {
         this.displayName = displayName;
-        this.colorCode = colorCode;
+        this.color = color;
         this.description = description;
     }
 
@@ -28,7 +31,7 @@ public enum SeasonType {
         return null;
     }
 
-    public String getFormattedName() {
-        return colorCode + displayName + " Achievement";
+    public Text getFormattedName() {
+        return Text.of("<color:{}>{} Achievement", color, displayName);
     }
 }

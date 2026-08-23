@@ -1,8 +1,5 @@
 package net.swofty.type.skyblockgeneric.gui.inventories;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.Inventory;
@@ -10,13 +7,12 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.RefreshingGUI;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointMinionData;
@@ -37,7 +33,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
@@ -49,7 +44,7 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
     private final IslandMinionData.IslandMinion minion;
 
     public GUIMinion(IslandMinionData.IslandMinion minion) {
-        super(I18n.t("gui_minion.title", Component.text(minion.getMinion().getDisplay()), Component.text(StringUtility.getAsRomanNumeral(minion.getTier()))), InventoryType.CHEST_6_ROW);
+        super(Text.key("gui_minion.title", minion.getMinion().getDisplay(), StringUtility.getAsRomanNumeral(minion.getTier())), InventoryType.CHEST_6_ROW);
 
         this.minion = minion;
     }
@@ -64,7 +59,7 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
                 if (net.swofty.type.generic.gui.inventory.HypixelInventoryGUI.GUI_MAP.containsKey(member.getUuid())) {
                     if (net.swofty.type.generic.gui.inventory.HypixelInventoryGUI.GUI_MAP.get(member.getUuid()) instanceof GUIMinion) {
                         e.player().closeInventory();
-                        e.player().sendMessage(I18n.t("gui_minion.coop_member_open"));
+                        e.player().sendMessage(Text.key("gui_minion.coop_member_open"));
                     }
                 }
             });
@@ -96,16 +91,17 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
                 minion.removeMinion();
                 player.getSkyBlockIsland().getMinionData().getMinions().remove(minion);
 
-                player.sendMessage(I18n.t("gui_minion.pickup_message", Component.text(String.valueOf(player.getSkyBlockIsland().getMinionData().getMinions().size())), Component.text(String.valueOf(player.getSkyblockDataHandler().get(
+                player.sendMessage(Text.key("gui_minion.pickup_message",
+                        player.getSkyBlockIsland().getMinionData().getMinions().size(),
+                        player.getSkyblockDataHandler().get(
                                 SkyBlockDataHandler.Data.MINION_DATA,
-                    DatapointMinionData.class).getValue().getSlots()))));
+                                DatapointMinionData.class).getValue().getSlots()));
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return TranslatableItemStackCreator.getStack("gui_minion.pickup_button", Material.BEDROCK, 1,
-                        "gui_minion.pickup_button.lore");
+                return ItemStacks.item(Material.BEDROCK, 1, Text.key("gui_minion.pickup_button"),
+                        List.of(Text.key("gui_minion.pickup_button.lore")));
             }
         });
 
@@ -114,7 +110,7 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 if (minion.getItemsInMinion().isEmpty()) {
-                    player.sendMessage(I18n.t("gui_minion.no_items_stored"));
+                    player.sendMessage(Text.key("gui_minion.no_items_stored"));
                     return;
                 }
 
@@ -131,9 +127,8 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return TranslatableItemStackCreator.getStack("gui_minion.collect_all_button", Material.CHEST, 1,
-                        "gui_minion.collect_all_button.lore");
+                return ItemStacks.item(Material.CHEST, 1, Text.key("gui_minion.collect_all_button"),
+                        List.of(Text.key("gui_minion.collect_all_button.lore")));
             }
         });
 
@@ -145,9 +140,8 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return TranslatableItemStackCreator.getStack("gui_minion.ideal_layout", Material.REDSTONE_TORCH, 1,
-                        "gui_minion.ideal_layout.lore");
+                return ItemStacks.item(Material.REDSTONE_TORCH, 1, Text.key("gui_minion.ideal_layout"),
+                        Text.keyLines("gui_minion.ideal_layout.lore"));
             }
         });
 
@@ -155,14 +149,12 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                List<Component> lore = new ArrayList<>();
-                MinionComponent.getLore(minion.asSkyBlockItem(), minion.getSpeedPercentage()).forEach(line -> {
-                    lore.add(Component.text("§r" + line.replace("&", "§"))
-                            .decorations(Collections.singleton(TextDecoration.ITALIC), false));
-                });
+                List<Text> lore = new ArrayList<>();
+                MinionComponent.getLore(minion.asSkyBlockItem(), minion.getSpeedPercentage())
+                        .forEach(line -> lore.add(Text.parseLenient(line)));
 
-                return PlayerItemUpdater.playerUpdate(player, minion.asSkyBlockItem().getItemStack())
-                        .set(DataComponents.LORE, lore);
+                return ItemStacks.lines(
+                        PlayerItemUpdater.playerUpdate(player, minion.asSkyBlockItem().getItemStack()), lore);
             }
         });
 
@@ -175,18 +167,17 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
                 List<SkyBlockMinion.MinionTier> minionTiers = minion.getMinion().asSkyBlockMinion().getTiers();
 
                 int speedPercentage = minion.getSpeedPercentage();
                 final DecimalFormat formatter = new DecimalFormat("#.##");
 
-                return TranslatableItemStackCreator.getStack("gui_minion.next_tier", Material.GOLD_INGOT, 1,
-                    "gui_minion.next_tier.lore",
-                    Component.text(formatter.format(minionTiers.get(minion.getTier() - 1).timeBetweenActions() / (1. + speedPercentage / 100.))),
-                    Component.text(formatter.format(minionTiers.get(minion.getTier()).timeBetweenActions() / (1. + speedPercentage / 100.))),
-                    Component.text(String.valueOf(minionTiers.get(minion.getTier() - 1).storage())),
-                    Component.text(String.valueOf(minionTiers.get(minion.getTier()).storage())));
+                return ItemStacks.item(Material.GOLD_INGOT, 1, Text.key("gui_minion.next_tier"),
+                    Text.keyLines("gui_minion.next_tier.lore",
+                        formatter.format(minionTiers.get(minion.getTier() - 1).timeBetweenActions() / (1. + speedPercentage / 100.)),
+                        formatter.format(minionTiers.get(minion.getTier()).timeBetweenActions() / (1. + speedPercentage / 100.)),
+                        minionTiers.get(minion.getTier() - 1).storage(),
+                        minionTiers.get(minion.getTier()).storage()));
             }
         });
 
@@ -210,9 +201,8 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
             set(new GUIItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                    SkyBlockPlayer player = (SkyBlockPlayer) p;
                     return unlocked ? ItemStack.builder(Material.AIR) :
-                            ItemStackCreator.createNamedItemStack(Material.WHITE_STAINED_GLASS_PANE);
+                            ItemStacks.named(Material.WHITE_STAINED_GLASS_PANE, "");
                 }
             });
         }
@@ -249,7 +239,7 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
                 public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                     SkyBlockPlayer player = (SkyBlockPlayer) p;
                     if (!p.getInventory().getCursorItem().isAir()) {
-                        player.sendMessage(I18n.t("gui_minion.cant_put_items"));
+                        player.sendMessage(Text.key("gui_minion.cant_put_items"));
 
                         e.setCancelled(true);
                         return;
@@ -271,8 +261,7 @@ public class GUIMinion extends HypixelInventoryGUI implements RefreshingGUI {
 
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                    SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    if (!unlocked) return ItemStackCreator.createNamedItemStack(Material.WHITE_STAINED_GLASS_PANE);
+                    if (!unlocked) return ItemStacks.named(Material.WHITE_STAINED_GLASS_PANE, "");
 
                     if (minion.getItemsInMinion().size() < finalI) return ItemStack.builder(Material.AIR);
 

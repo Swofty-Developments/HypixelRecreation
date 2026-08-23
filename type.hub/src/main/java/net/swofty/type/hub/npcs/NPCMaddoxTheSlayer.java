@@ -12,7 +12,7 @@ public class NPCMaddoxTheSlayer extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§5Maddox the Slayer", "§e§lCLICK"};
+                return new String[]{"<5>Maddox the Slayer", "<e><l>CLICK"};
             }
 
             @Override

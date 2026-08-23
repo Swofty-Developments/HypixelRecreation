@@ -1,8 +1,7 @@
 package net.swofty.type.skyblockgeneric.commands;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.arguments.ArgumentString;
-import net.minestom.server.command.builder.suggestion.SuggestionEntry;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -20,16 +19,16 @@ public class JumpToNextEvent extends HypixelCommand {
         ArgumentString eventNameArg = new ArgumentString("eventName");
         eventNameArg.setSuggestionCallback((sender, context, suggestion) -> {
             for (CalendarEvent event : CalendarEvent.getAllEvents()) {
-                suggestion.addEntry(new SuggestionEntry(event.id(), Component.text(event.getDisplayName(SkyBlockCalendar.getYear()))));
+                suggest(suggestion, event.id(), event.getDisplayName(SkyBlockCalendar.getYear()));
             }
         });
         command.addSyntax((sender, context) -> {
             String eventName = context.get(eventNameArg);
             CalendarEvent event = CalendarEvent.fromId(eventName);
             if (event == null) {
-                sender.sendMessage("§cInvalid event name. Available events:");
+                sender.sendMessage("<c>Invalid event name. Available events:");
                 for (CalendarEvent e : CalendarEvent.getAllEvents()) {
-                    sender.sendMessage("§7- " + e.getDisplayName(SkyBlockCalendar.getYear()));
+                    sender.sendMessage(Text.of("<7>- {}", e.getDisplayName(SkyBlockCalendar.getYear())));
                 }
                 return;
             }
@@ -54,15 +53,15 @@ public class JumpToNextEvent extends HypixelCommand {
             }
 
             if (nextEventTime == null) {
-                sender.sendMessage("§cCould not find next occurrence of this event.");
+                sender.sendMessage("<c>Could not find next occurrence of this event.");
                 return;
             }
 
             long newElapsed = ((long) (targetYear - 1) * SkyBlockCalendar.YEAR) + nextEventTime;
             SkyBlockCalendar.setElapsed(newElapsed - 20);
 
-            sender.sendMessage("§aJumped to " + event.getDisplayName(targetYear) + "!");
-            sender.sendMessage("§7New date: " + SkyBlockCalendar.getMonthName() + " " + SkyBlockCalendar.getDay() + ", Year " + SkyBlockCalendar.getYear());
+            sender.sendMessage(Text.of("<a>Jumped to {}!", event.getDisplayName(targetYear)));
+            sender.sendMessage(Text.of("<7>New date: {} {}, Year {}", SkyBlockCalendar.getMonthName(), SkyBlockCalendar.getDay(), SkyBlockCalendar.getYear()));
 
         }, eventNameArg);
     }

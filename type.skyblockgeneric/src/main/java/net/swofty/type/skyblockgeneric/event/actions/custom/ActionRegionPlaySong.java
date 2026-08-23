@@ -2,6 +2,7 @@ package net.swofty.type.skyblockgeneric.event.actions.custom;
 
 import net.swofty.commons.Songs;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.SkyBlockTypeLoader;
 import net.swofty.type.generic.event.EventNodes;
@@ -51,11 +52,9 @@ public class ActionRegionPlaySong implements HypixelEventClass {
 
         SkyBlockActionBar.getFor(player).addReplacement(
             SkyBlockActionBar.BarSection.MANA,
-            new SkyBlockActionBar.DisplayReplacement(
-                "§2" + StringUtility.toNormalCase(songToPlay.name()),
-                20,
-                2
-            )
+            Text.of("<2>{}", StringUtility.toNormalCase(songToPlay.name())),
+            20,
+            2
         );
     }
 }

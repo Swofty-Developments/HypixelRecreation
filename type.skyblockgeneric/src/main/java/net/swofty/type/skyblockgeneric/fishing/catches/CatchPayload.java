@@ -1,7 +1,7 @@
 package net.swofty.type.skyblockgeneric.fishing.catches;
 
-import net.kyori.adventure.text.Component;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCollection;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointTrophyFish;
@@ -50,8 +50,8 @@ public sealed interface CatchPayload {
                     .get(SkyBlockDataHandler.Data.COLLECTION, DatapointCollection.class)
                     .setValue(ctx.player().getCollection());
 
-            String prefix = fromTreasure ? "§b§lTREASURE! §7" : "§b§lGOOD CATCH! §7";
-            ctx.player().sendMessage(Component.text(prefix + "You found " + amount + "x §a" + itemId + "§7!"));
+            Text prefix = fromTreasure ? Text.of("<b><l>TREASURE! ") : Text.of("<b><l>GOOD CATCH! ");
+            ctx.player().sendMessage(prefix.append("<7>You found {}x <a>{}<7>!", amount, itemId));
         }
     }
 
@@ -71,7 +71,7 @@ public sealed interface CatchPayload {
         @Override
         public void apply(CatchAwardContext ctx) {
             if (spawnCount > 1) {
-                ctx.player().sendMessage(net.kyori.adventure.text.Component.text("§a§lDOUBLE HOOK!"));
+                ctx.player().sendMessage("<a><l>DOUBLE HOOK!");
             }
             for (int i = 0; i < spawnCount; i++) {
                 SeaCreatureSpawner.spawn(ctx.player(), seaCreatureId, ctx.hookPosition());
@@ -93,8 +93,8 @@ public sealed interface CatchPayload {
                     .get(SkyBlockDataHandler.Data.TROPHY_FISH, DatapointTrophyFish.class)
                     .setValue(data);
 
-            ctx.player().sendMessage(Component.text("§b§lTROPHY FISH! §7You reeled in a "
-                    + tier.colour() + tier.displayName() + " §a" + definitionId + "§7!"));
+            ctx.player().sendMessage("<b><l>TROPHY FISH! </l><7>You reeled in a <color:{0}>{1} <a>{2}<7>!",
+                    tier.colour(), tier.displayName(), definitionId);
         }
     }
 
@@ -104,7 +104,7 @@ public sealed interface CatchPayload {
         @Override
         public void apply(CatchAwardContext ctx) {
             ctx.player().addAndUpdateItem(ItemType.valueOf(itemId), amount);
-            ctx.player().sendMessage(Component.text("§d§lQUEST CATCH! §7" + message));
+            ctx.player().sendMessage("<d><l>QUEST CATCH! </l><7>{}", message);
         }
     }
 
@@ -116,8 +116,8 @@ public sealed interface CatchPayload {
             ItemType type = ItemType.valueOf(itemId);
             ctx.player().addAndUpdateItem(type, amount);
             ctx.player().getCollection().increase(type, amount);
-            String prefix = corrupted ? "§5§lCORRUPTED! §7" : "§d§lWONDROUS CATCH! §7";
-            ctx.player().sendMessage(Component.text(prefix + "You found §a" + itemId + "§7!"));
+            Text prefix = corrupted ? Text.of("<5><l>CORRUPTED! ") : Text.of("<d><l>WONDROUS CATCH! ");
+            ctx.player().sendMessage(prefix.append("<7>You found <a>{}<7>!", itemId));
         }
     }
 }

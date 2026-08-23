@@ -1,8 +1,7 @@
 package net.swofty.type.generic.tab;
 
-import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 import java.util.ArrayList;
@@ -36,12 +35,12 @@ public class AreaServerModule extends TablistModule {
     public List<TablistEntry> getEntries(HypixelPlayer player) {
         Locale l = player.getLocale();
         ArrayList<TablistEntry> entries = new ArrayList<>(List.of(
-                new TablistEntry(Component.text(getCentered(I18n.string("tablist.module.server_info", l))), TablistSkinRegistry.CYAN)
+                centered(Text.key("tablist.module.server_info"), l, TablistSkinRegistry.CYAN)
         ));
 
-        entries.add(new TablistEntry(I18n.t(areaI18nKey), TablistSkinRegistry.GRAY));
+        entries.add(new TablistEntry(Text.key(areaI18nKey), TablistSkinRegistry.GRAY));
         entries.add(new TablistEntry(
-                I18n.t("tablist.server_info.server_label", Component.text(HypixelConst.getServerName())),
+                Text.key("tablist.server_info.server_label", HypixelConst.getServerName()),
                 TablistSkinRegistry.GRAY
         ));
 

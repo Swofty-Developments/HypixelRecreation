@@ -4,7 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
 import net.swofty.type.skyblockgeneric.elections.SkyBlockMayor;
@@ -18,12 +18,12 @@ public abstract class AbstractCurrentMayorNPC extends HypixelNPC {
             public String[] holograms(HypixelPlayer player) {
                 SkyBlockMayor mayor = ElectionManager.getCurrentMayor();
                 if (mayor == null) return new String[]{
-                    I18n.string("npcs_hub.election.mayor_unknown", player.getLocale()),
-                    I18n.string("npcs_hub.election.click", player.getLocale())
+                    "<key:'npcs_hub.election.mayor_unknown'>",
+                    "<key:'npcs_hub.election.click'>"
                 };
                 return new String[]{
-                    "Mayor " + mayor.getDisplayName(),
-                    I18n.string("npcs_hub.election.click", player.getLocale())
+                    Text.of("Mayor {}", mayor.getDisplayName()).serialize(),
+                    "<key:'npcs_hub.election.click'>"
                 };
             }
 
@@ -55,7 +55,7 @@ public abstract class AbstractCurrentMayorNPC extends HypixelNPC {
     public void onClick(NPCInteractEvent event) {
         SkyBlockMayor mayor = ElectionManager.getCurrentMayor();
         if (mayor == null) {
-            event.player().sendMessage(I18n.string("npcs_hub.election.hello", event.player().getLocale()));
+            event.player().sendMessage(Text.key("npcs_hub.election.hello"));
             return;
         }
         event.player().openView(new MayorMenuView());

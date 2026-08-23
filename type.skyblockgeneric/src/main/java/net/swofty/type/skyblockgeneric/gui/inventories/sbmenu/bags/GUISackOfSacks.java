@@ -1,12 +1,12 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.bags;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.skyblock.item.ItemType;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -14,7 +14,6 @@ import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.ViewSession;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.collection.CustomCollectionAward;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSackOfSacks;
@@ -88,14 +87,16 @@ public class GUISackOfSacks implements StatefulView<GUISackOfSacks.SackOfSacksSt
         for (int i = totalSlots; i < slotsPerPage; i++) {
             CustomCollectionAward nextUpgrade = getUpgradeNeededForSlotIndex(i);
             if (nextUpgrade != null) {
-                layout.slot(i, (s, c) -> TranslatableItemStackCreator.getStack("gui_sbmenu.bags.sack_of_sacks.locked_slot", Material.RED_STAINED_GLASS_PANE, 1,
-                    "gui_sbmenu.bags.sack_of_sacks.locked_slot.lore", Component.text(nextUpgrade.getDisplay())));
+                layout.slot(i, (s, c) -> ItemStacks.item(Material.RED_STAINED_GLASS_PANE, 1,
+                    Text.key("gui_sbmenu.bags.sack_of_sacks.locked_slot"),
+                    Text.keyLines("gui_sbmenu.bags.sack_of_sacks.locked_slot.lore", nextUpgrade.getDisplay())));
             }
         }
 
         // Insert inventory button
-        layout.slot(38, (s, c) -> TranslatableItemStackCreator.getStack("gui_sbmenu.bags.sack_of_sacks.insert_inventory", Material.CHEST, 1,
-                        "gui_sbmenu.bags.sack_of_sacks.insert_inventory.lore"),
+        layout.slot(38, (s, c) -> ItemStacks.item(Material.CHEST, 1,
+                        Text.key("gui_sbmenu.bags.sack_of_sacks.insert_inventory"),
+                        Text.keyLines("gui_sbmenu.bags.sack_of_sacks.insert_inventory.lore")),
                 (click, c) -> {
                     SkyBlockPlayer p = (SkyBlockPlayer) c.player();
                     int slot = 0;
@@ -126,7 +127,7 @@ public class GUISackOfSacks implements StatefulView<GUISackOfSacks.SackOfSacksSt
             return true;
         }
 
-        player.sendMessage(I18n.t("gui_sbmenu.bags.sack_of_sacks.msg.cannot_put"));
+        player.sendMessage(Text.key("gui_sbmenu.bags.sack_of_sacks.msg.cannot_put"));
         return false;
     }
 

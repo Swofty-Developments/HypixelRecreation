@@ -5,7 +5,6 @@ public enum ServiceType {
     BAZAAR,
     ITEM_TRACKER,
     API,
-    DATA_MUTEX,
     PARTY,
     DARK_AUCTION,
     ORCHESTRATOR,

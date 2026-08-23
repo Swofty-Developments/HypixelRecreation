@@ -13,9 +13,9 @@ items:
     name: "New Year Cake Bag"
     rarity: UNCOMMON
     lore:
-      - "§7Holds §dNew Year Cake§7. Each"
-      - "§7unique New Year Cake within this"
-      - "§7bag grants §a+1 §c❤ Health§7."
+      - "<7>Holds <d>New Year Cake<7>. Each"
+      - "<7>unique New Year Cake within this"
+      - "<7>bag grants <a>+1 <c>❤ Health<7>."
     components:
       - id: CUSTOM_DISPLAY_NAME
         display_name: New Year Cake Bag

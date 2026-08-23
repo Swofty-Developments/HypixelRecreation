@@ -1,17 +1,13 @@
 package net.swofty.type.skywarsgame.luckyblock.items.weapons;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class SelfAttackingSword implements LuckyBlockWeapon {
 
@@ -34,20 +30,14 @@ public class SelfAttackingSword implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.IRON_SWORD)
-                .customName(Component.text("Self-Attacking Sword", NamedTextColor.RED)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("This cursed blade attacks", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("its wielder instead!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.IRON_SWORD, """
+                        <c>Self-Attacking Sword
+
+                        <7>This cursed blade attacks
+                        <7>its wielder instead!
+
+                        <6><l>LUCKY BLOCK ITEM
+                        """)
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }

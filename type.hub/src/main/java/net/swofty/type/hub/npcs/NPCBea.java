@@ -16,7 +16,7 @@ public class NPCBea extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Bea", "§e§lCLICK"};
+                return new String[]{"Bea", "<e><l>CLICK"};
             }
 
             @Override
@@ -59,11 +59,11 @@ public class NPCBea extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "Hello! Do you have a pet?",
                                 "Pets are little companions for your adventures in SkyBlock!",
-                                "Personally, I prefer the §ebee §fpet!"
-                        }).build()
+                                "Personally, I prefer the <e>bee <f>pet!"
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

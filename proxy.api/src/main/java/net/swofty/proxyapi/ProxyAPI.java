@@ -38,13 +38,19 @@ public class ProxyAPI {
                 handler,
                 (envelope, channel) -> RedisMessageContext.between(
                         UUID.fromString(envelope.id()),
-                        RedisEndpoint.proxy(),
+                        originOf(envelope),
                         RedisEndpoint.server(serverUUID),
                         protocol.channel()
                 ),
-                envelope -> RedisChannels.PROXY_RESPONSE,
+                RedisEnvelope::from,
                 envelope -> RedisChannels.protocol(protocol)
         );
+    }
+
+    private static RedisEndpoint originOf(RedisEnvelope envelope) {
+        return RedisEndpoint.proxy().id().equals(envelope.from())
+                ? RedisEndpoint.proxy()
+                : RedisEndpoint.server(envelope.from());
     }
 
     public <T, R> void registerServiceHandler(RedisMessageHandler<T, R> handler) {

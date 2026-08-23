@@ -1,21 +1,23 @@
 package net.swofty.type.bedwarsgame.shop;
 
 import lombok.Getter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.item.Material;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
 public enum Currency {
-    IRON("Iron", Material.IRON_INGOT, "§f"),
-    GOLD("Gold", Material.GOLD_INGOT, "§6"),
-    DIAMOND("Diamond", Material.DIAMOND, "§b"),
-    EMERALD("Emerald", Material.EMERALD, "§2");
+    IRON("Iron", Material.IRON_INGOT, NamedTextColor.WHITE),
+    GOLD("Gold", Material.GOLD_INGOT, NamedTextColor.GOLD),
+    DIAMOND("Diamond", Material.DIAMOND, NamedTextColor.AQUA),
+    EMERALD("Emerald", Material.EMERALD, NamedTextColor.DARK_GREEN);
 
     private final String name;
 	private final Material material;
-	private final String color;
+	private final TextColor color;
 
-    Currency(String name, Material material, String color) {
+    Currency(String name, Material material, TextColor color) {
         this.name = name;
 		this.material = material;
 		this.color = color;

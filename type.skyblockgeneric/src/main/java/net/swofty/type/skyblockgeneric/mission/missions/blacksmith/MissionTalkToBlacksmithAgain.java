@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.blacksmith;
 
+
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.skyblockgeneric.mission.LocationAssociatedMission;
 import net.swofty.type.skyblockgeneric.mission.MissionData;

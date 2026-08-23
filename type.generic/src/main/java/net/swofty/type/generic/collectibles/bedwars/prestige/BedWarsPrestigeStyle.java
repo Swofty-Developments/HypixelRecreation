@@ -1,6 +1,11 @@
 package net.swofty.type.generic.collectibles.bedwars.prestige;
 
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public record BedWarsPrestigeStyle(
@@ -20,7 +25,7 @@ public record BedWarsPrestigeStyle(
         return new Builder();
     }
 
-    public static BedWarsPrestigeStyle solid(String color) {
+    public static BedWarsPrestigeStyle solid(TextColor color) {
         return builder()
             .openBracket(color)
             .digits(color)
@@ -29,10 +34,10 @@ public record BedWarsPrestigeStyle(
             .build();
     }
 
-    public static BedWarsPrestigeStyle colors(String openColor, List<String> digitColors, String starColor, String closeColor) {
+    public static BedWarsPrestigeStyle colors(TextColor openColor, List<TextColor> digitColors, TextColor starColor, TextColor closeColor) {
         return BedWarsPrestigeStyle.builder()
             .openBracket(openColor)
-            .digits(digitColors.toArray(String[]::new))
+            .digits(digitColors.toArray(TextColor[]::new))
             .star(starColor)
             .closeBracket(closeColor)
             .build();
@@ -41,16 +46,40 @@ public record BedWarsPrestigeStyle(
     public String render(String level, String starSymbol, BedWarsPrestigeDefinitions.Bracket bracket, boolean includeBrackets) {
         StringBuilder rendered = new StringBuilder();
         if (includeBrackets) {
-            rendered.append(openBracket.apply(bracket.open()));
+            rendered.append(openBracket.apply(escape(bracket.open())));
         }
         for (int i = 0; i < level.length(); i++) {
-            rendered.append(digits.apply(String.valueOf(level.charAt(i)), i, level.length()));
+            rendered.append(digits.apply(escape(String.valueOf(level.charAt(i))), i, level.length()));
         }
-        rendered.append(star.apply(starSymbol));
+        rendered.append(star.apply(escape(starSymbol)));
         if (includeBrackets) {
-            rendered.append(closeBracket.apply(bracket.close()));
+            rendered.append(closeBracket.apply(escape(bracket.close())));
         }
         return rendered.toString();
+    }
+
+    private static String tag(TextColor color) {
+        if (color == null) {
+            return "";
+        }
+        return color instanceof NamedTextColor named
+            ? "<color:" + NamedTextColor.NAMES.keyOrThrow(named) + ">"
+            : "<" + color.asHexString() + ">";
+    }
+
+    private static String escape(String literal) {
+        if (literal == null || literal.isEmpty()) {
+            return "";
+        }
+        StringBuilder escaped = new StringBuilder(literal.length() + 2);
+        for (int i = 0; i < literal.length(); i++) {
+            char c = literal.charAt(i);
+            if (c == '<' || c == '{' || c == '\\') {
+                escaped.append('\\');
+            }
+            escaped.append(c);
+        }
+        return escaped.toString();
     }
 
     public static final class Builder {
@@ -59,27 +88,27 @@ public record BedWarsPrestigeStyle(
         private TextPaint star = TextPaint.none();
         private TextPaint closeBracket = TextPaint.none();
 
-        public Builder openBracket(String color) {
+        public Builder openBracket(TextColor color) {
             this.openBracket = TextPaint.color(color);
             return this;
         }
 
-        public Builder digits(String... colors) {
+        public Builder digits(TextColor... colors) {
             this.digits = DigitPaint.gradient(colors);
             return this;
         }
 
-        public Builder star(String color) {
+        public Builder star(TextColor color) {
             this.star = TextPaint.color(color);
             return this;
         }
 
-        public Builder closeBracket(String color) {
+        public Builder closeBracket(TextColor color) {
             this.closeBracket = TextPaint.color(color);
             return this;
         }
 
-        public Builder all(String color) {
+        public Builder all(TextColor color) {
             return openBracket(color).digits(color).star(color).closeBracket(color);
         }
 
@@ -88,37 +117,32 @@ public record BedWarsPrestigeStyle(
         }
     }
 
-    public record TextPaint(String color) {
-        public TextPaint {
-            color = color == null ? "" : color;
-        }
-
+    public record TextPaint(TextColor color) {
         public static TextPaint none() {
-            return new TextPaint("");
+            return new TextPaint(null);
         }
 
-        public static TextPaint color(String color) {
+        public static TextPaint color(TextColor color) {
             return new TextPaint(color);
         }
 
         public String apply(String text) {
-            return color + text;
+            return tag(color) + text;
         }
     }
 
-    public record DigitPaint(List<String> colors) {
+    public record DigitPaint(List<TextColor> colors) {
         public DigitPaint {
-            colors = colors == null ? List.of("") : List.copyOf(colors);
-            if (colors.isEmpty()) {
-                colors = List.of("");
-            }
+            colors = colors == null || colors.isEmpty()
+                ? Collections.singletonList(null)
+                : Collections.unmodifiableList(new ArrayList<>(colors));
         }
 
         public static DigitPaint none() {
-            return new DigitPaint(List.of(""));
+            return new DigitPaint(Collections.singletonList(null));
         }
 
-        public static DigitPaint gradient(String... colors) {
+        public static DigitPaint gradient(TextColor... colors) {
             if (colors == null || colors.length == 0) {
                 return none();
             }
@@ -126,10 +150,10 @@ public record BedWarsPrestigeStyle(
         }
 
         public String apply(String digit, int index, int totalDigits) {
-            return colorAt(index, totalDigits) + digit;
+            return tag(colorAt(index, totalDigits)) + digit;
         }
 
-        private String colorAt(int index, int totalDigits) {
+        private TextColor colorAt(int index, int totalDigits) {
             if (colors.size() == 1 || totalDigits <= 1) {
                 return colors.getFirst();
             }

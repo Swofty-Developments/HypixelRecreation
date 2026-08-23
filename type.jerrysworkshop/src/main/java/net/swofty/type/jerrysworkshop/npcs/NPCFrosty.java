@@ -12,7 +12,9 @@ public class NPCFrosty extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Frosty"};
+				return new String[]{
+						"Frosty"
+				};
 			}
 
 			@Override

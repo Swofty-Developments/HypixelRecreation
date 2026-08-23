@@ -1,8 +1,5 @@
 package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -14,11 +11,10 @@ import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
 import net.minestom.server.tag.Tag;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class TNTLaunchPad implements LuckyBlockConsumable {
 
@@ -39,24 +35,15 @@ public class TNTLaunchPad implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.HEAVY_WEIGHTED_PRESSURE_PLATE)
-                .customName(Component.text(getDisplayName(), NamedTextColor.RED)
-                        .decoration(TextDecoration.ITALIC, false)
-                        .decoration(TextDecoration.BOLD, true))
-                .lore(List.of(
-                        Component.text("Spawns 4 TNT that launch", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("you into the sky!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Grants Slow Falling", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("after launch.", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to use!", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                ))
+        return ItemStacks.item(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, """
+                <c><l>TNT Launch Pad</l>
+                <7>Spawns 4 TNT that launch
+                <7>you into the sky!
+
+                <7>Grants Slow Falling
+                <7>after launch.
+
+                <e>Right-click to use!""")
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
@@ -94,10 +81,10 @@ public class TNTLaunchPad implements LuckyBlockConsumable {
         player.scheduler().buildTask(() -> {
             player.setVelocity(new Vec(0, LAUNCH_POWER, 0));
             player.addEffect(new Potion(PotionEffect.SLOW_FALLING, (byte) 0, SLOW_FALLING_DURATION));
-            player.sendMessage(Component.text("Launched!", NamedTextColor.RED));
+            player.sendMessage("<c>Launched!");
         }).delay(java.time.Duration.ofMillis(FUSE_TICKS * 50L)).schedule();
 
-        player.sendMessage(Component.text("TNT Launch Pad activated!", NamedTextColor.GOLD));
+        player.sendMessage("<6>TNT Launch Pad activated!");
     }
 
     public static boolean isOwner(Entity tnt, SkywarsPlayer player) {

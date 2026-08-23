@@ -28,10 +28,11 @@ public class ActionPlayerRemoveTab implements HypixelEventClass {
 
             if (player2.getUuid().equals(player.getUuid())) return;
 
+            Component playerPrefix = playerRank.prefixComponent();
             player2.sendPacket(new TeamsPacket("ZZZZZ" + player.getUsername(), new TeamsPacket.CreateTeamAction(
                     new TeamsPacket.Settings(
-                            Component.text(playerRank.getPrefix()),
-                            Component.text(playerRank.getPrefix()),
+                            playerPrefix,
+                            playerPrefix,
                             Component.empty(),
                             TeamsPacket.NameTagVisibility.ALWAYS,
                             TeamsPacket.CollisionRule.ALWAYS,
@@ -40,10 +41,11 @@ public class ActionPlayerRemoveTab implements HypixelEventClass {
                     ),
                     new ArrayList<>(Collections.singletonList(player.getUsername()))
             )));
+            Component player2Prefix = player2Rank.prefixComponent();
             player.sendPacket(new TeamsPacket("ZZZZZ" + player2.getUsername(), new TeamsPacket.CreateTeamAction(
                     new TeamsPacket.Settings(
-                            Component.text(player2Rank.getPrefix()),
-                            Component.text(player2Rank.getPrefix()),
+                            player2Prefix,
+                            player2Prefix,
                             Component.empty(),
                             TeamsPacket.NameTagVisibility.ALWAYS,
                             TeamsPacket.CollisionRule.ALWAYS,

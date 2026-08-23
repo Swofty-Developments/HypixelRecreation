@@ -1,0 +1,1448 @@
+# thanks to https://raw.githubusercontent.com/NotEnoughUpdates/NotEnoughUpdates-REPO/refs/heads/master/constants/fairy_souls.json
+max_souls: 289
+souls:
+  - id: 1
+    zone: HUB
+    x: -3
+    y: 79
+    z: -147
+  - id: 2
+    zone: HUB
+    x: -15
+    y: 101
+    z: -76
+  - id: 3
+    zone: HUB
+    x: -15
+    y: 87
+    z: -52
+  - id: 4
+    zone: HUB
+    x: 8
+    y: 64
+    z: -137
+  - id: 5
+    zone: HUB
+    x: 15
+    y: 82
+    z: -127
+  - id: 6
+    zone: HUB
+    x: 12
+    y: 87
+    z: -66
+  - id: 7
+    zone: HUB
+    x: -11
+    y: 73
+    z: -164
+  - id: 8
+    zone: HUB
+    x: 61
+    y: 80
+    z: -139
+  - id: 9
+    zone: HUB
+    x: 82
+    y: 97
+    z: -139
+  - id: 10
+    zone: HUB
+    x: 87
+    y: 68
+    z: -154
+  - id: 11
+    zone: HUB
+    x: 70
+    y: 73
+    z: -106
+  - id: 12
+    zone: HUB
+    x: 77
+    y: 102
+    z: -88
+  - id: 13
+    zone: HUB
+    x: 66
+    y: 98
+    z: -60
+  - id: 14
+    zone: HUB
+    x: 106
+    y: 64
+    z: -62
+  - id: 15
+    zone: HUB
+    x: 136
+    y: 74
+    z: -105
+  - id: 16
+    zone: HUB
+    x: 145
+    y: 84
+    z: -67
+  - id: 17
+    zone: HUB
+    x: 98
+    y: 76
+    z: -29
+  - id: 18
+    zone: HUB
+    x: 158
+    y: 92
+    z: 8
+  - id: 19
+    zone: HUB
+    x: 153
+    y: 64
+    z: 45
+  - id: 20
+    zone: HUB
+    x: 162
+    y: 46
+    z: 69
+  - id: 21
+    zone: HUB
+    x: 147
+    y: 53
+    z: 88
+  - id: 22
+    zone: HUB
+    x: 80
+    y: 66
+    z: 26
+  - id: 23
+    zone: HUB
+    x: 78
+    y: 109
+    z: 87
+  - id: 24
+    zone: HUB
+    x: 103
+    y: 67
+    z: 110
+  - id: 25
+    zone: HUB
+    x: 132
+    y: 144
+    z: 114
+  - id: 26
+    zone: HUB
+    x: 119
+    y: 119
+    z: 124
+  - id: 27
+    zone: HUB
+    x: 123
+    y: 68
+    z: 152
+  - id: 28
+    zone: HUB
+    x: 145
+    y: 69
+    z: 173
+  - id: 29
+    zone: HUB
+    x: 82
+    y: 61
+    z: 196
+  - id: 30
+    zone: HUB
+    x: -48
+    y: 117
+    z: 129
+  - id: 31
+    zone: HUB
+    x: -52
+    y: 161
+    z: 73
+  - id: 32
+    zone: HUB
+    x: -9
+    y: 188
+    z: 70
+  - id: 33
+    zone: HUB
+    x: 12
+    y: 134
+    z: 72
+  - id: 34
+    zone: HUB
+    x: -50
+    y: 132
+    z: 62
+  - id: 35
+    zone: HUB
+    x: -38
+    y: 194
+    z: 65
+  - id: 36
+    zone: HUB
+    x: -21
+    y: 156
+    z: 69
+  - id: 37
+    zone: HUB
+    x: -22
+    y: 167
+    z: 66
+  - id: 38
+    zone: HUB
+    x: -3
+    y: 193
+    z: 62
+  - id: 39
+    zone: HUB
+    x: 9
+    y: 104
+    z: 64
+  - id: 40
+    zone: HUB
+    x: -56
+    y: 115
+    z: 58
+  - id: 41
+    zone: HUB
+    x: 10
+    y: 178
+    z: 52
+  - id: 42
+    zone: HUB
+    x: -60
+    y: 107
+    z: 33
+  - id: 43
+    zone: HUB
+    x: 18
+    y: 68
+    z: -3
+  - id: 44
+    zone: HUB
+    x: -39
+    y: 56
+    z: -11
+  - id: 45
+    zone: HUB
+    x: -106
+    y: 85
+    z: -22
+  - id: 46
+    zone: HUB
+    x: -116
+    y: 73
+    z: -20
+  - id: 47
+    zone: HUB
+    x: -166
+    y: 79
+    z: 93
+  - id: 48
+    zone: HUB
+    x: -183
+    y: 80
+    z: 29
+  - id: 49
+    zone: HUB
+    x: -191
+    y: 102
+    z: 109
+  - id: 50
+    zone: HUB
+    x: -207
+    y: 100
+    z: 66
+  - id: 51
+    zone: HUB
+    x: -152
+    y: 67
+    z: 123
+  - id: 52
+    zone: HUB
+    x: -214
+    y: 103
+    z: 89
+  - id: 53
+    zone: HUB
+    x: -229
+    y: 123
+    z: 84
+  - id: 54
+    zone: HUB
+    x: -133
+    y: 74
+    z: 133
+  - id: 55
+    zone: HUB
+    x: -233
+    y: 86
+    z: 84
+  - id: 56
+    zone: HUB
+    x: -248
+    y: 74
+    z: 125
+  - id: 57
+    zone: HUB
+    x: -245
+    y: 75
+    z: 149
+  - id: 58
+    zone: HUB
+    x: -262
+    y: 102
+    z: 67
+  - id: 59
+    zone: HUB
+    x: -259
+    y: 114
+    z: 85
+  - id: 60
+    zone: HUB
+    x: -261
+    y: 56
+    z: 115
+  - id: 61
+    zone: HUB
+    x: -195
+    y: 55
+    z: 153
+  - id: 62
+    zone: HUB
+    x: -252
+    y: 132
+    z: 51
+  - id: 63
+    zone: HUB
+    x: -260
+    y: 96
+    z: 48
+  - id: 64
+    zone: HUB
+    x: -188
+    y: 79
+    z: -56
+  - id: 65
+    zone: HUB
+    x: -117
+    y: 73
+    z: -163
+  - id: 66
+    zone: HUB
+    x: -127
+    y: 75
+    z: -185
+  - id: 67
+    zone: HUB
+    x: -92
+    y: 59
+    z: -138
+  - id: 68
+    zone: HUB
+    x: -77
+    y: 74
+    z: -152
+  - id: 69
+    zone: HUB
+    x: -64
+    y: 77
+    z: -72
+  - id: 70
+    zone: HUB
+    x: -34
+    y: 86
+    z: -35
+  - id: 71
+    zone: HUB
+    x: 38
+    y: 67
+    z: -36
+  - id: 72
+    zone: HUB
+    x: 36
+    y: 66
+    z: -35
+  - id: 73
+    zone: HUB
+    x: 73
+    y: 59
+    z: 6
+  - id: 74
+    zone: HUB
+    x: 169
+    y: 60
+    z: 129
+  - id: 75
+    zone: HUB
+    x: 45
+    y: 117
+    z: 94
+  - id: 76
+    zone: HUB
+    x: 45
+    y: 148
+    z: 98
+  - id: 77
+    zone: HUB
+    x: 49
+    y: 77
+    z: 93
+  - id: 78
+    zone: HUB
+    x: 44
+    y: 121
+    z: 88
+  - id: 79
+    zone: HUB
+    x: 41
+    y: 106
+    z: 101
+  - id: 80
+    zone: HUB
+    x: 27
+    y: 84
+    z: 83
+  - id: 81
+    zone: THE_FARMING_ISLANDS
+    x: 96
+    y: 96
+    z: -287
+  - id: 82
+    zone: THE_FARMING_ISLANDS
+    x: 182
+    y: 99
+    z: -235
+  - id: 83
+    zone: THE_FARMING_ISLANDS
+    x: 183
+    y: 99
+    z: -305
+  - id: 84
+    zone: THE_FARMING_ISLANDS
+    x: 126
+    y: 91
+    z: -304
+  - id: 85
+    zone: THE_FARMING_ISLANDS
+    x: 99
+    y: 112
+    z: -275
+  - id: 86
+    zone: THE_FARMING_ISLANDS
+    x: 143
+    y: 90
+    z: -243
+  - id: 87
+    zone: THE_FARMING_ISLANDS
+    x: 155
+    y: 23
+    z: -204
+  - id: 88
+    zone: THE_FARMING_ISLANDS
+    x: 111
+    y: 63
+    z: -447
+  - id: 89
+    zone: THE_FARMING_ISLANDS
+    x: 263
+    y: 177
+    z: -565
+  - id: 90
+    zone: THE_FARMING_ISLANDS
+    x: 138
+    y: 72
+    z: -587
+  - id: 91
+    zone: THE_FARMING_ISLANDS
+    x: 273
+    y: 141
+    z: -467
+  - id: 92
+    zone: THE_FARMING_ISLANDS
+    x: 387
+    y: 78
+    z: -365
+  - id: 93
+    zone: THE_FARMING_ISLANDS
+    x: 261
+    y: 133
+    z: -348
+  - id: 94
+    zone: THE_FARMING_ISLANDS
+    x: 145
+    y: 77
+    z: -374
+  - id: 95
+    zone: THE_FARMING_ISLANDS
+    x: 254
+    y: 70
+    z: -493
+  - id: 96
+    zone: THE_FARMING_ISLANDS
+    x: 193
+    y: 66
+    z: -468
+  - id: 97
+    zone: THE_FARMING_ISLANDS
+    x: 279
+    y: 112
+    z: -541
+  - id: 98
+    zone: THE_FARMING_ISLANDS
+    x: 271
+    y: 56
+    z: -361
+  - id: 99
+    zone: THE_FARMING_ISLANDS
+    x: 152
+    y: 67
+    z: -361
+  - id: 100
+    zone: THE_FARMING_ISLANDS
+    x: 150
+    y: 60
+    z: -448
+  - id: 101
+    zone: GOLD_MINE
+    x: -47
+    y: 75
+    z: -298
+  - id: 102
+    zone: GOLD_MINE
+    x: -62
+    y: 104
+    z: -289
+  - id: 103
+    zone: GOLD_MINE
+    x: -37
+    y: 78
+    z: -308
+  - id: 104
+    zone: GOLD_MINE
+    x: 17
+    y: 86
+    z: -312
+  - id: 105
+    zone: GOLD_MINE
+    x: 21
+    y: 36
+    z: -320
+  - id: 106
+    zone: GOLD_MINE
+    x: -44
+    y: 100
+    z: -344
+  - id: 107
+    zone: GOLD_MINE
+    x: -26
+    y: 94
+    z: -340
+  - id: 108
+    zone: GOLD_MINE
+    x: -1
+    y: 80
+    z: -337
+  - id: 109
+    zone: GOLD_MINE
+    x: 19
+    y: 57
+    z: -341
+  - id: 110
+    zone: GOLD_MINE
+    x: -19
+    y: 142
+    z: -364
+  - id: 111
+    zone: GOLD_MINE
+    x: -23
+    y: 113
+    z: -353
+  - id: 112
+    zone: GOLD_MINE
+    x: -11
+    y: 76
+    z: -395
+  - id: 113
+    zone: DEEP_CAVERNS
+    x: 3
+    y: 152
+    z: 85
+  - id: 114
+    zone: DEEP_CAVERNS
+    x: 18
+    y: 74
+    z: 74
+  - id: 115
+    zone: DEEP_CAVERNS
+    x: -21
+    y: 25
+    z: 72
+  - id: 116
+    zone: DEEP_CAVERNS
+    x: 3
+    y: 182
+    z: 50
+  - id: 117
+    zone: DEEP_CAVERNS
+    x: 0
+    y: 65
+    z: 57
+  - id: 118
+    zone: DEEP_CAVERNS
+    x: 3
+    y: 14
+    z: 51
+  - id: 119
+    zone: DEEP_CAVERNS
+    x: 9
+    y: 170
+    z: 44
+  - id: 120
+    zone: DEEP_CAVERNS
+    x: -60
+    y: 37
+    z: 52
+  - id: 121
+    zone: DEEP_CAVERNS
+    x: -35
+    y: 127
+    z: 28
+  - id: 122
+    zone: DEEP_CAVERNS
+    x: -18
+    y: 163
+    z: 26
+  - id: 123
+    zone: DEEP_CAVERNS
+    x: 44
+    y: 98
+    z: 23
+  - id: 124
+    zone: DEEP_CAVERNS
+    x: 57
+    y: 161
+    z: 19
+  - id: 125
+    zone: DEEP_CAVERNS
+    x: 29
+    y: 149
+    z: 14
+  - id: 126
+    zone: DEEP_CAVERNS
+    x: -2
+    y: 255
+    z: -1
+  - id: 127
+    zone: DEEP_CAVERNS
+    x: -40
+    y: 72
+    z: 0
+  - id: 128
+    zone: DEEP_CAVERNS
+    x: -11
+    y: 102
+    z: -16
+  - id: 129
+    zone: DEEP_CAVERNS
+    x: -71
+    y: 13
+    z: 5
+  - id: 130
+    zone: DEEP_CAVERNS
+    x: -76
+    y: 13
+    z: 24
+  - id: 131
+    zone: DEEP_CAVERNS
+    x: -8
+    y: 74
+    z: -44
+  - id: 132
+    zone: DEEP_CAVERNS
+    x: 71
+    y: 167
+    z: -12
+  - id: 133
+    zone: DEEP_CAVERNS
+    x: 22
+    y: 156
+    z: -42
+  - id: 134
+    zone: DWARVEN_MINES
+    x: -21
+    y: 208
+    z: -59
+  - id: 135
+    zone: DWARVEN_MINES
+    x: -139
+    y: 220
+    z: -89
+  - id: 136
+    zone: DWARVEN_MINES
+    x: -9
+    y: 230
+    z: -135
+  - id: 137
+    zone: DWARVEN_MINES
+    x: 155
+    y: 189
+    z: 123
+  - id: 138
+    zone: DWARVEN_MINES
+    x: 34
+    y: 102
+    z: 86
+  - id: 139
+    zone: DWARVEN_MINES
+    x: 133
+    y: 104
+    z: 104
+  - id: 140
+    zone: DWARVEN_MINES
+    x: 22
+    y: 127
+    z: 184
+  - id: 141
+    zone: DWARVEN_MINES
+    x: -110
+    y: 142
+    z: 143
+  - id: 142
+    zone: DWARVEN_MINES
+    x: -116
+    y: 142
+    z: 154
+  - id: 143
+    zone: DWARVEN_MINES
+    x: -204
+    y: 131
+    z: 199
+  - id: 144
+    zone: DWARVEN_MINES
+    x: -53
+    y: 205
+    z: 50
+  - id: 145
+    zone: DWARVEN_MINES
+    x: 20
+    y: 121
+    z: 240
+  - id: 146
+    zone: DWARVEN_MINES
+    x: -19
+    y: 121
+    z: 397
+  - id: 147
+    zone: DWARVEN_MINES
+    x: 111
+    y: 160
+    z: 412
+  - id: 148
+    zone: DWARVEN_MINES
+    x: -195
+    y: 124
+    z: -15
+  - id: 149
+    zone: SPIDERS_DEN
+    x: -279
+    y: 127
+    z: -177
+  - id: 150
+    zone: SPIDERS_DEN
+    x: -185
+    y: 135
+    z: -290
+  - id: 151
+    zone: SPIDERS_DEN
+    x: -147
+    y: 78
+    z: -299
+  - id: 152
+    zone: SPIDERS_DEN
+    x: -180
+    y: 68
+    z: -306
+  - id: 153
+    zone: SPIDERS_DEN
+    x: -297
+    y: 90
+    z: -169
+  - id: 154
+    zone: SPIDERS_DEN
+    x: -309
+    y: 63
+    z: -185
+  - id: 155
+    zone: SPIDERS_DEN
+    x: -309
+    y: 66
+    z: -245
+  - id: 156
+    zone: SPIDERS_DEN
+    x: -203
+    y: 169
+    z: -320
+  - id: 157
+    zone: SPIDERS_DEN
+    x: -222
+    y: 74
+    z: -361
+  - id: 158
+    zone: SPIDERS_DEN
+    x: -140
+    y: 85
+    z: -335
+  - id: 159
+    zone: SPIDERS_DEN
+    x: -198
+    y: 160
+    z: -331
+  - id: 160
+    zone: SPIDERS_DEN
+    x: -194
+    y: 67
+    z: -323
+  - id: 161
+    zone: SPIDERS_DEN
+    x: -301
+    y: 92
+    z: -171
+  - id: 162
+    zone: SPIDERS_DEN
+    x: -294
+    y: 36
+    z: -274
+  - id: 163
+    zone: SPIDERS_DEN
+    x: -204
+    y: 94
+    z: -241
+  - id: 164
+    zone: SPIDERS_DEN
+    x: -336
+    y: 82
+    z: -153
+  - id: 165
+    zone: SPIDERS_DEN
+    x: -422
+    y: 106
+    z: -206
+  - id: 166
+    zone: SPIDERS_DEN
+    x: -322
+    y: 95
+    z: -281
+  - id: 167
+    zone: SPIDERS_DEN
+    x: -336
+    y: 111
+    z: -253
+  - id: 168
+    zone: CRIMSON_ISLE
+    x: -644
+    y: 125
+    z: -689
+  - id: 169
+    zone: CRIMSON_ISLE
+    x: -79
+    y: 139
+    z: -779
+  - id: 170
+    zone: CRIMSON_ISLE
+    x: -352
+    y: 191
+    z: -553
+  - id: 171
+    zone: CRIMSON_ISLE
+    x: -717
+    y: 164
+    z: -981
+  - id: 172
+    zone: CRIMSON_ISLE
+    x: -726
+    y: 144
+    z: -891
+  - id: 173
+    zone: CRIMSON_ISLE
+    x: -690
+    y: 122
+    z: -752
+  - id: 174
+    zone: CRIMSON_ISLE
+    x: -31
+    y: 178
+    z: -907
+  - id: 175
+    zone: CRIMSON_ISLE
+    x: -297
+    y: 81
+    z: -835
+  - id: 176
+    zone: CRIMSON_ISLE
+    x: -462
+    y: 78
+    z: -698
+  - id: 177
+    zone: CRIMSON_ISLE
+    x: -383
+    y: 71
+    z: -883
+  - id: 178
+    zone: CRIMSON_ISLE
+    x: -721
+    y: 125
+    z: -811
+  - id: 179
+    zone: CRIMSON_ISLE
+    x: -480
+    y: 104
+    z: -593
+  - id: 180
+    zone: CRIMSON_ISLE
+    x: -606
+    y: 154
+    z: -800
+  - id: 181
+    zone: CRIMSON_ISLE
+    x: -106
+    y: 89
+    z: -883
+  - id: 182
+    zone: CRIMSON_ISLE
+    x: -343
+    y: 235
+    z: -780
+  - id: 183
+    zone: CRIMSON_ISLE
+    x: -500
+    y: 127
+    z: -795
+  - id: 184
+    zone: CRIMSON_ISLE
+    x: -346
+    y: 75
+    z: -552
+  - id: 185
+    zone: CRIMSON_ISLE
+    x: -445
+    y: 110
+    z: -1026
+  - id: 186
+    zone: CRIMSON_ISLE
+    x: -361
+    y: 133
+    z: -469
+  - id: 187
+    zone: CRIMSON_ISLE
+    x: -247
+    y: 44
+    z: -512
+  - id: 188
+    zone: CRIMSON_ISLE
+    x: -380
+    y: 141
+    z: -1020
+  - id: 189
+    zone: CRIMSON_ISLE
+    x: -310
+    y: 156
+    z: -1008
+  - id: 190
+    zone: CRIMSON_ISLE
+    x: -412
+    y: 58
+    z: -935
+  - id: 191
+    zone: CRIMSON_ISLE
+    x: -396
+    y: 108
+    z: -764
+  - id: 192
+    zone: CRIMSON_ISLE
+    x: -342
+    y: 101
+    z: -484
+  - id: 193
+    zone: CRIMSON_ISLE
+    x: -35
+    y: 116
+    z: -1055
+  - id: 194
+    zone: CRIMSON_ISLE
+    x: -361
+    y: 69
+    z: -425
+  - id: 195
+    zone: CRIMSON_ISLE
+    x: 14
+    y: 108
+    z: -769
+  - id: 196
+    zone: CRIMSON_ISLE
+    x: -479
+    y: 114
+    z: -972
+  - id: 197
+    zone: THE_END
+    x: -517
+    y: 100
+    z: -295
+  - id: 198
+    zone: THE_END
+    x: -583
+    y: 208
+    z: -272
+  - id: 199
+    zone: THE_END
+    x: -696
+    y: 116
+    z: -256
+  - id: 200
+    zone: THE_END
+    x: -587
+    y: 122
+    z: -276
+  - id: 201
+    zone: THE_END
+    x: -587
+    y: 48
+    z: -293
+  - id: 202
+    zone: THE_END
+    x: -492
+    y: 21
+    z: -175
+  - id: 203
+    zone: THE_END
+    x: -492
+    y: 81
+    z: -275
+  - id: 204
+    zone: THE_END
+    x: -545
+    y: 92
+    z: -257
+  - id: 205
+    zone: THE_END
+    x: -748
+    y: 106
+    z: -284
+  - id: 206
+    zone: THE_END
+    x: -723
+    y: 75
+    z: -222
+  - id: 207
+    zone: THE_END
+    x: -609
+    y: 84
+    z: -230
+  - id: 208
+    zone: THE_END
+    x: -657
+    y: 36
+    z: -201
+  - id: 209
+    zone: THE_PARK
+    x: -305
+    y: 71
+    z: -33
+  - id: 210
+    zone: THE_PARK
+    x: -419
+    y: 90
+    z: 42
+  - id: 211
+    zone: THE_PARK
+    x: -479
+    y: 107
+    z: -60
+  - id: 212
+    zone: THE_PARK
+    x: -482
+    y: 118
+    z: -33
+  - id: 213
+    zone: THE_PARK
+    x: -292
+    y: 69
+    z: 13
+  - id: 214
+    zone: THE_PARK
+    x: -339
+    y: 99
+    z: 67
+  - id: 215
+    zone: THE_PARK
+    x: -412
+    y: 123
+    z: -118
+  - id: 216
+    zone: THE_PARK
+    x: -434
+    y: 121
+    z: 56
+  - id: 217
+    zone: THE_PARK
+    x: -465
+    y: 108
+    z: -105
+  - id: 218
+    zone: THE_PARK
+    x: -305
+    y: 75
+    z: -83
+  - id: 219
+    zone: THE_PARK
+    x: -370
+    y: 89
+    z: -44
+  - id: 220
+    zone: JERRYS_WORKSHOP
+    x: -95
+    y: 77
+    z: 20
+  - id: 221
+    zone: JERRYS_WORKSHOP
+    x: -44
+    y: 87
+    z: 76
+  - id: 222
+    zone: JERRYS_WORKSHOP
+    x: -7
+    y: 108
+    z: 107
+  - id: 223
+    zone: JERRYS_WORKSHOP
+    x: 56
+    y: 108
+    z: 64
+  - id: 224
+    zone: JERRYS_WORKSHOP
+    x: 74
+    y: 109
+    z: -18
+  - id: 225
+    zone: THE_RIFT
+    x: 253
+    y: 123
+    z: 90
+  - id: 226
+    zone: DUNGEON_HUB
+    x: 17
+    y: 124
+    z: -58
+  - id: 227
+    zone: DUNGEON_HUB
+    x: 1
+    y: 134
+    z: 75
+  - id: 228
+    zone: DUNGEON_HUB
+    x: 10
+    y: 164
+    z: -10
+  - id: 229
+    zone: DUNGEON_HUB
+    x: -139
+    y: 46
+    z: -1
+  - id: 230
+    zone: DUNGEON_HUB
+    x: -55
+    y: 82
+    z: -10
+  - id: 231
+    zone: DUNGEON_HUB
+    x: -4
+    y: 21
+    z: -17
+  - id: 232
+    zone: DUNGEON_HUB
+    x: 14
+    y: 60
+    z: 99
+  - id: 233
+    zone: MISC_DUNGEONS
+    x: 0
+    y: 0
+    z: 0
+  - id: 234
+    zone: MISC_DUNGEONS
+    x: 0
+    y: 0
+    z: 0
+  - id: 235
+    zone: MISC_DUNGEONS
+    x: 0
+    y: 0
+    z: 0
+  - id: 236
+    zone: MISC_DUNGEONS
+    x: 0
+    y: 0
+    z: 0
+  - id: 237
+    zone: MISC_DUNGEONS
+    x: 0
+    y: 0
+    z: 0
+  - id: 238
+    zone: MISC_DUNGEONS
+    x: 0
+    y: 0
+    z: 0
+  - id: 239
+    zone: MISC_DUNGEONS
+    x: 0
+    y: 0
+    z: 0
+  - id: 240
+    zone: MISC_DUNGEONS
+    x: 0
+    y: 0
+    z: 0
+  - id: 241
+    zone: MISC_DUNGEONS
+    x: 0
+    y: 0
+    z: 0
+  - id: 242
+    zone: MISC_FISHING
+    x: 0
+    y: 0
+    z: 0
+  - id: 243
+    zone: MISC_FISHING
+    x: 0
+    y: 0
+    z: 0
+  - id: 244
+    zone: MISC_FISHING
+    x: 0
+    y: 0
+    z: 0
+  - id: 245
+    zone: MISC_FISHING
+    x: 0
+    y: 0
+    z: 0
+  - id: 246
+    zone: MISC_GARDEN
+    x: 0
+    y: 0
+    z: 0
+  - id: 247
+    zone: MISC_GARDEN
+    x: 0
+    y: 0
+    z: 0
+  - id: 248
+    zone: MISC_PLACEABLE
+    x: 0
+    y: 0
+    z: 0
+  - id: 249
+    zone: MISC_GLACITE_MINESHAFTS
+    x: 0
+    y: 0
+    z: 0
+  - id: 250
+    zone: BACKWATER_BAYOU
+    x: 33
+    y: 61
+    z: -46
+  - id: 251
+    zone: BACKWATER_BAYOU
+    x: 62
+    y: 76
+    z: 5
+  - id: 252
+    zone: BACKWATER_BAYOU
+    x: 16
+    y: 59
+    z: -7
+  - id: 253
+    zone: BACKWATER_BAYOU
+    x: 72
+    y: 115
+    z: -12
+  - id: 254
+    zone: BACKWATER_BAYOU
+    x: 2
+    y: 67
+    z: 10
+  - id: 255
+    zone: GALATEA
+    x: -601
+    y: 128
+    z: -20
+  - id: 256
+    zone: GALATEA
+    x: -565
+    y: 95
+    z: 17
+  - id: 257
+    zone: GALATEA
+    x: -556
+    y: 94
+    z: 60
+  - id: 258
+    zone: GALATEA
+    x: -598
+    y: 107
+    z: 16
+  - id: 259
+    zone: GALATEA
+    x: -586
+    y: 90
+    z: -26
+  - id: 260
+    zone: GALATEA
+    x: -620
+    y: 66
+    z: 32
+  - id: 261
+    zone: GALATEA
+    x: -663
+    y: 64
+    z: 62
+  - id: 262
+    zone: GALATEA
+    x: -621
+    y: 108
+    z: -86
+  - id: 263
+    zone: GALATEA
+    x: -696
+    y: 76
+    z: -44
+  - id: 264
+    zone: GALATEA
+    x: -737
+    y: 101
+    z: -17
+  - id: 265
+    zone: GALATEA
+    x: -707
+    y: 131
+    z: 1
+  - id: 266
+    zone: GALATEA
+    x: -702
+    y: 169
+    z: -2
+  - id: 267
+    zone: THE_PARK
+    x: -458
+    y: 118
+    z: -85
+  - id: 268
+    zone: LOTUS_ATOLL
+    x: 1
+    y: 70
+    z: -15
+  - id: 269
+    zone: LOTUS_ATOLL
+    x: 12
+    y: 66
+    z: 28
+  - id: 270
+    zone: LOTUS_ATOLL
+    x: 24
+    y: 142
+    z: -68
+  - id: 271
+    zone: LOTUS_ATOLL
+    x: 70
+    y: 118
+    z: 8
+  - id: 272
+    zone: LOTUS_ATOLL
+    x: 86
+    y: 65
+    z: -12
+  - id: 273
+    zone: LOTUS_ATOLL
+    x: 89
+    y: 78
+    z: 27
+  - id: 274
+    zone: GALATEA
+    x: -554
+    y: 94
+    z: 256
+  - id: 275
+    zone: GALATEA
+    x: -565
+    y: 136
+    z: 243
+  - id: 276
+    zone: GALATEA
+    x: -567
+    y: 81
+    z: 272
+  - id: 277
+    zone: GALATEA
+    x: -603
+    y: 167
+    z: 234
+  - id: 278
+    zone: GALATEA
+    x: -618
+    y: 125
+    z: 179
+  - id: 279
+    zone: GALATEA
+    x: -627
+    y: 122
+    z: 285
+  - id: 280
+    zone: GALATEA
+    x: -640
+    y: 90
+    z: 158
+  - id: 281
+    zone: GALATEA
+    x: -677
+    y: 102
+    z: 262
+  - id: 282
+    zone: GALATEA
+    x: -678
+    y: 62
+    z: 258
+  - id: 283
+    zone: GALATEA
+    x: -706
+    y: 98
+    z: 142
+  - id: 284
+    zone: GALATEA
+    x: -711
+    y: 59
+    z: 290
+  - id: 285
+    zone: GALATEA
+    x: -727
+    y: 125
+    z: 152
+  - id: 286
+    zone: SAFARI
+    x: -76
+    y: 40
+    z: -32
+  - id: 287
+    zone: SAFARI
+    x: 40
+    y: 63
+    z: -14
+  - id: 288
+    zone: SAFARI
+    x: -162
+    y: 60
+    z: 63
+  - id: 289
+    zone: SAFARI
+    x: 5
+    y: 106
+    z: 18

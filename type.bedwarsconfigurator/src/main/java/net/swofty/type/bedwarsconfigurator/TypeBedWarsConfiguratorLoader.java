@@ -39,6 +39,11 @@ public class TypeBedWarsConfiguratorLoader implements HypixelTypeLoader {
 	}
 
 	@Override
+	public java.util.List<Class<? extends net.swofty.type.generic.data.GameDataHandler>> getAdditionalDataHandlers() {
+		return java.util.List.of(net.swofty.type.generic.data.handlers.BedWarsDataHandler.class);
+	}
+
+	@Override
 	public void onInitialize(MinecraftServer server) {
 		gson = new GsonBuilder().create();
 		loadMapsConfig();

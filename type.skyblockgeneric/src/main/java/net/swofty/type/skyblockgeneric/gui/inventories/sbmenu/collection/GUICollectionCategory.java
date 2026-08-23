@@ -2,7 +2,8 @@ package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.collection;
 
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -40,7 +41,7 @@ public class GUICollectionCategory extends StatelessView {
 
     @Override
     public ViewConfiguration<DefaultState> configuration() {
-        return new ViewConfiguration<>(type.getName() + " Collections", InventoryType.CHEST_6_ROW);
+        return new ViewConfiguration<>(Text.of("{} Collections", type.getName()), InventoryType.CHEST_6_ROW);
     }
 
     @Override
@@ -50,12 +51,13 @@ public class GUICollectionCategory extends StatelessView {
         Components.back(layout, 48, ctx);
 
         layout.slot(4, (s, c) -> {
-            List<String> lore = new ArrayList<>(List.of(
-                    "§7View your " + type.getName() + " Collections!",
-                    " "
-            ));
-            lore.addAll(display);
-            return ItemStackCreator.getStack("§a" + type.getName() + " Collections", Material.STONE_PICKAXE, 1, lore);
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.of("<7>View your {} Collections!", type.getName()));
+            lore.add(Text.empty());
+            lore.addAll(display.stream().map(Text::parse).toList());
+
+            return ItemStacks.item(Material.STONE_PICKAXE, 1,
+                    Text.of("<a>{} Collections", type.getName()), lore);
         });
 
         CollectionCategory.ItemCollection[] collections = type.getCollections();
@@ -64,11 +66,11 @@ public class GUICollectionCategory extends StatelessView {
 
         // Pagination buttons
         if (page > 0) {
-            //layout.slot(45, (s, c) -> ItemStackCreator.getStack("§aPrevious Page", Material.ARROW, 1),
+            //layout.slot(45, (s, c) -> ItemStacks.item(Material.ARROW, 1, Text.of("<a>Previous Page")),
             //        (click, c) -> new GUICollectionCategory(type, display, page - 1).open((SkyBlockPlayer) c.player()));
         }
         if (page < totalPages - 1) {
-            //layout.slot(53, (s, c) -> ItemStackCreator.getStack("§aNext Page", Material.ARROW, 1),
+            //layout.slot(53, (s, c) -> ItemStacks.item(Material.ARROW, 1, Text.of("<a>Next Page")),
             //        (click, c) -> new GUICollectionCategory(type, display, page + 1).open((SkyBlockPlayer) c.player()));
         }
 
@@ -82,28 +84,32 @@ public class GUICollectionCategory extends StatelessView {
                 DatapointCollection.PlayerCollection collection = player.getCollection();
 
                 if (!collection.unlocked(item.type())) {
-                    return ItemStackCreator.getStack("§c" + item.type().getDisplayName(), Material.GRAY_DYE, 1,
-                            "§7Find this item to add it to your",
-                            "§7collection and unlock collection",
-                            "§7rewards!");
+                    return ItemStacks.item(Material.GRAY_DYE, 1, """
+                            <c>{}
+                            <7>Find this item to add it to your
+                            <7>collection and unlock collection
+                            <7>rewards!""", item.type().getDisplayName());
                 }
 
-                List<String> lore = new ArrayList<>(List.of(
-                        "§7View all your " + item.type().getDisplayName() + " Collection",
-                        "§7progress and rewards!",
-                        " "
-                ));
-                collection.getDisplay(lore, item);
-                lore.add(" ");
-                lore.add("§eClick to view!");
+                List<String> rendered = new ArrayList<>();
+                collection.getDisplay(rendered, item);
 
-                return ItemStackCreator.getStack("§e" + item.type().getDisplayName(), item.type().material, 1, lore);
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<7>View all your {} Collection", item.type().getDisplayName()));
+                lore.add(Text.of("<7>progress and rewards!"));
+                lore.add(Text.empty());
+                lore.addAll(rendered.stream().map(Text::parse).toList());
+                lore.add(Text.empty());
+                lore.add(Text.of("<e>Click to view!"));
+
+                return ItemStacks.item(item.type().material, 1,
+                        Text.of("<e>{}", item.type().getDisplayName()), lore);
             }, (click, c) -> {
                 SkyBlockPlayer player = (SkyBlockPlayer) c.player();
                 DatapointCollection.PlayerCollection collection = player.getCollection();
 
                 if (!collection.unlocked(item.type())) {
-                    player.sendMessage("§cYou haven't found this item yet!");
+                    player.sendMessage("<c>You haven't found this item yet!");
                     return;
                 }
                 player.openView(new GUICollectionItem(item.type()));

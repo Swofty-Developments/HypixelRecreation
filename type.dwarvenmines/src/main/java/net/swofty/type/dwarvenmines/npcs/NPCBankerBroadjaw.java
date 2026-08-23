@@ -14,7 +14,7 @@ public class NPCBankerBroadjaw extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§6Banker Broadjaw", "§e§lCLICK"};
+				return new String[]{"<6>Banker Broadjaw", "<e><l>CLICK"};
 			}
 
 			@Override

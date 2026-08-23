@@ -23,12 +23,12 @@ public class CoopCheckCommand extends HypixelCommand {
             CoopDatabase.Coop coop = CoopDatabase.getFromMember(player.getUuid());
 
             if (coop == null) {
-                player.sendMessage("§cYou don't have any co-op invites!");
+                player.sendMessage("<c>You don't have any co-op invites!");
                 return;
             }
 
             if (coop.members().contains(player.getUuid())) {
-                player.sendMessage("§b[Co-op] §cYou are already in a co-op!");
+                player.sendMessage("<b>[Co-op] <c>You are already in a co-op!");
                 return;
             }
 

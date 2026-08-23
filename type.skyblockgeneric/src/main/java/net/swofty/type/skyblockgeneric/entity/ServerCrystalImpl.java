@@ -14,7 +14,7 @@ import net.minestom.server.particle.Particle;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.utility.MathUtility;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +63,7 @@ public class ServerCrystalImpl extends LivingEntity {
         meta.setHasNoGravity(true);
         meta.setHasNoGravity(true);
 
-        setHelmet(ItemStackCreator.getStackHead(url).build());
+        setHelmet(ItemStacks.head(url, "").build());
 
         upAndDownTask = MinecraftServer.getSchedulerManager().scheduleTask(() -> {
             if (isDead()) {
@@ -110,7 +110,7 @@ public class ServerCrystalImpl extends LivingEntity {
             List<Pos> possiblePositions = new ArrayList<>();
             for (Pos block : landToPlaceOn) {
                 Block a = instance.getBlock(block.add(0, 1, 0));
-                if (a.isAir()) {
+                if (a.air()) {
                     possiblePositions.add(block);
                 }
             }

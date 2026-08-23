@@ -1,7 +1,8 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels.emblem;
 
 import net.minestom.server.inventory.InventoryType;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIMaterial;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
@@ -9,7 +10,7 @@ import net.swofty.type.skyblockgeneric.levels.SkyBlockEmblems;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class GUIEmblems extends StatelessView {
     private static final int[] SLOTS = new int[]{11, 12, 13, 14, 15};
@@ -33,17 +34,15 @@ public class GUIEmblems extends StatelessView {
                 SkyBlockPlayer player = (SkyBlockPlayer) c.player();
                 String displayName = emblem.toString();
                 GUIMaterial guiMaterial = emblem.getGuiMaterial();
-                ArrayList<String> description = new ArrayList<>(emblem.getDescription());
 
-                ArrayList<String> lore = new ArrayList<>(Arrays.asList(
-                        "§8" + emblem.amountUnlocked(player) + " Unlocked",
-                        " "
-                ));
-                lore.addAll(description);
-                lore.add(" ");
-                lore.add("§eClick to view!");
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<8>{} Unlocked", emblem.amountUnlocked(player)));
+                lore.add(Text.literal(" "));
+                lore.addAll(emblem.getDescription());
+                lore.add(Text.literal(" "));
+                lore.add(Text.of("<e>Click to view!"));
 
-                return ItemStackCreator.getUsingGUIMaterial("§a" + displayName, guiMaterial, 1, lore);
+                return ItemStacks.of(guiMaterial, 1, Text.of("<a>{}", displayName), lore);
             }, (click, c) -> c.push(new GUIEmblem(emblem), GUIEmblem.createInitialState(emblem)));
         }
     }

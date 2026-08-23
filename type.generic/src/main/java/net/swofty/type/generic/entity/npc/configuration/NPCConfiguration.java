@@ -1,17 +1,17 @@
 package net.swofty.type.generic.entity.npc.configuration;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityPose;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.user.HypixelPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public interface NPCConfiguration {
@@ -20,14 +20,10 @@ public interface NPCConfiguration {
         return new String[0];
     }
 
-    /**
-     * Component-native holograms. Existing NPCs can continue implementing
-     * {@link #holograms(HypixelPlayer)} while new NPCs avoid legacy formatting.
-     */
-    default Component[] hologramComponents(HypixelPlayer player) {
+    default List<Text> hologramTexts(HypixelPlayer player) {
         return Arrays.stream(holograms(player))
-                .map(line -> LegacyComponentSerializer.legacySection().deserialize(line))
-                .toArray(Component[]::new);
+                .map(Text::read)
+                .toList();
     }
 
     Pos position(HypixelPlayer player);
@@ -46,9 +42,9 @@ public interface NPCConfiguration {
     }
 
     @Nullable
-    default Component chatNameComponent(HypixelPlayer player) {
+    default Text chatNameText(HypixelPlayer player) {
         String name = chatName(player);
-        return name == null ? null : LegacyComponentSerializer.legacySection().deserialize(name);
+        return name == null ? null : Text.read(name);
     }
 
     default Instance instance() {

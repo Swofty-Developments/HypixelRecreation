@@ -12,7 +12,9 @@ public class NPCMaaike extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Maaike"};
+				return new String[]{
+						"Maaike"
+				};
 			}
 
 			@Override

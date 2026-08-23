@@ -1,14 +1,11 @@
 package net.swofty.type.murdermysterygame;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
-import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.scoreboard.HypixelScoreboard;
 import net.swofty.type.murdermysterygame.game.Game;
 import net.swofty.type.murdermysterygame.game.GameStatus;
@@ -17,11 +14,14 @@ import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class MurderMysteryGameScoreboard {
+	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yy");
+	private static final Text BLANK = Text.literal(" ");
 	private static final HypixelScoreboard scoreboard = new HypixelScoreboard();
 	private static Integer animationFrame = 0;
 	private static final long GAME_DURATION_MS = 5 * 60 * 1000;
@@ -40,117 +40,112 @@ public class MurderMysteryGameScoreboard {
 					if (player.getInstance() == null) continue;
 					Locale l = player.getLocale();
 
-					List<Component> lines = new ArrayList<>();
-					lines.add(I18n.t("scoreboard.common.date_line", Argument.tagResolver(Formatter.date("date", LocalDateTime.now(ZoneId.systemDefault()))), Argument.string("id", HypixelConst.getServerName())));
-					lines.add(Component.space());
+					List<Text> lines = new ArrayList<>();
+					lines.add(Text.key("scoreboard.common.date_line",
+						DATE_FORMAT.format(LocalDateTime.now(ZoneId.systemDefault())),
+						HypixelConst.getServerName()));
+					lines.add(BLANK);
 
 					if (game.getGameStatus() == GameStatus.WAITING) {
-						lines.add(I18n.t("scoreboard.murdermystery_game.map_line", Component.text(game.getMapEntry().getName())));
-						lines.add(I18n.t("scoreboard.murdermystery_game.players_line",
-							Component.text(String.valueOf(game.getPlayers().size())),
-							Component.text(String.valueOf(game.getGameType().getMaxPlayers()))));
-						lines.add(Component.space());
+						lines.add(Text.key("scoreboard.murdermystery_game.map_line", game.getMapEntry().getName()));
+						lines.add(Text.key("scoreboard.murdermystery_game.players_line",
+							game.getPlayers().size(),
+							game.getGameType().getMaxPlayers()));
+						lines.add(BLANK);
 						if (game.getCountdown().isActive()) {
-							lines.add(I18n.t("scoreboard.murdermystery_game.starting_in_line",
-								Component.text(String.valueOf(game.getCountdown().getSecondsRemaining()))));
+							lines.add(Text.key("scoreboard.murdermystery_game.starting_in_line",
+								game.getCountdown().getSecondsRemaining()));
 						} else {
-							lines.add(I18n.t("scoreboard.murdermystery_game.waiting_for_players"));
+							lines.add(Text.key("scoreboard.murdermystery_game.waiting_for_players"));
 						}
-						lines.add(Component.space());
-						lines.add(I18n.t("scoreboard.murdermystery_game.mode_line", Component.text(game.getGameType().getDisplayName())));
+						lines.add(BLANK);
+						lines.add(Text.key("scoreboard.murdermystery_game.mode_line", game.getGameType().getDisplayName()));
 
 						int playerCount = game.getPlayers().size();
 						int murdererChance = playerCount > 0 ? Math.round(100f / playerCount) : 0;
 						int detectiveChance = playerCount > 0 ? Math.round(100f / playerCount) : 0;
-						Component actionBar = Component.empty()
-							.append(I18n.t("scoreboard.murdermystery_game.actionbar.murderer_chance", Component.text(String.valueOf(murdererChance))))
-							.append(Component.text("    "))
-							.append(I18n.t("scoreboard.murdermystery_game.actionbar.detective_chance", Component.text(String.valueOf(detectiveChance))));
-						player.sendActionBar(actionBar);
+						player.sendActionBar(Text.key("scoreboard.murdermystery_game.actionbar.murderer_chance", murdererChance)
+							.append("    ")
+							.append(Text.key("scoreboard.murdermystery_game.actionbar.detective_chance", detectiveChance)));
 					} else if (game.getGameStatus() == GameStatus.IN_PROGRESS) {
 						GameRole role = game.getRoleManager().getRole(player.getUuid());
 
 						if (player.isEliminated()) {
-							lines.add(I18n.t("scoreboard.murdermystery_game.spectating_label"));
-							lines.add(Component.space());
+							lines.add(Text.key("scoreboard.murdermystery_game.spectating_label"));
+							lines.add(BLANK);
 
 							if (role != null) {
-								lines.add(I18n.t("scoreboard.murdermystery_game.your_role_line", I18n.t(getScoreboardRoleDisplayKey(role))));
+								lines.add(Text.key("scoreboard.murdermystery_game.your_role_line", Text.key(getScoreboardRoleDisplayKey(role))));
 							}
-							lines.add(Component.space());
+							lines.add(BLANK);
 
 							int playersAlive = game.getRoleManager().countAliveWithRole(GameRole.INNOCENT)
 									+ game.getRoleManager().countAliveWithRole(GameRole.DETECTIVE)
 									+ game.getRoleManager().countAliveWithRole(GameRole.MURDERER);
-							lines.add(I18n.t("scoreboard.murdermystery_game.players_alive_line", Component.text(String.valueOf(playersAlive))));
+							lines.add(Text.key("scoreboard.murdermystery_game.players_alive_line", playersAlive));
 
-							String timeLeft = formatTimeRemaining(game.getGameStartTime(), l);
-							lines.add(I18n.t("scoreboard.murdermystery_game.time_left_line", Component.text(timeLeft)));
-							lines.add(Component.space());
+							lines.add(Text.key("scoreboard.murdermystery_game.time_left_line",
+								formatTimeRemaining(game.getGameStartTime())));
+							lines.add(BLANK);
 
 							boolean detectiveAlive = game.getRoleManager().countAliveWithRole(GameRole.DETECTIVE) > 0;
-							Component detectiveStatus = detectiveAlive
-								? I18n.t("scoreboard.murdermystery_game.detective_alive")
-								: I18n.t("scoreboard.murdermystery_game.detective_dead");
-							lines.add(I18n.t("scoreboard.murdermystery_game.detective_line", detectiveStatus));
-							lines.add(Component.space());
+							Text detectiveStatus = detectiveAlive
+								? Text.key("scoreboard.murdermystery_game.detective_alive")
+								: Text.key("scoreboard.murdermystery_game.detective_dead");
+							lines.add(Text.key("scoreboard.murdermystery_game.detective_line", detectiveStatus));
+							lines.add(BLANK);
 
-							lines.add(I18n.t("scoreboard.murdermystery_game.map_line", Component.text(game.getMapEntry().getName())));
+							lines.add(Text.key("scoreboard.murdermystery_game.map_line", game.getMapEntry().getName()));
 						} else {
 							if (role != null) {
-								lines.add(I18n.t("scoreboard.murdermystery_game.role_line", I18n.t(getScoreboardRoleDisplayKey(role))));
+								lines.add(Text.key("scoreboard.murdermystery_game.role_line", Text.key(getScoreboardRoleDisplayKey(role))));
 							}
-							lines.add(Component.space());
+							lines.add(BLANK);
 
 							int innocentsLeft = game.getRoleManager().countAliveWithRole(GameRole.INNOCENT)
 									+ game.getRoleManager().countAliveWithRole(GameRole.DETECTIVE);
-							lines.add(I18n.t("scoreboard.murdermystery_game.innocents_left_line", Component.text(String.valueOf(innocentsLeft))));
+							lines.add(Text.key("scoreboard.murdermystery_game.innocents_left_line", innocentsLeft));
 
-							String timeLeft = formatTimeRemaining(game.getGameStartTime(), l);
-							lines.add(I18n.t("scoreboard.murdermystery_game.time_left_line", Component.text(timeLeft)));
-							lines.add(Component.space());
+							lines.add(Text.key("scoreboard.murdermystery_game.time_left_line",
+								formatTimeRemaining(game.getGameStartTime())));
+							lines.add(BLANK);
 
 							boolean detectiveAlive = game.getRoleManager().countAliveWithRole(GameRole.DETECTIVE) > 0;
-							Component detectiveStatus = detectiveAlive
-								? I18n.t("scoreboard.murdermystery_game.detective_alive")
-								: I18n.t("scoreboard.murdermystery_game.detective_dead");
-							lines.add(I18n.t("scoreboard.murdermystery_game.detective_line", detectiveStatus));
-							lines.add(Component.space());
+							Text detectiveStatus = detectiveAlive
+								? Text.key("scoreboard.murdermystery_game.detective_alive")
+								: Text.key("scoreboard.murdermystery_game.detective_dead");
+							lines.add(Text.key("scoreboard.murdermystery_game.detective_line", detectiveStatus));
+							lines.add(BLANK);
 
-							lines.add(I18n.t("scoreboard.murdermystery_game.map_line", Component.text(game.getMapEntry().getName())));
+							lines.add(Text.key("scoreboard.murdermystery_game.map_line", game.getMapEntry().getName()));
 						}
 					} else if (game.getGameStatus() == GameStatus.ENDING) {
-						lines.add(I18n.t("scoreboard.murdermystery_game.game_over"));
-						lines.add(Component.space());
+						lines.add(Text.key("scoreboard.murdermystery_game.game_over"));
+						lines.add(BLANK);
 
 						GameRole role = game.getRoleManager().getRole(player.getUuid());
 						if (role != null) {
-							lines.add(I18n.t("scoreboard.murdermystery_game.your_role_line", I18n.t(getScoreboardRoleDisplayKey(role))));
+							lines.add(Text.key("scoreboard.murdermystery_game.your_role_line", Text.key(getScoreboardRoleDisplayKey(role))));
 						}
-						lines.add(Component.space());
+						lines.add(BLANK);
 
 						int kills = player.getKillsThisGame();
 						if (kills > 0) {
-							lines.add(I18n.t("scoreboard.murdermystery_game.your_kills_line", Component.text(String.valueOf(kills))));
+							lines.add(Text.key("scoreboard.murdermystery_game.your_kills_line", kills));
 						}
 
 						int tokens = player.getTokensEarnedThisGame();
-						lines.add(I18n.t("scoreboard.murdermystery_game.tokens_earned_line", Component.text(String.valueOf(tokens))));
-						lines.add(Component.space());
+						lines.add(Text.key("scoreboard.murdermystery_game.tokens_earned_line", tokens));
+						lines.add(BLANK);
 
-						lines.add(I18n.t("scoreboard.murdermystery_game.map_line", Component.text(game.getMapEntry().getName())));
-						lines.add(I18n.t("scoreboard.murdermystery_game.mode_line", Component.text(game.getGameType().getDisplayName())));
+						lines.add(Text.key("scoreboard.murdermystery_game.map_line", game.getMapEntry().getName()));
+						lines.add(Text.key("scoreboard.murdermystery_game.mode_line", game.getGameType().getDisplayName()));
 					}
 
-					lines.add(Component.space());
-					lines.add(I18n.t("scoreboard.common.footer"));
+					lines.add(BLANK);
+					lines.add(Text.key("scoreboard.common.footer"));
 
-					if (!scoreboard.hasScoreboard(player)) {
-						scoreboard.createScoreboard(player, Component.text(getSidebarName(animationFrame, l)));
-					}
-
-					scoreboard.updateLines(player, lines);
-					scoreboard.updateTitle(player, Component.text(getSidebarName(animationFrame, l)));
+					scoreboard.update(player, getSidebarName(animationFrame, l), lines);
 				}
 			}
 			return TaskSchedule.tick(4);
@@ -166,35 +161,33 @@ public class MurderMysteryGameScoreboard {
 		};
 	}
 
-	private static String formatTimeRemaining(long gameStartTime, Locale locale) {
-		if (gameStartTime == 0) return I18n.string("scoreboard.murdermystery_game.time_left_default", locale);
+	private static Text formatTimeRemaining(long gameStartTime) {
+		if (gameStartTime == 0) return Text.key("scoreboard.murdermystery_game.time_left_default");
 		long elapsed = System.currentTimeMillis() - gameStartTime;
 		long remaining = GAME_DURATION_MS - elapsed;
 		if (remaining < 0) remaining = 0;
 
 		long minutes = remaining / 60000;
 		long seconds = (remaining % 60000) / 1000;
-		return String.format("%d:%02d", minutes, seconds);
+		return Text.literal(String.format("%d:%02d", minutes, seconds));
 	}
 
 	public static void removeCache(Player player) {
 		scoreboard.removeScoreboard(player);
 	}
 
-	private static String getSidebarName(int counter, Locale locale) {
-		String baseText = I18n.string("scoreboard.murdermystery_game.title_base", locale);
-		String[] colors = {"§f§l", "§6§l", "§e§l"};
-		String endColor = "§a§l";
+	private static Text getSidebarName(int counter, Locale locale) {
+		String plain = Text.key("scoreboard.murdermystery_game.title_base").plain(locale);
 
 		if (counter > 0 && counter <= 14) {
-			return colors[0] + baseText.substring(0, Math.min(counter - 1, baseText.length())) +
-					colors[1] + (counter <= baseText.length() ? String.valueOf(baseText.charAt(counter - 1)) : "") +
-					colors[2] + (counter < baseText.length() ? baseText.substring(counter) : "") +
-					endColor;
+			return Text.of("<f><l>{}<6>{}<e>{}<a>",
+					plain.substring(0, Math.min(counter - 1, plain.length())),
+					counter <= plain.length() ? String.valueOf(plain.charAt(counter - 1)) : "",
+					counter < plain.length() ? plain.substring(counter) : "");
 		} else if ((counter >= 15 && counter <= 25) || (counter >= 35 && counter <= 45)) {
-			return colors[0] + baseText + endColor;
+			return Text.of("<f><l>{}<a>", plain);
 		} else {
-			return colors[2] + baseText + endColor;
+			return Text.of("<e><l>{}<a>", plain);
 		}
 	}
 }

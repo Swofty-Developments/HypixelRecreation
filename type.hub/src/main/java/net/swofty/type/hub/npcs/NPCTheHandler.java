@@ -15,7 +15,7 @@ public class NPCTheHandler extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§5The Handler", "§e§lCLICK"};
+                return new String[]{"<5>The Handler", "<e><l>CLICK"};
             }
 
             @Override
@@ -51,11 +51,11 @@ public class NPCTheHandler extends HypixelNPC {
     @Override
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return List.of(
-            DialogueSet.builder().key("not-prosperous-1").lines(new String[]{"§dThe Hex §fwill not see you now."}).build(),
-            DialogueSet.builder().key("not-prosperous-2").lines(new String[]{"he Hex is troubled by your presence."}).build(),
-            DialogueSet.builder().key("not-prosperous-3").lines(new String[]{"There is an absence of §dprosperity §fwithin you."}).build(),
-            DialogueSet.builder().key("not-prosperous-4").lines(new String[]{"§dThe Hex §fdoes not wish to be tainted with §duseless §fitems."}).build(),
-            DialogueSet.builder().key("not-prosperous-5").lines(new String[]{"§fThe Hex §fdoes not have time for you."}).build()
+            DialogueSet.builder().key("not-prosperous-1").lines("<d>The Hex <f>will not see you now.").build(),
+            DialogueSet.builder().key("not-prosperous-2").lines("he Hex is troubled by your presence.").build(),
+            DialogueSet.builder().key("not-prosperous-3").lines("There is an absence of <d>prosperity <f>within you.").build(),
+            DialogueSet.builder().key("not-prosperous-4").lines("<d>The Hex <f>does not wish to be tainted with <d>useless <f>items.").build(),
+            DialogueSet.builder().key("not-prosperous-5").lines("<f>The Hex <f>does not have time for you.").build()
         ).toArray(DialogueSet[]::new);
     }
 }

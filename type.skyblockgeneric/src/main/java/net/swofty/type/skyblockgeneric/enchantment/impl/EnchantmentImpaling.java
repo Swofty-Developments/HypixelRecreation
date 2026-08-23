@@ -23,7 +23,7 @@ public class EnchantmentImpaling implements Ench, EnchFromTable, EventBasedEncha
 
     @Override
     public String getDescription(int level) {
-        return "Increases damage dealt to " + MobType.AQUATIC.getFullDisplayName() + "§7 mobs by §a" + DAMAGE_MULTIPLIERS[level - 1] + "%§7.";
+        return "Increases damage dealt to " + MobType.AQUATIC.getFullDisplayName() + "<7> mobs by <a>" + DAMAGE_MULTIPLIERS[level - 1] + "%<7>.";
     }
 
     @Override

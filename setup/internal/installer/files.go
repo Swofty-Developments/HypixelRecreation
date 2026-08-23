@@ -153,7 +153,6 @@ mongodb: mongodb://mongodb
 redis-uri: redis://redis:6379
 velocity-secret: placeholder
 require-auth: false
-sandbox: false
 integrations:
     spark: false
     anticheat: false

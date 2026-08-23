@@ -7,6 +7,7 @@ import net.hollowcube.polar.PolarSection;
 import net.hollowcube.polar.PolarWriter;
 import net.hollowcube.polar.PolarWorld;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -23,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Supplier;
 
 public final class PolarConvert {
     private PolarConvert() {
@@ -64,26 +67,83 @@ public final class PolarConvert {
     ) throws IOException {
         MinecraftServer.init();
         try {
-            PolarWorld polarWorld = AnvilPolar.anvilToPolar(anvilPath, ChunkSelector.all());
-            restoreSourceBiomePalettes(polarWorld, sourceChunks);
-            Map<String, Tag> customBiomes = collectCustomBiomeDefinitions(polarWorld, level, sourceChunks);
-            if (!customBiomes.isEmpty() || !blockDisplays.isEmpty()) {
-                polarWorld.userData(writeUserData(customBiomes, blockDisplays));
-            }
-            Files.createDirectories(outputPath.getParent());
-            Files.write(outputPath, PolarWriter.write(polarWorld));
-            return new ConversionResult(outputPath, customBiomes.size(), blockDisplays.size());
+            return convert(
+                anvilPath,
+                outputPath,
+                level == null ? null : level.registryAccess(),
+                sourceChunks,
+                blockDisplays
+            );
         } finally {
             MinecraftServer.stopCleanly();
         }
     }
 
+    public static List<ConversionOutcome> convertAll(List<ConversionJob> jobs) {
+        List<ConversionOutcome> outcomes = new ArrayList<>();
+        if (jobs.isEmpty()) {
+            return outcomes;
+        }
+
+        MinecraftServer.init();
+        try {
+            for (ConversionJob job : jobs) {
+                try {
+                    outcomes.add(new ConversionOutcome(job, convert(
+                        job.anvilPath(),
+                        job.outputPath(),
+                        job.registries(),
+                        job.sourceChunks().get(),
+                        job.blockDisplays()
+                    ), null));
+                } catch (IOException | RuntimeException exception) {
+                    outcomes.add(new ConversionOutcome(job, null, String.valueOf(exception.getMessage())));
+                }
+            }
+        } finally {
+            MinecraftServer.stopCleanly();
+        }
+
+        return outcomes;
+    }
+
+    private static ConversionResult convert(
+        Path anvilPath,
+        Path outputPath,
+        RegistryAccess registries,
+        Collection<CompoundTag> sourceChunks,
+        Collection<CompoundTag> blockDisplays
+    ) throws IOException {
+        PolarWorld polarWorld = AnvilPolar.anvilToPolar(anvilPath, ChunkSelector.all());
+        restoreSourceBiomePalettes(polarWorld, sourceChunks);
+        Map<String, Tag> customBiomes = collectCustomBiomeDefinitions(polarWorld, registries, sourceChunks);
+        if (!customBiomes.isEmpty() || !blockDisplays.isEmpty()) {
+            polarWorld.userData(writeUserData(customBiomes, blockDisplays));
+        }
+        Files.createDirectories(outputPath.getParent());
+        Files.write(outputPath, PolarWriter.write(polarWorld));
+        return new ConversionResult(outputPath, customBiomes.size(), blockDisplays.size());
+    }
+
+    public record ConversionJob(
+        String worldId,
+        Path anvilPath,
+        Path outputPath,
+        RegistryAccess registries,
+        Supplier<Collection<CompoundTag>> sourceChunks,
+        Collection<CompoundTag> blockDisplays
+    ) {
+    }
+
+    public record ConversionOutcome(ConversionJob job, ConversionResult result, String error) {
+    }
+
     private static Map<String, Tag> collectCustomBiomeDefinitions(
         PolarWorld polarWorld,
-        ClientLevel level,
+        RegistryAccess registries,
         Collection<CompoundTag> sourceChunks
     ) throws IOException {
-        if (level == null) {
+        if (registries == null) {
             return Map.of();
         }
 
@@ -96,8 +156,8 @@ public final class PolarConvert {
             return Map.of();
         }
 
-        var biomeRegistry = level.registryAccess().lookupOrThrow(Registries.BIOME);
-        var registryOps = RegistryOps.create(NbtOps.INSTANCE, level.registryAccess());
+        var biomeRegistry = registries.lookupOrThrow(Registries.BIOME);
+        var registryOps = RegistryOps.create(NbtOps.INSTANCE, registries);
         Map<String, Tag> customBiomes = new TreeMap<>();
 
         for (String biomeReference : biomeReferences) {

@@ -24,25 +24,25 @@ public class PlayMusicCommand extends HypixelCommand {
 
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
             if (!SkyBlockSongsHandler.isEnabled) {
-                player.sendMessage("§cSkyBlock songs are not enabled on this server.");
+                player.sendMessage("<c>SkyBlock songs are not enabled on this server.");
                 return;
             }
 
-            player.sendMessage("§aLoading song §e" + context.get(song).name() + "§a...");
+            player.sendMessage("<a>Loading song <e>{}<a>...", context.get(song).name());
             SkyBlockSong skyBlockSong;
             try {
                 skyBlockSong = new SkyBlockSong(context.get(song));
             } catch (Exception e) {
                 e.printStackTrace();
-                player.sendMessage("§cError loading song: " + e.getMessage());
+                player.sendMessage("<c>Error loading song: {}", e.getMessage());
                 return;
             }
-            player.sendMessage("§aLoaded song §e" + context.get(song).name() + "§a, now playing...");
+            player.sendMessage("<a>Loaded song <e>{}<a>, now playing...", context.get(song).name());
             SkyBlockSongsHandler songsHandler = new SkyBlockSongsHandler(player);
-            player.sendMessage("§aPlaying song §e" + skyBlockSong.getSong().name() + "§a...");
+            player.sendMessage("<a>Playing song <e>{}<a>...", skyBlockSong.getSong().name());
             songsHandler.setPlayerSong(skyBlockSong);
 
-            player.sendMessage("§aPlaying song §e" + skyBlockSong.getSong().name() + "§a.");
+            player.sendMessage("<a>Playing song <e>{}<a>.", skyBlockSong.getSong().name());
         }, song);
     }
 }

@@ -1,6 +1,5 @@
 package net.swofty.type.hub.npcs;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityType;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
@@ -16,7 +15,7 @@ public class NPCAlchemist extends HypixelNPC {
         super(new AnimalConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Alchemist", "§e§lCLICK"};
+                return new String[]{"Alchemist", "<e><l>CLICK"};
             }
 
             @Override
@@ -56,7 +55,7 @@ public class NPCAlchemist extends HypixelNPC {
     @Override
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
-            DialogueSet.ofTranslation("hello", "npcs_hub.alchemist.dialogue.hello", Component.text(player.getUsername()))
+            DialogueSet.ofTranslation("hello", "npcs_hub.alchemist.dialogue.hello", player.getUsername())
         };
     }
 }

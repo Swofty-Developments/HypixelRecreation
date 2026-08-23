@@ -1,13 +1,12 @@
 package net.swofty.type.skywarsgame.luckyblock.spawns;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.type.generic.utility.EntityUtility;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 import java.time.Duration;
@@ -43,8 +42,7 @@ public abstract class RideableMob {
         if (active) return;
 
         mount = new EntityCreature(getEntityType());
-        mount.setCustomName(Component.text(rider.getUsername() + "'s " + getDisplayName(), NamedTextColor.GOLD));
-        mount.setCustomNameVisible(true);
+        EntityUtility.nameEntityVisible(mount, "<6>{}'s {}", rider.getUsername(), getDisplayName());
 
         onMountCreated();
 
@@ -54,8 +52,8 @@ public abstract class RideableMob {
         rider.getVehicle();
         mount.addPassenger(rider);
 
-        rider.sendMessage(Component.text("You are now riding a " + getDisplayName() + "!", NamedTextColor.GOLD));
-        rider.sendMessage(Component.text("Sneak to dismount. Duration: " + getDurationSeconds() + " seconds", NamedTextColor.GRAY));
+        rider.sendMessage("<6>You are now riding a {}!", getDisplayName());
+        rider.sendMessage("<7>Sneak to dismount. Duration: {} seconds", getDurationSeconds());
 
         mount.scheduler().buildTask(() -> {
             if (!active || mount.isRemoved()) return;
@@ -78,7 +76,7 @@ public abstract class RideableMob {
             mount.remove();
         }
 
-        rider.sendMessage(Component.text("Your " + getDisplayName() + " has expired!", NamedTextColor.GRAY));
+        rider.sendMessage("<7>Your {} has expired!", getDisplayName());
     }
 
     public void handleSneak() {

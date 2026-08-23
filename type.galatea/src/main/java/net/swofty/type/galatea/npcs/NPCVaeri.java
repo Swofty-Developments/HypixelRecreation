@@ -13,7 +13,7 @@ public class NPCVaeri extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bVaeri", "§e§lCLICK"};
+                return new String[]{"<b>Vaeri", "<e><l>CLICK"};
             }
 
             @Override
@@ -48,13 +48,13 @@ public class NPCVaeri extends HypixelNPC {
     @Override
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[]{
-            DialogueSet.builder().key("idle").lines(new String[]{
-                "How do you do! Are you from §2Galatea§f?",
+            DialogueSet.builder().key("idle").lines(
+                "How do you do! Are you from <2>Galatea<f>?",
                 "Wonderful pl-",
                 "Did you just say \"Gala-tee\"?",
-                "No, no! It's §oGala-té-à§f!",
+                "No, no! It's <o>Gala-té-à</o><f>!",
                 "A lot of folks get it wrong but now you know better!"
-            }).build()
+            ).build()
         };
     }
 }

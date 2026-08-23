@@ -1,7 +1,5 @@
 package net.swofty.type.bedwarsgame.game.v2.listener;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.timer.TaskSchedule;
@@ -14,7 +12,7 @@ import net.swofty.type.game.game.event.GameStartEvent;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.PhasedEvent;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import org.tinylog.Logger;
 
 import java.util.Comparator;
@@ -102,16 +100,15 @@ public class GameStartListener implements HypixelEventClass {
                         player.getPosition().distanceSquared(target.getPosition())
                     );
 
-                    Component playerColouredName = target.getDisplayName();
-                    if (playerColouredName == null) {
-                        playerColouredName = Component.text(target.getUsername());
-                    }
+                    Text playerColouredName = target.getDisplayName() == null
+                            ? Text.literal(target.getUsername())
+                            : Text.component(target.getDisplayName());
 
                     player.sendActionBar(
-                        I18n.t(
+                        Text.key(
                             "bedwars.tracking_player",
-                            Argument.component("name", playerColouredName),
-                            Argument.string("distance", String.valueOf(distance))
+                            playerColouredName,
+                            String.valueOf(distance)
                         )
                     );
                 }, () -> game.getTrackers().remove(uuid));

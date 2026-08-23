@@ -30,67 +30,67 @@ public class NPCRabbitDaddy extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("dialogue-1").lines(new String[]{
-                                "In life there are §csharks§f and there are §asheep§f.",
-                                "I'm a §cshark§f.",
+                        .key("dialogue-1").lines(
+                                "In life there are <c>sharks<f> and there are <a>sheep<f>.",
+                                "I'm a <c>shark<f>.",
                                 "Well, I'm a rabbit. But you get the idea."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-2").lines(new String[]{
-                                "I am the heir to the §6chocolate throne§f.",
+                        .key("dialogue-2").lines(
+                                "I am the heir to the <6>chocolate throne<f>.",
                                 "The only thing in my way? You. Please hire me, boss."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-3").lines(new String[]{
-                                "Heir to the §6chocolate throne§f, they say.",
+                        .key("dialogue-3").lines(
+                                "Heir to the <6>chocolate throne<f>, they say.",
                                 "More like heir to a bunch of headaches, courtesy of my own daughter's protests."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-4").lines(new String[]{
+                        .key("dialogue-4").lines(
                                 "Every day, it's a new challenge. If it's not the market, it's Sis with her picket signs.",
                                 "Still, we're making the world sweeter, one chocolate bar at a time."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-5").lines(new String[]{
+                        .key("dialogue-5").lines(
                                 "Every family has its ups and downs, but ours?",
                                 "We've got a whole soap opera thanks to Sis."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-6").lines(new String[]{
+                        .key("dialogue-6").lines(
                                 "Between Bro's grindset, Cousin's relaxed approach, and Granny's wisdom, we've got all the ingredients for success.",
                                 "Now, if only Sis would see that."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-7").lines(new String[]{
-                                "Bro's dedication is what this company needs more of. And Cousin, well, he brings...§dcreativity§f.",
+                        .key("dialogue-7").lines(
+                                "Bro's dedication is what this company needs more of. And Cousin, well, he brings...<d>creativity<f>.",
                                 "Granny? She's the glue holding us all together."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-8").lines(new String[]{
-                                "§aHoppity §fwants us to 'think outside the box.' Last time I did that, we ended up with chocolate-covered grass.",
+                        .key("dialogue-8").lines(
+                                "<a>Hoppity <f>wants us to 'think outside the box.' Last time I did that, we ended up with chocolate-covered grass.",
                                 "Sold out in a week. Shows what I know."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-9").lines(new String[]{
-                                "In life there are §csharks§f and there are §asheep§f.",
-                                "I'm a §cshark§f.",
+                        .key("dialogue-9").lines(
+                                "In life there are <c>sharks<f> and there are <a>sheep<f>.",
+                                "I'm a <c>shark<f>.",
                                 "Well, I'm a rabbit. But you get the idea."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-10").lines(new String[]{
-                                "I am the heir to the §6chocolate throne§f.",
+                        .key("dialogue-10").lines(
+                                "I am the heir to the <6>chocolate throne<f>.",
                                 "The only thing in my way? You. Please hire me, boss."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-11").lines(new String[]{
-                                "Heir to the §6chocolate throne§f, they say.",
+                        .key("dialogue-11").lines(
+                                "Heir to the <6>chocolate throne<f>, they say.",
                                 "More like heir to a bunch of headaches, courtesy of my own daughter's protests."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-12").lines(new String[]{
+                        .key("dialogue-12").lines(
                                 "Every day, it's a new challenge. If it's not the market, it's Sis with her picket signs.",
                                 "Still, we're making the world sweeter, one chocolate bar at a time."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 

@@ -1,11 +1,11 @@
 package net.swofty.type.generic.command.commands;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.arguments.ArgumentString;
 import net.minestom.server.command.builder.arguments.ArgumentStringArray;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.party.FullParty;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @CommandParameters(labels = "p party",
         description = "Party management commands",
@@ -48,7 +47,7 @@ public class PartyCommand extends HypixelCommand {
             pendingCommands.add(player.getUuid());
 
             if (!partyService.isOnline().join()) {
-                player.sendTranslated("commands.common.service_offline_party");
+                player.sendMessage(Text.key("commands.common.service_offline_party"));
                 pendingCommands.remove(player.getUuid());
                 return;
             }
@@ -58,20 +57,20 @@ public class PartyCommand extends HypixelCommand {
             switch (sub.toLowerCase()) {
                 case "list" -> {
                     if (!PartyManager.isInParty(player)) {
-                        player.sendTranslated("commands.common.separator");
-                        player.sendTranslated("commands.party.not_in_party");
-                        player.sendTranslated("commands.common.separator");
+                        player.sendMessage(Text.key("commands.common.separator"));
+                        player.sendMessage(Text.key("commands.party.not_in_party"));
+                        player.sendMessage(Text.key("commands.common.separator"));
                         return;
                     }
                     FullParty party = PartyManager.getPartyFromPlayer(player);
 
                     int partySize = party.getMembers().size();
-                    player.sendTranslated("commands.common.separator");
-                    player.sendTranslated("commands.party.list_header", Component.text(String.valueOf(partySize)));
-                    player.sendTranslated("commands.common.empty_line");
+                    player.sendMessage(Text.key("commands.common.separator"));
+                    player.sendMessage(Text.key("commands.party.list_header", partySize));
+                    player.sendMessage(Text.key("commands.common.empty_line"));
 
                     FullParty.Member leader = party.getLeader();
-                    player.sendTranslated("commands.party.list_leader", Component.text(HypixelPlayer.getDisplayName(leader.getUuid())));
+                    player.sendMessage(Text.key("commands.party.list_leader", HypixelPlayer.getDisplayName(leader.getUuid())));
 
                     boolean hasMods = false;
                     for (FullParty.Member member : party.getMembers()) {
@@ -82,12 +81,12 @@ public class PartyCommand extends HypixelCommand {
                     }
 
                     if (hasMods) {
-                        player.sendTranslated("commands.common.empty_line");
-                        String modList = party.getMembers().stream()
+                        player.sendMessage(Text.key("commands.common.empty_line"));
+                        Text modList = Text.join(Text.of(", "), party.getMembers().stream()
                                 .filter(member -> member.getRole() == FullParty.Role.MODERATOR)
                                 .map(member -> HypixelPlayer.getDisplayName(member.getUuid()))
-                                .collect(Collectors.joining(", "));
-                        player.sendTranslated("commands.party.list_moderators", Component.text(modList));
+                                .toList());
+                        player.sendMessage(Text.key("commands.party.list_moderators", modList));
                     }
 
                     boolean hasMembers = false;
@@ -98,15 +97,15 @@ public class PartyCommand extends HypixelCommand {
                         }
                     }
 
-                    String memberList = party.getMembers().stream()
+                    Text memberList = Text.join(Text.of(", "), party.getMembers().stream()
                             .filter(member -> member.getRole() != FullParty.Role.LEADER && member.getRole() != FullParty.Role.MODERATOR)
                             .map(member -> HypixelPlayer.getDisplayName(member.getUuid()))
-                            .collect(Collectors.joining(", "));
+                            .toList());
                     if (hasMembers) {
-                        player.sendTranslated("commands.common.empty_line");
-                        player.sendTranslated("commands.party.list_members", Component.text(memberList));
+                        player.sendMessage(Text.key("commands.common.empty_line"));
+                        player.sendMessage(Text.key("commands.party.list_members", memberList));
                     }
-                    player.sendTranslated("commands.common.separator");
+                    player.sendMessage(Text.key("commands.common.separator"));
                 }
                 case "leave" -> PartyManager.leaveParty(player);
                 case "disband" -> PartyManager.disbandParty(player);
@@ -128,7 +127,7 @@ public class PartyCommand extends HypixelCommand {
             pendingCommands.add(player.getUuid());
 
             if (!partyService.isOnline().join()) {
-                player.sendTranslated("commands.common.service_offline_party");
+                player.sendMessage(Text.key("commands.common.service_offline_party"));
                 pendingCommands.remove(player.getUuid());
                 return;
             }
@@ -149,7 +148,7 @@ public class PartyCommand extends HypixelCommand {
                     UUID targetServer = UUID.fromString(target);
                     player.asProxyPlayer().transferToWithIndication(targetServer);
                 }
-                default -> player.sendTranslated("commands.common.unknown_command_use_help", Component.text("party"));
+                default -> player.sendMessage(Text.key("commands.common.unknown_command_use_help", "party"));
             }
 
             pendingCommands.remove(player.getUuid());
@@ -166,7 +165,7 @@ public class PartyCommand extends HypixelCommand {
             pendingCommands.add(player.getUuid());
 
             if (!partyService.isOnline().join()) {
-                player.sendTranslated("commands.common.service_offline_party_alt");
+                player.sendMessage(Text.key("commands.common.service_offline_party_alt"));
                 pendingCommands.remove(player.getUuid());
                 return;
             }
@@ -176,7 +175,7 @@ public class PartyCommand extends HypixelCommand {
 
             switch (sub.toLowerCase()) {
                 case "chat" -> PartyManager.sendChat(player, message);
-                default -> player.sendTranslated("commands.common.unknown_command_use_help", Component.text("party"));
+                default -> player.sendMessage(Text.key("commands.common.unknown_command_use_help", "party"));
             }
 
             pendingCommands.remove(player.getUuid());
@@ -184,22 +183,22 @@ public class PartyCommand extends HypixelCommand {
     }
 
     private void showHelp(HypixelPlayer player) {
-        player.sendTranslated("commands.common.separator");
-        player.sendTranslated("commands.party.help_header");
-        player.sendTranslated("commands.party.help_accept");
-        player.sendTranslated("commands.party.help_invite");
-        player.sendTranslated("commands.party.help_list");
-        player.sendTranslated("commands.party.help_leave");
-        player.sendTranslated("commands.party.help_warp");
-        player.sendTranslated("commands.party.help_disband");
-        player.sendTranslated("commands.party.help_transfer");
-        player.sendTranslated("commands.party.help_kick");
-        player.sendTranslated("commands.party.help_promote");
-        player.sendTranslated("commands.party.help_demote");
-        player.sendTranslated("commands.party.help_chat");
+        player.sendMessage(Text.key("commands.common.separator"));
+        player.sendMessage(Text.key("commands.party.help_header"));
+        player.sendMessage(Text.key("commands.party.help_accept"));
+        player.sendMessage(Text.key("commands.party.help_invite"));
+        player.sendMessage(Text.key("commands.party.help_list"));
+        player.sendMessage(Text.key("commands.party.help_leave"));
+        player.sendMessage(Text.key("commands.party.help_warp"));
+        player.sendMessage(Text.key("commands.party.help_disband"));
+        player.sendMessage(Text.key("commands.party.help_transfer"));
+        player.sendMessage(Text.key("commands.party.help_kick"));
+        player.sendMessage(Text.key("commands.party.help_promote"));
+        player.sendMessage(Text.key("commands.party.help_demote"));
+        player.sendMessage(Text.key("commands.party.help_chat"));
         if (player.getRank().isEqualOrHigherThan(Rank.STAFF)) {
-            player.sendTranslated("commands.party.help_hijack");
+            player.sendMessage(Text.key("commands.party.help_hijack"));
         }
-        player.sendTranslated("commands.common.separator");
+        player.sendMessage(Text.key("commands.common.separator"));
     }
 }

@@ -1,27 +1,24 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.recipe;
 
 import lombok.SneakyThrows;
-import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.skyblock.item.ItemType;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.CraftableComponent;
 import net.swofty.type.skyblockgeneric.item.crafting.SkyBlockRecipe;
 import net.swofty.type.skyblockgeneric.item.updater.PlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GUIRecipe extends StatelessView {
@@ -47,9 +44,7 @@ public class GUIRecipe extends StatelessView {
     public ViewConfiguration<DefaultState> configuration() {
         ItemType type = item.getAttributeHandler().getPotentialType();
         String name = type != null ? type.getDisplayName() : "Unknown";
-        return ViewConfiguration.withTitle(
-            (_, _) -> I18n.t("gui_sbmenu.recipe.view.title", Component.text(name)),
-                InventoryType.CHEST_6_ROW);
+        return new ViewConfiguration<>(Text.key("gui_sbmenu.recipe.view.title", name), InventoryType.CHEST_6_ROW);
     }
 
     @SneakyThrows
@@ -59,8 +54,9 @@ public class GUIRecipe extends StatelessView {
         Components.close(layout, 49);
         Components.back(layout, 48, ctx);
 
-        layout.slot(23, (s, c) -> ItemStackCreator.getStack(I18n.t("gui_sbmenu.recipe.view.crafting_table"), Material.CRAFTING_TABLE, 1,
-            I18n.iterable("gui_sbmenu.recipe.view.crafting_table.lore")));
+        layout.slot(23, (s, c) -> ItemStacks.item(Material.CRAFTING_TABLE, 1,
+                Text.key("gui_sbmenu.recipe.view.crafting_table"),
+                Text.keyLines("gui_sbmenu.recipe.view.crafting_table.lore")));
 
         ItemType itemTypeLinker = item.getAttributeHandler().getPotentialType();
         if (item.toConfigurableItem() == null) {
@@ -77,10 +73,9 @@ public class GUIRecipe extends StatelessView {
 
         // Next recipe button
         if (recipes.size() > actualRecipeIndex + 1) {
-            layout.slot(32, (s, c) -> {
-                    return ItemStackCreator.getStack(I18n.t("gui_sbmenu.recipe.view.next"), Material.ARROW, 1,
-                        I18n.iterable("gui_sbmenu.recipe.view.next.lore"));
-                    },
+            layout.slot(32, (s, c) -> ItemStacks.item(Material.ARROW, 1,
+                            Text.key("gui_sbmenu.recipe.view.next"),
+                            Text.keyLines("gui_sbmenu.recipe.view.next.lore")),
                     (click, c) -> {
                         c.push(new GUIRecipe(item, actualRecipeIndex + 1));
                     });
@@ -88,10 +83,9 @@ public class GUIRecipe extends StatelessView {
 
         // Previous recipe button
         if (actualRecipeIndex > 0) {
-            layout.slot(14, (s, c) -> {
-                    return ItemStackCreator.getStack(I18n.t("gui_sbmenu.recipe.view.previous"), Material.ARROW, 1,
-                        I18n.iterable("gui_sbmenu.recipe.view.previous.lore"));
-                    },
+            layout.slot(14, (s, c) -> ItemStacks.item(Material.ARROW, 1,
+                            Text.key("gui_sbmenu.recipe.view.previous"),
+                            Text.keyLines("gui_sbmenu.recipe.view.previous.lore")),
                     (click, c) -> {
                         c.push(new GUIRecipe(item, actualRecipeIndex - 1));
                     });
@@ -116,15 +110,13 @@ public class GUIRecipe extends StatelessView {
                     ItemStack.Builder builder = PlayerItemUpdater.playerUpdate(player, ingredient.getItemStack());
 
                     if (ingredient.hasComponent(CraftableComponent.class)) {
-                        List<Component> existingLore = builder.build().get(DataComponents.LORE);
-                        ArrayList<Component> lore = existingLore != null ? new ArrayList<>(existingLore) : new ArrayList<>();
-                        lore.add(Component.text(" "));
-                        lore.add(I18n.t("gui_sbmenu.recipe.view.click_to_view"));
-                        builder.set(DataComponents.LORE, lore);
+                        ItemStacks.appendLore(builder, List.of(
+                                Text.literal(" "),
+                                Text.key("gui_sbmenu.recipe.view.click_to_view")));
                     }
 
                     if (ingredient.getAttributeHandler().shouldBeEnchanted())
-                        ItemStackCreator.enchant(builder);
+                        ItemStacks.enchanted(builder);
 
                     return builder;
                 }, (click, c) -> {

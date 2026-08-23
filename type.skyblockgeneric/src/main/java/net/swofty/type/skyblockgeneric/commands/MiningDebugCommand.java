@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.commands;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -28,7 +29,7 @@ public class MiningDebugCommand extends HypixelCommand {
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
 
-            sender.sendMessage("§6§l=== Mining Handler Debug ===");
+            sender.sendMessage("<6><l>=== Mining Handler Debug ===");
             sender.sendMessage("");
 
             // Group blocks by handler type
@@ -41,20 +42,24 @@ public class MiningDebugCommand extends HypixelCommand {
             }
 
             // Print blocks grouped by handler
-            sender.sendMessage("§e§lBlocks by Handler Type:");
+            sender.sendMessage("<e><l>Blocks by Handler Type:");
             for (Map.Entry<String, List<MineableBlock>> entry : blocksByHandler.entrySet()) {
                 sender.sendMessage("");
-                sender.sendMessage("§b" + entry.getKey() + " Handler §7(" + entry.getValue().size() + " blocks):");
+                sender.sendMessage(Text.of("<b>{} Handler <7>({} blocks):", entry.getKey(), entry.getValue().size()));
                 for (MineableBlock block : entry.getValue()) {
                     SkyBlockMiningHandler handler = block.getMiningHandler();
-                    String strengthInfo = handler.breaksInstantly() ? "§aInstant" : "§7Strength: " + handler.getStrength();
-                    String powerInfo = handler.getMiningPowerRequirement() > 0 ? " §7Power: " + handler.getMiningPowerRequirement() : "";
-                    sender.sendMessage("  §7- §f" + block.name() + " §7(" + strengthInfo + powerInfo + "§7)");
+                    Text strengthInfo = handler.breaksInstantly()
+                            ? Text.of("<a>Instant")
+                            : Text.of("<7>Strength: {}", handler.getStrength());
+                    Text powerInfo = handler.getMiningPowerRequirement() > 0
+                            ? Text.of(" <7>Power: {}", handler.getMiningPowerRequirement())
+                            : Text.empty();
+                    sender.sendMessage(Text.of("  <7>- <f>{} <7>({}{}<7>)", block.name(), strengthInfo, powerInfo));
                 }
             }
 
             sender.sendMessage("");
-            sender.sendMessage("§e§lTool Component Mappings:");
+            sender.sendMessage("<e><l>Tool Component Mappings:");
 
             // Print tool -> blocks relationships
             printToolBlocks(sender, "Pickaxe/Drill", PickaxeComponent.class, DrillComponent.class);
@@ -62,7 +67,7 @@ public class MiningDebugCommand extends HypixelCommand {
             printToolBlocks(sender, "Hoe", HoeComponent.class);
 
             sender.sendMessage("");
-            sender.sendMessage("§6§l=========================");
+            sender.sendMessage("<6><l>=========================");
         });
     }
 
@@ -82,11 +87,12 @@ public class MiningDebugCommand extends HypixelCommand {
             }
         }
 
+        net.minestom.server.command.CommandSender commandSender = (net.minestom.server.command.CommandSender) sender;
         if (!breakableBlocks.isEmpty()) {
-            ((net.minestom.server.command.CommandSender) sender).sendMessage("§b" + toolName + " §7can break " + breakableBlocks.size() + " blocks:");
-            ((net.minestom.server.command.CommandSender) sender).sendMessage("  §7" + String.join(", ", breakableBlocks));
+            commandSender.sendMessage(Text.of("<b>{} <7>can break {} blocks:", toolName, breakableBlocks.size()));
+            commandSender.sendMessage(Text.of("  <7>{}", String.join(", ", breakableBlocks)));
         } else {
-            ((net.minestom.server.command.CommandSender) sender).sendMessage("§b" + toolName + " §7has no breakable blocks configured");
+            commandSender.sendMessage(Text.of("<b>{} <7>has no breakable blocks configured", toolName));
         }
     }
 }

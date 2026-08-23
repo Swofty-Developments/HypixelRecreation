@@ -5,7 +5,6 @@ import io.sentry.Sentry;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.minestom.server.Auth;
 import net.minestom.server.MinecraftServer;
@@ -20,18 +19,17 @@ import net.swofty.anticheat.loader.minestom.MinestomLoader;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.TestFlow;
 import net.swofty.commons.config.ConfigProvider;
+import net.swofty.commons.data.SwoftyData;
 import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.proxy.to.*;
 import net.swofty.commons.redis.ProxyHeartbeat;
 import net.swofty.commons.redis.RedisClient;
 import net.swofty.commons.redis.RedisMessageHandler;
-import net.swofty.commons.skyblock.PackSprite;
 import net.swofty.proxyapi.ProxyAPI;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.spark.Spark;
 import net.swofty.type.generic.*;
 import net.swofty.type.generic.i18n.HypixelTranslator;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.ravengardgeneric.RavengardGenericLoader;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import org.reflections.Reflections;
@@ -55,6 +53,7 @@ public class Hypixel {
     private static UUID serverUUID;
 
     private static final boolean ENABLE_SPARK = ConfigProvider.settings().getIntegrations().isSpark();
+    private static final long SERVER_NAME_RETRY_MILLIS = 2000;
 
     @SneakyThrows
     static void main(String[] args) {
@@ -90,7 +89,6 @@ public class Hypixel {
         String testFlowIndex = options.get("--test-flow-index");
         String testFlowTotal = options.get("--test-flow-total");
         String testFlowTotalExpected = options.get("--test-flow-total-expected");
-        String testFlowServerConfigs = options.get("--test-flow-server-configs");
 
         boolean isTestFlow = testFlowName != null;
 
@@ -106,6 +104,8 @@ public class Hypixel {
                 new Auth.Velocity(ConfigProvider.settings().getVelocitySecret())
         );
         serverUUID = UUID.randomUUID();
+
+        SwoftyData.bootstrap(ConfigProvider.settings().getRedisUri());
 
         // Loaders can schedule Redis-backed work immediately (calendar events,
         // elections, etc.), so identify and connect this server before running
@@ -141,12 +141,10 @@ public class Hypixel {
         new HypixelGenericLoader(typeLoader).initialize(minecraftServer);
 
         // Initialize TypeLoader
-        TagResolver[] resolvers = new TagResolver[0]; // this file is already full of bad code
         SkyBlockGenericLoader skyblockLoader = null;
         if (typeLoader instanceof SkyBlockTypeLoader) {
             skyblockLoader = new SkyBlockGenericLoader(typeLoader);
             skyblockLoader.initialize(minecraftServer);
-            resolvers = new TagResolver[]{PackSprite.TAG_RESOLVER};
         }
         if (typeLoader instanceof RavengardTypeLoader) {
             new RavengardGenericLoader(typeLoader).initialize(minecraftServer);
@@ -209,8 +207,7 @@ public class Hypixel {
             skyblockLoader.afterInitialize();
         }
 
-        HypixelTranslator translator = new HypixelTranslator(resolvers);
-        I18n.init(translator);
+        HypixelTranslator translator = new HypixelTranslator();
         GlobalTranslator.translator().addSource(translator);
         Logger.info("Loaded " + translator.keyCount() + " translation keys for default locale");
 
@@ -228,26 +225,7 @@ public class Hypixel {
             HypixelConst.setMaxPlayers(maxPlayers);
             HypixelConst.setServerUUID(serverUUID);
 
-            RedisClient.requestProxy(new RequestServerNameProtocol(),
-                    new RequestServerNameProtocol.Request())
-                    .thenAccept(response -> {
-                        if (isTestFlow) {
-                            String serverNameRaw = response.shortenedServerName().substring(1);
-                            String serverName = "isolated" + serverNameRaw;
-                            String shortenedServerName = "i" + serverNameRaw;
-
-                            HypixelConst.setServerName(serverName);
-                            HypixelConst.setShortenedServerName(shortenedServerName);
-
-                            handleTestFlowRegistration(testFlowName, testFlowHandler, testFlowPlayers,
-                                    serverType, testFlowIndex, testFlowTotal, testFlowServerConfigs);
-                        } else {
-                            HypixelConst.setServerName(response.serverName());
-                            HypixelConst.setShortenedServerName(response.shortenedServerName());
-                        }
-
-                        Logger.info("Received server name: " + HypixelConst.getServerName());
-                    });
+            acquireServerName(serverType, maxPlayers, options);
             checkProxyConnected();
 
             // Initialize anticheat
@@ -278,14 +256,70 @@ public class Hypixel {
                     System.exit(0);
                 });
 
-        RedisClient.requestProxy(new RegisterServerProtocol(),
+        registerWithProxy(serverType, maxPlayers, options, null)
+                .thenAccept(response -> startServer.complete(response.port()));
+    }
+
+    @SneakyThrows
+    private static CompletableFuture<RegisterServerProtocol.Response> registerWithProxy(ServerType serverType,
+                                                                                        int maxPlayers,
+                                                                                        Map<String, String> options,
+                                                                                        Integer port) {
+        String testFlowName = options.get("--test-flow");
+        boolean isTestFlow = testFlowName != null;
+
+        return RedisClient.requestProxy(new RegisterServerProtocol(),
                 new RegisterServerProtocol.Request(
-                        serverType.name(), maxPlayers, InetAddress.getLocalHost().getHostName(), null,
+                        serverType.name(), maxPlayers, InetAddress.getLocalHost().getHostName(), port,
                         isTestFlow ? true : null,
                         isTestFlow ? testFlowName : null,
-                        isTestFlow ? testFlowIndex : null,
-                        isTestFlow ? testFlowTotal : null))
-                .thenAccept(response -> startServer.complete(response.port()));
+                        isTestFlow ? options.get("--test-flow-index") : null,
+                        isTestFlow ? options.get("--test-flow-total") : null));
+    }
+
+    private static void acquireServerName(ServerType serverType, int maxPlayers, Map<String, String> options) {
+        boolean isTestFlow = options.get("--test-flow") != null;
+
+        RedisClient.requestProxy(new RequestServerNameProtocol(),
+                new RequestServerNameProtocol.Request())
+                .whenComplete((response, throwable) -> {
+                    if (throwable == null && response != null && response.success()) {
+                        if (isTestFlow) {
+                            String serverNameRaw = response.shortenedServerName().substring(1);
+
+                            HypixelConst.setServerName("isolated" + serverNameRaw);
+                            HypixelConst.setShortenedServerName("i" + serverNameRaw);
+
+                            handleTestFlowRegistration(options.get("--test-flow"), options.get("--test-flow-handler"),
+                                    options.get("--test-flow-players"), serverType, options.get("--test-flow-index"),
+                                    options.get("--test-flow-total"), options.get("--test-flow-server-configs"));
+                        } else {
+                            HypixelConst.setServerName(response.serverName());
+                            HypixelConst.setShortenedServerName(response.shortenedServerName());
+                        }
+
+                        Logger.info("Received server name: " + HypixelConst.getServerName());
+                        return;
+                    }
+
+                    Logger.warn("The proxy did not hand out a server name ({}), re-registering and retrying",
+                            describeNameFailure(response, throwable));
+
+                    CompletableFuture.delayedExecutor(SERVER_NAME_RETRY_MILLIS, TimeUnit.MILLISECONDS)
+                            .execute(() -> registerWithProxy(serverType, maxPlayers, options, HypixelConst.getPort())
+                                    .whenComplete((ignored, registerThrowable) -> {
+                                        if (registerThrowable != null) {
+                                            Logger.warn("Could not re-register with the proxy: {}", registerThrowable.toString());
+                                        }
+                                        acquireServerName(serverType, maxPlayers, options);
+                                    }));
+                });
+    }
+
+    private static String describeNameFailure(RequestServerNameProtocol.Response response, Throwable throwable) {
+        if (throwable != null) return throwable.toString();
+        if (response == null) return "no response";
+        return response.error() == null ? "unsuccessful response" : response.error();
     }
 
     private static void handleTestFlowRegistration(String testFlowName, String handler, String players,
@@ -374,7 +408,7 @@ public class Hypixel {
                 Logger.error("Proxy heartbeat absent for ~{}s. Shutting down...",
                         PROXY_HEARTBEAT_MAX_MISSES * PROXY_HEARTBEAT_CHECK_SECONDS);
                 MinecraftServer.getConnectionManager().getOnlinePlayers()
-                        .forEach(player -> player.kick("§cServer has lost connection to the proxy, please rejoin"));
+                        .forEach(player -> player.kick("<c>Server has lost connection to the proxy, please rejoin"));
                 CompletableFuture.delayedExecutor(500, TimeUnit.MILLISECONDS)
                         .execute(() -> System.exit(0));
             }

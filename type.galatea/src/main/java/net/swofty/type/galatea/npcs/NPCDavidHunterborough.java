@@ -13,7 +13,7 @@ public class NPCDavidHunterborough extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bDavid Hunterborough", "§e§lCLICK"};
+                return new String[]{"<b>David Hunterborough", "<e><l>CLICK"};
             }
 
             @Override

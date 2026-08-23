@@ -23,8 +23,9 @@ public class EnchantmentGiantKiller implements Ench, EnchFromTable, EventBasedEn
 
     @Override
     public String getDescription(int level) {
-        return "Increases damage dealt by §a" + DAMAGE_MULTIPLIERS[level - 1] + "%§7 for each percent of extra health " +
-                "that your target has above you up to §a" + DAMAGE_CAPS[level - 1] + "%§7.";
+        return "Increases damage dealt by <a>" + DAMAGE_MULTIPLIERS[level - 1]
+                + "%<7> for each percent of extra health that your target has above you up to <a>"
+                + DAMAGE_CAPS[level - 1] + "%<7>.";
     }
 
     @Override

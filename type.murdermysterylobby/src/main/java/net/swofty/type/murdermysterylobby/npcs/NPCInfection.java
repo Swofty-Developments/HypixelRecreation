@@ -1,7 +1,5 @@
 package net.swofty.type.murdermysterylobby.npcs;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
@@ -15,9 +13,9 @@ public class NPCInfection extends HypixelNPC {
             public String[] holograms(HypixelPlayer player) {
                 // Infection mode doesn't exist yet, so just show 0 players
                 return new String[]{
-                        "§e§lCLICK TO PLAY",
-                        "§bInfection",
-                        "§e0 Players",
+                        "<e><l>CLICK TO PLAY",
+                        "<b>Infection",
+                        "<e>0 Players"
                 };
             }
 
@@ -45,7 +43,7 @@ public class NPCInfection extends HypixelNPC {
 
     @Override
     public void onClick(NPCInteractEvent event) {
-        event.player().sendMessage("§7Infection is coming soon...");
+        event.player().sendMessage("<7>Infection is coming soon...");
         event.player().notImplemented();
     }
 }

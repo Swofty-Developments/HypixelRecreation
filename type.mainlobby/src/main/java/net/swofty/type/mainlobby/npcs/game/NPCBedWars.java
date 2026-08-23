@@ -13,7 +13,7 @@ public class NPCBedWars extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§b§lDREAMFEAST UPDATE!", "§bBedWars", "§e? Playing"};
+                return new String[]{"<b><l>DREAMFEAST UPDATE!", "<b>BedWars", "<e>? Playing"};
             }
 
             @Override

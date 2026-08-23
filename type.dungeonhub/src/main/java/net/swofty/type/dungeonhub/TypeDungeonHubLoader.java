@@ -93,7 +93,7 @@ public class TypeDungeonHubLoader implements SkyBlockTypeLoader {
 
     @Override
     public List<ServiceType> getRequiredServices() {
-        return List.of(ServiceType.ITEM_TRACKER, ServiceType.DATA_MUTEX);
+        return List.of(ServiceType.ITEM_TRACKER);
     }
 
     @Override

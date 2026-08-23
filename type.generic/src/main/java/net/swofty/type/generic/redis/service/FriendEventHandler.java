@@ -1,10 +1,7 @@
 package net.swofty.type.generic.redis.service;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.commons.friend.FriendEvent;
 import net.swofty.commons.friend.FriendSettingType;
 import net.swofty.commons.friend.events.response.*;
@@ -101,69 +98,65 @@ public class FriendEventHandler implements RedisMessageHandler<Request, Response
     }
 
     private void handleRequestSent(HypixelPlayer player, FriendRequestSentResponseEvent event) {
-        sendMessage(player, "§aFriend request sent to §e" + event.getTargetName() + "§a!");
+        sendMessage(player, "<a>Friend request sent to <e>{}<a>!", event.getTargetName());
     }
 
     private void handleRequestReceived(HypixelPlayer player, FriendRequestReceivedResponseEvent event) {
         String senderName = event.getSenderName();
 
-        player.sendMessage("§9§m-----------------------------------------------------");
-        player.sendMessage("§aFriend request from §e" + senderName);
-
-        TextComponent component = LegacyComponentSerializer.legacySection().deserialize("§eClick §6§lACCEPT §eor §c§lDENY");
-
-        TextComponent acceptButton = LegacyComponentSerializer.legacySection().deserialize(" §a§l[ACCEPT]");
-        acceptButton = acceptButton.hoverEvent(Component.text("§eClick to accept friend request"));
-        acceptButton = acceptButton.clickEvent(ClickEvent.runCommand("/f accept " + senderName));
-
-        TextComponent denyButton = LegacyComponentSerializer.legacySection().deserialize(" §c§l[DENY]");
-        denyButton = denyButton.hoverEvent(Component.text("§eClick to deny friend request"));
-        denyButton = denyButton.clickEvent(ClickEvent.runCommand("/f deny " + senderName));
-
-        player.sendMessage(component.append(acceptButton).append(denyButton));
-        player.sendMessage("§9§m-----------------------------------------------------");
+        player.sendMessage("<sep>");
+        player.sendMessage("<a>Friend request from <e>{}", senderName);
+        player.sendMessage("""
+                <e>Click <6><l>ACCEPT </l><e>or <c><l>DENY</l>\
+                <a><l><hover:'<e>Click to accept friend request'><click:run:'/f accept {0}'> [ACCEPT]</click></hover></l>\
+                <c><l><hover:'<e>Click to deny friend request'><click:run:'/f deny {0}'> [DENY]</click></hover>""",
+                senderName);
+        player.sendMessage("<sep>");
     }
 
     private void handleFriendAdded(HypixelPlayer player, FriendAddedResponseEvent event) {
         String otherName = player.getUuid().equals(event.getPlayer1())
                 ? event.getPlayer2Name()
                 : event.getPlayer1Name();
-        sendMessage(player, "§aYou are now friends with §e" + otherName + "§a!");
+        sendMessage(player, "<a>You are now friends with <e>{}<a>!", otherName);
     }
 
     private void handleRequestDenied(HypixelPlayer player, FriendDeniedResponseEvent event) {
-        sendMessage(player, "§e" + event.getDenierName() + " §cdenied your friend request.");
+        sendMessage(player, "<e>{} <c>denied your friend request.", event.getDenierName());
     }
 
     private void handleFriendRemoved(HypixelPlayer player, FriendRemovedResponseEvent event) {
         if (player.getUuid().equals(event.getRemover())) {
-            sendMessage(player, "§cRemoved §e" + HypixelPlayer.getDisplayName(event.getRemoved()) + " §cfrom your friends list.");
+            sendMessage(player, "<c>Removed <e>{} <c>from your friends list.",
+                    HypixelPlayer.getDisplayName(event.getRemoved()));
         } else {
-            sendMessage(player, "§e" + event.getRemoverName() + " §cremoved you from their friends list.");
+            sendMessage(player, "<e>{} <c>removed you from their friends list.", event.getRemoverName());
         }
     }
 
     private void handleRemoveAll(HypixelPlayer player, FriendRemoveAllResponseEvent event) {
         if (event.getRemovedCount() == 0) {
-            sendMessage(player, "§cYou have no friends to remove! (Best friends are kept)");
+            sendMessage(player, "<c>You have no friends to remove! (Best friends are kept)");
         } else {
-            sendMessage(player, "§cRemoved §e" + event.getRemovedCount() + " §cfriends from your list. Best friends were kept.");
+            sendMessage(player, "<c>Removed <e>{} <c>friends from your list. Best friends were kept.",
+                    event.getRemovedCount());
         }
     }
 
     private void handleBestToggled(HypixelPlayer player, FriendBestToggledResponseEvent event) {
         if (event.isBest()) {
-            sendMessage(player, "§e" + event.getTargetName() + " §ais now your best friend!");
+            sendMessage(player, "<e>{} <a>is now your best friend!", event.getTargetName());
         } else {
-            sendMessage(player, "§e" + event.getTargetName() + " §cis no longer your best friend.");
+            sendMessage(player, "<e>{} <c>is no longer your best friend.", event.getTargetName());
         }
     }
 
     private void handleNicknameSet(HypixelPlayer player, FriendNicknameSetResponseEvent event) {
         if (event.getNickname() == null || event.getNickname().isEmpty()) {
-            sendMessage(player, "§aCleared nickname for §e" + event.getTargetName() + "§a.");
+            sendMessage(player, "<a>Cleared nickname for <e>{}<a>.", event.getTargetName());
         } else {
-            sendMessage(player, "§aSet nickname for §e" + event.getTargetName() + " §ato §e" + event.getNickname() + "§a.");
+            sendMessage(player, "<a>Set nickname for <e>{} <a>to <e>{}<a>.",
+                    event.getTargetName(), event.getNickname());
         }
     }
 
@@ -171,140 +164,117 @@ public class FriendEventHandler implements RedisMessageHandler<Request, Response
         String settingName = event.getSettingType() == FriendSettingType.ACCEPTING_REQUESTS
                 ? "Friend requests"
                 : "Friend join/leave notifications";
-        String state = event.isNewValue() ? "§aenabled" : "§cdisabled";
-        sendMessage(player, "§e" + settingName + " §7are now " + state + "§7.");
+        sendMessage(player, event.isNewValue()
+                ? "<e>{} <7>are now <a>enabled<7>."
+                : "<e>{} <7>are now <c>disabled<7>.", settingName);
     }
 
     private void handleJoinNotification(HypixelPlayer player, FriendJoinNotificationEvent event) {
-        String displayName = HypixelPlayer.getDisplayName(event.getFriend());
-        player.sendMessage("§aFriend > " + displayName + " §7joined.");
+        player.sendMessage("<a>Friend > {} <7>joined.", HypixelPlayer.getDisplayName(event.getFriend()));
     }
 
     private void handleLeaveNotification(HypixelPlayer player, FriendLeaveNotificationEvent event) {
-        String displayName = HypixelPlayer.getDisplayName(event.getFriend());
-        player.sendMessage("§aFriend > " + displayName + " §7left.");
+        player.sendMessage("<a>Friend > {} <7>left.", HypixelPlayer.getDisplayName(event.getFriend()));
     }
 
     private void handleRequestExpired(HypixelPlayer player, FriendRequestExpiredResponseEvent event) {
         if (player.getUuid().equals(event.getSender())) {
-            String targetDisplay = HypixelPlayer.getDisplayName(event.getTarget());
-            sendMessage(player, "§eYour friend request to " + targetDisplay + " §ehas expired.");
+            sendMessage(player, "<e>Your friend request to {} <e>has expired.",
+                    HypixelPlayer.getDisplayName(event.getTarget()));
         } else {
-            String senderDisplay = HypixelPlayer.getDisplayName(event.getSender());
-            sendMessage(player, "§eThe friend request from " + senderDisplay + " §ehas expired.");
+            sendMessage(player, "<e>The friend request from {} <e>has expired.",
+                    HypixelPlayer.getDisplayName(event.getSender()));
         }
     }
 
     private void handleFriendList(HypixelPlayer player, FriendListResponseEvent event) {
-        String title = event.isBestOnly() ? "Best Friends" : "Friends";
-
-        player.sendMessage("§9§m-----------------------------------------------------");
-        player.sendMessage("§6" + title + " §7(Page " + event.getPage() + "/" + event.getTotalPages() + ")");
+        player.sendMessage("<sep>");
+        player.sendMessage("<6>{} <7>(Page {}/{})", event.isBestOnly() ? "Best Friends" : "Friends",
+                event.getPage(), event.getTotalPages());
 
         if (event.getFriends().isEmpty()) {
-            player.sendMessage("§7You have no " + (event.isBestOnly() ? "best " : "") + "friends to display.");
+            player.sendMessage("<7>You have no {}friends to display.", event.isBestOnly() ? "best " : "");
         } else {
             for (FriendListResponseEvent.FriendListEntry friend : event.getFriends()) {
-                StringBuilder sb = new StringBuilder();
-
-                if (friend.isOnline()) {
-                    sb.append("§a● ");
-                } else {
-                    sb.append("§c● ");
-                }
-
-                if (friend.isBest()) {
-                    sb.append("§6✦ ");
-                }
-
-                String displayName;
-                try {
-                    displayName = HypixelPlayer.getDisplayName(friend.getUuid());
-                } catch (Exception e) {
-                    displayName = "§e" + friend.getName();
-                }
-                if (displayName == null || displayName.isEmpty()) {
-                    displayName = "§e" + friend.getName();
-                }
+                Text line = Text.of(friend.isOnline() ? "<a>● " : "<c>● ")
+                        .appendIf(friend.isBest(), "<6>✦ ")
+                        .append(displayNameOf(friend));
 
                 if (friend.getNickname() != null && !friend.getNickname().isEmpty()) {
-                    sb.append(displayName).append(" §7(").append(friend.getNickname()).append(")");
-                } else {
-                    sb.append(displayName);
+                    line = line.append(" <7>({})", friend.getNickname());
                 }
-
                 if (friend.isOnline() && friend.getServer() != null && !friend.getServer().isEmpty()) {
-                    sb.append(" §7- §e").append(StringUtility.toNormalCase(friend.getServer()));
+                    line = line.append(" <7>- <e>{}", StringUtility.toNormalCase(friend.getServer()));
                 }
 
-                TextComponent line = LegacyComponentSerializer.legacySection().deserialize(sb.toString());
+                Text friendsSince = friend.getFriendSince() > 0
+                        ? Text.of("<7>Friends for {}", formatDuration(secondsSince(friend.getFriendSince())))
+                        : Text.of("<7>Friends since: Unknown");
 
-                String friendsSinceText;
-                if (friend.getFriendSince() > 0) {
-                    long secondsSince = Math.max(0, (System.currentTimeMillis() - friend.getFriendSince()) / 1000);
-                    friendsSinceText = "§7Friends for " + formatDuration(secondsSince);
-                } else {
-                    friendsSinceText = "§7Friends since: Unknown";
-                }
-
-                TextComponent hovered;
+                Text hover;
                 if (friend.isOnline()) {
-                    hovered = line.hoverEvent(Component.text(friendsSinceText));
+                    hover = friendsSince;
                 } else {
-                    String lastSeenText;
-                    if (friend.getLastSeen() > 0) {
-                        long secondsAgo = Math.max(0, (System.currentTimeMillis() - friend.getLastSeen()) / 1000);
-                        lastSeenText = "§7Last seen " + formatDuration(secondsAgo) + " ago";
-                    } else {
-                        lastSeenText = "§7Last seen: Unknown";
-                    }
-                    hovered = line.hoverEvent(Component.text(lastSeenText + "\n" + friendsSinceText));
+                    Text lastSeen = friend.getLastSeen() > 0
+                            ? Text.of("<7>Last seen {} ago", formatDuration(secondsSince(friend.getLastSeen())))
+                            : Text.of("<7>Last seen: Unknown");
+                    hover = Text.of("{}\n{}", lastSeen, friendsSince);
                 }
-                player.sendMessage(hovered);
+
+                player.sendMessage("<hover:'{1}'>{0}", line, hover);
             }
         }
 
         if (event.getTotalPages() > 1) {
-            TextComponent navMessage = LegacyComponentSerializer.legacySection().deserialize("§7Use §e/f list " + (event.isBestOnly() ? "best " : "") + "<page> §7to navigate.");
-            player.sendMessage(navMessage);
+            player.sendMessage("<7>Use <e>/f list {}\\<page> <7>to navigate.", event.isBestOnly() ? "best " : "");
         }
 
-        player.sendMessage("§9§m-----------------------------------------------------");
+        player.sendMessage("<sep>");
     }
 
     private void handleRequestsList(HypixelPlayer player, FriendRequestsListResponseEvent event) {
-        player.sendMessage("§9§m-----------------------------------------------------");
-        player.sendMessage("§6Pending Friend Requests §7(Page " + event.getPage() + "/" + event.getTotalPages() + ")");
+        player.sendMessage("<sep>");
+        player.sendMessage("<6>Pending Friend Requests <7>(Page {}/{})", event.getPage(), event.getTotalPages());
 
         if (event.getRequests().isEmpty()) {
-            player.sendMessage("§7You have no pending friend requests.");
+            player.sendMessage("<7>You have no pending friend requests.");
         } else {
             for (FriendRequestsListResponseEvent.FriendRequestEntry request : event.getRequests()) {
-                TextComponent line = LegacyComponentSerializer.legacySection().deserialize("§e" + request.getSenderName() + " ");
-
-                TextComponent acceptButton = LegacyComponentSerializer.legacySection().deserialize("§a[ACCEPT]");
-                acceptButton = acceptButton.hoverEvent(Component.text("§eClick to accept"));
-                acceptButton = acceptButton.clickEvent(ClickEvent.runCommand("/f accept " + request.getSenderName()));
-
-                TextComponent denyButton = LegacyComponentSerializer.legacySection().deserialize(" §c[DENY]");
-                denyButton = denyButton.hoverEvent(Component.text("§eClick to deny"));
-                denyButton = denyButton.clickEvent(ClickEvent.runCommand("/f deny " + request.getSenderName()));
-
-                player.sendMessage(line.append(acceptButton).append(denyButton));
+                player.sendMessage("""
+                        <e>{0} \
+                        <a><hover:'<e>Click to accept'><click:run:'/f accept {0}'>[ACCEPT]</click></hover>\
+                        <c><hover:'<e>Click to deny'><click:run:'/f deny {0}'> [DENY]</click></hover>""",
+                        request.getSenderName());
             }
         }
 
         if (event.getTotalPages() > 1) {
-            player.sendMessage("§7Use §e/f requests <page> §7to navigate.");
+            player.sendMessage("<7>Use <e>/f requests \\<page> <7>to navigate.");
         }
 
-        player.sendMessage("§9§m-----------------------------------------------------");
+        player.sendMessage("<sep>");
     }
 
-    private void sendMessage(HypixelPlayer player, String message) {
-        player.sendMessage("§9§m-----------------------------------------------------");
-        player.sendMessage(message);
-        player.sendMessage("§9§m-----------------------------------------------------");
+    private Text displayNameOf(FriendListResponseEvent.FriendListEntry friend) {
+        Text displayName;
+        try {
+            displayName = HypixelPlayer.getDisplayName(friend.getUuid());
+        } catch (Exception e) {
+            displayName = null;
+        }
+        return displayName == null || displayName.isEmpty()
+                ? Text.of("<e>{}", friend.getName())
+                : displayName;
+    }
+
+    private long secondsSince(long timestamp) {
+        return Math.max(0, (System.currentTimeMillis() - timestamp) / 1000);
+    }
+
+    private void sendMessage(HypixelPlayer player, String markup, Object... arguments) {
+        player.sendMessage("<sep>");
+        player.sendMessage(markup, arguments);
+        player.sendMessage("<sep>");
     }
 
     private String formatDuration(long seconds) {

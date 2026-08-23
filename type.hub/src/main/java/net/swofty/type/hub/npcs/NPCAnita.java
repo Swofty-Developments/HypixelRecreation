@@ -12,7 +12,7 @@ public class NPCAnita extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Anita", "§e§lCLICK"};
+                return new String[]{"Anita", "<e><l>CLICK"};
             }
 
             @Override

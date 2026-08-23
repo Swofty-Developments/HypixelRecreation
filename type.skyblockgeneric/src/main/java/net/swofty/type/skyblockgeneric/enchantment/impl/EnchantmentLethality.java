@@ -20,7 +20,7 @@ public class EnchantmentLethality implements Ench, EnchFromTable, DamageEventEnc
     @Override
     public String getDescription(int level) {
         double reduction = LethalityDebuff.DEFENSE_REDUCTION_PERCENTAGES[level - 1] * 100;
-        return "Reduces the ❈Defense of your target by §a" + reduction + "%§7 for 4s each time you hit them with melee. Stacks up to 4 times.";
+        return "Reduces the ❈Defense of your target by <a>" + reduction + "%<7> for 4s each time you hit them with melee. Stacks up to 4 times.";
     }
 
     @Override

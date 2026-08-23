@@ -18,7 +18,7 @@ public class NPCFishermanGerald extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§9Fisherman Gerald", "§e§lCLICK"};
+                return new String[]{"<9>Fisherman Gerald", "<e><l>CLICK"};
             }
 
             @Override
@@ -83,56 +83,54 @@ public class NPCFishermanGerald extends HypixelNPC {
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("below-fishing-5").lines(new String[]{
+                        .key("below-fishing-5").lines(
                                 "Hmm, you're not quite ready yet.",
-                                "Go talk to the §eFish Merchant §fin the §bFishing Outpost§f, get geared up, and get fishin'!",
-                                "Come back once you've reached §aFishing Skill V §fand I'll tell you how you can get to a §anew island§f!",
-                        }).build(),
+                                "Go talk to the <e>Fish Merchant <f>in the <b>Fishing Outpost<f>, get geared up, and get fishin'!",
+                                "Come back once you've reached <a>Fishing Skill V <f>and I'll tell you how you can get to a <a>new island<f>!"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("first-interaction").lines(new String[]{
+                        .key("first-interaction").lines(
                                 "Keep the noise down, kid!",
-                                "If you want to learn about §aFishing§f, go talk to my wife, Fisherwoman Enid.",
-                                "She's fishing a bit §bupstream§f. Once she's shown you the ropes, come back and talk to me!",
-                    }).build(),
+                                "If you want to learn about <a>Fishing<f>, go talk to my wife, Fisherwoman Enid.",
+                                "She's fishing a bit <b>upstream<f>. Once she's shown you the ropes, come back and talk to me!"
+                    ).build(),
             DialogueSet.builder()
-                .key("talk-to-enid-again").lines(new String[]{
-                    "If you want to learn about §aFishing§f, go talk to my wife, Fisherwoman Enid.",
-                    "She's fishing a bit §bupstream§f. Once she's shown you the ropes, come back and talk to me!"
-                }).build(),
+                .key("talk-to-enid-again").lines(
+                    "If you want to learn about <a>Fishing<f>, go talk to my wife, Fisherwoman Enid.",
+                    "She's fishing a bit <b>upstream<f>. Once she's shown you the ropes, come back and talk to me!"
+                ).build(),
             DialogueSet.builder()
-                .key("after-talking-to-enid").lines(new String[]{
-                    "Can you fish up the §cRusty Ship Engine §ffor me?",
+                .key("after-talking-to-enid").lines(
+                    "Can you fish up the <c>Rusty Ship Engine <f>for me?",
                     "It's somewhere in this pond here.",
-                    "Once you fish it out, you can set sail to the §2Backwater Bayou§f!"
-                }).build(),
+                    "Once you fish it out, you can set sail to the <2>Backwater Bayou<f>!"
+                ).build(),
             DialogueSet.builder()
-                .key("after-fishing-engine").lines(new String[]{
-                    "Ah! The §cRusty Ship Engine§f! Perfect!",
-                    "Bring that to §6Captain Baha §fand he'll be able to help you set sail!",
-                    "He's just behind the Fisherman's Hut, waiting by the §6Ship§f!",
+                .key("after-fishing-engine").lines(
+                    "Ah! The <c>Rusty Ship Engine<f>! Perfect!",
+                    "Bring that to <6>Captain Baha <f>and he'll be able to help you set sail!",
+                    "He's just behind the Fisherman's Hut, waiting by the <6>Ship<f>!",
                     "Just leave out the part about me dropping it, will ya?"
-                }).build(),
+                ).build(),
             DialogueSet.builder()
-                .key("after-bringing-engine-to-baha").lines(new String[]{
-                    "Thanks for helping me find the §cRusty Ship Engine§f, " + (player == null ? "kid" : player.getUsername()) + "!",
-                    "You can use the §6Ship Navigator §fto set sail to the §2Backwater Bayou§f!",
-                    "Safe travels!"
-                }).build(),
+                .key("after-bringing-engine-to-baha").line("Thanks for helping me find the <c>Rusty Ship Engine<f>, {}!", player == null ? "kid" : player.getUsername())
+                    .line("You can use the <6>Ship Navigator <f>to set sail to the <2>Backwater Bayou<f>!")
+                    .line("Safe travels!").build(),
             DialogueSet.builder()
-                .key("idle-1").lines(new String[]{
+                .key("idle-1").lines(
                     "Fishing is the family business.",
                     "Enid and I are thrilled that our two children love it as much as we do!"
-                }).build(),
+                ).build(),
             DialogueSet.builder()
-                .key("idle-2").lines(new String[]{
+                .key("idle-2").lines(
                     "I met Captain Baha when i was marooned on a distant pirate cove.",
                     "He saved my skin then, and I'm forever grateful to him."
-                }).build(),
+                ).build(),
             DialogueSet.builder()
-                .key("idle-3").lines(new String[]{
+                .key("idle-3").lines(
                     "I've only gone lava fishing a few times in my life.",
                     "I prefer the open water. More peaceful, less ghasts!"
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

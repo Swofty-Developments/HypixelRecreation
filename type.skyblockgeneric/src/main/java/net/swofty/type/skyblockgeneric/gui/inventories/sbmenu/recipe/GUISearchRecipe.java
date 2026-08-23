@@ -1,19 +1,19 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.recipe;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.HypixelSignGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
-import net.swofty.type.generic.gui.v2.*;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.v2.Components;
+import net.swofty.type.generic.gui.v2.Layouts;
+import net.swofty.type.generic.gui.v2.PaginatedView;
+import net.swofty.type.generic.gui.v2.ViewConfiguration;
+import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.item.crafting.ShapedRecipe;
 import net.swofty.type.skyblockgeneric.item.crafting.ShapelessRecipe;
@@ -24,8 +24,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class GUISearchRecipe extends PaginatedView<SkyBlockRecipe<?>, GUISearchRecipe.SearchState> {
     @Override
@@ -46,26 +44,21 @@ public class GUISearchRecipe extends PaginatedView<SkyBlockRecipe<?>, GUISearchR
     @Override
     protected ItemStack.Builder renderItem(SkyBlockRecipe<?> item, int index, HypixelPlayer p) {
         SkyBlockPlayer player = (SkyBlockPlayer) p;
-        Locale l = player.getLocale();
         SkyBlockRecipe.CraftingResult result = item.getCanCraft().apply(player);
         ItemStack.Builder itemStack = PlayerItemUpdater.playerUpdate(
                 player, item.getResult().getItemStack()
         );
 
         if (result.allowed()) {
-            ArrayList<String> lore = new ArrayList<>(
-                    itemStack.build().get(DataComponents.LORE).stream().map(StringUtility::getTextFromComponent).toList()
-            );
-            lore.add("§e ");
-            lore.add(I18n.string("gui_sbmenu.recipe.category.click_to_view", l));
-
-            return itemStack.set(DataComponents.LORE,
-                    lore.stream().map(line -> Component.text(line).decoration(TextDecoration.ITALIC, false))
-                            .collect(Collectors.toList()));
+            return ItemStacks.appendLore(itemStack, List.of(
+                    Text.of("<e> "),
+                    Text.key("gui_sbmenu.recipe.category.click_to_view")));
         } else {
-            List<String> lore = Arrays.asList(result.errorMessage());
-            lore = lore.stream().map(line -> "§7" + line).toList();
-            return ItemStackCreator.getStack(I18n.string("gui_sbmenu.recipe.category.locked", l), Material.GRAY_DYE, 1, lore);
+            return ItemStacks.item(Material.GRAY_DYE, 1,
+                    Text.key("gui_sbmenu.recipe.category.locked"),
+                    Arrays.stream(result.errorMessage())
+                            .map(message -> Text.of("<7>{}", Text.parse(message)))
+                            .toList());
         }
     }
 
@@ -77,21 +70,20 @@ public class GUISearchRecipe extends PaginatedView<SkyBlockRecipe<?>, GUISearchR
         if (result.allowed()) {
             ctx.push(new GUIRecipe(item.getResult().getAttributeHandler().getPotentialType()));
         } else {
-            player.sendMessage(I18n.string("gui_sbmenu.recipe.category.msg.not_unlocked", player.getLocale()));
+            player.sendMessage(Text.key("gui_sbmenu.recipe.category.msg.not_unlocked"));
         }
     }
 
     @Override
     public void layout(ViewLayout<SearchState> layout, SearchState state, ViewContext ctx) {
-        layout.filler(Layouts.border(0, 53));
+        layout.filler(Layouts.border(0, 53), Components.asFiller(Material.BLACK_STAINED_GLASS_PANE));
         Components.back(layout, 48, ctx);
         Components.close(layout, 49);
 
-        layout.slot(50, (_, c) -> {
-            return ItemStackCreator.getStack(I18n.t("gui_sbmenu.recipe.book.search"), Material.OAK_SIGN, 1,
-                I18n.iterable("gui_sbmenu.recipe.book.search.lore"));
-        }, (_, c) -> {
-            new HypixelSignGUI(c.player()).open(new String[]{I18n.string("gui_sbmenu.recipe.search.sign_prompt", c.player().getLocale())}).thenAccept(line -> {
+        layout.slot(50, (_, c) -> ItemStacks.item(Material.OAK_SIGN, 1,
+                Text.key("gui_sbmenu.recipe.book.search"),
+                Text.keyLines("gui_sbmenu.recipe.book.search.lore")), (_, c) -> {
+            new HypixelSignGUI(c.player()).open(new String[]{"Enter query", ""}).thenAccept(line -> {
                 if (line == null) {
                     return;
                 }
@@ -102,10 +94,9 @@ public class GUISearchRecipe extends PaginatedView<SkyBlockRecipe<?>, GUISearchR
 
         // if no results
         if (state.items().isEmpty()) {
-            layout.slot(22, (searchState, c) -> {
-                return ItemStackCreator.getStack(I18n.t("gui_sbmenu.recipe.search.no_results"), Material.BARRIER, 1,
-                    I18n.iterable("gui_sbmenu.recipe.search.no_results.lore", Component.text(searchState.query())));
-            });
+            layout.slot(22, (searchState, c) -> ItemStacks.item(Material.BARRIER, 1,
+                    Text.key("gui_sbmenu.recipe.search.no_results"),
+                    Text.keyLines("gui_sbmenu.recipe.search.no_results.lore", searchState.query())));
         }
     }
 
@@ -116,7 +107,11 @@ public class GUISearchRecipe extends PaginatedView<SkyBlockRecipe<?>, GUISearchR
 
     @Override
     public ViewConfiguration<SearchState> configuration() {
-        return ViewConfiguration.withString((state, ctx) -> I18n.string("gui_sbmenu.recipe.search.title", ctx.player().getLocale(), Component.text(state.query()), Component.text(String.valueOf(state.page() + 1)), Component.text(String.valueOf(Math.max(1, (int) Math.ceil((double) state.items().size() / DEFAULT_SLOTS.length))))), InventoryType.CHEST_6_ROW);
+        return ViewConfiguration.withText((state, ctx) -> Text.key("gui_sbmenu.recipe.search.title",
+                state.query(),
+                state.page() + 1,
+                Math.max(1, (int) Math.ceil((double) state.items().size() / DEFAULT_SLOTS.length))),
+                InventoryType.CHEST_6_ROW);
     }
 
     public static SearchState createInitialState(String query) {

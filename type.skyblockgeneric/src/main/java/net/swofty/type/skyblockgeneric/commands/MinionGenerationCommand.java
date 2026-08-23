@@ -1,6 +1,7 @@
 package net.swofty.type.skyblockgeneric.commands;
 
 import net.minestom.server.command.builder.arguments.ArgumentEnum;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -35,7 +36,7 @@ public class MinionGenerationCommand extends HypixelCommand {
                     break;
             }
 
-            sender.sendMessage("§aSuccessfully set minion speed to §c" + speed.name().toLowerCase());
+            sender.sendMessage(Text.of("<a>Successfully set minion speed to <c>{}", speed.name().toLowerCase()));
         }, argument);
     }
 

@@ -7,6 +7,7 @@ import net.swofty.commons.party.PendingParty;
 import net.swofty.commons.protocol.objects.messaging.SendMessagePushProtocol;
 import net.swofty.commons.protocol.objects.party.PartyBroadcastPushProtocol;
 import net.swofty.commons.redis.RedisClient;
+import net.swofty.commons.text.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class PartyCache {
 
         PendingParty pending = pendingInvites.remove(accepter);
         if (pending == null || !pending.leader().equals(inviter)) {
-            sendErrorToPlayer(accepter, "§cYou haven't been invited to a party, or the invitation has expired!");
+            sendErrorToPlayer(accepter, "<c>You haven't been invited to a party, or the invitation has expired!");
             return;
         }
 
@@ -73,7 +74,7 @@ public class PartyCache {
         UUID leaver = action.leaver();
         FullParty party = getPartyFromPlayer(leaver);
         if (party == null) {
-            sendErrorToPlayer(leaver, "§cYou are not in a party.");
+            sendErrorToPlayer(leaver, "<c>You are not in a party.");
             return;
         }
 
@@ -93,13 +94,13 @@ public class PartyCache {
         UUID disbander = action.disbander();
         FullParty party = getPartyFromPlayer(disbander);
         if (party == null) {
-            sendErrorToPlayer(disbander, "§cYou are not in a party.");
+            sendErrorToPlayer(disbander, "<c>You are not in a party.");
             return;
         }
 
         FullParty.Member member = getMember(party, disbander);
         if (member.getRole() != FullParty.Role.LEADER) {
-            sendErrorToPlayer(disbander, "§cYou are not the party leader!");
+            sendErrorToPlayer(disbander, "<c>You are not the party leader!");
             return;
         }
 
@@ -112,7 +113,7 @@ public class PartyCache {
 
         FullParty party = getPartyFromPlayer(currentLeaderUUID);
         if (party == null) {
-            sendErrorToPlayer(currentLeaderUUID, "§cYou are not in a party!");
+            sendErrorToPlayer(currentLeaderUUID, "<c>You are not in a party!");
             return;
         }
 
@@ -120,11 +121,11 @@ public class PartyCache {
         FullParty.Member newLeader = getMember(party, newLeaderUUID);
 
         if (currentLeader.getRole() != FullParty.Role.LEADER) {
-            sendErrorToPlayer(currentLeaderUUID, "§cYou are not the party leader!");
+            sendErrorToPlayer(currentLeaderUUID, "<c>You are not the party leader!");
             return;
         }
         if (newLeader == null) {
-            sendErrorToPlayer(currentLeaderUUID, "§cThat player is not in your party!");
+            sendErrorToPlayer(currentLeaderUUID, "<c>That player is not in your party!");
             return;
         }
 
@@ -139,7 +140,7 @@ public class PartyCache {
 
         FullParty party = getPartyFromPlayer(kickerUUID);
         if (party == null) {
-            sendErrorToPlayer(kickerUUID, "§cYou are not in a party!");
+            sendErrorToPlayer(kickerUUID, "<c>You are not in a party!");
             return;
         }
 
@@ -147,15 +148,15 @@ public class PartyCache {
         FullParty.Member target = getMember(party, targetUUID);
 
         if (kicker.getRole() == FullParty.Role.MEMBER) {
-            sendErrorToPlayer(kickerUUID, "§cOnly party leaders and moderators can kick players!");
+            sendErrorToPlayer(kickerUUID, "<c>Only party leaders and moderators can kick players!");
             return;
         }
         if (target == null) {
-            sendErrorToPlayer(kickerUUID, "§cThat player is not in your party!");
+            sendErrorToPlayer(kickerUUID, "<c>That player is not in your party!");
             return;
         }
         if (target.getRole() == FullParty.Role.LEADER) {
-            sendErrorToPlayer(kickerUUID, "§cYou cannot kick the party leader!");
+            sendErrorToPlayer(kickerUUID, "<c>You cannot kick the party leader!");
             return;
         }
 
@@ -176,7 +177,7 @@ public class PartyCache {
         FullParty.Member target = getMember(party, targetUUID);
 
         if (promoter.getRole() != FullParty.Role.LEADER) {
-            sendErrorToPlayer(promoterUUID, "§cOnly the party leader can promote players!");
+            sendErrorToPlayer(promoterUUID, "<c>Only the party leader can promote players!");
             return;
         }
         if (target == null || target.getRole() == FullParty.Role.MODERATOR) return;
@@ -206,7 +207,7 @@ public class PartyCache {
         UUID sender = action.player();
         FullParty party = getPartyFromPlayer(sender);
         if (party == null) {
-            sendErrorToPlayer(sender, "§cYou are not in a party!");
+            sendErrorToPlayer(sender, "<c>You are not in a party!");
             return;
         }
         broadcast(new PartyBroadcast.Chat(party, sender, action.message()));
@@ -225,7 +226,7 @@ public class PartyCache {
 
         FullParty targetParty = getPartyFromPlayer(targetUUID);
         if (targetParty == null) {
-            sendErrorToPlayer(hijackerUUID, "§cThat player is not in a party!");
+            sendErrorToPlayer(hijackerUUID, "<c>That player is not in a party!");
             return;
         }
 
@@ -250,21 +251,21 @@ public class PartyCache {
 
         FullParty party = getPartyFromPlayer(warperUUID);
         if (party == null) {
-            sendErrorToPlayer(warperUUID, "§cYou are not in a party!");
+            sendErrorToPlayer(warperUUID, "<c>You are not in a party!");
             return;
         }
 
         FullParty.Member warper = getMember(party, warperUUID);
         if (warper.getRole() != FullParty.Role.LEADER) {
-            sendErrorToPlayer(warperUUID, "§cYou are not the party leader!");
+            sendErrorToPlayer(warperUUID, "<c>You are not the party leader!");
             return;
         }
         if (party.getMembers().size() == 1) {
-            sendErrorToPlayer(warperUUID, "§cYou need someone else in the party to warp!");
+            sendErrorToPlayer(warperUUID, "<c>You need someone else in the party to warp!");
             return;
         }
         if (warpCooldown.contains(warperUUID)) {
-            sendErrorToPlayer(warperUUID, "§cYou can only warp once every 5 seconds!");
+            sendErrorToPlayer(warperUUID, "<c>You can only warp once every 5 seconds!");
             return;
         }
 
@@ -374,11 +375,11 @@ public class PartyCache {
                 BROADCAST_TIMEOUT_MS);
     }
 
-    private static void sendErrorToPlayer(UUID playerUUID, String message) {
-        String separator = "§9§m-----------------------------------------------------";
+    private static void sendErrorToPlayer(UUID playerUUID, String markup, Object... arguments) {
+        Text message = Text.of("<sep>\n").append(markup, arguments).append("\n<sep>");
         RedisClient.requestAllServersFromService(
                 new SendMessagePushProtocol(),
-                new SendMessagePushProtocol.Request(playerUUID, separator + "\n" + message + "\n" + separator),
+                new SendMessagePushProtocol.Request(playerUUID, message.serialize()),
                 BROADCAST_TIMEOUT_MS);
     }
 

@@ -7,7 +7,7 @@ import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
 import net.swofty.type.generic.data.datapoints.DatapointBedWarsHotbar;
 import net.swofty.type.generic.data.handlers.BedWarsDataHandler;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.Layouts;
@@ -35,12 +35,14 @@ public class HotbarManagerView extends StatelessView {
         Components.back(layout, 48, ctx);
         layout.slot(
             50,
-            (s, c) -> ItemStackCreator.getStack("§cReset to Default", Material.BARRIER, 1, "§7Reset your hotbar to the default."),
+            (s, c) -> ItemStacks.item(Material.BARRIER, 1, """
+                <c>Reset to Default
+                <7>Reset your hotbar to the default."""),
             (clickContext, c) -> {
                 BedWarsDataHandler dataHandler = BedWarsDataHandler.getUser(c.player());
                 if (dataHandler == null) {
                     c.backOrClose();
-                    c.player().sendMessage("§cAn error occurred while trying to reset your hotbar layout. Please try again later.");
+                    c.player().sendMessage("<c>An error occurred while trying to reset your hotbar layout. Please try again later.");
                     return;
                 }
                 dataHandler.get(BedWarsDataHandler.Data.HOTBAR_LAYOUT, DatapointBedWarsHotbar.class).setValue(DatapointBedWarsHotbar.defaultHotbar);
@@ -50,7 +52,9 @@ public class HotbarManagerView extends StatelessView {
         );
         layout.slots(
             Layouts.rectangle(18, 26),
-            (_, _) -> ItemStackCreator.getStack("§8⬆ §7Categories", Material.GRAY_STAINED_GLASS_PANE, 1, "§8⬇ §7Hotbar")
+            (_, _) -> ItemStacks.item(Material.GRAY_STAINED_GLASS_PANE, 1, """
+                <8>⬆ <7>Categories
+                <8>⬇ <7>Hotbar""")
         );
 
 
@@ -62,11 +66,13 @@ public class HotbarManagerView extends StatelessView {
             DatapointBedWarsHotbar.HotbarItemType finalItemType = itemType;
             layout.slot(
                 slot,
-                (s, c) -> ItemStackCreator.getStack("§a" + finalItemType.pretty(), finalItemType.getMaterial(), 1, "§7Drag this to a hotbar slot below to",
-                    "§7favor that slot when purchasing an",
-                    "§7item in this category or on spawn.",
-                    "",
-                    "§eClick to drag!"), (clickContext, context) -> {
+                (s, c) -> ItemStacks.item(finalItemType.getMaterial(), 1, """
+                    <a>{}
+                    <7>Drag this to a hotbar slot below to
+                    <7>favor that slot when purchasing an
+                    <7>item in this category or on spawn.
+
+                    <e>Click to drag!""", finalItemType.pretty()), (clickContext, context) -> {
                     final HypixelPlayer player = context.player();
                     ItemStack cursorItem = player.getInventory().getCursorItem();
                     if (!cursorItem.isAir() && getItemTypeFromCursor(cursorItem) == null) {
@@ -86,15 +92,17 @@ public class HotbarManagerView extends StatelessView {
                     DatapointBedWarsHotbar.HotbarItemType type = currentLayout.get(hotbarSlot);
 
                     if (type == null) {
-                        return ItemStackCreator.getStack("§7Empty Hotbar Slot", Material.AIR, 1,
-                            "§7Drag a category item here to",
-                            "§7prioritize this hotbar slot.");
+                        return ItemStacks.item(Material.AIR, 1, """
+                            <7>Empty Hotbar Slot
+                            <7>Drag a category item here to
+                            <7>prioritize this hotbar slot.""");
                     }
 
-                    return ItemStackCreator.getStack("§a" + type.pretty(), type.getMaterial(), 1,
-                        "§7" + type.pretty() + " items will prioritize this slot!",
-                        "",
-                        "§eClick to remove!");
+                    return ItemStacks.item(type.getMaterial(), 1, """
+                        <a>{}
+                        <7>{} items will prioritize this slot!
+
+                        <e>Click to remove!""", type.pretty(), type.pretty());
                 },
                 (clickContext, c) -> {
                     final HypixelPlayer player = c.player();
@@ -137,8 +145,9 @@ public class HotbarManagerView extends StatelessView {
     }
 
     private ItemStack.Builder buildCursorItem(DatapointBedWarsHotbar.HotbarItemType itemType) {
-        return ItemStackCreator.getStack("§a" + itemType.pretty(), itemType.getMaterial(), 1,
-            "§7Drag this to the hotbar slot you want to favor " + itemType.pretty() + " items in!");
+        return ItemStacks.item(itemType.getMaterial(), 1, """
+            <a>{}
+            <7>Drag this to the hotbar slot you want to favor {} items in!""", itemType.pretty(), itemType.pretty());
     }
 
     private DatapointBedWarsHotbar.HotbarItemType getItemTypeFromCursor(ItemStack cursorItem) {

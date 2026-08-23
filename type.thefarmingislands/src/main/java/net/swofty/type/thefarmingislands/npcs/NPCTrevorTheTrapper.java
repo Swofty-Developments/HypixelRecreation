@@ -14,7 +14,7 @@ public class NPCTrevorTheTrapper extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Trevor The Trapper", "§e§lCLICK"};
+                return new String[]{"Trevor The Trapper", "<e><l>CLICK"};
             }
 
             @Override

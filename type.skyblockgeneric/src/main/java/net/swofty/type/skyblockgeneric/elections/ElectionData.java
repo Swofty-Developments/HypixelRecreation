@@ -2,7 +2,10 @@ package net.swofty.type.skyblockgeneric.elections;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +18,10 @@ import java.util.concurrent.ThreadLocalRandom;
 @Getter
 @Setter
 public class ElectionData {
+    private static final List<NamedTextColor> CANDIDATE_COLORS = List.of(
+            NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.AQUA,
+            NamedTextColor.YELLOW, NamedTextColor.LIGHT_PURPLE);
+
     private int electionYear;
 
     private String currentMayor;
@@ -153,15 +160,16 @@ public class ElectionData {
         return currentYear - lastYear;
     }
 
-    public static String colorForIndex(int index) {
-        return switch (index) {
-            case 0 -> "§c";
-            case 1 -> "§a";
-            case 2 -> "§b";
-            case 3 -> "§e";
-            case 4 -> "§d";
-            default -> "§f";
-        };
+    public static TextColor colorForIndex(int index) {
+        return index >= 0 && index < CANDIDATE_COLORS.size() ? CANDIDATE_COLORS.get(index) : NamedTextColor.WHITE;
+    }
+
+    public static String wireColorForIndex(int index) {
+        return Text.colorTag(colorForIndex(index));
+    }
+
+    public static Text colored(String color, String value) {
+        return color.indexOf('§') >= 0 ? Text.legacy(color + value) : Text.of(color + "{}", value);
     }
 
     @Getter
@@ -191,12 +199,12 @@ public class ElectionData {
             return result;
         }
 
-        public String getColor() {
+        public TextColor getColor() {
             return colorForIndex(index);
         }
 
-        public String getColoredName() {
-            return getColor() + StringUtility.capitalize(getMayorName());
+        public Text getColoredName() {
+            return Text.of("<color:{}>{}", getColor(), StringUtility.capitalize(getMayorName()));
         }
 
         public boolean hasMinisterPerkMarker(SkyBlockMayor.Perk perk) {

@@ -2,8 +2,6 @@ package net.swofty.type.bedwarsgame.game.v2;
 
 import lombok.Getter;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.TitlePart;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
@@ -45,7 +43,8 @@ import net.swofty.type.game.game.event.GameTeamWinConditionEvent;
 import net.swofty.type.game.game.event.PlayerAssignedTeamEvent;
 import net.swofty.type.generic.data.datapoints.DatapointBedWarsHotbar;
 import net.swofty.type.generic.event.HypixelEventHandler;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.i18n.HypixelTranslator;
 import net.swofty.type.generic.party.PartyManager;
 import net.swofty.type.generic.utility.ScheduleUtility;
 import org.tinylog.Logger;
@@ -194,10 +193,9 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
         }
 
         BedWarsTeam team = teamOpt.get();
-        String teamColor = team.getColorCode();
         player.setTeamName(team.getTeamKey());
 
-        broadcastMessage(Component.text(teamColor + player.getUsername() + " §7reconnected."));
+        broadcastMessage("<color:{}>{} <7>reconnected.", team.getColor(), player.getUsername());
 
         if (!team.isBedAlive()) {
             setupAsSpectator(player);
@@ -366,7 +364,7 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
                 replayManager.recordBedRespawned(teamKey);
             }
 
-            broadcastMessage(Component.text(teamKey.chatColor() + "Team " + teamKey.getName() + "'s §abed has been respawned!"));
+            broadcastMessage("<color:{}>Team {}'s <a>bed has been respawned!", teamKey.chatColor(), teamKey.getName());
         });
     }
 
@@ -406,8 +404,8 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
             player.teleport(new Pos(spectatorPos.x(), spectatorPos.y(), spectatorPos.z()));
         }
 
-        player.sendTitlePart(TitlePart.TITLE, Component.text("SPECTATING", NamedTextColor.GRAY));
-        player.sendTitlePart(TitlePart.SUBTITLE, Component.text("Your bed was destroyed.", NamedTextColor.RED));
+        player.sendTitlePart(TitlePart.TITLE, Text.of("<7>SPECTATING").asComponent());
+        player.sendTitlePart(TitlePart.SUBTITLE, Text.of("<c>Your bed was destroyed.").asComponent());
 
         player.getInventory().setItemStack(0, TypeBedWarsGameLoader.getItemHandler().getItem("teleporter").getItemStack());
         player.getInventory().setItemStack(4, TypeBedWarsGameLoader.getItemHandler().getItem("spectator_settings").getItemStack());
@@ -437,9 +435,10 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
                 MapTeam config = teamConfigs.get(team.getTeamKey());
                 if (config != null) {
                     setupPlayer(player);
-                    player.setDisplayName(Component.text(
-                        team.getColorCode() + "§l" + team.firstLetter() + " §r" + team.getColorCode() + player.getUsername()
-                    ));
+                    player.setDisplayName(
+                        "<color:{0}><l>{1} </l><color:{0}>{2}",
+                        team.getColor(), team.firstLetter(), player.getUsername()
+                    );
                     player.reveal();
                 }
             });
@@ -460,16 +459,17 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
     // this is per game type, dreams modes have different looks
     public void sendGameStartMessage() {
         String line = "■".repeat(50);
-        List<Component> messages = new ArrayList<>();
-        messages.add(Component.text(line, NamedTextColor.GREEN));
-        messages.add(Component.text(ChatUtility.FontInfo.center("§l" + I18n.string(gameType.getGameStartTitleKey())), NamedTextColor.WHITE));
-        messages.add(Component.space());
-        ChatUtility.FontInfo.wrap(I18n.string(gameType.getGameStartDescriptionKey()))
-            .forEach(message -> messages.add(Component.text(ChatUtility.FontInfo.center(message), NamedTextColor.YELLOW)));
-        messages.add(Component.space());
-        messages.add(Component.text(line, NamedTextColor.GREEN));
+        List<Text> messages = new ArrayList<>();
+        messages.add(Text.of("<a>{}", line));
+        messages.add(Text.of("<f><l>{}",
+            ChatUtility.FontInfo.center(Text.key(gameType.getGameStartTitleKey()).plain(HypixelTranslator.defaultLocale))));
+        messages.add(Text.literal(" "));
+        ChatUtility.FontInfo.wrap(Text.key(gameType.getGameStartDescriptionKey()).plain(HypixelTranslator.defaultLocale))
+            .forEach(message -> messages.add(Text.of("<e>{}", ChatUtility.FontInfo.center(message))));
+        messages.add(Text.literal(" "));
+        messages.add(Text.of("<a>{}", line));
         Audience audience = Audience.audience(getPlayers());
-        for (Component msg : messages) {
+        for (Text msg : messages) {
             audience.sendMessage(msg);
         }
     }

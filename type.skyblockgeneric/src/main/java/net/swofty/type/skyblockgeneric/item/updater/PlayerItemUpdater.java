@@ -16,9 +16,9 @@ import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.item.attribute.ItemAttribute;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributeGemData;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributePotionData;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import net.swofty.type.skyblockgeneric.item.ItemAttributeHandler;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skyblockgeneric.item.ItemLore;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.GemstoneComponent;
@@ -48,7 +48,7 @@ public class PlayerItemUpdater {
 
     public static Map.Entry<SkyBlockItem, ItemStack.Builder> playerUpdateFull(SkyBlockPlayer player, ItemStack stack, boolean isOwnedByPlayer) {
         if (stack.hasTag(Tag.Boolean("uneditable")) && stack.getTag(Tag.Boolean("uneditable")))
-            return Map.entry(new SkyBlockItem(stack), ItemStackCreator.getFromStack(stack));
+            return Map.entry(new SkyBlockItem(stack), ItemStacks.copy(stack));
 
         if (!SkyBlockItem.isSkyBlockItem(stack) || stack.material().equals(Material.AIR)) {
             /*
@@ -94,9 +94,6 @@ public class PlayerItemUpdater {
         } else {
             handler.setRarity(Rarity.COMMON);
         }
-        if (handler.isRecombobulated()) {
-            handler.setRarity(handler.getRarity().upgrade());
-        }
 
         /*
          * Update Lore
@@ -107,7 +104,7 @@ public class PlayerItemUpdater {
 
         if (handler.shouldBeEnchanted()) {
             toReturn.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
-            toReturn = ItemStackCreator.clearAttributes(toReturn);
+            toReturn = ItemStacks.clearAttributes(toReturn);
         }
 
         Color leatherColour = handler.getLeatherColour();
@@ -143,36 +140,24 @@ public class PlayerItemUpdater {
             toReturn.set(DataComponents.ITEM_MODEL, item.getComponent(ItemModelComponent.class).getItemModel());
         }
 
-        Rarity rarity = handler.getRarity();
+        Rarity rarity = handler.isRecombobulated()
+                ? handler.getRarity().upgrade()
+                : handler.getRarity();
         toReturn.set(DataComponents.TOOLTIP_STYLE, rarity.getTooltipStyle());
 
         if (item.hasComponent(GemstoneComponent.class)) {
             GemstoneComponent gemstoneComponent = item.getComponent(GemstoneComponent.class);
 
-            int index = 0;
             ItemAttributeGemData.GemData gemData = item.getAttributeHandler().getGemData();
-            for (GemstoneComponent.GemstoneSlot slot : gemstoneComponent.getSlots()) {
-                if (slot.unlockPrice() == 0 && slot.itemRequirements().isEmpty()) {
-                    // Slot should be unlocked by default
-                    if (gemData.hasGem(index)) continue;
-                    gemData.putGem(
-                            new ItemAttributeGemData.GemData.GemSlots(
-                                    index,
-                                    null,
-                                    true
-                            )
-                    );
-                } else {
-                    if (gemData.hasGem(index)) continue;
-                    gemData.putGem(
-                            new ItemAttributeGemData.GemData.GemSlots(
-                                    index,
-                                    null,
-                                    false
-                            )
-                    );
-                }
-                index++;
+            for (int index = 0; index < gemstoneComponent.getSlots().size(); index++) {
+                if (gemData.hasGem(index)) continue;
+
+                GemstoneComponent.GemstoneSlot slot = gemstoneComponent.getSlots().get(index);
+                gemData.putGem(new ItemAttributeGemData.GemData.GemSlots(
+                        index,
+                        null,
+                        slot.unlockPrice() == 0 && slot.itemRequirements().isEmpty()
+                ));
             }
             item.getAttributeHandler().setGemData(gemData);
         }
@@ -187,7 +172,7 @@ public class PlayerItemUpdater {
             toReturn.set(DataComponents.POTION_CONTENTS, createPotionContents(potionData));
         }
 
-        ItemStackCreator.clearAttributes(toReturn);
+        ItemStacks.clearAttributes(toReturn);
         return Map.entry(item,
                 toReturn.amount(stack.amount())
                         .set(DataComponents.CUSTOM_NAME, stack.get(DataComponents.CUSTOM_NAME))

@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
@@ -24,7 +23,7 @@ import net.swofty.type.game.replay.api.ReplayScoreboard;
 import net.swofty.type.game.replay.api.ReplayViewerAdapter;
 import net.swofty.type.game.replay.model.ReplayMetadata;
 import net.swofty.type.game.replay.model.ReplayParticipant;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.ScheduleUtility;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
@@ -64,7 +63,7 @@ public class ReplaySession implements ReplayPlaybackContext {
 
     private final DynamicTextManager dynamicTextManager;
     private final NpcReplayManager npcManager;
-    private final BelowNameTag belowNameTag = new BelowNameTag("health", Component.text("§c❤"));
+    private final BelowNameTag belowNameTag = new BelowNameTag("health", Text.of("<c>❤").asComponent());
     private final Map<Integer, PlayerNameTag> playerNameTags = new ConcurrentHashMap<>();
 
     private volatile boolean rebuildingState = false;
@@ -181,8 +180,8 @@ public class ReplaySession implements ReplayPlaybackContext {
             if (entity instanceof ReplayPlayerEntity playerEntity) {
                 if (viewerUuid.equals(playerEntity.getActualUuid())) {
                     viewer.teleport(playerEntity.getPosition());
-                    viewer.sendMessage(I18n.t("replays.teleported_to_player",
-                            Argument.string("player", playerEntity.getActualUuid().toString())));
+                    viewer.sendMessage(Text.key("replays.teleported_to_player",
+                            playerEntity.getActualUuid().toString()));
                     applyTeamGlow(viewer, entity, entityId);
                     return;
                 }
@@ -262,8 +261,8 @@ public class ReplaySession implements ReplayPlaybackContext {
     public void setPlaybackSpeed(float speed) {
         playback.speed(speed);
         for (Player viewer : viewers) {
-            viewer.sendMessage(I18n.t("replays.playback_speed",
-                    Argument.string("speed", String.valueOf(getPlaybackSpeed()))));
+            viewer.sendMessage(Text.key("replays.playback_speed",
+                    String.valueOf(getPlaybackSpeed())));
         }
     }
 
@@ -341,16 +340,14 @@ public class ReplaySession implements ReplayPlaybackContext {
     }
 
     private void updateActionBar() {
-        Component status = I18n.t(isPlaying() ? "replays.playing" : "replays.paused")
-                .color(isPlaying() ? NamedTextColor.GREEN : NamedTextColor.RED);
-        Component actionBar = I18n.t("replays.playback_status",
-                Argument.component("status", status),
-                Argument.component("time", Component.text(
-                        getFormattedTime() + " / " + getFormattedTotalTime(), NamedTextColor.YELLOW)),
-                Argument.component("speed", Component.text(
-                        String.format("%.1fx", getPlaybackSpeed()), NamedTextColor.GOLD)));
+        Text status = Text.of("<color:{}>{}", isPlaying() ? NamedTextColor.GREEN : NamedTextColor.RED,
+                Text.key(isPlaying() ? "replays.playing" : "replays.paused"));
+        Text actionBar = Text.key("replays.playback_status",
+                status,
+                Text.of("<e>{} / {}", getFormattedTime(), getFormattedTotalTime()),
+                Text.of("<6>{}", String.format("%.1fx", getPlaybackSpeed())));
         for (Player viewer : viewers) {
-            viewer.sendActionBar(actionBar);
+            viewer.sendActionBar(actionBar.asComponent());
         }
     }
 
@@ -376,8 +373,8 @@ public class ReplaySession implements ReplayPlaybackContext {
 
     private void showSeekTitle(int tick) {
         Title title = Title.title(
-                Component.text(getFormattedTime(), NamedTextColor.GREEN),
-                Component.text("/" + getFormattedTotalTime(), NamedTextColor.GRAY),
+                Text.of("<a>{}", getFormattedTime()).asComponent(),
+                Text.of("<7>/{}", getFormattedTotalTime()).asComponent(),
                 Title.Times.times(Duration.ZERO, Duration.ofMillis(500), Duration.ofMillis(200))
         );
         for (Player viewer : viewers) {
@@ -426,7 +423,7 @@ public class ReplaySession implements ReplayPlaybackContext {
                 teamName,
                 new TeamsPacket.CreateTeamAction(
                         new TeamsPacket.Settings(
-                                Component.empty(),
+                                Text.empty().asComponent(),
                                 tag.prefix(),
                                 tag.suffix(),
                                 TeamsPacket.NameTagVisibility.ALWAYS,
@@ -450,8 +447,8 @@ public class ReplaySession implements ReplayPlaybackContext {
     private void onReplayEnd() {
         pause();
         Title title = Title.title(
-                I18n.t("replays.replay_ended"),
-                I18n.t("replays.replay_end_instruction"),
+                Text.key("replays.replay_ended").asComponent(),
+                Text.key("replays.replay_end_instruction").asComponent(),
                 Title.Times.times(Duration.ofMillis(200), Duration.ofSeconds(3), Duration.ofMillis(500))
         );
         for (Player viewer : viewers) {
@@ -530,9 +527,9 @@ public class ReplaySession implements ReplayPlaybackContext {
                 teamName,
                 new TeamsPacket.CreateTeamAction(
                         new TeamsPacket.Settings(
-                                Component.empty(),
-                                Component.empty(),
-                                Component.empty(),
+                                Text.empty().asComponent(),
+                                Text.empty().asComponent(),
+                                Text.empty().asComponent(),
                                 TeamsPacket.NameTagVisibility.ALWAYS,
                                 TeamsPacket.CollisionRule.NEVER,
                                 TeamColorUtil.fromNamedColor(teamColor),
@@ -612,9 +609,9 @@ public class ReplaySession implements ReplayPlaybackContext {
         int color = -1;
         BedWarsViewerMetadata.Team team = getBedWarsTeam(state.player().teamId());
         if (team != null) color = team.color();
-        Component prefix = team == null || team.name().isEmpty() ? COMPONENTS.deserialize(participant.prefixJson())
-                : Component.text(team.name().substring(0, 1).toUpperCase() + " ", TextColor.color(team.color()));
-        PlayerNameTag tag = new PlayerNameTag(participant.username(), prefix,
+        Text prefix = team == null || team.name().isEmpty() ? Text.component(COMPONENTS.deserialize(participant.prefixJson()))
+                : Text.of("<color:{}>{} ", TextColor.color(team.color()), team.name().substring(0, 1).toUpperCase());
+        PlayerNameTag tag = new PlayerNameTag(participant.username(), prefix.asComponent(),
                 COMPONENTS.deserialize(participant.suffixJson()), color);
         PlayerNameTag previous = playerNameTags.put(state.replayEntityId(), tag);
         if (!tag.equals(previous)) {
@@ -723,7 +720,7 @@ public class ReplaySession implements ReplayPlaybackContext {
         pause();
         Logger.error(exception, "Replay playback stopped: replay={}, gameType={}, version={}, tick={}",
                 replayId, metadata.descriptor().gameType(), metadata.descriptor().formatVersion(), tick);
-        viewers.forEach(viewer -> viewer.sendMessage(I18n.t("replays.playback_corrupt")));
+        viewers.forEach(viewer -> viewer.sendMessage(Text.key("replays.playback_corrupt")));
     }
 
 }

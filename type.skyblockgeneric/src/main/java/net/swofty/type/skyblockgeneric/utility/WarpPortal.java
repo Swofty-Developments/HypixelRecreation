@@ -2,10 +2,10 @@ package net.swofty.type.skyblockgeneric.utility;
 
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.coordinate.BlockVec;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.Instance;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.hologram.ServerHolograms;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class WarpPortal {
 
     public static void create(Instance instance, BlockVec vector, Component text, Pos pos) {
         ServerHolograms.addExternalHologram(ServerHolograms.ExternalHologram.builder().pos(vector.asPos().add(0.5, 2, 0.5)).instance(instance).text(new String[]{
-            "§5✦ §dWarp To §b" + LegacyComponentSerializer.legacySection().serialize(text)
+            Text.of("<5>✦ <d>Warp To <b>{}", text).serialize()
         }).build());
         warpPortals.add(new WarpPortalData(vector, text, pos));
     }

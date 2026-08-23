@@ -1,14 +1,9 @@
 package net.swofty.type.skyblockgeneric.user;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
-import net.swofty.commons.ChatUtility;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointStash;
-
-import java.util.List;
 
 public class StashReminder {
 
@@ -42,22 +37,17 @@ public class StashReminder {
 
         // Check for near-full warning (90% = 648 items)
         if (stash.isItemStashNearFull()) {
-            player.sendMessage("§cYOUR STASH IS ALMOST AT MAX CAPACITY!");
+            player.sendMessage("<c>YOUR STASH IS ALMOST AT MAX CAPACITY!");
         }
 
         String itemWord = count == 1 ? "item" : "items";
         String itWord = count == 1 ? "it" : "them";
 
         player.sendMessage("");
-        List<String> lines = List.of(
-                "§7You have §a" + count + " " + itemWord + " §7stashed away!",
-                "§6>>> CLICK HERE §eto pick " + itWord + " up! §6<<<"
-        );
-        lines = ChatUtility.FontInfo.centerLines(lines);
-        for (String line : lines) {
-            player.sendMessage(Component.text(line)
-                    .clickEvent(ClickEvent.runCommand("/pickupstash item")));
-        }
+        player.sendMessage("<click:run:'/pickupstash item'><center><7>You have <a>{} {} <7>stashed away!</center></click>",
+                count, itemWord);
+        player.sendMessage("<click:run:'/pickupstash item'><center><6>>>> CLICK HERE <e>to pick {} up! <6>\\<\\<\\<</center></click>",
+                itWord);
         player.sendMessage("");
     }
 
@@ -70,16 +60,12 @@ public class StashReminder {
         String itWord = count == 1 ? "it" : "them";
 
         player.sendMessage("");
-        List<String> lines = List.of(
-                "§7You have §b" + count + " " + materialWord + " §7stashed away!",
-                "§8(This totals " + types + " " + typeWord + " of materials stashed!)",
-                "§2>>> CLICK HERE §bto pick " + itWord + " up! §2<<<"
-        );
-        lines = ChatUtility.FontInfo.centerLines(lines);
-        for (String line : lines) {
-            player.sendMessage(Component.text(line)
-                    .clickEvent(ClickEvent.runCommand("/pickupstash material")));
-        }
+        player.sendMessage("<click:run:'/pickupstash material'><center><7>You have <b>{} {} <7>stashed away!</center></click>",
+                count, materialWord);
+        player.sendMessage("<click:run:'/pickupstash material'><center><8>(This totals {} {} of materials stashed!)</center></click>",
+                types, typeWord);
+        player.sendMessage("<click:run:'/pickupstash material'><center><2>>>> CLICK HERE <b>to pick {} up! <2>\\<\\<\\<</center></click>",
+                itWord);
 
         player.sendMessage("");
     }

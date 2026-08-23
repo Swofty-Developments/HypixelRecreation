@@ -16,7 +16,10 @@ public class NPCCaptainBaha extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6Captain Baha", "§e§lCLICK"};
+                return new String[]{
+                    "<6>Captain Baha",
+                    "<e><l>CLICK"
+                };
             }
 
             @Override
@@ -61,15 +64,15 @@ public class NPCCaptainBaha extends HypixelNPC {
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
             DialogueSet.builder()
-                .key("arrived").lines(new String[]{
-                    "Land ho! We have arrived at the §2Backwater Bayou§f!",
-                    "You go on and explore! Come back to the §6Ship §fand set sail when you're done!"
-                }).build(),
+                .key("arrived").lines(
+                    "Land ho! We have arrived at the <2>Backwater Bayou<f>!",
+                    "You go on and explore! Come back to the <6>Ship <f>and set sail when you're done!"
+                ).build(),
             DialogueSet.builder()
-                .key("idle").lines(new String[]{
-                    "The §6Ship Navigator §fis yours whenever you're ready to head back.",
+                .key("idle").lines(
+                    "The <6>Ship Navigator <f>is yours whenever you're ready to head back.",
                     "Don't keep the marsh waiting too long, though."
-                }).build()
+                ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

@@ -12,7 +12,7 @@ public class NPCShania extends HypixelNPC {
         super(new AnimalConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Shania", "§e§lCLICK"};
+                return new String[]{"Shania", "<e><l>CLICK"};
             }
 
             @Override

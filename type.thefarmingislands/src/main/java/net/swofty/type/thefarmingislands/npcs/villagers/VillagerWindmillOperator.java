@@ -16,7 +16,7 @@ public class VillagerWindmillOperator extends HypixelNPC {
         super(new VillagerConfiguration(){
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Windmill Operator", "§e§lCLICK"};
+                return new String[]{"Windmill Operator", "<e><l>CLICK"};
             }
 
             @Override

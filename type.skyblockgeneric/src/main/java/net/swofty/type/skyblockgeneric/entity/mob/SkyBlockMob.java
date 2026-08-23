@@ -5,7 +5,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -30,7 +29,9 @@ import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
+import net.swofty.commons.text.Text;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
+import net.swofty.type.generic.entity.drop.ItemDrops;
 import net.swofty.type.generic.event.HypixelEventHandler;
 import net.swofty.type.generic.utility.MathUtility;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
@@ -66,7 +67,7 @@ public abstract class SkyBlockMob extends EntityCreature {
     @Getter
     private boolean hasBeenDamaged = false;
 
-    private Component customName;
+    private Text customName;
     private TextDisplayEntity nameDisplayEntity;
 
     // Fully self-contained vanilla navigator (own A* + own follow loop + vanilla physics). Every mob
@@ -91,15 +92,14 @@ public abstract class SkyBlockMob extends EntityCreature {
                 .setBaseValue((float) ((getBaseStatistics().getOverall(ItemStatistic.SPEED).floatValue() / 1000) * 2.5));
         this.setHealth(getBaseStatistics().getOverall(ItemStatistic.HEALTH).floatValue());
 
-        this.customName = Component.text(
-                "§8[§7Lv" + getLevel() + "§8] §c"
-                        + getMobTypes().getFirst().getColor() + getMobTypes().getFirst().getSymbol() + "§c "
-                        + getDisplayName()
-                        + " §a" + Math.round(getHealth())
-                        + "§f/§a"
-                        + Math.round(getBaseStatistics().getOverall(ItemStatistic.HEALTH).floatValue())
+        this.customName = Text.of("<8>[<7>Lv{}<8>] <c>{}<c> {} <a>{}<f>/<a>{}",
+                getLevel(),
+                Text.parse(getMobTypes().getFirst().getColor() + getMobTypes().getFirst().getSymbol()),
+                getDisplayName(),
+                Math.round(getHealth()),
+                Math.round(getBaseStatistics().getOverall(ItemStatistic.HEALTH).floatValue())
         );
-        this.set(DataComponents.CUSTOM_NAME, customName);
+        this.set(DataComponents.CUSTOM_NAME, customName.asComponent());
         nameDisplayEntity = new TextDisplayEntity(customName, meta -> meta.setTranslation(new Pos(0, getNameDisplayHeightOffset(), 0)));
 
         setAutoViewable(true);
@@ -126,7 +126,7 @@ public abstract class SkyBlockMob extends EntityCreature {
                                     false,
                                     0,
                                     GameMode.SURVIVAL,
-                                    customName, // ARI - this is only used in tab for some reason
+                                    customName.asComponent(), // ARI - this is only used in tab for some reason
                                     null,
                                     1, true)),
                     new SpawnEntityPacket(this.getEntityId(), this.getUuid(), EntityType.PLAYER,
@@ -205,12 +205,12 @@ public abstract class SkyBlockMob extends EntityCreature {
                     -Math.cos(sourcePoint.getPosition().yaw() * Math.PI / 180));
         }
 
-        updateCustomName(Component.text(
-                "§8[§7Lv" + getLevel() + "§8] §c" + getDisplayName()
-                        + " §a" + Math.round(getHealth())
-                        + "§f/§a"
-                        + Math.round(this.getAttributeValue(Attribute.MAX_HEALTH))
-        ));
+        updateCustomName("<8>[<7>Lv{}<8>] <c>{} <a>{}<f>/<a>{}",
+                getLevel(),
+                getDisplayName(),
+                Math.round(getHealth()),
+                Math.round(this.getAttributeValue(Attribute.MAX_HEALTH))
+        );
 
         return toReturn;
     }
@@ -271,21 +271,25 @@ public abstract class SkyBlockMob extends EntityCreature {
             } else if (player.getSkyBlockExperience().getLevel().asInt() >= 6) {
                 player.addAndUpdateItem(item);
             } else {
-                DroppedItemEntityImpl droppedItem = new DroppedItemEntityImpl(item, player);
-                droppedItem.setInstance(getInstance(), getPosition().add(0, 0.5, 0));
+                ItemDrops.dropAt(new DroppedItemEntityImpl(item, player),
+                        getInstance(), getPosition().add(0, 0.5, 0));
             }
         }
     }
 
-    public void updateCustomName(Component newName) {
+    public void updateCustomName(Text newName) {
         this.customName = newName;
-        this.set(DataComponents.CUSTOM_NAME, customName);
+        this.set(DataComponents.CUSTOM_NAME, customName.asComponent());
         if (nameDisplayEntity != null) {
             nameDisplayEntity.editEntityMeta(TextDisplayMeta.class, meta -> {
                 meta.setTranslation(new Pos(0, getNameDisplayHeightOffset(), 0));
-                meta.setText(newName);
+                meta.setText(newName.asComponent());
             });
         }
+    }
+
+    public void updateCustomName(String markup, Object... arguments) {
+        updateCustomName(Text.of(markup, arguments));
     }
 
     public static void runRegionPopulators(Scheduler scheduler) {

@@ -1,10 +1,10 @@
 package net.swofty.type.murdermysterylobby.tab;
 
 import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointRank;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.generic.tab.TablistSkinRegistry;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -26,9 +26,9 @@ public class MurderMysteryPlayersOnlineModule extends TablistModule {
         Locale l = player.getLocale();
         List<HypixelPlayer> players = HypixelGenericLoader.getLoadedPlayers();
 
-        // todo: use components
         ArrayList<TablistEntry> entries = new ArrayList<>(List.of(
-                new TablistEntry(Component.text(getCentered(I18n.string("tablist.module.players_murder_mystery", l, Component.text(String.valueOf(players.size()))))), TablistSkinRegistry.ORANGE)
+                centered(Text.key("tablist.module.players_murder_mystery",
+                        players.size()), l, TablistSkinRegistry.ORANGE)
         ));
 
         List<HypixelPlayer> toShow = new ArrayList<>();
@@ -52,7 +52,7 @@ public class MurderMysteryPlayersOnlineModule extends TablistModule {
             }
 
             HypixelPlayer tablePlayer = toShow.get(x);
-            entries.add(new TablistEntry(tablePlayer.getRankDisplayName(), TablistSkinRegistry.GRAY));
+            entries.add(new TablistEntry(Text.of("{}", tablePlayer.getRankDisplayName()), TablistSkinRegistry.GRAY));
         }
 
         return entries;

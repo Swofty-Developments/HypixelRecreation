@@ -33,127 +33,127 @@ public class NPCRabbitDog extends HypixelNPC {
 
         return Stream.of(
                 DialogueSet.builder()
-                        .key("dialogue-1").lines(new String[]{
+                        .key("dialogue-1").lines(
                                 "In the pursuit of excellence, one must remember that the journey is as significant as the destination.",
                                 "True success lies not in the accolades, but in the lessons learned along the way."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-2").lines(new String[]{
+                        .key("dialogue-2").lines(
                                 "Consider the possibility that limitations are merely figments of our imagination, crafted by our fears and insecurities.",
                                 "To break free, one must first believe in the boundlessness of their own potential."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-3").lines(new String[]{
+                        .key("dialogue-3").lines(
                                 "Empathy is the silent language of the soul, spoken through actions rather than words.",
                                 "To truly understand another, one must listen not only with ears but with the heart."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-4").lines(new String[]{
+                        .key("dialogue-4").lines(
                                 "The greatest paradox of life is that in seeking control, we often surrender it.",
                                 "True power comes not from dominion over others, but from mastery over oneself."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-5").lines(new String[]{
+                        .key("dialogue-5").lines(
                                 "Wisdom often comes to us in whispers, through the leaves of the trees or the ripple of the waters.",
                                 "It teaches us that every voice, no matter how small, has something of value to say."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-6").lines(new String[]{
+                        .key("dialogue-6").lines(
                                 "In every moment of decision, we stand at the crossroads of countless possibilities.",
                                 "The paths we choose not only define our destiny but also reflect the essence of our being."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-7").lines(new String[]{
+                        .key("dialogue-7").lines(
                                 "Solitude is not the absence of company, but the moment when our soul is free to speak to us, unencumbered by the chaos of the world."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-8").lines(new String[]{
+                        .key("dialogue-8").lines(
                                 "Life, like a vast symphony, plays on the strings of our experiences, emotions, and encounters.",
                                 "Each note, while fleeting, contributes to the eternal melody of our existence."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-9").lines(new String[]{
+                        .key("dialogue-9").lines(
                                 "Ah, Rabbit Bro, tirelessly toiling from the break of dawn, clinging to his routines with the desperation of a shipwreck survivor to a life raft.",
                                 "One wonders if he runs from failure or merely jogs alongside it."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-10").lines(new String[]{
+                        .key("dialogue-10").lines(
                                 "And there strides Rabbit Sis, torchbearer of tumult, whose fervent protests might one day change the world, if they don't first incite her to single-handedly dismantle it, piece by bureaucratic piece."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-11").lines(new String[]{
+                        .key("dialogue-11").lines(
                                 "Ever observant Rabbit Daddy, guardian of the gold, manages finances with a paranoia that would make a conspiracy theorist blush.",
                                 "His ledger is tighter than a drum, his brow perpetually furrowed in fiscal fear."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-12").lines(new String[]{
+                        .key("dialogue-12").lines(
                                 "Granny, with anecdotes as endless as eternity, dispenses wisdom like a vending machine stuck on dispense, whether you requested it or not.",
                                 "Each story a subtle reminder that history repeats itself, especially at family gatherings."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-13").lines(new String[]{
+                        .key("dialogue-13").lines(
                                 "Observe the tranquil Rabbit Cuz, philosopher of sloth, whose profound punctuality issues suggest a man deeply at peace with life's ephemeral nature, or perhaps just deeply asleep."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-14").lines(new String[]{
+                        .key("dialogue-14").lines(
                                 "Bark!"
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-15").lines(new String[]{
+                        .key("dialogue-15").lines(
                                 "*pants*"
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-16").lines(new String[]{
+                        .key("dialogue-16").lines(
                                 "Woof!"
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-17").lines(new String[]{
+                        .key("dialogue-17").lines(
                                 "In the pursuit of excellence, one must remember that the journey is as significant as the destination.",
                                 "True success lies not in the accolades, but in the lessons learned along the way."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-18").lines(new String[]{
+                        .key("dialogue-18").lines(
                                 "Consider the possibility that limitations are merely figments of our imagination, crafted by our fears and insecurities.",
                                 "To break free, one must first believe in the boundlessness of their own potential."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-19").lines(new String[]{
+                        .key("dialogue-19").lines(
                                 "Empathy is the silent language of the soul, spoken through actions rather than words.",
                                 "To truly understand another, one must listen not only with ears but with the heart."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-20").lines(new String[]{
+                        .key("dialogue-20").lines(
                                 "The greatest paradox of life is that in seeking control, we often surrender it.",
                                 "True power comes not from dominion over others, but from mastery over oneself."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-21").lines(new String[]{
+                        .key("dialogue-21").lines(
                                 "Wisdom often comes to us in whispers, through the leaves of the trees or the ripple of the waters.",
                                 "It teaches us that every voice, no matter how small, has something of value to say."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-22").lines(new String[]{
+                        .key("dialogue-22").lines(
                                 "In every moment of decision, we stand at the crossroads of countless possibilities.",
                                 "The paths we choose not only define our destiny but also reflect the essence of our being."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-23").lines(new String[]{
+                        .key("dialogue-23").lines(
                                 "Solitude is not the absence of company, but the moment when our soul is free to speak to us, unencumbered by the chaos of the world."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-24").lines(new String[]{
+                        .key("dialogue-24").lines(
                                 "Life, like a vast symphony, plays on the strings of our experiences, emotions, and encounters.",
                                 "Each note, while fleeting, contributes to the eternal melody of our existence."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-25").lines(new String[]{
+                        .key("dialogue-25").lines(
                                 "Ah, Rabbit Bro, tirelessly toiling from the break of dawn, clinging to his routines with the desperation of a shipwreck survivor to a life raft.",
                                 "One wonders if he runs from failure or merely jogs alongside it."
-                        }).sound(barkSound).build(),
+                        ).sound(barkSound).build(),
                 DialogueSet.builder()
-                        .key("dialogue-26").lines(new String[]{
+                        .key("dialogue-26").lines(
                                 "And there strides Rabbit Sis, torchbearer of tumult, whose fervent protests might one day change the world, if they don't first incite her to single-handedly dismantle it, piece by bureaucratic piece."
-                        }).sound(barkSound).build()
+                        ).sound(barkSound).build()
         ).toArray(DialogueSet[]::new);
     }
 }

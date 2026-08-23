@@ -3,7 +3,8 @@ package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels.emblem;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
@@ -24,8 +25,9 @@ public class GUIEmblem extends PaginatedView<SkyBlockEmblems.SkyBlockEmblem, GUI
 
     @Override
     public ViewConfiguration<EmblemState> configuration() {
-        return ViewConfiguration.withString(
-                (state, ctx) -> "Emblems - " + emblemCategory.toString() + " (" + (state.page() + 1) + "/" + Math.max(1, (int) Math.ceil((double) state.items().size() / getPaginatedSlots().length)) + ")",
+        return ViewConfiguration.withText(
+                (state, ctx) -> Text.of("Emblems - {} ({}/{})", emblemCategory.toString(), state.page() + 1,
+                        Math.max(1, (int) Math.ceil((double) state.items().size() / getPaginatedSlots().length))),
                 InventoryType.CHEST_5_ROW
         );
     }
@@ -59,25 +61,26 @@ public class GUIEmblem extends PaginatedView<SkyBlockEmblems.SkyBlockEmblem, GUI
         boolean unlocked = sbPlayer.hasUnlockedXPCause(item.cause());
         CauseEmblem causeEmblem = (CauseEmblem) item.cause();
 
-        String name = (unlocked ? "§a" : "§c") + item.displayName() + " " + item.emblem();
-        List<String> lore;
+        Text name = Text.of(unlocked ? "<a>{} " : "<c>{} ", item.displayName()).append(item.emblem());
+
+        List<Text> lore;
         if (unlocked) {
             lore = new ArrayList<>(List.of(
-                    "§8" + causeEmblem.emblemEisplayName(),
-                    " ",
-                    "§7Preview: " + sbPlayer.getFullDisplayName(item),
-                    " ",
-                    "§eClick to select!"
+                    Text.of("<8>{}", causeEmblem.emblemEisplayName()),
+                    Text.literal(" "),
+                    Text.of("<7>Preview: ").append(sbPlayer.getFullDisplayName(item)),
+                    Text.literal(" "),
+                    Text.of("<e>Click to select!")
             ));
         } else {
             lore = new ArrayList<>(List.of(
-                    "§8Locked",
-                    " ",
-                    "§c" + causeEmblem.getEmblemRequiresMessage()
+                    Text.of("<8>Locked"),
+                    Text.literal(" "),
+                    Text.of("<c>{}", causeEmblem.getEmblemRequiresMessage())
             ));
         }
 
-        return ItemStackCreator.getStack(name, unlocked ? item.displayMaterial() : Material.GRAY_DYE, 1, lore);
+        return ItemStacks.item(unlocked ? item.displayMaterial() : Material.GRAY_DYE, 1, name, lore);
     }
 
     @Override
@@ -86,12 +89,12 @@ public class GUIEmblem extends PaginatedView<SkyBlockEmblems.SkyBlockEmblem, GUI
         boolean unlocked = player.hasUnlockedXPCause(item.cause());
 
         if (!unlocked) {
-            player.sendMessage("§cYou have not unlocked this emblem yet!");
+            player.sendMessage("<c>You have not unlocked this emblem yet!");
             return;
         }
 
         player.getSkyBlockExperience().setEmblem(emblemCategory, item);
-        player.sendMessage("§aYou have selected the " + item.displayName() + " emblem!");
+        player.sendMessage("<a>You have selected the {} emblem!", item.displayName());
     }
 
     @Override

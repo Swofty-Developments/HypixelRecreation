@@ -17,6 +17,7 @@ import net.swofty.type.generic.gui.v2.context.ViewContext;
 
 import java.util.Set;
 import java.util.function.BiConsumer;
+import net.swofty.commons.text.Text;
 
 /**
  * Base of every Ravengard menu. Pages declare their content; the chrome does the rest, replaying
@@ -88,7 +89,7 @@ public abstract class RavengardView extends StatelessView {
     @Override
     public ViewConfiguration<DefaultState> configuration() {
         return new ViewConfiguration<>(usesChrome() ? chrome(title())
-                : Component.text(title()), inventoryType());
+                : Text.literal(title()), inventoryType());
     }
 
     /** The invisible stick every captured menu holds in slot zero. */
@@ -104,7 +105,7 @@ public abstract class RavengardView extends StatelessView {
      */
     protected void place(ViewLayout<DefaultState> layout, int originSlot, RavengardItems.Builder button) {
         button.origin(originSlot);
-        for (int slot : button.sprite().coveredSlots(originSlot)) {
+        for (int slot : button.coveredSlots(originSlot)) {
             layout.slot(slot, button.toBuilder());
         }
     }
@@ -114,7 +115,7 @@ public abstract class RavengardView extends StatelessView {
                                RavengardItems.Builder button,
                                BiConsumer<ClickContext<DefaultState>, ViewContext> onClick) {
         button.origin(originSlot);
-        for (int slot : button.sprite().coveredSlots(originSlot)) {
+        for (int slot : button.coveredSlots(originSlot)) {
             layout.slot(slot, button.toBuilder(), onClick);
         }
     }
@@ -123,18 +124,19 @@ public abstract class RavengardView extends StatelessView {
     protected void backButton(ViewLayout<DefaultState> layout) {
         interactive(layout, SLOT_BACK, RavengardItems.button(RavengardButton.BACK)
                         .label("Go Back")
-                        .lore("§7Return to the previous menu.")
+                        .lore("<7>Return to the previous menu.")
                         .blankLine()
-                        .lore("§eClick to go back!"),
+                        .lore("<e>Click to go back!"),
                 (click, viewContext) -> viewContext.backOrClose());
     }
 
-    protected Component chrome(String title) {
-        return Component.text(RavengardFont.glyph(PANEL_GLYPH))
+    protected Text chrome(String title) {
+        return Text.of("{}", Component.text(RavengardFont.glyph(PANEL_GLYPH))
+                .font(RavengardFont.RAVENGARD)
                 .append(Component.text(RavengardFont.space(PANEL_LEAD_SPACE)))
                 .append(Component.text(RavengardFont.glyph(panelIcon())).color(NamedTextColor.WHITE))
                 .append(Component.text(RavengardFont.space(PANEL_TRAIL_SPACE)))
                 .append(Component.text(title).font(RavengardFont.HALF))
-                .append(Component.text(title).color(TITLE_COLOR).font(RavengardFont.DEFAULT));
+                .append(Component.text(title).color(TITLE_COLOR).font(RavengardFont.DEFAULT)));
     }
 }

@@ -20,7 +20,7 @@ import java.util.Map;
 public class EnchantmentEfficiency extends SkyBlockValueEvent implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "§7Grants §6+" + (30 + ((level - 1) * 20) + " Mining Speed§7.");
+        return "<7>Grants <6>+" + (30 + ((level - 1) * 20)) + " Mining Speed<7>.";
     }
 
     @Override

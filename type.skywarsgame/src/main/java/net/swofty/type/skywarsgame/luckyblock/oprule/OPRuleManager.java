@@ -1,15 +1,17 @@
 package net.swofty.type.skywarsgame.luckyblock.oprule;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import lombok.Getter;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.goal.MeleeAttackGoal;
 import net.minestom.server.entity.ai.target.ClosestEntityTarget;
+import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.instance.Instance;
+import net.minestom.server.instance.block.Block;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +29,7 @@ public class OPRuleManager {
 
     private final SkywarsGame game;
     private OPRule activeRule = null;
+    @Getter
     private boolean opRuleUsed = false;
     private Task continuousEffectTask = null;
 
@@ -36,7 +39,7 @@ public class OPRuleManager {
 
     public boolean activateRandomRule(SkywarsPlayer activator) {
         if (opRuleUsed) {
-            activator.sendMessage(Component.text("An OP Rule has already been used this game!", NamedTextColor.RED));
+            activator.sendMessage("<c>An OP Rule has already been used this game!");
             return false;
         }
 
@@ -52,8 +55,8 @@ public class OPRuleManager {
         activeRule = rule;
         opRuleUsed = true;
 
-        game.broadcastMessage(rule.getAnnouncementComponent());
-        game.broadcastMessage(Component.text(activator.getUsername() + " activated the OP Rule!", NamedTextColor.AQUA));
+        game.broadcastMessage(rule.getAnnouncement());
+        game.broadcastMessage(Text.of("<b>{} activated the OP Rule!", activator.getUsername()));
 
         rule.activate(game, activator);
 
@@ -122,7 +125,7 @@ public class OPRuleManager {
             double distance = player.getPosition().distance(pos);
             if (distance < 5) {
                 float damage = (float) (10 * (1 - distance / 5));
-                player.damage(net.minestom.server.entity.damage.Damage.fromEntity(null, damage));
+                player.damage(Damage.fromEntity(null, damage));
             }
         }
 
@@ -132,10 +135,10 @@ public class OPRuleManager {
                     if (RANDOM.nextDouble() < 0.4) {
                         Pos blockPos = pos.add(dx, dy, dz);
                         var block = instance.getBlock(blockPos);
-                        if (!block.isAir()
-                                && !block.compare(net.minestom.server.instance.block.Block.BEDROCK)
+                        if (!block.air()
+                                && !block.compare(Block.BEDROCK)
                                 && !game.getChestManager().isChestPosition(blockPos)) {
-                            instance.setBlock(blockPos, net.minestom.server.instance.block.Block.AIR);
+                            instance.setBlock(blockPos, Block.AIR);
                         }
                     }
                 }
@@ -196,10 +199,6 @@ public class OPRuleManager {
     @Nullable
     public OPRule getActiveRule() {
         return activeRule;
-    }
-
-    public boolean isOpRuleUsed() {
-        return opRuleUsed;
     }
 
     public boolean isRuleActive(OPRule rule) {

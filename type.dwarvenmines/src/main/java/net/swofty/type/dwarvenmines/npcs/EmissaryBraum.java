@@ -14,7 +14,7 @@ public class EmissaryBraum extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§6Emissary Braum", "§e§lCLICK"};
+				return new String[]{"<6>Emissary Braum", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -55,12 +55,12 @@ public class EmissaryBraum extends HypixelNPC {
 	@Override
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return new DialogueSet[]{
-				DialogueSet.builder().key("first-interaction").lines(new String[]{
+				DialogueSet.builder().key("first-interaction").lines(
 						"I am the King's favorite Emissary, which is why I'm the furthest away from him!",
 						"Commissions inside the Crystal Hollows are different from the ones in the Dwarven Mines.",
 						"Click me again to receive your first set of Crystal Hollows commissions.",
 						"Once you complete them, come back to me!"
-				}).build()
+				).build()
 		};
 	}
 }

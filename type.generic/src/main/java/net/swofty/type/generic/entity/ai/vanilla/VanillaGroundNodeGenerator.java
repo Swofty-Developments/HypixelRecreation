@@ -180,7 +180,7 @@ public class VanillaGroundNodeGenerator implements NodeGenerator {
          this.pointIterator.reset(boundingBox, pointX, pointY, pointZ, BoundingBox.AxisMask.Y, -axis);
          while (this.pointIterator.hasNext()) {
             BoundingBox.MutablePoint block = this.pointIterator.next();
-            if (getter.getBlock(block.blockX(), block.blockY(), block.blockZ(), Block.Getter.Condition.TYPE).isSolid()) {
+            if (getter.getBlock(block.blockX(), block.blockY(), block.blockZ(), Block.Getter.Condition.TYPE).solid()) {
                return OptionalDouble.of(block.blockY() + 1);
             }
          }
@@ -211,7 +211,7 @@ public class VanillaGroundNodeGenerator implements NodeGenerator {
 
    /** Port of vanilla {@code getPathTypeFromState}, classifying a single block by key/properties. */
    private static PathType pathTypeFromState(Block block) {
-      if (block.isAir()) {
+      if (block.air()) {
          return PathType.OPEN;
       } else if (BlockProps.isTrapdoor(block)) {
          return PathType.TRAPDOOR;

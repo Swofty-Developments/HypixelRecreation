@@ -7,11 +7,12 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.UnderstandableProxyServer;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyInformation;
 import net.swofty.proxyapi.ProxyPlayer;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.gui.inventory.HypixelPaginatedGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.RefreshingGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -48,7 +49,7 @@ public class GUIHubSelector extends HypixelPaginatedGUI<UnderstandableProxyServe
 
     @Override
     protected PaginationList<UnderstandableProxyServer> fillPaged(HypixelPlayer player, PaginationList<UnderstandableProxyServer> paged) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         servers = information.getServerInformation(ServerType.SKYBLOCK_HUB).join();
         paged.addAll(servers);
 
@@ -59,7 +60,7 @@ public class GUIHubSelector extends HypixelPaginatedGUI<UnderstandableProxyServe
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
 
                 if (sending) {
-                    player.sendMessage("§cWe are currently trying to queue you into another server!");
+                    player.sendMessage("<c>We are currently trying to queue you into another server!");
                     return;
                 }
 
@@ -69,7 +70,7 @@ public class GUIHubSelector extends HypixelPaginatedGUI<UnderstandableProxyServe
                         .toList();
 
                 if (serversToUse.isEmpty()) {
-                    player.sendMessage("§cNo servers with enough players found!");
+                    player.sendMessage("<c>No servers with enough players found!");
                     return;
                 }
 
@@ -80,14 +81,14 @@ public class GUIHubSelector extends HypixelPaginatedGUI<UnderstandableProxyServe
                             .min(Comparator.comparingInt((UnderstandableProxyServer server) -> server.players().size()))
                            .orElseThrow();
                     ProxyPlayer proxyPlayer = new ProxyPlayer(player.getUuid());
-                    proxyPlayer.sendMessage("§7Request join for Hub " + smallestServer.name() + "...");
+                    proxyPlayer.sendMessage("<7>Request join for Hub {}...", smallestServer.name());
                     proxyPlayer.transferToWithIndication(smallestServer.uuid())
                             .orTimeout(3, TimeUnit.SECONDS)
                             .exceptionally(throwable -> {
                                 if (throwable instanceof TimeoutException) {
-                                    player.sendMessage("§cYour transfer failed! The server took too long to respond.");
+                                    player.sendMessage("<c>Your transfer failed! The server took too long to respond.");
                                 } else {
-                                    player.sendMessage("§cYour transfer failed! An error occurred.");
+                                    player.sendMessage("<c>Your transfer failed! An error occurred.");
                                 }
                                 sending = false;
                                 return null; // Return value for the CompletableFuture
@@ -98,14 +99,14 @@ public class GUIHubSelector extends HypixelPaginatedGUI<UnderstandableProxyServe
                 int randomIndex = (int) (Math.random() * serversToUse.size());
                 UnderstandableProxyServer randomServer = serversToUse.get(randomIndex);
                 ProxyPlayer proxyPlayer = new ProxyPlayer(player.getUuid());
-                proxyPlayer.sendMessage("§7Request join for Hub " + randomServer.name() + "...");
+                proxyPlayer.sendMessage("<7>Request join for Hub {}...", randomServer.name());
                 proxyPlayer.transferToWithIndication(randomServer.uuid())
                         .orTimeout(3, TimeUnit.SECONDS)
                         .exceptionally(throwable -> {
                             if (throwable instanceof TimeoutException) {
-                                player.sendMessage("§cYour transfer failed! The server took too long to respond.");
+                                player.sendMessage("<c>Your transfer failed! The server took too long to respond.");
                             } else {
-                                player.sendMessage("§cYour transfer failed! An error occurred.");
+                                player.sendMessage("<c>Your transfer failed! An error occurred.");
                             }
                             sending = false;
                             return null; // Return value for the CompletableFuture
@@ -114,19 +115,18 @@ public class GUIHubSelector extends HypixelPaginatedGUI<UnderstandableProxyServe
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.getStack(
-                        "§aRandom Hub",
-                        Material.COMPASS, 1,
-                        "§7Have no strong feelings one way",
-                        "§7or the other?",
-                        " ",
-                        "§7Hub Servers: §a" + servers.size(),
-                        "§7Current: §3" + HypixelConst.getServerName() + " §7(" + SkyBlockGenericLoader.getLoadedPlayers().size() + "/" + HypixelConst.getMaxPlayers() + ")",
-                        " ",
-                        "§bRight-Click for a small server!",
-                        "§eClick to join a random hub!"
-                );
+                return ItemStacks.item(Material.COMPASS, 1, """
+                        <a>Random Hub
+                        <7>Have no strong feelings one way
+                        <7>or the other?
+                        <r>\s
+                        <7>Hub Servers: <a>{}
+                        <7>Current: <3>{} <7>({}/{})
+                        <r>\s
+                        <b>Right-Click for a small server!
+                        <e>Click to join a random hub!""",
+                        servers.size(), HypixelConst.getServerName(),
+                        SkyBlockGenericLoader.getLoadedPlayers().size(), HypixelConst.getMaxPlayers());
             }
         });
 
@@ -157,17 +157,18 @@ public class GUIHubSelector extends HypixelPaginatedGUI<UnderstandableProxyServe
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
                 counter++;
                 counterAtThisMoment = counter;
-                return ItemStackCreator.getStack(
-                        (isThisServer ? "§c"  : "§a") + "SkyBlock Hub #" + counter,
-                        (isThisServer ? Material.RED_CONCRETE  : Material.QUARTZ_BLOCK), 1,
-                        "§7Players: " + server.players().size() + "/" + server.maxPlayers(),
-                        "§8Server: " + server.name(),
-                        " ",
-                        (isThisServer ? "§cAlready connected!" :
-                                isFull ? "§cFull!" : "§eClick to connect!")
+                return ItemStacks.item(
+                        (isThisServer ? Material.RED_CONCRETE : Material.QUARTZ_BLOCK), 1,
+                        Text.of((isThisServer ? "<c>" : "<a>") + "SkyBlock Hub #{}", counter),
+                        List.of(
+                                Text.of("<7>Players: {}/{}", server.players().size(), server.maxPlayers()),
+                                Text.of("<8>Server: {}", server.name()),
+                                Text.literal(" "),
+                                Text.of(isThisServer ? "<c>Already connected!" :
+                                        isFull ? "<c>Full!" : "<e>Click to connect!")
+                        )
                 );
             }
 
@@ -175,31 +176,31 @@ public class GUIHubSelector extends HypixelPaginatedGUI<UnderstandableProxyServe
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 if (isThisServer) {
-                    player.sendMessage("§cYou are already on this server!");
+                    player.sendMessage("<c>You are already on this server!");
                     player.closeInventory();
                     return;
                 }
 
                 if (isFull) {
-                    player.sendMessage("§cYou cannot join this server because it is full!");
+                    player.sendMessage("<c>You cannot join this server because it is full!");
                     return;
                 }
 
                 if (sending) {
-                    player.sendMessage("§cWe are currently trying to queue you into another server!");
+                    player.sendMessage("<c>We are currently trying to queue you into another server!");
                     return;
                 }
 
                 sending = true;
                 ProxyPlayer proxyPlayer = new ProxyPlayer(player.getUuid());
-                proxyPlayer.sendMessage("§7Request join for Hub #" + counterAtThisMoment + " (" + server.name() + ")...");
+                proxyPlayer.sendMessage("<7>Request join for Hub #{} ({})...", counterAtThisMoment, server.name());
                 proxyPlayer.transferToWithIndication(server.uuid())
                         .orTimeout(3, TimeUnit.SECONDS)
                         .exceptionally(throwable -> {
                             if (throwable instanceof TimeoutException) {
-                                player.sendMessage("§cYour transfer failed! The server took too long to respond.");
+                                player.sendMessage("<c>Your transfer failed! The server took too long to respond.");
                             } else {
-                                player.sendMessage("§cYour transfer failed! An error occurred.");
+                                player.sendMessage("<c>Your transfer failed! An error occurred.");
                             }
                             sending = false;
                             return null; // Return value for the CompletableFuture

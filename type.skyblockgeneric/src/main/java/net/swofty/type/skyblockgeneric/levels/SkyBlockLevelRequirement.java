@@ -124,7 +124,7 @@ public class SkyBlockLevelRequirement {
     }
 
     public String getColor() {
-        return "§7"; // You might want to derive this from prefix or make it configurable
+        return "<7>";
     }
 
     public @Nullable SkyBlockLevelRequirement getNextLevel() {

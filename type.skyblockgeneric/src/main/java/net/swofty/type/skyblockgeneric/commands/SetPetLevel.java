@@ -31,7 +31,7 @@ public class SetPetLevel extends HypixelCommand {
                 item.getAttributeHandler().setPetData(data);
             });
 
-            player.sendMessage("§aUpdated the level of the pet to §e" + levelAsInt + "§a.");
+            player.sendMessage("<a>Updated the level of the pet to <e>{}<a>.", levelAsInt);
         }, level);
     }
 }

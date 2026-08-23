@@ -71,9 +71,9 @@ public class BedWarsDataHandler extends DataHandler implements GameDataHandler {
     }
 
     public static BedWarsDataHandler getOfOfflinePlayer(UUID uuid) throws RuntimeException {
-        UserDatabase userDatabase = new UserDatabase(uuid.toString());
-        Document doc = userDatabase.getHypixelData();
-        return createFromDocument(doc);
+        BedWarsDataHandler handler = initUserWithDefaultData(uuid);
+        handler.loadBackedData();
+        return handler;
     }
 
     @Override

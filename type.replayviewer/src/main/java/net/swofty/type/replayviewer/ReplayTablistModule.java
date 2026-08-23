@@ -1,10 +1,9 @@
 package net.swofty.type.replayviewer;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.swofty.type.game.replay.model.ReplayParticipant;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.tab.CustomTablistSkin;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.generic.tab.TablistSkin;
@@ -24,14 +23,14 @@ class ReplayTablistModule extends TablistModule {
     public List<TablistEntry> getEntries(HypixelPlayer player) {
         List<TablistEntry> entries = new ArrayList<>();
         entries.add(new TablistEntry(
-                Component.text("[Viewer] " + player.getUsername(), NamedTextColor.GRAY),
+                Text.of("<7>[Viewer] {}", player.getUsername()),
                 TablistSkinRegistry.GRAY));
 
         TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
             session -> {
                 addReplayParticipants(entries, session);
             },
-                () -> entries.add(new TablistEntry(I18n.t("replays.loading"), TablistSkinRegistry.ORANGE))
+                () -> entries.add(new TablistEntry(Text.key("replays.loading"), TablistSkinRegistry.ORANGE))
         );
 
         return entries;
@@ -54,7 +53,7 @@ class ReplayTablistModule extends TablistModule {
             BedWarsViewerMetadata.Team team = teamsByMember.get(participant.uuid());
             TextColor color = team == null ? NamedTextColor.GRAY : TextColor.color(team.color());
             entries.add(new TablistEntry(
-                    Component.text(participant.username(), color),
+                    Text.of("<color:{}>{}", color, participant.username()),
                     getSkin(participant)));
         }
     }

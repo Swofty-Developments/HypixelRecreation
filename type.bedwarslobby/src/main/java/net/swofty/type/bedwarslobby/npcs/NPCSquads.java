@@ -24,9 +24,9 @@ public class NPCSquads extends HypixelNPC {
 
                 String commaified = StringUtility.commaify(amountOnline);
                 return new String[]{
-                    "§e§lCLICK TO PLAY",
-                    "§b4v4v4v4 §7[v" + VersionConst.BED_WARS_VERSION + "]",
-                    "§e§l" + commaified + " Players",
+                    "<e><l>CLICK TO PLAY",
+                    "<b>4v4v4v4 <7>[v" + VersionConst.BED_WARS_VERSION + "]",
+                    "<e><l>" + commaified + " Players",
                 };
             }
 

@@ -2,27 +2,22 @@ package net.swofty.type.skyblockgeneric.gui.inventories.shop;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
-import net.swofty.commons.StringUtility;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.View;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.gui.ShopView;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.NonPlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.shop.ShopPrice;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public final class TradingOptionsView implements View<TradingOptionsView.State> {
 
@@ -50,42 +45,34 @@ public final class TradingOptionsView implements View<TradingOptionsView.State> 
         SkyBlockItem sbItem = item.getItem();
         ItemStack.Builder itemStack = new NonPlayerItemUpdater(sbItem).getUpdatedItem();
 
-        List<Component> existingLoreComponents = itemStack.build().get(DataComponents.LORE);
-        List<String> lore = new ArrayList<>((existingLoreComponents == null ? List.<Component>of() : existingLoreComponents)
-                .stream().map(StringUtility::getTextFromComponent).toList());
+        List<Text> lore = ItemStacks.loreText(itemStack);
 
-        Locale l = player.getLocale();
-        lore.add("");
-        lore.add(I18n.string("gui_shop.trading_options.cost_label", l));
+        lore.add(Text.empty());
+        lore.add(Text.key("gui_shop.trading_options.cost_label"));
         lore.addAll(totalPrice.getGUIDisplay());
-        lore.add("");
-        lore.add(I18n.string("gui_shop.trading_options.stock_label", l));
-        lore.add(I18n.string("gui_shop.trading_options.stock_remaining", l, Component.text(String.valueOf(player.getShoppingData().getStock(item.getItem().toUnderstandable())))));
-        lore.add("");
-        lore.add(I18n.string("gui_shop.trading_options.click_to_purchase", l));
+        lore.add(Text.empty());
+        lore.add(Text.key("gui_shop.trading_options.stock_label"));
+        lore.add(Text.key("gui_shop.trading_options.stock_remaining", player.getShoppingData().getStock(item.getItem().toUnderstandable())));
+        lore.add(Text.empty());
+        lore.add(Text.key("gui_shop.trading_options.click_to_purchase"));
 
-        Component baseName = itemStack.build().get(DataComponents.CUSTOM_NAME);
-        if (baseName == null) {
-            baseName = Component.text(sbItem.getDisplayName());
-        }
+        Text displayName = ItemStacks.nameText(itemStack, Text.literal(sbItem.getDisplayName()))
+                .append(" <8>x{}", amount);
 
-        String displayName = StringUtility.getTextFromComponent(baseName.append(Component.text(" §8x" + amount)));
-
-        return ItemStackCreator.getStack(displayName, itemStack.build().material(), amount, lore);
+        return ItemStacks.item(itemStack.build().material(), amount, displayName, lore);
     }
 
     private void attemptBuy(State state, int amount, ViewContext ctx) {
         SkyBlockPlayer player = (SkyBlockPlayer) ctx.player();
 
-        Locale l = player.getLocale();
         if (!player.getShoppingData().canPurchase(state.item.getItem().toUnderstandable(), amount)) {
-            player.sendMessage(I18n.string("gui_shop.trading_options.max_reached", l));
+            player.sendMessage(Text.key("gui_shop.trading_options.max_reached"));
             return;
         }
 
         ShopPrice totalPrice = state.stackPrice.multiply(amount);
         if (!totalPrice.canAfford(player)) {
-            player.sendMessage(I18n.string("gui_shop.trading_options.not_enough", l, Component.text(state.stackPrice.getNamePlural())));
+            player.sendMessage(Text.key("gui_shop.trading_options.not_enough", state.stackPrice.getNamePlural()));
             return;
         }
 

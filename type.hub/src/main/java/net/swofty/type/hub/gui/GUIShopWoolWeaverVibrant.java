@@ -1,7 +1,7 @@
 package net.swofty.type.hub.gui;
 
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.gui.ShopView;
@@ -18,7 +18,9 @@ public class GUIShopWoolWeaverVibrant extends ShopView {
         super.layoutCustom(layout, state, ctx);
         layout.slot(
                 53,
-                (_, _) -> ItemStackCreator.getStack("§aNext Page", Material.ARROW, 1, "§ePage 2"),
+                (_, _) -> ItemStacks.item(Material.ARROW, """
+                        <a>Next Page
+                        <e>Page 2"""),
                 ((_, context) -> context.push(new GUIShopWoolWeaverCool()))
         );
     }

@@ -17,7 +17,7 @@ public class NPCLotusAtoll extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6§lNEW UPDATE!", "§2Lotus Atoll", "§e§lCLICK"};
+                return new String[]{"<6><l>NEW UPDATE!", "<2>Lotus Atoll", "<e><l>CLICK"};
             }
 
             @Override

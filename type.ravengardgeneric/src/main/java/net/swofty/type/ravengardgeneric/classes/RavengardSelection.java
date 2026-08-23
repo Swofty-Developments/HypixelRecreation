@@ -1,7 +1,5 @@
 package net.swofty.type.ravengardgeneric.classes;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.ravengardgeneric.item.RavengardItem;
@@ -20,8 +18,7 @@ public final class RavengardSelection {
         player.setTutorial(false);
 
         player.closeInventory();
-        player.sendMessage(Component.text("You have selected the " + value.getDisplayName() + " class!")
-                .color(NamedTextColor.GREEN));
+        player.sendMessage("<a>You have selected the {} class!", value.getDisplayName());
 
         giveKit(player, value);
         net.swofty.type.ravengardgeneric.profile.RavengardProfiles.saveActive(player);
@@ -50,6 +47,10 @@ public final class RavengardSelection {
         player.getInventory().setItemStack(RavengardKit.SLOT_CHEST, RavengardItem.of(kit.chestId(), player));
         player.getInventory().setItemStack(RavengardKit.SLOT_LEGS, RavengardItem.of(kit.legsId(), player));
         player.getInventory().setItemStack(RavengardKit.SLOT_BOOTS, RavengardItem.of(kit.bootsId(), player));
+        int hotbarSlot = 0;
+        for (String itemId : kit.hotbarIds()) {
+            player.getInventory().setItemStack(hotbarSlot++, RavengardItem.of(itemId, player));
+        }
         giveAccessorySlots(player);
 
         List<RavengardAbility> abilities = value.defaultAbilities();

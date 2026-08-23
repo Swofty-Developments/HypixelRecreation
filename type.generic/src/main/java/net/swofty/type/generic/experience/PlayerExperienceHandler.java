@@ -3,6 +3,7 @@ package net.swofty.type.generic.experience;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.sound.Sound;
 import net.minestom.server.sound.SoundEvent;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointHypixelExperience;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -32,7 +33,7 @@ public class PlayerExperienceHandler {
 
         setExperience(newXP);
 
-        player.sendMessage("§b+§3" + HypixelExperience.formatXP(amount) + " Hypixel Experience");
+        player.sendMessage("<b>+<3>{:,} Hypixel Experience", amount);
 
         if (newLevel > oldLevel) {
             for (int level = oldLevel + 1; level <= newLevel; level++) {
@@ -68,28 +69,28 @@ public class PlayerExperienceHandler {
         return HypixelExperience.isVeteran(getLevel());
     }
 
-    public String getFormattedLevel() {
+    public Text getFormattedLevel() {
         return HypixelExperience.formatLevel(getLevel());
     }
 
     private void onLevelUp(int newLevel) {
-        player.sendMessage("§6§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
-        player.sendMessage("§b§lLEVEL UP! §7You are now Hypixel Level §e" + newLevel);
+        player.sendMessage("<6><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+        player.sendMessage("<b><l>LEVEL UP! </l><7>You are now Hypixel Level <e>{}", newLevel);
         player.sendMessage("");
 
         double multiplier = HypixelExperience.getCoinMultiplier(newLevel);
         int prevLevel = newLevel - 1;
         double prevMultiplier = HypixelExperience.getCoinMultiplier(prevLevel);
         if (multiplier > prevMultiplier) {
-            player.sendMessage("§6NEW PERK! §eCoin Multiplier: §6" + multiplier + "x");
+            player.sendMessage("<6>NEW PERK! <e>Coin Multiplier: <6>{}x", multiplier);
         }
 
         if (newLevel == 100) {
-            player.sendMessage("§d§lVETERAN STATUS UNLOCKED!");
-            player.sendMessage("§7Access exclusive veteran rewards!");
+            player.sendMessage("<d><l>VETERAN STATUS UNLOCKED!");
+            player.sendMessage("<7>Access exclusive veteran rewards!");
         }
 
-        player.sendMessage("§6§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+        player.sendMessage("<6><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
 
         player.playSound(Sound.sound(SoundEvent.ENTITY_PLAYER_LEVELUP, Sound.Source.MASTER, 1.0f, 1.0f));
     }

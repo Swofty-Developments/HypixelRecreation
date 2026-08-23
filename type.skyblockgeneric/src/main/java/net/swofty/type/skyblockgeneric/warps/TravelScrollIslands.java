@@ -1,8 +1,10 @@
 package net.swofty.type.skyblockgeneric.warps;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import net.swofty.commons.ServerType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,23 +14,24 @@ import java.util.function.Function;
 
 @Getter
 public enum TravelScrollIslands {
-	PRIVATE_ISLAND("home", "§bPrivate Island",
+	PRIVATE_ISLAND("home", "<b>Private Island",
 			"f151cffdaf303673531a7651b36637cad912ba485643158e548d59b2ead5011",
 			(unused) -> "Your very own chunk of SkyBlock. Nice housing for your minions.", ServerType.SKYBLOCK_ISLAND),
-	SKYBLOCK_HUB("hub", "§bSkyBlock Hub", "9c465a5d348c53d473f8115ed8923be416f35149f73ebaf5f2b05e13401e814f", (unused) -> "Where everything happens and anything is possible.",
+	SKYBLOCK_HUB("hub", "<b>SkyBlock Hub", "9c465a5d348c53d473f8115ed8923be416f35149f73ebaf5f2b05e13401e814f", (unused) -> "Where everything happens and anything is possible.",
 			ServerType.SKYBLOCK_HUB, List.of(TravelScrollType.HUB_CASTLE, TravelScrollType.HUB_MUSEUM, TravelScrollType.HUB_CRYPTS, TravelScrollType.HUB_DARK_AUCTION)),
-	GOLD_MINE("gold", "§aGold Mine §7- §bSpawn",
+	GOLD_MINE("gold", "<a>Gold Mine <7>- <b>Spawn",
 			"d8573ed917444316b0b28dd9927fd68e56f6625fcfa73ad80b8770d5139891b1",
 			(unused) -> "Your first stop for extended mining related activities and home to SkyBlock's local janitor Rusty", ServerType.SKYBLOCK_GOLD_MINE, SkillCategories.MINING, 1),
-	DEEP_CAVERNS("deep", "§aDeep Caverns §7- §bSpawn",
+	DEEP_CAVERNS("deep", "<a>Deep Caverns <7>- <b>Spawn",
 			"74213dc6dc4b1641defd333f4a4732cc714dd677718fa10f140a6939c12aa32b",
 			(unused) -> "An island that gets progressively deeper and contains 6 layers of dangerous mobs and new resources.", ServerType.SKYBLOCK_DEEP_CAVERNS, SkillCategories.MINING, 2),
-	DWARVEN_MINES("dwarven", "§aDwarven Mines §7- §bSpawn",
+	DWARVEN_MINES("dwarven", "<a>Dwarven Mines <7>- <b>Spawn",
 			"6b20b23c1aa2be0270f016b4c90d6ee6b8330a17cfef87869d6ad60b2ffbf3b5",
 			(unused) -> "An island that gets progressively deeper and contains 6 layers of dangerous mobs and new resources.", ServerType.SKYBLOCK_DWARVEN_MINES, SkillCategories.MINING, 2)
 	;
 
     private final String internalName;
+    @Getter(AccessLevel.NONE)
     private final String descriptiveName;
     private final String texture;
     private final Function<Boolean, String> description;
@@ -67,6 +70,10 @@ public enum TravelScrollIslands {
 		this.associatedScrolls.addAll(associatedScrolls);
 		this.associatedSkill = null;
 		this.islandTier = null;
+	}
+
+	public Text getDescriptiveName() {
+		return Text.of(descriptiveName);
 	}
 
 	public static @Nullable TravelScrollIslands getFromType(ServerType type) {

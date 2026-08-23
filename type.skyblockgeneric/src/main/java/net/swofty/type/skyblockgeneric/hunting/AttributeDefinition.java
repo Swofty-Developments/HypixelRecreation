@@ -42,7 +42,7 @@ public record AttributeDefinition(
     }
 
     public enum AttributeCategory {
-        FOREST("§a"), WATER("§b"), COMBAT("§c");
+        FOREST("<a>"), WATER("<b>"), COMBAT("<c>");
         private final String color;
 
         AttributeCategory(String color) {

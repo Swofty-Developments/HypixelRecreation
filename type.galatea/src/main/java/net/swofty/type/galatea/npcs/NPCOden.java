@@ -12,7 +12,7 @@ public class NPCOden extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bOden", "§e§lCLICK"};
+                return new String[]{"<b>Oden", "<e><l>CLICK"};
             }
 
             @Override

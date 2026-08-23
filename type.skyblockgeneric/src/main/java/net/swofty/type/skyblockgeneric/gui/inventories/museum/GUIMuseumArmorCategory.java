@@ -1,7 +1,5 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.museum;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
@@ -13,11 +11,11 @@ import net.swofty.commons.StringUtility;
 import net.swofty.commons.TrackedItem;
 import net.swofty.commons.protocol.objects.itemtracker.TrackedItemRetrieveProtocol;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.gui.inventory.HypixelPaginatedGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.PaginationList;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
@@ -32,7 +30,6 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -61,7 +58,8 @@ public class GUIMuseumArmorCategory extends HypixelPaginatedGUI<ArmorSetRegistry
         DatapointMuseum.MuseumData data = player.getMuseumData();
 
         if (data.getItemInMuseum(skyBlockItem.getAttributeHandler().getPotentialType()) != null) {
-            player.sendMessage(I18n.t("gui_museum.armor_category.already_in_museum", Component.text(skyBlockItem.getAttributeHandler().getPotentialType().getDisplayName())));
+            player.sendMessage(Text.key("gui_museum.armor_category.already_in_museum",
+                    skyBlockItem.getAttributeHandler().getPotentialType().getDisplayName()));
             return;
         }
 
@@ -78,7 +76,7 @@ public class GUIMuseumArmorCategory extends HypixelPaginatedGUI<ArmorSetRegistry
             UUID uuidOfNew = UUID.fromString(skyBlockItem.getAttributeHandler().getUniqueTrackedID());
 
             if (!uuidOfAlreadyInMuseum.equals(uuidOfNew)) {
-                player.sendMessage(I18n.t("gui_museum.armor_category.can_only_read"));
+                player.sendMessage(Text.key("gui_museum.armor_category.can_only_read"));
                 return;
             }
         }
@@ -129,7 +127,8 @@ public class GUIMuseumArmorCategory extends HypixelPaginatedGUI<ArmorSetRegistry
             }
 
             if (missing != 0) {
-                player.sendMessage(I18n.t("gui_museum.armor_category.missing_items", Component.text(armorSetRegistry.getDisplayName()), Component.text(String.valueOf(4 - missing))));
+                player.sendMessage(Text.key("gui_museum.armor_category.missing_items",
+                        armorSetRegistry.getDisplayName(), 4 - missing));
                 return;
             }
 
@@ -144,7 +143,7 @@ public class GUIMuseumArmorCategory extends HypixelPaginatedGUI<ArmorSetRegistry
             MuseumDisplays.updateDisplay(player);
 
             new GUIMuseumArmorCategory().open(player);
-            player.sendMessage(I18n.t("gui_museum.armor_category.donated", Component.text(armorSetRegistry.getDisplayName())));
+            player.sendMessage(Text.key("gui_museum.armor_category.donated", armorSetRegistry.getDisplayName()));
         }
     }
 
@@ -179,7 +178,7 @@ public class GUIMuseumArmorCategory extends HypixelPaginatedGUI<ArmorSetRegistry
 
     @Override
     public void performSearch(HypixelPlayer player, String query, int page, int maxPage) {
-        border(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        border(ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
         set(GUIClickableItem.getCloseItem(49));
         set(createSearchItem(this, 50, query));
         set(GUIClickableItem.getGoBackItem(48, new GUIYourMuseum()));
@@ -216,24 +215,22 @@ public class GUIMuseumArmorCategory extends HypixelPaginatedGUI<ArmorSetRegistry
                 ItemStack.Builder toReturn = item.getItemStackBuilder();
                 toReturn.set(DataComponents.CUSTOM_DATA, item.getItemStack().get(DataComponents.CUSTOM_DATA));
 
-                List<String> lore = new ArrayList<>(item.getLore());
-                lore.add("§8§m---------------------");
-                lore.add(I18n.string("gui_museum.category.item_created_label", player.getLocale()));
-                lore.add("§a" + StringUtility.formatAsDate(trackedItem.getCreated()));
-                lore.add(" ");
-                lore.add(I18n.string("gui_museum.armor_category.click_to_donate_armor", player.getLocale()));
+                List<Text> lore = item.getLoreText();
+                lore.add(Text.of("<8><m>---------------------"));
+                lore.add(Text.key("gui_museum.category.item_created_label"));
+                lore.add(Text.of("<a>{}", StringUtility.formatAsDate(trackedItem.getCreated())));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key("gui_museum.armor_category.click_to_donate_armor"));
 
-                player.getInventory().setItemStack(i, ItemStackCreator.updateLore(toReturn, lore)
-                        .set(DataComponents.CUSTOM_NAME, Component.text(item.getDisplayName()).decoration(
-                                TextDecoration.ITALIC, false
-                        )).build());
+                player.getInventory().setItemStack(i, ItemStacks.name(ItemStacks.lore(toReturn, lore),
+                        Text.literal(item.getDisplayName())).build());
             }
         }
     }
 
     @Override
-    public String getTitle(HypixelPlayer player, String query, int page, PaginationList<ArmorSetRegistry> paged) {
-        return I18n.string("gui_museum.armor_category.title", player.getLocale());
+    public Text getTitleText(HypixelPlayer player, String query, int page, PaginationList<ArmorSetRegistry> paged) {
+        return Text.key("gui_museum.armor_category.title");
     }
 
     @Override
@@ -258,12 +255,12 @@ public class GUIMuseumArmorCategory extends HypixelPaginatedGUI<ArmorSetRegistry
                 }
 
                 if (!player.hasEmptySlots(4)) {
-                    player.sendMessage(I18n.t("gui_museum.armor_category.need_empty_slots"));
+                    player.sendMessage(Text.key("gui_museum.armor_category.need_empty_slots"));
                     return;
                 }
 
-                player.sendMessage(I18n.t("gui_museum.armor_category.retrieved_message", Component.text(armorSet.getDisplayName())));
-                player.sendMessage(I18n.t("gui_museum.armor_category.retrieved_return_message"));
+                player.sendMessage(Text.key("gui_museum.armor_category.retrieved_message", armorSet.getDisplayName()));
+                player.sendMessage(Text.key("gui_museum.armor_category.retrieved_return_message"));
 
                 List<SkyBlockItem> set = List.of(helmet, chestplate, leggings, boots);
                 set.forEach(item -> {
@@ -280,15 +277,12 @@ public class GUIMuseumArmorCategory extends HypixelPaginatedGUI<ArmorSetRegistry
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
                 if (!inMuseum) {
-                    Locale l = player.getLocale();
-                    return ItemStackCreator.getStack(I18n.string("gui_museum.armor_category.not_in_museum", l, Component.text(armorSet.getDisplayName())),
-                            Material.GRAY_DYE, 1,
-                        I18n.iterable("gui_museum.armor_category.not_in_museum.lore"));
+                    return ItemStacks.item(Material.GRAY_DYE, 1,
+                            Text.key("gui_museum.armor_category.not_in_museum", armorSet.getDisplayName()),
+                            Text.keyLines("gui_museum.armor_category.not_in_museum.lore"));
                 }
 
-                Locale l = player.getLocale();
                 ProxyService itemTracker = new ProxyService(ServiceType.ITEM_TRACKER);
                 UUID helmetUUID = UUID.fromString(helmet.getAttributeHandler().getUniqueTrackedID());
                 UUID chestplateUUID = UUID.fromString(chestplate.getAttributeHandler().getUniqueTrackedID());
@@ -309,50 +303,51 @@ public class GUIMuseumArmorCategory extends HypixelPaginatedGUI<ArmorSetRegistry
                 int leggingsValue = new ItemPriceCalculator(leggings).calculateCleanPrice().intValue();
                 int bootsValue = new ItemPriceCalculator(boots).calculateCleanPrice().intValue();
 
-                List<Object> lore = new ArrayList<>();
-                lore.add("§8§m---------------------");
-                lore.add(I18n.string("gui_museum.armor_category.set_donated_label", l));
-                lore.add("§b" + StringUtility.formatAsDate(data.getInsertionTimes().get(helmetUUID)));
-                lore.add(" ");
-                lore.add(I18n.string("gui_museum.armor_category.helmet_data", l));
-                lore.add("§a" + StringUtility.formatAsDate(trackedHelmet.getCreated()));
-                lore.add("§6  " + StringUtility.commaifyAndTh(trackedHelmet.getNumberMade()) + " §7created");
-                lore.add(" ");
-                lore.add(I18n.string("gui_museum.armor_category.chestplate_data", l));
-                lore.add("§a" + StringUtility.formatAsDate(trackedChestplate.getCreated()));
-                lore.add("§6  " + StringUtility.commaifyAndTh(trackedChestplate.getNumberMade()) + " §7created");
-                lore.add(" ");
-                lore.add(I18n.string("gui_museum.armor_category.leggings_data", l));
-                lore.add("§a" + StringUtility.formatAsDate(trackedLeggings.getCreated()));
-                lore.add("§6  " + StringUtility.commaifyAndTh(trackedLeggings.getNumberMade()) + " §7created");
-                lore.add(" ");
-                lore.add(I18n.string("gui_museum.armor_category.boots_data", l));
-                lore.add("§a" + StringUtility.formatAsDate(trackedBoots.getCreated()));
-                lore.add("§6  " + StringUtility.commaifyAndTh(trackedBoots.getNumberMade()) + " §7created");
-                lore.add(" ");
-                lore.add(I18n.string("gui_museum.armor_category.set_clean_value_label", l));
-                lore.add("§6" + StringUtility.commaify(helmetValue + chestplateValue + leggingsValue + bootsValue)
-                        + " Coins");
-                lore.add(" ");
-                lore.add(I18n.string("gui_museum.armor_category.set_value_label", l));
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<8><m>---------------------"));
+                lore.add(Text.key("gui_museum.armor_category.set_donated_label"));
+                lore.add(Text.of("<b>{}", StringUtility.formatAsDate(data.getInsertionTimes().get(helmetUUID))));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key("gui_museum.armor_category.helmet_data"));
+                lore.addAll(trackedLore(trackedHelmet));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key("gui_museum.armor_category.chestplate_data"));
+                lore.addAll(trackedLore(trackedChestplate));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key("gui_museum.armor_category.leggings_data"));
+                lore.addAll(trackedLore(trackedLeggings));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key("gui_museum.armor_category.boots_data"));
+                lore.addAll(trackedLore(trackedBoots));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key("gui_museum.armor_category.set_clean_value_label"));
+                lore.add(Text.of("<6>{:,} Coins", helmetValue + chestplateValue + leggingsValue + bootsValue));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key("gui_museum.armor_category.set_value_label"));
                 if (data.getCalculatedPrices().containsKey(helmetUUID)) {
-                    lore.add("§6" + StringUtility.commaify(data.getCalculatedPrices().get(helmetUUID)) + " Coins");
+                    lore.add(Text.of("<6>{:,} Coins", data.getCalculatedPrices().get(helmetUUID)));
                 } else {
-                    lore.add(I18n.string("gui_museum.category.uncalculated", l));
+                    lore.add(Text.key("gui_museum.category.uncalculated"));
                 }
 
                 if (hasTakenItOut) {
-                    lore.add("§8§m---------------------");
-                    lore.addAll(List.of(I18n.iterable("gui_museum.armor_category.retrieved_from_museum.lore")));
+                    lore.add(Text.of("<8><m>---------------------"));
+                    lore.addAll(Text.keyLines("gui_museum.armor_category.retrieved_from_museum.lore"));
                 } else {
-                    lore.add(" ");
-                    lore.add(I18n.string("gui_museum.armor_category.click_to_retrieve", l));
+                    lore.add(Text.literal(" "));
+                    lore.add(Text.key("gui_museum.armor_category.click_to_retrieve"));
                 }
 
-                return ItemStackCreator.getStack("§a" + armorSet.getDisplayName(),
-                        hasTakenItOut ? Material.LIME_DYE : helmet.getMaterial(), 1, lore);
+                return ItemStacks.item(hasTakenItOut ? Material.LIME_DYE : helmet.getMaterial(), 1,
+                        Text.of("<a>{}", armorSet.getDisplayName()), lore);
             }
         };
+    }
+
+    private static List<Text> trackedLore(TrackedItem tracked) {
+        return List.of(
+                Text.of("<a>{}", StringUtility.formatAsDate(tracked.getCreated())),
+                Text.of("<6>  {} <7>created", StringUtility.commaifyAndTh(tracked.getNumberMade())));
     }
 
     @Override

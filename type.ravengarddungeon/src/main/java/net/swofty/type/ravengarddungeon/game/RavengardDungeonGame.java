@@ -30,8 +30,21 @@ public class RavengardDungeonGame extends AbstractGame<RavengardDungeonPlayer> {
     private long startedAt;
 
     public RavengardDungeonGame(Instance instance, RavengardDungeonConfig config) {
-        super(instance, _ -> {});
+        super(instance, RavengardDungeonGame::onGameEvent);
         this.config = config;
+    }
+
+    private static void onGameEvent(Object event) {
+        if (!(event instanceof net.swofty.type.game.game.event.CountdownTickEvent tick)
+                || !tick.shouldAnnounce() || tick.remainingSeconds() <= 0
+                || !(tick.getGame() instanceof RavengardDungeonGame game)) {
+            return;
+        }
+        int seconds = tick.remainingSeconds();
+        for (RavengardDungeonPlayer player : game.players.values()) {
+            player.sendMessage("<7>The game starts in <e>{}<7> {}!", seconds,
+                    seconds == 1 ? "second" : "seconds");
+        }
     }
 
     public RavengardDungeonConfig getConfig() {
@@ -82,7 +95,19 @@ public class RavengardDungeonGame extends AbstractGame<RavengardDungeonPlayer> {
     }
 
     public void eliminate(RavengardDungeonPlayer player) {
+        eliminate(player, null);
+    }
+
+    public void eliminate(RavengardDungeonPlayer player, String killer) {
         if (state != GameState.IN_PROGRESS || player.isDungeonDead()) return;
+        if (killer != null) {
+            for (RavengardDungeonPlayer viewer : players.values()) {
+                String victimColor = viewer.getDungeonTeam() == player.getDungeonTeam()
+                        ? "<e>" : "<f>";
+                viewer.sendMessage(victimColor + "{} <7>was defeated by <f>{}<7>!",
+                        player.getUsername(), killer);
+            }
+        }
         player.setDungeonDead(true);
         player.getInventory().clear();
         RavengardClass playerClass = player.getRavengardClass();

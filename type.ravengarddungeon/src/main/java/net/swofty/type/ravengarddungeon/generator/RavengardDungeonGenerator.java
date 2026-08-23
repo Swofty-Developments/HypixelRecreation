@@ -276,7 +276,7 @@ public final class RavengardDungeonGenerator {
                 }
                 if (solid >= 3) {
                     Block sample = template.blockAt(sourceX, 70, sourceZ);
-                    if (sample != Block.AIR && sample.isSolid()) {
+                    if (sample != Block.AIR && sample.solid()) {
                         wallSamples.merge(sample, 1, Integer::sum);
                     }
                 } else if (!doorCells.contains((((long) localX) << 32) | (localZ & 0xFFFFFFFFL))) {

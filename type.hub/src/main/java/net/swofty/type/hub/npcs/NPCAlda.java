@@ -15,7 +15,7 @@ public class NPCAlda extends HypixelNPC implements NPCAbiphoneTrait {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§6Alda", "§e§lCLICK"};
+				return new String[]{"<6>Alda", "<e><l>CLICK"};
 			}
 
 			@Override

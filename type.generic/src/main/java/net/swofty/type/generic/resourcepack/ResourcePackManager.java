@@ -3,7 +3,7 @@ package net.swofty.type.generic.resourcepack;
 import lombok.Getter;
 import net.kyori.adventure.resource.ResourcePackInfo;
 import net.kyori.adventure.resource.ResourcePackRequest;
-import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.minestom.server.entity.Player;
 import org.tinylog.Logger;
 
@@ -72,12 +72,15 @@ public class ResourcePackManager {
                 .packs(info)
                 .replace(true)
                 .required(activePack.isRequired())
-                .prompt(Component.text("§aThis resource pack is required to play on Hypixel."))
+                .prompt(Text.of("<a>This resource pack is required to play on Hypixel.").asComponent())
                 .callback((packId, status, audience) -> {
                     if (status.intermediate()) return;
                     if (status == net.kyori.adventure.resource.ResourcePackStatus.SUCCESSFULLY_LOADED) {
                         player.getPlayerConnection().storeCookie("hypixel:applied_pack",
                                 packHash.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                    } else {
+                        Logger.warn("Resource pack {} for {} finished with status {}",
+                                packHash.substring(0, 8), player.getUsername(), status);
                     }
                     resolved.complete(null);
                 })

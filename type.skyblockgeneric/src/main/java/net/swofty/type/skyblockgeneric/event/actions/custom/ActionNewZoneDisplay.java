@@ -2,8 +2,8 @@ package net.swofty.type.skyblockgeneric.event.actions.custom;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointStringList;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
@@ -42,176 +42,176 @@ public class ActionNewZoneDisplay implements HypixelEventClass {
 
         switch (event.getTo()) {
             case VILLAGE -> onNewZone(player, RegionType.VILLAGE,
-                "Purchase items at the Market.",
-                "Visit the Auction House.",
-                "Manage your Coins in the Bank.",
-                "Enchant items at the Library.");
+                Text.of("Purchase items at the Market."),
+                Text.of("Visit the Auction House."),
+                Text.of("Manage your Coins in the Bank."),
+                Text.of("Enchant items at the Library."));
 
             case AUCTION_HOUSE -> onNewZone(player, RegionType.AUCTION_HOUSE,
-                "Auction off your special items.",
-                "Bid on other player's items.");
+                Text.of("Auction off your special items."),
+                Text.of("Bid on other player's items."));
 
             case CRYPTS ->
-                onNewZone(player, RegionType.CRYPTS, "Explore the Crypts.", "Watch out for the Zombies that lurk here!");
+                onNewZone(player, RegionType.CRYPTS, Text.of("Explore the Crypts."), Text.of("Watch out for the Zombies that lurk here!"));
 
             case FORAGING_CAMP -> onNewZone(player, RegionType.FORAGING_CAMP,
-                "Unlock the §2Foraging Skill §fat §2Lumber Jark§f.",
-                "Purchase Foraging Tools from the §2Lumber Merchant§f.",
-                "Travel to the §aBirch Park§f.");
+                Text.of("Unlock the <2>Foraging Skill <f>at <2>Lumber Jark<f>."),
+                Text.of("Purchase Foraging Tools from the <2>Lumber Merchant<f>."),
+                Text.of("Travel to the <a>Birch Park<f>."));
 
             case MINING_DISTRICT -> onNewZone(player, RegionType.MINING_DISTRICT,
-                "Purchase Mining Tools from the §6Mining Merchant§f.",
-                "Learn about §3Reforges §fat the §6Blacksmith§f.",
-                "Travel to the §8Coal Mine§f.");
+                Text.of("Purchase Mining Tools from the <6>Mining Merchant<f>."),
+                Text.of("Learn about <3>Reforges <f>at the <6>Blacksmith<f>."),
+                Text.of("Travel to the <8>Coal Mine<f>."));
 
             case SHENS_AUCTION -> onNewZone(player, RegionType.SHENS_AUCTION,
-                "Talk to Damia.",
-                "Bid on high-end items.");
+                Text.of("Talk to Damia."),
+                Text.of("Bid on high-end items."));
 
             case BANK -> onNewZone(player, RegionType.BANK,
-                "Talk to the Banker.",
-                "Store your coins to keep them safe.",
-                "Earn interest on your coins.");
+                Text.of("Talk to the Banker."),
+                Text.of("Store your coins to keep them safe."),
+                Text.of("Earn interest on your coins."));
 
             case DEEP_CAVERNS -> onNewZone(player, RegionType.DEEP_CAVERNS,
-                "Talk to the Lift Operator",
-                "Mine valuable ores.",
-                "Watch out for mobs!");
+                Text.of("Talk to the Lift Operator"),
+                Text.of("Mine valuable ores."),
+                Text.of("Watch out for mobs!"));
 
             case MOUNTAIN -> onNewZone(player, RegionType.MOUNTAIN,
-                "Climb to the top!");
+                Text.of("Climb to the top!"));
 
             case DWARVEN_MINES -> onNewZone(player, RegionType.DWARVEN_MINES,
-                "Mine rare ores.");
+                Text.of("Mine rare ores."));
 
             case GUNPOWDER_MINES -> onNewZone(player, RegionType.GUNPOWDER_MINES,
-                "Talk to the Lift Operator.",
-                "Explore the caverns.",
-                "Mine Coal, Iron ore, and Gold ore.");
+                Text.of("Talk to the Lift Operator."),
+                Text.of("Explore the caverns."),
+                Text.of("Mine Coal, Iron ore, and Gold ore."));
 
             case LAPIS_QUARRY -> onNewZone(player, RegionType.LAPIS_QUARRY,
-                "The Lift Operator will now let you travel to the §bLapis Quarry.",
-                "Access to Lapis Lazuli ore.",
-                "Talk to the Lapis Miner.",
-                "Watch out for the zombies!");
+                Text.of("The Lift Operator will now let you travel to the <b>Lapis Quarry."),
+                Text.of("Access to Lapis Lazuli ore."),
+                Text.of("Talk to the Lapis Miner."),
+                Text.of("Watch out for the zombies!"));
 
             // TODO: Replace placeholder text with correct Pigmen's Den zone features
             case PIGMENS_DEN -> onNewZone(player, RegionType.PIGMENS_DEN,
-                "The Lift Operator will now let you travel to the §bLapis Quarry.",
-                "Access to Lapis Lazuli ore.",
-                "Talk to the Lapis Miner.",
-                "Watch out for the zombies!");
+                Text.of("The Lift Operator will now let you travel to the <b>Lapis Quarry."),
+                Text.of("Access to Lapis Lazuli ore."),
+                Text.of("Talk to the Lapis Miner."),
+                Text.of("Watch out for the zombies!"));
 
             case SLIMEHILL -> onNewZone(player, RegionType.SLIMEHILL,
-                "The Lift Operator will now let you travel to the §bSlimehill.",
-                "Mine Emerald ore.",
-                "This area is covered with slimes!");
+                Text.of("The Lift Operator will now let you travel to the <b>Slimehill."),
+                Text.of("Mine Emerald ore."),
+                Text.of("This area is covered with slimes!"));
 
             case DIAMOND_RESERVE -> onNewZone(player, RegionType.DIAMOND_RESERVE,
-                "The Lift Operator will now let you travel to the §bDiamond Reserve.",
-                "Mine Diamond ore.",
-                "Beware of deadly monsters!");
+                Text.of("The Lift Operator will now let you travel to the <b>Diamond Reserve."),
+                Text.of("Mine Diamond ore."),
+                Text.of("Beware of deadly monsters!"));
 
             case OBSIDIAN_SANCTUARY -> onNewZone(player, RegionType.OBSIDIAN_SANCTUARY,
-                "The Lift Operator will now let you travel to the §bObsidian Sanctuary.",
-                "Mine Obsidian and Diamond.",
-                "Beware of deadly monsters!",
-                "Talk to §dRhys.");
+                Text.of("The Lift Operator will now let you travel to the <b>Obsidian Sanctuary."),
+                Text.of("Mine Obsidian and Diamond."),
+                Text.of("Beware of deadly monsters!"),
+                Text.of("Talk to <d>Rhys."));
 
             case GOLD_MINE -> onNewZone(player, RegionType.GOLD_MINE,
-                "Talk to the Lazy Miner.",
-                "Mine for gold, iron, and coal.",
-                "Visit the Iron and Gold Forgers.",
-                "Visit the Blacksmith.",
-                "Talk to Rusty.");
+                Text.of("Talk to the Lazy Miner."),
+                Text.of("Mine for gold, iron, and coal."),
+                Text.of("Visit the Iron and Gold Forgers."),
+                Text.of("Visit the Blacksmith."),
+                Text.of("Talk to Rusty."));
 
             case COAL_MINE -> onNewZone(player, RegionType.COAL_MINE,
-                "Mine §8Coal§f.",
-                "Travel to the Gold Mine.");
+                Text.of("Mine <8>Coal<f>."),
+                Text.of("Travel to the Gold Mine."));
 
             case FARM -> onNewZone(player, RegionType.FARM,
-                "Learn about the Farming Skill at §eFarmer Rigby§f.",
-                "Gather §eWheat§f.",
-                "Learn about Minion Upgrades at §eArthur§f.",
-                "Travel to §eThe Barn§f.");
+                Text.of("Learn about the Farming Skill at <e>Farmer Rigby<f>."),
+                Text.of("Gather <e>Wheat<f>."),
+                Text.of("Learn about Minion Upgrades at <e>Arthur<f>."),
+                Text.of("Travel to <e>The Barn<f>."));
 
             case BIRCH_PARK -> onNewZone(player, RegionType.BIRCH_PARK,
-                "Talk to Charlie.",
-                "Chop down Birch logs.");
+                Text.of("Talk to Charlie."),
+                Text.of("Chop down Birch logs."));
 
             case FOREST -> onNewZone(player, RegionType.FOREST,
-                "Visit the §aLumber Jack.",
-                "Chop down trees.",
-                "Travel to the §aBirch Park§f.");
+                Text.of("Visit the <a>Lumber Jack."),
+                Text.of("Chop down trees."),
+                Text.of("Travel to the <a>Birch Park<f>."));
 
             case SPRUCE_WOODS -> onNewZone(player, RegionType.SPRUCE_WOODS,
-                "Chop down Spruce logs.");
+                Text.of("Chop down Spruce logs."));
 
             case DARK_THICKET -> onNewZone(player, RegionType.DARK_THICKET,
-                "Chop down Dark Oak Logs.",
-                "Talk to §cRyan §fabout the §6Trial of Fire§f.");
+                Text.of("Chop down Dark Oak Logs."),
+                Text.of("Talk to <c>Ryan <f>about the <6>Trial of Fire<f>."));
 
             case TRIALS_OF_FIRE -> onNewZone(player, RegionType.TRIALS_OF_FIRE,
-                "Compete in a §6Trial of Fire§f.");
+                Text.of("Compete in a <6>Trial of Fire<f>."));
 
             case SAVANNA_WOODLAND -> onNewZone(player, RegionType.SAVANNA_WOODLAND,
-                "Chop down Acacia logs.");
+                Text.of("Chop down Acacia logs."));
 
             case GRAVEYARD -> onNewZone(player, RegionType.GRAVEYARD,
-                "Fight Zombies.",
-                "Travel to the Spider's Den.",
-                "Talk to §7Pat§f.",
-                "Investigate the Catacombs.");
+                Text.of("Fight Zombies."),
+                Text.of("Travel to the Spider's Den."),
+                Text.of("Talk to <7>Pat<f>."),
+                Text.of("Investigate the Catacombs."));
 
             case COMBAT_SETTLEMENT -> onNewZone(player, RegionType.COMBAT_SETTLEMENT,
-                "Buy Combat Tools from the §cWeaponsmith §fand §cRosetta§f.",
-                "Talk to §cTalk §fat the §2Archery Range §fto learn about bows and arrows.",
-                "Learn about §2Enchanting §fat the §2Library§f.",
-                "Talk to §cMaxwell §fat the §6Thaumaturgist §fto learn about §6Magical Power§f.");
+                Text.of("Buy Combat Tools from the <c>Weaponsmith <f>and <c>Rosetta<f>."),
+                Text.of("Talk to <c>Talk <f>at the <2>Archery Range <f>to learn about bows and arrows."),
+                Text.of("Learn about <2>Enchanting <f>at the <2>Library<f>."),
+                Text.of("Talk to <c>Maxwell <f>at the <6>Thaumaturgist <f>to learn about <6>Magical Power<f>."));
 
             case FISHING_OUTPOST -> onNewZone(player, RegionType.FISHING_OUTPOST,
-                "Buy fishing essentials from the §bFishing Merchant§f.",
-                "Talk to §9Fisherman Gerald §fand §6Captain Baha §fabout your §6Ship§f.",
-                "Learn about §aFishing §fstats from §bGwynnie§f.");
+                Text.of("Buy fishing essentials from the <b>Fishing Merchant<f>."),
+                Text.of("Talk to <9>Fisherman Gerald <f>and <6>Captain Baha <f>about your <6>Ship<f>."),
+                Text.of("Learn about <a>Fishing <f>stats from <b>Gwynnie<f>."));
 
             case FLOWER_HOUSE -> onNewZone(player, RegionType.FLOWER_HOUSE,
-                "Talk to Marco about §aSpray Cans§f.",
-                "Gather flowers.");
+                Text.of("Talk to Marco about <a>Spray Cans<f>."),
+                Text.of("Gather flowers."));
 
             case BAZAAR_ALLEY -> onNewZone(player, RegionType.BAZAAR_ALLEY,
-                "Buy and sell materials in bulk in the Bazaar.");
+                Text.of("Buy and sell materials in bulk in the Bazaar."));
 
             case WILDERNESS -> onNewZone(player, RegionType.WILDERNESS,
-                "Fish in the pond.",
-                "Visit §dTia the Fairy §fat the §dFairy Pond§f.",
-                "Discover hidden secrets.");
+                Text.of("Fish in the pond."),
+                Text.of("Visit <d>Tia the Fairy <f>at the <d>Fairy Pond<f>."),
+                Text.of("Discover hidden secrets."));
 
             case RUINS -> onNewZone(player, RegionType.RUINS,
-                "Explore the ancient ruins.",
-                "Watch out for the guard dogs!");
+                Text.of("Explore the ancient ruins."),
+                Text.of("Watch out for the guard dogs!"));
 
             case THE_END -> onNewZone(player, RegionType.THE_END,
-                "Talk to the Pearl Dealer.",
-                "Explore the End Shop.",
-                "Kill Endermen.",
-                "Fight Dragons!");
+                Text.of("Talk to the Pearl Dealer."),
+                Text.of("Explore the End Shop."),
+                Text.of("Kill Endermen."),
+                Text.of("Fight Dragons!"));
 
             case ARCHERY_RANGE -> onNewZone(player, RegionType.ARCHERY_RANGE,
-                "Talk to Jax to forge special arrows!");
+                Text.of("Talk to Jax to forge special arrows!"));
         }
     }
 
-    public void onNewZone(SkyBlockPlayer player, RegionType zone, String... features) {
+    public void onNewZone(SkyBlockPlayer player, RegionType zone, Text... features) {
         player.sendMessage("");
-        player.sendMessage("§6§l NEW AREA DISCOVERED!");
-        player.sendMessage("§7  ⏣ " + zone.getColor() + zone.getName());
+        player.sendMessage("<6><l> NEW AREA DISCOVERED!");
+        player.sendMessage(Text.of("<7>  ⏣ ").append("<color:{}>{}", zone.getColor(), zone.getName()));
         player.sendMessage("");
         if (features.length > 0) {
-            for (String feature : features) {
-                player.sendMessage("§7   ⬛ §f" + feature);
+            for (Text feature : features) {
+                player.sendMessage(Text.of("<7>   ⬛ <f>").append(feature));
             }
         } else {
-            player.sendMessage("§7   ⬛ §cNot much yet!");
+            player.sendMessage("<7>   ⬛ <c>Not much yet!");
         }
         player.sendMessage("");
 
@@ -220,10 +220,10 @@ public class ActionNewZoneDisplay implements HypixelEventClass {
             .volume(1f)
             .build());
 
-        player.showTitle(Title.title(
-            Component.text(zone.getColor() + zone.getName()),
-            Component.text("§6§lNEW AREA DISCOVERED!"),
+        player.showTitle(
+            Text.of("<color:{}>{}", zone.getColor(), zone.getName()),
+            Text.of("<6><l>NEW AREA DISCOVERED!"),
             Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
-        ));
+        );
     }
 }

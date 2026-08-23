@@ -1,5 +1,7 @@
 package net.swofty.type.game.game.team;
 
+import net.kyori.adventure.text.format.TextColor;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -9,13 +11,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SimpleGameTeam implements GameTeam {
 	private final String id;
 	private final String name;
-	private final String colorCode;
+	private final TextColor color;
 	private final Set<UUID> playerIds = ConcurrentHashMap.newKeySet();
 
-	public SimpleGameTeam(String id, String name, String colorCode) {
+	public SimpleGameTeam(String id, String name, TextColor color) {
 		this.id = id;
 		this.name = name;
-		this.colorCode = colorCode;
+		this.color = color;
 	}
 
 	@Override
@@ -29,8 +31,8 @@ public class SimpleGameTeam implements GameTeam {
 	}
 
 	@Override
-	public String getColorCode() {
-		return colorCode;
+	public TextColor getColor() {
+		return color;
 	}
 
 	@Override

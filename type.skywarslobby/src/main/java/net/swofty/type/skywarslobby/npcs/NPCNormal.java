@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skywars.SkywarsGameType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
@@ -30,9 +31,9 @@ public class NPCNormal extends HypixelNPC {
                 String playerCount = StringUtility.commaify(soloPlayers + doublePlayers);
 
                 return new String[]{
-                        "§e§lCLICK TO PLAY",
-                        "§bNormal SkyWars §7[Solo/Doubles]",
-                        "§e§l" + playerCount + " Players",
+                        "<e><l>CLICK TO PLAY",
+                        "<b>Normal SkyWars <7>[Solo/Doubles]",
+                        Text.of("<e><l>{} Players", playerCount).serialize(),
                 };
             }
 

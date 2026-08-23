@@ -1,8 +1,7 @@
 package net.swofty.type.bedwarsgame.game.v2.listener;
 
-import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsTeam;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.event.PlayerDisconnectGameEvent;
 import net.swofty.type.generic.event.EventNodes;
@@ -16,11 +15,11 @@ public class PlayerGameDisconnectListener implements HypixelEventClass {
         BedWarsPlayer player = (BedWarsPlayer) event.player();
         BedWarsGame game = player.getGame();
         if (game != null) {
-            String teamColor = game.getPlayerTeam(player.getUuid())
-                .map(BedWarsTeam::getColorCode)
-                .orElse("§7");
+            Text name = game.getPlayerTeam(player.getUuid())
+                .map(team -> Text.of("<color:{}>{}", team.getColor(), player.getUsername()))
+                .orElseGet(() -> Text.literal(player.getUsername()));
 
-            game.broadcastMessage(Component.text(teamColor + player.getUsername() + " §7disconnected."));
+            game.broadcastMessage(Text.of("<7>{} disconnected.", name));
         }
     }
 

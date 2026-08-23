@@ -7,8 +7,9 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.AbstractInventory;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.sound.SoundEvent;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.chest.Chest;
@@ -22,7 +23,7 @@ public class GUIChest extends HypixelInventoryGUI {
     private final Chest chest;
 
     public GUIChest(Chest chest) {
-        super(chest.getName(), chest.getSize());
+        super(Text.literal(chest.getName()), chest.getSize());
         this.chest = chest;
     }
 
@@ -33,7 +34,7 @@ public class GUIChest extends HypixelInventoryGUI {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
                     SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    return ItemStackCreator.getFromStack(chest.getItem(index));
+                    return ItemStacks.copy(chest.getItem(index));
                 }
 
                 @Override

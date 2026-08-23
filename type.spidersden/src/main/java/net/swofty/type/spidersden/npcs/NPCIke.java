@@ -2,7 +2,6 @@ package net.swofty.type.spidersden.npcs;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
-import net.swofty.commons.ChatColor;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.NPCOption;
@@ -20,8 +19,8 @@ public class NPCIke extends HypixelNPC {
             @Override
             public String[] holograms(HypixelPlayer player) {
                 return new String[]{
-                        ChatColor.GOLD + "Ike",
-                        ChatColor.YELLOW + "" + ChatColor.BOLD + "CLICK"
+                        "<6>Ike",
+                        "<e><l>CLICK"
                 };
             }
 
@@ -100,36 +99,36 @@ public class NPCIke extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("initial-hello").lines(new String[] {
+                        .key("initial-hello").lines(
                                 "You heard what Michael said about Mob Types?"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("answering-no").lines(new String[] {
+                        .key("answering-no").lines(
                                 "Then go talk to him, bro."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("continuation-1").lines(new String[] {
+                        .key("continuation-1").lines(
                                 "Not to flex, but I've seen enough films to know about every mob type in existence.",
                                 "I'm bored, so let's play a game, just us two."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("continuation-2").lines(new String[] {
+                        .key("continuation-2").lines(
                                 "You go out and slay some mobs and, every time you kill a mob with a new mob type, I'll add it to my book!",
                                 "I'll give you a reward each time you kill a new mob type, so get busy!",
                                 "Talk to me again if you want to check your progress!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("idle-1").lines(new String[] {
+                        .key("idle-1").lines(
                                 "'Sup champ! How's that Mob Type collection coming along? Let's take a look!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("idle-2").lines(new String[] {
+                        .key("idle-2").lines(
                                 "Dude, I'm so bored out here. Mind showing me what you've been up to?"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("close").lines(new String[] {
+                        .key("close").lines(
                                 "Get back out there, there's always more to explore!"
-                        }).build(),
+                        ).build(),
         };
     }
 }

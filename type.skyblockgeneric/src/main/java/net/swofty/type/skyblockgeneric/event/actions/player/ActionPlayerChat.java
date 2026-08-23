@@ -2,7 +2,8 @@ package net.swofty.type.skyblockgeneric.event.actions.player;
 
 import net.minestom.server.event.player.PlayerChatEvent;
 import net.swofty.commons.ServerType;
-import net.swofty.commons.StringUtility;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.chat.StaffChat;
 import net.swofty.type.generic.data.datapoints.DatapointChatType;
@@ -42,7 +43,7 @@ public class ActionPlayerChat implements HypixelEventClass {
         DatapointChatType.Chats chatType = player.getChatType().currentChatType;
         if (chatType == DatapointChatType.Chats.STAFF) {
             if (!rank.isStaff()) {
-                player.sendMessage("§cUnknown chat type.");
+                player.sendMessage("<c>Unknown chat type.");
                 player.getChatType().switchTo(DatapointChatType.Chats.ALL);
                 return;
             }
@@ -52,7 +53,7 @@ public class ActionPlayerChat implements HypixelEventClass {
 
         if (chatType == DatapointChatType.Chats.PARTY) {
             if (!PartyManager.isInParty(player)) {
-                player.sendMessage("§cYou are not in a party and were moved to the ALL channel.");
+                player.sendMessage("<c>You are not in a party and were moved to the ALL channel.");
                 player.getChatType().switchTo(DatapointChatType.Chats.ALL);
                 return;
             }
@@ -71,16 +72,14 @@ public class ActionPlayerChat implements HypixelEventClass {
         receivers.forEach(onlinePlayer -> {
             boolean showLevel = onlinePlayer.getToggles().get(DatapointToggles.Toggles.ToggleType.SKYBLOCK_LEVELS_IN_CHAT);
 
-            if (showLevel)
-                if (rank.equals(Rank.DEFAULT))
-                    onlinePlayer.sendMessage(player.getFullDisplayName() + "§7: " + finalMessage);
-                else
-                    onlinePlayer.sendMessage(player.getFullDisplayName() + "§f: " + finalMessage);
+            Text namePrefix = showLevel
+                    ? player.getFullDisplayName()
+                    : Text.of("{}", player.getRank().displayName(player.getRankColor(), player.isMvpPlusPlusAqua() ? NamedTextColor.AQUA : NamedTextColor.GOLD, player.getUsername()));
+
+            if (rank.equals(Rank.DEFAULT))
+                onlinePlayer.sendMessage(namePrefix.append("<7>: ").append(Text.literal(finalMessage)));
             else
-                if (rank.equals(Rank.DEFAULT))
-                    onlinePlayer.sendMessage(player.getLegacyRankPrefix() + StringUtility.getTextFromComponent(player.getName()) + "§7: " + finalMessage);
-                else
-                    onlinePlayer.sendMessage(player.getLegacyRankPrefix() + StringUtility.getTextFromComponent(player.getName()) + "§f: " + finalMessage);
+                onlinePlayer.sendMessage(namePrefix.append("<f>: ").append(Text.literal(finalMessage)));
         });
     }
 }

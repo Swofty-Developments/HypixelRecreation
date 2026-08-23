@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.shop;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface ShopPrice {
     /**
      * @return the display name of the item, used for the GUI (with the amount)
      */
-    List<String> getGUIDisplay();
+    List<Text> getGUIDisplay();
 
     /**
      * @return the plural name of the item type, used for displaying "Not enough [plural name]!" type messages

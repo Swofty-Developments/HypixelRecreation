@@ -40,6 +40,7 @@ public record RavengardGenericLoader(HypixelTypeLoader typeLoader) {
     @SneakyThrows
     public void initialize(MinecraftServer server) {
         RavengardGenericLoader.server = server;
+        net.swofty.type.generic.data.domain.PlayerDataService.register(new net.swofty.type.ravengardgeneric.data.RavengardDomain());
 
         if (typeLoader.getType() == ServerType.RAVENGARD_LOBBY) {
             tutorialInstance = HypixelWorldLoader.load(CustomWorlds.RAVENGARD_TUTORIAL, MinecraftServer.getInstanceManager());
@@ -86,9 +87,11 @@ public record RavengardGenericLoader(HypixelTypeLoader typeLoader) {
             UUID uuid = playerConnection.getPlayer().getUuid();
             String username = playerConnection.getPlayer().getUsername();
 
-            if (RedisOriginServer.origin.containsKey(uuid)) {
-                player.setOriginServer(RedisOriginServer.origin.get(uuid));
-                RedisOriginServer.origin.remove(uuid);
+            ServerType originServer = RedisOriginServer.consume(uuid);
+
+            if (originServer != null) {
+
+                player.setOriginServer(originServer);
             }
 
             Logger.info("Received new Ravengard player: {} ({})", username, uuid);

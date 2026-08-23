@@ -1,6 +1,5 @@
 package net.swofty.type.skywarslobby.gui;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
@@ -10,7 +9,7 @@ import net.minestom.server.timer.TaskSchedule;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
@@ -53,7 +52,7 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return new ViewConfiguration<>(Component.text("Soul Well"), InventoryType.CHEST_5_ROW);
+        return new ViewConfiguration<>("Soul Well", InventoryType.CHEST_5_ROW);
     }
 
     @Override
@@ -116,11 +115,11 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
 
             // Left side of wheel column's middle position
             if (slotCol == wheelCol - 1 && slotRow == 2) {
-                return ItemStackCreator.getStack(" ", Material.BLACK_STAINED_GLASS_PANE, 1);
+                return ItemStacks.item(Material.BLACK_STAINED_GLASS_PANE, 1, " ");
             }
             // Right side of wheel column's middle position
             if (slotCol == wheelCol + 1 && slotRow == 2) {
-                return ItemStackCreator.getStack(" ", Material.BLACK_STAINED_GLASS_PANE, 1);
+                return ItemStacks.item(Material.BLACK_STAINED_GLASS_PANE, 1, " ");
             }
 
             for (int i = 0; i < slots.length; i++) {
@@ -132,7 +131,7 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
                     if (i == 2) {
                         return finalRewards.get(wheel).toItemStack();
                     }
-                    return ItemStackCreator.getStack(" ", Material.AIR, 1);
+                    return ItemStacks.item(Material.AIR, 1, " ");
                 }
 
                 List<SoulWellReward> items = wheelItems.get(wheel);
@@ -143,9 +142,9 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
 
         boolean allStopped = state.stoppedWheels.size() >= wheelCount;
         if (allStopped) {
-            return ItemStackCreator.getStack(" ", Material.AIR, 1);
+            return ItemStacks.item(Material.AIR, 1, " ");
         }
-        return ItemStackCreator.getStack(" ", GLASS_COLORS[RANDOM.nextInt(GLASS_COLORS.length)], 1);
+        return ItemStacks.item(GLASS_COLORS[RANDOM.nextInt(GLASS_COLORS.length)], 1, " ");
     }
 
     private int getStopTick(int wheel) {
@@ -180,32 +179,32 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
                 int amount = 100 + RANDOM.nextInt(401);
                 long coins = handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class).getValue();
                 handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class).setValue(coins + amount);
-                ctx.player().sendMessage("§6§lSOUL WELL! §7You received §6" + amount + " Coins§7!");
+                ctx.player().sendMessage("<6><l>SOUL WELL! </l><7>You received <6>{} Coins<7>!", amount);
             }
             case COINS_MEDIUM -> {
                 int amount = 300 + RANDOM.nextInt(701);
                 long coins = handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class).getValue();
                 handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class).setValue(coins + amount);
-                ctx.player().sendMessage("§9§lSOUL WELL! §7You received §9" + amount + " Coins§7!");
+                ctx.player().sendMessage("<9><l>SOUL WELL! </l><7>You received <9>{} Coins<7>!", amount);
             }
             case COINS_LARGE -> {
                 int amount = 500 + RANDOM.nextInt(1501);
                 long coins = handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class).getValue();
                 handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class).setValue(coins + amount);
-                ctx.player().sendMessage("§6§lSOUL WELL! §7You received §6" + amount + " Coins§7!");
+                ctx.player().sendMessage("<6><l>SOUL WELL! </l><7>You received <6>{} Coins<7>!", amount);
             }
             case KIT -> {
                 if (reward.kit != null) {
                     var unlocks = handler.get(SkywarsDataHandler.Data.UNLOCKS, DatapointSkywarsUnlocks.class).getValue();
                     unlocks.unlockKit(reward.kit.getId());
-                    ctx.player().sendMessage("§a§lSOUL WELL! §7You unlocked the §a" + reward.kit.getName() + " Kit§7!");
+                    ctx.player().sendMessage("<a><l>SOUL WELL! </l><7>You unlocked the <a>{} Kit<7>!", reward.kit.getName());
                 }
             }
             case PERK -> {
                 if (reward.perk != null) {
                     var unlocks = handler.get(SkywarsDataHandler.Data.UNLOCKS, DatapointSkywarsUnlocks.class).getValue();
                     unlocks.unlockPerk(reward.perk.getId());
-                    ctx.player().sendMessage("§a§lSOUL WELL! §7You unlocked the §a" + reward.perk.getName() + " Perk§7!");
+                    ctx.player().sendMessage("<a><l>SOUL WELL! </l><7>You unlocked the <a>{} Perk<7>!", reward.perk.getName());
                 }
             }
         }
@@ -261,23 +260,23 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
     public record SoulWellReward(RewardType type, SkywarsKit kit, SkywarsPerk perk, String displayName) {
         public ItemStack.Builder toItemStack() {
             return switch (type) {
-                case COINS_SMALL -> ItemStackCreator.getStack("§aSmall bag of coins", Material.SUNFLOWER, 1);
-                case COINS_MEDIUM -> ItemStackCreator.getStack("§9Medium bag of coins", Material.SUNFLOWER, 1);
-                case COINS_LARGE -> ItemStackCreator.getStack("§6Large bag of coins", Material.SUNFLOWER, 1);
+                case COINS_SMALL -> ItemStacks.item(Material.SUNFLOWER, 1, "<a>Small bag of coins");
+                case COINS_MEDIUM -> ItemStacks.item(Material.SUNFLOWER, 1, "<9>Medium bag of coins");
+                case COINS_LARGE -> ItemStacks.item(Material.SUNFLOWER, 1, "<6>Large bag of coins");
                 case KIT -> {
                     if (kit != null) {
                         if (kit.hasCustomTexture()) {
-                            yield ItemStackCreator.getStackHead("§a" + displayName, kit.getIconTexture(), 1);
+                            yield ItemStacks.head(kit.getIconTexture(), "<a>{}", displayName);
                         }
-                        yield ItemStackCreator.getStack("§a" + displayName, kit.getIconMaterial(), 1);
+                        yield ItemStacks.item(kit.getIconMaterial(), 1, "<a>{}", displayName);
                     }
-                    yield ItemStackCreator.getStack("§a" + displayName, Material.LEATHER_HELMET, 1);
+                    yield ItemStacks.item(Material.LEATHER_HELMET, 1, "<a>{}", displayName);
                 }
                 case PERK -> {
                     if (perk != null) {
-                        yield ItemStackCreator.getStack("§a" + displayName, perk.getIconMaterial(), 1);
+                        yield ItemStacks.item(perk.getIconMaterial(), 1, "<a>{}", displayName);
                     }
-                    yield ItemStackCreator.getStack("§a" + displayName, Material.OAK_PLANKS, 1);
+                    yield ItemStacks.item(Material.OAK_PLANKS, 1, "<a>{}", displayName);
                 }
             };
         }

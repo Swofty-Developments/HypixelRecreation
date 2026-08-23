@@ -12,7 +12,7 @@ public class VillagerSmithmonger extends HypixelNPC {
         super(new VillagerConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§fSmithmonger", "§e§lCLICK"};
+                return new String[]{"<f>Smithmonger", "<e><l>CLICK"};
             }
 
             @Override

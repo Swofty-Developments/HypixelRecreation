@@ -12,7 +12,7 @@ public class NPCLiz extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Zog", "§e§lCLICK"};
+                return new String[]{"Zog", "<e><l>CLICK"};
             }
 
             @Override

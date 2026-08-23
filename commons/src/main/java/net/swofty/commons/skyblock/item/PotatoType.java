@@ -9,10 +9,14 @@ import java.util.Map;
 
 @Getter
 public enum PotatoType {
-    ARMOR(List.of("§7When applied to armor, grants §a+2" + ItemStatistic.DEFENSE.getSymbol(),
-            "§aDefense §7and §c+4" + ItemStatistic.HEALTH.getSymbol() + " Health§7."), Map.of(ItemStatistic.DEFENSE, 2.0, ItemStatistic.HEALTH, 4.0)),
-    WEAPONS(List.of("§7When applied to weapons, grants",
-            "§c+2" + ItemStatistic.STRENGTH.getSymbol() + " Strength §7and §c+2" + ItemStatistic.DAMAGE.getSymbol() + " Damage§7."), Map.of(ItemStatistic.STRENGTH, 2.0, ItemStatistic.DAMAGE, 2.0)),
+    ARMOR(List.of(
+            "<7>When applied to armor, grants <a>+2<glyph:stat_defense>",
+            "<a>Defense <7>and <c>+4<glyph:stat_health> Health<7>."
+    ), Map.of(ItemStatistic.DEFENSE, 2.0, ItemStatistic.HEALTH, 4.0)),
+    WEAPONS(List.of(
+            "<7>When applied to weapons, grants",
+            "<c>+2<glyph:stat_strength> Strength <7>and <c>+2<glyph:stat_ability_damage> Damage<7>."
+    ), Map.of(ItemStatistic.STRENGTH, 2.0, ItemStatistic.DAMAGE, 2.0)),
     ;
 
     public final List<String> display;

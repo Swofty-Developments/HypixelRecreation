@@ -5,6 +5,7 @@ import net.swofty.commons.protocol.objects.messaging.SendMessagePushProtocol;
 import net.swofty.commons.protocol.objects.messaging.SendMessagePushProtocol.Request;
 import net.swofty.commons.protocol.objects.messaging.SendMessagePushProtocol.Response;
 import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.commons.redis.RedisMessageContext;
@@ -27,7 +28,8 @@ public class SendMessageHandler implements RedisMessageHandler<Request, Response
                     .orElse(null);
 
             if (player != null) {
-                player.sendMessage(message.message());
+                String raw = message.message();
+                player.sendMessage(raw);
                 return new Response(true, null);
             }
 

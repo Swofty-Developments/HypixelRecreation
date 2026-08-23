@@ -5,11 +5,13 @@ import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.kyori.adventure.translation.GlobalTranslator;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.GameMode;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.npc.configuration.AnimalConfiguration;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.entity.npc.configuration.NPCConfiguration;
@@ -19,7 +21,8 @@ import net.swofty.type.generic.entity.npc.impl.NPCEntityImpl;
 import net.swofty.type.generic.entity.npc.impl.NPCViewable;
 import net.swofty.type.generic.entity.npc.impl.NPCVillagerEntityImpl;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.type.generic.text.HypixelTextRenderer;
+import net.swofty.type.generic.text.RenderContext;
 import net.swofty.type.generic.user.HypixelPlayer;
 import org.tinylog.Logger;
 
@@ -93,8 +96,9 @@ public abstract class HypixelNPC {
 
                     if (!config.visible(player)) return;
 
-                    String[] holograms = Arrays.stream(config.hologramComponents(player))
-                            .map(component -> LegacyComponentSerializer.legacySection().serialize(component))
+                    String[] holograms = config.hologramTexts(player).stream()
+                            .map(text -> LegacyComponentSerializer.legacySection().serialize(
+                                    GlobalTranslator.render(HypixelTextRenderer.render(text.asComponent(), RenderContext.of(player)), player.getLocale())))
                             .toArray(String[]::new);
                     Pos position = config.position(player);
 
@@ -252,15 +256,19 @@ public abstract class HypixelNPC {
     }
 
     public void sendNPCMessage(HypixelPlayer player, String message) {
-        sendNPCMessage(player, Component.text(message));
+        sendNPCMessage(player, Text.read(message));
     }
 
-    public void sendNPCMessage(HypixelPlayer player, Component message) {
+    public void sendNPCMessage(HypixelPlayer player, String markup, Object... arguments) {
+        sendNPCMessage(player, Text.of(markup, arguments));
+    }
+
+    public void sendNPCMessage(HypixelPlayer player, Text message) {
         sendNPCMessage(player, message, Sound.sound().type(Key.key("entity.villager.celebrate")).volume(1.0f).pitch(0.8f + new Random().nextFloat() * 0.4f).build());
     }
 
     public String getName(HypixelPlayer player) {
-        return LegacyComponentSerializer.legacySection().serialize(getNameComponent(player));
+        return PlainTextComponentSerializer.plainText().serialize(getNameText(player).asComponent());
     }
 
     /**
@@ -271,20 +279,20 @@ public abstract class HypixelNPC {
         return className.replaceAll("(?<=.)(?=\\p{Lu})", " ");
     }
 
-    public Component getNameComponent(HypixelPlayer player) {
-        Component name = parameters.chatNameComponent(player);
-        return name != null ? name : Component.text(getName());
+    public Text getNameText(HypixelPlayer player) {
+        Text name = parameters.chatNameText(player);
+        return name != null ? name : Text.of("<e>{}", getName());
     }
 
     public void sendNPCMessage(HypixelPlayer player, String message, Sound sound) {
-        sendNPCMessage(player, Component.text(message), sound);
+        sendNPCMessage(player, Text.read(message), sound);
     }
 
-    public void sendNPCMessage(HypixelPlayer player, Component message, Sound sound) {
+    public void sendNPCMessage(HypixelPlayer player, Text message, Sound sound) {
         player.sendMessage(Component.text()
-            .append(Component.text("[NPC] ", NamedTextColor.YELLOW))
-                .append(getNameComponent(player))
-            .append(Component.text(": ", NamedTextColor.WHITE))
+            .append(Text.of("<e>[NPC] "))
+                .append(getNameText(player))
+            .append(Text.of("<f>: "))
             .append(message)
             .build());
         player.playSound(sound);
@@ -364,44 +372,52 @@ public abstract class HypixelNPC {
     }
 
     @Builder
-    public record DialogueSet(String key, Component[] lines, Sound sound) {
+    public record DialogueSet(String key, Text[] lines, Sound sound) {
         public static final DialogueSet[] EMPTY = new DialogueSet[0];
 
         public static class DialogueSetBuilder {
-            public DialogueSetBuilder lines(Component[] lines) {
-                this.lines = lines;
-                return this;
-            }
-
-            public DialogueSetBuilder lines(String[] lines) {
-                if (lines == null) {
+            public DialogueSetBuilder lines(String... markup) {
+                if (markup == null) {
                     this.lines = null;
                     return this;
                 }
 
-                Component[] components = new Component[lines.length];
-                for (int i = 0; i < lines.length; i++) {
-                    components[i] = Component.text(lines[i]);
+                Text[] texts = new Text[markup.length];
+                for (int index = 0; index < markup.length; index++) {
+                    texts[index] = Text.read(markup[index]);
                 }
-                this.lines = components;
+                this.lines = texts;
+                return this;
+            }
+
+            public DialogueSetBuilder line(String markup, Object... arguments) {
+                Text[] existing = this.lines == null ? new Text[0] : this.lines;
+                Text[] appended = Arrays.copyOf(existing, existing.length + 1);
+                appended[existing.length] = Text.of(markup, arguments);
+                this.lines = appended;
+                return this;
+            }
+
+            public DialogueSetBuilder keyLines(String i18nKey, Object... arguments) {
+                this.lines = Text.keyLines(i18nKey, arguments).toArray(new Text[0]);
                 return this;
             }
         }
 
         public static DialogueSet ofTranslation(String key, String translationKey) {
-            return new DialogueSet(key, I18n.iterable(translationKey), null);
+            return builder().key(key).keyLines(translationKey).build();
         }
 
-        public static DialogueSet ofTranslation(String key, String translationKey, Component... args) {
-            return new DialogueSet(key, I18n.iterable(translationKey, args), null);
+        public static DialogueSet ofTranslation(String key, String translationKey, Object... arguments) {
+            return builder().key(key).keyLines(translationKey, arguments).build();
         }
 
         public static DialogueSet ofTranslation(String key, String translationKey, Sound sound) {
-            return new DialogueSet(key, I18n.iterable(translationKey), sound);
+            return builder().key(key).keyLines(translationKey).sound(sound).build();
         }
 
-        public static DialogueSet ofTranslation(String key, String translationKey, Sound sound, Component... args) {
-            return new DialogueSet(key, I18n.iterable(translationKey, args), sound);
+        public static DialogueSet ofTranslation(String key, String translationKey, Sound sound, Object... arguments) {
+            return builder().key(key).keyLines(translationKey, arguments).sound(sound).build();
         }
 
     }

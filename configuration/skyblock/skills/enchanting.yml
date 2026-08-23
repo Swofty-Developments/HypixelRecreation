@@ -1,7 +1,7 @@
 name: "Enchanting"
 displayIcon: "enchanting_table"
 description:
-  - "§7Enchant items to earn Enchanting XP!"
+  - "<7>Enchant items to earn Enchanting XP!"
 
 rewards:
   - level: 1

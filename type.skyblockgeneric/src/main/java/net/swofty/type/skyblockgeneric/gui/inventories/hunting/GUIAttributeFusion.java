@@ -2,7 +2,7 @@ package net.swofty.type.skyblockgeneric.gui.inventories.hunting;
 
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointHunting;
@@ -51,10 +51,10 @@ public class GUIAttributeFusion implements StatefulView<GUIAttributeFusion.State
             }
             int pages = AttributeGUIItems.pages(available.size());
             if (state.page() > 1)
-                layout.slot(45, (s, c) -> ItemStackCreator.getStack("§aPrevious Page", Material.ARROW, 1),
+                layout.slot(45, (s, c) -> ItemStacks.item(Material.ARROW, "<a>Previous Page"),
                         (click, c) -> c.session(State.class).setState(new State(state.page() - 1, state.first(), state.second())));
             if (state.page() < pages)
-                layout.slot(53, (s, c) -> ItemStackCreator.getStack("§aNext Page", Material.ARROW, 1),
+                layout.slot(53, (s, c) -> ItemStacks.item(Material.ARROW, "<a>Next Page"),
                         (click, c) -> c.session(State.class).setState(new State(state.page() + 1, state.first(), state.second())));
         } else {
             List<AttributeFusionService.FusionResult> results = AttributeFusionService.results(first, second);
@@ -71,21 +71,25 @@ public class GUIAttributeFusion implements StatefulView<GUIAttributeFusion.State
                                     case EPIC -> 500D;
                                     case LEGENDARY -> 1000D;
                                 });
-                                c.player().sendMessage("§aFusion complete! You received §e" + result.amount() + "x §a"
-                                        + result.definition().shardName() + "!");
+                                c.player().sendMessage("<a>Fusion complete! You received <e>{}x <a>{}!",
+                                        result.amount(), result.definition().shardName());
                                 c.session(State.class).setState(new State(1, null, null));
-                            } else c.player().sendMessage("§cYou no longer have enough Shards for that fusion!");
+                            } else c.player().sendMessage("<c>You no longer have enough Shards for that fusion!");
                         });
             }
         }
-        layout.slot(4, (s, c) -> ItemStackCreator.getStack("§aFusion Box", Material.BLAST_FURNACE, 1,
-                List.of("§7Select two different Shards.", "§7One of up to three result Shards", "§7can then be chosen.", "",
-                        "§7Shards: §2" + data.getShards().values().stream().mapToInt(Integer::intValue).sum())));
+        layout.slot(4, (s, c) -> ItemStacks.item(Material.BLAST_FURNACE, """
+                <a>Fusion Box
+                <7>Select two different Shards.
+                <7>One of up to three result Shards
+                <7>can then be chosen.
+
+                <7>Shards: <2>{}""", data.getShards().values().stream().mapToInt(Integer::intValue).sum()));
         if (first != null)
             layout.slot(47, (s, c) -> AttributeGUIItems.shard(first, AttributeFusionService.required(first)));
         if (second != null)
             layout.slot(51, (s, c) -> AttributeGUIItems.shard(second, AttributeFusionService.required(second)));
-        if (first != null) layout.slot(48, (s, c) -> ItemStackCreator.getStack("§cReset", Material.RED_DYE, 1),
+        if (first != null) layout.slot(48, (s, c) -> ItemStacks.item(Material.RED_DYE, "<c>Reset"),
                 (click, c) -> c.session(State.class).setState(new State(1, null, null)));
         Components.close(layout, 49);
     }

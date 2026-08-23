@@ -1,9 +1,9 @@
 package net.swofty.type.skyblockgeneric.skill;
 
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointDouble;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkills;
@@ -48,24 +48,31 @@ public abstract class SkillCategory {
 
     public record SkillReward(int level, int requirement, Reward... unlocks) {
         public List<String> getDisplay(List<String> lore) {
-            lore.add("§7Level " + StringUtility.getAsRomanNumeral(level) + " Rewards:");
+            lore.add(Text.of("<7>Level {:roman} Rewards:", level).serialize());
 
             Arrays.stream(unlocks).forEach(unlock -> {
                 switch (unlock.type()) {
-                    case XP -> lore.add("§7  §8+§b" + ((XPReward) unlock).getXP() + " SkyBlock XP");
-                    case COINS -> lore.add("§7  §8+§6" + ((CoinReward) unlock).getCoins() + " §7Coins");
-                    case REGION_ACCESS -> lore.add("§7  §8+§aAccess to " + ((RegionReward) unlock).getRegion());
+                    case XP -> lore.add("<7>  <8>+<b>" + ((XPReward) unlock).getXP() + " SkyBlock XP");
+                    case COINS -> lore.add("<7>  <8>+<6>" + ((CoinReward) unlock).getCoins() + " <7>Coins");
+                    case REGION_ACCESS -> {
+                        RegionType region = ((RegionReward) unlock).getRegion();
+                        lore.add(Text.of("<7>  <8>+<a>Access to <color:{}>{}",
+                                region.getColor(), region.getName()).serialize());
+                    }
                     case STATS_BASE -> {
                         ItemStatistic statistic = ((BaseStatisticReward) unlock).getStatistic();
-                        lore.add("§7  §8+§a" + StringUtility.decimalify(((BaseStatisticReward) unlock).amountAdded(), 1) +
-                                statistic.getSuffix() + " " + statistic.getFullDisplayName());
+                        lore.add(Text.of("<7>  <8>+<a>{:.1}{} <stat:'{}'>",
+                                ((BaseStatisticReward) unlock).amountAdded(),
+                                statistic.getSuffix(),
+                                statistic.name()).serialize());
                     }
                     case STATS_ADDITIVE_PERCENTAGE -> {
                         ItemStatistic statistic = ((AdditivePercentageStatisticReward) unlock).getStatistic();
-                        lore.add("§7  §8+§a" + StringUtility.decimalify(((AdditivePercentageStatisticReward) unlock).amountAdded() * 100, 1) +
-                                "% " + statistic.getFullDisplayName());
+                        lore.add(Text.of("<7>  <8>+<a>{:.1}% <stat:'{}'>",
+                                ((AdditivePercentageStatisticReward) unlock).amountAdded() * 100,
+                                statistic.name()).serialize());
                     }
-                    case RUNE -> lore.add("§7  Access to Level §d" + ((RuneReward) unlock).getRuneLevel() + " §7Runes");
+                    case RUNE -> lore.add("<7>  Access to Level <d>" + ((RuneReward) unlock).getRuneLevel() + " <7>Runes");
                 }
             });
 

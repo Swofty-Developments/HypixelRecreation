@@ -14,7 +14,7 @@ public class NPCClerkSeraphine extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Clerk Seraphine", "§e§lCLICK"};
+                return new String[]{"Clerk Seraphine", "<e><l>CLICK"};
             }
 
             @Override
@@ -49,11 +49,11 @@ public class NPCClerkSeraphine extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
-                                "Welcome to the §bCommunity Center§f!",
-                                "Contribute to community projects, upgrade your account, and more by talking to §dElizabeth§f!",
-                                "You can also vote in the §bmayor elections §fby heading through the warp behind me!"
-                        }).build()
+                        .key("hello").lines(
+                                "Welcome to the <b>Community Center<f>!",
+                                "Contribute to community projects, upgrade your account, and more by talking to <d>Elizabeth<f>!",
+                                "You can also vote in the <b>mayor elections <f>by heading through the warp behind me!"
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

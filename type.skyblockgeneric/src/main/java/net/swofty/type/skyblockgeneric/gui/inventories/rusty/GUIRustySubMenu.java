@@ -1,19 +1,15 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.rusty;
 
-import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.gui.inventory.HypixelPaginatedGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.PaginationList;
 import net.swofty.type.skyblockgeneric.gui.inventories.shop.ConfirmBuyView;
@@ -23,28 +19,27 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class GUIRustySubMenu<T extends GUIRustySubMenu.ShopEntry>
         extends HypixelPaginatedGUI<GUIRustySubMenu.DisplayEntry<T>> {
 
-    private final Supplier<String> titleSupplier;
+    private final String titleKey;
     private final Supplier<List<T>> entriesSupplier;
 
     public GUIRustySubMenu(
-            Supplier<String> titleSupplier,
+            String titleKey,
             Supplier<List<T>> entriesSupplier
     ) {
         super(InventoryType.CHEST_6_ROW);
-        this.titleSupplier = titleSupplier;
+        this.titleKey = titleKey;
         this.entriesSupplier = entriesSupplier;
     }
 
     @Override
-    protected String getTitle(HypixelPlayer player, String query, int page, PaginationList paged) {
-        return titleSupplier.get();
+    protected Text getTitleText(HypixelPlayer player, String query, int page, PaginationList<DisplayEntry<T>> paged) {
+        return Text.key(titleKey);
     }
 
     @Override
@@ -100,7 +95,7 @@ public class GUIRustySubMenu<T extends GUIRustySubMenu.ShopEntry>
     }
 
     @Override public void performSearch(HypixelPlayer player, String query, int page, int maxPage) {
-        border(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE, ""));
+        border(ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
         set(GUIClickableItem.getGoBackItem(49, new GUIRusty()));
 
         set(new GUIClickableItem(48) {
@@ -115,18 +110,18 @@ public class GUIRustySubMenu<T extends GUIRustySubMenu.ShopEntry>
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                String toggleAction = player.getToggles().get(DatapointToggles.Toggles.ToggleType.RUSTY_PURCHASE_CONFIRMATION) ? "disable" : "enable";
-                return ItemStackCreator.getStack(I18n.t("gui_rusty.submenu.shop_confirmations"),
-                        player.getToggles().get(DatapointToggles.Toggles.ToggleType.RUSTY_PURCHASE_CONFIRMATION) ? Material.LIME_DYE : Material.LIGHT_GRAY_DYE, 1,
-                    I18n.iterable("gui_rusty.submenu.shop_confirmations.lore", Component.text(toggleAction)));
+                boolean enabled = player.getToggles().get(DatapointToggles.Toggles.ToggleType.RUSTY_PURCHASE_CONFIRMATION);
+                return ItemStacks.item(enabled ? Material.LIME_DYE : Material.LIGHT_GRAY_DYE, 1,
+                        Text.key("gui_rusty.submenu.shop_confirmations"),
+                        Text.keyLines("gui_rusty.submenu.shop_confirmations.lore", enabled ? "disable" : "enable"));
             }
         });
 
         set(new GUIItem(50) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return TranslatableItemStackCreator.getStack("gui_rusty.submenu.janitor_info", Material.REDSTONE_TORCH, 1,
-                        "gui_rusty.submenu.janitor_info.lore");
+                return ItemStacks.item(Material.REDSTONE_TORCH, 1, Text.key("gui_rusty.submenu.janitor_info"),
+                        Text.keyLines("gui_rusty.submenu.janitor_info.lore"));
             }
         });
 
@@ -142,10 +137,10 @@ public class GUIRustySubMenu<T extends GUIRustySubMenu.ShopEntry>
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                Locale l = player.getLocale();
-                String status = player.getToggles().get(DatapointToggles.Toggles.ToggleType.RUSTY_SORT_BY_RARITY) ? "§aYES" : "§cNO";
-                return ItemStackCreator.getStack(I18n.string("gui_rusty.submenu.sort_by_rarity", l), Material.ENDER_EYE, 1,
-                    I18n.iterable("gui_rusty.submenu.sort_by_rarity.lore", Component.text(status)));
+                boolean sortByRarity = player.getToggles().get(DatapointToggles.Toggles.ToggleType.RUSTY_SORT_BY_RARITY);
+                return ItemStacks.item(Material.ENDER_EYE, 1, Text.key("gui_rusty.submenu.sort_by_rarity"),
+                        Text.keyLines("gui_rusty.submenu.sort_by_rarity.lore",
+                                sortByRarity ? Text.of("<a>YES") : Text.of("<c>NO")));
             }
         });
 
@@ -166,11 +161,8 @@ public class GUIRustySubMenu<T extends GUIRustySubMenu.ShopEntry>
             return new GUIClickableItem(slot) {
                 @Override public void run(InventoryPreClickEvent e, HypixelPlayer player) {}
                 @Override public ItemStack.Builder getItem(HypixelPlayer player) {
-                    Locale l = player.getLocale();
-                    return ItemStackCreator.getStackHead(
-                            I18n.string("gui_rusty.submenu.unknown_item", l),
-                            "5359d91277242fc01c309accb87b533f1929be176ecba2cde63bf635e05e699b"
-                    );
+                    return ItemStacks.head("5359d91277242fc01c309accb87b533f1929be176ecba2cde63bf635e05e699b",
+                            Text.key("gui_rusty.submenu.unknown_item"), List.of());
                 }
             };
         }
@@ -189,13 +181,13 @@ public class GUIRustySubMenu<T extends GUIRustySubMenu.ShopEntry>
                     return;
                 }
 
-                Locale l = skyblockPlayer.getLocale();
                 if (skyblockPlayer.getCoins() >= price) {
                     skyblockPlayer.addAndUpdateItem(item);
                     skyblockPlayer.removeCoins(price);
-                    skyblockPlayer.sendMessage(I18n.string("gui_rusty.submenu.bought_message", l, Component.text(item.getDisplayName()), Component.text(String.valueOf(price))));
+                    skyblockPlayer.sendMessage(Text.key("gui_rusty.submenu.bought_message",
+                            item.getDisplayName(), price));
                 } else {
-                    skyblockPlayer.sendMessage(I18n.t("gui_rusty.submenu.not_enough_coins"));
+                    skyblockPlayer.sendMessage(Text.key("gui_rusty.submenu.not_enough_coins"));
                 }
             }
 
@@ -204,22 +196,12 @@ public class GUIRustySubMenu<T extends GUIRustySubMenu.ShopEntry>
                 ItemStack.Builder stack =
                         new NonPlayerItemUpdater(entry.item()).getUpdatedItem();
 
-                List<String> lore = new ArrayList<>(
-                        stack.build()
-                                .get(DataComponents.LORE)
-                                .stream()
-                                .map(StringUtility::getTextFromComponent)
-                                .toList()
-                );
-
-                Locale l = player.getLocale();
-                lore.add("");
-                lore.add(I18n.string("gui_rusty.submenu.cost_label", l));
-                lore.add("§6" + StringUtility.commaify(entry.price()) + " Coins");
-                lore.add("");
-                lore.add(I18n.string("gui_rusty.submenu.click_to_trade", l));
-
-                return ItemStackCreator.updateLore(stack, lore);
+                return ItemStacks.appendLore(stack, List.of(
+                        Text.empty(),
+                        Text.key("gui_rusty.submenu.cost_label"),
+                        Text.of("<6>{:,} Coins", entry.price()),
+                        Text.empty(),
+                        Text.key("gui_rusty.submenu.click_to_trade")));
             }
         };
     }

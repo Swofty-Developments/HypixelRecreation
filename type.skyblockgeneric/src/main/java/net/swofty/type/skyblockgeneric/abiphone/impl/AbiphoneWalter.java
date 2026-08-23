@@ -2,14 +2,16 @@ package net.swofty.type.skyblockgeneric.abiphone.impl;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.item.ItemStack;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.entity.npc.NPCOption;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.abiphone.AbiphoneNPC;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.Collections;
+import java.util.List;
 
 public class AbiphoneWalter extends AbiphoneNPC {
 
@@ -49,26 +51,26 @@ public class AbiphoneWalter extends AbiphoneNPC {
 	public DialogueSet[] dialogues(HypixelPlayer player) {
 		return new DialogueSet[]{
 				DialogueSet.builder()
-						.key("abiphone").lines(new String[]{ // when clicking with an Abiphone
+						.key("abiphone").lines( // when clicking with an Abiphone
 								"My abiphone is for Platinum-level donors of the Walter cause only.",
 								"You know these superbooms don't craft themselves right?",
-								"You just need §3Sulphur Collection 7 §fand to then donate an Enchanted Sulphur Cube!", // then show "donate cube" option
-						}).build(),
+								"You just need <3>Sulphur Collection 7 <f>and to then donate an Enchanted Sulphur Cube!" // then show "donate cube" option
+						).build(),
 				DialogueSet.builder()
-						.key("donate_cube").lines(new String[]{ // when donating the cube with requirements met
+						.key("donate_cube").lines( // when donating the cube with requirements met
 								"Welcome to the Platinum club, high roller!",
 								"Call me anytime!",
-								"And before you ask... yes, I do try to commercialize all of my friendships.",
-						}).build(),
+								"And before you ask... yes, I do try to commercialize all of my friendships."
+						).build(),
 				DialogueSet.builder()
-						.key("donate_cube_no_requirements").lines(new String[]{ // when donating the cube without requirements met
-								"Mmh... you're missing something to become a Platinum-level donor...",
-						}).build()
+						.key("donate_cube_no_requirements").lines( // when donating the cube without requirements met
+								"Mmh... you're missing something to become a Platinum-level donor..."
+						).build()
 		};
 	}
 
 	@Override
 	public ItemStack.Builder getIcon() {
-		return ItemStackCreator.getStackHead("43ac21b653a27632dbc8373c6e6fba5b8c97b7ecbfef2d793630d149b116ba81");
+		return ItemStacks.head("43ac21b653a27632dbc8373c6e6fba5b8c97b7ecbfef2d793630d149b116ba81", Text.empty(), List.of());
 	}
 }

@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.blacksmith;
 
+
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.skyblockgeneric.event.custom.CustomBlockBreakEvent;
@@ -46,7 +47,7 @@ public class MissionMineCoal extends SkyBlockProgressMission {
 
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§3100 §7Mining Experience", "§b5 SkyBlock XP"))).forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<3>100 <7>Mining Experience", "<b>5 SkyBlock XP"))).forEach(player::sendMessage);
         player.getSkills().increase(player, SkillCategories.MINING, 100D);
         player.getMissionData().startMission(MissionTalkToBlacksmithAgain.class);
     }

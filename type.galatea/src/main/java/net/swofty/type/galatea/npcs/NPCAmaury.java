@@ -12,7 +12,7 @@ public class NPCAmaury extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bAmaury", "§e§lCLICK"};
+                return new String[]{"<b>Amaury", "<e><l>CLICK"};
             }
 
             @Override

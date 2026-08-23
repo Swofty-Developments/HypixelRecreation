@@ -1,8 +1,8 @@
 name: Hunting
 displayIcon: lead
 description:
-  - §7Hunt various monsters to earn
-  - §7Hunting XP!
+  - <7>Hunt various monsters to earn
+  - <7>Hunting XP!
 rewards:
   - level: 1
     requirement: 50

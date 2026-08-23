@@ -3,6 +3,7 @@ package net.swofty.type.bedwarsgame.gui;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.generic.gui.v2.SharedContext;
@@ -26,7 +27,7 @@ public class GUITeamChest implements View<GUITeamChest.State> {
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return new ViewConfiguration<>(teamKey.getName() + "'s Team Chest", InventoryType.CHEST_3_ROW);
+        return new ViewConfiguration<>(Text.of("{}'s Team Chest", teamKey.getName()), InventoryType.CHEST_3_ROW);
     }
 
     @Override

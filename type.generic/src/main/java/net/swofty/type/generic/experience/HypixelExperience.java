@@ -1,5 +1,7 @@
 package net.swofty.type.generic.experience;
 
+import net.swofty.commons.text.Text;
+
 public class HypixelExperience {
     private static final int[] MULTIPLIER_LEVELS = {10, 25, 50, 75, 100, 150, 200, 250};
     private static final double[] MULTIPLIER_VALUES = {1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};
@@ -63,24 +65,24 @@ public class HypixelExperience {
         return level >= 100;
     }
 
-    public static String formatLevel(int level) {
+    public static Text formatLevel(int level) {
         String color;
         if (level >= 250) {
-            color = "§6";
+            color = "<6>";
         } else if (level >= 200) {
-            color = "§d";
+            color = "<d>";
         } else if (level >= 150) {
-            color = "§b";
+            color = "<b>";
         } else if (level >= 100) {
-            color = "§a";
+            color = "<a>";
         } else if (level >= 50) {
-            color = "§e";
+            color = "<e>";
         } else if (level >= 25) {
-            color = "§2";
+            color = "<2>";
         } else {
-            color = "§7";
+            color = "<7>";
         }
-        return color + level;
+        return Text.of(color + "{}", level);
     }
 
     public static String formatXP(long xp) {

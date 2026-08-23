@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.barn;
 
+
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.skyblockgeneric.event.custom.PlayerRegionChangeEvent;
 import net.swofty.type.skyblockgeneric.levels.SkyBlockLevelCause;
@@ -47,7 +48,7 @@ public class MissionTalkToFarmHand extends SkyBlockMission {
 
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§b5 SkyBlock XP", "§3100 §7Farming Experience"))).forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<b>5 SkyBlock XP", "<3>100 <7>Farming Experience"))).forEach(player::sendMessage);
         player.getSkills().increase(player, SkillCategories.FARMING, 100D);
         player.getSkyBlockExperience().addExperience(SkyBlockLevelCause.getMissionCause(getID()));
         player.getMissionData().startMission(MissionCraftWheatMinion.class);

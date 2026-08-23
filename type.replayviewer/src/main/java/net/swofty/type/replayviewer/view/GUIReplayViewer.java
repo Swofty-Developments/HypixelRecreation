@@ -3,13 +3,13 @@ package net.swofty.type.replayviewer.view;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
 import net.swofty.commons.ServerType;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
 import net.swofty.type.replayviewer.util.ReplayShareUtil;
 
@@ -24,63 +24,63 @@ public class GUIReplayViewer extends StatelessView {
 
     @Override
     public void layout(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
-        layout.slot(9, ItemStackCreator.getStack(
-                I18n.t("replays.settings"),
+        layout.slot(9, ItemStacks.item(
             Material.OAK_SIGN,
             1,
+                Text.key("replays.settings"),
                 List.of(
-                        I18n.t("replays.settings_description"),
-                        net.kyori.adventure.text.Component.empty(),
-                        I18n.t("replays.click_to_open")
+                        Text.key("replays.settings_description"),
+                        Text.empty(),
+                        Text.key("replays.click_to_open")
                 )
         ), (s, c) -> {
             c.push(new GUIViewerSettings());
         });
 
-        layout.slot(11, ItemStackCreator.getStack(
-                I18n.t("replays.bookmarks"),
+        layout.slot(11, ItemStacks.item(
             Material.BOOK,
             1,
+                Text.key("replays.bookmarks"),
                 List.of(
-                        I18n.t("replays.bookmarks_description"),
-                        net.kyori.adventure.text.Component.empty(),
-                        I18n.t("replays.click_to_view")
+                        Text.key("replays.bookmarks_description"),
+                        Text.empty(),
+                        Text.key("replays.click_to_view")
                 )
         ), (_, c) -> c.push(new GUIBookmarks()));
 
-        layout.slot(13, ItemStackCreator.getStack(
-                I18n.t("replays.share"),
+        layout.slot(13, ItemStacks.item(
             Material.PAPER,
             1,
+                Text.key("replays.share"),
                 List.of(
-                        I18n.t("replays.share_description"),
-                        net.kyori.adventure.text.Component.empty(),
-                        I18n.t("replays.click_to_share")
+                        Text.key("replays.share_description"),
+                        Text.empty(),
+                        Text.key("replays.click_to_share")
                 )
         ), (_, c) -> TypeReplayViewerLoader.getSession(c.player()).ifPresentOrElse(
             session -> ReplayShareUtil.sendShareCommandMessage(c.player(), session),
-                () -> c.player().sendMessage(I18n.t("replays.no_active_session"))
+                () -> c.player().sendMessage(Text.key("replays.no_active_session"))
         ));
 
         // for now, this can't be implemented
-        layout.slot(15, ItemStackCreator.getStack(
-                I18n.t("replays.submit_highlight"),
+        layout.slot(15, ItemStacks.item(
             Material.FILLED_MAP,
             1,
+                Text.key("replays.submit_highlight"),
                 List.of(
-                        I18n.t("replays.highlight_description"),
-                        net.kyori.adventure.text.Component.empty(),
-                        I18n.t("replays.highlight_terms"),
-                        net.kyori.adventure.text.Component.empty(),
-                        I18n.t("replays.click_to_submit")
+                        Text.key("replays.highlight_description"),
+                        Text.empty(),
+                        Text.key("replays.highlight_terms"),
+                        Text.empty(),
+                        Text.key("replays.click_to_submit")
                 )
         ), (_, viewContext) -> viewContext.player().notImplemented());
 
-        layout.slot(17, ItemStackCreator.getStack(
-                I18n.t("replays.leave_replay"),
+        layout.slot(17, ItemStacks.item(
             Material.DARK_OAK_DOOR,
             1,
-                I18n.t("replays.click_to_leave")
+                Text.key("replays.leave_replay"),
+                List.of(Text.key("replays.click_to_leave"))
         ), (_, c) -> {
             TypeReplayViewerLoader.getSession(c.player())
                 .ifPresent(session -> session.removeViewer(c.player()));

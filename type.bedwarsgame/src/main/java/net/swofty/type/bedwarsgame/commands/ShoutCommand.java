@@ -3,6 +3,7 @@ package net.swofty.type.bedwarsgame.commands;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.commons.bedwars.BedWarsGameType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
@@ -28,23 +29,23 @@ public class ShoutCommand extends HypixelCommand {
 			BedWarsPlayer player = (BedWarsPlayer) sender;
 			BedWarsGame game = player.getGame();
 			if (game == null) {
-				player.sendMessage("§cYou are not in a game.");
+				player.sendMessage("<c>You are not in a game.");
 				return;
 			}
 			if (game.getGameType() == BedWarsGameType.ONE_EIGHT) {
-				player.sendMessage("§cThis command is unavailable.");
+				player.sendMessage("<c>This command is unavailable.");
 				return;
 			}
 			if (game.getState() != GameState.IN_PROGRESS) {
-				player.sendMessage("§cYou can only shout messages during an active game.");
+				player.sendMessage("<c>You can only shout messages during an active game.");
 				return;
 			}
 			if (message.isEmpty()) {
-				player.sendMessage("§cPlease provide a message to shout.");
+				player.sendMessage("<c>Please provide a message to shout.");
 				return;
 			}
 			for (BedWarsPlayer receiver : game.getPlayers()) {
-				receiver.sendMessage("§6[SHOUT] §r" + player.getFullDisplayName() + "§r: " + message);
+				receiver.sendMessage("<6>[SHOUT] <r>{}<r>: {}", player.getFullDisplayName(), message);
 			}
 
 			if (game.getReplayManager().isRecording()) {
@@ -53,7 +54,7 @@ public class ShoutCommand extends HypixelCommand {
 		}, messageArg);
 
 		command.setDefaultExecutor((sender, _) -> {
-			sender.sendMessage("§cPlease provide a message to shout.");
+			sender.sendMessage("<c>Please provide a message to shout.");
 		});
 	}
 

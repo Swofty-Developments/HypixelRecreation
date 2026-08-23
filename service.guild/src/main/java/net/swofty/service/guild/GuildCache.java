@@ -12,6 +12,7 @@ import net.swofty.commons.guild.events.response.*;
 import net.swofty.commons.protocol.objects.guild.GuildEventPushProtocol;
 import net.swofty.commons.protocol.objects.messaging.SendMessagePushProtocol;
 import net.swofty.commons.redis.RedisClient;
+import net.swofty.commons.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.ZonedDateTime;
@@ -60,17 +61,17 @@ public class GuildCache {
         final String guildName = event.getGuildName();
 
         if (isInGuild(creator)) {
-            sendErrorToPlayer(creator, "§cYou are already in a guild! Leave your current guild to create a new one.");
+            sendErrorToPlayer(creator, "<c>You are already in a guild! Leave your current guild to create a new one.");
             return;
         }
 
         if (guildName.length() < 3 || guildName.length() > 30) {
-            sendErrorToPlayer(creator, "§cGuild name must be between 3 and 30 characters.");
+            sendErrorToPlayer(creator, "<c>Guild name must be between 3 and 30 characters.");
             return;
         }
 
         if (GuildDatabase.guildNameExists(guildName)) {
-            sendErrorToPlayer(creator, "§cA guild with that name already exists!");
+            sendErrorToPlayer(creator, "<c>A guild with that name already exists!");
             return;
         }
 
@@ -88,35 +89,35 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(inviter);
         if (guild == null) {
-            sendErrorToPlayer(inviter, "§cYou are not in a guild!");
+            sendErrorToPlayer(inviter, "<c>You are not in a guild!");
             return;
         }
 
         GuildRank inviterRank = guild.getMemberRank(inviter);
         if (inviterRank == null || !inviterRank.hasPermission(GuildPermission.INVITE)) {
-            sendErrorToPlayer(inviter, "§cYou do not have permission to invite players!");
+            sendErrorToPlayer(inviter, "<c>You do not have permission to invite players!");
             return;
         }
 
         if (guild.isFull()) {
-            sendErrorToPlayer(inviter, "§cYour guild is full!");
+            sendErrorToPlayer(inviter, "<c>Your guild is full!");
             return;
         }
 
         if (isInGuild(invitee)) {
-            sendErrorToPlayer(inviter, "§cThat player is already in a guild!");
+            sendErrorToPlayer(inviter, "<c>That player is already in a guild!");
             return;
         }
 
         if (pendingInvites.containsKey(invitee)) {
-            sendErrorToPlayer(inviter, "§cThat player already has a pending guild invite!");
+            sendErrorToPlayer(inviter, "<c>That player already has a pending guild invite!");
             return;
         }
 
         PendingGuildInvite invite = new PendingGuildInvite(guild.getGuildId(), inviter, invitee);
         pendingInvites.put(invitee, invite);
         scheduleInviteExpiration(guild.getGuildId(), inviter, invitee, 60000);
-        log(guild, "§a" + inviter + "§7 invited §e" + invitee);
+        log(guild, "<a>{}<7> invited <e>{}", inviter, invitee);
         persistGuild(guild);
 
         GuildInviteSentResponseEvent response = new GuildInviteSentResponseEvent(guild, inviter, invitee);
@@ -129,31 +130,31 @@ public class GuildCache {
 
         PendingGuildInvite invite = pendingInvites.get(accepter);
         if (invite == null || !invite.inviter().equals(inviter)) {
-            sendErrorToPlayer(accepter, "§cYou don't have a pending invite from that player, or it has expired!");
+            sendErrorToPlayer(accepter, "<c>You don't have a pending invite from that player, or it has expired!");
             return;
         }
 
         if (isInGuild(accepter)) {
-            sendErrorToPlayer(accepter, "§cYou must leave your current guild before joining another!");
+            sendErrorToPlayer(accepter, "<c>You must leave your current guild before joining another!");
             return;
         }
 
         GuildData guild = getGuild(invite.guildId());
         if (guild == null) {
-            sendErrorToPlayer(accepter, "§cThe guild no longer exists!");
+            sendErrorToPlayer(accepter, "<c>The guild no longer exists!");
             pendingInvites.remove(accepter);
             return;
         }
 
         if (guild.isFull()) {
-            sendErrorToPlayer(accepter, "§cThe guild is now full!");
+            sendErrorToPlayer(accepter, "<c>The guild is now full!");
             pendingInvites.remove(accepter);
             return;
         }
 
         GuildMember newMember = new GuildMember(accepter, "Member", System.currentTimeMillis());
         guild.getMembers().add(newMember);
-        log(guild, "§a" + accepter + "§7 joined");
+        log(guild, "<a>{}<7> joined", accepter);
         pendingInvites.remove(accepter);
 
         persistGuild(guild);
@@ -168,18 +169,18 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(leaver);
         if (guild == null) {
-            sendErrorToPlayer(leaver, "§cYou are not in a guild!");
+            sendErrorToPlayer(leaver, "<c>You are not in a guild!");
             return;
         }
 
         if (guild.getMasterUuid().equals(leaver)) {
-            sendErrorToPlayer(leaver, "§cYou cannot leave a guild as the Guild Master! Transfer ownership first or disband the guild.");
+            sendErrorToPlayer(leaver, "<c>You cannot leave a guild as the Guild Master! Transfer ownership first or disband the guild.");
             return;
         }
 
         GuildMember member = guild.getMember(leaver);
         guild.getMembers().remove(member);
-        log(guild, "§a" + leaver + "§7 left");
+        log(guild, "<a>{}<7> left", leaver);
 
         persistGuild(guild);
         GuildDatabase.removePlayerMapping(leaver);
@@ -195,30 +196,31 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(kicker);
         if (guild == null) {
-            sendErrorToPlayer(kicker, "§cYou are not in a guild!");
+            sendErrorToPlayer(kicker, "<c>You are not in a guild!");
             return;
         }
 
         GuildRank kickerRank = guild.getMemberRank(kicker);
         if (kickerRank == null || !kickerRank.hasPermission(GuildPermission.KICK)) {
-            sendErrorToPlayer(kicker, "§cYou do not have permission to kick members!");
+            sendErrorToPlayer(kicker, "<c>You do not have permission to kick members!");
             return;
         }
 
         GuildMember targetMember = guild.getMember(target);
         if (targetMember == null) {
-            sendErrorToPlayer(kicker, "§cThat player is not in your guild!");
+            sendErrorToPlayer(kicker, "<c>That player is not in your guild!");
             return;
         }
 
         GuildRank targetRank = guild.getRank(targetMember.getRankName());
         if (targetRank != null && !kickerRank.isHigherThan(targetRank)) {
-            sendErrorToPlayer(kicker, "§cYou cannot kick someone of equal or higher rank!");
+            sendErrorToPlayer(kicker, "<c>You cannot kick someone of equal or higher rank!");
             return;
         }
 
         guild.getMembers().remove(targetMember);
-        log(guild, "§a" + kicker + "§7 kicked §e" + target + (reason.isBlank() ? "" : " §7for §e" + reason));
+        log(guild, Text.of("<a>{}<7> kicked <e>{}", kicker, target)
+                .appendIf(!reason.isBlank(), " <7>for <e>{}", reason));
 
         persistGuild(guild);
         GuildDatabase.removePlayerMapping(target);
@@ -232,12 +234,12 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(disbander);
         if (guild == null) {
-            sendErrorToPlayer(disbander, "§cYou are not in a guild!");
+            sendErrorToPlayer(disbander, "<c>You are not in a guild!");
             return;
         }
 
         if (!guild.getMasterUuid().equals(disbander)) {
-            sendErrorToPlayer(disbander, "§cOnly the Guild Master can disband the guild!");
+            sendErrorToPlayer(disbander, "<c>Only the Guild Master can disband the guild!");
             return;
         }
 
@@ -250,19 +252,19 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(promoter);
         if (guild == null) {
-            sendErrorToPlayer(promoter, "§cYou are not in a guild!");
+            sendErrorToPlayer(promoter, "<c>You are not in a guild!");
             return;
         }
 
         GuildRank promoterRank = guild.getMemberRank(promoter);
         if (promoterRank == null || !promoterRank.hasPermission(GuildPermission.PROMOTE)) {
-            sendErrorToPlayer(promoter, "§cYou do not have permission to promote members!");
+            sendErrorToPlayer(promoter, "<c>You do not have permission to promote members!");
             return;
         }
 
         GuildMember targetMember = guild.getMember(target);
         if (targetMember == null) {
-            sendErrorToPlayer(promoter, "§cThat player is not in your guild!");
+            sendErrorToPlayer(promoter, "<c>That player is not in your guild!");
             return;
         }
 
@@ -271,18 +273,18 @@ public class GuildCache {
 
         GuildRank nextRank = guild.getNextRankUp(currentRank);
         if (nextRank == null || nextRank.getName().equals("Guild Master")) {
-            sendErrorToPlayer(promoter, "§cThat player cannot be promoted any further!");
+            sendErrorToPlayer(promoter, "<c>That player cannot be promoted any further!");
             return;
         }
 
         if (!promoterRank.isHigherThan(nextRank)) {
-            sendErrorToPlayer(promoter, "§cYou can only promote members to ranks below yours!");
+            sendErrorToPlayer(promoter, "<c>You can only promote members to ranks below yours!");
             return;
         }
 
         String oldRank = targetMember.getRankName();
         targetMember.setRankName(nextRank.getName());
-        log(guild, "§a" + promoter + "§7 set rank of §e" + target + " §7to §e" + nextRank.getName());
+        log(guild, "<a>{}<7> set rank of <e>{} <7>to <e>{}", promoter, target, nextRank.getName());
         persistGuild(guild);
 
         GuildRankChangedResponseEvent response = new GuildRankChangedResponseEvent(guild, promoter, target, oldRank, nextRank.getName());
@@ -295,19 +297,19 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(demoter);
         if (guild == null) {
-            sendErrorToPlayer(demoter, "§cYou are not in a guild!");
+            sendErrorToPlayer(demoter, "<c>You are not in a guild!");
             return;
         }
 
         GuildRank demoterRank = guild.getMemberRank(demoter);
         if (demoterRank == null || !demoterRank.hasPermission(GuildPermission.DEMOTE)) {
-            sendErrorToPlayer(demoter, "§cYou do not have permission to demote members!");
+            sendErrorToPlayer(demoter, "<c>You do not have permission to demote members!");
             return;
         }
 
         GuildMember targetMember = guild.getMember(target);
         if (targetMember == null) {
-            sendErrorToPlayer(demoter, "§cThat player is not in your guild!");
+            sendErrorToPlayer(demoter, "<c>That player is not in your guild!");
             return;
         }
 
@@ -316,18 +318,18 @@ public class GuildCache {
 
         GuildRank nextRank = guild.getNextRankDown(currentRank);
         if (nextRank == null) {
-            sendErrorToPlayer(demoter, "§cThat player cannot be demoted any further!");
+            sendErrorToPlayer(demoter, "<c>That player cannot be demoted any further!");
             return;
         }
 
         if (!demoterRank.isHigherThan(currentRank)) {
-            sendErrorToPlayer(demoter, "§cYou can only demote members of lower rank!");
+            sendErrorToPlayer(demoter, "<c>You can only demote members of lower rank!");
             return;
         }
 
         String oldRank = targetMember.getRankName();
         targetMember.setRankName(nextRank.getName());
-        log(guild, "§a" + demoter + "§7 set rank of §e" + target + " §7to §e" + nextRank.getName());
+        log(guild, "<a>{}<7> set rank of <e>{} <7>to <e>{}", demoter, target, nextRank.getName());
         persistGuild(guild);
 
         GuildRankChangedResponseEvent response = new GuildRankChangedResponseEvent(guild, demoter, target, oldRank, nextRank.getName());
@@ -340,25 +342,25 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(currentOwner);
         if (guild == null) {
-            sendErrorToPlayer(currentOwner, "§cYou are not in a guild!");
+            sendErrorToPlayer(currentOwner, "<c>You are not in a guild!");
             return;
         }
 
         if (!guild.getMasterUuid().equals(currentOwner)) {
-            sendErrorToPlayer(currentOwner, "§cOnly the Guild Master can transfer ownership!");
+            sendErrorToPlayer(currentOwner, "<c>Only the Guild Master can transfer ownership!");
             return;
         }
 
         GuildMember newOwnerMember = guild.getMember(newOwner);
         if (newOwnerMember == null) {
-            sendErrorToPlayer(currentOwner, "§cThat player is not in your guild!");
+            sendErrorToPlayer(currentOwner, "<c>That player is not in your guild!");
             return;
         }
 
         GuildMember currentOwnerMember = guild.getMember(currentOwner);
         currentOwnerMember.setRankName("Officer");
         newOwnerMember.setRankName("Guild Master");
-        log(guild, "§a" + currentOwner + "§7 transferred the guild to §e" + newOwner);
+        log(guild, "<a>{}<7> transferred the guild to <e>{}", currentOwner, newOwner);
         persistGuild(guild);
 
         GuildTransferredResponseEvent response = new GuildTransferredResponseEvent(guild, currentOwner, newOwner);
@@ -388,28 +390,28 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(sender);
         if (guild == null) {
-            sendErrorToPlayer(sender, "§cYou are not in a guild!");
+            sendErrorToPlayer(sender, "<c>You are not in a guild!");
             return;
         }
 
         if (officerChat) {
             GuildRank rank = guild.getMemberRank(sender);
             if (rank == null || !rank.hasPermission(GuildPermission.OFFICER_CHAT)) {
-                sendErrorToPlayer(sender, "§cYou do not have permission to use officer chat!");
+                sendErrorToPlayer(sender, "<c>You do not have permission to use officer chat!");
                 return;
             }
         }
 
         GuildMember member = guild.getMember(sender);
         if (member != null && member.isMuted()) {
-            sendErrorToPlayer(sender, "§cYou are muted in this guild!");
+            sendErrorToPlayer(sender, "<c>You are muted in this guild!");
             return;
         }
 
         if (guild.isEveryoneMuted() && guild.getEveryoneMutedExpiry() > System.currentTimeMillis()) {
             GuildRank rank = guild.getMemberRank(sender);
             if (rank == null || !rank.hasPermission(GuildPermission.MUTE_MEMBERS)) {
-                sendErrorToPlayer(sender, "§cGuild chat is currently muted!");
+                sendErrorToPlayer(sender, "<c>Guild chat is currently muted!");
                 return;
             }
         }
@@ -417,7 +419,7 @@ public class GuildCache {
         if (guild.isSlowChat()) {
             Long lastChat = lastChatTimestamps.get(sender);
             if (lastChat != null && System.currentTimeMillis() - lastChat < 10000) {
-                sendErrorToPlayer(sender, "§cSlow mode is enabled. Please wait before sending another message.");
+                sendErrorToPlayer(sender, "<c>Slow mode is enabled. Please wait before sending another message.");
                 return;
             }
             lastChatTimestamps.put(sender, System.currentTimeMillis());
@@ -434,7 +436,7 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(changer);
         if (guild == null) {
-            sendErrorToPlayer(changer, "§cYou are not in a guild!");
+            sendErrorToPlayer(changer, "<c>You are not in a guild!");
             return;
         }
 
@@ -444,22 +446,22 @@ public class GuildCache {
         switch (setting.toLowerCase()) {
             case "tag" -> {
                 if (!rank.hasPermission(GuildPermission.MODIFY_TAG)) {
-                    sendErrorToPlayer(changer, "§cYou do not have permission to change the guild tag!");
+                    sendErrorToPlayer(changer, "<c>You do not have permission to change the guild tag!");
                     return;
                 }
                 if (!guild.canSetTag()) {
-                    sendErrorToPlayer(changer, "§cYour guild must be Level 5 to set a tag!");
+                    sendErrorToPlayer(changer, "<c>Your guild must be Level 5 to set a tag!");
                     return;
                 }
                 if (value.length() > guild.getMaxTagLength()) {
-                    sendErrorToPlayer(changer, "§cTag cannot be longer than " + guild.getMaxTagLength() + " characters!");
+                    sendErrorToPlayer(changer, "<c>Tag cannot be longer than {} characters!", guild.getMaxTagLength());
                     return;
                 }
                 guild.setTag(value);
             }
             case "tagcolor" -> {
                 if (!rank.hasPermission(GuildPermission.MODIFY_TAG)) {
-                    sendErrorToPlayer(changer, "§cYou do not have permission to change the tag color!");
+                    sendErrorToPlayer(changer, "<c>You do not have permission to change the tag color!");
                     return;
                 }
                 int requiredLevel = switch (value) {
@@ -469,50 +471,50 @@ public class GuildCache {
                     default -> Integer.MAX_VALUE;
                 };
                 if (guild.getLevel() < requiredLevel) {
-                    sendErrorToPlayer(changer, "§cThat guild tag color has not been unlocked!");
+                    sendErrorToPlayer(changer, "<c>That guild tag color has not been unlocked!");
                     return;
                 }
                 guild.setTagColor(value);
             }
             case "motd" -> {
                 if (!rank.hasPermission(GuildPermission.MODIFY_MOTD)) {
-                    sendErrorToPlayer(changer, "§cYou do not have permission to change the MOTD!");
+                    sendErrorToPlayer(changer, "<c>You do not have permission to change the MOTD!");
                     return;
                 }
                 guild.setMotd(value);
             }
             case "description" -> {
                 if (!rank.hasPermission(GuildPermission.MODIFY_DESCRIPTION)) {
-                    sendErrorToPlayer(changer, "§cYou do not have permission to change the description!");
+                    sendErrorToPlayer(changer, "<c>You do not have permission to change the description!");
                     return;
                 }
                 guild.setDescription(value);
             }
             case "discord" -> {
                 if (!rank.hasPermission(GuildPermission.MODIFY_DISCORD)) {
-                    sendErrorToPlayer(changer, "§cYou do not have permission to change the discord link!");
+                    sendErrorToPlayer(changer, "<c>You do not have permission to change the discord link!");
                     return;
                 }
                 guild.setDiscordLink(value);
             }
             case "rename" -> {
                 if (!guild.getMasterUuid().equals(changer)) {
-                    sendErrorToPlayer(changer, "§cOnly the Guild Master can rename the guild!");
+                    sendErrorToPlayer(changer, "<c>Only the Guild Master can rename the guild!");
                     return;
                 }
                 if (value.length() < 3 || value.length() > 30) {
-                    sendErrorToPlayer(changer, "§cGuild name must be between 3 and 30 characters.");
+                    sendErrorToPlayer(changer, "<c>Guild name must be between 3 and 30 characters.");
                     return;
                 }
                 if (GuildDatabase.guildNameExists(value)) {
-                    sendErrorToPlayer(changer, "§cA guild with that name already exists!");
+                    sendErrorToPlayer(changer, "<c>A guild with that name already exists!");
                     return;
                 }
                 guild.setName(value);
             }
             case "slow" -> {
                 if (!rank.hasPermission(GuildPermission.MODIFY_SETTINGS)) {
-                    sendErrorToPlayer(changer, "§cYou do not have permission to modify settings!");
+                    sendErrorToPlayer(changer, "<c>You do not have permission to modify settings!");
                     return;
                 }
                 guild.setSlowChat(!guild.isSlowChat());
@@ -520,7 +522,7 @@ public class GuildCache {
             }
             case "finder" -> {
                 if (!rank.hasPermission(GuildPermission.MODIFY_SETTINGS)) {
-                    sendErrorToPlayer(changer, "§cYou do not have permission to modify settings!");
+                    sendErrorToPlayer(changer, "<c>You do not have permission to modify settings!");
                     return;
                 }
                 guild.setListedInFinder(!guild.isListedInFinder());
@@ -541,12 +543,12 @@ public class GuildCache {
                 value = guild.isOnlineMode() ? "enabled" : "disabled";
             }
             default -> {
-                sendErrorToPlayer(changer, "§cUnknown setting: " + setting);
+                sendErrorToPlayer(changer, "<c>Unknown setting: {}", setting);
                 return;
             }
         }
 
-        log(guild, "§a" + changer + "§7 changed guild setting §e" + setting);
+        log(guild, "<a>{}<7> changed guild setting <e>{}", changer, setting);
         persistGuild(guild);
 
         GuildSettingChangedResponseEvent response = new GuildSettingChangedResponseEvent(guild, changer, setting, value);
@@ -560,13 +562,13 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(muter);
         if (guild == null) {
-            sendErrorToPlayer(muter, "§cYou are not in a guild!");
+            sendErrorToPlayer(muter, "<c>You are not in a guild!");
             return;
         }
 
         GuildRank muterRank = guild.getMemberRank(muter);
         if (muterRank == null || !muterRank.hasPermission(GuildPermission.MUTE_MEMBERS)) {
-            sendErrorToPlayer(muter, "§cYou do not have permission to mute guild members!");
+            sendErrorToPlayer(muter, "<c>You do not have permission to mute guild members!");
             return;
         }
 
@@ -577,13 +579,13 @@ public class GuildCache {
             UUID targetUUID = UUID.fromString(target);
             GuildMember member = guild.getMember(targetUUID);
             if (member == null) {
-                sendErrorToPlayer(muter, "§cThat player is not in your guild!");
+                sendErrorToPlayer(muter, "<c>That player is not in your guild!");
                 return;
             }
             member.setMutedUntil(System.currentTimeMillis() + duration);
         }
 
-        log(guild, "§a" + muter + "§7 muted §e" + target + " §7for §e" + duration + "ms");
+        log(guild, "<a>{}<7> muted <e>{} <7>for <e>{}ms", muter, target, duration);
         persistGuild(guild);
 
         GuildMuteChangedResponseEvent response = new GuildMuteChangedResponseEvent(guild, muter, target, duration, false);
@@ -596,13 +598,13 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(actor);
         if (guild == null) {
-            sendErrorToPlayer(actor, "§cYou are not in a guild!");
+            sendErrorToPlayer(actor, "<c>You are not in a guild!");
             return;
         }
 
         GuildRank actorRank = guild.getMemberRank(actor);
         if (actorRank == null || !actorRank.hasPermission(GuildPermission.MUTE_MEMBERS)) {
-            sendErrorToPlayer(actor, "§cYou do not have permission to unmute guild members!");
+            sendErrorToPlayer(actor, "<c>You do not have permission to unmute guild members!");
             return;
         }
 
@@ -613,13 +615,13 @@ public class GuildCache {
             UUID targetUUID = UUID.fromString(target);
             GuildMember member = guild.getMember(targetUUID);
             if (member == null) {
-                sendErrorToPlayer(actor, "§cThat player is not in your guild!");
+                sendErrorToPlayer(actor, "<c>That player is not in your guild!");
                 return;
             }
             member.setMutedUntil(0);
         }
 
-        log(guild, "§a" + actor + "§7 unmuted §e" + target);
+        log(guild, "<a>{}<7> unmuted <e>{}", actor, target);
         persistGuild(guild);
 
         GuildMuteChangedResponseEvent response = new GuildMuteChangedResponseEvent(guild, actor, target, 0, true);
@@ -633,35 +635,35 @@ public class GuildCache {
 
         GuildData guild = getGuildFromPlayer(setter);
         if (guild == null) {
-            sendErrorToPlayer(setter, "§cYou are not in a guild!");
+            sendErrorToPlayer(setter, "<c>You are not in a guild!");
             return;
         }
 
         if (!guild.getMasterUuid().equals(setter)) {
-            sendErrorToPlayer(setter, "§cOnly the Guild Master can set ranks directly!");
+            sendErrorToPlayer(setter, "<c>Only the Guild Master can set ranks directly!");
             return;
         }
 
         GuildMember targetMember = guild.getMember(target);
         if (targetMember == null) {
-            sendErrorToPlayer(setter, "§cThat player is not in your guild!");
+            sendErrorToPlayer(setter, "<c>That player is not in your guild!");
             return;
         }
 
         GuildRank newRank = guild.getRank(rankName);
         if (newRank == null) {
-            sendErrorToPlayer(setter, "§cThat rank does not exist!");
+            sendErrorToPlayer(setter, "<c>That rank does not exist!");
             return;
         }
 
         if (newRank.getName().equals("Guild Master")) {
-            sendErrorToPlayer(setter, "§cUse /guild transfer to transfer Guild Master!");
+            sendErrorToPlayer(setter, "<c>Use /guild transfer to transfer Guild Master!");
             return;
         }
 
         String oldRank = targetMember.getRankName();
         targetMember.setRankName(newRank.getName());
-        log(guild, "§a" + setter + "§7 set rank of §e" + target + " §7to §e" + newRank.getName());
+        log(guild, "<a>{}<7> set rank of <e>{} <7>to <e>{}", setter, target, newRank.getName());
         persistGuild(guild);
 
         GuildRankChangedResponseEvent response = new GuildRankChangedResponseEvent(guild, setter, target, oldRank, newRank.getName());
@@ -688,14 +690,15 @@ public class GuildCache {
         );
     }
 
-    private static void sendErrorToPlayer(UUID playerUUID, String message) {
-        sendMessageToPlayer(playerUUID, "§9§m-----------------------------------------------------\n" + message + "\n§9§m-----------------------------------------------------");
+    private static void sendErrorToPlayer(UUID playerUUID, String markup, Object... arguments) {
+        Text message = Text.of("<sep>\n").append(markup, arguments).append("\n<sep>");
+        sendMessageToPlayer(playerUUID, message);
     }
 
-    private static void sendMessageToPlayer(final @NotNull UUID playerUUID, final @NotNull String message) {
+    private static void sendMessageToPlayer(final @NotNull UUID playerUUID, final @NotNull Text message) {
         RedisClient.requestAllServersFromService(
             new SendMessagePushProtocol(),
-            new SendMessagePushProtocol.Request(playerUUID, message),
+            new SendMessagePushProtocol.Request(playerUUID, message.serialize()),
             300
         );
     }
@@ -718,8 +721,13 @@ public class GuildCache {
         GuildDatabase.saveGuild(guild);
     }
 
-    private static void log(GuildData guild, String message) {
-        guild.addAuditLog("§7" + LOG_DATE.format(ZonedDateTime.now()) + ": " + message);
+    private static void log(GuildData guild, String markup, Object... arguments) {
+        log(guild, Text.of(markup, arguments));
+    }
+
+    private static void log(GuildData guild, Text message) {
+        Text entry = Text.of("<7>{}: ", LOG_DATE.format(ZonedDateTime.now())).append(message);
+        guild.addAuditLog(entry.serialize());
     }
 
     public record PendingGuildInvite(@NotNull UUID guildId, @NotNull UUID inviter, @NotNull UUID invitee) {

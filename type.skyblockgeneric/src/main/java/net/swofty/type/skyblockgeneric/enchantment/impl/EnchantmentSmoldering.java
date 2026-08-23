@@ -26,7 +26,7 @@ public final class EnchantmentSmoldering implements Ench, MobTypeDamageEnchantme
 
     @Override
     public String getDescription(int level) {
-        return "Increases damage dealt to " + MobType.INFERNAL.getFullDisplayName() + "§7 mobs by §a" + BONUSES[level - 1] + "%§7.";
+        return "Increases damage dealt to " + MobType.INFERNAL.getFullDisplayName() + "<7> mobs by <a>" + BONUSES[level - 1] + "%<7>.";
     }
 
     @Override

@@ -9,8 +9,9 @@ import net.swofty.commons.bedwars.BedWarsDreamRotation;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.protocol.objects.orchestrator.ChooseGameProtocol;
 import net.swofty.commons.protocol.objects.orchestrator.RejoinGameProtocol;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -38,16 +39,13 @@ public class GUIPlayDreamBedWars extends StatelessView {
         Components.close(layout, 40);
 
         layout.slot(4,
-            (_, _) -> ItemStackCreator.getStack(
-                "§bDream Calendar",
-                Material.CLOCK,
-                1,
-                "",
-                "§7See what §bDream Modes §7will enter",
-                "§7rotation next!",
-                "",
-                "§eClick to open!"
-            ),
+            (_, _) -> ItemStacks.item(Material.CLOCK, """
+                <b>Dream Calendar
+
+                <7>See what <b>Dream Modes <7>will enter
+                <7>rotation next!
+
+                <e>Click to open!"""),
             (_, viewCtx) -> viewCtx.push(new GUIDreamCalendar())
         );
 
@@ -60,14 +58,11 @@ public class GUIPlayDreamBedWars extends StatelessView {
         }
 
         layout.slot(44,
-            (_, _) -> ItemStackCreator.getStack(
-                "§cClick here to rejoin!",
-                Material.ENDER_PEARL,
-                1,
-                "§7Click here to rejoin your Bed Wars",
-                "§7game if you have been disconnected",
-                "§7from it."
-            ),
+            (_, _) -> ItemStacks.item(Material.ENDER_PEARL, """
+                <c>Click here to rejoin!
+                <7>Click here to rejoin your Bed Wars
+                <7>game if you have been disconnected
+                <7>from it."""),
             (_, viewCtx) -> rejoin(viewCtx)
         );
     }
@@ -83,27 +78,30 @@ public class GUIPlayDreamBedWars extends StatelessView {
 
     private ItemStack.Builder dreamItem(BedWarsDreamRotation.DreamMode dreamMode, BedWarsGameType type) {
         String queueName = queueDisplay(type);
-        List<String> lore = new ArrayList<>();
-        lore.add("§7Play a game of Bed Wars " + type.getDisplayName());
-        lore.add("§7" + queueName + ".");
-        lore.add("");
-        lore.addAll(type.getDescription());
-        lore.add("");
-        lore.add("§cOverall stats, achievements and");
-        lore.add("§cquests will NOT be earned in this");
-        lore.add("§cmode!");
-        lore.add("");
-        lore.add("§7Bed Wars Dreams is a variety of");
-        lore.add("§7rotating game modes.");
-        lore.add("");
-        lore.add("§eClick to play!");
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<7>Play a game of Bed Wars {}", type.getDisplayName()));
+        lore.add(Text.of("<7>{}.", queueName));
+        lore.add(Text.empty());
+        for (String line : type.getDescription()) {
+            lore.add(Text.literal(line));
+        }
+        lore.add(Text.empty());
+        lore.add(Text.of("<c>Overall stats, achievements and"));
+        lore.add(Text.of("<c>quests will NOT be earned in this"));
+        lore.add(Text.of("<c>mode!"));
+        lore.add(Text.empty());
+        lore.add(Text.of("<7>Bed Wars Dreams is a variety of"));
+        lore.add(Text.of("<7>rotating game modes."));
+        lore.add(Text.empty());
+        lore.add(Text.of("<e>Click to play!"));
 
+        Text name = Text.of("<a>{} {}", type.getDisplayName(), queueName);
         if (type.getDisplayName().contains("Lucky")) {
-            return ItemStackCreator.getStackHead("§a" + type.getDisplayName() + " " + queueName, LUCKY_HEAD, amount(type), lore);
+            return ItemStacks.head(LUCKY_HEAD, amount(type), name, lore);
         }
         Material icon = Material.fromKey(type.getIconName().toLowerCase());
         if (icon == null) icon = Material.RED_BED;
-        return ItemStackCreator.getStack("§a" + type.getDisplayName() + " " + queueName, icon, amount(type), lore);
+        return ItemStacks.item(icon, amount(type), name, lore);
     }
 
     private void queue(ViewContext ctx, BedWarsGameType type) {
@@ -128,16 +126,16 @@ public class GUIPlayDreamBedWars extends StatelessView {
 
         ORCHESTRATOR.handleRequest(request).thenAccept(response -> {
             if (!(response instanceof RejoinGameProtocol.RejoinGameResponse resp)) {
-                player.sendMessage("§cFailed to check for active games. Please try again.");
+                player.sendMessage("<c>Failed to check for active games. Please try again.");
                 return;
             }
 
             if (!resp.hasActiveGame() || resp.server() == null) {
-                player.sendMessage("§cYou don't have an active game to rejoin!");
+                player.sendMessage("<c>You don't have an active game to rejoin!");
                 return;
             }
 
-            player.sendMessage("§aRejoining your game...");
+            player.sendMessage("<a>Rejoining your game...");
             ChooseGameProtocol.ChooseGameMessage chooseMsg =
                 new ChooseGameProtocol.ChooseGameMessage(player.getUuid(), resp.server(), resp.gameId());
             ORCHESTRATOR.handleRequest(chooseMsg);
@@ -145,7 +143,7 @@ public class GUIPlayDreamBedWars extends StatelessView {
             player.asProxyPlayer().transferToWithIndication(resp.server().uuid());
             player.getAchievementHandler().completeAchievement("bedwars.rejoining_the_dream");
         }).exceptionally(throwable -> {
-            player.sendMessage("§cFailed to rejoin: " + throwable.getMessage());
+            player.sendMessage("<c>Failed to rejoin: {}", throwable.getMessage());
             return null;
         });
     }

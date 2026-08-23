@@ -30,14 +30,12 @@ public class ShapedRecipe extends SkyBlockRecipe<ShapedRecipe> {
     private final ItemQuantifiable[] ingredientByChar;
 
     private final Function<SkyBlockItem, Boolean>[] extraReqByChar;
-    private final char[] patternFlat;
-    private final int[] requiredPatternIdx;
-    private final char[] requiredSymbols;
     private final boolean[] symbolHasExtraReq;
-    private final int[] airMaskByOffset;
-    private final int[][] requiredGridIdxByOffset;
-    private final char[][] requiredSymByOffset;
+    private final Variant[] variants;
     private final int recipeSize;
+
+    private record Variant(int[] airMaskByOffset, int[][] requiredGridIdxByOffset, char[][] requiredSymByOffset) {
+    }
 
     public ShapedRecipe(RecipeType type,
                         SkyBlockItem result,
@@ -67,66 +65,76 @@ public class ShapedRecipe extends SkyBlockRecipe<ShapedRecipe> {
         this.extraReqByChar = tmp;
         this.symbolHasExtraReq = new boolean[CHAR_SPACE];
 
-        this.patternFlat = new char[height * width];
-        for (int r = 0; r < height; r++) {
-            if (width >= 0) System.arraycopy(patternArray[r], 0, patternFlat, r * width, width);
-        }
-
-        int reqCount = 0;
-        for (char sym : patternFlat) {
-            ItemQuantifiable iq = ingredientByChar[sym & 0xFF];
-            if (iq != null && iq.getItem().getMaterial() != Material.AIR) {
-                reqCount++;
-            }
-        }
-        this.requiredPatternIdx = new int[reqCount];
-        this.requiredSymbols = new char[reqCount];
-        int w = 0;
-        for (int i = 0; i < patternFlat.length; i++) {
-            char sym = patternFlat[i];
-            ItemQuantifiable iq = ingredientByChar[sym & 0xFF];
-            if (iq != null && iq.getItem().getMaterial() != Material.AIR) {
-                requiredPatternIdx[w] = i;
-                requiredSymbols[w] = sym;
-                w++;
-            }
-        }
-
-        int offsetRows = 3 - height + 1;
-        int offsetCols = 3 - width + 1;
-        int offsets = offsetRows * offsetCols;
-        this.airMaskByOffset = new int[offsets];
-        this.requiredGridIdxByOffset = new int[offsets][];
-        this.requiredSymByOffset = new char[offsets][];
-
-        for (int startRow = 0; startRow < offsetRows; startRow++) {
-            for (int startCol = 0; startCol < offsetCols; startCol++) {
-                int offsetIndex = offsetIndex(startRow, startCol, offsetCols);
-
-                int airMask = getAirMask(startRow, startCol);
-                airMaskByOffset[offsetIndex] = airMask;
-
-                int[] reqGrid = new int[requiredPatternIdx.length]; // upper bound
-                char[] reqSym = new char[requiredPatternIdx.length];
-                int count = 0;
-                for (int i = 0; i < requiredPatternIdx.length; i++) {
-                    int pi = requiredPatternIdx[i];
-                    int pr = pi / width;
-                    int pc = pi - pr * width;
-                    int gridIdx = (startRow + pr) * 3 + (startCol + pc);
-                    reqGrid[count] = gridIdx;
-                    reqSym[count] = requiredSymbols[i];
-                    count++;
-                }
-                requiredGridIdxByOffset[offsetIndex] = Arrays.copyOf(reqGrid, count);
-                requiredSymByOffset[offsetIndex] = Arrays.copyOf(reqSym, count);
-            }
-        }
+        char[][] mirrored = mirrorHorizontally(patternArray);
+        this.variants = Arrays.deepEquals(mirrored, patternArray)
+                ? new Variant[]{buildVariant(patternArray)}
+                : new Variant[]{buildVariant(patternArray), buildVariant(mirrored)};
 
         this.recipeSize = height * width;
     }
 
-    private int getAirMask(int startRow, int startCol) {
+    public ShapedRecipe(RecipeType type,
+                        SkyBlockItem result,
+                        Map<Character, ItemQuantifiable> ingredientMap,
+                        List<String> pattern) {
+        this(type, result, ingredientMap, pattern, (_) -> new CraftingResult(true, new String[]{}));
+    }
+
+    private char[][] mirrorHorizontally(char[][] source) {
+        char[][] mirrored = new char[height][width];
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                mirrored[row][col] = source[row][width - 1 - col];
+            }
+        }
+        return mirrored;
+    }
+
+    private Variant buildVariant(char[][] shape) {
+        int offsetRows = 3 - height + 1;
+        int offsetCols = 3 - width + 1;
+        int offsets = offsetRows * offsetCols;
+
+        List<Integer> requiredPatternIdx = new ArrayList<>();
+        List<Character> requiredSymbols = new ArrayList<>();
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                char symbol = shape[row][col];
+                ItemQuantifiable ingredient = ingredientByChar[symbol & 0xFF];
+                if (ingredient != null && ingredient.getItem().getMaterial() != Material.AIR) {
+                    requiredPatternIdx.add(row * width + col);
+                    requiredSymbols.add(symbol);
+                }
+            }
+        }
+
+        int[] airMaskByOffset = new int[offsets];
+        int[][] requiredGridIdxByOffset = new int[offsets][];
+        char[][] requiredSymByOffset = new char[offsets][];
+
+        for (int startRow = 0; startRow < offsetRows; startRow++) {
+            for (int startCol = 0; startCol < offsetCols; startCol++) {
+                int offsetIndex = offsetIndex(startRow, startCol, offsetCols);
+                airMaskByOffset[offsetIndex] = getAirMask(shape, startRow, startCol);
+
+                int[] reqGrid = new int[requiredPatternIdx.size()];
+                char[] reqSym = new char[requiredPatternIdx.size()];
+                for (int i = 0; i < requiredPatternIdx.size(); i++) {
+                    int patternIndex = requiredPatternIdx.get(i);
+                    int patternRow = patternIndex / width;
+                    int patternCol = patternIndex - patternRow * width;
+                    reqGrid[i] = (startRow + patternRow) * 3 + (startCol + patternCol);
+                    reqSym[i] = requiredSymbols.get(i);
+                }
+                requiredGridIdxByOffset[offsetIndex] = reqGrid;
+                requiredSymByOffset[offsetIndex] = reqSym;
+            }
+        }
+
+        return new Variant(airMaskByOffset, requiredGridIdxByOffset, requiredSymByOffset);
+    }
+
+    private int getAirMask(char[][] shape, int startRow, int startCol) {
         int airMask = 0;
         for (int gr = 0; gr < 3; gr++) {
             for (int gc = 0; gc < 3; gc++) {
@@ -138,7 +146,7 @@ public class ShapedRecipe extends SkyBlockRecipe<ShapedRecipe> {
                     continue;
                 }
 
-                char sym = patternArray[pr][pc];
+                char sym = shape[pr][pc];
                 ItemQuantifiable iq = ingredientByChar[sym & 0xFF];
                 if (sym == 'O' || iq == null || iq.getItem().getMaterial() == Material.AIR) {
                     airMask |= (1 << idx);
@@ -146,13 +154,6 @@ public class ShapedRecipe extends SkyBlockRecipe<ShapedRecipe> {
             }
         }
         return airMask;
-    }
-
-    public ShapedRecipe(RecipeType type,
-                        SkyBlockItem result,
-                        Map<Character, ItemQuantifiable> ingredientMap,
-                        List<String> pattern) {
-        this(type, result, ingredientMap, pattern, (_) -> new CraftingResult(true, new String[]{}));
     }
 
     private static int offsetIndex(int startRow, int startCol, int offsetCols) {
@@ -210,35 +211,27 @@ public class ShapedRecipe extends SkyBlockRecipe<ShapedRecipe> {
         return mask;
     }
 
-    private boolean matchesAtPosition(ItemStack[] stacks, int startRow, int startCol) {
-        int offsetRows = 3 - height + 1;
-        int offsetCols = 3 - width + 1;
-        if (startRow < 0 || startCol < 0 || startRow >= offsetRows || startCol >= offsetCols) return false;
+    private boolean matchesOffset(Variant variant, ItemStack[] stacks, int offset, int nonAir) {
+        if ((nonAir & variant.airMaskByOffset()[offset]) != 0) return false;
 
-        int offset = offsetIndex(startRow, startCol, offsetCols);
-        int nonAir = nonAirMask(stacks);
-        if ((nonAir & airMaskByOffset[offset]) != 0) return false;
-
-        int[] reqIdx = requiredGridIdxByOffset[offset];
-        char[] reqSym = requiredSymByOffset[offset];
+        int[] reqIdx = variant.requiredGridIdxByOffset()[offset];
+        char[] reqSym = variant.requiredSymByOffset()[offset];
 
         for (int i = 0; i < reqIdx.length; i++) {
-            int idx = reqIdx[i];
-            ItemStack actualStack = stacks[idx];
+            ItemStack actualStack = stacks[reqIdx[i]];
             if (actualStack == null || actualStack.material() == Material.AIR) return false;
 
             char sym = reqSym[i];
             ItemQuantifiable expected = ingredientByChar[sym & 0xFF];
-            if (expected == null) return false; // should not happen for required
+            if (expected == null) return false;
 
             if (actualStack.amount() < expected.getAmount()) return false;
 
-            SkyBlockItem expectedItem = expected.getItem();
             SkyBlockItem actualItem = new SkyBlockItem(actualStack);
             if (!expected.matchesType(actualItem)) {
                 if (!ExchangeableType.isExchangeable(
                         actualItem.getAttributeHandler().getPotentialType(),
-                        expectedItem.getAttributeHandler().getPotentialType())) {
+                        expected.getItem().getAttributeHandler().getPotentialType())) {
                     return false;
                 }
             }
@@ -259,22 +252,20 @@ public class ShapedRecipe extends SkyBlockRecipe<ShapedRecipe> {
         ItemStack[] rawStacks = new ItemStack[stacks.length];
         for (int i = 0; i < stacks.length; i++) rawStacks[i] = (stacks[i] != null) ? stacks[i].getItemStack() : null;
 
-        int offsetRows = 3 - height + 1;
-        int offsetCols = 3 - width + 1;
+        int nonAir = nonAirMask(rawStacks);
+        int offsets = offsetCount();
 
-        for (int startRow = 0; startRow < offsetRows; startRow++) {
-            for (int startCol = 0; startCol < offsetCols; startCol++) {
-                if (!matchesAtPosition(rawStacks, startRow, startCol)) continue;
+        for (Variant variant : variants) {
+            for (int offset = 0; offset < offsets; offset++) {
+                if (!matchesOffset(variant, rawStacks, offset, nonAir)) continue;
 
                 SkyBlockItem[] resultStacks = Arrays.copyOf(stacks, stacks.length);
-                int offset = offsetIndex(startRow, startCol, offsetCols);
-                int[] reqIdx = requiredGridIdxByOffset[offset];
-                char[] reqSym = requiredSymByOffset[offset];
+                int[] reqIdx = variant.requiredGridIdxByOffset()[offset];
+                char[] reqSym = variant.requiredSymByOffset()[offset];
 
                 for (int i = 0; i < reqIdx.length; i++) {
                     int idx = reqIdx[i];
-                    char sym = reqSym[i];
-                    ItemQuantifiable required = ingredientByChar[sym & 0xFF];
+                    ItemQuantifiable required = ingredientByChar[reqSym[i] & 0xFF];
                     if (required == null) continue;
 
                     SkyBlockItem slot = resultStacks[idx];
@@ -338,69 +329,11 @@ public class ShapedRecipe extends SkyBlockRecipe<ShapedRecipe> {
         int nonAir = nonAirMask(stacks);
 
         for (ShapedRecipe recipe : CACHED_RECIPES) {
-            // size = height*width (kept consistent with previous scoring).
-            int size = recipe.recipeSize;
-            if (size <= bestSize) {
-                // still need to allow ties? previous code used > only, so skip.
-                continue;
-            }
+            if (recipe.recipeSize <= bestSize) continue;
 
-            int offsetRows = 3 - recipe.height + 1;
-            int offsetCols = 3 - recipe.width + 1;
-            int offsets = offsetRows * offsetCols;
-
-            for (int offset = 0; offset < offsets; offset++) {
-                if ((nonAir & recipe.airMaskByOffset[offset]) != 0) continue;
-
-                int[] reqIdx = recipe.requiredGridIdxByOffset[offset];
-                char[] reqSym = recipe.requiredSymByOffset[offset];
-
-                boolean ok = true;
-                for (int i = 0; i < reqIdx.length; i++) {
-                    int idx = reqIdx[i];
-                    ItemStack actualStack = stacks[idx];
-                    if (actualStack == null || actualStack.material() == Material.AIR) {
-                        ok = false;
-                        break;
-                    }
-
-                    char sym = reqSym[i];
-                    ItemQuantifiable expected = recipe.ingredientByChar[sym & 0xFF];
-                    if (expected == null) {
-                        ok = false;
-                        break;
-                    }
-
-                    if (actualStack.amount() < expected.getAmount()) {
-                        ok = false;
-                        break;
-                    }
-
-                    SkyBlockItem expectedItem = expected.getItem();
-                    SkyBlockItem actualItem = new SkyBlockItem(actualStack);
-
-                    if (!expected.matchesType(actualItem)) {
-                        if (!ExchangeableType.isExchangeable(
-                                actualItem.getAttributeHandler().getPotentialType(),
-                                expectedItem.getAttributeHandler().getPotentialType())) {
-                            ok = false;
-                            break;
-                        }
-                    }
-
-                    if (recipe.symbolHasExtraReq[sym & 0xFF]) {
-                        Function<SkyBlockItem, Boolean> req = recipe.extraReqByChar[sym & 0xFF];
-                        if (req != null && !req.apply(actualItem)) {
-                            ok = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (ok) {
-                    best = recipe;
-                    bestSize = size;
-                }
+            if (recipe.matches(stacks, nonAir)) {
+                best = recipe;
+                bestSize = recipe.recipeSize;
             }
         }
 
@@ -411,27 +344,36 @@ public class ShapedRecipe extends SkyBlockRecipe<ShapedRecipe> {
         Map<Character, List<Integer>> positions = new HashMap<>();
 
         int nonAir = nonAirMask(stacks);
-        int offsetRows = 3 - height + 1;
-        int offsetCols = 3 - width + 1;
-        int offsets = offsetRows * offsetCols;
+        int offsets = offsetCount();
 
-        for (int offset = 0; offset < offsets; offset++) {
-            if ((nonAir & airMaskByOffset[offset]) != 0) continue;
+        for (Variant variant : variants) {
+            for (int offset = 0; offset < offsets; offset++) {
+                if (!matchesOffset(variant, stacks, offset, nonAir)) continue;
 
-            int[] reqIdx = requiredGridIdxByOffset[offset];
-            char[] reqSym = requiredSymByOffset[offset];
-
-            int startRow = offset / offsetCols;
-            int startCol = offset - startRow * offsetCols;
-            if (!matchesAtPosition(stacks, startRow, startCol)) continue;
-
-            for (int i = 0; i < reqIdx.length; i++) {
-                positions.computeIfAbsent(reqSym[i], _ -> new ArrayList<>()).add(reqIdx[i]);
+                int[] reqIdx = variant.requiredGridIdxByOffset()[offset];
+                char[] reqSym = variant.requiredSymByOffset()[offset];
+                for (int i = 0; i < reqIdx.length; i++) {
+                    positions.computeIfAbsent(reqSym[i], _ -> new ArrayList<>()).add(reqIdx[i]);
+                }
             }
         }
 
         positions.replaceAll((_, v) -> new ArrayList<>(new LinkedHashSet<>(v)));
         return positions;
+    }
+
+    private boolean matches(ItemStack[] stacks, int nonAir) {
+        int offsets = offsetCount();
+        for (Variant variant : variants) {
+            for (int offset = 0; offset < offsets; offset++) {
+                if (matchesOffset(variant, stacks, offset, nonAir)) return true;
+            }
+        }
+        return false;
+    }
+
+    private int offsetCount() {
+        return (3 - height + 1) * (3 - width + 1);
     }
 
     @Override

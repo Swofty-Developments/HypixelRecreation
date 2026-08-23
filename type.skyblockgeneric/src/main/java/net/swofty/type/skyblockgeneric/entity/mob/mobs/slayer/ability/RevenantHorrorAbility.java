@@ -30,7 +30,7 @@ final class RevenantHorrorAbility extends SlayerAbilitySupport {
         if (boss.getProfile().tier().tier().number() >= 4) {
             repeating(boss, 800, 800, () -> {
                 enrage = true;
-                nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§c" + boss.getDisplayName() + " is enraged!"));
+                nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<c>{} is enraged!", boss.getDisplayName()));
                 delayed(boss, 240, () -> enrage = false);
             });
         }
@@ -38,7 +38,7 @@ final class RevenantHorrorAbility extends SlayerAbilitySupport {
         if (boss.getProfile().tier().tier().number() >= 5) {
             repeating(boss, 40, 40, () -> heal(boss, boss.getProfile().tier().bossHealth() * 0.015D));
             repeating(boss, 160, 160, () -> nearbyPlayers(boss, 6).forEach(player -> {
-                player.sendMessage("§cExplosive Assault!");
+                player.sendMessage("<c>Explosive Assault!");
                 trueDamage(boss, player, 4800, "Explosive Assault");
             }));
         }
@@ -51,7 +51,7 @@ final class RevenantHorrorAbility extends SlayerAbilitySupport {
         }
 
         thermonuclear = true;
-        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§4§lTHERMONUCLEAR! §cMove away!"));
+        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<4><l>THERMONUCLEAR! </l><c>Move away!"));
         delayed(boss, 45, () -> {
             nearbyPlayers(boss, 7).forEach(player -> {
                 lightning(player.getPosition(), player.getInstance());

@@ -2,7 +2,6 @@ package net.swofty.type.bedwarsgame.user;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.*;
 import net.minestom.server.entity.attribute.Attribute;
@@ -13,6 +12,7 @@ import net.minestom.server.scoreboard.BelowNameTag;
 import net.minestom.server.tag.Tag;
 import net.swofty.commons.bedwars.BedwarsLevelUtil;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.game.game.GameParticipant;
@@ -93,7 +93,7 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 
 	public void updateBelowTag() {
 		if (belowNameTag == null)
-			setBelowNameTag(new BelowNameTag("health", Component.text("§c❤")));
+			setBelowNameTag(new BelowNameTag("health", Text.of("<c>❤").asComponent()));
 		int health = (int) (getHealth() + getAdditionalHearts());
 		belowNameTag.updateScore(this, health);
 
@@ -115,7 +115,7 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 						false,
 						0,
 						GameMode.SURVIVAL,
-						Component.text(fakeUuid.toString().substring(0, 12)),
+						Text.literal(fakeUuid.toString().substring(0, 12)).asComponent(),
 						null,
 						1, false)),
 				new SpawnEntityPacket(this.getEntityId(), fakeUuid, EntityType.PLAYER,
@@ -141,7 +141,7 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 			return new PlayerInfoUpdatePacket(EnumSet.of(
 				PlayerInfoUpdatePacket.Action.ADD_PLAYER),
 				List.of(new PlayerInfoUpdatePacket.Entry(fakeUuid, "§k" + fakeUuid.toString().substring(0, 14), List.of(),
-					false, getLatency(), getGameMode(), Component.text(fakeUuid.toString().substring(0, 12)), null, 0, false)));
+					false, getLatency(), getGameMode(), Text.literal(fakeUuid.toString().substring(0, 12)).asComponent(), null, 0, false)));
 		}*/
 		final PlayerSkin skin = getSkin();
 		List<PlayerInfoUpdatePacket.Property> prop = skin != null ?
@@ -198,7 +198,7 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 	public void xp(ExperienceCause cause) {
 		xpThisGame += cause.getExperience();
 
-		sendMessage("§b+" + cause.getExperience() + " Bed Wars XP (" + cause.getFormattedName() + ")");
+		sendMessage("<b>+{} Bed Wars XP ({})", cause.getExperience(), cause.getFormattedName());
 		DatapointLeaderboardLong dp = getBedWarsDataHandler().get(BedWarsDataHandler.Data.EXPERIENCE, DatapointLeaderboardLong.class);
 		dp.setValue(dp.getValue() + cause.getExperience());
 
@@ -210,7 +210,7 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 		long amount = cause.calculateXp(units);
 		xpThisGame += amount;
 
-		sendMessage("§b+" + amount + " Bed Wars XP (" + cause.getFormattedName() + ")");
+		sendMessage("<b>+{} Bed Wars XP ({})", amount, cause.getFormattedName());
 		DatapointLeaderboardLong dp = getBedWarsDataHandler().get(BedWarsDataHandler.Data.EXPERIENCE, DatapointLeaderboardLong.class);
 		dp.setValue(dp.getValue() + amount);
 
@@ -220,14 +220,14 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 
 	public void hypixelXp(long amount) {
 		hypixelXpThisGame += amount;
-		sendMessage("§b+" + amount + " Hypixel Experience");
+		sendMessage("<b>+{} Hypixel Experience", amount);
 		DatapointHypixelExperience dp = getDataHandler().get(HypixelDataHandler.Data.HYPIXEL_EXPERIENCE, DatapointHypixelExperience.class);
 		dp.setValue(dp.getValue() + amount);
 	}
 
 	public void token(TokenCause cause) {
 		tokensThisGame += cause.getExperience();
-		sendMessage("§2+" + cause.getExperience() + " Tokens (" + cause.getFormattedName() + ")");
+		sendMessage("<2>+{} Tokens ({})", cause.getExperience(), cause.getFormattedName());
 		DatapointLeaderboardLong dp = getBedWarsDataHandler().get(BedWarsDataHandler.Data.TOKENS, DatapointLeaderboardLong.class);
 		dp.setValue(dp.getValue() + cause.getExperience());
 	}

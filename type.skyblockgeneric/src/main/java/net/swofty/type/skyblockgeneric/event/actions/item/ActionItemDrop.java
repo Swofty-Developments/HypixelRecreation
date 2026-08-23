@@ -1,9 +1,8 @@
 package net.swofty.type.skyblockgeneric.event.actions.item;
 
-import net.kyori.adventure.text.Component;
-import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.item.ItemDropEvent;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
+import net.swofty.type.generic.entity.drop.ItemDrops;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
@@ -36,29 +35,12 @@ public class ActionItemDrop implements HypixelEventClass {
         boolean hideMessage = player.getToggles().get(DatapointToggles.Toggles.ToggleType.DISABLE_DROP_MESSAGES);
 
         if (!hideMessage) {
-            player.sendMessage(Component.text("§e⚠ §aYour drops can't be seen by other players in §bSkyBlock§a!")
-                    .hoverEvent(Component.text("§eClick here to disable the alert!"))
-                    .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/toggledropalert"))
-            );
-            player.sendMessage(Component.text("§aOnly you can pickup your dropped items!")
-                    .hoverEvent(Component.text("§eClick here to disable the alert!"))
-                    .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/toggledropalert"))
-            );
-            player.sendMessage(Component.text("§eClick here to disable this alert forever!")
-                    .hoverEvent(Component.text("§eClick here to disable the alert!"))
-                    .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/toggledropalert")));
+            player.sendMessage("<hover:'<e>Click here to disable the alert!'><click:run:'/toggledropalert'><e>⚠ <a>Your drops can't be seen by other players in <b>SkyBlock<a>!</click></hover>");
+            player.sendMessage("<hover:'<e>Click here to disable the alert!'><click:run:'/toggledropalert'><a>Only you can pickup your dropped items!</click></hover>");
+            player.sendMessage("<hover:'<e>Click here to disable the alert!'><click:run:'/toggledropalert'><e>Click here to disable this alert forever!</click></hover>");
         }
 
-        DroppedItemEntityImpl droppedItem = new DroppedItemEntityImpl(new SkyBlockItem(
-                event.getItemStack()),
-                player);
-        Pos pos = player.getPosition().add(0, 1, 0);
-
-        droppedItem.setVelocity(player.getPosition().direction()
-                .mul(5)
-                .add(0, 1.5, 0)
-        );
-
-        droppedItem.setInstance(player.getInstance(), pos);
+        ItemDrops.throwFromPlayer(player, new DroppedItemEntityImpl(
+                new SkyBlockItem(event.getItemStack()), player));
     }
 }

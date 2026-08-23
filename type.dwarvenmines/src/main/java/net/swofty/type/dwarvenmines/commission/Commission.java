@@ -1,5 +1,8 @@
 package net.swofty.type.dwarvenmines.commission;
 
+import net.swofty.commons.text.Text;
+import net.swofty.type.skyblockgeneric.region.RegionType;
+
 public class Commission {
     public final String name;
     public final CommissionCategory category;
@@ -18,58 +21,34 @@ public class Commission {
         this.oneTimeOnly = oneTimeOnly;
     }
 
-    public String generateDescription() {
-        StringBuilder sb = new StringBuilder();
-
-        switch (objective.type) {
-            case MINE -> {
-                sb.append("Mine §a").append(objective.amount).append(" §7");
-                sb.append(getTargetName(objective.target)).append(" Ore");
-                appendLocation(sb);
-                sb.append(".");
-            }
-            case SLAY -> {
-                sb.append("Slay §a").append(objective.amount).append(" §7");
-                sb.append(getTargetNamePlural(objective.target));
-                sb.append("§7");
-                appendLocation(sb);
-                appendEvent(sb);
-                sb.append(".");
-            }
-            case DAMAGE -> {
-                sb.append("Damage ").append(getTargetNamePlural(objective.target));
-                sb.append(" §7").append(objective.amount).append(" times");
-                appendLocation(sb);
-                sb.append(".");
-            }
-            case PARTICIPATE -> sb.append("Participate in the ").append(getEventName(objective.event)).append(".");
-            case COLLECT -> {
-                sb.append("Collect ").append(objective.amount).append(" ");
-                sb.append(getCollectibleName(objective.target));
-                appendEvent(sb);
-                sb.append(".");
-            }
-            case DEPOSIT -> {
-                sb.append("Deposit ").append(objective.amount).append(" Tickets");
-                appendEvent(sb);
-                sb.append(".");
-            }
-        }
-
-        return sb.toString();
+    public Text generateDescription() {
+        return switch (objective.type) {
+            case MINE -> withSuffix(Text.of("Mine <a>{} <7>{} Ore",
+                    objective.amount, getTargetName(objective.target)), true, false);
+            case SLAY -> withSuffix(Text.of("Slay <a>{} <7>{}",
+                    objective.amount, getTargetNamePlural(objective.target)), true, true);
+            case DAMAGE -> withSuffix(Text.of("Damage {} <7>{} times",
+                    getTargetNamePlural(objective.target), objective.amount), true, false);
+            case PARTICIPATE -> Text.of("Participate in the {}.", getEventName(objective.event));
+            case COLLECT -> withSuffix(Text.of("Collect {} {}",
+                    objective.amount, getCollectibleName(objective.target)), false, true);
+            case DEPOSIT -> withSuffix(Text.of("Deposit {} Tickets", objective.amount), false, true);
+        };
     }
 
-    private void appendLocation(StringBuilder sb) {
-        if (!objective.location.isAny()) {
-            objective.location.getRegion().ifPresent(region ->
-                    sb.append(" in §b").append(region.getName()));
-        }
-    }
+    private Text withSuffix(Text base, boolean allowLocation, boolean allowEvent) {
+        RegionType region = allowLocation && !objective.location.isAny()
+                ? objective.location.getRegion().orElse(null)
+                : null;
 
-    private void appendEvent(StringBuilder sb) {
-        if (objective.event != EventType.NONE) {
-            sb.append(" during the ").append(getEventName(objective.event));
+        if (allowEvent && objective.event != EventType.NONE) {
+            Text located = region == null ? base : base.append(" in <b>{}", region.getName());
+            return located.append(" during the {}.", getEventName(objective.event));
         }
+        if (region != null) {
+            return base.append(" in <b>{}.", region.getName());
+        }
+        return base.append(".");
     }
 
     private String getTargetName(Objective.BlockTarget target) {
@@ -85,16 +64,16 @@ public class Commission {
         };
     }
 
-    private String getTargetNamePlural(Objective.BlockTarget target) {
+    private Text getTargetNamePlural(Objective.BlockTarget target) {
         return switch (target) {
-            case MITHRIL -> "Mithril Ore";
-            case TITANIUM -> "Titanium Ore";
-            case GOBLIN -> "§cGoblins";
-            case GLACITE_WALKER -> "§bGlacite Walkers";
-            case TREASURE_HOARDER -> "§cTreasure Hoarders";
-            case GOLDEN_GOBLIN -> "§6Golden Goblin";
-            case STAR_SENTRY -> "Star Sentrys";
-            case NONE -> "";
+            case MITHRIL -> Text.of("Mithril Ore");
+            case TITANIUM -> Text.of("Titanium Ore");
+            case GOBLIN -> Text.of("<c>Goblins");
+            case GLACITE_WALKER -> Text.of("<b>Glacite Walkers");
+            case TREASURE_HOARDER -> Text.of("<c>Treasure Hoarders");
+            case GOLDEN_GOBLIN -> Text.of("<6>Golden Goblin");
+            case STAR_SENTRY -> Text.of("Star Sentrys");
+            case NONE -> Text.empty();
         };
     }
 
@@ -105,12 +84,12 @@ public class Commission {
         };
     }
 
-    private String getEventName(EventType event) {
+    private Text getEventName(EventType event) {
         return switch (event) {
-            case GOBLIN_RAID -> "§cGoblin Raid §7Event";
-            case RAFFLE -> "§eRaffle §7Event";
-            case DOUBLE_POWDER -> "2x Powder Event";
-            case NONE -> "";
+            case GOBLIN_RAID -> Text.of("<c>Goblin Raid <7>Event");
+            case RAFFLE -> Text.of("<e>Raffle <7>Event");
+            case DOUBLE_POWDER -> Text.of("2x Powder Event");
+            case NONE -> Text.empty();
         };
     }
 }

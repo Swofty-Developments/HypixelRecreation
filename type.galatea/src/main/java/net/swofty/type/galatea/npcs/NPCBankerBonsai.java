@@ -12,7 +12,7 @@ public class NPCBankerBonsai extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Banker Bonsai", "§e§lCLICK"};
+                return new String[]{"Banker Bonsai", "<e><l>CLICK"};
             }
 
             @Override

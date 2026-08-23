@@ -3,7 +3,7 @@ package net.swofty.velocity.command;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
-import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.swofty.commons.LobbyDestination;
 import net.swofty.commons.ServerType;
 import net.swofty.velocity.gamemanager.GameManager;
@@ -15,13 +15,13 @@ public class LobbyCommand implements SimpleCommand {
     public void execute(Invocation invocation) {
         CommandSource source = invocation.source();
         if (!(source instanceof Player player)) {
-            source.sendMessage(Component.text("§cThis command can only be used by players."));
+            source.sendMessage(Text.of("<c>This command can only be used by players."));
             return;
         }
 
         String[] args = invocation.arguments();
         if (args.length > 1) {
-            player.sendMessage(Component.text("§cUsage: /lobby [game]"));
+            player.sendMessage(Text.of("<c>Usage: /lobby [game]"));
             return;
         }
 
@@ -35,7 +35,7 @@ public class LobbyCommand implements SimpleCommand {
         } else {
             destination = LobbyDestination.resolveFromAlias(args[0]);
             if (destination == null) {
-                player.sendMessage(Component.text("§cUnknown lobby destination. Try /lobby bw, /lobby sw, /lobby bedwars, /lobby skywars."));
+                player.sendMessage(Text.of("<c>Unknown lobby destination. Try /lobby bw, /lobby sw, /lobby bedwars, /lobby skywars."));
                 return;
             }
         }

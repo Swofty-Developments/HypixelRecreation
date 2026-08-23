@@ -15,7 +15,7 @@ public class NPCSeymour extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Seymour", "§e§lCLICK"};
+                return new String[]{"Seymour", "<e><l>CLICK"};
             }
 
             @Override
@@ -60,9 +60,9 @@ public class NPCSeymour extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
-                                "Looking to buy something fancy?",
-                        }).build(),
+                        .key("hello").lines(
+                                "Looking to buy something fancy?"
+                        ).build(),
         };
     }
 }

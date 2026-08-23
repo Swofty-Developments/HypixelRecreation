@@ -31,7 +31,7 @@ public class ActionPlayerInventoryClick implements HypixelEventClass {
         } catch (Exception e) {
             event.setCancelled(true);
             player.closeInventory();
-            player.sendMessage("§cSomething went wrong while handling your click!");
+            player.sendMessage("<c>Something went wrong while handling your click!");
             Logger.error(e);
         }
     }

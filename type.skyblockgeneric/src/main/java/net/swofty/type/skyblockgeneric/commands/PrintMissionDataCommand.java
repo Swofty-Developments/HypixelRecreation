@@ -1,4 +1,5 @@
 package net.swofty.type.skyblockgeneric.commands;
+import net.swofty.commons.text.Text;
 
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
@@ -20,20 +21,20 @@ public class PrintMissionDataCommand extends HypixelCommand {
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
             MissionData data = player.getMissionData();
 
-            player.sendMessage("§aMission Data:");
-            player.sendMessage("§7Active Missions:");
+            player.sendMessage("<a>Mission Data:");
+            player.sendMessage("<7>Active Missions:");
             data.getActiveMissions().forEach((mission) -> {
-                player.sendMessage("§e" + mission.toString() + "§7:");
+                player.sendMessage("<e>{}<7>:", mission.toString());
                 mission.getCustomData().forEach((key, value) -> {
-                    player.sendMessage("§7" + key + "§e: " + value);
+                    player.sendMessage("<7>{}<e>: {}", key, value);
                 });
             });
 
-            player.sendMessage("§7Completed Missions:");
+            player.sendMessage("<7>Completed Missions:");
             data.getCompletedMissions().forEach((mission) -> {
-                player.sendMessage("§e" + mission.toString());
+                player.sendMessage("<e>{}", mission.toString());
                 mission.getCustomData().forEach((key, value) -> {
-                    player.sendMessage("§7" + key + "§e: " + value);
+                    player.sendMessage("<7>{}<e>: {}", key, value);
                 });
             });
         });

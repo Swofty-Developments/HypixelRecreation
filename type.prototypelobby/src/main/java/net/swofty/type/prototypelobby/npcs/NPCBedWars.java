@@ -2,8 +2,8 @@ package net.swofty.type.prototypelobby.npcs;
 
 import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.ServerType;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.UnderstandableProxyServer;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyInformation;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
@@ -36,11 +36,10 @@ public class NPCBedWars extends HypixelNPC {
                     return server.players().size();
                 }).reduce(0, Integer::sum);
 
-                String commaified = StringUtility.commaify(amountOnline);
                 return new String[]{
-                        "§e" + commaified + " Playing",
-                        "§bBedWars",
-                        "§e§lCLICK"
+                        Text.of("<e>{:,} Playing", amountOnline).serialize(),
+                        "<b>BedWars",
+                        "<e><l>CLICK"
                 };
             }
 

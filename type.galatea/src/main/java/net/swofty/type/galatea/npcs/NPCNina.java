@@ -12,7 +12,7 @@ public class NPCNina extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bHina", "§e§lCLICK"};
+                return new String[]{"<b>Hina", "<e><l>CLICK"};
             }
 
             @Override

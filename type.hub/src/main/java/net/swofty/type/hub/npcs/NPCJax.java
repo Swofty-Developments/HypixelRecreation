@@ -1,6 +1,7 @@
 package net.swofty.type.hub.npcs;
 
 import net.minestom.server.coordinate.Pos;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
@@ -18,7 +19,7 @@ public class NPCJax extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Jax", "§e§lCLICK"};
+                return new String[]{"Jax", "<e><l>CLICK"};
             }
 
             @Override
@@ -70,17 +71,15 @@ public class NPCJax extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("introduction").lines(new String[]{
-                                "Hello " + player.getFullDisplayName() + "§f! What brings you to my workshop? I forge the newest and most powerful arrows in all of SkyBlock!",
-                                "If you can prove to me you're a real archer I'll forge you arrows whenever you need them.",
-                            "Ready to test your skills? Step on the pressure plate and all the targets will light up, if you can shoot them all in 25 seconds, I'll know you're the real deal."
-                        }).build(),
+                        .key("introduction").line("Hello {}<f>! What brings you to my workshop? I forge the newest and most powerful arrows in all of SkyBlock!", player.getFullDisplayName())
+                                .line("If you can prove to me you're a real archer I'll forge you arrows whenever you need them.")
+                                .line("Ready to test your skills? Step on the pressure plate and all the targets will light up, if you can shoot them all in 25 seconds, I'll know you're the real deal.").build(),
                 DialogueSet.builder()
-                        .key("completed_level_one").lines(new String[]{
+                        .key("completed_level_one").lines(
                                 "Wow, you can really shoot a bow!",
                                 "Well, a deal's a deal! Come to me any time and I'll forge you whatever arrows you need for adventures.",
                                 "I only have one condition... These are powerful arrows, they can't fall into the wrong hands so keep them in your quiver and don't share them with anyone."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

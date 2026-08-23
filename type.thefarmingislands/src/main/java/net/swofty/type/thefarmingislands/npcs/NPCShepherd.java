@@ -14,7 +14,7 @@ public class NPCShepherd extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Shepherd", "§e§lCLICK"};
+                return new String[]{"Shepherd", "<e><l>CLICK"};
             }
 
             @Override

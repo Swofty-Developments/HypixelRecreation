@@ -9,7 +9,7 @@ import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.skyblockgeneric.calendar.SkyBlockCalendar;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-@CommandParameters(description = "Force starts a Dark Auction",
+@CommandParameters(labels = "forcedarkauction", description = "Force starts a Dark Auction",
         usage = "/forcedarkauction",
         permission = Rank.STAFF,
         allowsConsole = false)
@@ -22,10 +22,10 @@ public class ForceDarkAuctionCommand extends HypixelCommand {
             if (!permissionCheck(sender)) return;
 
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
-            player.sendMessage("§7Triggering Dark Auction...");
+            player.sendMessage("<7>Triggering Dark Auction...");
 
             if (!darkAuctionService.isOnline().join()) {
-                player.sendMessage("§cDark Auction service is currently offline.");
+                player.sendMessage("<c>Dark Auction service is currently offline.");
                 return;
             }
 
@@ -36,14 +36,14 @@ public class ForceDarkAuctionCommand extends HypixelCommand {
                     .thenAccept(response -> {
                         if (response instanceof TriggerDarkAuctionProtocol.TriggerResponse triggerResponse) {
                             if (triggerResponse.success()) {
-                                player.sendMessage("§aDark Auction started successfully!");
+                                player.sendMessage("<a>Dark Auction started successfully!");
                             } else {
-                                player.sendMessage("§cFailed to start Dark Auction: " + triggerResponse.message());
+                                player.sendMessage("<c>Failed to start Dark Auction: {}", triggerResponse.message());
                             }
                         }
                     })
                     .exceptionally(throwable -> {
-                        player.sendMessage("§cError triggering Dark Auction: " + throwable.getMessage());
+                        player.sendMessage("<c>Error triggering Dark Auction: {}", throwable.getMessage());
                         return null;
                     });
         });

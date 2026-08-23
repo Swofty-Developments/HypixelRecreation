@@ -23,14 +23,14 @@ public class ActionPlayerInteractNPC implements HypixelEventClass {
 		SkyBlockItem item = new SkyBlockItem(player.getItemInMainHand());
 		if (item.hasComponent(AbiphoneComponent.class)) {
 			if (!(npc instanceof NPCAbiphoneTrait trait)) {
-				player.sendMessage("§7[§b✆§7] §7This NPC doesn't own an Abiphone...");
+				player.sendMessage("<7>[<b>✆<7>] This NPC doesn't own an Abiphone...");
 				event.setCancelled(true);
 				return;
 			}
 			AbiphoneNPC abiphoneNPC = AbiphoneRegistry.getFromId(trait.getAbiphoneKey());
 			if (abiphoneNPC != null) {
 				if (item.getAttributeHandler().hasAbiphoneNPC(abiphoneNPC)) {
-					player.sendMessage("§7[§b✆§7] §7This NPC is already in your contacts list!");
+					player.sendMessage("<7>[<b>✆<7>] This NPC is already in your contacts list!");
 					return;
 				}
 				abiphoneNPC.onAdd(player, player.getHeldSlot());

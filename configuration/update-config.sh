@@ -40,7 +40,7 @@ echo "Created temporary directory: $TEMP_DIR"
 
 # Download repository
 echo "Downloading configuration files..."
-wget -q https://github.com/Swofty-Developments/HypixelSkyBlock/archive/refs/heads/master.zip -O "$TEMP_DIR/master.zip"
+wget -q https://github.com/Swofty-Developments/HypixelRecreation/archive/refs/heads/master.zip -O "$TEMP_DIR/master.zip"
 
 # Check if download was successful
 if [ $? -ne 0 ]; then
@@ -60,8 +60,8 @@ rm -rf ./collections
 
 # Copy new configuration folders
 echo "Copying new configuration files..."
-cp -r "$TEMP_DIR/HypixelSkyBlock-master/configuration/skyblock/items" .
-cp -r "$TEMP_DIR/HypixelSkyBlock-master/configuration/skyblock/collections" .
+cp -r "$TEMP_DIR/HypixelRecreation-master/configuration/skyblock/items" .
+cp -r "$TEMP_DIR/HypixelRecreation-master/configuration/skyblock/collections" .
 
 # Fix permissions to make files accessible to the original user
 SUDO_USER=$(logname)

@@ -21,7 +21,7 @@ public class EnchantmentKnockback implements Ench, EnchFromTable, DamageEventEnc
     @Override
     public String getDescription(int level) {
         int blocks = KNOCKBACK_BLOCKS[level - 1];
-        return "Increases knockback by §a" + blocks + " blocks§7.";
+        return "Increases knockback by <a>" + blocks + " blocks<7>.";
     }
 
     @Override

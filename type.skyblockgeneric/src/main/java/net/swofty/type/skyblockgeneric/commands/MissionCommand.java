@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.commands;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -19,14 +20,14 @@ public class MissionCommand extends HypixelCommand {
 
             MissionData data = ((SkyBlockPlayer) sender).getMissionData();
 
-            sender.sendMessage("Active Missions: " + data.getActiveMissions().size());
-            sender.sendMessage("Completed Missions: " + data.getCompletedMissions().size());
+            sender.sendMessage(Text.of("Active Missions: {}", data.getActiveMissions().size()));
+            sender.sendMessage(Text.of("Completed Missions: {}", data.getCompletedMissions().size()));
 
             data.getCompletedMissions().forEach(mission -> {
-                sender.sendMessage("Completed Mission: " + mission.getMissionID());
+                sender.sendMessage(Text.of("Completed Mission: {}", mission.getMissionID()));
             });
             data.getActiveMissions().forEach(mission -> {
-                sender.sendMessage("Active Mission: " + mission.getMissionID());
+                sender.sendMessage(Text.of("Active Mission: {}", mission.getMissionID()));
             });
         });
     }

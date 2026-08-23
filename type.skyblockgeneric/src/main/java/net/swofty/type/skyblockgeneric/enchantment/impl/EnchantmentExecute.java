@@ -24,7 +24,7 @@ public class EnchantmentExecute implements Ench, EnchFromTable, EventBasedEnchan
 
     @Override
     public String getDescription(int level) {
-        return "Increases damage dealt by §a" + DAMAGE_MULTIPLIERS[level - 1] + "%§7 for each percent of health missing on your target.";
+        return "Increases damage dealt by <a>" + DAMAGE_MULTIPLIERS[level - 1] + "%<7> for each percent of health missing on your target.";
     }
 
     @Override

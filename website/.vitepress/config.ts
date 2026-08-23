@@ -2,8 +2,8 @@ import { defineConfig } from "vitepress";
 import container_plugin from "markdown-it-container";
 
 export default defineConfig({
-  title: "HypixelSkyBlock",
-  description: "A Minestom-based recreation of Hypixel SkyBlock",
+  title: "HypixelRecreation",
+  description: "A Minestom-based recreation of Hypixel",
   markdown: {
     config(md) {
       md.use(container_plugin, "alert", {
@@ -31,8 +31,8 @@ export default defineConfig({
     nav: [
       { text: "Guide", link: "/docs/introduction" },
       { text: "Reference", link: "/docs/reference/server-types" },
-      { text: "Javadoc", link: "https://swofty-developments.github.io/HypixelSkyBlock/" },
-      { text: "Discord", link: "https://discord.gg/ZaGW5wzUJ3" },
+      { text: "Javadoc", link: "https://swofty-developments.github.io/HypixelRecreation/" },
+      { text: "Discord", link: "https://discord.swofty.net" },
     ],
     sidebar: {
       "/docs/": [
@@ -79,11 +79,11 @@ export default defineConfig({
       ],
     },
     socialLinks: [
-      { icon: "github", link: "https://github.com/Swofty-Developments/HypixelSkyBlock" },
-      { icon: "discord", link: "https://discord.gg/ZaGW5wzUJ3" },
+      { icon: "github", link: "https://github.com/Swofty-Developments/HypixelRecreation" },
+      { icon: "discord", link: "https://discord.swofty.net" },
     ],
     footer: {
-      message: "Released under the MIT License.",
+      message: "Released under the AGPL-3.0 License.",
       copyright: "Copyright © 2026 Swofty Developments",
     },
   },

@@ -13,7 +13,7 @@ public class NPCSkyBlock extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§e§l0.25 §3§lLOTUS ATOLL", "§bSkyBlock", "§e? Playing"};
+                return new String[]{"<e><l>0.25 <3>LOTUS ATOLL", "<b>SkyBlock", "<e>? Playing"};
             }
 
             @Override

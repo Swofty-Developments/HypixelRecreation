@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.lumber;
 
+
 import net.minestom.server.event.player.PlayerTickEvent;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.event.EventNodes;
@@ -76,7 +77,7 @@ public class MissionBreakOaklog extends SkyBlockProgressMission {
 
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§6100 Coins", "§b5 SkyBlock XP"))).forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<6>100 Coins", "<b>5 SkyBlock XP"))).forEach(player::sendMessage);
         player.addCoins(100);
         player.getSkyBlockExperience().addExperience(SkyBlockLevelCause.getMissionCause(getID()));
         player.getMissionData().startMission(MissionTalkToLumberjackAgain.class);

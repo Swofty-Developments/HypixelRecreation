@@ -7,7 +7,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
@@ -19,7 +19,7 @@ public class GUIGuests extends HypixelInventoryGUI {
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(FILLER_ITEM);
 
         set(new GUIClickableItem(31) {
             @Override
@@ -30,9 +30,9 @@ public class GUIGuests extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1,
-                        "§7To Jerry the Assistant"
-                );
+                return ItemStacks.item(Material.ARROW, """
+                        <a>Go Back
+                        <7>To Jerry the Assistant""");
             }
         });
 
@@ -42,14 +42,14 @@ public class GUIGuests extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aVisit player islands", Material.FEATHER, 1,
-                        "§7You can get Guest on other islands",
-                        "§7using §a/visit <player>",
-                        "",
-                        "§7Guests §cCan't interact with the",
-                        "§7world, but it's always fun to see",
-                        "§7what others are up to!"
-                );
+                return ItemStacks.item(Material.FEATHER, """
+                        <a>Visit player islands
+                        <7>You can get Guest on other islands
+                        <7>using <a>/visit \\<player>
+
+                        <7>Guests <c>Can't interact with the
+                        <7>world, but it's always fun to see
+                        <7>what others are up to!""");
             }
         });
 
@@ -58,30 +58,30 @@ public class GUIGuests extends HypixelInventoryGUI {
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 player.closeInventory();
-                player.sendMessage("§eVisit our web store: §6https://store.hypixel.net");
+                player.sendMessage("<e>Visit our web store: <6>https://store.hypixel.net");
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aGuests limit", Material.SHORT_GRASS, 1,
-                        "§7You can only host a limited",
-                        "§7number of §aguests §7on your",
-                        "§7island concurrently.",
-                        "",
-                        "§7The limit depends on your rank:",
-                        "§7- §c[§fYOUTUBE§c] §f= §a15",
-                        "§7- §6[MVP§c++§6] §f= §a7",
-                        "§7- §b[MVP] §f= §a5",
-                        "§7- §a[VIP] §f= §a3",
-                        "§7- Default §f= §a1",
-                        "",
-                        "§7Limit on the island: §a1 guests",
-                        "",
-                        "§bCo-op profile use the partner",
-                        "§bwith the highest rank!",
-                        "",
-                        "§epurchase rank at store.hypixel.net!"
-                );
+                return ItemStacks.item(Material.SHORT_GRASS, """
+                        <a>Guests limit
+                        <7>You can only host a limited
+                        <7>number of <a>guests <7>on your
+                        <7>island concurrently.
+
+                        <7>The limit depends on your rank:
+                        <7>- <c>[<f>YOUTUBE<c>] <f>= <a>15
+                        <7>- <6>[MVP<c>++<6>] <f>= <a>7
+                        <7>- <b>[MVP] <f>= <a>5
+                        <7>- <a>[VIP] <f>= <a>3
+                        <7>- Default <f>= <a>1
+
+                        <7>Limit on the island: <a>1 guests
+
+                        <b>Co-op profile use the partner
+                        <b>with the highest rank!
+
+                        <e>purchase rank at store.hypixel.net!""");
             }
         });
 
@@ -91,17 +91,17 @@ public class GUIGuests extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aAccess Permissions", Material.OAK_FENCE, 1,
-                        "§7You may edit who is able to",
-                        "§7guest on your island in your",
-                        "§eIsland Settings§7.",
-                        "",
-                        "§7Use §c/ignore add <username> to",
-                        "§7prevent a specific player from",
-                        "§7joining.",
-                        "",
-                        "§eClick to open island settings!"
-                );
+                return ItemStacks.item(Material.OAK_FENCE, """
+                        <a>Access Permissions
+                        <7>You may edit who is able to
+                        <7>guest on your island in your
+                        <e>Island Settings<7>.
+
+                        <7>Use <c>/ignore add \\<username> to
+                        <7>prevent a specific player from
+                        <7>joining.
+
+                        <e>Click to open island settings!""");
             }
         });
 
@@ -113,14 +113,14 @@ public class GUIGuests extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aModeration", Material.REPEATER, 1,
-                        "§7Manage online guests using the",
-                        "§eGuests Management §7menu.",
-                        "",
-                        "§7Alternatively, use the §c/sbkick &",
-                        "§a/sbkickall commands or §aclicking",
-                        "§aon them§7."
-                );
+                return ItemStacks.item(Material.REPEATER, """
+                        <a>Moderation
+                        <7>Manage online guests using the
+                        <e>Guests Management <7>menu.
+
+                        <7>Alternatively, use the <c>/sbkick &
+                        <a>/sbkickall commands or <a>clicking
+                        <a>on them<7>.""");
             }
         });
         updateItemStacks(getInventory(), getPlayer());

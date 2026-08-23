@@ -1,18 +1,14 @@
 package net.swofty.type.skywarsgame.luckyblock.items.consumables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class UpgradeBook implements LuckyBlockConsumable {
 
@@ -30,19 +26,12 @@ public class UpgradeBook implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.ENCHANTED_BOOK)
-                .customName(Component.text(getDisplayName(), NamedTextColor.AQUA)
-                        .decoration(TextDecoration.ITALIC, false)
-                        .decoration(TextDecoration.BOLD, true))
-                .lore(List.of(
-                        Component.text("Grants you enhanced protection", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("for 5 minutes!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to use!", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                ))
+        return ItemStacks.item(Material.ENCHANTED_BOOK, """
+                <b><l>Upgrade Book</l>
+                <7>Grants you enhanced protection
+                <7>for 5 minutes!
+
+                <e>Right-click to use!""")
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
@@ -57,9 +46,9 @@ public class UpgradeBook implements LuckyBlockConsumable {
                 !player.getEquipment(EquipmentSlot.BOOTS).isAir();
 
         if (hasArmor) {
-            player.sendMessage(Component.text("Your armor has been magically enhanced!", NamedTextColor.AQUA));
+            player.sendMessage("<b>Your armor has been magically enhanced!");
         } else {
-            player.sendMessage(Component.text("You feel protected by ancient magic!", NamedTextColor.AQUA));
+            player.sendMessage("<b>You feel protected by ancient magic!");
         }
     }
 }

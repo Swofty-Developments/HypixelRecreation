@@ -1,17 +1,13 @@
 package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class EnderTeleport implements LuckyBlockConsumable {
 
@@ -27,20 +23,12 @@ public class EnderTeleport implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.ENDER_EYE)
-                .amount(3)
-                .customName(Component.text(getDisplayName(), NamedTextColor.DARK_PURPLE)
-                        .decoration(TextDecoration.ITALIC, false)
-                        .decoration(TextDecoration.BOLD, true))
-                .lore(List.of(
-                        Component.text("Teleport to the block you're", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("looking at (up to 100 blocks)!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to use!", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                ))
+        return ItemStacks.item(Material.ENDER_EYE, 3, """
+                <5><l>Ender Teleport</l>
+                <7>Teleport to the block you're
+                <7>looking at (up to 100 blocks)!
+
+                <e>Right-click to use!""")
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
@@ -49,13 +37,13 @@ public class EnderTeleport implements LuckyBlockConsumable {
     public void onConsume(SkywarsPlayer player) {
         Point targetBlock = player.getTargetBlockPosition(100);
         if (targetBlock == null) {
-            player.sendMessage(Component.text("No block in range!", NamedTextColor.RED));
+            player.sendMessage("<c>No block in range!");
             return;
         }
 
-        if (!player.getInstance().getBlock(targetBlock.add(0, 1, 0)).isAir() ||
-                !player.getInstance().getBlock(targetBlock.add(0, 2, 0)).isAir()) {
-            player.sendMessage(Component.text("Not enough space to teleport!", NamedTextColor.RED));
+        if (!player.getInstance().getBlock(targetBlock.add(0, 1, 0)).air() ||
+                !player.getInstance().getBlock(targetBlock.add(0, 2, 0)).air()) {
+            player.sendMessage("<c>Not enough space to teleport!");
             return;
         }
 
@@ -66,6 +54,6 @@ public class EnderTeleport implements LuckyBlockConsumable {
                 player.getPosition().yaw(),
                 player.getPosition().pitch()
         ));
-        player.sendMessage(Component.text("Whoosh!", NamedTextColor.DARK_PURPLE));
+        player.sendMessage("<5>Whoosh!");
     }
 }

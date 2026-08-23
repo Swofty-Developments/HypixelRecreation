@@ -11,26 +11,26 @@ public class AbiphoneComponent extends SkyBlockItemComponent {
 
 	public AbiphoneComponent(int maxContacts, int maxDiscs, List<AbiphoneFeature> features) {
 		List<String> lore = new ArrayList<>(List.of(
-				"§7A device that can be used to contact",
-				"§7people! Click NPCs to add them to ",
-				"§7your contacts!",
+				"<7>A device that can be used to contact",
+				"<7>people! Click NPCs to add them to ",
+				"<7>your contacts!",
 				" ",
-				"§7Features:",
-				" §7Maximum Contacts: §b" + maxContacts
+				"<7>Features:",
+				" <7>Maximum Contacts: <b>" + maxContacts
 		));
 
 		if (maxDiscs > 0) {
-			lore.add(" §7Maximum Music Discs: §b" + maxDiscs);
+			lore.add(" <7>Maximum Music Discs: <b>" + maxDiscs);
 		}
 
 		if (!features.isEmpty()) {
 			for (AbiphoneFeature feature : features) {
-				lore.add(" " + feature.colorCode + "§l" + StringUtility.toNormalCase(feature.name()));
+				lore.add(" " + feature.colorCode + "<l>" + StringUtility.toNormalCase(feature.name()));
 			}
 		}
 
 		lore.add(" ");
-		lore.add("§eRight-click to open!");
+		lore.add("<e>Right-click to open!");
 
 		addInheritedComponent(new LoreUpdateComponent(lore, false));
 		addInheritedComponent(new InteractableComponent(
@@ -42,12 +42,12 @@ public class AbiphoneComponent extends SkyBlockItemComponent {
 	}
 
 	public enum AbiphoneFeature {
-		CONTACTS_DIRECTORY("§a"),
-		DO_NOT_DISTURB_MODE("§c"),
-		RINGTONES("§6"),
-		TIC_TAC_TOE("§5"),
-		SNAKE("§5"),
-		SPEED_DIAL("§b");
+		CONTACTS_DIRECTORY("<a>"),
+		DO_NOT_DISTURB_MODE("<c>"),
+		RINGTONES("<6>"),
+		TIC_TAC_TOE("<5>"),
+		SNAKE("<5>"),
+		SPEED_DIAL("<b>");
 
 		public final String colorCode;
 

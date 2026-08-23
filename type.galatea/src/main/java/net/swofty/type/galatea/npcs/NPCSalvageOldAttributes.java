@@ -12,7 +12,7 @@ public class NPCSalvageOldAttributes extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bSalvage Old Attributes", "§e§lCLICK"};
+                return new String[]{"<b>Salvage Old Attributes", "<e><l>CLICK"};
             }
 
             @Override

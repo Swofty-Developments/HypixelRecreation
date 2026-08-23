@@ -5,18 +5,18 @@ import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
+import net.swofty.type.generic.gui.inventory.item.GUIMaterial;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.hub.gui.elizabeth.subguis.GUIBitsAbiphone;
 import net.swofty.type.hub.gui.elizabeth.subguis.GUIBitsConfirmBuy;
@@ -25,9 +25,7 @@ import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.NonPlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class GUIBitsShop extends HypixelInventoryGUI {
 
@@ -75,17 +73,20 @@ public class GUIBitsShop extends HypixelInventoryGUI {
     }
     @Getter
     private enum SubCategorys {
-        KAT_ITEMS("Kat Items", new GUIBitsShop(), ItemStackCreator.enchant(ItemStackCreator.getStack("§bKat Items", Material.RED_TULIP, 1,
-                "§7Reduce the amount of time it takes",
-                "§7to upgrade your pet at §bKat§7.")),
+        KAT_ITEMS("Kat Items", new GUIBitsShop(), new GUIMaterial(Material.RED_TULIP), true, """
+                <b>Kat Items
+                <7>Reduce the amount of time it takes
+                <7>to upgrade your pet at <b>Kat</b>.""",
                 List.of(
                         new CommunityShopItem(ItemType.KAT_FLOWER, 500, 1),
                         new CommunityShopItem(ItemType.KAT_BOUQUET, 2500, 1)
                 )),
-        UPGRADE_COMPONENTS("Upgrade Components", new GUIBitsShop(), ItemStackCreator.getStackHead("§cUpgrade Components", "59358703ab7727df3324336969e81d6f92b7aa79edb966c0be91ab161bad1f01", 1,
-                "§7Upgrade many items in SkyBlock",
-                "§7through special crafting",
-                "§7components."),
+        UPGRADE_COMPONENTS("Upgrade Components", new GUIBitsShop(),
+                new GUIMaterial("59358703ab7727df3324336969e81d6f92b7aa79edb966c0be91ab161bad1f01"), false, """
+                <c>Upgrade Components
+                <7>Upgrade many items in SkyBlock
+                <7>through special crafting
+                <7>components.""",
                 List.of(
                         new CommunityShopItem(ItemType.HEAT_CORE, 3000, 1),
                         new CommunityShopItem(ItemType.HYPER_CATALYST_UPGRADER, 300, 1),
@@ -94,9 +95,11 @@ public class GUIBitsShop extends HypixelInventoryGUI {
                         new CommunityShopItem(ItemType.JUMBO_BACKPACK_UPGRADE, 4000, 1),
                         new CommunityShopItem(ItemType.MINION_STORAGE_EXPANDER, 1500, 1)
                 )),
-        SACKS("Sacks", new GUIBitsShop(), ItemStackCreator.getStackHead("§5Sacks", "7442c66f4bf9aa4256fa7b49c6367d4658408ec408477879ac8076794402d95b", 1,
-                "§7Obtain sack capacity upgrades as well",
-                "§7as exclusive bits shop sacks."),
+        SACKS("Sacks", new GUIBitsShop(),
+                new GUIMaterial("7442c66f4bf9aa4256fa7b49c6367d4658408ec408477879ac8076794402d95b"), false, """
+                <5>Sacks
+                <7>Obtain sack capacity upgrades as well
+                <7>as exclusive bits shop sacks.""",
                 List.of(
                         new CommunityShopItem(ItemType.POCKET_SACK_IN_A_SACK, 8000, 1),
                         new CommunityShopItem(ItemType.DUNGEON_SACK, 14000, 1),
@@ -105,28 +108,32 @@ public class GUIBitsShop extends HypixelInventoryGUI {
                         new CommunityShopItem(ItemType.DWARVEN_SACK, 14000, 1),
                         new CommunityShopItem(ItemType.CRYSTAL_HOLLOWS_SACK, 14000, 1)
                 )),
-        DYES("Dyes", new GUIBitsShop(), ItemStackCreator.getStack("§aD§ey§ce§ds", Material.ORANGE_DYE, 1,
-                "§7Dyes are exceedingly exclusive items",
-                "§7which let you colorize armor pieces."),
+        DYES("Dyes", new GUIBitsShop(), new GUIMaterial(Material.ORANGE_DYE), false, """
+                <a>D<e>y<c>e<d>s
+                <7>Dyes are exceedingly exclusive items
+                <7>which let you colorize armor pieces.""",
                 List.of(
                         new CommunityShopItem(ItemType.PURE_WHITE_DYE, 250000, 1),
                         new CommunityShopItem(ItemType.PURE_BLACK_DYE, 250000, 1)
                 )),
-        INFERNO_FUEL_BLOCKS("Inferno Fuel", new GUIBitsShop(), ItemStackCreator.getStackHead("§9Inferno Fuel Blocks", "28a1884ee3f8a6e66692a91ed763cb78d9f2017706d8b42a9263b417b2d715d2", 1,
-                "§7Use fuel blocks when creating",
-                "§6Inferno §7minion fuel and level up",
-                "§7your §cChili Pepper §7collection!"),
+        INFERNO_FUEL_BLOCKS("Inferno Fuel", new GUIBitsShop(),
+                new GUIMaterial("28a1884ee3f8a6e66692a91ed763cb78d9f2017706d8b42a9263b417b2d715d2"), false, """
+                <9>Inferno Fuel Blocks
+                <7>Use fuel blocks when creating
+                <6>Inferno <7>minion fuel and level up
+                <7>your <c>Chili Pepper <7>collection!""",
                 List.of(
                         new CommunityShopItem(ItemType.INFERNO_FUEL_BLOCK, 75, 1),
                         new CommunityShopItem(ItemType.INFERNO_FUEL_BLOCK, 3600, 64)
                 )),
-        STACKING_ENCHANTS("Stacking Enchants", new GUIBitsShop(), ItemStackCreator.getStack("§9Stacking Enchants", Material.ENCHANTED_BOOK, 1,
-                "§7Unlock unique §9enchants §7to apply",
-                "§7on your gear.",
-                " ",
-                "§7Stacking enchants become",
-                "§7stronger as you use the gear it's",
-                "§7on."),
+        STACKING_ENCHANTS("Stacking Enchants", new GUIBitsShop(), new GUIMaterial(Material.ENCHANTED_BOOK), false, """
+                <9>Stacking Enchants
+                <7>Unlock unique <9>enchants </9>to apply
+                <7>on your gear.
+
+                <7>Stacking enchants become
+                <7>stronger as you use the gear it's
+                <7>on.""",
                 List.of(
                         new CommunityShopItem(ItemType.EXPERTISE, 4000, 1),
                         new CommunityShopItem(ItemType.COMPACT, 4000, 1),
@@ -134,12 +141,14 @@ public class GUIBitsShop extends HypixelInventoryGUI {
                         new CommunityShopItem(ItemType.CHAMPION, 4000, 1),
                         new CommunityShopItem(ItemType.HECATOMB, 6000, 1)
                 )),
-        ENRICHMENTS("Enrichments", new GUIBitsShop(), ItemStackCreator.getStackHead("§dEnrichments", "32fa8f38c7b22096619c3a6d6498b405530e48d5d4f91e2aacea578844d5c67", 1,
-                "§7Add a §dboost §7of a stat of your choice",
-                "§7to your accessories.",
-                " ",
-                "§7Only one enrichment may be",
-                "§7applied per item."),
+        ENRICHMENTS("Enrichments", new GUIBitsShop(),
+                new GUIMaterial("32fa8f38c7b22096619c3a6d6498b405530e48d5d4f91e2aacea578844d5c67"), false, """
+                <d>Enrichments
+                <7>Add a <d>boost </d>of a stat of your choice
+                <7>to your accessories.
+
+                <7>Only one enrichment may be
+                <7>applied per item.""",
                 List.of(
                         new CommunityShopItem(ItemType.SPEED_ENRICHMENT, 5000, 1),
                         new CommunityShopItem(ItemType.INTELLIGENCE_ENRICHMENT, 5000, 1),
@@ -158,20 +167,30 @@ public class GUIBitsShop extends HypixelInventoryGUI {
 
         private final String guiName;
         private final HypixelInventoryGUI previousGUI;
-        private final ItemStack.Builder item;
+        private final GUIMaterial material;
+        private final boolean enchanted;
+        private final String textBlock;
         private final List<CommunityShopItem> shopItems;
 
-        SubCategorys(String guiName, HypixelInventoryGUI previousGUI, ItemStack.Builder item, List<CommunityShopItem> shopItems) {
+        SubCategorys(String guiName, HypixelInventoryGUI previousGUI, GUIMaterial material, boolean enchanted,
+                     String textBlock, List<CommunityShopItem> shopItems) {
             this.guiName = guiName;
             this.previousGUI = previousGUI;
-            this.item = item;
+            this.material = material;
+            this.enchanted = enchanted;
+            this.textBlock = textBlock;
             this.shopItems = shopItems;
+        }
+
+        private ItemStack.Builder buildStack() {
+            ItemStack.Builder builder = ItemStacks.of(material, textBlock + "\n\n<e>Click to browse!");
+            return enchanted ? ItemStacks.enchanted(builder) : builder;
         }
     }
 
     public void onOpen(InventoryGUIOpenEvent e) {
-        border(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
-        set(15, ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        border(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
+        set(15, ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
 
         GUIAccountAndProfileUpgrades.ShopCategorys[] allShopCategorys = GUIAccountAndProfileUpgrades.ShopCategorys.values();
         int index = 0;
@@ -180,32 +199,13 @@ public class GUIBitsShop extends HypixelInventoryGUI {
             set(new GUIClickableItem(slot) {
                 @Override
                 public void run(InventoryPreClickEvent e, HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
                     if (slot != 4) {
-                        shopCategorys.gui.open(player);
+                        shopCategorys.gui.open(p);
                     }
                 }
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    ItemStack.Builder itemStack = shopCategorys.stack;
-                    ArrayList<String> lore = new ArrayList<>(itemStack.build().get(DataComponents.LORE).stream().map(StringUtility::getTextFromComponent).toList());
-                    if (slot != 4) {
-                        if (Objects.equals(lore.getLast(), "§aCurrently selected!")) {
-                            lore.removeLast();
-                            lore.add("§eClick to view!");
-                        } else if (Objects.equals(lore.getLast(), " ")) {
-                            lore.add("§eClick to view!");
-                        }
-                    } else {
-                        if (Objects.equals(lore.getLast(), "§eClick to view!")) {
-                            lore.removeLast();
-                            lore.add("§aCurrently selected!");
-                        } else if (Objects.equals(lore.getLast(), " ")) {
-                            lore.add("§aCurrently selected!");
-                        }
-                    }
-                    return ItemStackCreator.updateLore(itemStack, lore);
+                    return shopCategorys.buildStack(slot == 4);
                 }
             });
             index++;
@@ -214,12 +214,11 @@ public class GUIBitsShop extends HypixelInventoryGUI {
         for (int slot : categoriesItemsSlots) {
             set(new GUIItem(slot) {
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    if (slot != 13) {
-                        return ItemStackCreator.getStack("§8▲ §7Categories", Material.GRAY_STAINED_GLASS_PANE, 1, "§8▼ §7Items");
-                    } else {
-                        return ItemStackCreator.getStack("§8▲ §7Categories", Material.GREEN_STAINED_GLASS_PANE, 1, "§8▼ §7Items");
-                    }
+                    return ItemStacks.item(slot != 13
+                            ? Material.GRAY_STAINED_GLASS_PANE
+                            : Material.GREEN_STAINED_GLASS_PANE, """
+                            <8>▲ <7>Categories
+                            <8>▼ <7>Items""");
                 }
             });
         }
@@ -245,22 +244,20 @@ public class GUIBitsShop extends HypixelInventoryGUI {
                                 new GUIBitsConfirmBuy(finalItem, bitItems.price).open(player);
                             }
                         } else {
-                            player.sendMessage("§cYou don't have enough Bits to buy that!");
+                            player.sendMessage("<c>You don't have enough Bits to buy that!");
                         }
                     }
 
                     @Override
                     public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
                         SkyBlockItem item = new SkyBlockItem(bitItems.item);
                         ItemStack.Builder itemStack = new NonPlayerItemUpdater(item).getUpdatedItem();
-                        ArrayList<String> lore = new ArrayList<>(itemStack.build().get(DataComponents.LORE).stream().map(StringUtility::getTextFromComponent).toList());
-                        lore.add(" ");
-                        lore.add("§7Cost");
-                        lore.add("§b" + StringUtility.commaify(bitItems.price) + " Bits");
-                        lore.add(" ");
-                        lore.add("§eClick to trade!");
-                        return ItemStackCreator.updateLore(itemStack, lore);
+                        return ItemStacks.appendLore(itemStack, """
+                                \s
+                                <7>Cost
+                                <b>{:,} Bits
+                                <r>\s
+                                <e>Click to trade!""", bitItems.price);
                     }
                 });
                 indexBitItems++;
@@ -279,13 +276,7 @@ public class GUIBitsShop extends HypixelInventoryGUI {
 
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                    ItemStack.Builder itemstack = subCategorys.item;
-                    ArrayList<String> lore = new ArrayList<>(itemstack.build().get(DataComponents.LORE).stream().map(StringUtility::getTextFromComponent).toList());
-                    if (!Objects.equals(lore.getLast(), "§eClick to browse!")) {
-                        lore.add(" ");
-                        lore.add("§eClick to browse!");
-                    }
-                    return ItemStackCreator.updateLore(itemstack, lore);
+                    return subCategorys.buildStack();
                 }
             });
             indexSubCategorys++;
@@ -293,8 +284,7 @@ public class GUIBitsShop extends HypixelInventoryGUI {
         set(new GUIClickableItem(49) {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                player.openBook(Book.builder()
+                p.openBook(Book.builder()
                         .addPage(Component.text("Purchase ranks, gems and more on our webstore!")
                                 .appendNewline()
                                 .appendNewline()
@@ -307,19 +297,19 @@ public class GUIBitsShop extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.enchant(ItemStackCreator.getStack("§aCommunity Shop", Material.EMERALD, 1,
-                        "§8Elizabeth",
-                        " ",
-                        "§7Gems: §a" + StringUtility.commaify(player.getGems()),
-                        "§8Purchase on store.hypixel.net!",
-                        " ",
-                        "§7Bits: §b" + StringUtility.commaify(player.getBits()),
-                        "§8Earn from Booster Cookies!",
-                        " ",
-                        "§7Fame Rank: §e",
-                        "§8Rank up by spending gems & bits!",
-                        "§eClick to get link!"
-                ));
+                return ItemStacks.enchanted(ItemStacks.item(Material.EMERALD, """
+                        <a>Community Shop
+                        <8>Elizabeth
+
+                        <7>Gems: <a>{:,}
+                        <8>Purchase on store.hypixel.net!
+
+                        <7>Bits: <b>{:,}
+                        <8>Earn from Booster Cookies!
+
+                        <7>Fame Rank: <e>
+                        <8>Rank up by spending gems & bits!
+                        <e>Click to get link!""", player.getGems(), player.getBits()));
             }
         });
         set(new GUIClickableItem(48) {
@@ -335,17 +325,18 @@ public class GUIBitsShop extends HypixelInventoryGUI {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 String status;
                 if (player.getToggles().get(DatapointToggles.Toggles.ToggleType.PURCHASE_CONFIRMATION_BITS)) {
-                    status = "§aEnabled!";
+                    status = "<a>Enabled!";
                 } else {
-                    status = "§cOFF";
+                    status = "<c>OFF";
                 }
-                return ItemStackCreator.getStack("§aPurchase Confirmation", Material.COMPARATOR, 1,
-                        "§7Buying a lot and never",
-                        "§7second-guess a decision?",
-                        " ",
-                        "§7Confirmations: " + status,
-                        " ",
-                        "§eClick to toggle confirm menu!");
+                return ItemStacks.item(Material.COMPARATOR, """
+                        <a>Purchase Confirmation
+                        <7>Buying a lot and never
+                        <7>second-guess a decision?
+
+                        <7>Confirmations: {}
+
+                        <e>Click to toggle confirm menu!""", Text.of(status));
             }
         });
         set(new GUIClickableItem(33) {
@@ -357,13 +348,13 @@ public class GUIBitsShop extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.getStackHead("§5Abiphone Supershop", "785d157db6c9fcc1a5bb24c4590988849933bd355608cae3a6a420660676bc33", 1,
-                        "§7Obtain upgrades and special cases",
-                        "§7for your Abiphone.",
-                        " ",
-                        "§7Purchase an Abiphone in the §cCrimson",
-                        "§cIsle §7to contact NPCs from afar!");
+                return ItemStacks.head("785d157db6c9fcc1a5bb24c4590988849933bd355608cae3a6a420660676bc33", """
+                        <5>Abiphone Supershop
+                        <7>Obtain upgrades and special cases
+                        <7>for your Abiphone.
+
+                        <7>Purchase an Abiphone in the <c>Crimson
+                        <c>Isle <7>to contact NPCs from afar!""");
             }
         });
         updateItemStacks(getInventory(), getPlayer());

@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.goldmine.lazyminer;
 
+
 import net.swofty.type.skyblockgeneric.mission.MissionData;
 import net.swofty.type.skyblockgeneric.mission.SkyBlockMission;
 import net.swofty.type.skyblockgeneric.region.RegionType;
@@ -31,7 +32,7 @@ public class MissionTalkToLazyMiner extends SkyBlockMission {
 
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§b10 Mining XP"))).forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<b>10 Mining XP"))).forEach(player::sendMessage);
         player.getSkills().increase(player, SkillCategories.MINING, 10D);
     }
 

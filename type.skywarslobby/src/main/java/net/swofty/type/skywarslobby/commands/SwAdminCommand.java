@@ -48,7 +48,7 @@ public class SwAdminCommand extends HypixelCommand {
 
             SkywarsDataHandler handler = SkywarsDataHandler.getUser(player);
             if (handler == null) {
-                player.sendMessage("§cCould not find your SkyWars data. Please try again.");
+                player.sendMessage("<c>Could not find your SkyWars data. Please try again.");
                 return;
             }
 
@@ -66,14 +66,14 @@ public class SwAdminCommand extends HypixelCommand {
                 case GIVE -> {
                     newValue = currentValue + amount;
                     datapoint.setValue(newValue);
-                    player.sendMessage("§aAdded §e" + amount + " " + currency.name().toLowerCase() +
-                            "§a! New balance: §e" + newValue);
+                    player.sendMessage("<a>Added <e>{} {}<a>! New balance: <e>{}",
+                            amount, currency.name().toLowerCase(), newValue);
                 }
                 case SET -> {
                     newValue = amount;
                     datapoint.setValue(newValue);
-                    player.sendMessage("§aSet your " + currency.name().toLowerCase() +
-                            " to §e" + newValue + "§a! (was: §7" + currentValue + "§a)");
+                    player.sendMessage("<a>Set your {} to <e>{}<a>! (was: <7>{}<a>)",
+                            currency.name().toLowerCase(), newValue, currentValue);
                 }
             }
         }, actionArgument, currencyArgument, amountArgument);
@@ -85,7 +85,7 @@ public class SwAdminCommand extends HypixelCommand {
             HypixelPlayer player = (HypixelPlayer) sender;
             SkywarsDataHandler handler = SkywarsDataHandler.getUser(player);
             if (handler == null) {
-                player.sendMessage("§cCould not find your SkyWars data. Please try again.");
+                player.sendMessage("<c>Could not find your SkyWars data. Please try again.");
                 return;
             }
 
@@ -93,15 +93,15 @@ public class SwAdminCommand extends HypixelCommand {
             long souls = handler.get(SkywarsDataHandler.Data.SOULS, DatapointLong.class).getValue();
             long tokens = handler.get(SkywarsDataHandler.Data.TOKENS, DatapointLong.class).getValue();
 
-            player.sendMessage("§6§lSkyWars Admin Commands");
-            player.sendMessage("§7Current balances:");
-            player.sendMessage("  §eCoins: §f" + coins);
-            player.sendMessage("  §dSouls: §f" + souls);
-            player.sendMessage("  §bTokens: §f" + tokens);
+            player.sendMessage("<6><l>SkyWars Admin Commands");
+            player.sendMessage("<7>Current balances:");
+            player.sendMessage("  <e>Coins: <f>{}", coins);
+            player.sendMessage("  <d>Souls: <f>{}", souls);
+            player.sendMessage("  <b>Tokens: <f>{}", tokens);
             player.sendMessage("");
-            player.sendMessage("§7Usage:");
-            player.sendMessage("  §e/swadmin give <coins|souls|tokens> <amount>");
-            player.sendMessage("  §e/swadmin set <coins|souls|tokens> <amount>");
+            player.sendMessage("<7>Usage:");
+            player.sendMessage("  <e>/swadmin give \\<coins|souls|tokens> \\<amount>");
+            player.sendMessage("  <e>/swadmin set \\<coins|souls|tokens> \\<amount>");
         });
     }
 }

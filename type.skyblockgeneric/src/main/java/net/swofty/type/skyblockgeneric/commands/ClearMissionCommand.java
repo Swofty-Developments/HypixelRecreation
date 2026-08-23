@@ -20,7 +20,7 @@ public class ClearMissionCommand extends HypixelCommand {
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
 
-            sender.sendMessage("§aYour missions have been cleared.");
+            sender.sendMessage("<a>Your missions have been cleared.");
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
             player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.MISSION_DATA, DatapointMissionData.class)
                     .setValue(new MissionData());

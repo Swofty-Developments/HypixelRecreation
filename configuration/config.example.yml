@@ -8,8 +8,6 @@ redis-uri: redis://localhost:6379
 velocity-secret: ixmSUgWOgvs7
 # Whether to require player authentication on initial connection
 require-auth: false
-# Whether to enable sandbox features (such as editing items)
-sandbox: false
 # Integrations with services
 integrations:
     # Whether to enable Spark for performance monitoring
@@ -17,7 +15,7 @@ integrations:
     # Whether to enable anti-cheat measures
     anticheat: false
     # Whether to enable ViaVersion for supporting multiple Minecraft versions. This may cause issues of any kind
-    via-version: true
+    via-version: false
     # The DSN to use for Sentry error tracking. If empty, Sentry will be disabled
     sentry-dsn: ''
 # Settings related to configuration of Limbo server connections

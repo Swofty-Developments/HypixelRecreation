@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skywars.SkywarsGameType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
@@ -27,9 +28,9 @@ public class NPCSoloInsane extends HypixelNPC {
                 String commaified = StringUtility.commaify(insanePlayers);
 
                 return new String[]{
-                        "§e§lCLICK TO PLAY",
-                        "§bInsane SkyWars §7[Solo]",
-                        "§e§l" + commaified + " Players",
+                        "<e><l>CLICK TO PLAY",
+                        "<b>Insane SkyWars <7>[Solo]",
+                        Text.of("<e><l>{} Players", commaified).serialize(),
                 };
             }
 

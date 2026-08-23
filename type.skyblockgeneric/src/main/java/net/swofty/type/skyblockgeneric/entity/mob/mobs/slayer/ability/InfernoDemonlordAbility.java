@@ -55,7 +55,7 @@ final class InfernoDemonlordAbility extends SlayerAbilitySupport {
         if (shieldHits >= 8) {
             shieldHits = 0;
             attunementIndex = (attunementIndex + 1) % attunements.length;
-            nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§6Hellion Shield attuned to §e" + attunements[attunementIndex] + "§6!"));
+            nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<6>Hellion Shield attuned to <e>{}<6>!", attunements[attunementIndex]));
         }
 
         if (boss.getProfile().tier().tier().number() >= 2) {
@@ -75,7 +75,7 @@ final class InfernoDemonlordAbility extends SlayerAbilitySupport {
     }
 
     private void demonSplit(SlayerBossMob boss) {
-        nearbyPlayers(boss, 18).forEach(player -> player.sendMessage("§6Demonsplit! §eQuazii and Typhoeus join the fight."));
+        nearbyPlayers(boss, 18).forEach(player -> player.sendMessage("<6>Demonsplit! <e>Quazii and Typhoeus join the fight."));
         spawnMinion(boss, new SlayerMinionMob.SlayerMinionProfile(
             "Quazii",
             boss.getLevel(),
@@ -106,7 +106,7 @@ final class InfernoDemonlordAbility extends SlayerAbilitySupport {
             }
 
             Pos pillar = owner.getPosition().add((Math.random() - 0.5D) * 6D, 0, (Math.random() - 0.5D) * 6D);
-            nearbyPlayers(boss, 18).forEach(player -> player.sendMessage("§6Fire Pillar! §eClear it before it explodes."));
+            nearbyPlayers(boss, 18).forEach(player -> player.sendMessage("<6>Fire Pillar! <e>Clear it before it explodes."));
             delayed(boss, 140, () -> {
                 if (owner.getPosition().distance(pillar) <= 4D) {
                     trueDamage(boss, owner, owner.getMaxHealth() * 10D, "Fire Pillar");
@@ -116,7 +116,7 @@ final class InfernoDemonlordAbility extends SlayerAbilitySupport {
     }
 
     private void ddrApocalypse(SlayerBossMob boss) {
-        nearbyPlayers(boss, 18).forEach(player -> player.sendMessage("§cDDR Apocalypse!"));
+        nearbyPlayers(boss, 18).forEach(player -> player.sendMessage("<c>DDR Apocalypse!"));
         repeating(boss, 20, 20, () -> nearbyPlayers(boss, 8).forEach(player ->
             trueDamage(boss, player, player.getMaxHealth() * 2D, "DDR Apocalypse")));
     }

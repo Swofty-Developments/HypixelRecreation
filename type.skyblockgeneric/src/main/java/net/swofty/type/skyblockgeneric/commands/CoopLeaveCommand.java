@@ -1,15 +1,18 @@
 package net.swofty.type.skyblockgeneric.commands;
 
-import com.mongodb.client.model.Filters;
-import net.minestom.server.MinecraftServer;
-import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.data.SwoftyData;
+import net.swofty.commons.skyblock.SkyBlockPlayerProfiles;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
-import net.swofty.type.skyblockgeneric.data.monogdb.CoopDatabase;
 import net.swofty.type.generic.data.mongodb.ProfilesDatabase;
 import net.swofty.type.generic.data.mongodb.UserDatabase;
-import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.generic.user.categories.Rank;
+import net.swofty.commons.skyblock.CoopLinks;
+import net.swofty.type.skyblockgeneric.data.ProfileSwitcher;
+import net.swofty.type.skyblockgeneric.data.monogdb.CoopDatabase;
+import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
+
+import java.util.UUID;
 
 @CommandParameters(labels = "cooperativeleave",
         description = "Leaves the current coop",
@@ -17,6 +20,7 @@ import net.swofty.type.generic.user.categories.Rank;
         permission = Rank.DEFAULT,
         allowsConsole = false)
 public class CoopLeaveCommand extends HypixelCommand {
+
     @Override
     public void registerUsage(MinestomCommand command) {
         command.addSyntax((sender, context) -> {
@@ -25,30 +29,53 @@ public class CoopLeaveCommand extends HypixelCommand {
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
 
             if (!player.isCoop()) {
-                player.sendMessage("§b[Co-op] §cYou are not on a coop profile!");
+                player.sendMessage("<b>[Co-op] <c>You are not on a coop profile!");
                 return;
             }
-
-            if (player.getProfiles().getProfiles().size() == 1) {
-                player.sendMessage("§b[Co-op] §cYou cannot leave your last profile!");
-                player.sendMessage("§b[Co-op] §eMake another profile before deleting this one.");
-                return;
-            }
-
-            player.kick("§cYou must reconnect for this change to take effect");
 
             CoopDatabase.Coop coop = CoopDatabase.getFromMember(player.getUuid());
-            coop.members().remove(player.getUuid());
-            coop.memberProfiles().remove(player.getProfiles().getCurrentlySelected());
-            coop.save();
+            if (coop == null) {
+                player.sendMessage("<b>[Co-op] <c>You are not part of a co-op!");
+                return;
+            }
 
-            MinecraftServer.getSchedulerManager().scheduleTask(() -> {
-                ProfilesDatabase.collection.deleteOne(Filters.eq("_id", player.getProfiles().getCurrentlySelected().toString()));
+            UUID coopId = coop.coopUUID();
+            UUID playerId = player.getUuid();
+            UUID profileId = player.getProfiles().getCurrentlySelected();
+            UUID fallbackProfileId = player.getProfiles().getProfiles().stream()
+                    .filter(candidate -> !candidate.equals(profileId))
+                    .findFirst()
+                    .orElse(null);
 
-                player.getProfiles().removeProfile(player.getProfiles().getCurrentlySelected());
-                player.getProfiles().setCurrentlySelected(player.getProfiles().getProfiles().getFirst());
-                new UserDatabase(player.getUuid()).saveProfiles(player.getProfiles());
-            }, TaskSchedule.tick(4), TaskSchedule.stop());
+            if (fallbackProfileId == null) {
+                player.sendMessage("<b>[Co-op] <c>You cannot leave your last profile!");
+                player.sendMessage("<b>[Co-op] <e>Make another profile before deleting this one.");
+                return;
+            }
+
+            ProfileSwitcher.switchTo(player, fallbackProfileId).thenAccept(result -> {
+                if (result != ProfileSwitcher.Result.SWITCHED && result != ProfileSwitcher.Result.TRANSFERRED) return;
+                leave(playerId, coopId, profileId);
+            });
         });
+    }
+
+    private void leave(UUID playerId, UUID coopId, UUID profileId) {
+        CoopDatabase.Coop remaining = CoopDatabase.update(coopId, latest -> {
+            latest.members().remove(playerId);
+            latest.removeInvite(playerId);
+            latest.memberProfiles().remove(profileId);
+        });
+
+        SwoftyData.profile().unlink(profileId, CoopLinks.COOP);
+        if (remaining == null || (remaining.members().isEmpty() && remaining.memberProfiles().isEmpty())) {
+            SwoftyData.profile().deleteLink(CoopLinks.COOP, coopId);
+        }
+
+        ProfilesDatabase.deleteDocument(profileId.toString());
+
+        SkyBlockPlayerProfiles profiles = new UserDatabase(playerId).getProfiles();
+        profiles.removeProfile(profileId);
+        new UserDatabase(playerId).saveProfiles(profiles);
     }
 }

@@ -14,7 +14,7 @@ public class NPCMiningMerchant extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6Mining Merchant", "§e§lCLICK"};
+                return new String[]{"<6>Mining Merchant", "<e><l>CLICK"};
             }
 
             @Override
@@ -59,10 +59,10 @@ public class NPCMiningMerchant extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "My specialities are ores, stone, and mining equipment.",
                                 "Click me again to open the Miner Shop!"
-                        }).build(),
+                        ).build(),
         };
     }
 }

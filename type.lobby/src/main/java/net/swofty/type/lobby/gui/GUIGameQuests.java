@@ -4,12 +4,13 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.achievement.AchievementCategory;
 import net.swofty.type.generic.achievement.AchievementRegistry;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.quest.QuestData;
@@ -25,7 +26,7 @@ public class GUIGameQuests extends HypixelInventoryGUI {
     private final AchievementCategory category;
 
     public GUIGameQuests(AchievementCategory category) {
-        super(category.getDisplayName() + " Quests", InventoryType.CHEST_6_ROW);
+        super(Text.literal(category.getDisplayName() + " Quests"), InventoryType.CHEST_6_ROW);
         this.category = category;
     }
 
@@ -37,13 +38,10 @@ public class GUIGameQuests extends HypixelInventoryGUI {
         set(new GUIItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getUsingGUIMaterial(
-                        "§a" + category.getDisplayName() + " Quests & Challenges",
-                        category.getMaterial(),
-                        1,
-                        "§7View all available quests and challenges",
-                        "§7that you can complete by playing " + category.getDisplayName() + "."
-                );
+                return ItemStacks.of(category.getMaterial(), 1, """
+                        <a>{0} Quests & Challenges
+                        <7>View all available quests and challenges
+                        <7>that you can complete by playing {0}.""", category.getDisplayName());
             }
         });
 
@@ -62,15 +60,15 @@ public class GUIGameQuests extends HypixelInventoryGUI {
                 int unlockedPercent = total > 0 ? (int) (unlocked * 100.0 / total) : 0;
                 int pointsPercent = maxPoints > 0 ? (int) (points * 100.0 / maxPoints) : 0;
 
-                return ItemStackCreator.getStack(
-                        "§a" + category.getDisplayName() + " Achievements",
-                        Material.DIAMOND,
-                        1,
-                        "§7Unlocked: §b" + unlocked + "§7/§b" + total + " §8(" + unlockedPercent + "%)",
-                        "§7Points: §e" + points + "§7/§e" + maxPoints + " §8(" + pointsPercent + "%)",
-                        "",
-                        "§eClick to view achievements!"
-                );
+                return ItemStacks.item(Material.DIAMOND, """
+                        <a>{} Achievements
+                        <7>Unlocked: <b>{}<7>/<b>{} <8>({}%)
+                        <7>Points: <e>{}<7>/<e>{} <8>({}%)
+
+                        <e>Click to view achievements!""",
+                        category.getDisplayName(),
+                        unlocked, total, unlockedPercent,
+                        points, maxPoints, pointsPercent);
             }
 
             @Override
@@ -82,12 +80,9 @@ public class GUIGameQuests extends HypixelInventoryGUI {
         set(new GUIClickableItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aGo Back",
-                        Material.ARROW,
-                        1,
-                        "§7To Quests & Challenges"
-                );
+                return ItemStacks.item(Material.ARROW, """
+                        <a>Go Back
+                        <7>To Quests & Challenges""");
             }
 
             @Override
@@ -104,39 +99,30 @@ public class GUIGameQuests extends HypixelInventoryGUI {
                 if (hasMvpPlus) {
                     boolean isEnabled = player.getToggles().get(DatapointToggles.Toggles.ToggleType.AUTO_ACCEPT_QUESTS);
                     if (isEnabled) {
-                        return ItemStackCreator.getStack(
-                                "§aAuto-Accept Quests: §aON",
-                                Material.LIME_DYE,
-                                1,
-                                "§7Quests will be automatically",
-                                "§7accepted whenever you join a",
-                                "§7game lobby.",
-                                "",
-                                "§eClick to disable!"
-                        );
+                        return ItemStacks.item(Material.LIME_DYE, """
+                                <a>Auto-Accept Quests: <a>ON
+                                <7>Quests will be automatically
+                                <7>accepted whenever you join a
+                                <7>game lobby.
+
+                                <e>Click to disable!""");
                     } else {
-                        return ItemStackCreator.getStack(
-                                "§aAuto-Accept Quests: §cOFF",
-                                Material.GRAY_DYE,
-                                1,
-                                "§7Click to automatically accept",
-                                "§7quests whenever you join a",
-                                "§7game lobby.",
-                                "",
-                                "§eClick to enable!"
-                        );
+                        return ItemStacks.item(Material.GRAY_DYE, """
+                                <a>Auto-Accept Quests: <c>OFF
+                                <7>Click to automatically accept
+                                <7>quests whenever you join a
+                                <7>game lobby.
+
+                                <e>Click to enable!""");
                     }
                 } else {
-                    return ItemStackCreator.getStack(
-                            "§aAuto-Accept Quests: §cOFF",
-                            Material.GRAY_DYE,
-                            1,
-                            "§7Click to automatically accept",
-                            "§7quests whenever you join a",
-                            "§7game lobby.",
-                            "",
-                            "§7Requires §bMVP§c+"
-                    );
+                    return ItemStacks.item(Material.GRAY_DYE, """
+                            <a>Auto-Accept Quests: <c>OFF
+                            <7>Click to automatically accept
+                            <7>quests whenever you join a
+                            <7>game lobby.
+
+                            <7>Requires <b>MVP<c>+""");
                 }
             }
 
@@ -145,13 +131,13 @@ public class GUIGameQuests extends HypixelInventoryGUI {
                 if (player.getRank().isEqualOrHigherThan(Rank.MVP_PLUS)) {
                     boolean newValue = player.getToggles().inverse(DatapointToggles.Toggles.ToggleType.AUTO_ACCEPT_QUESTS);
                     if (newValue) {
-                        player.sendMessage("§aAuto-Accept Quests enabled!");
+                        player.sendMessage("<a>Auto-Accept Quests enabled!");
                     } else {
-                        player.sendMessage("§cAuto-Accept Quests disabled.");
+                        player.sendMessage("<c>Auto-Accept Quests disabled.");
                     }
                     open(player);
                 } else {
-                    player.sendMessage("§cThis feature requires MVP+!");
+                    player.sendMessage("<c>This feature requires MVP+!");
                 }
             }
         });
@@ -176,49 +162,45 @@ public class GUIGameQuests extends HypixelInventoryGUI {
                 set(new GUIClickableItem(slot) {
                     @Override
                     public ItemStack.Builder getItem(HypixelPlayer p) {
-                        List<String> lore = new ArrayList<>();
-                        lore.add("§7" + quest.getDescription() + "§b (§6" + progress + "§b/§6" + goal + "§b)");
-                        lore.add("");
-                        lore.add("§7Rewards:");
+                        List<Text> lore = new ArrayList<>();
+                        lore.add(Text.of("<7>{}<b> (<6>{}<b>/<6>{}<b>)", quest.getDescription(), progress, goal));
+                        lore.add(Text.empty());
+                        lore.add(Text.of("<7>Rewards:"));
 
                         if (quest.getReward() != null) {
                             if (quest.getReward().getHypixelExperience() > 0) {
-                                lore.add("§8+§3" + quest.getReward().getHypixelExperience() + "§7 Hypixel Experience");
+                                lore.add(Text.of("<8>+<3>{}<7> Hypixel Experience", quest.getReward().getHypixelExperience()));
                             }
                             if (quest.getReward().getGameExperience() > 0) {
-                                lore.add("§8+§b" + quest.getReward().getGameExperience() + "§7 " + category.getDisplayName() + " Experience");
+                                lore.add(Text.of("<8>+<b>{}<7> {} Experience", quest.getReward().getGameExperience(), category.getDisplayName()));
                             }
                             if (quest.getReward().getCoins() > 0) {
-                                lore.add("§8+§6" + quest.getReward().getCoins() + "§7 Coins");
+                                lore.add(Text.of("<8>+<6>{}<7> Coins", quest.getReward().getCoins()));
                             }
                         }
 
-                        lore.add("");
-                        lore.add("§8§oDaily Quests can be completed once every");
-                        lore.add("§8§oday.");
-                        lore.add("");
+                        lore.add(Text.empty());
+                        lore.add(Text.of("<8><o>Daily Quests can be completed once every"));
+                        lore.add(Text.of("<8><o>day."));
+                        lore.add(Text.empty());
 
                         if (completed) {
-                            lore.add("§a§lCOMPLETED!");
+                            lore.add(Text.of("<a><l>COMPLETED!"));
                         } else if (active) {
-                            lore.add("§aYou've already started this quest!");
+                            lore.add(Text.of("<a>You've already started this quest!"));
                         } else {
-                            lore.add("§eClick to start this quest!");
+                            lore.add(Text.of("<e>Click to start this quest!"));
                         }
 
-                        return ItemStackCreator.getStack(
-                                "§aDaily Quest: " + quest.getName(),
-                                Material.PAPER,
-                                1,
-                                lore.toArray(new String[0])
-                        );
+                        return ItemStacks.item(Material.PAPER, 1,
+                                Text.of("<a>Daily Quest: {}", quest.getName()), lore);
                     }
 
                     @Override
                     public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                         if (!questData.isActive(quest.getId()) && !questData.isCompleted(quest.getId())) {
                             p.getQuestHandler().startQuest(quest.getId());
-                            p.sendMessage("§aQuest started: §e" + quest.getName());
+                            p.sendMessage("<a>Quest started: <e>{}", quest.getName());
                             open(p);
                         }
                     }
@@ -244,49 +226,45 @@ public class GUIGameQuests extends HypixelInventoryGUI {
                 set(new GUIClickableItem(slot) {
                     @Override
                     public ItemStack.Builder getItem(HypixelPlayer p) {
-                        List<String> lore = new ArrayList<>();
-                        lore.add("§7" + quest.getDescription() + "§b (§6" + progress + "§b/§6" + goal + "§b)");
-                        lore.add("");
-                        lore.add("§7Rewards:");
+                        List<Text> lore = new ArrayList<>();
+                        lore.add(Text.of("<7>{}<b> (<6>{}<b>/<6>{}<b>)", quest.getDescription(), progress, goal));
+                        lore.add(Text.empty());
+                        lore.add(Text.of("<7>Rewards:"));
 
                         if (quest.getReward() != null) {
                             if (quest.getReward().getHypixelExperience() > 0) {
-                                lore.add("§8+§3" + quest.getReward().getHypixelExperience() + "§7 Hypixel Experience");
+                                lore.add(Text.of("<8>+<3>{}<7> Hypixel Experience", quest.getReward().getHypixelExperience()));
                             }
                             if (quest.getReward().getGameExperience() > 0) {
-                                lore.add("§8+§b" + quest.getReward().getGameExperience() + "§7 " + category.getDisplayName() + " Experience");
+                                lore.add(Text.of("<8>+<b>{}<7> {} Experience", quest.getReward().getGameExperience(), category.getDisplayName()));
                             }
                             if (quest.getReward().getCoins() > 0) {
-                                lore.add("§8+§6" + quest.getReward().getCoins() + "§7 Coins");
+                                lore.add(Text.of("<8>+<6>{}<7> Coins", quest.getReward().getCoins()));
                             }
                         }
 
-                        lore.add("");
-                        lore.add("§8§oWeekly Quests can be completed once every");
-                        lore.add("§8§oweek. Resets Thursday night.");
-                        lore.add("");
+                        lore.add(Text.empty());
+                        lore.add(Text.of("<8><o>Weekly Quests can be completed once every"));
+                        lore.add(Text.of("<8><o>week. Resets Thursday night."));
+                        lore.add(Text.empty());
 
                         if (completed) {
-                            lore.add("§a§lCOMPLETED!");
+                            lore.add(Text.of("<a><l>COMPLETED!"));
                         } else if (active) {
-                            lore.add("§aYou've already started this quest!");
+                            lore.add(Text.of("<a>You've already started this quest!"));
                         } else {
-                            lore.add("§eClick to start this quest!");
+                            lore.add(Text.of("<e>Click to start this quest!"));
                         }
 
-                        return ItemStackCreator.getStack(
-                                "§aWeekly Quest: " + quest.getName(),
-                                Material.PAPER,
-                                1,
-                                lore.toArray(new String[0])
-                        );
+                        return ItemStacks.item(Material.PAPER, 1,
+                                Text.of("<a>Weekly Quest: {}", quest.getName()), lore);
                     }
 
                     @Override
                     public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                         if (!questData.isActive(quest.getId()) && !questData.isCompleted(quest.getId())) {
                             p.getQuestHandler().startQuest(quest.getId());
-                            p.sendMessage("§aQuest started: §e" + quest.getName());
+                            p.sendMessage("<a>Quest started: <e>{}", quest.getName());
                             open(p);
                         }
                     }
@@ -310,50 +288,41 @@ public class GUIGameQuests extends HypixelInventoryGUI {
             set(new GUIClickableItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                    List<String> lore = new ArrayList<>();
-                    lore.add("§7" + quest.getDescription() + "§b (§6" + progress + "§b/§6" + goal + "§b)");
-                    lore.add("");
-                    lore.add("§7Rewards:");
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.of("<7>{}<b> (<6>{}<b>/<6>{}<b>)", quest.getDescription(), progress, goal));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>Rewards:"));
 
                     if (quest.getReward() != null) {
                         if (quest.getReward().getHypixelExperience() > 0) {
-                            lore.add("§8+§3" + String.format("%,d", quest.getReward().getHypixelExperience()) + "§7 Hypixel Experience");
+                            lore.add(Text.of("<8>+<3>{:,}<7> Hypixel Experience", quest.getReward().getHypixelExperience()));
                         }
                         if (quest.getReward().getGameExperience() > 0) {
-                            lore.add("§8+§b" + quest.getReward().getGameExperience() + "§7 " + category.getDisplayName() + " Experience");
+                            lore.add(Text.of("<8>+<b>{}<7> {} Experience", quest.getReward().getGameExperience(), category.getDisplayName()));
                         }
                         if (quest.getReward().getCoins() > 0) {
-                            lore.add("§8+§6" + quest.getReward().getCoins() + "§7 Coins");
+                            lore.add(Text.of("<8>+<6>{}<7> Coins", quest.getReward().getCoins()));
                         }
                     }
 
-                    lore.add("");
-                    lore.add("§8§oDaily Quests can be completed once every");
-                    lore.add("§8§oday.");
-                    lore.add("");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<8><o>Daily Quests can be completed once every"));
+                    lore.add(Text.of("<8><o>day."));
+                    lore.add(Text.empty());
 
                     if (completed) {
-                        lore.add("§a§lCOMPLETED!");
+                        lore.add(Text.of("<a><l>COMPLETED!"));
                     } else if (active) {
-                        lore.add("§aYou've already started this quest!");
+                        lore.add(Text.of("<a>You've already started this quest!"));
                     } else {
-                        lore.add("§eClick to start this quest!");
+                        lore.add(Text.of("<e>Click to start this quest!"));
                     }
 
+                    Text name = Text.of("<a>Special Daily: {}", quest.getName());
                     if (quest.getHeadTexture() != null) {
-                        return ItemStackCreator.getStackHead(
-                                "§aSpecial Daily: " + quest.getName(),
-                                quest.getHeadTexture(),
-                                1,
-                                lore.toArray(new String[0])
-                        );
+                        return ItemStacks.head(quest.getHeadTexture(), 1, name, lore);
                     } else {
-                        return ItemStackCreator.getStack(
-                                "§aSpecial Daily: " + quest.getName(),
-                                Material.PAPER,
-                                1,
-                                lore.toArray(new String[0])
-                        );
+                        return ItemStacks.item(Material.PAPER, 1, name, lore);
                     }
                 }
 
@@ -361,7 +330,7 @@ public class GUIGameQuests extends HypixelInventoryGUI {
                 public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                     if (!questData.isActive(quest.getId()) && !questData.isCompleted(quest.getId())) {
                         p.getQuestHandler().startQuest(quest.getId());
-                        p.sendMessage("§aQuest started: §e" + quest.getName());
+                        p.sendMessage("<a>Quest started: <e>{}", quest.getName());
                         open(p);
                     }
                 }
@@ -381,27 +350,23 @@ public class GUIGameQuests extends HypixelInventoryGUI {
             set(new GUIItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                    List<String> lore = new ArrayList<>();
-                    lore.add("§7" + quest.getDescription());
-                    lore.add("");
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.of("<7>{}", quest.getDescription()));
+                    lore.add(Text.empty());
 
                     if (quest.getReward() != null && quest.getReward().getHypixelExperience() > 0) {
-                        lore.add("§7Reward: §8+§3" + quest.getReward().getHypixelExperience() + "§7 Hypixel Experience");
+                        lore.add(Text.of("<7>Reward: <8>+<3>{}<7> Hypixel Experience", quest.getReward().getHypixelExperience()));
                     }
 
-                    lore.add("");
-                    lore.add("§8§oYou can complete the same challenge");
-                    lore.add("§8§omultiple times per day, but only");
-                    lore.add("§8§oonce per game.");
-                    lore.add("");
-                    lore.add("§7Challenges remaining today: §a" + challengesRemaining);
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<8><o>You can complete the same challenge"));
+                    lore.add(Text.of("<8><o>multiple times per day, but only"));
+                    lore.add(Text.of("<8><o>once per game."));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>Challenges remaining today: <a>{}", challengesRemaining));
 
-                    return ItemStackCreator.getStack(
-                            "§a" + quest.getName(),
-                            Material.MAP,
-                            1,
-                            lore.toArray(new String[0])
-                    );
+                    return ItemStacks.item(Material.MAP, 1,
+                            Text.of("<a>{}", quest.getName()), lore);
                 }
             });
         }

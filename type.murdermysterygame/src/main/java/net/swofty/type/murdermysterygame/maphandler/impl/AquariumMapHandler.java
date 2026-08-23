@@ -2,8 +2,6 @@ package net.swofty.type.murdermysterygame.maphandler.impl;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Point;
@@ -16,6 +14,7 @@ import net.minestom.server.item.Material;
 import net.minestom.server.item.component.PotionContents;
 import net.minestom.server.potion.PotionType;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.murdermysterygame.game.Game;
 import net.swofty.type.murdermysterygame.game.GameStatus;
 import net.swofty.type.murdermysterygame.maphandler.InteractionType;
@@ -274,13 +273,12 @@ public class AquariumMapHandler extends MapHandler {
             return;
         }
 
-        player.sendMessage(Component.text("This action requires 1 gold", NamedTextColor.RED));
+        player.sendMessage("<c>This action requires 1 gold");
     }
 
     private void giveTier1Items(MurderMysteryPlayer player) {
         // Bow
-        ItemStack bow = ItemStack.builder(Material.BOW)
-                .customName(Component.text("Trader's Bow", NamedTextColor.GOLD))
+        ItemStack bow = ItemStacks.name(ItemStack.builder(Material.BOW), "<6><o>Trader's Bow")
                 .build();
         player.getInventory().addItemStack(bow);
 
@@ -302,18 +300,18 @@ public class AquariumMapHandler extends MapHandler {
         player.getInventory().addItemStack(slownessPotion);
 
         // Splash Weakness (custom name to indicate protection)
-        ItemStack weaknessPotion = ItemStack.builder(Material.SPLASH_POTION)
-                .set(DataComponents.POTION_CONTENTS, new PotionContents(PotionType.WEAKNESS))
-                .customName(Component.text("Protective Weakness", NamedTextColor.LIGHT_PURPLE))
+        ItemStack weaknessPotion = ItemStacks.name(ItemStack.builder(Material.SPLASH_POTION)
+                                .set(DataComponents.POTION_CONTENTS, new PotionContents(PotionType.WEAKNESS)),
+                        "<d><o>Protective Weakness")
                 .build();
         player.getInventory().addItemStack(weaknessPotion);
     }
 
     private void giveTier3Items(MurderMysteryPlayer player) {
         // Splash Blindness (using mundane with custom name since blindness isn't a standard potion type)
-        ItemStack blindnessPotion = ItemStack.builder(Material.SPLASH_POTION)
-                .set(DataComponents.POTION_CONTENTS, new PotionContents(PotionType.MUNDANE))
-                .customName(Component.text("Blinding Splash", NamedTextColor.DARK_GRAY))
+        ItemStack blindnessPotion = ItemStacks.name(ItemStack.builder(Material.SPLASH_POTION)
+                                .set(DataComponents.POTION_CONTENTS, new PotionContents(PotionType.MUNDANE)),
+                        "<8><o>Blinding Splash")
                 .build();
         player.getInventory().addItemStack(blindnessPotion);
 

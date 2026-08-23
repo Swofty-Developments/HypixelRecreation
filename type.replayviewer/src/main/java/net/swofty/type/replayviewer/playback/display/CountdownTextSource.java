@@ -1,9 +1,6 @@
 package net.swofty.type.replayviewer.playback.display;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.translation.Argument;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +35,7 @@ public class CountdownTextSource implements DynamicTextSource {
     public List<String> getTextAt(int currentTick) {
         if (currentTick >= endTick) {
             return completedText.isEmpty()
-                    ? List.of(ReplayDisplayTranslations.toLegacy(I18n.t("replays.countdown_completed")))
+                    ? List.of(ReplayDisplayTranslations.toLegacy(Text.key("replays.countdown_completed")))
                     : completedText;
         }
 
@@ -46,13 +43,13 @@ public class CountdownTextSource implements DynamicTextSource {
         int remainingSeconds = remainingTicks / 20;
 
         List<String> result = new ArrayList<>();
-        Component event = eventName.isEmpty()
-                ? I18n.t("replays.countdown_default_event")
-                : LegacyComponentSerializer.legacySection().deserialize(eventName);
-        result.add(ReplayDisplayTranslations.toLegacy(I18n.t(
-                "replays.countdown_event", Argument.component("event", event))));
-        result.add(ReplayDisplayTranslations.toLegacy(I18n.t(
-                "replays.countdown_in", Argument.string("time", formatTime(remainingSeconds)))));
+        Text event = eventName.isEmpty()
+                ? Text.key("replays.countdown_default_event")
+                : Text.legacy(eventName);
+        result.add(ReplayDisplayTranslations.toLegacy(Text.key(
+                "replays.countdown_event", event)));
+        result.add(ReplayDisplayTranslations.toLegacy(Text.key(
+                "replays.countdown_in", formatTime(remainingSeconds))));
 
         return result;
     }

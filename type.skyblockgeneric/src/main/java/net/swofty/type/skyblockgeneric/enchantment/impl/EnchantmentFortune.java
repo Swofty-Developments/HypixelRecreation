@@ -21,8 +21,8 @@ public class EnchantmentFortune implements Ench, EnchFromTable, ConflictingEnch 
 
     @Override
     public String getDescription(int level) {
-        return "Grants §a+" + MINING_FORTUNE_BONUS[level - 1] + " " + ItemStatistic.MINING_FORTUNE.getDisplayName() +
-                "§7, which increases your chance for multiple drops.";
+        return "Grants <a>+" + MINING_FORTUNE_BONUS[level - 1] + " " + ItemStatistic.MINING_FORTUNE.getDisplayName()
+                + "<7>, which increases your chance for multiple drops.";
     }
 
     @Override

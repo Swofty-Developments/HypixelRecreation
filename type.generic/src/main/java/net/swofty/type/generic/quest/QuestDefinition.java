@@ -2,6 +2,7 @@ package net.swofty.type.generic.quest;
 
 import lombok.Builder;
 import lombok.Getter;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.achievement.AchievementCategory;
 
 @Getter
@@ -17,7 +18,7 @@ public class QuestDefinition {
     private final QuestReward reward;
     private final String headTexture;
 
-    public String formatProgress(int current) {
-        return "§b(§6" + current + "§b/§6" + goal + "§b)";
+    public Text formatProgress(int current) {
+        return Text.of("<b>(<6>{}<b>/<6>{}<b>)", current, goal);
     }
 }

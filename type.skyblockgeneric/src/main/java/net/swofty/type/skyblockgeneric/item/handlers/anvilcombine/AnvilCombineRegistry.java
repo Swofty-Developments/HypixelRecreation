@@ -107,11 +107,11 @@ public class AnvilCombineRegistry {
                 // onCraft: Check and deduct Bits when player confirms the craft
                 (player, upgradeItem, sacrificeItem) -> {
                     if (player.getBits() < 100) {
-                        player.sendMessage("§cYou need at least §b100 Bits §cto apply this dye!");
+                        player.sendMessage("<c>You need at least <b>100 Bits <c>to apply this dye!");
                         return false; // Cancel the craft
                     }
                     player.removeBits(100);
-                    player.sendMessage("§aApplied Dark Purple Dye! §7(§b-100 Bits§7)");
+                    player.sendMessage("<a>Applied Dark Purple Dye! <7>(<b>-100 Bits<7>)");
                     return true; // Proceed with craft
                 }
         ));

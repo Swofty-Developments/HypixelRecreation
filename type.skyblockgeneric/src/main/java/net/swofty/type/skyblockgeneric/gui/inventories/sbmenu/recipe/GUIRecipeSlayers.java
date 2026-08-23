@@ -1,16 +1,15 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.recipe;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.inventory.InventoryType;
 import net.swofty.commons.StringUtility;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.item.crafting.ShapedRecipe;
 import net.swofty.type.skyblockgeneric.item.crafting.ShapelessRecipe;
 import net.swofty.type.skyblockgeneric.item.crafting.SkyBlockRecipe;
@@ -18,7 +17,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class GUIRecipeSlayers extends StatelessView {
 
@@ -50,7 +48,6 @@ public class GUIRecipeSlayers extends StatelessView {
         // Title item
         layout.slot(4, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-            Locale l = player.getLocale();
 
             SkyBlockRecipe.RecipeType type = SkyBlockRecipe.RecipeType.SLAYER;
 
@@ -74,21 +71,10 @@ public class GUIRecipeSlayers extends StatelessView {
             String unlockedPercentage = String.format("%.2f", (allowedRecipes.size() / (double) typeRecipes.size()) * 100);
             String categoryName = StringUtility.toNormalCase(type.name());
 
-            String baseLoadingBar = "─────────────────";
-            int maxBarLength = baseLoadingBar.length();
-            int completedLength = (int) ((allowedRecipes.size() / (double) typeRecipes.size()) * maxBarLength);
-
-            String completedLoadingBar = "§2§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-            int formattingCodeLength = 4;
-            String uncompletedLoadingBar = "§7§m" + baseLoadingBar.substring(Math.min(
-                    completedLoadingBar.length() - formattingCodeLength,
-                    maxBarLength
-            ));
-            String progressBar = completedLoadingBar + uncompletedLoadingBar + "§r §e" + allowedRecipes.size() + "§6/§e" + typeRecipes.size();
-
-            return ItemStackCreator.getStack(I18n.string("gui_sbmenu.recipe.book.category", l, Component.text(categoryName)),
-                    type.getMaterial(), 1,
-                I18n.iterable("gui_sbmenu.recipe.book.category.lore", Component.text(categoryName), Component.text(unlockedPercentage), Component.text(progressBar)));
+            return ItemStacks.item(type.getMaterial(), 1,
+                    Text.key("gui_sbmenu.recipe.book.category", categoryName),
+                    Text.keyLines("gui_sbmenu.recipe.book.category.lore", categoryName, unlockedPercentage,
+                            GUIRecipeBook.progressBar(allowedRecipes.size(), typeRecipes.size())));
         });
 
         // Category items
@@ -98,7 +84,6 @@ public class GUIRecipeSlayers extends StatelessView {
 
             layout.slot(slot, (s, c) -> {
                 SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-                Locale l = player.getLocale();
 
                 ArrayList<SkyBlockRecipe> typeRecipes = new ArrayList<>();
                 ArrayList<SkyBlockRecipe> allowedRecipes = new ArrayList<>();
@@ -120,21 +105,10 @@ public class GUIRecipeSlayers extends StatelessView {
                 String unlockedPercentage = String.format("%.2f", (allowedRecipes.size() / (double) typeRecipes.size()) * 100);
                 String categoryName = StringUtility.toNormalCase(type.name());
 
-                String baseLoadingBar = "─────────────────";
-                int maxBarLength = baseLoadingBar.length();
-                int completedLength = (int) ((allowedRecipes.size() / (double) typeRecipes.size()) * maxBarLength);
-
-                String completedLoadingBar = "§2§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-                int formattingCodeLength = 4;
-                String uncompletedLoadingBar = "§7§m" + baseLoadingBar.substring(Math.min(
-                        completedLoadingBar.length() - formattingCodeLength,
-                        maxBarLength
-                ));
-                String progressBar = completedLoadingBar + uncompletedLoadingBar + "§r §e" + allowedRecipes.size() + "§6/§e" + typeRecipes.size();
-
-                return ItemStackCreator.getStack(I18n.string("gui_sbmenu.recipe.book.category", l, Component.text(categoryName)),
-                        type.getMaterial(), 1,
-                    I18n.iterable("gui_sbmenu.recipe.book.category.lore", Component.text(categoryName), Component.text(unlockedPercentage), Component.text(progressBar)));
+                return ItemStacks.item(type.getMaterial(), 1,
+                        Text.key("gui_sbmenu.recipe.book.category", categoryName),
+                        Text.keyLines("gui_sbmenu.recipe.book.category.lore", categoryName, unlockedPercentage,
+                                GUIRecipeBook.progressBar(allowedRecipes.size(), typeRecipes.size())));
             }, (_, c) -> c.push(new GUIRecipeCategory(type), GUIRecipeCategory.createInitialState((SkyBlockPlayer) c.player(), type)));
         }
     }

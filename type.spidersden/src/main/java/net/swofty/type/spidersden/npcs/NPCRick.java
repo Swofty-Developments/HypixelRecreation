@@ -1,7 +1,6 @@
 package net.swofty.type.spidersden.npcs;
 
 import net.minestom.server.coordinate.Pos;
-import net.swofty.commons.ChatColor;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
@@ -18,8 +17,8 @@ public class NPCRick extends HypixelNPC {
             @Override
             public String[] holograms(HypixelPlayer player) {
                 return new String[]{
-                        ChatColor.GRAY + "Rick",
-                        ChatColor.YELLOW + "" + ChatColor.BOLD + "CLICK"
+                        "<7>Rick",
+                        "<e><l>CLICK"
                 };
             }
 
@@ -77,30 +76,30 @@ public class NPCRick extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("initial-hello").lines(new String[] {
-                                "Hey, I could use some help! My " + ChatColor.BLUE + "Promising Shovel" + ChatColor.WHITE + " just broke, and I don't have the right ingredients to make a new one.",
+                        .key("initial-hello").lines(
+                                "Hey, I could use some help! My <9>Promising Shovel<f> just broke, and I don't have the right ingredients to make a new one.",
                                 "If you could get me a couple iron ingots, I could make one for us both!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("still-need-iron").lines(new String[] {
+                        .key("still-need-iron").lines(
                                 "Bring me a couple iron ingots and I'll craft us both a Promising Shovel!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("got-iron").lines(new String[] {
+                        .key("got-iron").lines(
                                 "Thanks a lot. Here's your Promising Shovel."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("idle-1").lines(new String[] {
+                        .key("idle-1").lines(
                                 "Have you met Pat? He's my brother. We're the Flint Bros!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("idle-2").lines(new String[] {
+                        .key("idle-2").lines(
                                 "Careful when it rains around here, it gets dangerous!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("idle-3").lines(new String[] {
+                        .key("idle-3").lines(
                                 "Mining gravel is hard work, but the flint is worth it."
-                        }).build(),
+                        ).build(),
         };
     }
 }

@@ -1,6 +1,6 @@
 package net.swofty.type.bedwarsconfigurator.autosetup;
 
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
@@ -18,6 +18,7 @@ import net.minestom.server.item.Material;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
 import net.swofty.commons.mc.HypixelPosition;
+import net.swofty.commons.text.Text;
 
 import java.util.*;
 
@@ -33,59 +34,59 @@ public class DebugMarkerManager {
         for (Map.Entry<TeamKey, AutoSetupSession.TeamConfig> entry : session.getTeams().entrySet()) {
             TeamKey team = entry.getKey();
             AutoSetupSession.TeamConfig config = entry.getValue();
-            String teamColor = team.chatColor();
+            TextColor teamColor = team.chatColor();
 
             if (config.getBedFeet() != null) {
-                markers.add(createBlockHighlight(instance, config.getBedFeet().asHypixelPosition(), teamColor + team.getName() + " Bed (Feet)"));
+                markers.add(createBlockHighlight(instance, config.getBedFeet().asHypixelPosition(), Text.of("<color:{}>{} Bed (Feet)", teamColor, team.getName())));
             }
             if (config.getBedHead() != null) {
-                markers.add(createBlockHighlight(instance, config.getBedHead().asHypixelPosition(), teamColor + team.getName() + " Bed (Head)"));
+                markers.add(createBlockHighlight(instance, config.getBedHead().asHypixelPosition(), Text.of("<color:{}>{} Bed (Head)", teamColor, team.getName())));
             }
 
             if (config.getSpawn() != null) {
-                markers.add(createMannequin(instance, config.getSpawn(), teamColor + team.getName() + " Spawn"));
+                markers.add(createMannequin(instance, config.getSpawn(), Text.of("<color:{}>{} Spawn", teamColor, team.getName())));
             }
 
             if (config.getGenerator() != null) {
-                markers.addAll(createGeneratorMarkers(instance, config.getGenerator(), teamColor + team.getName() + " Generator", Material.IRON_INGOT));
+                markers.addAll(createGeneratorMarkers(instance, config.getGenerator(), Text.of("<color:{}>{} Generator", teamColor, team.getName()), Material.IRON_INGOT));
             }
 
             if (config.getItemShop() != null) {
-                markers.add(createMannequin(instance, config.getItemShop(), teamColor + team.getName() + " Item Shop"));
+                markers.add(createMannequin(instance, config.getItemShop(), Text.of("<color:{}>{} Item Shop", teamColor, team.getName())));
             }
             if (config.getTeamShop() != null) {
-                markers.add(createMannequin(instance, config.getTeamShop(), teamColor + team.getName() + " Team Shop"));
+                markers.add(createMannequin(instance, config.getTeamShop(), Text.of("<color:{}>{} Team Shop", teamColor, team.getName())));
             }
         }
 
         // Diamond generators
         int diamondIndex = 1;
         for (HypixelPosition pos : session.getDiamondGenerators()) {
-            markers.addAll(createGeneratorMarkers(instance, pos, "§bDiamond Gen #" + diamondIndex++, Material.DIAMOND_BLOCK));
+            markers.addAll(createGeneratorMarkers(instance, pos, Text.of("<b>Diamond Gen #{}", diamondIndex++), Material.DIAMOND_BLOCK));
         }
 
         // Emerald generators
         int emeraldIndex = 1;
         for (HypixelPosition pos : session.getEmeraldGenerators()) {
-            markers.addAll(createGeneratorMarkers(instance, pos, "§aEmerald Gen #" + emeraldIndex++, Material.EMERALD_BLOCK));
+            markers.addAll(createGeneratorMarkers(instance, pos, Text.of("<a>Emerald Gen #{}", emeraldIndex++), Material.EMERALD_BLOCK));
         }
 
         // Waiting location
         if (session.getWaitingLocation() != null) {
             HypixelPosition pos = new HypixelPosition(session.getWaitingLocation().x(), session.getWaitingLocation().y(), session.getWaitingLocation().z());
-            markers.add(createMarker(instance, pos, "§eWaiting Spawn", Material.CLOCK));
+            markers.add(createMarker(instance, pos, Text.of("<e>Waiting Spawn"), Material.CLOCK));
         }
 
         // Spectator location
         if (session.getSpectatorLocation() != null) {
             HypixelPosition pos = new HypixelPosition(session.getSpectatorLocation().x(), session.getSpectatorLocation().y(), session.getSpectatorLocation().z());
-            markers.add(createMarker(instance, pos, "§7Spectator Spawn", Material.ENDER_EYE));
+            markers.add(createMarker(instance, pos, Text.of("<7>Spectator Spawn"), Material.ENDER_EYE));
         }
 
         // Bounds markers (corners)
         if (session.hasBounds()) {
-            markers.add(createMarker(instance, new HypixelPosition(session.getMinX(), session.getMinY(), session.getMinZ()), "§8Bounds Min", Material.BARRIER));
-            markers.add(createMarker(instance, new HypixelPosition(session.getMaxX(), session.getMaxY(), session.getMaxZ()), "§8Bounds Max", Material.BARRIER));
+            markers.add(createMarker(instance, new HypixelPosition(session.getMinX(), session.getMinY(), session.getMinZ()), Text.of("<8>Bounds Min"), Material.BARRIER));
+            markers.add(createMarker(instance, new HypixelPosition(session.getMaxX(), session.getMaxY(), session.getMaxZ()), Text.of("<8>Bounds Max"), Material.BARRIER));
         }
 
         playerMarkers.put(playerUuid, markers);
@@ -100,7 +101,7 @@ public class DebugMarkerManager {
         }
     }
 
-    private static Entity createMarker(Instance instance, HypixelPosition pos, String label, Material headItem) {
+    private static Entity createMarker(Instance instance, HypixelPosition pos, Text label, Material headItem) {
         LivingEntity armorStand = new LivingEntity(EntityType.ARMOR_STAND);
 
         ArmorStandMeta meta = (ArmorStandMeta) armorStand.getEntityMeta();
@@ -110,7 +111,7 @@ public class DebugMarkerManager {
         meta.setSmall(true);
         meta.setCustomNameVisible(true);
 
-        armorStand.set(DataComponents.CUSTOM_NAME, Component.text(label));
+        armorStand.set(DataComponents.CUSTOM_NAME, label.asComponent());
         armorStand.setEquipment(EquipmentSlot.HELMET, ItemStack.of(headItem));
 
         armorStand.setInstance(instance, new Pos(pos.x(), pos.y() + 1.5, pos.z()));
@@ -130,29 +131,29 @@ public class DebugMarkerManager {
         return armorStand;
     }
 
-    private static Entity createMannequin(Instance instance, HypixelPosition pos, String label) {
+    private static Entity createMannequin(Instance instance, HypixelPosition pos, Text label) {
         Entity mannequin = new Entity(EntityType.MANNEQUIN);
         mannequin.setNoGravity(true);
-        mannequin.setCustomName(Component.text(label));
+        mannequin.setCustomName(label.asComponent());
         mannequin.setCustomNameVisible(true);
         mannequin.editEntityMeta(MannequinMeta.class, meta -> meta.setImmovable(true));
         mannequin.setInstance(instance, new Pos(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch()));
         return mannequin;
     }
 
-    private static Entity createBlockHighlight(Instance instance, HypixelPosition pos, String label) {
+    private static Entity createBlockHighlight(Instance instance, HypixelPosition pos, Text label) {
         LivingEntity slime = new LivingEntity(EntityType.SLIME);
         slime.setInvisible(true);
         slime.setGlowing(true);
         slime.setNoGravity(true);
-        slime.setCustomName(Component.text(label));
+        slime.setCustomName(label.asComponent());
         slime.setCustomNameVisible(true);
         slime.editEntityMeta(SlimeMeta.class, meta -> meta.setSize(2));
         slime.setInstance(instance, new Pos(pos.x() + 0.5, pos.y(), pos.z() + 0.5));
         return slime;
     }
 
-    private static List<Entity> createGeneratorMarkers(Instance instance, HypixelPosition pos, String label, Material item) {
+    private static List<Entity> createGeneratorMarkers(Instance instance, HypixelPosition pos, Text label, Material item) {
         Entity itemDisplay = new Entity(EntityType.ITEM_DISPLAY);
         itemDisplay.setNoGravity(true);
         itemDisplay.editEntityMeta(ItemDisplayMeta.class, meta -> {
@@ -167,13 +168,13 @@ public class DebugMarkerManager {
         meta.setInvisible(true);
         meta.setHasNoGravity(true);
         meta.setCustomNameVisible(true);
-        text.set(DataComponents.CUSTOM_NAME, Component.text(label));
+        text.set(DataComponents.CUSTOM_NAME, label.asComponent());
         text.setInstance(instance, new Pos(pos.x(), pos.y() + 1.25, pos.z()));
         return List.of(itemDisplay, text);
     }
 
     public static Entity createSingleMarker(Instance instance, double x, double y, double z, String label) {
-        return createMarker(instance, new HypixelPosition(x, y, z), label, Material.ARMOR_STAND);
+        return createMarker(instance, new HypixelPosition(x, y, z), Text.literal(label), Material.ARMOR_STAND);
     }
 
     public static void refreshMarkers(UUID playerUuid, AutoSetupSession session, Instance instance) {

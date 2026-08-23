@@ -14,7 +14,7 @@ public class NPCMoby extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Moby", "§e§lCLICK"};
+                return new String[]{"Moby", "<e><l>CLICK"};
             }
 
             @Override

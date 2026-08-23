@@ -8,6 +8,7 @@ import net.minestom.server.potion.PotionType;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.potion.handler.DebuffHandler;
 import net.swofty.type.skyblockgeneric.potion.handler.InstantDamageHandler;
 import net.swofty.type.skyblockgeneric.potion.handler.InstantHealingHandler;
@@ -347,33 +348,36 @@ public enum PotionEffectType {
     public String getDescription(int level) {
         ItemStatistics stats = getStatistics(level);
         return switch (this) {
-            case SPEED -> "Increases §aSpeed §7by §a" + stats.getOverall(ItemStatistic.SPEED).intValue() + "§7.";
-            case STRENGTH -> "Increases §cStrength §7by §c" + stats.getOverall(ItemStatistic.STRENGTH).intValue() + "§7.";
-            case CRITICAL -> "Grants §9+" + stats.getOverall(ItemStatistic.CRITICAL_CHANCE).intValue() + "% Crit Chance §7and §9+" + stats.getOverall(ItemStatistic.CRITICAL_DAMAGE).intValue() + "% Crit Damage§7.";
-            case HASTE -> "Increases §6Mining Speed §7by §6" + stats.getOverall(ItemStatistic.MINING_SPEED).intValue() + "§7.";
-            case REGENERATION -> "Increases §cHealth Regen §7by §c" + stats.getOverall(ItemStatistic.HEALTH_REGENERATION).intValue() + "§7.";
-            case RESISTANCE -> "Increases §aDefense §7by §a" + stats.getOverall(ItemStatistic.DEFENSE).intValue() + "§7.";
-            case MANA -> "Regenerate §b" + level + " Mana §7per second.";
-            case ABSORPTION -> "Grants §6" + stats.getOverall(ItemStatistic.HEALTH).intValue() + " Absorption Hearts§7.";
-            case ARCHERY -> "Increases §cBow Damage §7by §c" + (int) (12.5 * level) + "%§7.";
-            case SPELUNKER -> "Increases §6Mining Fortune §7by §6" + stats.getOverall(ItemStatistic.MINING_FORTUNE).intValue() + "§7.";
-            case MAGIC_FIND -> "Increases §bMagic Find §7by §b" + stats.getOverall(ItemStatistic.MAGIC_FIND).intValue() + "§7.";
-            case PET_LUCK -> "Increases §dPet Luck §7by §d" + stats.getOverall(ItemStatistic.PET_LUCK).intValue() + "§7.";
-            case TRUE_RESISTANCE -> "Increases §fTrue Defense §7by §f" + stats.getOverall(ItemStatistic.TRUE_DEFENSE).intValue() + "§7.";
-            case HEALING -> "Instantly heals §c" + (int) getInstantHealAmount(level) + " Health§7.";
-            case DAMAGE -> "Deals §c" + (int) getInstantDamageAmount(level) + " damage §7to enemies.";
-            case STAMINA -> "Instantly restores §c" + (int) getStaminaHealAmount(level) + " Health §7and §b" + (int) getStaminaManaBoost(level) + " Mana§7.";
-            case POISON -> "Deals §2" + (int) getPoisonDamagePerSecond(level) + " damage §7per second.";
-            case WEAKNESS -> "Decreases §cDamage §7by §c" + Math.abs(stats.getOverall(ItemStatistic.DAMAGE).intValue()) + "§7.";
-            case SLOWNESS -> "Decreases §aSpeed §7by §c" + Math.abs(stats.getOverall(ItemStatistic.SPEED).intValue()) + "§7.";
+            case SPEED -> Text.of("Increases <a>Speed <7>by <a>{}<7>.", stats.getOverall(ItemStatistic.SPEED).intValue()).serialize();
+            case STRENGTH -> Text.of("Increases <c>Strength <7>by <c>{}<7>.", stats.getOverall(ItemStatistic.STRENGTH).intValue()).serialize();
+            case CRITICAL -> Text.of("Grants <9>+{}% Crit Chance <7>and <9>+{}% Crit Damage<7>.",
+                    stats.getOverall(ItemStatistic.CRITICAL_CHANCE).intValue(),
+                    stats.getOverall(ItemStatistic.CRITICAL_DAMAGE).intValue()).serialize();
+            case HASTE -> Text.of("Increases <6>Mining Speed <7>by <6>{}<7>.", stats.getOverall(ItemStatistic.MINING_SPEED).intValue()).serialize();
+            case REGENERATION -> Text.of("Increases <c>Health Regen <7>by <c>{}<7>.", stats.getOverall(ItemStatistic.HEALTH_REGENERATION).intValue()).serialize();
+            case RESISTANCE -> Text.of("Increases <a>Defense <7>by <a>{}<7>.", stats.getOverall(ItemStatistic.DEFENSE).intValue()).serialize();
+            case MANA -> Text.of("Regenerate <b>{} Mana <7>per second.", level).serialize();
+            case ABSORPTION -> Text.of("Grants <6>{} Absorption Hearts<7>.", stats.getOverall(ItemStatistic.HEALTH).intValue()).serialize();
+            case ARCHERY -> Text.of("Increases <c>Bow Damage <7>by <c>{}%<7>.", (int) (12.5 * level)).serialize();
+            case SPELUNKER -> Text.of("Increases <6>Mining Fortune <7>by <6>{}<7>.", stats.getOverall(ItemStatistic.MINING_FORTUNE).intValue()).serialize();
+            case MAGIC_FIND -> Text.of("Increases <b>Magic Find <7>by <b>{}<7>.", stats.getOverall(ItemStatistic.MAGIC_FIND).intValue()).serialize();
+            case PET_LUCK -> Text.of("Increases <d>Pet Luck <7>by <d>{}<7>.", stats.getOverall(ItemStatistic.PET_LUCK).intValue()).serialize();
+            case TRUE_RESISTANCE -> Text.of("Increases <f>True Defense <7>by <f>{}<7>.", stats.getOverall(ItemStatistic.TRUE_DEFENSE).intValue()).serialize();
+            case HEALING -> Text.of("Instantly heals <c>{} Health<7>.", (int) getInstantHealAmount(level)).serialize();
+            case DAMAGE -> Text.of("Deals <c>{} damage <7>to enemies.", (int) getInstantDamageAmount(level)).serialize();
+            case STAMINA -> Text.of("Instantly restores <c>{} Health <7>and <b>{} Mana<7>.",
+                    (int) getStaminaHealAmount(level), (int) getStaminaManaBoost(level)).serialize();
+            case POISON -> Text.of("Deals <2>{} damage <7>per second.", (int) getPoisonDamagePerSecond(level)).serialize();
+            case WEAKNESS -> Text.of("Decreases <c>Damage <7>by <c>{}<7>.", Math.abs(stats.getOverall(ItemStatistic.DAMAGE).intValue())).serialize();
+            case SLOWNESS -> Text.of("Decreases <a>Speed <7>by <c>{}<7>.", Math.abs(stats.getOverall(ItemStatistic.SPEED).intValue())).serialize();
             case FIRE_RESISTANCE -> "Reduces fire and lava damage.";
             case NIGHT_VISION -> "Allows you to see in the dark.";
             case WATER_BREATHING -> "Allows you to breathe underwater.";
             case JUMP_BOOST -> "Increases jump height.";
             case INVISIBILITY -> "Makes you invisible to mobs.";
-            case SPIRIT -> "Increases §cCrit Damage §7by §c" + stats.getOverall(ItemStatistic.CRITICAL_DAMAGE).intValue() + "§7.";
-            case DODGE, AGILITY -> "Grants §a" + (int) getDodgeChance(level) + "% §7chance to dodge attacks.";
-            case STUN -> "Grants §e" + (int) getStunChance(level) + "% §7chance to stun enemies.";
+            case SPIRIT -> Text.of("Increases <c>Crit Damage <7>by <c>{}<7>.", stats.getOverall(ItemStatistic.CRITICAL_DAMAGE).intValue()).serialize();
+            case DODGE, AGILITY -> Text.of("Grants <a>{}% <7>chance to dodge attacks.", (int) getDodgeChance(level)).serialize();
+            case STUN -> Text.of("Grants <e>{}% <7>chance to stun enemies.", (int) getStunChance(level)).serialize();
             case AWKWARD, THICK, MUNDANE, WATER -> "No effect.";
             default -> "";
         };

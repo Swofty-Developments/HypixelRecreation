@@ -1,5 +1,9 @@
 package net.swofty.type.ravengardgeneric.gui;
 
+import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.ViewNavigator;
@@ -60,13 +64,13 @@ public class GUIItemList extends RavengardView {
             layout.slot(index - from, RavengardItem.displayBuilder(type), (click, viewContext) -> {
                 if (viewContext.player() instanceof RavengardPlayer player) {
                     player.getInventory().addItemStack(RavengardItem.of(type, player));
-                    player.sendMessage("§aGave you §f" + type.getId() + "§a.");
+                    player.sendMessage("<a>Gave you <f>{}<a>.", type.getId());
                 }
             });
         }
 
         if (current > 0) {
-            layout.slot(SLOT_PREVIOUS, arrow("§aPrevious Page", current, pages),
+            layout.slot(SLOT_PREVIOUS, arrow("<a>Previous Page", current, pages),
                     (click, viewContext) -> {
                         if (viewContext.player() instanceof RavengardPlayer player) {
                             ViewNavigator.get(player).push(new GUIItemList(filter, current - 1));
@@ -74,7 +78,7 @@ public class GUIItemList extends RavengardView {
                     });
         }
         if (current < pages - 1) {
-            layout.slot(SLOT_NEXT, arrow("§aNext Page", current + 2, pages),
+            layout.slot(SLOT_NEXT, arrow("<a>Next Page", current + 2, pages),
                     (click, viewContext) -> {
                         if (viewContext.player() instanceof RavengardPlayer player) {
                             ViewNavigator.get(player).push(new GUIItemList(filter, current + 1));
@@ -83,11 +87,7 @@ public class GUIItemList extends RavengardView {
         }
     }
 
-    private static net.minestom.server.item.ItemStack.Builder arrow(String label, int page, int pages) {
-        return net.minestom.server.item.ItemStack.builder(net.minestom.server.item.Material.ARROW)
-                .customName(net.kyori.adventure.text.Component.text(label)
-                        .decoration(net.kyori.adventure.text.format.TextDecoration.ITALIC, false))
-                .lore(net.kyori.adventure.text.Component.text("§ePage " + page + " of " + pages)
-                        .decoration(net.kyori.adventure.text.format.TextDecoration.ITALIC, false));
+    private static ItemStack.Builder arrow(String label, int page, int pages) {
+        return ItemStacks.raw(Material.ARROW, Text.of(label), List.of(Text.of("<e>Page {} of {}", page, pages)));
     }
 }

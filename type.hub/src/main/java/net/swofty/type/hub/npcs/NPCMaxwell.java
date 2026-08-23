@@ -13,7 +13,7 @@ public class NPCMaxwell extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6Thaumaturgist", "§fMaxwell", "§e§lCLICK"};
+                return new String[]{"<6>Thaumaturgist", "<f>Maxwell", "<e><l>CLICK"};
             }
 
             @Override

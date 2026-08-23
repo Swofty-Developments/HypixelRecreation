@@ -15,7 +15,7 @@ import java.util.Map;
 public class EnchantmentAngler implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Grants §3+" + level + "% Sea Creature Chance§7.";
+        return "Grants <3>+" + level + "% Sea Creature Chance<7>.";
     }
 
     @Override

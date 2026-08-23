@@ -12,7 +12,7 @@ public class NPCGrumblefoot extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Grumblefoot", "§e§lCLICK"};
+                return new String[]{"Grumblefoot", "<e><l>CLICK"};
             }
 
             @Override

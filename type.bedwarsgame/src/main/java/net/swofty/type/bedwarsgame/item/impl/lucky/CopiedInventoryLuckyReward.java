@@ -17,13 +17,13 @@ public class CopiedInventoryLuckyReward extends LuckyReward {
             .filter(other -> other != player)
             .toList();
         if (candidates.isEmpty()) {
-            player.sendMessage("§cNo inventory to copy.");
+            player.sendMessage("<c>No inventory to copy.");
             return;
         }
         BedWarsPlayer target = candidates.get(ThreadLocalRandom.current().nextInt(candidates.size()));
         for (int i = 0; i < player.getInventory().getSize(); i++) {
             player.getInventory().setItemStack(i, target.getInventory().getItemStack(i));
         }
-        player.sendMessage("§aCopied " + target.getUsername() + "'s inventory.");
+        player.sendMessage("<a>Copied {}'s inventory.", target.getUsername());
     }
 }

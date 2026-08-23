@@ -2,7 +2,7 @@ package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu;
 
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -38,9 +38,14 @@ public class GUILoadoutPetSelection extends StatelessView {
             layout.slot(SLOTS[i], (s, c) -> PlayerItemUpdater.playerUpdate((SkyBlockPlayer) c.player(), pet.getItemStack()),
                     (_, c) -> select((SkyBlockPlayer) c.player(), pet));
         }
-        layout.slot(48, ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To Loadout " + (loadout + 1)), (_, c) -> c.pop());
-        layout.slot(50, ItemStackCreator.getStack("§cClear Selection", Material.LAVA_BUCKET, 1,
-                "§7Clear this loadout's pet.", "", "§eClick to clear!"), (_, c) -> clear((SkyBlockPlayer) c.player()));
+        layout.slot(48, ItemStacks.item(Material.ARROW, 1, """
+                <a>Go Back
+                <7>To Loadout {}""", loadout + 1), (_, c) -> c.pop());
+        layout.slot(50, ItemStacks.item(Material.LAVA_BUCKET, 1, """
+                <c>Clear Selection
+                <7>Clear this loadout's pet.
+
+                <e>Click to clear!"""), (_, c) -> clear((SkyBlockPlayer) c.player()));
     }
 
     private void select(SkyBlockPlayer player, SkyBlockItem pet) {

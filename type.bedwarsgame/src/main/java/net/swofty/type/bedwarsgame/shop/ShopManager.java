@@ -56,9 +56,9 @@ public class ShopManager {
     private final ShopItem FIREBALL = new InteractableShopItem(new Fireball());
     private final ShopItem POPUP_TOWER = new InteractableShopItem(new PopupTower());
     private final ShopItem GOLDEN_APPLE = new InteractableShopItem(new GoldenApple());
-    private final ShopItem INVISIBILITY_POTION = new PotionShopItem("invisibility_potion", "Invisibility Potion (30 seconds)", "§9Complete invisibility (0:30).", 2, 1, Currency.EMERALD, PotionType.INVISIBILITY);
-    private final ShopItem SPEED_POTION = new PotionShopItem("speed_potion", "Speed II Potion (45 seconds)", "§9Speed II (0:45).", 2, 1, Currency.EMERALD, PotionType.SWIFTNESS);
-    private final ShopItem JUMP_POTION = new PotionShopItem("jump_potion", "Jump V Potion (45 seconds)", "§9Jump Boost V (0:45).", 2, 1, Currency.EMERALD, PotionType.LEAPING);
+    private final ShopItem INVISIBILITY_POTION = new PotionShopItem("invisibility_potion", "Invisibility Potion (30 seconds)", "<9>Complete invisibility (0:30).", 2, 1, Currency.EMERALD, PotionType.INVISIBILITY);
+    private final ShopItem SPEED_POTION = new PotionShopItem("speed_potion", "Speed II Potion (45 seconds)", "<9>Speed II (0:45).", 2, 1, Currency.EMERALD, PotionType.SWIFTNESS);
+    private final ShopItem JUMP_POTION = new PotionShopItem("jump_potion", "Jump V Potion (45 seconds)", "<9>Jump Boost V (0:45).", 2, 1, Currency.EMERALD, PotionType.LEAPING);
     private final ShopItem CHAINMAIL_ARMOR = new ArmorShopItem("chainmail_armor", "Permanent Chainmail Armor", "", 24, Currency.IRON, Material.CHAINMAIL_BOOTS, Material.CHAINMAIL_LEGGINGS, 1);
     private final ShopItem IRON_ARMOR = new ArmorShopItem("iron_armor", "Permanent Iron Armor", "", 12, Currency.GOLD, Material.IRON_BOOTS, Material.IRON_LEGGINGS, 2);
     private final ShopItem DIAMOND_ARMOR = new ArmorShopItem("diamond_armor", "Permanent Diamond Armor", "", 6, Currency.EMERALD, Material.DIAMOND_BOOTS, Material.DIAMOND_LEGGINGS, 3);

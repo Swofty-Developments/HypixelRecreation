@@ -16,7 +16,7 @@ public class NPCCastleGuardSeven extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§6Castle Guard", "§e§lCLICK"};
+				return new String[]{"<6>Castle Guard", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -53,9 +53,9 @@ public class NPCCastleGuardSeven extends HypixelNPC {
 		return Stream.of(
 				DialogueSet.builder()
 						.key("idle")
-						.lines(new String[]{
-								"§fI am guarding the lava."
-						})
+						.lines(
+								"<f>I am guarding the lava."
+						)
 						.build()
 		).toArray(DialogueSet[]::new);
 	}

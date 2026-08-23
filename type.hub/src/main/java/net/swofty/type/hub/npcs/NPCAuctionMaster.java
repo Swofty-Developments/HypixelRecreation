@@ -15,7 +15,7 @@ public class NPCAuctionMaster extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6Auction Master", "§e§lCLICK"};
+                return new String[]{"<6>Auction Master", "<e><l>CLICK"};
             }
 
             @Override

@@ -9,7 +9,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.item.component.CustomData;
 import net.minestom.server.network.player.ResolvableProfile;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.lobby.gui.GUIMyProfile;
 import net.swofty.type.lobby.item.LobbyItem;
@@ -30,7 +30,7 @@ public class ProfileItem extends LobbyItem {
     @Override
     public ItemStack getItemStack(HypixelPlayer... p) {
         HypixelPlayer player = Arrays.stream(p).findFirst().orElseThrow();
-        return ItemStackCreator.createNamedItemStack(Material.PLAYER_HEAD, "§aMy Profile §7(Right Click)")
+        return ItemStacks.named(Material.PLAYER_HEAD, "<a>My Profile <7>(Right Click)")
                 .set(DataComponents.PROFILE, new ResolvableProfile(player.getPlayerSkin()))
                 .set(DataComponents.CUSTOM_DATA, new CustomData(CompoundBinaryTag.builder().putString("item", this.getId()).build())).build();
     }

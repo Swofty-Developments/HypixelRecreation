@@ -14,7 +14,7 @@ public class NPCSalesman extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bSalesman", "§e§lCLICK"};
+                return new String[]{"<b>Salesman", "<e><l>CLICK"};
             }
 
             @Override
@@ -44,10 +44,10 @@ public class NPCSalesman extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "Thank you for supporting the server and allowing us maintain SkyBlock!",
-                                "If you want to support us, head over to the Hypixel Store §bstore.hypixel.net§f!"
-                        }).build()
+                                "If you want to support us, head over to the Hypixel Store <b>store.hypixel.net<f>!"
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

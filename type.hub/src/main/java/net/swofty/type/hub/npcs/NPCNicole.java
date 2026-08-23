@@ -16,7 +16,7 @@ public class NPCNicole extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Nicole", "§e§lCLICK"};
+                return new String[]{"Nicole", "<e><l>CLICK"};
             }
 
             @Override
@@ -57,21 +57,21 @@ public class NPCNicole extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "Books are mesmerizing.",
                                 "Their words offer permanence.",
                                 "Permanence is knowledge.",
                                 "Knowledge transcends time and space.",
                                 "Space is only a construct...",
-                                "§cWhew! §fI need some coffee!"
-                        }).build(),
+                                "<c>Whew! <f>I need some coffee!"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("coffee-hello").lines(new String[]{
+                        .key("coffee-hello").lines(
                                 "Thank you!",
-                                "§dElise §freally wanted this but she is shy.",
+                                "<d>Elise <f>really wanted this but she is shy.",
                                 "I'm selecting books for her.",
-                                "Anything to do with the §4Calamity §for the §dRiftway §fat the top of the mountain."
-                        }).build()
+                                "Anything to do with the <4>Calamity <f>or the <d>Riftway <f>at the top of the mountain."
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

@@ -3,6 +3,7 @@ package net.swofty.type.skyblockgeneric.commands;
 import net.minestom.server.command.builder.arguments.ArgumentWord;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 import net.swofty.commons.skyblock.item.Rarity;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -36,8 +37,8 @@ public class SetPetRarityCommand extends HypixelCommand {
 
             Rarity rarity = Rarity.getRarity(context.get(rarityArgument));
             if (rarity == null || !PET_RARITIES.contains(rarity)) {
-                sender.sendMessage("§cInvalid rarity. Use " + PET_RARITIES.stream()
-                        .map(Enum::name).collect(Collectors.joining("/")) + ".");
+                sender.sendMessage(Text.of("<c>Invalid rarity. Use {}.", PET_RARITIES.stream()
+                        .map(Enum::name).collect(Collectors.joining("/"))));
                 return;
             }
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
@@ -45,11 +46,12 @@ public class SetPetRarityCommand extends HypixelCommand {
             player.updateItem(PlayerItemOrigin.MAIN_HAND, (item) -> {
                 ItemAttributeHandler handler = item.getAttributeHandler();
                 if (!handler.isPet()) {
-                    sender.sendMessage("§cThe item in your hand is not a pet.");
+                    sender.sendMessage("<c>The item in your hand is not a pet.");
                     return;
                 }
                 handler.setRarity(rarity);
-                sender.sendMessage("§aSet rarity to " + rarity.getLegacyColor() + rarity.name() + "§a.");
+                sender.sendMessage(Text.of("<a>Set rarity to <color:{}>{}<a>.",
+                        rarity.getColor(), rarity.name()));
             });
         }, rarityArgument);
     }

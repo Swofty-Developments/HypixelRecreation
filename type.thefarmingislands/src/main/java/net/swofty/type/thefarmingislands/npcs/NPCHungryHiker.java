@@ -14,7 +14,7 @@ public class NPCHungryHiker extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Hungry Hiker", "§e§lCLICK"};
+                return new String[]{"Hungry Hiker", "<e><l>CLICK"};
             }
 
             @Override

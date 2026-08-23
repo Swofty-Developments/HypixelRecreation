@@ -1,7 +1,7 @@
 name: "Carpentry"
 displayIcon: "crafting_table"
 description:
-  - "§7Craft items to earn Carpentry XP!"
+  - "<7>Craft items to earn Carpentry XP!"
 
 rewards:
   - level: 1

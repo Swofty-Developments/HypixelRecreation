@@ -14,7 +14,7 @@ public class NPCTammy extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Tammy", "§e§lCLICK"};
+                return new String[]{"Tammy", "<e><l>CLICK"};
             }
 
             @Override

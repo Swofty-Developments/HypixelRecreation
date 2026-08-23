@@ -7,6 +7,7 @@ import net.swofty.commons.skywars.SkywarsLeaderboardPeriod;
 import net.swofty.commons.skywars.SkywarsLeaderboardView;
 import net.swofty.commons.skywars.SkywarsStatType;
 import net.swofty.commons.skywars.SkywarsTextAlignment;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.leaderboard.LeaderboardService;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -48,11 +49,11 @@ public enum SkywarsLeaderboardHologram {
         List<String> lines = new ArrayList<>();
 
         if (statType == SkywarsStatType.LEVEL) {
-            lines.add("§b§l" + statType.getDisplayName());
+            lines.add(Text.of("<b><l>{}", statType.getDisplayName()).serialize());
         } else {
-            lines.add("§b§l" + period.getDisplayName() + " " + statType.getDisplayName());
+            lines.add(Text.of("<b><l>{} {}", period.getDisplayName(), statType.getDisplayName()).serialize());
         }
-        lines.add("§7" + mode.getDisplayName());
+        lines.add(Text.of("<7>{}", mode.getDisplayName()).serialize());
 
         String leaderboardKey = getLeaderboardKey(period, mode);
         List<LeaderboardService.LeaderboardEntry> entries;
@@ -66,48 +67,48 @@ public enum SkywarsLeaderboardHologram {
         int maxNameWidth = 0;
         if (alignment == SkywarsTextAlignment.BLOCK && !entries.isEmpty()) {
             for (LeaderboardService.LeaderboardEntry entry : entries) {
-                String name = HypixelPlayer.getDisplayName(entry.playerUuid());
-                maxNameWidth = Math.max(maxNameWidth, getMinecraftStringWidth(name));
+                Text name = HypixelPlayer.getDisplayName(entry.playerUuid());
+                maxNameWidth = Math.max(maxNameWidth, getMinecraftStringWidth(name.plain()));
             }
         }
 
         if (entries.isEmpty()) {
-            lines.add("§7No data available");
+            lines.add("<7>No data available");
         } else {
             int displayRank = 1;
             for (LeaderboardService.LeaderboardEntry entry : entries) {
-                String playerName = HypixelPlayer.getDisplayName(entry.playerUuid());
+                Text playerName = HypixelPlayer.getDisplayName(entry.playerUuid());
                 String formattedScore = formatScore(entry.scoreAsLong());
 
-                String paddedName = playerName;
+                Text paddedName = playerName;
                 if (alignment == SkywarsTextAlignment.BLOCK) {
                     paddedName = padToWidth(playerName, maxNameWidth);
                 }
 
                 int rank = view == SkywarsLeaderboardView.PLAYERS_AROUND_YOU ? displayRank : entry.rank();
-                lines.add(String.format("§e%d. §f%s §7- §a%s", rank, paddedName, formattedScore));
+                lines.add(Text.of("<e>{}. <f>{} <7>- <a>{}", rank, paddedName, formattedScore).serialize());
                 displayRank++;
             }
         }
 
         while (lines.size() < 12) {
-            lines.add("§8---");
+            lines.add("<8>---");
         }
 
         LeaderboardService.LeaderboardEntry playerEntry = LeaderboardService.getPlayerRankEntry(leaderboardKey, player.getUuid());
 
         if (playerEntry != null) {
             String formattedScore = formatScore(playerEntry.scoreAsLong());
-            lines.add(String.format("§eYou: §f%d. §7(§a%s§7)", playerEntry.rank(), formattedScore));
+            lines.add(Text.of("<e>You: <f>{}. <7>(<a>{}<7>)", playerEntry.rank(), formattedScore).serialize());
         } else {
-            lines.add("§eYou: §7Not ranked");
+            lines.add("<e>You: <7>Not ranked");
         }
 
         if (period != SkywarsLeaderboardPeriod.LIFETIME) {
-            lines.add("§7Resets in §f" + getTimeUntilReset(period));
+            lines.add(Text.of("<7>Resets in <f>{}", getTimeUntilReset(period)).serialize());
         }
 
-        lines.add("§6Click to change filters!");
+        lines.add("<6>Click to change filters!");
 
         return lines.toArray(new String[0]);
     }
@@ -175,12 +176,12 @@ public enum SkywarsLeaderboardHologram {
         return width;
     }
 
-    private String padToWidth(String text, int targetWidth) {
-        int currentWidth = getMinecraftStringWidth(text);
+    private Text padToWidth(Text text, int targetWidth) {
+        int currentWidth = getMinecraftStringWidth(text.plain());
         int spaceWidth = CHAR_WIDTHS[' '];
         int spacesNeeded = (targetWidth - currentWidth) / spaceWidth;
         if (spacesNeeded <= 0) return text;
-        return text + " ".repeat(spacesNeeded);
+        return text.append(Text.literal(" ".repeat(spacesNeeded)));
     }
 
     private String getTimeUntilReset(SkywarsLeaderboardPeriod period) {

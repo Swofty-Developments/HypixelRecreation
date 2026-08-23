@@ -1,20 +1,17 @@
 package net.swofty.type.skywarsgame.luckyblock.items.armor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 import java.time.Duration;
-import java.util.List;
 
 public class ChillyPants implements LuckyBlockArmor {
 
@@ -44,29 +41,21 @@ public class ChillyPants implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.LEATHER_LEGGINGS)
-                .customName(Component.text("Chilly Pants", NamedTextColor.AQUA)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("The ground beneath you ", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("turns to ", NamedTextColor.GRAY)
-                                .append(Component.text("ice", NamedTextColor.AQUA))
-                                .append(Component.text(" as you walk.", NamedTextColor.GRAY))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.LEATHER_LEGGINGS, """
+                        <b>Chilly Pants
+
+                        <7>The ground beneath you 
+                        <7>turns to <b>ice<7> as you walk.
+
+                        <6><l>LUCKY BLOCK ITEM
+                        """)
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }
 
     @Override
     public void onEquip(SkywarsPlayer player) {
-        player.sendMessage(Component.text("You feel a chill...", NamedTextColor.AQUA));
+        player.sendMessage("<b>You feel a chill...");
     }
 
     @Override
@@ -93,7 +82,7 @@ public class ChillyPants implements LuckyBlockArmor {
 
         Block currentBlock = instance.getBlock(blockBelow);
 
-        if (!currentBlock.isSolid() || currentBlock.compare(Block.PACKED_ICE) || currentBlock.compare(Block.BEDROCK)) {
+        if (!currentBlock.solid() || currentBlock.compare(Block.PACKED_ICE) || currentBlock.compare(Block.BEDROCK)) {
             return;
         }
 

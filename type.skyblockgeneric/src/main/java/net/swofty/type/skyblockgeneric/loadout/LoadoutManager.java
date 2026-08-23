@@ -46,13 +46,13 @@ public final class LoadoutManager {
         if (index < 0 || index >= unlockedLoadouts(player)) return false;
         DatapointLoadouts.Loadout loadout = data.getLoadouts()[index];
         if (loadout.isEmpty()) {
-            player.sendMessage("§cYou must customize this loadout before you can equip it!");
+            player.sendMessage("<c>You must customize this loadout before you can equip it!");
             return false;
         }
         long now = System.currentTimeMillis();
         if (!canSwap(data.getActiveHotmSlot(), loadout.getHotmSlot(), data.getLastHotmSwap(), now)
                 || !canSwap(data.getActiveHotfSlot(), loadout.getHotfSlot(), data.getLastHotfSwap(), now)) {
-            player.sendMessage("§cYou must wait before swapping skill trees again!");
+            player.sendMessage("<c>You must wait before swapping skill trees again!");
             return false;
         }
 
@@ -90,7 +90,7 @@ public final class LoadoutManager {
         }
         data.setEquipped(index);
         save(player);
-        player.sendMessage("§aEquipped " + loadout.getName() + "!");
+        player.sendMessage("<a>Equipped {}!", loadout.getName());
         return true;
     }
 
@@ -101,7 +101,7 @@ public final class LoadoutManager {
         long lastSwap = tree == TreeType.HOTM ? data.getLastHotmSwap() : data.getLastHotfSwap();
         long now = System.currentTimeMillis();
         if (!canSwap(active, slot, lastSwap, now)) {
-            player.sendMessage("§cYou must wait before swapping trees again!");
+            player.sendMessage("<c>You must wait before swapping trees again!");
             return false;
         }
         if (tree == TreeType.HOTM) {

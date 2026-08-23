@@ -12,7 +12,10 @@ public class NPCGenerow extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§6Generow", "§e§lCLICK"};
+				return new String[]{
+						"<6>Generow",
+						"<e><l>CLICK"
+				};
 			}
 
 			@Override

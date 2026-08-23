@@ -19,7 +19,7 @@ public class NPCLonelyPhilosopher extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Lonely Philosopher", "§e§lCLICK"};
+                return new String[]{"Lonely Philosopher", "<e><l>CLICK"};
             }
 
             @Override
@@ -63,13 +63,13 @@ public class NPCLonelyPhilosopher extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
-                                "§fI'm sorry, I have nothing for you."
-                        }).build(),
+                        .key("hello").lines(
+                                "<f>I'm sorry, I have nothing for you."
+                        ).build(),
                 DialogueSet.builder()
-                        .key("open_shop").lines(new String[]{
-                                "§fTo fast travel or not to fast travel?"
-                        }).build()
+                        .key("open_shop").lines(
+                                "<f>To fast travel or not to fast travel?"
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

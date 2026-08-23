@@ -1,6 +1,5 @@
 package net.swofty.type.deepcaverns.gui;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
@@ -9,7 +8,7 @@ import net.minestom.server.item.Material;
 import net.swofty.commons.ServerType;
 import net.swofty.type.generic.data.datapoints.DatapointStringList;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
@@ -31,7 +30,7 @@ public class GUILiftOperator extends HypixelInventoryGUI {
 
 	@Override
 	public void onOpen(InventoryGUIOpenEvent event) {
-		fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+		fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
 
 		for (LiftLocation location : LiftLocation.values()) {
 			set(new GUIClickableItem(location.slot) {
@@ -41,7 +40,7 @@ public class GUILiftOperator extends HypixelInventoryGUI {
 					SkyBlockRegion region = player.getRegion();
 					if (region != null) {
 						if (region.getType().name().equals(location.name())) {
-							p.sendMessage(Component.text("§cYou are already in the " + location.prettyName() + "!"));
+							p.sendMessage("<c>You are already in the {}!", location.prettyName());
 							return;
 						}
 					}
@@ -51,7 +50,7 @@ public class GUILiftOperator extends HypixelInventoryGUI {
 					);
 					List<String> discoveredZonesList = discoveredZones.getValue();
 					if (!discoveredZonesList.contains(location.prettyName()) && location != LiftLocation.DWARVEN_MINES) {
-						player.sendMessage("§cYou have not discovered the " + location.prettyName() + " yet!");
+						player.sendMessage("<c>You have not discovered the {} yet!", location.prettyName());
 						return;
 					}
 					location.consumer.accept(p);
@@ -67,9 +66,19 @@ public class GUILiftOperator extends HypixelInventoryGUI {
 					);
 					List<String> discoveredZonesList = discoveredZones.getValue();
 					if (!discoveredZonesList.contains(location.name()) && location != LiftLocation.DWARVEN_MINES) {
-						return ItemStackCreator.getSingleLoreStack("§a" + location.prettyName(), "§e", location.material, 1, "§7Click to teleport to the §b" + location.prettyName() + "§7!\n\n§cNot discovered yet!");
+						return ItemStacks.item(location.material, """
+								<a>{}
+								<7>Click to teleport to the
+								<b>{}<7>!
+
+								<c>Not discovered yet!""", location.prettyName(), location.prettyName());
 					}
-					return ItemStackCreator.getSingleLoreStack("§a" + location.prettyName(), "§e", location.material, 1, "§7Click to teleport to the §b" + location.prettyName() + "§7!\n\n§eClick to travel!");
+					return ItemStacks.item(location.material, """
+							<a>{}
+							<7>Click to teleport to the
+							<b>{}<7>!
+
+							<e>Click to travel!""", location.prettyName(), location.prettyName());
 				}
 			});
 		}

@@ -1,13 +1,11 @@
 package net.swofty.type.replayviewer.playback.scoreboard;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minestom.server.entity.Player;
 import net.minestom.server.scoreboard.Sidebar;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.type.generic.HypixelConst;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.replayviewer.playback.ReplaySession;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +23,7 @@ public class GenericReplayScoreboard implements ReplayScoreboard {
 
     @Override
     public void create(Player viewer) {
-        sidebar = new Sidebar(getTitle());
+        sidebar = new Sidebar(getTitle().asComponent());
         sidebar.addViewer(viewer);
         update(session);
     }
@@ -34,7 +32,7 @@ public class GenericReplayScoreboard implements ReplayScoreboard {
     public void update(ReplaySession session) {
         if (sidebar == null) return;
 
-        List<Component> lines = getLines(session);
+        List<Text> lines = getLines(session);
         for (int i = 0; i < 15; i++) {
             sidebar.removeLine("line_" + i);
         }
@@ -42,7 +40,7 @@ public class GenericReplayScoreboard implements ReplayScoreboard {
         for (int i = 0; i < lines.size() && i < 15; i++) {
             sidebar.createLine(new Sidebar.ScoreboardLine(
                     "line_" + i,
-                    lines.get(i),
+                    lines.get(i).asComponent(),
                     lines.size() - i,
                     Sidebar.NumberFormat.blank()
             ));
@@ -57,38 +55,32 @@ public class GenericReplayScoreboard implements ReplayScoreboard {
     }
 
     @Override
-    public Component getTitle() {
-        return I18n.t("replays.replay_scoreboard_title");
+    public Text getTitle() {
+        return Text.key("replays.replay_scoreboard_title");
     }
 
     @Override
-    public List<Component> getLines(ReplaySession session) {
-        List<Component> lines = new ArrayList<>();
-        lines.add(Component.text(new SimpleDateFormat("MM/dd/yyyy").format(new Date()), NamedTextColor.GRAY)
-                .appendSpace().appendSpace().append(Component.text(HypixelConst.getServerName(), NamedTextColor.DARK_GRAY)));
-        lines.add(I18n.t("replays.replay_scoreboard_from",
-                Argument.component("server", Component.text(session.getMetadata().descriptor().serverId(), NamedTextColor.GRAY))));
+    public List<Text> getLines(ReplaySession session) {
+        List<Text> lines = new ArrayList<>();
+        lines.add(Text.of("<7>{}  <8>{}", new SimpleDateFormat("MM/dd/yyyy").format(new Date()), HypixelConst.getServerName()));
+        lines.add(Text.key("replays.replay_scoreboard_from",
+                Text.of("<7>{}", session.getMetadata().descriptor().serverId())));
 
-        lines.add(Component.empty());
+        lines.add(Text.empty());
 
-        lines.add(I18n.t("replays.date").color(NamedTextColor.WHITE)
-                .append(Component.text(new SimpleDateFormat("MM/dd/yyyy").format(new Date(session.getMetadata().descriptor().startTime())), NamedTextColor.GREEN)));
-        lines.add(I18n.t("replays.time").color(NamedTextColor.WHITE)
-                .append(Component.text(new SimpleDateFormat("HH:mm").format(new Date(session.getMetadata().descriptor().startTime())), NamedTextColor.GREEN))
-                .appendSpace().append(I18n.t("replays.est").color(NamedTextColor.GREEN)));
+        lines.add(Text.of("<f>{}<a>{}", Text.key("replays.date"), new SimpleDateFormat("MM/dd/yyyy").format(new Date(session.getMetadata().descriptor().startTime()))));
+        lines.add(Text.of("<f>{}<a>{} {}", Text.key("replays.time"),
+                new SimpleDateFormat("HH:mm").format(new Date(session.getMetadata().descriptor().startTime())), Text.key("replays.est")));
 
-        lines.add(Component.empty());
+        lines.add(Text.empty());
 
-        lines.add(I18n.t("replays.game").color(NamedTextColor.WHITE)
-                .append(I18n.t("replays.bedwars").color(NamedTextColor.GREEN)));
-        lines.add(I18n.t("replays.mode").color(NamedTextColor.WHITE)
-                .append(Component.text(formatMode(session.gameModeId()), NamedTextColor.GREEN)));
+        lines.add(Text.of("<f>{}<a>{}", Text.key("replays.game"), Text.key("replays.bedwars")));
+        lines.add(Text.of("<f>{}<a>{}", Text.key("replays.mode"), formatMode(session.gameModeId())));
 
-        lines.add(Component.empty());
+        lines.add(Text.empty());
 
-        lines.add(I18n.t("replays.map").color(NamedTextColor.WHITE)
-                .append(Component.text(session.getMetadata().descriptor().mapName(), NamedTextColor.GREEN)));
-        lines.add(I18n.t("replays.website"));
+        lines.add(Text.of("<f>{}<a>{}", Text.key("replays.map"), session.getMetadata().descriptor().mapName()));
+        lines.add(Text.key("replays.website"));
 
         return lines;
     }

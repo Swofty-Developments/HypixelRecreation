@@ -7,7 +7,7 @@ import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 import net.swofty.type.murdermysterygame.item.SimpleInteractableItem;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 
 public class LeaveGameBed extends SimpleInteractableItem {
 
@@ -17,7 +17,9 @@ public class LeaveGameBed extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStackCreator.getStack("§c§lReturn to Lobby §7(Right Click)", Material.RED_BED, 1, "§7Right-click to leave to the lobby!").build();
+        return ItemStacks.item(Material.RED_BED, """
+                <c><l>Return to Lobby </l><7>(Right Click)
+                <7>Right-click to leave to the lobby!""").build();
     }
 
     @Override

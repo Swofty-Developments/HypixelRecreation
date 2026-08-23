@@ -1,17 +1,15 @@
 package net.swofty.type.hub.gui;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributePetData;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.gui.ShopView;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.shop.type.CoinShopPrice;
 import net.swofty.type.skyblockgeneric.shop.type.CombinedShopPrice;
 import net.swofty.type.skyblockgeneric.shop.type.ItemShopPrice;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GUIShopBea extends ShopView {
@@ -56,12 +54,12 @@ public class GUIShopBea extends ShopView {
         petData.setLevel(100, rarity);
         beeDisplayItem.getAttributeHandler().setPetData(petData);
 
-        ArrayList<Component> lore = new ArrayList<>(beeDisplayItem.getLoreComponent());
-        lore.add(Component.space());
-        lore.add(Component.text("This is a preview of Lvl 100", NamedTextColor.RED));
-        lore.add(Component.text("New pets are lowest level!", NamedTextColor.RED));
+        List<Text> lore = beeDisplayItem.getLoreText();
+        lore.add(Text.literal(" "));
+        lore.add(Text.of("<c>This is a preview of Lvl 100"));
+        lore.add(Text.of("<c>New pets are lowest level!"));
 
-        bee.setComponentLore(lore);
+        bee.setLore(lore);
         bee.setDisplayName(beeDisplayItem.getDisplayName());
         attachItem(bee);
     }

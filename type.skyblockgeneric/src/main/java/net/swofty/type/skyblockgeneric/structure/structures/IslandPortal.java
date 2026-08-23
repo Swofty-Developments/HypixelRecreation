@@ -73,7 +73,7 @@ public class IslandPortal extends SkyBlockStructure {
     @Override
     public List<StructureHologram> getHolograms() {
         return List.of(
-                new StructureHologram(new String[]{"§bTravel to:", "§aHub Island"}, 0, 1, 1)
+                new StructureHologram(new String[]{"<b>Travel to:", "<a>Hub Island"}, 0, 1, 1)
         );
     }
 

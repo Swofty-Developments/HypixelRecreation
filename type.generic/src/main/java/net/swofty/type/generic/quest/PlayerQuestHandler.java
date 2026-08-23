@@ -85,7 +85,7 @@ public class PlayerQuestHandler {
         QuestData data = getQuestData();
 
         if (!data.canCompleteChallenge()) {
-            player.sendMessage("§cYou have completed the maximum number of challenges today (15)!");
+            player.sendMessage("<c>You have completed the maximum number of challenges today (15)!");
             return;
         }
 
@@ -97,8 +97,8 @@ public class PlayerQuestHandler {
 
         player.getExperienceHandler().addExperience(xpReward);
 
-        player.sendMessage("§a§lCHALLENGE COMPLETE!");
-        player.sendMessage("§7Challenges remaining today: §a" + data.getRemainingChallenges());
+        player.sendMessage("<a><l>CHALLENGE COMPLETE!");
+        player.sendMessage("<7>Challenges remaining today: <a>{}", data.getRemainingChallenges());
     }
 
     public List<QuestDefinition> getActiveQuests(AchievementCategory category) {
@@ -116,28 +116,28 @@ public class PlayerQuestHandler {
     }
 
     private void onQuestCompleted(QuestDefinition def) {
-        player.sendMessage("§6§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
-        player.sendMessage("§a§lQUEST COMPLETE: §e" + def.getName());
+        player.sendMessage("<6><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+        player.sendMessage("<a><l>QUEST COMPLETE: </l><e>{}", def.getName());
         player.sendMessage("");
 
         QuestReward reward = def.getReward();
         if (reward != null && reward.hasReward()) {
             if (reward.getHypixelExperience() > 0) {
-                player.sendMessage("§8+§3" + reward.getHypixelExperience() + " §7Hypixel Experience");
+                player.sendMessage("<8>+<3>{} <7>Hypixel Experience", reward.getHypixelExperience());
                 player.getExperienceHandler().addExperience(reward.getHypixelExperience());
             }
             if (reward.getCoins() > 0) {
-                player.sendMessage("§8+§6" + reward.getCoins() + " §7Coins");
+                player.sendMessage("<8>+<6>{} <7>Coins", reward.getCoins());
             }
             if (reward.getGameExperience() > 0) {
-                player.sendMessage("§8+§b" + reward.getGameExperience() + " §7Game Experience");
+                player.sendMessage("<8>+<b>{} <7>Game Experience", reward.getGameExperience());
             }
             if (reward.getTokens() > 0) {
-                player.sendMessage("§8+§2" + reward.getTokens() + " §7Tokens");
+                player.sendMessage("<8>+<2>{} <7>Tokens", reward.getTokens());
             }
         }
 
-        player.sendMessage("§6§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+        player.sendMessage("<6><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
 
         player.playSound(Sound.sound(SoundEvent.ENTITY_PLAYER_LEVELUP, Sound.Source.MASTER, 1.0f, 1.2f));
     }

@@ -1,9 +1,8 @@
 package net.swofty.type.skyblockgeneric.commands;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.command.builder.arguments.ArgumentString;
 import net.minestom.server.command.builder.arguments.ArgumentType;
-import net.minestom.server.command.builder.suggestion.SuggestionEntry;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -22,7 +21,7 @@ public class AwardHypixelXPCommand extends HypixelCommand {
         ArgumentString causeArgument = ArgumentType.String("cause");
         causeArgument.setSuggestionCallback((_, _, suggestion) -> {
             SkyBlockLevelCause.getCauses().forEach((causeKey, causeAbstr) -> {
-                suggestion.addEntry(new SuggestionEntry(causeKey, MiniMessage.miniMessage().deserialize("<gold>" + causeAbstr.xpReward() + "<reset>")));
+                suggest(suggestion, causeKey, "<6>{}", causeAbstr.xpReward());
             });
         });
 
@@ -32,16 +31,16 @@ public class AwardHypixelXPCommand extends HypixelCommand {
             SkyBlockLevelCauseAbstr cause = SkyBlockLevelCause.getCause(causeString);
 
             if (cause == null) {
-                sender.sendMessage("§cInvalid cause.");
+                sender.sendMessage("<c>Invalid cause.");
                 SkyBlockLevelCause.getCauses().forEach((causeKey, causeAbstr) -> {
-                    sender.sendMessage("§7- §a" + causeKey);
+                    sender.sendMessage(Text.of("<7>- <a>{}", causeKey));
                 });
                 return;
             }
 
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
             player.getSkyBlockExperience().addExperience(cause);
-            sender.sendMessage("§aAwarded " + cause + " with " + cause.xpReward() + " xp.");
+            player.sendMessage("<a>Awarded {} with {} xp.", cause, cause.xpReward());
         }, causeArgument);
     }
 }

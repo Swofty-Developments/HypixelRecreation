@@ -46,17 +46,17 @@ public class UnMuteCommand extends HypixelCommand {
                     punishmentService.handleRequest(message).thenAccept(result -> {
                         if (result instanceof UnpunishPlayerProtocol.UnpunishPlayerResponse response) {
                             if (response.success()) {
-                                player.sendMessage("§aSuccessfully unmuted player: " + playerName);
+                                player.sendMessage("<a>Successfully unmuted player: {}", playerName);
                             } else {
-                                player.sendMessage("§c" + response.errorMessage());
+                                player.sendMessage("<c>{}", response.errorMessage());
                             }
                         }
                     }).orTimeout(5, TimeUnit.SECONDS).exceptionally(_ -> {
-                        player.sendMessage("§cCould not unmute this player at this time. The punishment service may be offline.");
+                        player.sendMessage("<c>Could not unmute this player at this time. The punishment service may be offline.");
                         return null;
                     });
                 } catch (IOException e) {
-                    player.sendMessage("§cCould not find player: " + playerName);
+                    player.sendMessage("<c>Could not find player: {}", playerName);
                 }
             });
         }, playerArg);

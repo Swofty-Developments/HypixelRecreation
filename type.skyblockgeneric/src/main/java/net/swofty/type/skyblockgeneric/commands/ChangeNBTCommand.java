@@ -34,7 +34,7 @@ public class ChangeNBTCommand extends HypixelCommand {
             attribute.setValue(attribute.loadFromString(value));
 
             player.setItemInHand(PlayerHand.MAIN, item.getItemStack());
-            player.sendMessage("§aSuccessfully changed NBT key §e" + key + "§a to §e" + value + "§a.");
+            player.sendMessage("<a>Successfully changed NBT key <e>{} <a>to <e>{} <a>.", key, value);
         }, keyArgument, valueArgument);
     }
 }

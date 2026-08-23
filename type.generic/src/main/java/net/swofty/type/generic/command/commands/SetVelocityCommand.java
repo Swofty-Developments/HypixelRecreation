@@ -5,6 +5,7 @@ import net.minestom.server.command.builder.arguments.minecraft.ArgumentEntity;
 import net.minestom.server.command.builder.arguments.number.ArgumentFloat;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
+import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 
 @CommandParameters(labels = "setvelocity",
@@ -29,7 +30,7 @@ public class SetVelocityCommand extends HypixelCommand {
 			float z = context.get(zArg);
 
 			if (target == null) {
-				sender.sendMessage("§cPlayer not found.");
+				((HypixelPlayer) sender).sendMessage("<c>Player not found.");
 				return;
 			}
 

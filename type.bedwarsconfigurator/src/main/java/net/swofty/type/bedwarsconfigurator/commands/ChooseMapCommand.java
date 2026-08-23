@@ -1,18 +1,17 @@
 package net.swofty.type.bedwarsconfigurator.commands;
 
 import net.hollowcube.polar.PolarLoader;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 import net.minestom.server.entity.GameMode;
-import net.minestom.server.entity.Player;
 import net.minestom.server.instance.InstanceContainer;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.type.bedwarsconfigurator.TypeBedWarsConfiguratorLoader;
 import net.swofty.type.bedwarsconfigurator.autosetup.AutoSetupSession;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
+import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 
 import java.io.File;
@@ -35,7 +34,7 @@ public class ChooseMapCommand extends HypixelCommand {
             Set<SuggestionEntry> suggestions = new HashSet<>();
 
             for (BedWarsMapsConfig.MapEntry entry : TypeBedWarsConfiguratorLoader.getMapsConfig().getMaps()) {
-                suggestions.add(new SuggestionEntry(entry.getId(), Component.text(entry.getName() + " §7(configured)")));
+                suggestions.add(suggestion(entry.getId(), "{} <7>(configured)", entry.getName()));
                 addedIds.add(entry.getId().toLowerCase());
             }
 
@@ -46,7 +45,7 @@ public class ChooseMapCommand extends HypixelCommand {
                     for (File polarFile : polarFiles) {
                         String mapId = polarFile.getName().replace(".polar", "");
                         if (!addedIds.contains(mapId.toLowerCase())) {
-                            suggestions.add(new SuggestionEntry(mapId, Component.text(mapId + " §e(unconfigured)")));
+                            suggestions.add(suggestion(mapId, "{} <e>(unconfigured)", mapId));
                         }
                     }
                 }
@@ -66,8 +65,8 @@ public class ChooseMapCommand extends HypixelCommand {
         });
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof Player player)) {
-                sender.sendMessage(Component.text("§cThis command can only be executed by a player."));
+            if (!(sender instanceof HypixelPlayer player)) {
+                sender.sendMessage("<c>This command can only be executed by a player.");
                 return;
             }
             String mapId = context.get("map");
@@ -82,7 +81,7 @@ public class ChooseMapCommand extends HypixelCommand {
 
             File polarFile = new File("./configuration/bedwars/" + mapId + ".polar");
             if (!polarFile.exists()) {
-                sender.sendMessage(Component.text("§cNo polar file found for map: " + mapId));
+                player.sendMessage("<c>No polar file found for map: {}", mapId);
                 return;
             }
 
@@ -90,7 +89,7 @@ public class ChooseMapCommand extends HypixelCommand {
             try {
                 mapInstance.setChunkLoader(new PolarLoader(polarFile.toPath()));
             } catch (IOException e) {
-                sender.sendMessage(Component.text("§cFailed to load map: " + mapId));
+                player.sendMessage("<c>Failed to load map: {}", mapId);
                 return;
             }
 
@@ -102,9 +101,9 @@ public class ChooseMapCommand extends HypixelCommand {
 
                 if (selectedMap.getConfiguration() != null) {
                     session.loadFromMapEntry(selectedMap);
-                    player.sendMessage(Component.text("§aLoaded existing configuration for: " + selectedMap.getName()));
+                    player.sendMessage("<a>Loaded existing configuration for: {}", selectedMap.getName());
                 } else {
-                    player.sendMessage(Component.text("§eSelected map: " + selectedMap.getName() + " §7(no existing config)"));
+                    player.sendMessage("<e>Selected map: {} <7>(no existing config)", selectedMap.getName());
                 }
             } else {
                 player.setGameMode(GameMode.CREATIVE);
@@ -113,8 +112,8 @@ public class ChooseMapCommand extends HypixelCommand {
                 session.clear();
                 session.setMapId(mapId);
                 session.setMapName(mapId);
-                player.sendMessage(Component.text("§eLoaded unconfigured map: §f" + mapId + " §7(starting fresh)"));
-                player.sendMessage(Component.text("§7Use §b/autosetup §7to automatically configure the map, or set things manually."));
+                player.sendMessage("<e>Loaded unconfigured map: <f>{} <7>(starting fresh)", mapId);
+                player.sendMessage("<7>Use <b>/autosetup <7>to automatically configure the map, or set things manually.");
             }
 
             player.setInstance(mapInstance);

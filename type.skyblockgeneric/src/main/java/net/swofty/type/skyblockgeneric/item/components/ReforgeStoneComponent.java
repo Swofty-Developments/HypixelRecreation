@@ -30,7 +30,7 @@ public class ReforgeStoneComponent extends SkyBlockItemComponent {
                     int cost = applicationCosts.getOrDefault(
                             upgradeItem.getAttributeHandler().getRarity(), 0);
                     if (player.getCoins() < cost) {
-                        player.sendMessage("§cYou don't have enough coins to apply this reforge!");
+                        player.sendMessage("<c>You don't have enough coins to apply this reforge!");
                         return false;
                     }
                     player.removeCoins(cost);

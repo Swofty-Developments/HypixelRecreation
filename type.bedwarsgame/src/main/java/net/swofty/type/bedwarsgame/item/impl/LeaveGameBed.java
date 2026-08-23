@@ -10,7 +10,7 @@ import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.item.SimpleInteractableItem;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 
 import java.util.Map;
 import java.util.UUID;
@@ -26,27 +26,30 @@ public class LeaveGameBed extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStackCreator.getStack("§c§lReturn to Lobby §7(Right Click)", Material.RED_BED, 1, "§7Right-click to leave to the lobby!").build();
+        return ItemStacks.item(Material.RED_BED, """
+                <c><l>Return to Lobby </l><7>(Right Click)
+                <7>Right-click to leave to the lobby!""").build();
     }
 
     @Override
     public void onItemUse(PlayerUseItemEvent event) {
-        BedWarsGame game = ((BedWarsPlayer) event.getPlayer()).getGame();
+        BedWarsPlayer player = (BedWarsPlayer) event.getPlayer();
+        BedWarsGame game = player.getGame();
         if (game != null) {
-            if (leaveTasks.containsKey(event.getPlayer().getUuid())) {
-                leaveTasks.get(event.getPlayer().getUuid()).cancel();
-                leaveTasks.remove(event.getPlayer().getUuid());
-                event.getPlayer().sendMessage("§c§lTeleport cancelled!");
+            if (leaveTasks.containsKey(player.getUuid())) {
+                leaveTasks.get(player.getUuid()).cancel();
+                leaveTasks.remove(player.getUuid());
+                player.sendMessage("<c><l>Teleport cancelled!");
                 return;
             }
-            leaveTasks.put(event.getPlayer().getUuid(), MinecraftServer.getSchedulerManager().scheduleTask(() -> {
+            leaveTasks.put(player.getUuid(), MinecraftServer.getSchedulerManager().scheduleTask(() -> {
                 if (game.getState() != GameState.IN_PROGRESS) {
-                    leaveTasks.remove(event.getPlayer().getUuid());
-                    game.leave((BedWarsPlayer) event.getPlayer());
+                    leaveTasks.remove(player.getUuid());
+                    game.leave(player);
                 }
                 return TaskSchedule.stop();
             }, TaskSchedule.seconds(3L)));
-            event.getPlayer().sendMessage("§a§lTeleporting you to the lobby in 3 seconds... Right-click again to cancel the teleport!");
+            player.sendMessage("<a><l>Teleporting you to the lobby in 3 seconds... Right-click again to cancel the teleport!");
         }
     }
 }

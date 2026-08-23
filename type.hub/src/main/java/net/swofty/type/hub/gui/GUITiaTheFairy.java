@@ -6,8 +6,9 @@ import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
@@ -27,7 +28,7 @@ public class GUITiaTheFairy extends HypixelInventoryGUI {
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(GUIClickableItem.getCloseItem(49));
 
         int collectedAmount = ((SkyBlockPlayer) getPlayer()).getFairySouls().getCollectedFairySouls().size();
@@ -39,7 +40,7 @@ public class GUITiaTheFairy extends HypixelInventoryGUI {
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 if (!canExchange) {
-                    player.sendMessage("§cYou don't have enough Fairy Souls!");
+                    player.sendMessage("<c>You don't have enough Fairy Souls!");
                     return;
                 }
 
@@ -47,8 +48,8 @@ public class GUITiaTheFairy extends HypixelInventoryGUI {
                 player.getFairySouls().exchange();
                 player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.FAIRY_SOULS, DatapointFairySouls.class)
                                 .setValue(player.getFairySouls());
-                player.sendMessage("§aYou have exchanged your Fairy Souls for rewards!");
-                nextLevel.getDisplay().forEach(player::sendMessage);
+                player.sendMessage("<a>You have exchanged your Fairy Souls for rewards!");
+                nextLevel.getDisplay().forEach(line -> player.sendMessage(line));
 
                 player.getSkyBlockExperience().addExperience(
                         SkyBlockLevelCause.getFairySoulExchangeCause(nextLevel.ordinal())
@@ -66,27 +67,26 @@ public class GUITiaTheFairy extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                List<String> lore = new ArrayList<>(List.of(
-                        "§7Find §dFairy Souls §7around the",
-                        "§7world and bring them back to me",
-                        "§7and I will reward you with",
-                        "§7SkyBlock XP and Backpack Slots!",
-                        "",
-                        "§7Fairy Souls: " + (canExchange ? "§a" : "§e") + collectedAmount + "§7/§d5",
-                        "",
-                        "§7Next Reward:"
+                List<Text> lore = new ArrayList<>(List.of(
+                        Text.of("<7>Find <d>Fairy Souls </d>around the"),
+                        Text.of("<7>world and bring them back to me"),
+                        Text.of("<7>and I will reward you with"),
+                        Text.of("<7>SkyBlock XP and Backpack Slots!"),
+                        Text.empty(),
+                        Text.of("<7>Fairy Souls: " + (canExchange ? "<a>" : "<e>") + "{}<7>/<d>5", collectedAmount),
+                        Text.empty(),
+                        Text.of("<7>Next Reward:")
                 ));
 
-                nextLevel.getDisplay().forEach(s -> lore.add("§7" + s));
+                nextLevel.getDisplay().forEach(line -> lore.add(Text.of("<7>{}", Text.parse(line))));
 
                 lore.addAll(List.of(
-                        "",
-                        (canExchange ? "§eClick to exchange!" : "§cYou don't have enough Fairy Souls!"  )
+                        Text.empty(),
+                        Text.of(canExchange ? "<e>Click to exchange!" : "<c>You don't have enough Fairy Souls!")
                 ));
 
-                return ItemStackCreator.getStackHead("§aExchange Fairy Souls",
-                        "b96923ad247310007f6ae5d326d847ad53864cf16c3565a181dc8e6b20be2387",
-                        1, lore);
+                return ItemStacks.head("b96923ad247310007f6ae5d326d847ad53864cf16c3565a181dc8e6b20be2387",
+                        Text.of("<a>Exchange Fairy Souls"), lore);
             }
         });
         updateItemStacks(getInventory(), getPlayer());

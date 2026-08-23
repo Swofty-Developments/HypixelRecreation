@@ -70,7 +70,7 @@ public class FlySpeedCommand extends HypixelCommand {
             } else {
                 player.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(realSpeed);
             }
-            sender.sendMessage("§aSet your " + speedType.getDisplayName() + " speed to §e" + userSpeed + "§a.");
+            player.sendMessage("<a>Set your {} speed to <e>{}<a>.", speedType.getDisplayName(), userSpeed);
         }, speedArg, typeArg);
     }
 }

@@ -1,12 +1,10 @@
 package net.swofty.type.generic.gui.impl.collectibles;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.collectibles.CollectibleCategory;
 import net.swofty.type.generic.collectibles.CollectibleDefinition;
 import net.swofty.type.generic.collectibles.CollectibleDescriptionService;
@@ -15,7 +13,7 @@ import net.swofty.type.generic.collectibles.CollectibleRarity;
 import net.swofty.type.generic.collectibles.CollectibleSelectionCheck;
 import net.swofty.type.generic.collectibles.CollectibleUnlockMethod;
 import net.swofty.type.generic.collectibles.CollectibleUnlockRequirement;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulPaginatedView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -31,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class CollectibleSelectionView extends StatefulPaginatedView<CollectibleDefinition, CollectibleSelectionView.State> {
-
-    private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacySection();
 
     private final String title;
 
@@ -104,80 +100,73 @@ public abstract class CollectibleSelectionView extends StatefulPaginatedView<Col
         boolean showRarity = item.rarity().getWeight() > 2;
         boolean hasDetailSection = event != null || showRarity;
 
-        List<Component> lore = new ArrayList<>();
-        lore.add(legacy("§8" + item.category().getDisplayName()));
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<8>{}", item.category().getDisplayName()));
 
-        List<Component> descriptionLore = CollectibleDescriptionService.resolveLore(item);
+        List<Text> descriptionLore = CollectibleDescriptionService.resolveLore(item);
         if (!descriptionLore.isEmpty()) {
-            lore.add(Component.empty());
+            lore.add(Text.empty());
             lore.addAll(descriptionLore);
         }
 
-        List<Component> previewLore = previewLore(player, item);
+        List<Text> previewLore = previewLore(player, item);
         if (!previewLore.isEmpty()) {
-            lore.add(Component.empty());
+            lore.add(Text.empty());
             lore.addAll(previewLore);
         }
 
         if (isPreviewSupported(player, item)) {
-            lore.add(Component.empty());
-            lore.add(legacy("§eRight-Click to preview!"));
+            lore.add(Text.empty());
+            lore.add(Text.of("<e>Right-Click to preview!"));
         }
 
         if (hasDetailSection) {
-            lore.add(Component.empty());
+            lore.add(Text.empty());
 
             if (event != null) {
-                lore.add(legacy("§7Event: §b" + event.displayName()));
+                lore.add(Text.of("<7>Event: <b>{}", event.displayName()));
                 if (showRarity) {
-                    lore.add(Component.empty());
+                    lore.add(Text.empty());
                 }
             }
 
             if (showRarity) {
-                lore.add(legacy("§7Rarity: " + item.rarity().formattedName()));
+                lore.add(Text.of("<7>Rarity: {}", item.rarity().formattedName()));
             }
 
-            lore.add(Component.empty());
+            lore.add(Text.empty());
         }
 
         if (selectable) {
-            lore.add(legacy(selected ? "§aSelected!" : "§eClick to select!"));
+            lore.add(Text.of(selected ? "<a>Selected!" : "<e>Click to select!"));
 
             if (favoriteable) {
-                lore.add(legacy("§eShift-click to toggle favorite!"));
+                lore.add(Text.of("<e>Shift-click to toggle favorite!"));
             }
         } else {
             if (!hasDetailSection) {
-                lore.add(Component.empty());
+                lore.add(Text.empty());
             }
 
-            String reason = check.reason() != null ? check.reason() : "§cLocked.";
+            String reason = check.reason() != null ? check.reason() : "<c>Locked.";
             lore.addAll(legacyLines(reason));
 
             if (showInsufficientTokens) {
-                lore.add(Component.empty());
-                lore.addAll(
-                    StringUtility.splitByWordAndLengthKeepLegacyColor("§cYou don't have enough tokens to buy that!", 38)
-                        .stream()
-                        .map(this::legacy)
-                        .toList()
-                );
+                lore.add(Text.empty());
+                lore.addAll(Text.of("<c><wrap:38>You don't have enough tokens to buy that!</wrap>").lines());
             }
         }
 
-        String itemName = (check.selectable() ? "§a" : "§c") + item.name();
-        if (favorite) {
-            itemName = "§6✯ " + itemName;
-        }
-        Component itemNameComponent = legacy(itemName);
-
+        String namePrefix = check.selectable() ? "<a>" : "<c>";
+        Text itemNameText = favorite
+            ? Text.of("<6>✯ " + namePrefix + "{}", item.name())
+            : Text.of(namePrefix + "{}", item.name());
         if (item.iconTexture() != null && !item.iconTexture().isBlank()) {
-            return ItemStackCreator.getStackHead(itemNameComponent, item.iconTexture(), 1, lore);
+            return ItemStacks.clearAttributes(ItemStacks.head(item.iconTexture(), itemNameText, lore));
         }
 
         Material iconMaterial = item.iconMaterial() != null ? item.iconMaterial() : Material.BARRIER;
-        return ItemStackCreator.getStack(itemNameComponent, iconMaterial, 1, lore);
+        return ItemStacks.item(iconMaterial, 1, itemNameText, lore);
     }
 
     @Override
@@ -193,7 +182,7 @@ public abstract class CollectibleSelectionView extends StatefulPaginatedView<Col
             }
 
             boolean favorite = toggleFavorite(click.player(), item);
-            click.player().sendMessage(favorite ? "§aAdded to favorites." : "§cRemoved from favorites.");
+            click.player().sendMessage(favorite ? "<a>Added to favorites." : "<c>Removed from favorites.");
             ctx.session(State.class).refresh();
             return;
         }
@@ -205,8 +194,12 @@ public abstract class CollectibleSelectionView extends StatefulPaginatedView<Col
 
         SelectionOutcome outcome = selectItem(click.player(), ctx, item);
         if (outcome.message() != null && !outcome.message().isBlank()) {
-            String message = outcome.success() ? outcome.message() : bottomLineFailureMessage(outcome.message());
-            click.player().sendMessage(message);
+            if (outcome.success()) {
+                String message = outcome.message();
+                click.player().sendMessage(message);
+            } else {
+                click.player().sendMessage(bottomLineFailureMessage(outcome.message()));
+            }
         }
         ctx.session(State.class).refresh();
     }
@@ -220,24 +213,20 @@ public abstract class CollectibleSelectionView extends StatefulPaginatedView<Col
     protected void layoutCustom(ViewLayout<State> layout, State state, ViewContext ctx) {
         Components.backOrClose(layout, 48, ctx);
 
-        layout.slot(49, (s, c) -> ItemStackCreator.getStack(
-            "§7Total " + tokenCurrencyLabel() + ": §2" + StringUtility.commaify(tokenBalance(c.player())),
-            Material.EMERALD,
-            1,
-            "§6https://store.hypixel.net"
-        ));
+        layout.slot(49, (s, c) -> ItemStacks.item(Material.EMERALD, 1, """
+            <7>Total {}: <2>{:,}
+            <6>https://store.hypixel.net""", tokenCurrencyLabel(), tokenBalance(c.player())));
 
-        layout.slot(50, (s, c) -> ItemStackCreator.getStack(
-            "§6Sorted by: §a" + s.sortMode().displayName,
-            Material.HOPPER,
-            1,
-            "§7Sort order: §a" + s.sortMode().displayName,
-            "",
-            "§7Next sort: §a" + s.sortMode().next().displayName,
-            "§eLeft click to use!",
-            "",
-            "§7Owned items first: " + (s.ownedFirst() ? "§aYes" : "§cNo"),
-            "§eRight click to toggle!"
+        layout.slot(50, (s, c) -> ItemStacks.item(Material.HOPPER, 1,
+            "<6>Sorted by: <a>{}\n"
+                + "<7>Sort order: <a>{}\n"
+                + "\n"
+                + "<7>Next sort: <a>{}\n"
+                + "<e>Left click to use!\n"
+                + "\n"
+                + "<7>Owned items first: " + (s.ownedFirst() ? "<a>Yes" : "<c>No") + "\n"
+                + "<e>Right click to toggle!",
+            s.sortMode().displayName, s.sortMode().displayName, s.sortMode().next().displayName
         ), (click, context) -> {
             if (click.click() instanceof Click.Right) {
                 context.session(State.class).update(current ->
@@ -278,7 +267,7 @@ public abstract class CollectibleSelectionView extends StatefulPaginatedView<Col
         return false;
     }
 
-    protected List<Component> previewLore(HypixelPlayer player, CollectibleDefinition definition) {
+    protected List<Text> previewLore(HypixelPlayer player, CollectibleDefinition definition) {
         return List.of();
     }
 
@@ -354,29 +343,25 @@ public abstract class CollectibleSelectionView extends StatefulPaginatedView<Col
         return rarity != null ? rarity.getWeight() : CollectibleRarity.COMMON.getWeight();
     }
 
-    private Component legacy(String text) {
-        return LEGACY.deserialize(text);
-    }
-
-    protected List<Component> legacyLines(String text) {
+    protected List<Text> legacyLines(String text) {
         if (text == null || text.isBlank()) {
             return List.of();
         }
         String[] lines = text.replace("\r\n", "\n").replace('\r', '\n').split("\n", -1);
-        List<Component> components = new ArrayList<>();
+        List<Text> parsed = new ArrayList<>();
         for (String line : lines) {
-            components.add(legacy(line));
+            parsed.add(Text.read(line));
         }
-        return components;
+        return parsed;
     }
 
     private boolean isCostReason(String reason) {
         return reason != null && reason.contains("Cost:");
     }
 
-    private String bottomLineFailureMessage(String message) {
+    private Text bottomLineFailureMessage(String message) {
         if (message == null || message.isBlank()) {
-            return "§cAction failed.";
+            return Text.of("<c>Action failed.");
         }
 
         String normalized = message.replace("\r\n", "\n").replace('\r', '\n');
@@ -387,13 +372,16 @@ public abstract class CollectibleSelectionView extends StatefulPaginatedView<Col
                 continue;
             }
 
-            if (line.indexOf('§') == -1) {
-                return "§c" + line;
+            if (line.indexOf('§') >= 0) {
+                return Text.legacy(line);
             }
-            return line;
+            if (line.indexOf('<') >= 0) {
+                return Text.parse(line);
+            }
+            return Text.of("<c>{}", line);
         }
 
-        return "§cAction failed.";
+        return Text.of("<c>Action failed.");
     }
 
     public record SelectionOutcome(boolean success, String message) {

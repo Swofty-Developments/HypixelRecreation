@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.event.actions.custom;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
@@ -26,11 +27,9 @@ public class ActionRegionChangeDisplay implements HypixelEventClass {
 
             SkyBlockActionBar.getFor(player).addReplacement(
                     SkyBlockActionBar.BarSection.DEFENSE,
-                    new SkyBlockActionBar.DisplayReplacement(
-                            type.getColor() + " ⏣ " + name,
-                            20,
-                            2
-                    )
+                    Text.of("<color:{}> ⏣ {}", type.getColor(), name),
+                    20,
+                    2
             );
         }
     }

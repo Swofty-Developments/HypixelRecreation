@@ -18,7 +18,7 @@ public class NPCWalter extends HypixelNPC implements NPCAbiphoneTrait {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Walter", "§e§lCLICK"};
+				return new String[]{"Walter", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -57,9 +57,9 @@ public class NPCWalter extends HypixelNPC implements NPCAbiphoneTrait {
 	public DialogueSet[] dialogues(HypixelPlayer player) {
 		return Stream.of(
 				DialogueSet.builder()
-						.key("none").lines(new String[]{
-								"With the right tools, you can get through anything!",
-						}).build()
+						.key("none").lines(
+								"With the right tools, you can get through anything!"
+						).build()
 		).toArray(DialogueSet[]::new);
 	}
 

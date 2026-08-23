@@ -50,11 +50,11 @@ public class EntityLostPickaxe extends LivingEntity {
 
 			boolean hasFound = player.getMissionData().hasCompleted(MissionFindLazyMinerPickaxe.class);
 			if (hasFound) {
-				player.sendMessage("§cYou have already picked that up!");
+				player.sendMessage("<c>You have already picked that up!");
 				return;
 			}
 
-			player.sendMessage("§aYou have found the Lazy Miner's Pickaxe!");
+			player.sendMessage("<a>You have found the Lazy Miner's Pickaxe!");
 
 			data.endMission(MissionFindLazyMinerPickaxe.class);
 

@@ -4,10 +4,10 @@ items:
     name: "Campfire Talisman"
     rarity: COMMON
     lore:
-      - "§7Heal §c4❤ §7 per second while burning"
+      - "<7>Heal <c>4❤ <7> per second while burning"
       - " "
-      - "§6Trial of Fire II"
-      - "§8§o\"Fire guy!\""
+      - "<6>Trial of Fire II"
+      - "<8><o>\"Fire guy!\""
     components:
       - id: SKULL_HEAD
         texture: 3ada666715bfd2aa9fbd81daef59b9fe1c96c4fa0d08dbc72eae5633177dbf88
@@ -15,7 +15,7 @@ items:
       - id: DEFAULT_SOULBOUND
         coop_allowed: false
       - id: CUSTOM_DISPLAY_NAME
-        name: "§fCampfire Initiate Badge I"
+        name: "<f>Campfire Initiate Badge I"
 
   - id: CAMPFIRE_TALISMAN_2
     material: PLAYER_HEAD

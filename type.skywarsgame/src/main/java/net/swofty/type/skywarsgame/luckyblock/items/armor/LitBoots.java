@@ -1,8 +1,5 @@
 package net.swofty.type.skywarsgame.luckyblock.items.armor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.instance.Instance;
@@ -11,12 +8,12 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 import java.time.Duration;
-import java.util.List;
 
 public class LitBoots implements LuckyBlockArmor {
 
@@ -47,31 +44,21 @@ public class LitBoots implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.LEATHER_BOOTS)
-                .customName(Component.text("Lit Boots", NamedTextColor.RED)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Leave a ", NamedTextColor.GRAY)
-                                .append(Component.text("fire trail", NamedTextColor.RED))
-                                .append(Component.text(" behind you.", NamedTextColor.GRAY))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Grants ", NamedTextColor.GRAY)
-                                .append(Component.text("Fire Resistance", NamedTextColor.GOLD))
-                                .append(Component.text(".", NamedTextColor.GRAY))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.LEATHER_BOOTS, """
+                        <c>Lit Boots
+
+                        <7>Leave a <c>fire trail<7> behind you.
+                        <7>Grants <6>Fire Resistance<7>.
+
+                        <6><l>LUCKY BLOCK ITEM
+                        """)
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }
 
     @Override
     public void onEquip(SkywarsPlayer player) {
-        player.sendMessage(Component.text("Your feet are on fire!", NamedTextColor.RED));
+        player.sendMessage("<c>Your feet are on fire!");
         applyFireResistance(player);
     }
 
@@ -108,12 +95,12 @@ public class LitBoots implements LuckyBlockArmor {
 
         Block currentBlock = instance.getBlock(blockAbove);
 
-        if (!currentBlock.isAir()) {
+        if (!currentBlock.air()) {
             return;
         }
 
         Block blockBelow = instance.getBlock(blockAbove.add(0, -1, 0));
-        if (!blockBelow.isSolid()) {
+        if (!blockBelow.solid()) {
             return;
         }
 

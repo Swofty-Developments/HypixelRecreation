@@ -18,8 +18,8 @@ public class SoulWellHologramManager {
 
     public static void spawnHologramForPlayer(HypixelPlayer player) {
         String[] lines = new String[]{
-                "§bSoul Well",
-                "§e§lRIGHT CLICK"
+                "<b>Soul Well",
+                "<e><l>RIGHT CLICK"
         };
 
         PlayerHolograms.ExternalPlayerHologram externalHologram = PlayerHolograms.ExternalPlayerHologram.builder()
@@ -29,8 +29,8 @@ public class SoulWellHologramManager {
                 .instance(player.getInstance())
                 .spacing(0.3)
                 .displayFunction(p -> new String[]{
-                        "§bSoul Well",
-                        "§e§lRIGHT CLICK"
+                        "<b>Soul Well",
+                        "<e><l>RIGHT CLICK"
                 })
                 .build();
 

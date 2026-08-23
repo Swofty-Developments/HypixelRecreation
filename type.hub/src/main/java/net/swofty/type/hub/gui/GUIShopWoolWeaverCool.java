@@ -1,7 +1,7 @@
 package net.swofty.type.hub.gui;
 
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.gui.ShopView;
@@ -22,7 +22,9 @@ public class GUIShopWoolWeaverCool extends ShopView {
     protected void layoutCustom(ViewLayout<State> layout, State state, ViewContext ctx) {
         super.layoutCustom(layout, state, ctx);
         layout.slot(45, (s, c) -> {
-            return ItemStackCreator.getStack("§aPrevious Page", Material.ARROW, 1, "§ePage 1");
+            return ItemStacks.item(Material.ARROW, """
+                    <a>Previous Page
+                    <e>Page 1""");
         }, ((stateClickContext, context) -> {
             context.pop();
         }));

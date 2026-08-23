@@ -13,7 +13,7 @@ public class NPCDoormanDave extends HypixelNPC {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
 				return new String[]{
-						"§eDoorman Dave",
+						"<e>Doorman Dave",
 				};
 			}
 

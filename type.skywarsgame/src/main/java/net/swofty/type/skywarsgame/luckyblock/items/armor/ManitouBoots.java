@@ -1,13 +1,12 @@
 package net.swofty.type.skywarsgame.luckyblock.items.armor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.color.Color;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 
@@ -39,35 +38,22 @@ public class ManitouBoots implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.LEATHER_BOOTS)
-                .customName(Component.text("Manitou Boots", NamedTextColor.WHITE)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Protection I", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Fire Protection II", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Feather Falling III", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Unbreaking III", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Blast Protection II", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Projectile Protection I", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Thorns I", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Depth Strider III", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Blessed by the Great Spirit", NamedTextColor.DARK_GRAY)
-                                .decoration(TextDecoration.ITALIC, true),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.LEATHER_BOOTS,
+                        Text.of("<f>Manitou Boots"),
+                        List.of(
+                                Text.empty(),
+                                Text.of("<7>Protection I"),
+                                Text.of("<7>Fire Protection II"),
+                                Text.of("<7>Feather Falling III"),
+                                Text.of("<7>Unbreaking III"),
+                                Text.of("<7>Blast Protection II"),
+                                Text.of("<7>Projectile Protection I"),
+                                Text.of("<7>Thorns I"),
+                                Text.of("<7>Depth Strider III"),
+                                Text.empty(),
+                                Text.of("<8><o>Blessed by the Great Spirit"),
+                                Text.empty(),
+                                Text.of("<6><l>LUCKY BLOCK ITEM")))
                 .set(DataComponents.DYED_COLOR, new Color(255, 255, 255))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();

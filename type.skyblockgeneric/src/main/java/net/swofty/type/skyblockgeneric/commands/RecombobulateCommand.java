@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.commands;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.skyblockgeneric.item.ItemAttributeHandler;
@@ -21,11 +22,11 @@ public class RecombobulateCommand extends HypixelCommand {
             ((SkyBlockPlayer) sender).updateItem(PlayerItemOrigin.MAIN_HAND, (item) -> {
                 ItemAttributeHandler itemAttributeHandler = item.getAttributeHandler();
                 if (itemAttributeHandler.isPet()) {
-                    sender.sendMessage("§cPets cannot be recombobulated!");
+                    sender.sendMessage("<c>Pets cannot be recombobulated!");
                     return;
                 }
                 itemAttributeHandler.setRecombobulated(!itemAttributeHandler.isRecombobulated());
-                sender.sendMessage("§aRecombobulated: §d" + itemAttributeHandler.isRecombobulated());
+                sender.sendMessage(Text.of("<a>Recombobulated: <d>{}", itemAttributeHandler.isRecombobulated()));
             });
         });
     }

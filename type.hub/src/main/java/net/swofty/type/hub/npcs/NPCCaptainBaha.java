@@ -22,7 +22,7 @@ public class NPCCaptainBaha extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6Captain Baha", "§e§lCLICK"};
+                return new String[]{"<6>Captain Baha", "<e><l>CLICK"};
             }
 
             @Override
@@ -98,19 +98,19 @@ public class NPCCaptainBaha extends HypixelNPC {
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("first-interaction").lines(new String[]{
-                                "I was about to set sail, but this §6Ship §fis missing its §cengine§f!",
-                                "Maybe §3Fisherman §fGerald knows where it is?",
-                        }).build(),
+                        .key("first-interaction").lines(
+                                "I was about to set sail, but this <6>Ship <f>is missing its <c>engine<f>!",
+                                "Maybe <3>Fisherman <f>Gerald knows where it is?"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("rust-ship-engine").lines(new String[]{
-                                "Ahoy, is that the §cRusty Ship Engine§f?"
-                        }).build(),
+                        .key("rust-ship-engine").lines(
+                                "Ahoy, is that the <c>Rusty Ship Engine<f>?"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-yes").lines(new String[]{
-                                "Excellent! I'm the captain of this §6Ship§f, which means I oversee everything from repairs to navigation.",
-                                "Apply that §cRusty Ship Engine §fin the §6Engine §fslot by clicking the engine in your inventory!"
-                        }).build()
+                        .key("dialogue-yes").lines(
+                                "Excellent! I'm the captain of this <6>Ship<f>, which means I oversee everything from repairs to navigation.",
+                                "Apply that <c>Rusty Ship Engine <f>in the <6>Engine <f>slot by clicking the engine in your inventory!"
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

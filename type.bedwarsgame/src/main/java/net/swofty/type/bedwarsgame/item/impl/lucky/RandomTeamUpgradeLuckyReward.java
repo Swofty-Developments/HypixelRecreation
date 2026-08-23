@@ -20,7 +20,7 @@ public class RandomTeamUpgradeLuckyReward extends LuckyReward {
             .filter(upgrade -> upgrade.getNextTier(player.getGame(), player.getTeamKey()) != null)
             .toList();
         if (upgrades.isEmpty()) {
-            player.sendMessage("§cYour team has maxed every upgrade.");
+            player.sendMessage("<c>Your team has maxed every upgrade.");
             return;
         }
         TeamUpgrade upgrade = upgrades.get(ThreadLocalRandom.current().nextInt(upgrades.size()));
@@ -29,7 +29,7 @@ public class RandomTeamUpgradeLuckyReward extends LuckyReward {
         upgrade.applyEffect(player.getGame(), player.getTeamKey(), nextLevel);
         player.getGame().getPlayersOnTeam(player.getTeamKey()).forEach(teammate -> {
             teammate.setTag(upgrade.getId().levelTag(), nextLevel);
-            teammate.sendMessage("§aLucky Block upgraded §6" + upgrade.getName() + " " + nextLevel + "§a!");
+            teammate.sendMessage("<a>Lucky Block upgraded <6>{} {}<a>!", upgrade.getName(), nextLevel);
         });
     }
 }

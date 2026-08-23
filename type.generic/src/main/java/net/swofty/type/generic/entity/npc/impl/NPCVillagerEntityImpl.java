@@ -6,6 +6,7 @@ import net.minestom.server.entity.*;
 import net.minestom.server.entity.metadata.villager.VillagerMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.hologram.PlayerHolograms;
 import net.swofty.type.generic.entity.npc.NPCMovementController;
 import net.swofty.type.generic.entity.npc.configuration.VillagerConfiguration;
@@ -116,7 +117,9 @@ public class NPCVillagerEntityImpl extends EntityCreature implements NPCViewable
             setPose(config.pose(viewer));
         }
 
-        String[] newHolograms = config.holograms(viewer);
+        String[] newHolograms = config.hologramTexts(viewer).stream()
+                .map(Text::serialize)
+                .toArray(String[]::new);
         if (!Arrays.equals(newHolograms, holograms)) {
             PlayerHolograms.updateExternalPlayerHologramText(holo, newHolograms);
             this.holograms = newHolograms;

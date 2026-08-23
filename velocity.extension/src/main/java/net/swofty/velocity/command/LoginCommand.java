@@ -5,6 +5,7 @@ import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.config.ConfigProvider;
+import net.swofty.commons.text.Text;
 import net.swofty.velocity.SkyBlockVelocity;
 import net.swofty.velocity.data.AuthenticationDatabase;
 import net.swofty.velocity.gamemanager.TransferHandler;
@@ -29,23 +30,23 @@ public class LoginCommand implements SimpleCommand {
 
         String[] args = invocation.arguments();
         if (args.length != 1) {
-            player.sendPlainMessage("§cIn the Minecraft chat, type §6/login <password>§c.");
-            player.sendPlainMessage("§cIt is not a command, it's just a message. Nobody else can see it.");
+            player.sendMessage(Text.of("<c>In the Minecraft chat, type <6>/login \\<password><c>."));
+            player.sendMessage(Text.of("<c>It is not a command, it's just a message. Nobody else can see it."));
             return;
         }
 
         AuthenticationDatabase.AuthenticationData data = new AuthenticationDatabase(player.getUniqueId()).getAuthenticationData();
         if (data == null) {
-            player.sendPlainMessage("§cYou must do §6/register <password> <password> §cfirst!");
+            player.sendMessage(Text.of("<c>You must do <6>/register \\<password> \\<password> <c>first!"));
             return;
         }
 
         if (data.matches(args[0])) {
             SkyBlockVelocity.getUnauthenticated().remove(player.getUniqueId());
-            player.sendPlainMessage("§aYou have successfully logged in!");
+            player.sendMessage(Text.of("<a>You have successfully logged in!"));
             new TransferHandler(player).transferTo(ServerType.PROTOTYPE_LOBBY);
         } else {
-            player.sendPlainMessage("§cYour password is incorrect.");
+            player.sendMessage(Text.of("<c>Your password is incorrect."));
         }
     }
 }

@@ -1,56 +1,60 @@
 package net.swofty.commons.punishment;
 
-import net.kyori.adventure.text.Component;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 
 public final class PunishmentMessages {
     private PunishmentMessages() {}
 
-    public static Component banMessage(ActivePunishment punishment) {
+    public static Text banMessage(ActivePunishment punishment) {
         long expiresAt = punishment.expiresAt();
         PunishmentReason reason = punishment.reason();
         String banId = punishment.banId();
 
-        String header;
-        if (expiresAt <= 0) {
-            header = "§cYou are permanently banned from this server!\n";
-        } else {
-            long timeLeft = expiresAt - System.currentTimeMillis();
-            String prettyTimeLeft = StringUtility.formatTimeLeft(timeLeft);
-            header = "§cYou are temporarily banned for §f" + prettyTimeLeft + " §cfrom this server!\n";
-        }
+        Text header = expiresAt <= 0
+                ? Text.of("<c>You are permanently banned from this server!")
+                : Text.of("<c>You are temporarily banned for <f>{:time} <c>from this server!",
+                        expiresAt - System.currentTimeMillis());
 
-        String findOutMore = "";
-        if (reason.getBanType() != null && reason.getBanType().getUrl() != null) {
-            findOutMore = "§7Find out more: §b" + reason.getBanType().getUrl() + "\n";
-        }
+        Text findOutMore = reason.getBanType() != null && reason.getBanType().getUrl() != null
+                ? Text.of("\n<7>Find out more: <b>{}", reason.getBanType().getUrl())
+                : Text.empty();
 
-        String footer = "§7Sharing your Ban ID may affect the processing of your appeal!";
+        return Text.of("""
+                {0}
 
-        return Component.text(header + "\n§7Reason: §f" + reason.getReasonString() + "\n" + findOutMore + "\n§7Ban ID: §f" + banId + "\n" + footer);
+                <7>Reason: <f>{1}{2}
+
+                <7>Ban ID: <f>{3}
+                <7>Sharing your Ban ID may affect the processing of your appeal!\
+                """, header, reason.getReasonString(), findOutMore, banId);
     }
 
-    public static Component muteMessage(ActivePunishment punishment) {
+    public static Text muteMessage(ActivePunishment punishment) {
         long expiresAt = punishment.expiresAt();
         PunishmentReason reason = punishment.reason();
+        String reasonString = reason.getReasonString();
 
-        String line = "\n§c§m                                                     §r\n";
-
-        String header;
-        String time;
+        Text header;
+        Text expiry;
         if (expiresAt <= 0) {
-            header = "§cYou are permanently muted on this server!\n";
-            time = "";
+            header = Text.of("<c>You are permanently muted on this server!");
+            expiry = Text.empty();
         } else {
             long timeLeft = expiresAt - System.currentTimeMillis();
-            String prettyTimeLeft = StringUtility.formatTimeLeft(timeLeft);
-            header = "§cYou are currently muted for " + reason.getReasonString() + "\n";
-            time = "§7Your mute will expire in §c" + prettyTimeLeft + "\n\n";
+            header = Text.of("<c>You are currently muted for {}", reasonString);
+            expiry = Text.of("\n<7>Your mute will expire in <c>{:time}\n", timeLeft);
         }
 
-        String reasonLine = "§7Reason: §f" + reason.getReasonString() + "\n";
-        String urlInfo = "§7Find out more here: §fwww.hypixel.net/mutes\n";
-        String footer = "§7Mute ID: §f" + punishment.banId();
-        return Component.text(line + header + reasonLine + time + urlInfo + footer + line);
+        String rule = " ".repeat(53);
+
+        return Text.of("""
+
+                <c><m>{0}</m>
+                {1}
+                <7>Reason: <f>{2}{3}
+                <7>Find out more here: <f>www.hypixel.net/mutes
+                <7>Mute ID: <f>{4}
+                <c><m>{0}</m>
+                """, rule, header, reasonString, expiry, punishment.banId());
     }
 }

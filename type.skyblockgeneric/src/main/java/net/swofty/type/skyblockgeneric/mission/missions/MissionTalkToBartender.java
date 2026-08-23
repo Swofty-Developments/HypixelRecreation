@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions;
 
+
 import net.swofty.type.skyblockgeneric.mission.MissionData;
 import net.swofty.type.skyblockgeneric.mission.SkyBlockMission;
 import net.swofty.type.skyblockgeneric.region.RegionType;
@@ -28,7 +29,7 @@ public class MissionTalkToBartender extends SkyBlockMission {
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
         //TODO move bartender to the bar
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§6100 §7Coins"))).forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<6>100 <7>Coins"))).forEach(player::sendMessage);
         player.addCoins(100);
     }
 

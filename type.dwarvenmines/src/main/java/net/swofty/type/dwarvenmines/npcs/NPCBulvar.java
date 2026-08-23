@@ -13,7 +13,7 @@ public class NPCBulvar extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§5Bulvar", "§e§lCLICK"};
+				return new String[]{"<5>Bulvar", "<e><l>CLICK"};
 			}
 
 			@Override

@@ -28,7 +28,7 @@ public class ActionPlayerCommissions implements HypixelEventClass {
 	public void run(PlayerBlockBreakEvent event) {
 		if (!(event.getPlayer() instanceof SkyBlockPlayer player)) return;
 
-		Material brokenMaterial = event.getBlock().registry().material();
+		Material brokenMaterial = event.getBlock().material();
 		if (brokenMaterial == null) return;
 
 		Objective.BlockTarget target = null;
@@ -82,6 +82,6 @@ public class ActionPlayerCommissions implements HypixelEventClass {
 	}
 
 	private static void onCommissionComplete(SkyBlockPlayer player, Commission commission) {
-		player.sendMessage("§a§l" + commission.name + " §eCommission Complete! Visit the King to claim your rewards!");
+		player.sendMessage("<a><l>{} </l><e>Commission Complete! Visit the King to claim your rewards!", commission.name);
 	}
 }

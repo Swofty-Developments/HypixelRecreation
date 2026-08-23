@@ -5,8 +5,9 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -31,17 +32,14 @@ public class GUIBlocks extends HypixelInventoryGUI {
         set(new GUIItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§9Blocks",
-                        Material.BOOK,
-                        1,
-                        "§8Block Classification",
-                        "",
-                        "§7These blocks are affected by: ",
-                        "§8 - §6☘ Block Fortune",
-                        "§8 - §6☘ Mining Fortune",
-                        "§8 - §e▚ Mining Spread"
-                );
+                return ItemStacks.item(Material.BOOK, """
+                        <9>Blocks
+                        <8>Block Classification
+
+                        <7>These blocks are affected by:\s
+                        <8> - <6>☘ Block Fortune
+                        <8> - <6>☘ Mining Fortune
+                        <8> - <e>▚ Mining Spread""");
             }
         });
 
@@ -54,26 +52,26 @@ public class GUIBlocks extends HypixelInventoryGUI {
             set(new GUIItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    List<String> lore = new ArrayList<>();
+                    List<Text> lore = new ArrayList<>();
 
-                    lore.add("§8Block");
+                    lore.add(Text.of("<8>Block"));
 
                     if (block.getBreakingPower() > 0 || block.getBlockStrength() > 0) {
-                        lore.add("");
-                        lore.add("§7Properties");
+                        lore.add(Text.empty());
+                        lore.add(Text.of("<7>Properties"));
                         if (block.getBreakingPower() > 0) {
-                            lore.add("§7 Breaking Power: §2" + block.getBreakingPower());
+                            lore.add(Text.of("<7> Breaking Power: <2>{}", block.getBreakingPower()));
                         }
                         if (block.getBlockStrength() > 0) {
-                            lore.add("§7 Block Strength: §e" + block.getBlockStrength());
+                            lore.add(Text.of("<7> Block Strength: <e>{}", block.getBlockStrength()));
                         }
                     }
 
-                    return ItemStackCreator.getStack(
-                            "§9" + block.getDisplayName(),
+                    return ItemStacks.item(
                             block.getMaterial(),
                             1,
-                            lore.toArray(new String[0])
+                            Text.of("<9>{}", block.getDisplayName()),
+                            lore
                     );
                 }
             });

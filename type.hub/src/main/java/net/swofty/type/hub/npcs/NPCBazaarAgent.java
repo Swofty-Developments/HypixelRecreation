@@ -19,7 +19,7 @@ public class NPCBazaarAgent extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6Bazaar Agent", "§e§lCLICK"};
+                return new String[]{"<6>Bazaar Agent", "<e><l>CLICK"};
             }
 
             @Override
@@ -61,9 +61,9 @@ public class NPCBazaarAgent extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
-                                "§cYou need SkyBlock Level 7 to access this feature!"
-                        }).build()
+                        .key("hello").lines(
+                                "<c>You need SkyBlock Level 7 to access this feature!"
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

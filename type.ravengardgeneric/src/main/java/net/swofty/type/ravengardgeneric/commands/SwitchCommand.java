@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @CommandParameters(
@@ -48,14 +49,16 @@ public class SwitchCommand extends HypixelCommand {
             String name = context.get(worldArg);
 
             if (!available().contains(name)) {
-                player.sendMessage("§cNo capture named §f" + name + "§c. Available: §f"
-                        + String.join("§7, §f", available()));
+                String options = available().stream()
+                        .map(option -> "<f>" + option)
+                        .collect(Collectors.joining("<7>, "));
+                player.sendMessage("<c>No capture named <f>{}<c>. Available: " + options, name);
                 return;
             }
 
             Instance instance = loaded.get(name);
             if (instance == null) {
-                player.sendMessage("§7Loading §f" + name + "§7...");
+                player.sendMessage("<7>Loading <f>{}<7>...", name);
                 try {
                     InstanceContainer source = MinecraftServer.getInstanceManager().createInstanceContainer();
                     instance = HypixelWorldLoader.loadFrom(CAPTURES.resolve(name + EXTENSION),
@@ -63,28 +66,31 @@ public class SwitchCommand extends HypixelCommand {
                     loaded.put(name, instance);
                 } catch (IOException exception) {
                     Logger.error(exception, "Failed to load capture {}", name);
-                    player.sendMessage("§cFailed to load §f" + name + "§c: " + exception.getMessage());
+                    player.sendMessage("<c>Failed to load <f>{}<c>: {}", name, exception.getMessage());
                     return;
                 }
             }
 
             if (player.getInstance() == instance) {
-                player.sendMessage("§7You are already in §f" + name + "§7.");
+                player.sendMessage("<7>You are already in <f>{}<7>.", name);
                 return;
             }
 
             player.setInstance(instance, player.getPosition()).thenRun(() ->
-                    player.sendMessage("§aSwitched to §f" + name + "§a."));
+                    player.sendMessage("<a>Switched to <f>{}<a>.", name));
         }, worldArg);
 
         command.addSyntax((sender, context) -> {
             HypixelPlayer player = (HypixelPlayer) sender;
             List<String> names = available();
             if (names.isEmpty()) {
-                player.sendMessage("§cNo captures found in " + CAPTURES + ".");
+                player.sendMessage("<c>No captures found in {}.", CAPTURES);
                 return;
             }
-            player.sendMessage("§7Captures: §f" + String.join("§7, §f", names));
+            String list = names.stream()
+                    .map(option -> "<f>" + option)
+                    .collect(Collectors.joining("<7>, "));
+            player.sendMessage("<7>Captures: " + list);
         });
     }
 

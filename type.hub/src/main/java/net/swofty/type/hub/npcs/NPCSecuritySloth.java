@@ -1,7 +1,5 @@
 package net.swofty.type.hub.npcs;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
@@ -16,7 +14,7 @@ public class NPCSecuritySloth extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§a§lSTAY SAFE!", "§cSecurity Sloth", "§e§lCLICK"};
+                return new String[]{"<a><l>STAY SAFE!", "<c>Security Sloth", "<e><l>CLICK"};
             }
 
             @Override
@@ -45,8 +43,7 @@ public class NPCSecuritySloth extends HypixelNPC {
         if (isInDialogue(e.player())) return;
 
         setDialogue(e.player(), "hello").thenAccept(key -> {
-            e.player().sendMessage(Component.text("§eGeneral Security Support Article §b§lCLICK HERE")
-                    .clickEvent(ClickEvent.openUrl("https://support.hypixel.net/hc/en-us/articles/360019538060-How-to-Keep-Your-Account-Secure-on-Hypixel")));
+            e.player().sendMessage("<click:url:'https://support.hypixel.net/hc/en-us/articles/360019538060-How-to-Keep-Your-Account-Secure-on-Hypixel'><e>General Security Support Article <b><l>CLICK HERE");
         });
     }
 
@@ -54,10 +51,10 @@ public class NPCSecuritySloth extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "Downloading suspicious mods or visiting untrusted discord servers can put your account at risk. It is upto you to keep your account secure!",
                                 "Here are some helpful support articles that will help you keep your account more secure and avoid losing valuable progress or items."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

@@ -1,19 +1,19 @@
 package net.swofty.type.skywarslobby.gui;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSoulWellUpgrades;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skywarslobby.soulwell.SoulWellMessages;
 import net.swofty.type.skywarslobby.soulwell.SoulWellUpgrade;
 
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
 public class GUISoulWellConfirm extends StatelessView {
@@ -30,7 +30,7 @@ public class GUISoulWellConfirm extends StatelessView {
 
     @Override
     public ViewConfiguration<DefaultState> configuration() {
-        return new ViewConfiguration<>(Component.text("Are you sure?"), InventoryType.CHEST_3_ROW);
+        return new ViewConfiguration<>("Are you sure?", InventoryType.CHEST_3_ROW);
     }
 
     @Override
@@ -46,40 +46,34 @@ public class GUISoulWellConfirm extends StatelessView {
 
         layout.slot(13, (_, __) -> {
             String colorCode = upgrade.color();
-            return ItemStackCreator.getStack(
-                    "§" + colorCode + upgrade.name() + " " + StringUtility.getAsRomanNumeral(newLevel),
-                    upgrade.material(),
-                    1,
-                    "§8Permanent Upgrade",
-                    "",
-                    "§7" + upgrade.baseDescription(),
-                    "",
-                    tier.getEffectChangeLine(),
-                    "",
-                    "§7Cost: §6" + formattedCost
-            );
+            return ItemStacks.item(upgrade.material(), 1,
+                    Text.of("<color:{}>{} {:roman}", colorCode, upgrade.name(), newLevel),
+                    List.of(
+                            Text.of("<8>Permanent Upgrade"),
+                            Text.empty(),
+                            Text.of("<7>{}", upgrade.baseDescription()),
+                            Text.empty(),
+                            tier.getEffectChangeLine(),
+                            Text.empty(),
+                            Text.of("<7>Cost: <6>{}", formattedCost)
+                    ));
         });
 
         layout.slot(11,
                 (_, __) -> {
                     if (canAfford) {
-                        return ItemStackCreator.getStack(
-                                "§aConfirm",
-                                Material.LIME_TERRACOTTA,
-                                1,
-                                "§7Click to purchase §" + upgrade.color() + upgrade.name(),
-                                "§7for §6" + formattedCost + " Coins§7."
-                        );
+                        return ItemStacks.item(Material.LIME_TERRACOTTA, 1, """
+                                <a>Confirm
+                                <7>Click to purchase {}
+                                <7>for <6>{} Coins<7>.""",
+                                Text.of("<color:{}>{}", upgrade.color(), upgrade.name()), formattedCost);
                     }
-                    return ItemStackCreator.getStack(
-                            "§cCannot Afford",
-                            Material.GRAY_TERRACOTTA,
-                            1,
-                            "§7You need §6" + formattedCost + " Coins",
-                            "§7to purchase this upgrade.",
-                            "",
-                            "§cYou don't have enough coins!"
-                    );
+                    return ItemStacks.item(Material.GRAY_TERRACOTTA, 1, """
+                            <c>Cannot Afford
+                            <7>You need <6>{} Coins
+                            <7>to purchase this upgrade.
+
+                            <c>You don't have enough coins!""", formattedCost);
                 },
                 (_, c) -> {
                     SkywarsDataHandler dataHandler = SkywarsDataHandler.getUser(c.player());
@@ -88,7 +82,7 @@ public class GUISoulWellConfirm extends StatelessView {
                     DatapointLong coinsDatapoint = dataHandler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class);
                     long currentCoins = coinsDatapoint.getValue();
                     if (currentCoins < tier.cost()) {
-                        c.player().sendMessage("§cYou don't have enough coins to purchase this upgrade!");
+                        c.player().sendMessage("<c>You don't have enough coins to purchase this upgrade!");
                         c.session(Object.class).refresh();
                         return;
                     }
@@ -106,12 +100,9 @@ public class GUISoulWellConfirm extends StatelessView {
         );
 
         layout.slot(15,
-                (_, __) -> ItemStackCreator.getStack(
-                        "§cCancel",
-                        Material.RED_TERRACOTTA,
-                        1,
-                        "§7Click to go back."
-                ),
+                (_, __) -> ItemStacks.item(Material.RED_TERRACOTTA, 1, """
+                        <c>Cancel
+                        <7>Click to go back."""),
                 (_, c) -> c.replace(new GUISoulWell())
         );
     }

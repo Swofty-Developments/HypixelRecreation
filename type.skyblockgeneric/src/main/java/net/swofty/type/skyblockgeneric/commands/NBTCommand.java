@@ -3,6 +3,7 @@ package net.swofty.type.skyblockgeneric.commands;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.tag.Tag;
 import net.swofty.commons.skyblock.item.attribute.ItemAttribute;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -34,7 +35,7 @@ public class NBTCommand extends HypixelCommand {
                 String value = item.getTag(Tag.String(key));
                 if (value != null) {
                     values.set(key + ": " + value + "\n");
-                    sender.sendMessage(key + ": " + value);
+                    sender.sendMessage(Text.of("{}: {}", key, value));
                 }
             }
 
@@ -50,8 +51,8 @@ public class NBTCommand extends HypixelCommand {
 
                     for (int i = 0; i < oldValues.length; i++) {
                         if (!oldValues[i].equals(newValues[i])) {
-                            sender.sendMessage("Old: " + oldValues[i]);
-                            sender.sendMessage("New: " + newValues[i]);
+                            sender.sendMessage(Text.of("Old: {}", oldValues[i]));
+                            sender.sendMessage(Text.of("New: {}", newValues[i]));
                         }
                     }
 

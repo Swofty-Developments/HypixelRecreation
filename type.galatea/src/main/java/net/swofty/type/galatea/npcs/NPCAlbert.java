@@ -12,7 +12,7 @@ public class NPCAlbert extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bAlbert", "§e§lCLICK"};
+                return new String[]{"<b>Albert", "<e><l>CLICK"};
             }
 
             @Override

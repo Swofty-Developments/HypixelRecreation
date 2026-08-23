@@ -14,7 +14,7 @@ public class NPCKaris extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Karis", "§e§lCLICK"};
+				return new String[]{"Karis", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -49,12 +49,12 @@ public class NPCKaris extends HypixelNPC {
 	@Override
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return Stream.of(
-			DialogueSet.builder().key("idle").lines(new String[]{
-				"§fThe §aAbiphone Basic §fis the best model for beginners.",
-				"§fBetween you and me, if you ever want to upgrade it you should travel to the §cCrimson Isle§f.",
-				"§fThere's this guy named §6Udel §fthere - he created the §aAbiphone§f. Forgot to patent it, though.",
-				"§fHe sells a whole bunch of high-end Abiphones with more features, you should check it out sometime!"
-			}).build()
+			DialogueSet.builder().key("idle").lines(
+				"<f>The <a>Abiphone Basic <f>is the best model for beginners.",
+				"<f>Between you and me, if you ever want to upgrade it you should travel to the <c>Crimson Isle<f>.",
+				"<f>There's this guy named <6>Udel <f>there - he created the <a>Abiphone<f>. Forgot to patent it, though.",
+				"<f>He sells a whole bunch of high-end Abiphones with more features, you should check it out sometime!"
+			).build()
 		).toArray(DialogueSet[]::new);
 	}
 }

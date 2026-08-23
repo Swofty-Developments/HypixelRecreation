@@ -13,7 +13,7 @@ public class NPCKingName extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§6§lKing Name", "§e§lCLICK"};
+				return new String[]{"<6><l>King Name", "<e><l>CLICK"};
 			}
 
 			@Override

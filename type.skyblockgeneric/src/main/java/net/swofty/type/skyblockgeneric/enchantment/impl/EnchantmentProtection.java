@@ -17,7 +17,7 @@ public class EnchantmentProtection implements Ench, EnchFromTable {
 
     @Override
     public String getDescription(int level) {
-        return "Grants §a+" + (level * 4) + " Defense§7.";
+        return "Grants <a>+" + level * 4 + " Defense<7>.";
     }
 
     @Override

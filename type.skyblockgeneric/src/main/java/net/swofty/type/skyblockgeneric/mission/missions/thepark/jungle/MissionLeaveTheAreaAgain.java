@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.thepark.jungle;
 
+
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.skyblockgeneric.event.custom.PlayerRegionChangeEvent;
 import net.swofty.type.skyblockgeneric.mission.MissionData;

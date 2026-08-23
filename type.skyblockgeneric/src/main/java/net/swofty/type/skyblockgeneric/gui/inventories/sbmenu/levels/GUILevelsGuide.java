@@ -1,24 +1,21 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.levels.LevelsGuide;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class GUILevelsGuide extends StatelessView {
     private final LevelsGuide guide;
@@ -39,8 +36,8 @@ public class GUILevelsGuide extends StatelessView {
 
     @Override
     public ViewConfiguration<DefaultState> configuration() {
-        return ViewConfiguration.withString(
-            (state, ctx) -> I18n.string("gui_sbmenu.levels.guide.title", ctx.player().getLocale(), Component.text(StringUtility.toNormalCase(guide.name()))),
+        return ViewConfiguration.withText(
+            (state, ctx) -> Text.key("gui_sbmenu.levels.guide.title", StringUtility.toNormalCase(guide.name())),
                 InventoryType.CHEST_6_ROW);
     }
 
@@ -51,12 +48,12 @@ public class GUILevelsGuide extends StatelessView {
 
         // Border slots with colored glass
         for (int slot : BORDER_SLOTS) {
-            layout.slot(slot, ItemStackCreator.createNamedItemStack(guide.getGlassMaterial()));
+            layout.slot(slot, ItemStacks.named(guide.getGlassMaterial(), ""));
         }
 
         // Guide info
-        layout.slot(50, (s, c) -> TranslatableItemStackCreator.getStack("gui_sbmenu.levels.guide.info", Material.REDSTONE_TORCH, 1,
-                "gui_sbmenu.levels.guide.info.lore"));
+        layout.slot(50, (s, c) -> ItemStacks.item(Material.REDSTONE_TORCH, 1, Text.key("gui_sbmenu.levels.guide.info"),
+                Text.keyLines("gui_sbmenu.levels.guide.info.lore")));
 
         // Task items
         LevelsGuide.TasksSet[] tasks = guide.getTasksSets().toArray(new LevelsGuide.TasksSet[0]);
@@ -66,17 +63,16 @@ public class GUILevelsGuide extends StatelessView {
 
             layout.slot(slot, (s, c) -> {
                 SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-                Locale l = player.getLocale();
-                List<String> lore = new ArrayList<>();
+                List<Text> lore = new ArrayList<>();
 
                 if (task.getCauses().size() > 1) {
-                    lore.add(I18n.string("gui_sbmenu.levels.guide.tasks", l, Component.text(String.valueOf(task.getCauses().size()))));
-                    lore.add("");
+                    lore.add(Text.key("gui_sbmenu.levels.guide.tasks", task.getCauses().size()));
+                    lore.add(Text.empty());
                 }
 
-                lore.addAll(task.getDisplay().apply(player));
+                task.getDisplay().apply(player).forEach(line -> lore.add(Text.parse(line)));
 
-                return ItemStackCreator.updateLore(ItemStackCreator.getFromStack(task.getMaterial().build()), lore);
+                return ItemStacks.lore(ItemStacks.copy(task.getMaterial().build()), lore);
             }, (click, c) -> {
                 SkyBlockPlayer player = (SkyBlockPlayer) c.player();
                 player.openView(task.getGuiToOpen());

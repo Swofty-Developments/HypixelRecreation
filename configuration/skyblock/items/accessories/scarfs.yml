@@ -4,11 +4,11 @@ items:
     name: "Scarfs Studies"
     rarity: COMMON
     lore:
-      - "§7Gain §a2% §7more Dungeons class"
-      - "§7experience."
+      - "<7>Gain <a>2% <7>more Dungeons class"
+      - "<7>experience."
       - ""
-      - "§7§7§oThe collection of his studies,"
-      - "§7§obeautiful handwriting!"
+      - "<7><7><o>The collection of his studies,"
+      - "<7><o>beautiful handwriting!"
     components:
       - id: TALISMAN
       - id: SKULL_HEAD
@@ -19,11 +19,11 @@ items:
     name: "Scarfs Thesis"
     rarity: COMMON
     lore:
-      - "§7Gain §a4% §7more Dungeons class"
-      - "§7experience."
+      - "<7>Gain <a>4% <7>more Dungeons class"
+      - "<7>experience."
       - ""
-      - "§7§7§oA research on how to preserve and"
-      - "§7§oenhance class abilities in death."
+      - "<7><7><o>A research on how to preserve and"
+      - "<7><o>enhance class abilities in death."
     components:
       - id: TALISMAN
       - id: SKULL_HEAD
@@ -49,12 +49,12 @@ items:
     name: "Scarfs Grimoire"
     rarity: COMMON
     lore:
-      - "§7Gain §a6% §7more Dungeons class"
-      - "§7experience."
+      - "<7>Gain <a>6% <7>more Dungeons class"
+      - "<7>experience."
       - ""
-      - "§7§7§oDark and powerful spells, includes"
-      - '§7§ohis favorite "Barrier" that his'
-      - "§7§oProfessor taught him."
+      - "<7><7><o>Dark and powerful spells, includes"
+      - '<7><o>his favorite "Barrier" that his'
+      - "<7><o>Professor taught him."
     components:
       - id: TALISMAN
       - id: SKULL_HEAD

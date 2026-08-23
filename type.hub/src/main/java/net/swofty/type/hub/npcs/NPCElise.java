@@ -12,7 +12,7 @@ public class NPCElise extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§dElise", "§e§lCLICK"};
+                return new String[]{"<d>Elise", "<e><l>CLICK"};
             }
 
             @Override

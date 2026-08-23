@@ -1,6 +1,5 @@
 package net.swofty.type.skywarsconfigurator.events;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
@@ -16,10 +15,9 @@ public class ActionPlayerDataSpawn implements HypixelEventClass {
 
         final HypixelPlayer player = (HypixelPlayer) event.getPlayer();
 
-        // Send welcome message
-        player.sendMessage(Component.text("§6§l=== SkyWars Configurator ==="));
-        player.sendMessage(Component.text("§eUse §b/choosemap <mapId> §eto load a map"));
-        player.sendMessage(Component.text("§eUse §b/swconfig §eto configure the map"));
-        player.sendMessage(Component.text("§7Anvil worlds will be automatically converted to Polar format"));
+        player.sendMessage("<6><l>=== SkyWars Configurator ===");
+        player.sendMessage("<e>Use <b>/choosemap \\<mapId> <e>to load a map");
+        player.sendMessage("<e>Use <b>/swconfig <e>to configure the map");
+        player.sendMessage("<7>Anvil worlds will be automatically converted to Polar format");
     }
 }

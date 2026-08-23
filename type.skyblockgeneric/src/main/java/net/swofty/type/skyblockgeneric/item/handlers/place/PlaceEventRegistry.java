@@ -16,7 +16,7 @@ public class PlaceEventRegistry {
     static {
         register("minion", (event, player, item) -> {
             if (!HypixelConst.isIslandServer()) {
-                player.sendMessage("§cYou can only place minions on your island!");
+                player.sendMessage("<c>You can only place minions on your island!");
                 event.setCancelled(true);
                 return;
             }
@@ -30,7 +30,7 @@ public class PlaceEventRegistry {
             IslandMinionData minionData = player.getSkyBlockIsland().getMinionData();
 
             if (minionData.getMinions().size() >= slots) {
-                player.sendMessage("§cYou have reached the maximum amount of minions you can place!");
+                player.sendMessage("<c>You have reached the maximum amount of minions you can place!");
                 event.setCancelled(true);
                 return;
             }
@@ -45,9 +45,8 @@ public class PlaceEventRegistry {
 
             event.setBlock(Block.AIR);
 
-            player.sendMessage(
-                    "§bYou placed a minion! (" + minionData.getMinions().size() + "/" + playerData.getSlots() + ")"
-            );
+            player.sendMessage("<b>You placed a minion! ({}/{})",
+                    minionData.getMinions().size(), playerData.getSlots());
         });
         register("CARROT_CRYSTAL_PLACE", (event, player, item) -> {
 

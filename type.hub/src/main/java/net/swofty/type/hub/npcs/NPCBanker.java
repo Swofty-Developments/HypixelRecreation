@@ -14,7 +14,7 @@ public class NPCBanker extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Banker", "§e§lCLICK"};
+                return new String[]{"Banker", "<e><l>CLICK"};
             }
 
             @Override

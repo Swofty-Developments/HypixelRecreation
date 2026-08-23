@@ -5,6 +5,7 @@ import net.swofty.commons.bedwars.BedWarsModeStats;
 import net.swofty.commons.bedwars.BedwarsLeaderboardMode;
 import net.swofty.commons.bedwars.BedwarsLeaderboardPeriod;
 import net.swofty.commons.bedwars.BedwarsLevelUtil;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarslobby.gui.GUIBedWarsStatistics;
 import net.swofty.type.generic.collectibles.bedwars.prestige.BedWarsPrestigeRenderer;
 import net.swofty.type.generic.data.datapoints.DatapointBedWarsModeStats;
@@ -40,13 +41,13 @@ public class NPCStats extends HypixelNPC {
 					winstreak = modeStats.getWinstreak(BedwarsLeaderboardMode.ALL);
 				}
 				return new String[]{
-						"§6§lBed Wars Profile",
-					"§fYour Level: " + BedWarsPrestigeRenderer.renderBrackets(player, level),
-						"§fProgress: §b" + suffix(progress) + "§7/§a" + suffix(maxExperience),
-						"§fAchievements: §e" + 0 + "§a/" + 0,
-						"§fTotal Wins: §a" + suffix(totalWins),
-						"§fCurrent Winstreak: §a" + suffix(winstreak),
-						"§e§lCLICK FOR STATS",
+						"<6><l>Bed Wars Profile",
+						Text.of("<f>Your Level: {}", BedWarsPrestigeRenderer.renderBrackets(player, level)).serialize(),
+						Text.of("<f>Progress: <b>{}<7>/<a>{}", suffix(progress), suffix(maxExperience)).serialize(),
+						Text.of("<f>Achievements: <e>{}<a>/{}", 0, 0).serialize(),
+						Text.of("<f>Total Wins: <a>{}", suffix(totalWins)).serialize(),
+						Text.of("<f>Current Winstreak: <a>{}", suffix(winstreak)).serialize(),
+						"<e><l>CLICK FOR STATS",
 				};
 			}
 

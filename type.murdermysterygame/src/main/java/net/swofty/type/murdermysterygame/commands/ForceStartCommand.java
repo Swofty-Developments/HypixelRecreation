@@ -23,15 +23,15 @@ public class ForceStartCommand extends HypixelCommand {
             MurderMysteryPlayer player = (MurderMysteryPlayer) sender;
             Game game = TypeMurderMysteryGameLoader.getPlayerGame(player);
             if (game == null) {
-                player.sendMessage("§cYou are not in a game.");
+                player.sendMessage("<c>You are not in a game.");
                 return;
             }
             if (game.getGameStatus() != GameStatus.WAITING) {
-                player.sendMessage("§cYou can only force start a game that is waiting.");
+                player.sendMessage("<c>You can only force start a game that is waiting.");
                 return;
             }
             if (game.getPlayers().size() < 2) {
-                player.sendMessage("§cNeed at least 2 players to start!");
+                player.sendMessage("<c>Need at least 2 players to start!");
                 return;
             }
             game.forceStart();
@@ -43,20 +43,20 @@ public class ForceStartCommand extends HypixelCommand {
             MurderMysteryPlayer player = (MurderMysteryPlayer) sender;
             Game game = TypeMurderMysteryGameLoader.getPlayerGame(player);
             if (game == null) {
-                player.sendMessage("§cYou are not in a game.");
+                player.sendMessage("<c>You are not in a game.");
                 return;
             }
             if (game.getGameStatus() != GameStatus.WAITING) {
-                player.sendMessage("§cYou can only force start a game that is waiting.");
+                player.sendMessage("<c>You can only force start a game that is waiting.");
                 return;
             }
             if (game.getPlayers().size() < 2) {
-                player.sendMessage("§cNeed at least 2 players to start!");
+                player.sendMessage("<c>Need at least 2 players to start!");
                 return;
             }
             int seconds = context.get(secondsArg);
             if (seconds < 1 || seconds > 60) {
-                player.sendMessage("§cSeconds must be between 1 and 60!");
+                player.sendMessage("<c>Seconds must be between 1 and 60!");
                 return;
             }
             game.forceStart(seconds);

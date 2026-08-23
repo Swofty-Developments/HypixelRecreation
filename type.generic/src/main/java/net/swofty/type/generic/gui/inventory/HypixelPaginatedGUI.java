@@ -1,12 +1,12 @@
 package net.swofty.type.generic.gui.inventory;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.gui.inventory.item.GUIQueryItem;
@@ -34,7 +34,13 @@ public abstract class HypixelPaginatedGUI<T> extends HypixelInventoryGUI {
 
     protected abstract void performSearch(HypixelPlayer player, String query, int page, int maxPage);
 
-    protected abstract String getTitle(HypixelPlayer player, String query, int page, PaginationList<T> paged);
+    protected String getTitle(HypixelPlayer player, String query, int page, PaginationList<T> paged) {
+        return "";
+    }
+
+    protected Text getTitleText(HypixelPlayer player, String query, int page, PaginationList<T> paged) {
+        return Text.literal(getTitle(player, query, page, paged));
+    }
 
     protected abstract GUIClickableItem createItemFor(T item, int slot, HypixelPlayer player);
 
@@ -51,7 +57,7 @@ public abstract class HypixelPaginatedGUI<T> extends HypixelInventoryGUI {
                 paged.removeIf(type -> shouldFilterFromSearch(query, type));
             }
 
-            this.title = Component.text(getTitle(player, query, page, paged));
+            this.title = getTitleText(player, query, page, paged);
             latestPaged = paged;
 
             try {
@@ -90,8 +96,9 @@ public abstract class HypixelPaginatedGUI<T> extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack("§aSearch", Material.BIRCH_SIGN, 1, "§7Query: §e" +
-                        (Objects.equals(search, "") ? "None" : search));
+                return ItemStacks.item(Material.BIRCH_SIGN, """
+                        <a>Search
+                        <7>Query: <e>{}""", Objects.equals(search, "") ? "None" : search);
             }
         };
     }
@@ -106,9 +113,8 @@ public abstract class HypixelPaginatedGUI<T> extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                String name = forward ? "§aNext Page" : "§aPrevious Page";
-                String lore = forward ? "§ePage " + (page + 1) : "§ePage " + (page - 1);
-                return ItemStackCreator.getStack(name, Material.ARROW, 1, lore);
+                String block = forward ? "<a>Next Page\n<e>Page {}" : "<a>Previous Page\n<e>Page {}";
+                return ItemStacks.item(Material.ARROW, block, forward ? page + 1 : page - 1);
             }
         };
     }

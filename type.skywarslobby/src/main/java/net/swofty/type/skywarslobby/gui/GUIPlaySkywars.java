@@ -5,10 +5,10 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.ServerType;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skywars.SkywarsGameType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.GameCountCache;
@@ -16,7 +16,6 @@ import net.swofty.type.lobby.GameQueueValidator;
 import net.swofty.type.lobby.LobbyOrchestratorConnector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GUIPlaySkywars extends HypixelInventoryGUI {
@@ -24,7 +23,7 @@ public class GUIPlaySkywars extends HypixelInventoryGUI {
     private final boolean showBothSoloAndDoubles;
 
     public GUIPlaySkywars(SkywarsGameType primaryType, boolean showBothSoloAndDoubles) {
-        super("Play SkyWars - " + primaryType.getDisplayName(), InventoryType.CHEST_4_ROW);
+        super(Text.of("Play SkyWars - {}", primaryType.getDisplayName()), InventoryType.CHEST_4_ROW);
         this.primaryType = primaryType;
         this.showBothSoloAndDoubles = showBothSoloAndDoubles;
     }
@@ -68,20 +67,13 @@ public class GUIPlaySkywars extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 int playersInGame = GameCountCache.getPlayerCount(ServerType.SKYWARS_GAME, type.name());
-                List<String> loreDescription = new ArrayList<>(StringUtility.splitByNewLine(getLoreForType(type)).stream().map(
-                        string -> "§7" + string
-                ).toList());
-                loreDescription.addAll(Arrays.asList(
-                        "§7Players: §a" + playersInGame,
-                        "",
-                        "§eClick to play!"
-                ));
+                List<Text> loreDescription = new ArrayList<>(Text.of("<7>{}", getLoreForType(type)).lines());
+                loreDescription.add(Text.of("<7>Players: <a>{}", playersInGame));
+                loreDescription.add(Text.empty());
+                loreDescription.add(Text.of("<e>Click to play!"));
 
-                return ItemStackCreator.getStack(
-                        "§a" + type.getDisplayName(),
-                        getMaterialForType(type), 1,
-                        loreDescription
-                );
+                return ItemStacks.item(getMaterialForType(type), 1,
+                        Text.of("<a>{}", type.getDisplayName()), loreDescription);
             }
 
             @Override
@@ -106,14 +98,12 @@ public class GUIPlaySkywars extends HypixelInventoryGUI {
         return new GUIClickableItem(slot) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aMap Selector",
-                        Material.OAK_SIGN, 1,
-                        "§7Pick which map you want to play from",
-                        "§7a list of available maps for " + type.getDisplayName() + ".",
-                        "",
-                        "§eClick to browse!"
-                );
+                return ItemStacks.item(Material.OAK_SIGN, 1, """
+                        <a>Map Selector
+                        <7>Pick which map you want to play from
+                        <7>a list of available maps for {}.
+
+                        <e>Click to browse!""", type.getDisplayName());
             }
 
             @Override
@@ -140,10 +130,22 @@ public class GUIPlaySkywars extends HypixelInventoryGUI {
 
     private String getLoreForType(SkywarsGameType type) {
         return switch (type) {
-            case SOLO_NORMAL -> "Classic SkyWars! Gather resources\nfrom your island and center.\nBe the last player standing!";
-            case SOLO_INSANE -> "Insane mode with better loot!\nStronger gear, faster action.\nBe the last player standing!";
-            case DOUBLES_NORMAL -> "Team up with a partner!\nWork together to be the\nlast team standing!";
-            case SOLO_LUCKY_BLOCK -> "Break Lucky Blocks for random\nrewards! Good luck or bad luck?\nBe the last player standing!";
+            case SOLO_NORMAL -> """
+                    Classic SkyWars! Gather resources
+                    from your island and center.
+                    Be the last player standing!""";
+            case SOLO_INSANE -> """
+                    Insane mode with better loot!
+                    Stronger gear, faster action.
+                    Be the last player standing!""";
+            case DOUBLES_NORMAL -> """
+                    Team up with a partner!
+                    Work together to be the
+                    last team standing!""";
+            case SOLO_LUCKY_BLOCK -> """
+                    Break Lucky Blocks for random
+                    rewards! Good luck or bad luck?
+                    Be the last player standing!""";
         };
     }
 

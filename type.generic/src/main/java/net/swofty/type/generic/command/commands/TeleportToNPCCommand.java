@@ -33,7 +33,7 @@ public class TeleportToNPCCommand extends HypixelCommand {
             HypixelNPC npc = HypixelNPC.getRegisteredNPCs().stream().filter(n -> n.getName().equalsIgnoreCase(npcName)).findFirst().orElse(null);
 
             if (npc == null) {
-                player.sendMessage("§cNo NPC found with the name '" + npcName + "'.");
+                ((HypixelPlayer) player).sendMessage("<c>No NPC found with the name '{}'.", npcName);
                 return;
             }
             player.teleport(npc.getParameters().position((HypixelPlayer) player));

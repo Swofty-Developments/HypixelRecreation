@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.commands;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -19,7 +20,7 @@ public class BuildCommand extends HypixelCommand {
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
             player.setBypassBuild(!player.isBypassBuild());
 
-            sender.sendMessage("§aBuild mode has been " + (player.isBypassBuild() ? "§aENABLED" : "§cDISABLED") + "§a.");
+            sender.sendMessage(Text.of("<a>Build mode has been " + (player.isBypassBuild() ? "<a>ENABLED" : "<c>DISABLED") + "<a>."));
         });
     }
 }

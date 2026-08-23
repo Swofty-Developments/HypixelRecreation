@@ -12,7 +12,7 @@ public class NPCLucius extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Lucius", "§e§lCLICK"};
+                return new String[]{"Lucius", "<e><l>CLICK"};
             }
 
             @Override

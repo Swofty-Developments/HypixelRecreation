@@ -1,9 +1,9 @@
 name: "Mining"
 displayIcon: "stone_pickaxe"
 description:
-  - "§7Dive into deep caves and find rare"
-  - "§7ores and valuable materials to earn"
-  - "§7Mining XP!"
+  - "<7>Dive into deep caves and find rare"
+  - "<7>ores and valuable materials to earn"
+  - "<7>Mining XP!"
 
 rewards:
   - level: 1

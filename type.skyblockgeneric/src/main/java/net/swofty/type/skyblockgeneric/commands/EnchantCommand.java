@@ -35,7 +35,7 @@ public class EnchantCommand extends HypixelCommand {
                                 .type(context.get(typeArgument))
                                 .build()
                 );
-                sender.sendMessage("§aYour item has been enchanted");
+                sender.sendMessage("<a>Your item has been enchanted");
             });
         }, typeArgument, level);
     }

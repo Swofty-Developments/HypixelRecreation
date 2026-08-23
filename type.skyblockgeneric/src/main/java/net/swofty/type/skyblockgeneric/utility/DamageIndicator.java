@@ -1,11 +1,13 @@
 package net.swofty.type.skyblockgeneric.utility;
 
+import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.hologram.HologramEntity;
 
 public class DamageIndicator {
@@ -24,7 +26,8 @@ public class DamageIndicator {
     public void display(Instance instance) {
         if (this.pos == null) return;
 
-        String name = crit ? getRainbowEffect("✧" + damage + "✧") : "§7" + damage;
+        Text name = crit ? Text.of(getRainbowEffect("✧" + damage + "✧"))
+                : Text.of("<7>{}", damage);
 
         Entity entity = new HologramEntity(name);
         entity.setInstance(instance, utilRandomizeLoc(pos));
@@ -52,7 +55,7 @@ public class DamageIndicator {
         int i = 0;
         for (String c : string.split("")) {
             if (i > DEFAULT_COLOUR_PALLET.length - 1) i = 0;
-            builder.append("§").append(DEFAULT_COLOUR_PALLET[i]).append(c);
+            builder.append("<").append(Character.toLowerCase(DEFAULT_COLOUR_PALLET[i])).append(">").append(c);
             i++;
         }
         return builder.toString();

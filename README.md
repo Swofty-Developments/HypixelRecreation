@@ -1,8 +1,8 @@
-# Hypixel SkyBlock
+# Hypixel
 
 [<img src="https://discordapp.com/assets/e4923594e694a21542a489471ecffa50.svg" alt="Discord" height="55" />](https://discord.swofty.net)
 
-A 26.2 Minestom-based recreation of Hypixel with a properly abstracted, scalable microservices architecture.
+A 26.2 Minestom-based recreation of Hypixel with a properly abstracted, scalable microservices architecture. A setup guide can be found **[here](https://www.youtube.com/watch?v=XgIzgHGRB3s)**.
 
 > **Note**: This implementation is under active development and is not yet production-ready.
 
@@ -20,20 +20,10 @@ Full documentation is available at **[opensource.swofty.net](https://opensource.
 
 ## Quick Links
 
-- [Releases](https://github.com/Swofty-Developments/HypixelSkyBlock/releases)
-- [Javadocs](https://swofty-developments.github.io/HypixelSkyBlock/)
+- [Releases](https://github.com/Swofty-Developments/HypixelRecreation/releases)
+- [Javadocs](https://swofty-developments.github.io/HypixelRecreation/)
 - [Discord](https://discord.swofty.net)
 - [Video Guide](https://www.youtube.com/watch?v=pxzJbjjQL-M)
-
-## Features
-
-- **Multi-Server Architecture** - 13 server types (SkyBlock + BedWars)
-- **Microservices** - 8 independent services (Auctions, Bazaar, Party, etc.)
-- **Redis Communication** - Real-time inter-service messaging
-- **MongoDB Storage** - Persistent data storage
-- **Velocity Proxy** - Load balancing and player routing
-- **Docker Support** - Full Docker Compose deployment
-- **Java 25** - Modern Java with virtual threads
 
 ## Requirements
 
@@ -49,7 +39,7 @@ See the [full requirements](https://opensource.swofty.net/docs/requirements) for
 
 ```bash
 # Clone the repository
-git clone https://github.com/Swofty-Developments/HypixelSkyBlock.git
+git clone https://github.com/Swofty-Developments/HypixelRecreation.git
 
 # Docker deployment
 docker-compose up --build
@@ -63,7 +53,7 @@ For manual setup, follow the [documentation](https://opensource.swofty.net/docs/
 
 ## Credits
 
-Thanks to the Minestom community and all [contributors](https://github.com/Swofty-Developments/HypixelSkyBlock/graphs/contributors).
+Thanks to the Minestom community and all [contributors](https://github.com/Swofty-Developments/HypixelRecreation/graphs/contributors).
 
 ## License
 

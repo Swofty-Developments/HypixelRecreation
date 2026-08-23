@@ -5,7 +5,8 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.PaginatedView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -71,7 +72,7 @@ public class GUICraftedMinions extends PaginatedView<SkyBlockItem, GUICraftedMin
         DatapointMinionData.ProfileMinionData playerData = sbPlayer.getSkyblockDataHandler()
                 .get(SkyBlockDataHandler.Data.MINION_DATA, DatapointMinionData.class).getValue();
 
-        ArrayList<String> lore = new ArrayList<>();
+        List<Text> lore = new ArrayList<>();
         List<Integer> tiers = List.of();
         boolean unlocked = false;
         int minionAmount = 0;
@@ -83,23 +84,26 @@ public class GUICraftedMinions extends PaginatedView<SkyBlockItem, GUICraftedMin
         }
         for (SkyBlockMinion.MinionTier minionTier : minionRegistry.asSkyBlockMinion().getTiers()) {
             if (tiers.contains(minionTier.tier())) {
-                lore.add("§a✔ Tier " + StringUtility.getAsRomanNumeral(minionTier.tier()));
+                lore.add(Text.of("<a>✔ Tier {:roman}", minionTier.tier()));
                 unlocked = true;
                 minionAmount++;
             } else {
-                lore.add("§c✖ Tier " + StringUtility.getAsRomanNumeral(minionTier.tier()));
+                lore.add(Text.of("<c>✖ Tier {:roman}", minionTier.tier()));
             }
         }
 
         if (unlocked) {
-            lore.add("");
-            lore.add("§eClick to view recipes!");
-            String color = (minionAmount == minionRegistry.asSkyBlockMinion().getTiers().size()) ? "§a" : "§e";
-            return ItemStackCreator.getStackHead(color + StringUtility.toNormalCase(minionRegistry.name()) + " Minion",
-                    minionRegistry.asSkyBlockMinion().getTiers().getFirst().texture(), 1, lore);
+            lore.add(Text.empty());
+            lore.add(Text.of("<e>Click to view recipes!"));
+            boolean maxed = minionAmount == minionRegistry.asSkyBlockMinion().getTiers().size();
+            return ItemStacks.head(minionRegistry.asSkyBlockMinion().getTiers().getFirst().texture(),
+                    Text.of(maxed ? "<a>{} Minion" : "<e>{} Minion", StringUtility.toNormalCase(minionRegistry.name())),
+                    lore);
         } else {
-            return ItemStackCreator.getStack("§c" + StringUtility.toNormalCase(minionRegistry.name()) + " Minion",
-                    Material.GRAY_DYE, 1, "§7You haven't crafted this minion.");
+            return ItemStacks.item(Material.GRAY_DYE, 1, """
+                    <c>{} Minion
+                    <7>You haven't crafted this minion.""",
+                    StringUtility.toNormalCase(minionRegistry.name()));
         }
     }
 

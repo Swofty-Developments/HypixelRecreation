@@ -4,10 +4,11 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsTeam;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -55,13 +56,10 @@ public class GUISelectAnOption extends StatelessView {
     public void layout(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         List<Option> options = optionSupplier.apply(ctx);
         if (options.isEmpty()) {
-            layout.slot(13, ItemStackCreator.getStack(
-                "§cNo options available",
-                Material.BARRIER,
-                1,
-                "§7There are no valid options",
-                "§7for this selection."
-            ));
+            layout.slot(13, ItemStacks.item(Material.BARRIER, """
+                <c>No options available
+                <7>There are no valid options
+                <7>for this selection."""));
         } else {
             for (Option option : options) {
                 layout.slot(option.slot(), buildOptionItem(option), (click, _) -> {
@@ -80,44 +78,26 @@ public class GUISelectAnOption extends StatelessView {
     }
 
     private static ItemStack.Builder buildOptionItem(Option option) {
-        return ItemStackCreator.getStack(
-            option.displayName(),
-            option.icon(),
-            1,
-            "§7Click to send the message: \"" + option.message() + "§7\"",
-            "§7to your teammates!",
-            "",
-            "§eClick to send!"
-        );
+        return ItemStacks.item(option.icon(), 1, option.displayName(), List.of(
+            Text.of("<7>Click to send the message: \"{}<7>\"", option.message()),
+            Text.of("<7>to your teammates!"),
+            Text.empty(),
+            Text.of("<e>Click to send!")
+        ));
     }
 
     private static List<Option> buildResourceOptions(String prefix) {
         List<Option> options = new ArrayList<>(RESOURCE_SLOTS.length);
-        options.add(new Option(
-            RESOURCE_SLOTS[0],
-            "§a" + prefix + " §b§lDIAMOND",
-            Material.DIAMOND,
-            "§a" + prefix + " §b§lDIAMOND"
-        ));
-        options.add(new Option(
-            RESOURCE_SLOTS[1],
-            "§a" + prefix + " §f§lIRON",
-            Material.IRON_INGOT,
-            "§a" + prefix + " §f§lIRON"
-        ));
-        options.add(new Option(
-            RESOURCE_SLOTS[2],
-            "§a" + prefix + " §6§lGOLD",
-            Material.GOLD_INGOT,
-            "§a" + prefix + " §6§lGOLD"
-        ));
-        options.add(new Option(
-            RESOURCE_SLOTS[3],
-            "§a" + prefix + " §2§lEMERALD",
-            Material.EMERALD,
-            "§a" + prefix + " §2§lEMERALD"
-        ));
+        options.add(resourceOption(RESOURCE_SLOTS[0], prefix, "<b><l>DIAMOND", Material.DIAMOND));
+        options.add(resourceOption(RESOURCE_SLOTS[1], prefix, "<f><l>IRON", Material.IRON_INGOT));
+        options.add(resourceOption(RESOURCE_SLOTS[2], prefix, "<6><l>GOLD", Material.GOLD_INGOT));
+        options.add(resourceOption(RESOURCE_SLOTS[3], prefix, "<2><l>EMERALD", Material.EMERALD));
         return options;
+    }
+
+    private static Option resourceOption(int slot, String prefix, String resource, Material icon) {
+        Text message = Text.of("<a>{} " + resource, prefix);
+        return new Option(slot, message, icon, message);
     }
 
     private static List<Option> buildTeamOptions(ViewContext ctx, String prefix) {
@@ -142,8 +122,8 @@ public class GUISelectAnOption extends StatelessView {
         int optionCount = Math.min(TEAM_SLOTS.length, teams.size());
         for (int i = 0; i < optionCount; i++) {
             TeamKey team = teams.get(i);
-            String coloredTeamName = team.chatColor() + "§l" + team.getName().toUpperCase(Locale.ROOT);
-            String message = "§a" + prefix + " " + coloredTeamName;
+            Text message = Text.of("<a>{} <l>{}", prefix,
+                Text.of("<color:{}>{}", team.chatColor(), team.getName().toUpperCase(Locale.ROOT)));
             options.add(new Option(
                 TEAM_SLOTS[i],
                 message,
@@ -155,6 +135,6 @@ public class GUISelectAnOption extends StatelessView {
         return options;
     }
 
-    private record Option(int slot, String displayName, Material icon, String message) {
+    private record Option(int slot, Text displayName, Material icon, Text message) {
     }
 }

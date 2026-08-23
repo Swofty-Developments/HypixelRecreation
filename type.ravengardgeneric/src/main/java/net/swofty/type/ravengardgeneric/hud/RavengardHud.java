@@ -136,10 +136,12 @@ public final class RavengardHud {
 
         Component header = Component.empty()
                 .append(Component.text(state.isDungeon() ? DUNGEON_TILES : FULLSCREEN_TILES)
+                        .font(net.swofty.type.ravengardgeneric.gui.RavengardFont.RAVENGARD)
                         .color(net.kyori.adventure.text.format.NamedTextColor.WHITE)
                         .shadowColor(net.kyori.adventure.text.format.ShadowColor.shadowColor(0)))
                 .append(Component.newline())
                 .append(Component.text(PLAYER_MARKER)
+                        .font(net.swofty.type.ravengardgeneric.gui.RavengardFont.RAVENGARD)
                         .color(net.kyori.adventure.text.format.TextColor.color(tint))
                         .shadowColor(net.kyori.adventure.text.format.ShadowColor.shadowColor(0)))
                 .append(Component.newline());

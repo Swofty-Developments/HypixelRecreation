@@ -2,14 +2,11 @@ package net.swofty.type.bedwarsgame.gui;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.shop.TeamShopManager;
@@ -20,6 +17,7 @@ import net.swofty.type.bedwarsgame.shop.TrapId;
 import net.swofty.type.bedwarsgame.shop.TrapManager;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.bedwarsgame.util.BedWarsInventoryManipulator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -31,9 +29,6 @@ import net.swofty.type.generic.user.HypixelPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
-import static net.swofty.type.bedwarsgame.util.ComponentManipulator.noItalic;
 
 public class GUITeamShop extends StatelessView {
 
@@ -53,8 +48,7 @@ public class GUITeamShop extends StatelessView {
     @Override
     public void layout(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         for (int slot : SEPARATOR_SLOTS) {
-            layout.slot(slot, ItemStack.builder(Material.GRAY_STAINED_GLASS_PANE)
-                .customName(noItalic(Component.text(" "))));
+            layout.slot(slot, ItemStacks.named(Material.GRAY_STAINED_GLASS_PANE, " "));
         }
 
         BedWarsPlayer player = (BedWarsPlayer) ctx.player();
@@ -62,12 +56,10 @@ public class GUITeamShop extends StatelessView {
         BedWarsMapsConfig.TeamKey teamKey = player.getTeamKey();
         if (game == null || teamKey == null) {
             for (int slot : UPGRADE_SLOTS) {
-                layout.slot(slot, ItemStack.builder(Material.BARRIER)
-                    .customName(noItalic(Component.text("No Game/Team").color(NamedTextColor.RED))));
+                layout.slot(slot, ItemStacks.named(Material.BARRIER, "<c>No Game/Team"));
             }
             for (int slot : TRAP_SHOP_SLOTS) {
-                layout.slot(slot, ItemStack.builder(Material.BARRIER)
-                    .customName(noItalic(Component.text("No Game/Team").color(NamedTextColor.RED))));
+                layout.slot(slot, ItemStacks.named(Material.BARRIER, "<c>No Game/Team"));
             }
             return;
         }
@@ -116,12 +108,12 @@ public class GUITeamShop extends StatelessView {
         TeamUpgrade upgrade = upgrades.get(index);
         TeamUpgradeTier nextTier = upgrade.getNextTier(game, teamKey);
         if (nextTier == null) {
-            player.sendMessage("§cYour team has already bought this upgrade!");
+            player.sendMessage("<c>Your team has already bought this upgrade!");
             playClickSound(player);
             return;
         }
         if (!upgrade.hasEnoughCurrency(player, nextTier)) {
-            player.sendMessage("§cYou don't have enough " + nextTier.getCurrency().getName() + "!");
+            player.sendMessage("<c>You don't have enough {}!", nextTier.getCurrency().getName());
             playClickSound(player);
             return;
         }
@@ -137,8 +129,7 @@ public class GUITeamShop extends StatelessView {
         BedWarsGame game = player.getGame();
         BedWarsMapsConfig.TeamKey teamKey = player.getTeamKey();
         if (game == null || teamKey == null) {
-            return ItemStack.builder(Material.BARRIER)
-                .customName(noItalic(Component.text("No Game").color(NamedTextColor.RED)));
+            return ItemStacks.named(Material.BARRIER, "<c>No Game");
         }
 
         TeamUpgrade upgrade = upgrades.get(index);
@@ -146,34 +137,34 @@ public class GUITeamShop extends StatelessView {
         boolean isMaxed = nextTier == null;
         boolean canAfford = !isMaxed && upgrade.hasEnoughCurrency(player, nextTier);
 
-        List<Component> lore = new ArrayList<>();
-        lore.add(noItalic(Component.text(upgrade.getDescription()).color(NamedTextColor.GRAY)));
-        lore.add(Component.empty().decoration(ITALIC, TextDecoration.State.FALSE));
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<7>{}", upgrade.getDescription()));
+        lore.add(Text.empty());
 
         int currentLevel = upgrade.getCurrentLevel(game, teamKey);
         for (TeamUpgradeTier tier : upgrade.getTiers()) {
             boolean owned = tier.getLevel() <= currentLevel;
             boolean next = !owned && !isMaxed && tier.getLevel() == nextTier.getLevel();
-            TextColor color = owned ? NamedTextColor.GREEN : (next ? NamedTextColor.YELLOW : NamedTextColor.GRAY);
-            lore.add(noItalic(Component.text("Tier " + tier.getLevel() + ": " + tier.getDescription() + ", ")
-                .color(color)
-                .append(Component.text(tier.getPrice() + " " + tier.getCurrency().getName() + (tier.getPrice() != 1 ? "s" : ""))
-                    .color(NamedTextColor.AQUA))));
+            String colour = owned ? "<a>" : (next ? "<e>" : "<7>");
+            lore.add(Text.of(colour + "Tier {}: {}, <b>{} {}",
+                tier.getLevel(),
+                tier.getDescription(),
+                tier.getPrice(),
+                tier.getCurrency().getName() + (tier.getPrice() != 1 ? "s" : "")));
         }
 
-        lore.add(Component.empty().decoration(ITALIC, TextDecoration.State.FALSE));
+        lore.add(Text.empty());
         if (isMaxed) {
-            lore.add(noItalic(Component.text("UNLOCKED").color(NamedTextColor.GREEN)));
+            lore.add(Text.of("<a>UNLOCKED"));
         } else if (canAfford) {
-            lore.add(noItalic(Component.text("Click to purchase!").color(NamedTextColor.YELLOW)));
+            lore.add(Text.of("<e>Click to purchase!"));
         } else {
-            lore.add(noItalic(Component.text("You don't have enough " + nextTier.getCurrency().getName() + "!").color(NamedTextColor.RED)));
+            lore.add(Text.of("<c>You don't have enough {}!", nextTier.getCurrency().getName()));
         }
 
-        return upgrade.getDisplayItem().builder()
-            .customName(noItalic(Component.text(upgrade.getName())
-                .color(isMaxed || canAfford ? NamedTextColor.GREEN : NamedTextColor.RED)))
-            .lore(lore);
+        return ItemStacks.text(upgrade.getDisplayItem().builder(),
+            Text.of(isMaxed || canAfford ? "<a>{}" : "<c>{}", upgrade.getName()),
+            lore);
     }
 
     private void handleTrapClick(ViewContext ctx, List<Trap> traps, int index) {
@@ -186,7 +177,7 @@ public class GUITeamShop extends StatelessView {
 
         int trapSize = game.getTeamTraps(teamKey).size();
         if (trapSize >= 3) {
-            player.sendMessage("§cYou can't have more traps than 3!");
+            player.sendMessage("<c>You can't have more traps than 3!");
             playClickSound(player);
             return;
         }
@@ -198,7 +189,7 @@ public class GUITeamShop extends StatelessView {
             .mapToInt(ItemStack::amount)
             .sum();
         if (owned < price) {
-            player.sendMessage("§cYou don't have enough " + trap.getCurrency().getName() + "!");
+            player.sendMessage("<c>You don't have enough {}!", trap.getCurrency().getName());
             playClickSound(player);
             return;
         }
@@ -224,8 +215,7 @@ public class GUITeamShop extends StatelessView {
         BedWarsMapsConfig.TeamKey teamKey = player.getTeamKey();
         BedWarsGame game = player.getGame();
         if (game == null || teamKey == null) {
-            return ItemStack.builder(Material.BARRIER)
-                .customName(noItalic(Component.text("No Game").color(NamedTextColor.RED)));
+            return ItemStacks.named(Material.BARRIER, "<c>No Game");
         }
 
         Trap trap = traps.get(index);
@@ -236,19 +226,17 @@ public class GUITeamShop extends StatelessView {
             .sum();
         boolean canAfford = owned >= price;
 
-        return trap.getDisplayItem().builder()
-            .customName(noItalic(Component.text(trap.getName())
-                .color(canAfford ? NamedTextColor.GREEN : NamedTextColor.RED)))
-            .lore(List.of(
-                noItalic(Component.text(trap.getDescription()).color(NamedTextColor.GRAY)),
-                Component.empty().decoration(ITALIC, TextDecoration.State.FALSE),
-                noItalic(Component.text("Cost: ").color(NamedTextColor.GRAY)
-                    .append(Component.text(price + " " + trap.getCurrency().getName() + (price != 1 ? "s" : ""))
-                        .color(NamedTextColor.AQUA))),
-                Component.empty().decoration(ITALIC, TextDecoration.State.FALSE),
+        return ItemStacks.text(trap.getDisplayItem().builder(),
+            Text.of(canAfford ? "<a>{}" : "<c>{}", trap.getName()),
+            List.of(
+                Text.of("<7>{}", trap.getDescription()),
+                Text.empty(),
+                Text.of("<7>Cost: <b>{} {}", price,
+                    trap.getCurrency().getName() + (price != 1 ? "s" : "")),
+                Text.empty(),
                 canAfford
-                    ? noItalic(Component.text("Click to purchase!").color(NamedTextColor.YELLOW))
-                    : noItalic(Component.text("You don't have enough " + trap.getCurrency().getName() + "!").color(NamedTextColor.RED))
+                    ? Text.of("<e>Click to purchase!")
+                    : Text.of("<c>You don't have enough {}!", trap.getCurrency().getName())
             ));
     }
 
@@ -256,38 +244,31 @@ public class GUITeamShop extends StatelessView {
         BedWarsGame game = player.getGame();
         BedWarsMapsConfig.TeamKey teamKey = player.getTeamKey();
         if (game == null || teamKey == null) {
-            return ItemStack.builder(Material.BARRIER)
-                .customName(noItalic(Component.text("No Game").color(NamedTextColor.RED)));
+            return ItemStacks.named(Material.BARRIER, "<c>No Game");
         }
 
         List<TrapId> queued = game.getTeamTraps(teamKey);
         if (index < queued.size()) {
             Trap trap = trapManager.getTrap(queued.get(index));
             if (trap != null) {
-                return ItemStack.builder(Material.GRAY_STAINED_GLASS_PANE)
-                    .customName(noItalic(Component.text("Trap #" + (index + 1) + ": " + trap.getName())
-                        .color(NamedTextColor.AQUA)))
-                    .amount(index + 1);
+                return ItemStacks.named(Material.GRAY_STAINED_GLASS_PANE, index + 1,
+                    "<b>Trap #{}: {}", index + 1, trap.getName());
             }
         }
 
-        return ItemStack.builder(Material.GRAY_STAINED_GLASS)
-            .customName(noItalic(Component.text("Trap #" + (index + 1) + ": No Trap")
-                .color(NamedTextColor.RED)))
-            .lore(List.of(
-                noItalic(Component.text("The first enemy to walk into your").color(NamedTextColor.GRAY)),
-                noItalic(Component.text("base will trigger this trap!").color(NamedTextColor.GRAY)),
-                Component.empty().decoration(ITALIC, TextDecoration.State.FALSE),
-                noItalic(Component.text("Purchasing a trap will queue it here.").color(NamedTextColor.GRAY)),
-                noItalic(Component.text("Its cost scales with traps queued.").color(NamedTextColor.GRAY))
-            ))
-            .amount(index + 1);
+        return ItemStacks.item(Material.GRAY_STAINED_GLASS, index + 1, """
+            <c>Trap #{}: No Trap
+            <7>The first enemy to walk into your
+            <7>base will trigger this trap!
+
+            <7>Purchasing a trap will queue it here.
+            <7>Its cost scales with traps queued.""", index + 1);
     }
 
     private void broadcastTeamPurchase(BedWarsGame game, BedWarsMapsConfig.TeamKey teamName, BedWarsPlayer buyer, String name) {
         for (BedWarsPlayer pl : game.getPlayers()) {
             if (teamName.equals(pl.getTeamKey())) {
-                pl.sendMessage(buyer.getTeamKey().chatColor() + " §apurchased §6" + name + "!");
+                pl.sendMessage("{} <a>purchased <6>{}!", Text.of("<color:{}> ", buyer.getTeamKey().chatColor()), name);
             }
         }
     }

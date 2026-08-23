@@ -16,7 +16,7 @@ public class PacketListenerItemSwitch extends HypixelPacketClientListener {
     public void run(PlayerPacketEvent event, ClientPacket packet, HypixelPlayer player) {
         if (player.getOpenInventory() != null) {
             player.closeInventory();
-            player.sendMessage("§cYou can't switch items while in an inventory!");
+            player.sendMessage("<c>You can't switch items while in an inventory!");
         }
     }
 

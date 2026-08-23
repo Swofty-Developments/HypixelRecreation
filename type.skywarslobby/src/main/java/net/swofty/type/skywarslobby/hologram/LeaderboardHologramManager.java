@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.player.PlayerEntityInteractEvent;
 import net.minestom.server.instance.Instance;
 import net.swofty.commons.skywars.*;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsLeaderboardPreferences;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.entity.InteractionEntity;
@@ -168,12 +169,12 @@ public class LeaderboardHologramManager {
     private static String[] getSettingsHologramLines(PlayerLeaderboardState state) {
         String viewDisplay = state.view() == SkywarsLeaderboardView.TOP_10 ? "Top 10" : "Players Near";
         return new String[] {
-                "§b§nLeaderboard Settings",
-                "§7Mode: §a" + state.mode().getDisplayName(),
-                "§7Time: §a" + state.period().getDisplayName(),
-                "§7View: §a" + viewDisplay,
-                "§7Players: §aAll",
-                "§6Click to change settings!"
+                "<b><n>Leaderboard Settings",
+                Text.of("<7>Mode: <a>{}", state.mode().getDisplayName()).serialize(),
+                Text.of("<7>Time: <a>{}", state.period().getDisplayName()).serialize(),
+                Text.of("<7>View: <a>{}", viewDisplay).serialize(),
+                "<7>Players: <a>All",
+                "<6>Click to change settings!"
         };
     }
 

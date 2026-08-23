@@ -3,6 +3,7 @@ package net.swofty.type.skyblockgeneric.commands;
 import net.minestom.server.command.builder.arguments.ArgumentString;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.suggestion.SuggestionEntry;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -42,7 +43,7 @@ public class StartMission extends HypixelCommand {
                 if (missionClass != null) break;
             }
             if (missionClass == null) {
-                sender.sendMessage("§cMission with ID §e" + missionId + "§c not found.");
+                sender.sendMessage(Text.of("<c>Mission with ID <e>{} <c>not found.", missionId));
                 return;
             }
             ((SkyBlockPlayer) sender).getMissionData().startMission(missionClass);

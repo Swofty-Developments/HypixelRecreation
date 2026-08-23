@@ -18,7 +18,8 @@ public abstract class Datapoint<T> {
     @Getter private String key;
     @Getter public T value;
     @Getter protected Serializer<T> serializer;
-    protected Enum<?> data;
+    @Getter protected Enum<?> data;
+    private volatile String lastWrittenSerialized;
 
     protected Datapoint(String key, T value, Serializer<T> serializer) {
         this.key = key;
@@ -41,27 +42,59 @@ public abstract class Datapoint<T> {
     public Datapoint<T> setData(Enum<?> data) { this.data = data; return this; }
 
     public String getSerializedValue() throws JacksonException { return serializer.serialize(value); }
-    public void deserializeValue(String json) { this.value = serializer.deserialize(json); }
+
+    public void deserializeValue(String json) {
+        this.value = serializer.deserialize(json);
+        this.lastWrittenSerialized = json;
+    }
 
     /** Copy value from another datapoint without triggering onChange. */
     @SuppressWarnings("unchecked")
     public void setFrom(Datapoint<?> other) { this.value = ((Datapoint<T>) other).getValue(); }
 
     @SneakyThrows
-    public void setValueBypassOnChange(T value) { this.value = value; }
+    public void setValueBypassOnChange(T value) {
+        this.value = value;
+        writeThrough(value);
+    }
 
     @SneakyThrows
     public void setValue(T value) {
-        if (Objects.equals(value, this.value)) return;
+        boolean sameReference = value == this.value;
+        if (sameReference && value == null) return;
+        if (!sameReference && Objects.equals(value, this.value)) return;
+
+        String serialized = serializer.serialize(value);
+        if (sameReference && Objects.equals(serialized, this.lastWrittenSerialized)) return;
 
         T oldValue = this.value;
         this.value = value;
 
-        // Sync to leaderboard if tracked
         syncToLeaderboard(oldValue, value);
+        writeThroughSerialized(serialized);
 
+        if (dataHandler == null) return;
         Player player = MinecraftServer.getConnectionManager().getOnlinePlayerByUuid(dataHandler.getUuid());
         if (player != null && hasOnChange()) triggerOnChange(player, this);
+    }
+
+    protected void writeThrough(T value) {
+        writeThroughSerialized(serializer.serialize(value));
+    }
+
+    void markPersisted(String serialized) {
+        this.lastWrittenSerialized = serialized;
+    }
+
+    private void writeThroughSerialized(String serialized) {
+        this.lastWrittenSerialized = serialized;
+        if (dataHandler == null || data == null) return;
+
+        DataHandler handler = dataHandler;
+        Enum<?> backing = data;
+        String datapointKey = key;
+        DataWriteQueue.submit(handler.getUuid(), datapointKey,
+                () -> handler.writeBackedValue(backing, datapointKey, serialized));
     }
 
     /**

@@ -18,7 +18,7 @@ public class NPCAnglerAngus extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§dAngler Angus", "§e§lCLICK"};
+                return new String[]{"<d>Angler Angus", "<e><l>CLICK"};
             }
 
             @Override

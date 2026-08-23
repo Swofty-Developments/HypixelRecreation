@@ -131,6 +131,37 @@ func WaitHealthy(ctx context.Context, name string, timeout time.Duration) error 
 	}
 }
 
+const (
+	accountPrefix  = "hsb:acct"
+	nameIndexKey   = "hsb:name2uuid"
+	rankField      = "hypixel:rank"
+	staffRankValue = `"STAFF"`
+)
+
+const makeStaffScript = `local uuid = redis.call('hget', KEYS[1], ARGV[1])
+if not uuid then return 'no-player' end
+local document_key = ARGV[2] .. ':players:' .. uuid
+local raw = redis.call('get', document_key)
+if not raw then return 'no-player' end
+local decoded, document = pcall(cjson.decode, raw)
+if not decoded or type(document) ~= 'table' then return 'bad-document' end
+for _, value in pairs(document) do
+  if type(value) ~= 'string' then return 'bad-document' end
+end
+document[ARGV[3]] = ARGV[4]
+redis.call('set', document_key, cjson.encode(document))
+redis.call('incr', ARGV[2] .. ':version:players:' .. uuid)
+redis.call('sadd', ARGV[2] .. ':index:players', uuid)
+return 'ok'`
+
+const makeStaffShell = `status=$(redis-cli EVAL "$1" 1 "$2" "$3" "$4" "$5" "$6") || exit 1
+case "$status" in
+  ok) exit 0 ;;
+  no-player) exit 44 ;;
+  bad-document) exit 45 ;;
+  *) echo "$status" >&2; exit 1 ;;
+esac`
+
 func MakeStaff(ctx context.Context, username string) error {
 	username = strings.TrimSpace(username)
 	if username == "" {
@@ -143,19 +174,12 @@ func MakeStaff(ctx context.Context, username string) error {
 	}
 	defer cli.Close()
 
-	usernameLower := strings.ToLower(username)
-	serializedUsernameLower := fmt.Sprintf("%q", usernameLower)
-	serializedStaffRank := fmt.Sprintf("%q", "STAFF")
-	script := fmt.Sprintf(
-		`var result = db.profiles.updateOne({$or: [{ignLowercase: %q}, {ignLowercase: %q}]}, {$set: {rank: %q}}); if (result.matchedCount !== 1) { quit(44); }`,
-		usernameLower,
-		serializedUsernameLower,
-		serializedStaffRank,
-	)
-	created, err := cli.ExecCreate(ctx, "hypixel_mongo", client.ExecCreateOptions{
+	created, err := cli.ExecCreate(ctx, "hypixel_redis", client.ExecCreateOptions{
 		AttachStdout: false,
 		AttachStderr: false,
-		Cmd:          []string{"mongosh", "--quiet", "Minestom", "--eval", script},
+		Cmd: []string{"sh", "-c", makeStaffShell, "make-staff",
+			makeStaffScript, nameIndexKey, strings.ToLower(username),
+			accountPrefix, rankField, staffRankValue},
 	})
 	if err != nil {
 		return err
@@ -175,8 +199,10 @@ func MakeStaff(ctx context.Context, username string) error {
 				return nil
 			case 44:
 				return fmt.Errorf("player %q was not found; they need to join once first", username)
+			case 45:
+				return fmt.Errorf("the stored account for %q is not in the expected format; promote them with an in-game command instead", username)
 			default:
-				return fmt.Errorf("mongosh exited with code %d", inspect.ExitCode)
+				return fmt.Errorf("redis-cli exited with code %d", inspect.ExitCode)
 			}
 		}
 

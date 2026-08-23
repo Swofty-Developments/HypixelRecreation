@@ -14,7 +14,7 @@ public class NPCTreasureHunter extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Treasure Hunter", "§e§lCLICK"};
+                return new String[]{"Treasure Hunter", "<e><l>CLICK"};
             }
 
             @Override

@@ -7,12 +7,12 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.protocol.objects.darkauction.PlayerLeftAuctionProtocol;
 import net.swofty.commons.skyblock.auctions.DarkAuctionPhase;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * This includes player tracking, event handling, and state management.
  */
 public class DarkAuctionHandler {
-    private static final String NPC_PREFIX = "§e[NPC] §6Sirius§f: ";
+    private static final String NPC_PREFIX = "<e>[NPC] <6>Sirius<f>: ";
 
     private static final Set<UUID> playersInAuction = ConcurrentHashMap.newKeySet();
     private static final ProxyService darkAuctionService = new ProxyService(ServiceType.DARK_AUCTION);
@@ -101,8 +101,8 @@ public class DarkAuctionHandler {
                     long refundAmount = localState.getCurrentBid();
                     if (refundAmount > 0) {
                         player.addCoins(refundAmount);
-                        player.sendMessage("§cThe Dark Auction has been interrupted! §6" +
-                                StringUtility.commaify(refundAmount) + " Coins §chave been refunded.");
+                        player.sendMessage("<c>The Dark Auction has been interrupted! <6>{:,} Coins <c>have been refunded.",
+                                refundAmount);
                     }
                 }
 
@@ -158,7 +158,7 @@ public class DarkAuctionHandler {
             for (UUID playerId : playersInAuction) {
                 SkyBlockPlayer player = SkyBlockGenericLoader.getFromUUID(playerId);
                 if (player != null) {
-                    player.sendMessage(NPC_PREFIX + "Welcome to the §5Dark Auction§f! I hope everyone's ready, the first item is about to come out!");
+                    player.sendMessage(NPC_PREFIX + "Welcome to the <5>Dark Auction</5>! I hope everyone's ready, the first item is about to come out!");
                 }
             }
         }).delay(TaskSchedule.seconds(2)).schedule();
@@ -174,7 +174,7 @@ public class DarkAuctionHandler {
         biddingOpen = false;
         timeLeft.set(countdown);
 
-        String formattedItem = getFormattedItemName(itemTypeName);
+        Text formattedItem = getFormattedItemName(itemTypeName);
         int round = localState.getCurrentRound() + 1;
         String ordinal = getOrdinal(round);
 
@@ -185,7 +185,8 @@ public class DarkAuctionHandler {
         for (UUID playerId : playersInAuction) {
             SkyBlockPlayer player = SkyBlockGenericLoader.getFromUUID(playerId);
             if (player != null) {
-                player.sendMessage(NPC_PREFIX + ordinal + " up, we have a " + formattedItem + "§f, the starting bid is §6" + StringUtility.commaify(startingBid) + " Coins§f!");
+                player.sendMessage(NPC_PREFIX + "{} up, we have a {}<f>, the starting bid is <6>{:,} Coins<f>!",
+                        ordinal, formattedItem, startingBid);
             }
         }
 
@@ -206,7 +207,7 @@ public class DarkAuctionHandler {
                 for (UUID playerId : playersInAuction) {
                     SkyBlockPlayer player = SkyBlockGenericLoader.getFromUUID(playerId);
                     if (player != null) {
-                        player.sendMessage(NPC_PREFIX + "The bidding will start in §b" + current + "§f...");
+                        player.sendMessage(NPC_PREFIX + "The bidding will start in <b>{}</b>...", current);
                     }
                 }
                 return TaskSchedule.seconds(1);
@@ -265,8 +266,8 @@ public class DarkAuctionHandler {
             SkyBlockPlayer refundPlayer = SkyBlockGenericLoader.getFromUUID(refundPlayerId);
             if (refundPlayer != null && playersInAuction.contains(refundPlayerId)) {
                 refundPlayer.addCoins(refundAmount);
-                refundPlayer.sendMessage("§cYou have been outbid! §6" +
-                        StringUtility.commaify(refundAmount) + " Coins §chave been returned to you.");
+                refundPlayer.sendMessage("<c>You have been outbid! <6>{:,} Coins <c>have been returned to you.",
+                        refundAmount);
             }
         }
 
@@ -281,7 +282,7 @@ public class DarkAuctionHandler {
             if (newBidder != null && playersInAuction.contains(newBidderId)) {
                 newBidder.removeCoins(newBidAmount);
                 // Send personal message to the bidder
-                newBidder.sendMessage("§aYou have placed a bid of §6" + StringUtility.commaify(bid) + " Coins§a!");
+                newBidder.sendMessage("<a>You have placed a bid of <6>{:,} Coins</6>!", bid);
             }
         }
 
@@ -295,7 +296,7 @@ public class DarkAuctionHandler {
 
             SkyBlockPlayer player = SkyBlockGenericLoader.getFromUUID(playerId);
             if (player != null) {
-                player.sendMessage(bidderName + " §fplaced a bid of §6" + StringUtility.commaify(bid) + " Coins§f!");
+                player.sendMessage("{} <f>placed a bid of <6>{:,} Coins</6>!", bidderName, bid);
             }
         }
     }
@@ -309,7 +310,7 @@ public class DarkAuctionHandler {
         String itemTypeName = msg.getString("currentItemType");
         long bid = msg.getLong("currentBid");
 
-        String formattedItem = getFormattedItemName(itemTypeName);
+        Text formattedItem = getFormattedItemName(itemTypeName);
 
         Logger.info("Round ended. Winner: {}, Item: {}, Bid: {}", winnerName, itemTypeName, bid);
 
@@ -346,7 +347,8 @@ public class DarkAuctionHandler {
             for (UUID playerId : playersInAuction) {
                 SkyBlockPlayer player = SkyBlockGenericLoader.getFromUUID(playerId);
                 if (player != null) {
-                    player.sendMessage(NPC_PREFIX + "Sold! " + formattedItem + " §fto " + winnerName + " §ffor §6" + StringUtility.commaify(bid) + " Coins§f!");
+                    player.sendMessage(NPC_PREFIX + "Sold! {} <f>to {} <f>for <6>{:,} Coins<f>!",
+                            formattedItem, winnerName, bid);
                 }
             }
         } else {
@@ -391,16 +393,16 @@ public class DarkAuctionHandler {
         }).delay(TaskSchedule.seconds(10)).schedule();
     }
 
-    private static String getFormattedItemName(String itemTypeName) {
-        if (itemTypeName == null) return "§fUnknown Item";
+    private static Text getFormattedItemName(String itemTypeName) {
+        if (itemTypeName == null) return Text.of("<f>Unknown Item");
         try {
             ItemType itemType = ItemType.valueOf(itemTypeName);
             SkyBlockItem item = new SkyBlockItem(itemType);
-            return item.getDisplayName();
+            return Text.literal(item.getDisplayName());
         } catch (Exception e) {
             // Fallback formatting
             String formatted = itemTypeName.replace("_", " ");
-            return "§f" + formatted.substring(0, 1).toUpperCase() + formatted.substring(1).toLowerCase();
+            return Text.of("<f>{}", formatted.substring(0, 1).toUpperCase() + formatted.substring(1).toLowerCase());
         }
     }
 

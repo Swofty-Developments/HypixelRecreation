@@ -1,6 +1,5 @@
 package net.swofty.type.thepark.npcs;
 
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
@@ -21,7 +20,7 @@ public class NPCGustave extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§aGustave", "§e§lCLICK"};
+				return new String[]{"<a>Gustave", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -46,7 +45,7 @@ public class NPCGustave extends HypixelNPC {
 
 			@Override
             public @NonNull String chatName(HypixelPlayer player) {
-				return "§aGustave";
+				return "<a>Gustave";
 			}
 		});
 	}
@@ -64,7 +63,7 @@ public class NPCGustave extends HypixelNPC {
 			return;
 		}
 		if (missionData.isCurrentlyActive(MissionCompleteTheRaceTwoMinutes.class)) {
-			sendNPCMessage(player, "Run over the pressure plate to start racing! Run up to the §eopposite §fside of the island AND back to complete the race. Can you finish it in §e2 minutes§f?");
+			sendNPCMessage(player, "Run over the pressure plate to start racing! Run up to the <e>opposite <f>side of the island AND back to complete the race. Can you finish it in <e>2 minutes<f>?");
 			return;
 		}
 		if (missionData.isCurrentlyActive(MissionTalkToGustaveAgain.class)) {
@@ -114,45 +113,41 @@ public class NPCGustave extends HypixelNPC {
 	@Override
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return List.of(
-				DialogueSet.builder().key("first-interaction").lines(new String[]{
+				DialogueSet.builder().key("first-interaction").lines(
 						"There's nothing like island racing!",
 						"I've traveled many islands and this is my favorite to race on. Want to try?",
-						"To complete the race, you'll need to reach the §eopposite side of the island §fAND come all the way back.",
+						"To complete the race, you'll need to reach the <e>opposite side of the island <f>AND come all the way back.",
 						"Start the race by walking over the pressure plate. If you finish in under 2 minutes, I'll reward you for it! Good luck!",
 						"The other end of the race can be found at -407 128 -119 and is also marked by a beacon.",
 						"There are also crit-particle trails to follow."
-				}).build(),
-				DialogueSet.builder().key("not-too-fast").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("not-too-fast").lines(
 						"Hey! Come talk to me over here! I'll tell you all about racing!"
-				}).build(),
-				DialogueSet.builder().key("completed-1").lines(new String[]{
-						"Not bad, " + LegacyComponentSerializer.legacySection().serialize(player.getColouredName()) + "§f!",
-						"I hope you can get better than this!",
-						"Here's a §aPolished Pebble§f. I found it laying around...",
-						"Try again, but this time come back in 1 minute or less!"
-				}).build(),
-				DialogueSet.builder().key("completed-2").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("completed-1").line("Not bad, {}<f>!", player.getColouredName())
+						.line("I hope you can get better than this!")
+						.line("Here's a <a>Polished Pebble<f>. I found it laying around...")
+						.line("Try again, but this time come back in 1 minute or less!").build(),
+				DialogueSet.builder().key("completed-2").lines(
 						"You're getting much faster!",
-						"Use my §aHunter Knife§f. Holding it somehow makes me go faster.",
+						"Use my <a>Hunter Knife<f>. Holding it somehow makes me go faster.",
 						"See if you can beat 32 seconds!"
-				}).build(),
-				DialogueSet.builder().key("completed-3").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("completed-3").lines(
 						"Now we're cooking! You're getting close to my record!",
 						"Here's an trinket I've found in the caverns behind the waterfall.",
 						"Finish the race in under 18 seconds and come talk to me!"
-				}).build(),
-				DialogueSet.builder().key("completed-4").lines(new String[]{
-						"You did it! Congratulations, " + LegacyComponentSerializer.legacySection().serialize(player.getColouredName()) + "§f. You are now faster than §aGustave§f!",
-						"I've been racing this island so fast that some bark from the trees snatched right off!",
-						"Here's a rare piece of §9Silky Lichen§f. Maybe you can do something with it.",
-						"I have this lichen could improve some weapons!"
-				}).build(),
-				DialogueSet.builder().key("idle-1").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("completed-4").line("You did it! Congratulations, {}<f>. You are now faster than <a>Gustave<f>!", player.getColouredName())
+						.line("I've been racing this island so fast that some bark from the trees snatched right off!")
+						.line("Here's a rare piece of <9>Silky Lichen<f>. Maybe you can do something with it.")
+						.line("I have this lichen could improve some weapons!").build(),
+				DialogueSet.builder().key("idle-1").lines(
 						"You're always welcome to try the race again. Just run over the pressure plate to begin!"
-				}).build(),
-				DialogueSet.builder().key("idle-2").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("idle-2").lines(
 						"It's a great day to go for a run!"
-				}).build()
+				).build()
 		).toArray(DialogueSet[]::new);
 	}
 }

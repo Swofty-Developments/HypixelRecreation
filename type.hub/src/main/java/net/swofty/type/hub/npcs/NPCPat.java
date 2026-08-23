@@ -13,7 +13,7 @@ public class NPCPat extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§7Pat", "§e§lCLICK"};
+                return new String[]{"<7>Pat", "<e><l>CLICK"};
             }
 
             @Override

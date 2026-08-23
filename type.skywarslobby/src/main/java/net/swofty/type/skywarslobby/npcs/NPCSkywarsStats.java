@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.skywars.SkyWarsLevelColor;
 import net.swofty.commons.skywars.SkywarsLeaderboardPeriod;
 import net.swofty.commons.skywars.SkywarsModeStats;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.achievement.AchievementCategory;
 import net.swofty.type.generic.achievement.AchievementRegistry;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
@@ -45,13 +46,13 @@ public class NPCSkywarsStats extends HypixelNPC {
                 int totalAchievements = AchievementRegistry.getByCategory(AchievementCategory.SKYWARS).size();
 
                 return new String[]{
-                        "§6§lYour SkyWars Profile",
-                        "§fYour Level: " + SkyWarsLevelColor.getLevelDisplay(level),
-                        "§fProgress: " + SkywarsLevelRegistry.formatXPDisplay(experience),
-                        "§fTotal Wins: §a" + NUMBER_FORMAT.format(totalWins),
-                        "§fTotal Kills: §a" + NUMBER_FORMAT.format(totalKills),
-                        "§fAchievements: §e" + playerAchievements + "§7/§a" + totalAchievements,
-                        "§e§lCLICK FOR STATS",
+                        "<6><l>Your SkyWars Profile",
+                        Text.of("<f>Your Level: {}", SkyWarsLevelColor.getLevelDisplay(level)).serialize(),
+                        Text.of("<f>Progress: {}", SkywarsLevelRegistry.formatXPDisplay(experience)).serialize(),
+                        Text.of("<f>Total Wins: <a>{}", NUMBER_FORMAT.format(totalWins)).serialize(),
+                        Text.of("<f>Total Kills: <a>{}", NUMBER_FORMAT.format(totalKills)).serialize(),
+                        Text.of("<f>Achievements: <e>{}<7>/<a>{}", playerAchievements, totalAchievements).serialize(),
+                        "<e><l>CLICK FOR STATS",
                 };
             }
 

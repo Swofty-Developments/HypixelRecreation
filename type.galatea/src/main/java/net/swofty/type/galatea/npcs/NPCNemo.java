@@ -12,7 +12,7 @@ public class NPCNemo extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bNemo", "§e§lCLICK"};
+                return new String[]{"<b>Nemo", "<e><l>CLICK"};
             }
 
             @Override

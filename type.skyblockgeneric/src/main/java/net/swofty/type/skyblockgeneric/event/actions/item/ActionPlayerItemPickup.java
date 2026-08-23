@@ -1,13 +1,14 @@
 package net.swofty.type.skyblockgeneric.event.actions.item;
 
 import net.minestom.server.event.player.PlayerMoveEvent;
-import net.minestom.server.network.packet.server.play.CollectItemPacket;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.type.generic.entity.drop.ItemPickup;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.skyblockgeneric.entity.DroppedItemEntityImpl;
+import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 public class ActionPlayerItemPickup implements HypixelEventClass {
@@ -18,23 +19,22 @@ public class ActionPlayerItemPickup implements HypixelEventClass {
 
         DroppedItemEntityImpl.getDroppedItems().computeIfPresent(player, (unused, list) -> {
             list.forEach(item -> {
-                if ((System.currentTimeMillis() > item.getEndPickupDelay())
-                        && item.getPosition().distance(player.getPosition()) <= 1.5
-                        && !item.isRemoved()) {
+                if (item.isRemoved() || !item.isPickable()) return;
+                if (!ItemPickup.isWithinRange(player, item)) return;
 
-                    player.sendPacket(new CollectItemPacket(item.getEntityId(), player.getEntityId(),
-                            item.getItem().getAmount()));
+                SkyBlockItem dropped = item.getItem();
+                int amount = dropped.getAmount();
 
-                    ItemType type = item.getItem().getAttributeHandler().getPotentialType();
-                    int amount = item.getItem().getAmount();
+                ItemPickup.sendCollectPacket(player, item, amount);
+                ItemPickup.playPickupSound(player);
 
-                    if (player.canInsertItemIntoSacks(type, amount)) {
-                        player.getSackItems().increase(type, amount);
-                    } else {
-                        player.addAndUpdateItem(item.getItem());
-                    }
-                    item.remove();
+                ItemType type = dropped.getAttributeHandler().getPotentialType();
+                if (player.canInsertItemIntoSacks(type, amount)) {
+                    player.getSackItems().increase(type, amount);
+                } else {
+                    player.addAndUpdateItem(dropped);
                 }
+                item.remove();
             });
             return list;
         });

@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions;
 
+
 import net.swofty.type.generic.data.datapoints.DatapointDouble;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.skyblockgeneric.event.custom.PlayerRegionChangeEvent;
@@ -46,7 +47,7 @@ public class MissionUseTeleporter extends SkyBlockMission {
 
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§61000 §7Coins"))).forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<6>1000 <7>Coins"))).forEach(player::sendMessage);
         player.getSkyblockDataHandler().get(net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler.Data.COINS, DatapointDouble.class).setValue(
                 player.getSkyblockDataHandler().get(net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler.Data.COINS, DatapointDouble.class).getValue() + 1000
         );

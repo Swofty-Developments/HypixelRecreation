@@ -15,7 +15,7 @@ public class NPCFarmMerchant extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Farm Merchant", "§e§lCLICK"};
+                return new String[]{"Farm Merchant", "<e><l>CLICK"};
             }
 
             @Override
@@ -60,11 +60,11 @@ public class NPCFarmMerchant extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "You can buy and sell harvested crops with me!",
                                 "Wheat, carrots, potatoes, and melon are my specialties!",
                                 "Click me again to open the Farmer Shop!"
-                        }).build(),
+                        ).build(),
         };
     }
 

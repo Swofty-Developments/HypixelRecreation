@@ -2,8 +2,8 @@ package net.swofty.type.lobby;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.swofty.commons.party.FullParty;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.party.PartyManager;
 import net.swofty.type.generic.user.HypixelPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +39,7 @@ public final class GameQueueValidator {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean canPlayerQueue(HypixelPlayer player, @Nullable QueueRequirements requirements) {
         if (LobbyOrchestratorConnector.isSearching(player.getUuid())) {
-            player.sendMessage("§cYou are already searching for a game!");
+            player.sendMessage("<c>You are already searching for a game!");
             return false;
         }
 
@@ -47,11 +47,11 @@ public final class GameQueueValidator {
         if (PartyManager.isInParty(player)) {
             party = PartyManager.getPartyFromPlayer(player);
             if (party == null) {
-                player.sendMessage("§cFailed to read your party state. Please try again.");
+                player.sendMessage("<c>Failed to read your party state. Please try again.");
                 return false;
             }
             if (!party.getLeader().getUuid().equals(player.getUuid())) {
-                player.sendMessage("§cYou are in a party! Ask your leader to start the game, or /p leave");
+                player.sendMessage("<c>You are in a party! Ask your leader to start the game, or /p leave");
                 return false;
             }
         }
@@ -62,11 +62,10 @@ public final class GameQueueValidator {
 
         for (FullParty.Member member : party.getMembers()) {
             if (!member.isJoined()) {
-                player.sendTranslated("mcp_miscellaneous.364", Argument.string(
-                        "game_type", requirements.gameTypeDisplayName()),
-                    Argument.string("map", requirements.modeDisplayName()),
-                    Argument.string("player", HypixelPlayer.getDisplayName(member.getUuid())
-                    ));
+                player.sendMessage(Text.key("mcp_miscellaneous.364",
+                        requirements.gameTypeDisplayName(),
+                        requirements.modeDisplayName(),
+                        HypixelPlayer.getDisplayName(member.getUuid())));
                 return false;
             }
         }
@@ -74,16 +73,14 @@ public final class GameQueueValidator {
         int partySize = party.getMembers().size();
         if (partySize > requirements.maxPartySize()) {
             if (requirements.maxPartySize() == 1) {
-                player.sendTranslated("mcp_miscellaneous.468", Argument.string(
-                        "game_type", requirements.gameTypeDisplayName()),
-                    Argument.string("mode", requirements.modeDisplayName())
-                );
+                player.sendMessage(Text.key("mcp_miscellaneous.468",
+                        requirements.gameTypeDisplayName(),
+                        requirements.modeDisplayName()));
             } else {
-                player.sendTranslated("mcp_miscellaneous.469", Argument.string(
-                        "game_type", requirements.gameTypeDisplayName()),
-                    Argument.string("mode", requirements.modeDisplayName()),
-                    Argument.string("number", String.valueOf(requirements.maxPartySize())
-                    ));
+                player.sendMessage(Text.key("mcp_miscellaneous.469",
+                        requirements.gameTypeDisplayName(),
+                        requirements.modeDisplayName(),
+                        requirements.maxPartySize()));
             }
             return false;
         }

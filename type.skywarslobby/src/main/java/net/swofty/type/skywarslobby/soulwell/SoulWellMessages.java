@@ -1,6 +1,5 @@
 package net.swofty.type.skywarslobby.soulwell;
 
-import net.kyori.adventure.text.Component;
 import net.swofty.commons.StringUtility;
 import net.swofty.type.generic.user.HypixelPlayer;
 
@@ -22,24 +21,24 @@ public class SoulWellMessages {
      */
     public static void sendPurchaseMessage(HypixelPlayer player, SoulWellUpgrade upgrade,
                                            SoulWellUpgrade.SoulWellUpgradeTier tier, int newLevel) {
-        player.sendMessage(Component.empty());
+        player.sendMessage("");
 
         // Centered purple upgrade name with level
-        String upgradeName = "§5§l" + upgrade.name().toUpperCase() + " " + StringUtility.getAsRomanNumeral(newLevel);
-        player.sendMessage(Component.text(centerMessage(upgradeName)));
+        String upgradeName = "<5><l>" + upgrade.name().toUpperCase() + " " + StringUtility.getAsRomanNumeral(newLevel);
+        player.sendMessage(centerMessage(upgradeName));
 
         // Centered white description
-        String description = "§f" + upgrade.baseDescription();
-        player.sendMessage(Component.text(centerMessage(description)));
+        String description = "<f>" + upgrade.baseDescription();
+        player.sendMessage(centerMessage(description));
 
-        player.sendMessage(Component.empty());
+        player.sendMessage("");
 
         // Centered yellow "Rewards"
-        player.sendMessage(Component.text(centerMessage("§e§lRewards")));
+        player.sendMessage(centerMessage("<e><l>Rewards"));
 
         // Centered effect description
-        String effectLine = "§7" + tier.previousEffect() + " §l→ §a" + tier.newEffect() + " §7" + tier.effectDescription();
-        player.sendMessage(Component.text(centerMessage(effectLine)));
+        String effectLine = "<7>" + tier.previousEffect() + " <l>→ </l><a>" + tier.newEffect() + " <7>" + tier.effectDescription();
+        player.sendMessage(centerMessage(effectLine));
     }
 
     /**
@@ -64,41 +63,33 @@ public class SoulWellMessages {
     }
 
     /**
-     * Calculate the pixel width of a message (accounting for color codes)
+     * Calculate the pixel width of a message (accounting for markup tags)
      */
     private static int getMessagePixelWidth(String message) {
         int width = 0;
         boolean isBold = false;
-        boolean isColor = false;
 
         for (int i = 0; i < message.length(); i++) {
             char c = message.charAt(i);
 
-            if (c == '§' && i + 1 < message.length()) {
-                char code = message.charAt(i + 1);
-                if (code == 'l' || code == 'L') {
-                    isBold = true;
-                } else if (code == 'r' || code == 'R') {
-                    isBold = false;
-                } else if (isColorCode(code)) {
-                    // Color codes don't reset bold in all versions
+            if (c == '<') {
+                int end = message.indexOf('>', i);
+                if (end > i) {
+                    String tag = message.substring(i + 1, end);
+                    if (tag.equals("l") || tag.equals("bold")) {
+                        isBold = true;
+                    } else if (tag.equals("/l") || tag.equals("/bold") || tag.equals("r") || tag.equals("reset")) {
+                        isBold = false;
+                    }
+                    i = end;
+                    continue;
                 }
-                isColor = true;
-                i++; // Skip the next character
-                continue;
             }
 
             width += getCharWidth(c, isBold);
         }
 
         return width;
-    }
-
-    /**
-     * Check if a character is a color code
-     */
-    private static boolean isColorCode(char c) {
-        return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
     }
 
     /**

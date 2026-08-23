@@ -13,7 +13,7 @@ import net.swofty.type.bedwarsgame.item.SimpleInteractableItem;
 import net.swofty.type.bedwarsgame.shop.Currency;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.generic.data.datapoints.DatapointBedWarsHotbar;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,7 +26,7 @@ public class PopupTower extends SimpleInteractableItem {
 
 	@Override
 	public ItemStack getBlandItem() {
-		return ItemStackCreator.createNamedItemStack(Material.CHEST, "§aPop-Up Tower").build();
+		return ItemStacks.named(Material.CHEST, "<a>Pop-Up Tower").build();
 	}
 
 	@Override

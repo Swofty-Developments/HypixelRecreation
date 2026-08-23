@@ -1,4 +1,4 @@
-module github.com/Swofty-Developments/HypixelSkyBlock/setup
+module github.com/Swofty-Developments/HypixelRecreation/setup
 
 go 1.26.4
 

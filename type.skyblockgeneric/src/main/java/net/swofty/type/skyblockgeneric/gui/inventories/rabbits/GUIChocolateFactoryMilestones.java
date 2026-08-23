@@ -2,7 +2,8 @@ package net.swofty.type.skyblockgeneric.gui.inventories.rabbits;
 
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -66,69 +67,51 @@ public class GUIChocolateFactoryMilestones implements StatefulView<GUIChocolateF
     }
 
     private ItemStack.Builder createUnlockedMilestoneItem(ChocolateMilestone milestone) {
-        List<String> lore = new ArrayList<>();
+        List<Text> lore = new ArrayList<>();
         String formattedReq = formatRequirement(milestone.getRequiredChocolate());
 
-        lore.add("§7Reach §6" + formattedReq + " Chocolate §7all-time to");
-        lore.add("§7unlock this special §aChocolate Rabbit§7!");
-        lore.add("");
-        lore.add("§7Milestone " + milestone.getRomanNumeral() + " Reward");
-        lore.add("§" + milestone.getColorCode() + milestone.getRabbitName());
-        lore.add("");
+        lore.add(Text.of("<7>Reach <6>{} Chocolate <7>all-time to", formattedReq));
+        lore.add(Text.of("<7>unlock this special <a>Chocolate Rabbit<7>!"));
+        lore.add(Text.empty());
+        lore.add(Text.of("<7>Milestone {} Reward", milestone.getRomanNumeral()));
+        lore.add(Text.of("<color:{}>{}", milestone.getColorCode(), milestone.getRabbitName()));
+        lore.add(Text.empty());
         addRewardLore(lore, milestone);
-        lore.add("");
-        lore.add("§a§lUNLOCKED");
+        lore.add(Text.empty());
+        lore.add(Text.of("<a><l>UNLOCKED"));
 
-        return ItemStackCreator.getStackHead(
-                getMilestoneName(milestone),
-                milestone.getTextureId(),
-                1,
-                lore
-        );
+        return ItemStacks.head(milestone.getTextureId(), 1, getMilestoneName(milestone), lore);
     }
 
     private ItemStack.Builder createLockedMilestoneItem(ChocolateMilestone milestone, long allTimeChocolate) {
-        List<String> lore = new ArrayList<>();
+        List<Text> lore = new ArrayList<>();
         String formattedReq = formatRequirement(milestone.getRequiredChocolate());
         String formattedCurrent = formatRequirement(allTimeChocolate);
         double progress = milestone.getProgress(allTimeChocolate);
 
-        lore.add("§7Reach §6" + formattedReq + " Chocolate §7all-time to");
-        lore.add("§7unlock this special §aChocolate Rabbit§7!");
-        lore.add("");
-        lore.add("§7Progress to Milestone " + milestone.getRomanNumeral() + ": §b" + String.format("%.0f", progress) + "%");
-        lore.add(createProgressBar(progress) + " §b" + formattedCurrent + "§3/§b" + formattedReq);
-        lore.add("");
-        lore.add("§7Milestone " + milestone.getRomanNumeral() + " Reward");
-        lore.add("§" + milestone.getColorCode() + milestone.getRabbitName());
-        lore.add("");
+        lore.add(Text.of("<7>Reach <6>{} Chocolate <7>all-time to", formattedReq));
+        lore.add(Text.of("<7>unlock this special <a>Chocolate Rabbit<7>!"));
+        lore.add(Text.empty());
+        lore.add(Text.of("<7>Progress to Milestone {}: <b>{}%", milestone.getRomanNumeral(),
+                String.format("%.0f", progress)));
+        lore.add(createProgressBar(progress, formattedCurrent, formattedReq));
+        lore.add(Text.empty());
+        lore.add(Text.of("<7>Milestone {} Reward", milestone.getRomanNumeral()));
+        lore.add(Text.of("<color:{}>{}", milestone.getColorCode(), milestone.getRabbitName()));
+        lore.add(Text.empty());
         addRewardLore(lore, milestone);
-        lore.add("");
-        lore.add("§cRequires " + formattedReq + " all-time Chocolate!");
+        lore.add(Text.empty());
+        lore.add(Text.of("<c>Requires {} all-time Chocolate!", formattedReq));
 
-        return ItemStackCreator.getStack(
-                getMilestoneName(milestone),
-                milestone.getGlassPaneMaterial(),
-                1,
-                lore
-        );
+        return ItemStacks.item(milestone.getGlassPaneMaterial(), 1, getMilestoneName(milestone), lore);
     }
 
-    private String createProgressBar(double progress) {
+    private Text createProgressBar(double progress, String current, String required) {
         int filled = (int) (progress / PERCENT_PER_SEGMENT);
         int empty = PROGRESS_BAR_SEGMENTS - filled;
 
-        StringBuilder bar = new StringBuilder("§3§l§m");
-        for (int i = 0; i < filled; i++) {
-            bar.append(" ");
-        }
-        bar.append("§f§l§m");
-        for (int i = 0; i < empty; i++) {
-            bar.append(" ");
-        }
-        bar.append("§r");
-
-        return bar.toString();
+        return Text.of("<3><l><m>{}<f>{}<r> <b>{}<3>/<b>{}",
+                " ".repeat(Math.max(0, filled)), " ".repeat(Math.max(0, empty)), current, required);
     }
 
     private String formatRequirement(long amount) {
@@ -156,20 +139,22 @@ public class GUIChocolateFactoryMilestones implements StatefulView<GUIChocolateF
         return number + suffixes[number % 10];
     }
 
-    private String getMilestoneName(ChocolateMilestone milestone) {
-        return "§" + milestone.getColorCode() + getOrdinal(milestone.getNumber()) + " Chocolate Milestone";
+    private Text getMilestoneName(ChocolateMilestone milestone) {
+        return Text.of("<color:{}>{} Chocolate Milestone", milestone.getColorCode(),
+                getOrdinal(milestone.getNumber()));
     }
 
-    private void addRewardLore(List<String> lore, ChocolateMilestone milestone) {
+    private void addRewardLore(List<Text> lore, ChocolateMilestone milestone) {
         if (milestone.getChocolateBonus() > 0) {
-            lore.add("§7Grants §6+" + milestone.getChocolateBonus() + " Chocolate §7and §6" +
-                    String.format("%.3fx", milestone.getMultiplierBonus()));
-            lore.add("§6Chocolate §7per second to your");
-            lore.add("§7§6Chocolate Factory§7.");
+            lore.add(Text.of("<7>Grants <6>+{} Chocolate <7>and <6>{}", milestone.getChocolateBonus(),
+                    String.format("%.3fx", milestone.getMultiplierBonus())));
+            lore.add(Text.of("<6>Chocolate <7>per second to your"));
+            lore.add(Text.of("<6>Chocolate Factory<7>."));
             return;
         }
 
-        lore.add("§7Grants §6+" + String.format("%.2fx", milestone.getMultiplierBonus()) + " Chocolate §7per second");
-        lore.add("§7to your §6Chocolate Factory§7.");
+        lore.add(Text.of("<7>Grants <6>+{} Chocolate <7>per second",
+                String.format("%.2fx", milestone.getMultiplierBonus())));
+        lore.add(Text.of("<7>to your <6>Chocolate Factory<7>."));
     }
 }

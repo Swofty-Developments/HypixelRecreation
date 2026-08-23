@@ -1,7 +1,6 @@
 package net.swofty.type.bedwarsgame.item.impl;
 
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
@@ -24,10 +23,12 @@ import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.commons.mc.HypixelPosition;
 import net.swofty.commons.mc.Vec3i;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.item.SimpleInteractableItem;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.utility.EntityUtility;
 import net.swofty.type.generic.utility.ScheduleUtility;
 
 import java.util.Comparator;
@@ -49,12 +50,15 @@ public class LuckySpecialItem extends SimpleInteractableItem {
     }
 
     public ItemStack item(String name, Material material, String action, int uses, String... lore) {
-        List<String> itemLore = new java.util.ArrayList<>(List.of(lore));
-        if (uses > 0) {
-            itemLore.add("");
-            itemLore.add("§7Uses: §e" + uses);
+        List<Text> itemLore = new java.util.ArrayList<>();
+        for (String line : lore) {
+            itemLore.add(Text.of(line));
         }
-        return ItemStackCreator.getStack("§a" + name, material, 1, itemLore).build()
+        if (uses > 0) {
+            itemLore.add(Text.empty());
+            itemLore.add(Text.of("<7>Uses: <e>{}", uses));
+        }
+        return ItemStacks.item(material, 1, Text.of("<a>{}", name), itemLore).build()
             .with(DataComponents.CUSTOM_DATA, new CustomData(CompoundBinaryTag.builder()
                 .putString("item", getId())
                 .putString("lucky_action", action)
@@ -81,7 +85,7 @@ public class LuckySpecialItem extends SimpleInteractableItem {
         boolean consumed = switch (action) {
             case "bed_pointer" -> bedPointer(player);
             case "sleepinator" -> targetEffect(player, "Sleepinator", PotionEffect.BLINDNESS, 1, 100);
-            case "lava_rune" -> placeTemporaryBlock(player, clickedBlock, Block.LAVA, 80, "§aLava Rune activated.");
+            case "lava_rune" -> placeTemporaryBlock(player, clickedBlock, Block.LAVA, 80, "<a>Lava Rune activated.");
             case "hot_potato" -> hotPotato(player);
             case "instant_barrier" -> instantBarrier(player);
             case "stasis" -> stasis(player);
@@ -89,7 +93,7 @@ public class LuckySpecialItem extends SimpleInteractableItem {
             case "vampire_blood" -> vampireBlood(player);
             case "grappling_hook" -> grapplingHook(player);
             case "gravity_gun", "jedi_force" ->
-                pushTarget(player, action.equals("gravity_gun") ? 16 : 20, 12, "§aForce pushed target.");
+                pushTarget(player, action.equals("gravity_gun") ? 16 : 20, 12, "<a>Force pushed target.");
             case "dreadlord_skull" -> dreadlordSkull(player);
             case "teleport_beam" -> teleportHome(player);
             case "super_star" -> superStar(player);
@@ -97,11 +101,11 @@ public class LuckySpecialItem extends SimpleInteractableItem {
             case "nuke" -> nuke(player);
             case "magic_toy_stick" -> magicToyStick(player);
             case "water_balloon" ->
-                placeTemporaryBlock(player, clickedBlock, Block.WATER, 240, "§bWater splashed down.");
+                placeTemporaryBlock(player, clickedBlock, Block.WATER, 240, "<b>Water splashed down.");
             case "chicken_bomb" -> chickenBomb(player);
             case "explosive_chicken" -> explosiveChicken(player);
             default -> {
-                player.sendMessage("§cThis Lucky item is not implemented yet.");
+                player.sendMessage("<c>This Lucky item is not implemented yet.");
                 yield false;
             }
         };
@@ -129,30 +133,30 @@ public class LuckySpecialItem extends SimpleInteractableItem {
             .filter(team -> team.getBed() != null && team.getBed().feet() != null)
             .min(Comparator.comparingDouble(team -> player.getPosition().distance(pos(team.getBed().feet()))));
         if (nearest.isEmpty()) {
-            player.sendMessage("§cNo enemy beds found.");
+            player.sendMessage("<c>No enemy beds found.");
             return false;
         }
         Vec3i feet = nearest.get().getBed().feet();
-        player.sendMessage("§aNearest enemy bed: §e" + feet.x() + ", " + feet.y() + ", " + feet.z());
+        player.sendMessage("<a>Nearest enemy bed: <e>{}, {}, {}", feet.x(), feet.y(), feet.z());
         return false;
     }
 
     private boolean targetEffect(BedWarsPlayer player, String name, PotionEffect effect, int amplifier, int ticks) {
         BedWarsPlayer target = target(player, 12).orElse(null);
         if (target == null) {
-            player.sendMessage("§cNo target in sight.");
+            player.sendMessage("<c>No target in sight.");
             return false;
         }
         target.addEffect(new Potion(effect, (byte) amplifier, ticks));
         target.addEffect(new Potion(PotionEffect.SLOWNESS, (byte) 1, ticks));
-        player.sendMessage("§a" + name + " hit " + target.getUsername() + ".");
+        player.sendMessage("<a>{} hit {}.", name, target.getUsername());
         return true;
     }
 
     private boolean placeTemporaryBlock(BedWarsPlayer player, Point clickedBlock, Block block, int ticks, String message) {
         Point base = clickedBlock != null ? clickedBlock.add(0, 1, 0) : firstAirInFront(player, 4);
         if (base == null) {
-            player.sendMessage("§cNo space in front of you.");
+            player.sendMessage("<c>No space in front of you.");
             return false;
         }
         Block previous = player.getInstance().getBlock(base);
@@ -168,7 +172,7 @@ public class LuckySpecialItem extends SimpleInteractableItem {
 
     private boolean hotPotato(BedWarsPlayer player) {
         UUID playerUuid = player.getUuid();
-        player.sendMessage("§cHot Potato will explode in 5 seconds!");
+        player.sendMessage("<c>Hot Potato will explode in 5 seconds!");
         ScheduleUtility.delay(() -> {
             BedWarsPlayer current = player.getGame() == null ? null : player.getGame().getPlayer(playerUuid).orElse(null);
             if (current == null || current.getInstance() == null) return;
@@ -205,17 +209,17 @@ public class LuckySpecialItem extends SimpleInteractableItem {
                 other.addEffect(new Potion(PotionEffect.SLOWNESS, (byte) 10, 120));
                 other.addEffect(new Potion(PotionEffect.MINING_FATIGUE, (byte) 5, 120));
             });
-        player.sendMessage("§aStasis activated.");
+        player.sendMessage("<a>Stasis activated.");
         return true;
     }
 
     private boolean timeWarp(BedWarsPlayer player) {
         Pos start = player.getPosition();
-        player.sendMessage("§aTime Warp started.");
+        player.sendMessage("<a>Time Warp started.");
         ScheduleUtility.delay(() -> {
             if (player.getInstance() != null) {
                 player.teleport(start);
-                player.sendMessage("§aTime warped!");
+                player.sendMessage("<a>Time warped!");
             }
         }, TaskSchedule.seconds(5));
         return true;
@@ -235,7 +239,7 @@ public class LuckySpecialItem extends SimpleInteractableItem {
     private boolean pushTarget(BedWarsPlayer player, double range, double strength, String message) {
         BedWarsPlayer target = target(player, range).orElse(null);
         if (target == null) {
-            player.sendMessage("§cNo target in sight.");
+            player.sendMessage("<c>No target in sight.");
             return false;
         }
         target.setVelocity(target.getVelocity().add(player.getPosition().direction().mul(strength)).add(0, 4, 0));
@@ -246,7 +250,7 @@ public class LuckySpecialItem extends SimpleInteractableItem {
     private boolean dreadlordSkull(BedWarsPlayer player) {
         BedWarsPlayer target = target(player, 18).orElse(null);
         if (target == null) {
-            player.sendMessage("§cNo target in sight.");
+            player.sendMessage("<c>No target in sight.");
             return false;
         }
         target.damage(Damage.fromPlayer(player, 7f));
@@ -264,28 +268,28 @@ public class LuckySpecialItem extends SimpleInteractableItem {
     private boolean superStar(BedWarsPlayer player) {
         player.addEffect(new Potion(PotionEffect.RESISTANCE, (byte) 10, 180));
         player.addEffect(new Potion(PotionEffect.REGENERATION, (byte) 2, 180));
-        player.sendMessage("§eYou are invincible for a short time!");
+        player.sendMessage("<e>You are invincible for a short time!");
         return true;
     }
 
     private boolean voidMaker(BedWarsPlayer player) {
         Point point = firstBreakableInFront(player, 8);
         if (point == null) {
-            player.sendMessage("§cNo obsidian or bedrock in range.");
+            player.sendMessage("<c>No obsidian or bedrock in range.");
             return false;
         }
         player.getInstance().setBlock(point, Block.AIR);
-        player.sendMessage("§5Void Maker removed a block.");
+        player.sendMessage("<5>Void Maker removed a block.");
         return true;
     }
 
     private boolean nuke(BedWarsPlayer player) {
         Point target = firstSolidInFront(player, 50);
         if (target == null) {
-            player.sendMessage("§cNo target selected.");
+            player.sendMessage("<c>No target selected.");
             return false;
         }
-        player.sendMessage("§cNuke inbound!");
+        player.sendMessage("<c>Nuke inbound!");
         ScheduleUtility.delay(() -> explode(player.getInstance(), target.asPos(), 8f, player), TaskSchedule.seconds(5));
         return true;
     }
@@ -317,8 +321,7 @@ public class LuckySpecialItem extends SimpleInteractableItem {
 
     private boolean explosiveChicken(BedWarsPlayer player) {
         LivingEntity chicken = new LivingEntity(EntityType.CHICKEN);
-        chicken.setCustomName(Component.text("§cExplosive Chicken"));
-        chicken.setCustomNameVisible(true);
+        EntityUtility.nameEntityVisible(chicken, "<c>Explosive Chicken");
         chicken.setInstance(player.getInstance(), player.getPosition());
         ScheduleUtility.delay(() -> {
             if (!chicken.isRemoved()) {

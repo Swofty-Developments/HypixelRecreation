@@ -31,128 +31,128 @@ public class NPCRabbitUncle extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("dialogue-1").lines(new String[]{
+                        .key("dialogue-1").lines(
                                 "Grandma always said I could be somebody if I put my mind to it.",
                                 "She was wrong."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-2").lines(new String[]{
+                        .key("dialogue-2").lines(
                                 player.getUsername() + "...you have to hire me. Please."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-3").lines(new String[]{
+                        .key("dialogue-3").lines(
                                 "I should be in the Hall of Fame by now.",
                                 "Instead, I am here. Please, hire me."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-4").lines(new String[]{
+                        .key("dialogue-4").lines(
                                 "Back in high school, I was just one play away from that state championship.",
                                 "If only I had zigged instead of zagged..."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-5").lines(new String[]{
+                        .key("dialogue-5").lines(
                                 "I used to chuck that ball like nobody's business. Those were the days, eh?",
                                 "Still got some of those moves, you know."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-6").lines(new String[]{
+                        .key("dialogue-6").lines(
                                 "Every time I see a football, I can't help but wonder 'What if?'",
                                 "Was so close to grabbing that championship ring."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-7").lines(new String[]{
+                        .key("dialogue-7").lines(
                                 "Sometimes, late at night, I replay that final drive in my head.",
                                 "I could have been a legend, you know?"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-8").lines(new String[]{
+                        .key("dialogue-8").lines(
                                 "Man."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-9").lines(new String[]{
+                        .key("dialogue-9").lines(
                                 "I've got the entire high school trophy case memorized.",
                                 "Sometimes, I give tours. You know, just to keep the legacy going."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-10").lines(new String[]{
+                        .key("dialogue-10").lines(
                                 "Cuz might not have the typical athlete's discipline, but he's clutch.",
                                 "Just like my old teammate who didn't show up to every practice, but could score tuddies when it mattered most."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-11").lines(new String[]{
-                                "§dHoppity§f's like the star quarterback of this chocolate game. Always looking for that next big play.",
+                        .key("dialogue-11").lines(
+                                "<d>Hoppity<f>'s like the star quarterback of this chocolate game. Always looking for that next big play.",
                                 "He's got that championship mindset, just like I had."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-12").lines(new String[]{
+                        .key("dialogue-12").lines(
                                 "Sis has that fire, like the team captains back in my day.",
                                 "She doesn't just play - she changes the game.",
                                 "Always rallying the troops for her cause, much like a good quarterback does in the fourth quarter."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-13").lines(new String[]{
+                        .key("dialogue-13").lines(
                                 "Sure, Rabbit Bro's up at dawn doing push-ups and planning his day.",
                                 "I used to be like him, then I tore my ACL.",
                                 "My knee has never been the same since, man."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-14").lines(new String[]{
+                        .key("dialogue-14").lines(
                                 "Cuz showing up to work is like a trick play.",
                                 "You never see it coming, and when it happens you can't help but wonder if it was a fluke."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-15").lines(new String[]{
+                        .key("dialogue-15").lines(
                                 "Grandma always said I could be somebody if I put my mind to it.",
                                 "She was wrong."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-16").lines(new String[]{
+                        .key("dialogue-16").lines(
                                 player.getUsername() + "...you have to hire me. Please."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-17").lines(new String[]{
+                        .key("dialogue-17").lines(
                                 "I should be in the Hall of Fame by now.",
                                 "Instead, I am here. Please, hire me."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-18").lines(new String[]{
+                        .key("dialogue-18").lines(
                                 "Back in high school, I was just one play away from that state championship.",
                                 "If only I had zigged instead of zagged..."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-19").lines(new String[]{
+                        .key("dialogue-19").lines(
                                 "I used to chuck that ball like nobody's business. Those were the days, eh?",
                                 "Still got some of those moves, you know."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-20").lines(new String[]{
+                        .key("dialogue-20").lines(
                                 "Every time I see a football, I can't help but wonder 'What if?'",
                                 "Was so close to grabbing that championship ring."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-21").lines(new String[]{
+                        .key("dialogue-21").lines(
                                 "Sometimes, late at night, I replay that final drive in my head.",
                                 "I could have been a legend, you know?"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-22").lines(new String[]{
+                        .key("dialogue-22").lines(
                                 "Man."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-23").lines(new String[]{
+                        .key("dialogue-23").lines(
                                 "I've got the entire high school trophy case memorized.",
                                 "Sometimes, I give tours. You know, just to keep the legacy going."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-24").lines(new String[]{
+                        .key("dialogue-24").lines(
                                 "Cuz might not have the typical athlete's discipline, but he's clutch.",
                                 "Just like my old teammate who didn't show up to every practice, but could score tuddies when it mattered most."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-25").lines(new String[]{
-                                "§dHoppity§f's like the star quarterback of this chocolate game. Always looking for that next big play.",
+                        .key("dialogue-25").lines(
+                                "<d>Hoppity<f>'s like the star quarterback of this chocolate game. Always looking for that next big play.",
                                 "He's got that championship mindset, just like I had."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

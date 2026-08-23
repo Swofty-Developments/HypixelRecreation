@@ -17,6 +17,8 @@ type Config struct {
 	ExposePorts bool     `json:"expose_ports"`
 	APIPort     string   `json:"api_port"`
 	Reinstall   bool     `json:"-"`
+	SourceRepo  string   `json:"-"`
+	NoStart     bool     `json:"-"`
 }
 
 type State struct {

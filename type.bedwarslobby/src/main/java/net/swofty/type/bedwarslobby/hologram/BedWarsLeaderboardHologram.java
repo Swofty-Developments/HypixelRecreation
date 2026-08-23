@@ -2,7 +2,13 @@ package net.swofty.type.bedwarslobby.hologram;
 
 import lombok.Getter;
 import net.minestom.server.coordinate.Pos;
-import net.swofty.commons.bedwars.*;
+import net.swofty.commons.bedwars.BedwarsLeaderboardMode;
+import net.swofty.commons.bedwars.BedwarsLeaderboardPeriod;
+import net.swofty.commons.bedwars.BedwarsLeaderboardView;
+import net.swofty.commons.bedwars.BedwarsLevelUtil;
+import net.swofty.commons.bedwars.BedwarsStatType;
+import net.swofty.commons.bedwars.BedwarsTextAlignment;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarslobby.hologram.LeaderboardHologramManager.PlayerLeaderboardState;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.collectibles.bedwars.prestige.BedWarsPrestigeRenderer;
@@ -18,7 +24,11 @@ import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 public enum BedWarsLeaderboardHologram {
@@ -35,7 +45,7 @@ public enum BedWarsLeaderboardHologram {
 		this.position = position;
 	}
 
-	public String[] getHologramLines(HypixelPlayer player, PlayerLeaderboardState state) {
+	public List<Text> getHologramLines(HypixelPlayer player, PlayerLeaderboardState state) {
 		BedwarsLeaderboardPeriod period = statType == BedwarsStatType.LEVEL
 				? BedwarsLeaderboardPeriod.LIFETIME
 				: state.period();
@@ -43,15 +53,15 @@ public enum BedWarsLeaderboardHologram {
 		BedwarsLeaderboardView view = state.view();
 		BedwarsTextAlignment alignment = state.textAlignment();
 
-		List<String> lines = new ArrayList<>();
+		List<Text> lines = new ArrayList<>();
 
 		if (statType == BedwarsStatType.LEVEL) {
-			lines.add("§b§l" + statType.getDisplayName());
+			lines.add(Text.of("<b><l>{}", statType.getDisplayName()));
 		} else {
-			lines.add("§b§l" + period.getDisplayName() + " " + statType.getDisplayName());
+			lines.add(Text.of("<b><l>{} {}", period.getDisplayName(), statType.getDisplayName()));
 		}
 
-		lines.add("§7" + mode.getDisplayName());
+		lines.add(Text.of("<7>{}", mode.getDisplayName()));
 
 		String leaderboardKey = getLeaderboardKey(period, mode);
 		List<LeaderboardService.LeaderboardEntry> entries;
@@ -65,39 +75,41 @@ public enum BedWarsLeaderboardHologram {
 		int maxNameWidth = 0;
 		if (alignment == BedwarsTextAlignment.BLOCK && !entries.isEmpty()) {
 			for (LeaderboardService.LeaderboardEntry entry : entries) {
-				String name = HypixelPlayer.getDisplayName(entry.playerUuid());
-				maxNameWidth = Math.max(maxNameWidth, getMinecraftStringWidth(name));
+				Text name = HypixelPlayer.getDisplayName(entry.playerUuid());
+				maxNameWidth = Math.max(maxNameWidth, getMinecraftStringWidth(name.plain()));
 			}
 		}
 
 		if (entries.isEmpty()) {
-			lines.add("§7No data available");
+			lines.add(Text.of("<7>No data available"));
 		} else {
 			int displayRank = 1;
 			for (LeaderboardService.LeaderboardEntry entry : entries) {
-				String playerName = HypixelPlayer.getDisplayName(entry.playerUuid());
+				Text playerName = HypixelPlayer.getDisplayName(entry.playerUuid());
 				String formattedScore = formatScore(entry.scoreAsLong());
 
-				String paddedName = playerName;
+				Text paddedName = playerName;
 				if (alignment == BedwarsTextAlignment.BLOCK) {
 					paddedName = padToWidth(playerName, maxNameWidth);
 				}
 
+				int rank = view == BedwarsLeaderboardView.PLAYERS_AROUND_YOU ? displayRank : entry.rank();
 				if (statType == BedwarsStatType.LEVEL) {
 					int level = BedwarsLevelUtil.calculateLevel(entry.scoreAsLong());
-					String levelBracket = renderEntryLevel(entry.playerUuid(), level);
-					int rank = view == BedwarsLeaderboardView.PLAYERS_AROUND_YOU ? displayRank : entry.rank();
-					lines.add(String.format("§e%d. §f%s %s", rank, levelBracket, paddedName));
+					lines.add(Text.of("<e>{}. <f>{} {}", rank,
+							renderEntryLevel(entry.playerUuid(), level),
+							paddedName));
 				} else {
-					int rank = view == BedwarsLeaderboardView.PLAYERS_AROUND_YOU ? displayRank : entry.rank();
-					lines.add(String.format("§e%d. §f%s §7- §a%s", rank, paddedName, formattedScore));
+					lines.add(Text.of("<e>{}. <f>{} <7>- <a>{}", rank,
+							paddedName,
+							formattedScore));
 				}
 				displayRank++;
 			}
 		}
 
 		while (lines.size() < 12) {
-			lines.add("§8---");
+			lines.add(Text.of("<8>---"));
 		}
 
 		long playerScore = getPlayerScore(player, period, mode);
@@ -107,24 +119,25 @@ public enum BedWarsLeaderboardHologram {
 			String formattedScore = formatScore(playerScore);
 			if (statType == BedwarsStatType.LEVEL) {
 				int level = BedwarsLevelUtil.calculateLevel(playerScore);
-				lines.add(String.format("§eYou: §f%d. %s", playerEntry.rank(), BedWarsPrestigeRenderer.renderBrackets(player, level)));
+				lines.add(Text.of("<e>You: <f>{}. {}", playerEntry.rank(),
+						BedWarsPrestigeRenderer.renderBrackets(player, level)));
 			} else {
-				lines.add(String.format("§eYou: §f%d. §7(§a%s§7)", playerEntry.rank(), formattedScore));
+				lines.add(Text.of("<e>You: <f>{}. <7>(<a>{}<7>)", playerEntry.rank(), formattedScore));
 			}
 		} else {
-			lines.add("§eYou: §7Not ranked");
+			lines.add(Text.of("<e>You: <7>Not ranked"));
 		}
 
 		if (period != BedwarsLeaderboardPeriod.LIFETIME) {
-			lines.add("§7Resets in §f" + getTimeUntilReset(period));
+			lines.add(Text.of("<7>Resets in <f>{}", getTimeUntilReset(period)));
 		}
 
-		lines.add("§6Click to change filters!");
+		lines.add(Text.of("<6>Click to change filters!"));
 
-		return lines.toArray(new String[0]);
+		return lines;
 	}
 
-	private String renderEntryLevel(UUID uuid, int level) {
+	private Text renderEntryLevel(UUID uuid, int level) {
 		try {
 			BedWarsDataHandler handler = BedWarsDataHandler.getOfOfflinePlayer(uuid);
 			return BedWarsPrestigeRenderer.renderForData(handler, level, true);
@@ -177,16 +190,7 @@ public enum BedWarsLeaderboardHologram {
 
 	private int getMinecraftStringWidth(String text) {
 		int width = 0;
-		boolean skipNext = false;
 		for (char c : text.toCharArray()) {
-			if (skipNext) {
-				skipNext = false;
-				continue;
-			}
-			if (c == '\u00A7') {
-				skipNext = true;
-				continue;
-			}
 			if (c < 256) {
 				width += CHAR_WIDTHS[c];
 			} else {
@@ -196,12 +200,12 @@ public enum BedWarsLeaderboardHologram {
 		return width;
 	}
 
-	private String padToWidth(String text, int targetWidth) {
-		int currentWidth = getMinecraftStringWidth(text);
+	private Text padToWidth(Text text, int targetWidth) {
+		int currentWidth = getMinecraftStringWidth(text.plain());
 		int spaceWidth = CHAR_WIDTHS[' '];
 		int spacesNeeded = (targetWidth - currentWidth) / spaceWidth;
 		if (spacesNeeded <= 0) return text;
-		return text + " ".repeat(spacesNeeded);
+		return text.append(Text.literal(" ".repeat(spacesNeeded)));
 	}
 
 	private String getTimeUntilReset(BedwarsLeaderboardPeriod period) {

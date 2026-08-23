@@ -1,7 +1,5 @@
 package net.swofty.type.skyblockgeneric.commands;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.minestom.server.command.builder.arguments.ArgumentWord;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
@@ -27,16 +25,14 @@ public class ClearStashCommand extends HypixelCommand {
             DatapointStash.PlayerStash stash = player.getStash();
 
             if (stash.isEmpty()) {
-                player.sendMessage("§cYour stash is already empty!");
+                player.sendMessage("<c>Your stash is already empty!");
                 return;
             }
 
             int totalItems = stash.getItemStashCount() + stash.getMaterialStashCount();
 
-            player.sendMessage("§cWARNING: This action is irreversible and deletes all " +
-                    totalItems + " stashed items. If you still wish to continue, click below.");
-            player.sendMessage(Component.text("§eCLEAR STASH YES I AM SURE")
-                    .clickEvent(ClickEvent.runCommand("/clearstash confirm")));
+            player.sendMessage("<c>WARNING: This action is irreversible and deletes all {} stashed items. If you still wish to continue, click below.", totalItems);
+            player.sendMessage("<e><click:run:'/clearstash confirm'>CLEAR STASH YES I AM SURE</click>");
         });
 
         // With confirm argument - actually clear
@@ -47,12 +43,12 @@ public class ClearStashCommand extends HypixelCommand {
             DatapointStash.PlayerStash stash = player.getStash();
 
             if (stash.isEmpty()) {
-                player.sendMessage("§cYour stash is already empty!");
+                player.sendMessage("<c>Your stash is already empty!");
                 return;
             }
 
             stash.clear();
-            player.sendMessage("§aYour stash has been cleared!");
+            player.sendMessage("<a>Your stash has been cleared!");
         }, confirmArg);
     }
 }

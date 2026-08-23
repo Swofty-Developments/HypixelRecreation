@@ -13,7 +13,7 @@ public class NPCLapisMiner extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Lapis Miner", "§e§lCLICK"};
+				return new String[]{"Lapis Miner", "<e><l>CLICK"};
 			}
 
 			@Override

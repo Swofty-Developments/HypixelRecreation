@@ -1,7 +1,6 @@
 package net.swofty.type.hub.npcs;
 
 import net.minestom.server.coordinate.Pos;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.auctions.DarkAuctionPhase;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
@@ -22,7 +21,7 @@ public class NPCSirius extends HypixelNPC {
             public String[] holograms(HypixelPlayer player) {
                 return new String[]{
                         "Sirius",
-                        "§e§lCLICK"
+                        "<e><l>CLICK"
                 };
             }
 
@@ -79,7 +78,7 @@ public class NPCSirius extends HypixelNPC {
             }
 
             setDialogue(e.player(), "adding_to_auction").join();
-            player.sendMessage("§7Signing up to the Dark Auction...");
+            player.sendMessage("<7>Signing up to the Dark Auction...");
 
             if (player.getCoins() < MINIMUM_COINS) {
                 setDialogue(e.player(), "minimum_coins");
@@ -101,22 +100,20 @@ public class NPCSirius extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("closed").lines(new String[]{
+                        .key("closed").lines(
                                 "You shouldn't have of had been able to click me!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("adding_to_auction").lines(new String[]{
+                        .key("adding_to_auction").lines(
                                 "Are you here for the Auction? Only the richest players can enter."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("minimum_coins").lines(new String[]{
-                                "You need at least §6" + StringUtility.commaify(MINIMUM_COINS) + " coins §fto enter the Dark Auction!"
-                        }).build(),
+                        .key("minimum_coins").line("You need at least <6>{:,} coins <f>to enter the Dark Auction!", MINIMUM_COINS).build(),
                 DialogueSet.builder()
-                        .key("added_to_auction").lines(new String[]{
+                        .key("added_to_auction").lines(
                                 "You signed up for the Auction!",
                                 "You'll be warped once it starts..."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

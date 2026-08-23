@@ -1,6 +1,7 @@
 package net.swofty.type.skywarslobby.soulwell;
 
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -69,15 +70,15 @@ public record SoulWellUpgrade(
         /**
          * Format the effect change display line
          */
-        public String getEffectChangeLine() {
-            return "§7" + previousEffect + "§l\u279C§a" + newEffect + " §7" + effectDescription;
+        public Text getEffectChangeLine() {
+            return Text.of("<7>{}<l>\u279C<a>{} <7>{}", previousEffect, newEffect, effectDescription);
         }
 
         /**
          * Format the cost display
          */
         public String getCostDisplay() {
-            return "§6" + formatNumber(cost);
+            return Text.of("<6>{}", formatNumber(cost)).serialize();
         }
 
         private static String formatNumber(long number) {

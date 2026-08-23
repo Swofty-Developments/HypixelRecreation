@@ -16,7 +16,7 @@ public class NPCBartender extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Bartender", "§e§lCLICK"};
+                return new String[]{"Bartender", "<e><l>CLICK"};
             }
 
             @Override

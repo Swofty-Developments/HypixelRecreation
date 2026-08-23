@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Set up JDK 25
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: '25'
           distribution: 'temurin'
@@ -74,7 +74,6 @@ jobs:
             service.bazaar/build/libs/*.jar
             service.itemtracker/build/libs/*.jar
             service.api/build/libs/*.jar
-            service.datamutex/build/libs/*.jar
             service.party/build/libs/*.jar
             service.orchestrator/build/libs/*.jar
             service.friend/build/libs/*.jar

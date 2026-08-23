@@ -24,7 +24,7 @@ public class ActionPlayerJoin implements HypixelEventClass {
             }
             Game.JoinResult result = TypeRavengardDungeonLoader.getGame().join(player);
             if (result instanceof Game.JoinResult.Denied(String reason)) {
-                player.sendMessage("§cCould not enter the dungeon: " + reason);
+                player.sendMessage("<c>Could not enter the dungeon: {}", reason);
                 player.sendTo(ServerType.RAVENGARD_LOBBY);
             }
         }, 20);

@@ -2,19 +2,18 @@ package net.swofty.velocity.redis.listeners;
 
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.UnderstandableProxyServer;
 import net.swofty.commons.protocol.RedisProtocol;
-import net.swofty.commons.protocol.objects.proxy.from.RefreshCoopDataProtocol;
 import net.swofty.commons.protocol.objects.proxy.from.RunEventProtocol;
 import net.swofty.commons.protocol.objects.proxy.from.TeleportProtocol;
 import net.swofty.commons.protocol.objects.proxy.to.PlayerHandlerProtocol;
 import net.swofty.commons.redis.RedisClient;
 import net.swofty.commons.redis.RedisMessageContext;
 import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.text.Text;
 import net.swofty.redisapi.api.requests.DataRequest;
 import net.swofty.velocity.SkyBlockVelocity;
 import net.swofty.velocity.gamemanager.GameManager;
@@ -97,17 +96,19 @@ public class ListenerPlayerHandler implements RedisMessageHandler<
                 TransferHandler transferHandler = new TransferHandler(player);
 
                 if (serverInfo == null) {
-                    player.sendMessage(Component.text(
-                        "§cWe encountered an issue while attempting to locate the server on the network. Please try again later."
+                    player.sendMessage(Text.of(
+                        "<c>We encountered an issue while attempting to locate the server on the network. Please try again later."
                     ));
-                    return EMPTY;
+                    return new PlayerHandlerProtocol.Response(Map.of(), false,
+                            "The destination server could not be located on the network");
                 }
 
-                player.sendMessage(Component.text("§7Sending to server " + serverInfo.displayName() + "..."));
+                player.sendMessage(Text.of("<7>Sending to server {}...", serverInfo.displayName()));
 
                 if (!serverInfo.hasEmptySlots()) {
-                    player.sendMessage(Component.text(
-                        "§cAttempted to connect to " + serverInfo.displayName() + ", but there are no empty slots available. Please try again later."
+                    player.sendMessage(Text.of(
+                        "<c>Attempted to connect to {}, but there are no empty slots available. Please try again later.",
+                        serverInfo.displayName()
                     ));
                     return new PlayerHandlerProtocol.Response(Map.of(), false, "The destination server is full");
                 }
@@ -137,8 +138,9 @@ public class ListenerPlayerHandler implements RedisMessageHandler<
                 if (!GameManager.hasType(type)
                     || new TransferHandler(player).isInLimbo()
                     || !GameManager.isAnyEmpty(type)) {
-                    player.sendMessage(Component.text(
-                        "§cAttempted to transfer to a " + StringUtility.toNormalCase(type.name()) + " server, but there are no empty slots available. Please try again later."
+                    player.sendMessage(Text.of(
+                        "<c>Attempted to transfer to a {} server, but there are no empty slots available. Please try again later.",
+                        StringUtility.toNormalCase(type.name())
                     ));
                     return EMPTY;
                 }
@@ -181,16 +183,6 @@ public class ListenerPlayerHandler implements RedisMessageHandler<
                     new RunEventProtocol.Request(uuid.toString(),
                         (String) data.get("event"),
                         (String) data.get("data"))).join();
-            }
-            case REFRESH_COOP_DATA -> {
-                if (potentialServer.isEmpty()) {
-                    return EMPTY;
-                }
-                UUID server = UUID.fromString(potentialServer.get().getServer().getServerInfo().getName());
-                RedisClient.requestServer(server,
-                    new RefreshCoopDataProtocol(),
-                    new RefreshCoopDataProtocol.Request(uuid.toString(),
-                        (String) data.get("datapoint"))).join();
             }
             case MESSAGE -> {
                 String messageToSend = (String) data.get("message");

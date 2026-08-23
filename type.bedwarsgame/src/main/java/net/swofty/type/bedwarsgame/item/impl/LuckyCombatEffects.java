@@ -36,7 +36,7 @@ public final class LuckyCombatEffects {
                 }
                 knockTarget(attacker, target, 14, 5);
                 consumeMainHand(attacker, item);
-                attacker.sendMessage("§cAngel of Death's Sword shattered.");
+                attacker.sendMessage("<c>Angel of Death's Sword shattered.");
             }
             case "knockback_slimeball" -> {
                 knockTarget(attacker, target, 20, 6);

@@ -15,7 +15,7 @@ import java.util.Map;
 public class EnchantmentFlash implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Grants §b+" + (level * 5) + "☂ Fishing Speed§7.";
+        return "Grants <b>+" + level * 5 + "☂ Fishing Speed<7>.";
     }
 
     @Override

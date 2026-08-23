@@ -2,7 +2,7 @@ package net.swofty.type.replayviewer.command;
 
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
@@ -13,7 +13,8 @@ import net.swofty.type.replayviewer.util.ReplayShareUtil;
 	description = "Share your current replay position",
 	usage = "/share",
 	permission = Rank.DEFAULT,
-	allowsConsole = false
+	allowsConsole = false,
+	labels = "share"
 )
 public class ShareCommand extends HypixelCommand {
 
@@ -24,7 +25,7 @@ public class ShareCommand extends HypixelCommand {
 
 			var sessionOpt = TypeReplayViewerLoader.getSession(player.getUuid());
 			if (sessionOpt.isEmpty()) {
-                player.sendMessage(I18n.t("replays.not_watching_replay"));
+                player.sendMessage(Text.key("replays.not_watching_replay"));
 				return;
 			}
 

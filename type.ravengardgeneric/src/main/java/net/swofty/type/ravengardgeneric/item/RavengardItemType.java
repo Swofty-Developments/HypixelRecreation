@@ -25,9 +25,11 @@ public class RavengardItemType {
     private final List<RavengardItemComponent> components = new ArrayList<>();
 
     /** Set by the CLASS_RESTRICTED component; empty means any class may hold the item. */
-    private final java.util.Set<RavengardClass> restrictedTo = new java.util.HashSet<>();
+    private final java.util.Set<RavengardClass> restrictedTo = new java.util.LinkedHashSet<>();
     private final List<String> description = new ArrayList<>();
     private String effect;
+    /** Overrides the rarity-prefixed tracked id, for items whose live id carries no prefix. */
+    private String trackedId;
 
     public RavengardItemType(String id) {
         this.id = id;

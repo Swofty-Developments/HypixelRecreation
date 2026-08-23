@@ -20,7 +20,7 @@ public class BedPlacement extends PlacementRule {
         Instance instance = (Instance) placementState.instance();
         BlockUtils blockUtils = new BlockUtils(instance, placementState.placePosition());
         Facing playerFacing = Facing.fromYaw(placementState.playerPosition().yaw());
-        return blockUtils.getBlock().isAir() && blockUtils.getRelativeTo(playerFacing).getBlock().isAir();
+        return blockUtils.getBlock().air() && blockUtils.getRelativeTo(playerFacing).getBlock().air();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class BedPlacement extends PlacementRule {
         Facing playerFacing = Facing.fromYaw(placementState.playerPosition().yaw());
         BlockUtils headBlock = footBlock.getRelativeTo(playerFacing);
 
-        if (footBlock.getBlock().isAir() && headBlock.getBlock().isAir()) {
+        if (footBlock.getBlock().air() && headBlock.getBlock().air()) {
             blockState.set(Part.FOOT);
             BlockState headStates = headBlock.getState();
             headStates.withBlock(block());

@@ -2,6 +2,7 @@ package net.swofty.type.ravengarddungeon.game;
 
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.instance.InstanceContainer;
+import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.ravengarddungeon.generator.RavengardDungeonGenerator;
 
 import java.util.ArrayList;
@@ -273,13 +274,13 @@ public final class DungeonInstanceRegistry {
 
     private static final Set<UUID> PENDING_TELEPORTS = ConcurrentHashMap.newKeySet();
 
-    public static void sendPlayerIn(net.minestom.server.entity.Player player, DungeonInstance instance) {
+    public static void sendPlayerIn(HypixelPlayer player, DungeonInstance instance) {
         if (!PENDING_TELEPORTS.add(player.getUuid())) {
-            player.sendMessage("§7Your dungeon is still being prepared, hold on...");
+            player.sendMessage("<7>Your dungeon is still being prepared, hold on...");
             return;
         }
         instance.markPlayerJoined(player.getUuid());
-        player.sendMessage("§7Preparing your dungeon (seed §f" + instance.getSeed() + "§7)...");
+        player.sendMessage("<7>Preparing your dungeon (seed <f>{}<7>)...", instance.getSeed());
         boolean aerial = instance.getMode().equals("ADMIN");
         instance.whenReady().thenRun(() -> player.scheduler().scheduleNextTick(() -> {
             net.minestom.server.coordinate.Pos spawn;
@@ -302,9 +303,10 @@ public final class DungeonInstanceRegistry {
                 } else {
                     player.setInstance(instance.getInstance(), spawn);
                 }
-                player.sendMessage("§aEntered dungeon §f" + instance.getGameId().toString().substring(0, 8)
-                        + "§a (" + instance.getGenerated().dungeon().getRoomCount() + " rooms, mode "
-                        + instance.getMode() + ").");
+                player.sendMessage("<a>Entered dungeon <f>{}<a> ({} rooms, mode {}).",
+                        instance.getGameId().toString().substring(0, 8),
+                        instance.getGenerated().dungeon().getRoomCount(),
+                        instance.getMode());
                 scheduleChunkRefresh(player, instance);
             } finally {
                 PENDING_TELEPORTS.remove(player.getUuid());

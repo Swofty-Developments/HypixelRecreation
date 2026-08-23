@@ -8,7 +8,7 @@ import net.minestom.server.item.Material;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.StringUtility;
 import net.swofty.type.generic.HypixelConst;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.lobby.gui.GUILobbySelector;
 import net.swofty.type.lobby.item.LobbyItem;
@@ -34,13 +34,10 @@ public class LobbySelector extends LobbyItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStackCreator.getStack(
-                "§aLobby Selector §7(Right Click)",
-                Material.NETHER_STAR,
-                1,
-                "§7Right-click to switch between different lobbies!",
-                "§7Use this to stay with your friends."
-        ).build();
+        return ItemStacks.item(Material.NETHER_STAR, """
+                <a>Lobby Selector <7>(Right Click)
+                <7>Right-click to switch between different lobbies!
+                <7>Use this to stay with your friends.""").build();
     }
 
     @Override

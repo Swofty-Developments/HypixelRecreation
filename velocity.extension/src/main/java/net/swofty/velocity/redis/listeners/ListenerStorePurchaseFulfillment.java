@@ -5,17 +5,18 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.model.UpdateOptions;
 import net.kyori.adventure.inventory.Book;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
+import net.swofty.PlayerField;
+import net.swofty.codec.Codecs;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.data.SwoftyData;
 import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.proxy.to.StorePurchaseFulfillmentProtocol;
 import net.swofty.commons.redis.RedisMessageContext;
 import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.text.Text;
 import net.swofty.velocity.SkyBlockVelocity;
-import net.swofty.velocity.data.UserDatabase;
+import net.swofty.velocity.data.StoreEntitlementsDatabase;
+import net.swofty.velocity.text.ProxyText;
 import org.bson.Document;
 import org.tinylog.Logger;
 
@@ -33,9 +34,10 @@ public class ListenerStorePurchaseFulfillment implements RedisMessageHandler<
     StorePurchaseFulfillmentProtocol.Request,
     StorePurchaseFulfillmentProtocol.Response> {
 
-    private static final String ENTITLEMENTS_COLLECTION = "store-player-entitlements";
     private static final String SUPPORT_URL = "https://support.hypixel.net/";
     private static final UpdateOptions UPSERT = new UpdateOptions().upsert(true);
+
+    private static final PlayerField<String> RANK = PlayerField.create("hypixel", "rank", Codecs.STRING, null);
     private static final FindOneAndUpdateOptions RETURN_UPDATED =
             new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER);
     private static final Map<String, Integer> STORE_RANK_STRENGTH = Map.of(
@@ -194,60 +196,42 @@ public class ListenerStorePurchaseFulfillment implements RedisMessageHandler<
                 return;
             }
 
-            player.sendMessage(Component.text("§b" + deliveryMessage(message)));
+            player.sendMessage(Text.of("<b>{}", deliveryMessage(message)));
         });
     }
 
     private static Book purchaseBook(List<StorePurchaseFulfillmentProtocol.Entitlement> entitlements) {
-        Component page = Component.text("Your purchase has been processed!", NamedTextColor.BLACK)
-                .appendNewline()
-                .appendNewline()
-                .append(Component.text("You've received the following items:", NamedTextColor.BLACK))
-                .appendNewline()
-                .append(rankItems(entitlements))
-                .appendNewline()
-                .appendNewline()
-                .append(Component.text("If you have any problems, ", NamedTextColor.BLACK))
-                .append(Component.text("contact support.", NamedTextColor.LIGHT_PURPLE)
-                        .decorate(TextDecoration.UNDERLINED)
-                        .clickEvent(ClickEvent.openUrl(SUPPORT_URL)));
-        return Book.builder().addPage(page).build();
+        return Book.builder().addPage(ProxyText.render(
+                "<0>Your purchase has been processed!\n\nYou've received the following items:\n{0}\n\n"
+                        + "If you have any problems, <d><n><click:url:'{1}'>contact support.",
+                rankItems(entitlements), SUPPORT_URL)).build();
     }
 
-    private static Component rankItems(List<StorePurchaseFulfillmentProtocol.Entitlement> entitlements) {
-        List<Component> ranks = entitlements.stream()
+    private static Text rankItems(List<StorePurchaseFulfillmentProtocol.Entitlement> entitlements) {
+        List<Text> ranks = entitlements.stream()
             .filter(entitlement -> "RANK".equals(entitlement.type()))
             .map(ListenerStorePurchaseFulfillment::rankItem)
                 .toList();
-        if (ranks.isEmpty()) return Component.text("Rank", NamedTextColor.BLACK);
+        if (ranks.isEmpty()) return Text.of("<0>Rank");
 
-        Component result = Component.empty();
-        for (int index = 0; index < ranks.size(); index++) {
-            if (index > 0) result = result.appendNewline();
-            result = result.append(ranks.get(index));
-        }
-        return result;
+        return Text.join(Text.of("\n"), ranks);
     }
 
-    private static Component rankItem(StorePurchaseFulfillmentProtocol.Entitlement entitlement) {
-        Component rank = rankName(entitlement.key()).append(Component.text(" Rank", NamedTextColor.BLACK));
+    private static Text rankItem(StorePurchaseFulfillmentProtocol.Entitlement entitlement) {
         Long durationDays = entitlement.durationDays();
         return durationDays == null
-                ? rank
-                : rank.append(Component.text(" (" + durationDays + " days)", NamedTextColor.BLACK));
+                ? Text.of("{}<0> Rank", rankName(entitlement.key()))
+                : Text.of("{}<0> Rank ({} days)", rankName(entitlement.key()), durationDays);
     }
 
-    private static Component rankName(String rank) {
+    private static Text rankName(String rank) {
         return switch (rank) {
-            case "VIP" -> Component.text("VIP", NamedTextColor.GREEN);
-            case "VIP_PLUS" -> Component.text("VIP", NamedTextColor.GREEN)
-                    .append(Component.text("+", NamedTextColor.GOLD));
-            case "MVP" -> Component.text("MVP", NamedTextColor.AQUA);
-            case "MVP_PLUS" -> Component.text("MVP", NamedTextColor.AQUA)
-                    .append(Component.text("+", NamedTextColor.RED));
-            case "MVP_PLUS_PLUS" -> Component.text("MVP", NamedTextColor.GOLD)
-                    .append(Component.text("++", NamedTextColor.RED));
-            default -> Component.text(readableKey(rank), NamedTextColor.BLACK);
+            case "VIP" -> Text.of("<a>VIP");
+            case "VIP_PLUS" -> Text.of("<a>VIP<6>+");
+            case "MVP" -> Text.of("<b>MVP");
+            case "MVP_PLUS" -> Text.of("<b>MVP<c>+");
+            case "MVP_PLUS_PLUS" -> Text.of("<6>MVP<c>++");
+            default -> Text.of("<0>{}", readableKey(rank));
         };
     }
 
@@ -351,21 +335,23 @@ public class ListenerStorePurchaseFulfillment implements RedisMessageHandler<
     }
 
     private static String currentProfileRank(UUID playerUuid) {
-        Document profile = UserDatabase.collection.find(new Document("_id", playerUuid.toString())).first();
-        return profile != null ? deserializeRank(profile.getString("rank")) : "DEFAULT";
+        try {
+            return deserializeRank(SwoftyData.account().get(playerUuid, RANK));
+        } finally {
+            SwoftyData.account().unload(playerUuid);
+        }
     }
 
     private static void setProfileRank(UUID playerUuid, String rank) {
-        UserDatabase.collection.updateOne(
-                playerFilter(playerUuid),
-            new Document("$set", new Document("rank", serializeRank(rank)))
-                .append("$setOnInsert", new Document("_id", playerUuid.toString())),
-                UPSERT
-        );
+        try {
+            SwoftyData.account().set(playerUuid, RANK, serializeRank(rank));
+        } finally {
+            SwoftyData.account().unload(playerUuid);
+        }
     }
 
     private static MongoCollection<Document> entitlementCollection() {
-        return UserDatabase.database.getCollection(ENTITLEMENTS_COLLECTION);
+        return StoreEntitlementsDatabase.collection();
     }
 
     private static Document playerFilter(UUID playerUuid) {

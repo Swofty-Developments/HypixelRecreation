@@ -5,11 +5,10 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.ServerType;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.murdermystery.MurderMysteryGameType;
 import net.swofty.commons.party.FullParty;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.party.PartyManager;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -31,30 +30,27 @@ public class GUIPlayMurderMystery extends HypixelInventoryGUI {
                         ServerType.MURDER_MYSTERY_GAME,
                         MurderMysteryGameType.CLASSIC.name()
                 );
-                String playersPlaying = StringUtility.commaify(playersInGame);
 
-                return ItemStackCreator.getStack(
-                        "§aMurder Mystery (Classic)",
-                        Material.CLOCK,
-                        1,
-                        "§8Solo",
-                        "§8" + MurderMysteryGameType.CLASSIC.getMaxPlayers() + " Total Players",
-                        "",
-                        "§7The Classic Murder Mystery",
-                        "§7experience - take on the role of",
-                        "§cMurderer§7, §9Detective §7or §aInnocent§7. The",
-                        "§7Murderer must try and kill without",
-                        "§7getting caught, while the others must",
-                        "§7try to figure out who they are!",
-                        "",
-                        "§c1 Murderer",
-                        "§91 Detective",
-                        "§a10 Innocents",
-                        "",
-                        "§a" + playersPlaying + " currently playing!",
-                        "",
-                        "§eClick to play!"
-                );
+                return ItemStacks.item(Material.CLOCK, """
+                                <a>Murder Mystery (Classic)
+                                <8>Solo
+                                <8>{} Total Players
+
+                                <7>The Classic Murder Mystery
+                                <7>experience - take on the role of
+                                <c>Murderer<7>, <9>Detective <7>or <a>Innocent<7>. The
+                                <7>Murderer must try and kill without
+                                <7>getting caught, while the others must
+                                <7>try to figure out who they are!
+
+                                <c>1 Murderer
+                                <9>1 Detective
+                                <a>10 Innocents
+
+                                <a>{:,} currently playing!
+
+                                <e>Click to play!""",
+                        MurderMysteryGameType.CLASSIC.getMaxPlayers(), playersInGame);
             }
 
             @Override
@@ -62,7 +58,7 @@ public class GUIPlayMurderMystery extends HypixelInventoryGUI {
                 player.closeInventory();
 
                 if (LobbyOrchestratorConnector.isSearching(player.getUuid())) {
-                    player.sendMessage("§cYou are already searching for a game!");
+                    player.sendMessage("<c>You are already searching for a game!");
                     return;
                 }
 
@@ -70,7 +66,7 @@ public class GUIPlayMurderMystery extends HypixelInventoryGUI {
                 if (PartyManager.isInParty(player)) {
                     FullParty party = PartyManager.getPartyFromPlayer(player);
                     if (party != null && !party.getLeader().getUuid().equals(player.getUuid())) {
-                        player.sendMessage("§cYou are in a party! Ask your leader to start the game, or /p leave");
+                        player.sendMessage("<c>You are in a party! Ask your leader to start the game, or /p leave");
                         return;
                     }
                 }
@@ -86,30 +82,27 @@ public class GUIPlayMurderMystery extends HypixelInventoryGUI {
                         ServerType.MURDER_MYSTERY_GAME,
                         MurderMysteryGameType.DOUBLE_UP.name()
                 );
-                String playersPlaying = StringUtility.commaify(playersInGame);
 
-                return ItemStackCreator.getStack(
-                        "§aMurder Mystery (Double Up!)",
-                        Material.CLOCK,
-                        1,
-                        "§8Teams",
-                        "§8" + MurderMysteryGameType.DOUBLE_UP.getMaxPlayers() + " Total Players",
-                        "",
-                        "§7The Classic Murder Mystery",
-                        "§7experience - take on the role of",
-                        "§cMurderer§7, §9Detective §7or §aInnocent§7. The",
-                        "§7Murderers must try and kill without",
-                        "§7getting caught, while the others must",
-                        "§7try to figure out who they are!",
-                        "",
-                        "§c2 Murderers",
-                        "§92 Detectives",
-                        "§a12 Innocents",
-                        "",
-                        "§a" + playersPlaying + " currently playing!",
-                        "",
-                        "§eClick to play!"
-                );
+                return ItemStacks.item(Material.CLOCK, """
+                                <a>Murder Mystery (Double Up!)
+                                <8>Teams
+                                <8>{} Total Players
+
+                                <7>The Classic Murder Mystery
+                                <7>experience - take on the role of
+                                <c>Murderer<7>, <9>Detective <7>or <a>Innocent<7>. The
+                                <7>Murderers must try and kill without
+                                <7>getting caught, while the others must
+                                <7>try to figure out who they are!
+
+                                <c>2 Murderers
+                                <9>2 Detectives
+                                <a>12 Innocents
+
+                                <a>{:,} currently playing!
+
+                                <e>Click to play!""",
+                        MurderMysteryGameType.DOUBLE_UP.getMaxPlayers(), playersInGame);
             }
 
             @Override
@@ -117,7 +110,7 @@ public class GUIPlayMurderMystery extends HypixelInventoryGUI {
                 player.closeInventory();
 
                 if (LobbyOrchestratorConnector.isSearching(player.getUuid())) {
-                    player.sendMessage("§cYou are already searching for a game!");
+                    player.sendMessage("<c>You are already searching for a game!");
                     return;
                 }
 
@@ -125,7 +118,7 @@ public class GUIPlayMurderMystery extends HypixelInventoryGUI {
                 if (PartyManager.isInParty(player)) {
                     FullParty party = PartyManager.getPartyFromPlayer(player);
                     if (party != null && !party.getLeader().getUuid().equals(player.getUuid())) {
-                        player.sendMessage("§cYou are in a party! Ask your leader to start the game, or /p leave");
+                        player.sendMessage("<c>You are in a party! Ask your leader to start the game, or /p leave");
                         return;
                     }
                 }
@@ -137,15 +130,12 @@ public class GUIPlayMurderMystery extends HypixelInventoryGUI {
         set(new GUIClickableItem(21) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aMap Selector (Classic)",
-                        Material.OAK_SIGN,
-                        1,
-                        "§7Pick which map you want to play from",
-                        "§7a list of available games.",
-                        "",
-                        "§eClick to browse!"
-                );
+                return ItemStacks.item(Material.OAK_SIGN, """
+                        <a>Map Selector (Classic)
+                        <7>Pick which map you want to play from
+                        <7>a list of available games.
+
+                        <e>Click to browse!""");
             }
 
             @Override
@@ -156,15 +146,12 @@ public class GUIPlayMurderMystery extends HypixelInventoryGUI {
         set(new GUIClickableItem(23) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aMap Selector (Double Up!)",
-                        Material.OAK_SIGN,
-                        1,
-                        "§7Pick which map you want to play from",
-                        "§7a list of available games.",
-                        "",
-                        "§eClick to browse!"
-                );
+                return ItemStacks.item(Material.OAK_SIGN, """
+                        <a>Map Selector (Double Up!)
+                        <7>Pick which map you want to play from
+                        <7>a list of available games.
+
+                        <e>Click to browse!""");
             }
 
             @Override

@@ -4,9 +4,12 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y jq curl && apt-get clean
 
-ARG JAR_BASE_URL=https://github.com/Swofty-Developments/HypixelSkyBlock/releases/download/latest
+ARG JAR_BASE_URL=https://github.com/Swofty-Developments/HypixelRecreation/releases/download/latest
 
-# Download all JARs in a single layer
+# Locally built JARs, empty for a regular install
+COPY ./DockerFiles/jars /app/prebuilt_jars
+
+# Take every JAR from the local build when it is there, download it otherwise
 RUN set -eu; \
     for jar in \
         HypixelCore.jar \
@@ -14,7 +17,6 @@ RUN set -eu; \
         ServiceAuctionHouse.jar \
         ServiceBazaar.jar \
         ServiceItemTracker.jar \
-        ServiceDataMutex.jar \
         ServiceParty.jar \
         ServiceDarkAuction.jar \
         ServiceOrchestrator.jar \
@@ -26,9 +28,15 @@ RUN set -eu; \
         ServiceReplay.jar \
         net.swofty.packer.HypixelPackServer.jar \
     ; do \
-        echo "Downloading $jar"; \
-        curl -fSL -o "$jar" "${JAR_BASE_URL}/$jar"; \
-    done
+        if [ -f "/app/prebuilt_jars/$jar" ]; then \
+            echo "Using locally built $jar"; \
+            cp "/app/prebuilt_jars/$jar" "$jar"; \
+        else \
+            echo "Downloading $jar"; \
+            curl -fSL -o "$jar" "${JAR_BASE_URL}/$jar"; \
+        fi; \
+    done; \
+    rm -rf /app/prebuilt_jars
 
 # Copy configuration data
 COPY ./configuration /app/configuration_files
@@ -40,6 +48,7 @@ EXPOSE 25565 65535 8080 20000
 
 RUN cp configuration_files/server.toml ./server.toml && \
     cp configuration_files/entrypoint.sh ./entrypoint.sh && \
+    sed -i 's/\r$//' entrypoint.sh && \
     chmod +x entrypoint.sh
 
 CMD ["sh", "entrypoint.sh"]

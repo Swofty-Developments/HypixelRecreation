@@ -14,7 +14,7 @@ public class NPCWeaponsmith extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Weaponsmith", "§e§lCLICK"};
+                return new String[]{"Weaponsmith", "<e><l>CLICK"};
             }
 
             @Override
@@ -59,10 +59,10 @@ public class NPCWeaponsmith extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "You'll need some strong weapons to survive out in the wild! Lucky for you, I've got some!",
                                 "Click me again to open the Weaponsmith Shop!"
-                        }).build(),
+                        ).build(),
         };
     }
 }

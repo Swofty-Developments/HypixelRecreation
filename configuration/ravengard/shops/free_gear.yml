@@ -1,0 +1,35 @@
+id: free_gear
+title: Free Gear
+banner: free_gear
+shelf_slots: [4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 22, 23, 24, 25, 26]
+pool:
+  - item: WEATHERED_ROBE
+    price: 0
+  - item: APPRENTICE_STAFF
+    price: 0
+  - item: TUNIC
+    price: 0
+  - item: OLD_BOOTS
+    price: 0
+  - item: WEATHERED_PANTS
+    price: 0
+  - item: WEATHERED_COAT
+    price: 0
+  - item: BUCKLER
+    price: 0
+  - item: REINFORCED_PANTS
+    price: 0
+  - item: RUSTY_KNIFE
+    price: 0
+  - item: CLOTH_SHIRT
+    price: 0
+  - item: RUSTY_SWORD
+    price: 0
+  - item: RUSTY_DAGGER
+    price: 0
+  - item: ASH_BOW
+    price: 0
+  - item: RUSTY_GREAT_AXE
+    price: 0
+  - item: WEATHERED_HARNESS
+    price: 0

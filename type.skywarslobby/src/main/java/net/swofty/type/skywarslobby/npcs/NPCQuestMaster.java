@@ -17,8 +17,8 @@ public class NPCQuestMaster extends HypixelNPC {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
 				return new String[]{
-						"§bQuest Master",
-						"§e§lRIGHT CLICK",
+						"<b>Quest Master",
+						"<e><l>RIGHT CLICK",
 				};
 			}
 

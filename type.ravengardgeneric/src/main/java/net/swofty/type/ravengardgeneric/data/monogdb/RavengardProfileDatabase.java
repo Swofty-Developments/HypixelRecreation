@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.swofty.type.ravengardgeneric.profile.RavengardProfile;
 import org.bson.Document;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ public final class RavengardProfileDatabase {
     public static List<RavengardProfile> byOwner(UUID owner) {
         List<RavengardProfile> profiles = new ArrayList<>();
         if (collection == null) {
+            Logger.warn("The legacy Ravengard profile collection is unavailable, {} may be handed a fresh profile",
+                    owner);
             return profiles;
         }
         for (Document document : collection.find(new Document("_owner", owner.toString()))
@@ -40,20 +43,5 @@ public final class RavengardProfileDatabase {
         }
         Document document = collection.find(new Document("_id", id.toString())).first();
         return document == null ? null : RavengardProfile.fromDocument(document);
-    }
-
-    public static void save(RavengardProfile profile) {
-        if (collection == null) {
-            return;
-        }
-        collection.replaceOne(new Document("_id", profile.getId().toString()), profile.toDocument(),
-                new com.mongodb.client.model.ReplaceOptions().upsert(true));
-    }
-
-    public static void delete(UUID id) {
-        if (collection == null) {
-            return;
-        }
-        collection.deleteOne(new Document("_id", id.toString()));
     }
 }

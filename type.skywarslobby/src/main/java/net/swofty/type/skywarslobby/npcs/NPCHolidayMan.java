@@ -14,9 +14,9 @@ public class NPCHolidayMan extends HypixelNPC {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
 				return new String[]{
-					"§aThe Delivery Man",
-						"§e§lRIGHT CLICK",
-						"§a0 Daily Reward Tokens!" // this changes colors
+					"<a>The Delivery Man",
+						"<e><l>RIGHT CLICK",
+						"<a>0 Daily Reward Tokens!"
 				};
 			}
 

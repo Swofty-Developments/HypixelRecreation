@@ -110,27 +110,27 @@ public class DatapointArcheryPractice extends SkyBlockDatapoint<DatapointArchery
     @Getter
     public enum TargetPracticeLevels {
         FIRST_LEVEL(new String[] {
-                "§aTarget Practice I",
+                "<a>Target Practice I",
                 "Shoot all targets in 25s",
-                "§e§lACTIVATE TO START",
+                "<e><l>ACTIVATE TO START",
         }, 25),
         SECOND_LEVEL(new String[] {
-                "§6Target Practice II",
+                "<6>Target Practice II",
                 "Shoot all targets in 15s",
-                "§e§lACTIVATE TO START",
+                "<e><l>ACTIVATE TO START",
         }, 15),
         THIRD_LEVEL(new String[] {
-                "§cTarget Practice III",
+                "<c>Target Practice III",
                 "Shoot all targets in 12s",
-                "§e§lACTIVATE TO START",
+                "<e><l>ACTIVATE TO START",
         }, 12),
         FOURTH_LEVEL(new String[] {
-                "§4Target Practice IV",
+                "<4>Target Practice IV",
                 "Shoot all targets in 11s",
-                "§e§lACTIVATE TO START",
+                "<e><l>ACTIVATE TO START",
         }, 11),
         CONCLUDED(new String[] {
-                "§cYou have completed all levels!",
+                "<c>You have completed all levels!",
         }, 0)
         ;
 

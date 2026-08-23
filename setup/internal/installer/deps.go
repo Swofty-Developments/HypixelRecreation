@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"os/user"
 	"runtime"
+	"strconv"
 	"strings"
 )
 
@@ -268,8 +269,8 @@ func CheckDependenciesReport(ctx context.Context) DependencyReport {
 				DocURL:   "https://docs.docker.com/compose/install/",
 			})
 		}
-		if err := exec.CommandContext(ctx, "docker", "info").Run(); err != nil {
-			report.Missing = append(report.Missing, dockerDaemonDependency(p, &report))
+		if out, err := exec.CommandContext(ctx, "docker", "info").CombinedOutput(); err != nil {
+			report.Missing = append(report.Missing, dockerDaemonDependency(p, &report, dockerFailureReason(out)))
 		}
 	}
 
@@ -283,9 +284,18 @@ func CheckDependenciesReport(ctx context.Context) DependencyReport {
 	return report
 }
 
-func dockerDaemonDependency(p Platform, report *DependencyReport) Dependency {
-	if !inDockerGroup() {
+func dockerDaemonDependency(p Platform, report *DependencyReport, reason string) Dependency {
+	if !sessionInDockerGroup() {
 		report.Relogin = true
+		if inDockerGroup() {
+			return Dependency{
+				Name: "docker daemon access",
+				Detail: "Your user is in the 'docker' group but this session started before that, " +
+					"so it still cannot reach the daemon. Log out and back in, then run the installer again.",
+				Commands: []string{"newgrp docker"},
+				DocURL:   "https://docs.docker.com/engine/install/linux-postinstall/",
+			}
+		}
 		commands := append(daemonStartCommands(p), "sudo usermod -aG docker $USER")
 		return Dependency{
 			Name:     "docker daemon access",
@@ -294,12 +304,59 @@ func dockerDaemonDependency(p Platform, report *DependencyReport) Dependency {
 			DocURL:   "https://docs.docker.com/engine/install/linux-postinstall/",
 		}
 	}
+	detail := "Docker is installed but the daemon is not responding."
+	if reason != "" {
+		detail = detail + " Docker reported: " + reason
+	}
 	return Dependency{
 		Name:     "docker daemon",
-		Detail:   "Docker is installed but the daemon is not responding.",
+		Detail:   detail,
 		Commands: daemonStartCommands(p),
 		DocURL:   dockerInstallDocs,
 	}
+}
+
+func dockerFailureReason(out []byte) string {
+	for _, line := range strings.Split(string(out), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
+		lowered := strings.ToLower(line)
+		if strings.Contains(lowered, "permission denied") ||
+			strings.Contains(lowered, "cannot connect") ||
+			strings.HasPrefix(lowered, "error") {
+			if len(line) > 200 {
+				line = line[:200]
+			}
+			return line
+		}
+	}
+	return ""
+}
+
+func sessionInDockerGroup() bool {
+	if os.Geteuid() == 0 {
+		return true
+	}
+	group, err := user.LookupGroup("docker")
+	if err != nil {
+		return false
+	}
+	gid, err := strconv.Atoi(group.Gid)
+	if err != nil {
+		return false
+	}
+	groups, err := os.Getgroups()
+	if err != nil {
+		return false
+	}
+	for _, id := range groups {
+		if id == gid {
+			return true
+		}
+	}
+	return false
 }
 
 func inDockerGroup() bool {

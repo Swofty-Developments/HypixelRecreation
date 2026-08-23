@@ -1,6 +1,7 @@
 package net.swofty.type.dwarvenmines.commission;
 
 import lombok.Getter;
+import net.swofty.commons.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,30 +61,30 @@ public enum CommissionMilestone {
         return null;
     }
 
-    public String[] getRewardDescriptions() {
-        List<String> rewards = new ArrayList<>();
+    public List<Text> getRewardDescriptions() {
+        List<Text> rewards = new ArrayList<>();
 
         if (unlocksEmissaries) {
-            rewards.add("§7- §aEmissaries");
-            rewards.add("§7- §6Royal Compass");
+            rewards.add(Text.of("<a>Emissaries"));
+            rewards.add(Text.of("<6>Royal Compass"));
         }
         if (unlocksExtraSlot) {
-            rewards.add("§7- §a+1 Commission Slot");
+            rewards.add(Text.of("<a>+1 Commission Slot"));
         }
         if (unlocksDwarvenMinesScroll) {
-            rewards.add("§7- §5Travel Scroll to Dwarven Mines");
+            rewards.add(Text.of("<5>Travel Scroll to Dwarven Mines"));
         }
         if (unlocksRoyalPigeon) {
-            rewards.add("§7- §6Royal Pigeon");
+            rewards.add(Text.of("<6>Royal Pigeon"));
         }
         if (unlocksCrystalNucleusScroll) {
-            rewards.add("§7- §5Travel Scroll to Crystal Nucleus");
+            rewards.add(Text.of("<5>Travel Scroll to Crystal Nucleus"));
         }
 
-        rewards.add("§7- §3+" + String.format("%,d", miningXpReward) + " Mining XP");
-        rewards.add("§7- §b+" + skyBlockXpReward + " SkyBlock XP");
+        rewards.add(Text.of("<3>+{:,} Mining XP", miningXpReward));
+        rewards.add(Text.of("<b>+{} SkyBlock XP", skyBlockXpReward));
 
-        return rewards.toArray(new String[0]);
+        return rewards;
     }
 }
 

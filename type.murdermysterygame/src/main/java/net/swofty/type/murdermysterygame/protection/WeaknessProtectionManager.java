@@ -1,7 +1,5 @@
 package net.swofty.type.murdermysterygame.protection;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.tag.Tag;
 import net.minestom.server.timer.TaskSchedule;
@@ -30,17 +28,13 @@ public class WeaknessProtectionManager {
         murderer.setTag(FIRST_HIT_USED, false);
         murderer.setTag(WEAKNESS_EXPIRES, expiresAt);
 
-        murderer.sendMessage(Component.text(
-                "You have been weakened for 60 seconds! Your first attack will be absorbed.",
-                NamedTextColor.LIGHT_PURPLE));
+        murderer.sendMessage("<d>You have been weakened for 60 seconds! Your first attack will be absorbed.");
 
         // Schedule weakness removal
         MinecraftServer.getSchedulerManager().buildTask(() -> {
             if (isWeakened(murderer)) {
                 removeWeakness(murderer);
-                murderer.sendMessage(Component.text(
-                        "Your weakness has worn off.",
-                        NamedTextColor.GRAY));
+                murderer.sendMessage("<7>Your weakness has worn off.");
             }
         }).delay(TaskSchedule.seconds(60)).schedule();
     }

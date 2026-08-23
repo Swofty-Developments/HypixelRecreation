@@ -14,7 +14,7 @@ public class NPCFragilis extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§5Fragilis", "§e§lCLICK"};
+				return new String[]{"<5>Fragilis", "<e><l>CLICK"};
 			}
 
 			@Override

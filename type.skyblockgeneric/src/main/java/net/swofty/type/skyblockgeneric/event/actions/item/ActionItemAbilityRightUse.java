@@ -49,8 +49,8 @@ public class ActionItemAbilityRightUse implements HypixelEventClass {
 
                 PlayerAbilityHandler abilityHandler = player.getAbilityHandler();
                 if (!abilityHandler.canUseAbility(item, ability.getCooldownTicks())) {
-                    player.sendMessage("§cThis ability is on cooldown for " +
-                            Math.round((float) abilityHandler.getRemainingCooldown(item, ability.getCooldownTicks()) / 1000) + "s.");
+                    player.sendMessage("<c>This ability is on cooldown for {}s.",
+                            Math.round((float) abilityHandler.getRemainingCooldown(item, ability.getCooldownTicks()) / 1000));
                     return;
                 }
 

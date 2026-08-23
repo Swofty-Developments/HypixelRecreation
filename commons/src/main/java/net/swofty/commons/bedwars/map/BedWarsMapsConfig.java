@@ -2,6 +2,8 @@ package net.swofty.commons.bedwars.map;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.mc.HypixelPosition;
@@ -77,26 +79,26 @@ public class BedWarsMapsConfig {
     }
 
     public enum TeamKey {
-        RED("Red", "§c", 0xFF5555, Material.RED_BED, Material.RED_WOOL),
-        BLUE("Blue", "§9", 0x5555FF, Material.BLUE_BED, Material.BLUE_WOOL),
-        GREEN("Green", "§a", 0x55FF55, Material.LIME_BED, Material.LIME_WOOL),
-        YELLOW("Yellow", "§e", 0xFFFF55, Material.YELLOW_BED, Material.YELLOW_WOOL),
-        AQUA("Aqua", "§b", 0x00AAAA, Material.LIGHT_BLUE_BED, Material.LIGHT_BLUE_WOOL),
-        WHITE("White", "§f", 0xFFFFFF, Material.WHITE_BED, Material.WHITE_WOOL),
-        PINK("Pink", "§d", 0xFF55FF, Material.PINK_BED, Material.PINK_WOOL),
-        GRAY("Gray", "§7", 0xAAAAAA, Material.GRAY_BED, Material.GRAY_WOOL),
+        RED("Red", NamedTextColor.RED, 0xFF5555, Material.RED_BED, Material.RED_WOOL),
+        BLUE("Blue", NamedTextColor.BLUE, 0x5555FF, Material.BLUE_BED, Material.BLUE_BED),
+        GREEN("Green", NamedTextColor.GREEN, 0x55FF55, Material.LIME_BED, Material.LIME_WOOL),
+        YELLOW("Yellow", NamedTextColor.YELLOW, 0xFFFF55, Material.YELLOW_BED, Material.YELLOW_WOOL),
+        AQUA("Aqua", NamedTextColor.AQUA, 0x00AAAA, Material.LIGHT_BLUE_BED, Material.LIGHT_BLUE_WOOL),
+        WHITE("White", NamedTextColor.WHITE, 0xFFFFFF, Material.WHITE_BED, Material.WHITE_WOOL),
+        PINK("Pink", NamedTextColor.LIGHT_PURPLE, 0xFF55FF, Material.PINK_BED, Material.PINK_WOOL),
+        GRAY("Gray", NamedTextColor.GRAY, 0xAAAAAA, Material.GRAY_BED, Material.GRAY_WOOL),
         ;
 
         @Getter
         private final String name;
-        private final String chatColor;
+        private final TextColor chatColor;
         private final int rgb;
         @NotNull
         private final Material bedMaterial;
         @NotNull
         private final Material woolMaterial;
 
-        TeamKey(@NotNull String name, @NotNull String chatColor, int rgb, @NotNull Material bedMaterial, @NotNull Material woolMaterial) {
+        TeamKey(@NotNull String name, @NotNull TextColor chatColor, int rgb, @NotNull Material bedMaterial, @NotNull Material woolMaterial) {
             this.name = name;
             this.chatColor = chatColor;
             this.rgb = rgb;
@@ -105,7 +107,7 @@ public class BedWarsMapsConfig {
         }
 
         @NotNull
-        public String chatColor() {
+        public TextColor chatColor() {
             return chatColor;
         }
 

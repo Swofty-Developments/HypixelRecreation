@@ -47,20 +47,20 @@ public final class BlockProps {
    // ----- basic physical predicates (delegate to Minestom registry) -----
 
    public static boolean isAir(final Block block) {
-      return block.isAir();
+      return block.air();
    }
 
    public static boolean isSolid(final Block block) {
-      return block.isSolid();
+      return block.solid();
    }
 
    public static boolean blocksMotion(final Block block) {
-      return block.registry().isSolid();
+      return block.solid();
    }
 
    public static boolean isFluid(final Block block) {
       // 26.1.2: BlockEntry has no isFluid(); block.isLiquid() covers water/lava (and flowing variants).
-      return block.isLiquid();
+      return block.liquid();
    }
 
    public static boolean isWater(final Block block) {
@@ -157,18 +157,18 @@ public final class BlockProps {
 
    /** Whether a mob can path through this block (vanilla {@code BlockState.isPathfindable}). */
    public static boolean isPathfindable(final Block block, final PathComputationType type) {
-      if (block.isAir()) {
+      if (block.air()) {
          return true;
       }
       return switch (type) {
-         case LAND -> !block.registry().isSolid();
-         case WATER -> block.isLiquid();
-         case AIR -> !block.registry().isSolid();
+         case LAND -> !block.solid();
+         case WATER -> block.liquid();
+         case AIR -> !block.solid();
       };
    }
 
    /** Block friction used by ground travel (grass/dirt/stone = 0.6, ice higher, slime lower). */
    public static float getFriction(final Block block) {
-      return block.registry().friction();
+      return block.friction();
    }
 }

@@ -46,6 +46,7 @@ public enum ItemStatistic {
     GEMSTONE_SPREAD("Gemstone Spread", NamedTextColor.GREEN, NamedTextColor.YELLOW, false, PackSprite.STAT_GEMSTONE_SPREAD),
     HUNTER_FORTUNE("Hunter Fortune", NamedTextColor.GREEN, NamedTextColor.LIGHT_PURPLE, false, PackSprite.STAT_HUNTER_FORTUNE),
     SWEEP("Sweep", NamedTextColor.GREEN, NamedTextColor.DARK_GREEN, false, PackSprite.STAT_SWEEP),
+    SOULFLOW("Soulflow", NamedTextColor.DARK_AQUA, NamedTextColor.DARK_AQUA, false, PackSprite.STAT_SOULFLOW),
 
     // Sub-Gathering Stats
     ORE_FORTUNE("Ore Fortune", NamedTextColor.GREEN, NamedTextColor.GOLD, false, PackSprite.STAT_ORE_FORTUNE),
@@ -165,14 +166,6 @@ public enum ItemStatistic {
         return isPercentage ? "" : "+";
     }
 
-    public String getFullDisplayName() {
-        return LegacyComponentSerializer.legacySection().serialize(getCompleteDisplayName());
-    }
-
-    public String getLegacyDisplayColor() {
-        return LegacyComponentSerializer.legacySection()
-                .serialize(Component.text("|", displayColor)).replace("|", "");
-    }
 
     public Component getCompleteDisplayName() {
         return symbol.getSprite().appendSpace().append(Component.text(displayName)).color(displayColor);

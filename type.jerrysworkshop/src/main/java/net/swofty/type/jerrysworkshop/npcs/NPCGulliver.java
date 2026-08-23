@@ -12,7 +12,10 @@ public class NPCGulliver extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Gulliver", "§e§lCLICK"};
+				return new String[]{
+						"Gulliver",
+						"<e><l>CLICK"
+				};
 			}
 
 			@Override

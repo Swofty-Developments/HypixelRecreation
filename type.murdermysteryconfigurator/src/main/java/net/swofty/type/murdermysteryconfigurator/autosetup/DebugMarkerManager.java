@@ -1,8 +1,6 @@
 package net.swofty.type.murdermysteryconfigurator.autosetup;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
@@ -11,6 +9,8 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.item.Material;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.mc.HypixelPosition;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.utility.EntityUtility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,19 +30,19 @@ public class DebugMarkerManager {
         // Gold spawns
         int goldIndex = 1;
         for (HypixelPosition pos : session.getGoldSpawns()) {
-            markers.add(createMarker(instance, pos, "§6Gold Spawn #" + goldIndex++, Material.GOLD_INGOT));
+            markers.add(createMarker(instance, pos, Text.of("<6>Gold Spawn #{}", goldIndex++), Material.GOLD_INGOT));
         }
 
         // Player spawns
         int spawnIndex = 1;
         for (HypixelPosition pos : session.getPlayerSpawns()) {
-            markers.add(createMarker(instance, pos, "§aPlayer Spawn #" + spawnIndex++, Material.PLAYER_HEAD));
+            markers.add(createMarker(instance, pos, Text.of("<a>Player Spawn #{}", spawnIndex++), Material.PLAYER_HEAD));
         }
 
         // Waiting location
         if (session.getWaitingLocation() != null) {
             HypixelPosition pos = new HypixelPosition(session.getWaitingLocation().x(), session.getWaitingLocation().y(), session.getWaitingLocation().z());
-            markers.add(createMarker(instance, pos, "§eWaiting Spawn", Material.CLOCK));
+            markers.add(createMarker(instance, pos, Text.of("<e>Waiting Spawn"), Material.CLOCK));
         }
 
         // Kill zones (show min/max corners for each)
@@ -50,10 +50,10 @@ public class DebugMarkerManager {
             var region = entry.getValue();
             String name = entry.getKey();
             if (region.getMinPos() != null) {
-                markers.add(createMarker(instance, region.getMinPos(), "§c" + name + " Min", Material.BARRIER));
+                markers.add(createMarker(instance, region.getMinPos(), Text.of("<c>{} Min", name), Material.BARRIER));
             }
             if (region.getMaxPos() != null) {
-                markers.add(createMarker(instance, region.getMaxPos(), "§c" + name + " Max", Material.BARRIER));
+                markers.add(createMarker(instance, region.getMaxPos(), Text.of("<c>{} Max", name), Material.BARRIER));
             }
         }
 
@@ -69,7 +69,7 @@ public class DebugMarkerManager {
         }
     }
 
-    private static Entity createMarker(Instance instance, HypixelPosition pos, String label, Material headItem) {
+    private static Entity createMarker(Instance instance, HypixelPosition pos, Text label, Material headItem) {
         Entity armorStand = new Entity(EntityType.ARMOR_STAND);
 
         ArmorStandMeta meta = (ArmorStandMeta) armorStand.getEntityMeta();
@@ -79,7 +79,7 @@ public class DebugMarkerManager {
         meta.setSmall(true);
         meta.setCustomNameVisible(true);
 
-        armorStand.set(DataComponents.CUSTOM_NAME, Component.text(label));
+        EntityUtility.nameEntity(armorStand, label);
 
         armorStand.setInstance(instance, new Pos(pos.x(), pos.y() + 1.5, pos.z()));
 
@@ -99,7 +99,7 @@ public class DebugMarkerManager {
     }
 
     public static Entity createSingleMarker(Instance instance, double x, double y, double z, String label) {
-        return createMarker(instance, new HypixelPosition(x, y, z), label, Material.ARMOR_STAND);
+        return createMarker(instance, new HypixelPosition(x, y, z), Text.literal(label), Material.ARMOR_STAND);
     }
 
     public static void refreshMarkers(UUID playerUuid, MurderMysterySetupSession session, Instance instance) {

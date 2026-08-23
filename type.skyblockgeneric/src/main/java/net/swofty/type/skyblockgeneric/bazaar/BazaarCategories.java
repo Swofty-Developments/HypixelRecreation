@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Getter
 public enum BazaarCategories {
-    FARMING(Material.GOLDEN_HOE, Material.YELLOW_STAINED_GLASS_PANE, "§e",
+    FARMING(Material.GOLDEN_HOE, Material.YELLOW_STAINED_GLASS_PANE, "<e>",
             new BazaarItemSet(ItemType.WHEAT, "Wheat & Seeds",
                     ItemType.WHEAT, ItemType.ENCHANTED_BREAD, ItemType.HAY_BALE, ItemType.ENCHANTED_HAY_BALE, ItemType.SEEDS, ItemType.ENCHANTED_SEEDS),
             new BazaarItemSet(ItemType.CARROT, "Carrot",
@@ -44,7 +44,7 @@ public enum BazaarCategories {
                     ItemType.NETHER_WART, ItemType.ENCHANTED_NETHER_WART)
 
     ),
-    MINING(Material.DIAMOND_PICKAXE, Material.BLUE_STAINED_GLASS_PANE, "§b",
+    MINING(Material.DIAMOND_PICKAXE, Material.BLUE_STAINED_GLASS_PANE, "<b>",
             new BazaarItemSet(ItemType.COBBLESTONE, "Cobblestone",
                     ItemType.COBBLESTONE, ItemType.ENCHANTED_COBBLESTONE),
             new BazaarItemSet(ItemType.COAL, "Coal",
@@ -88,7 +88,7 @@ public enum BazaarCategories {
             new BazaarItemSet(ItemType.MITHRIL, "Dwarven Mines",
                     ItemType.MITHRIL, ItemType.ENCHANTED_MITHRIL, ItemType.REFINED_MITHRIL, ItemType.TITANIUM, ItemType.ENCHANTED_TITANIUM, ItemType.REFINED_TITANIUM, ItemType.STARFALL, ItemType.TREASURITE, ItemType.SORROW)
     ),
-    COMBAT(Material.IRON_SWORD, Material.RED_STAINED_GLASS_PANE, "§c",
+    COMBAT(Material.IRON_SWORD, Material.RED_STAINED_GLASS_PANE, "<c>",
             new BazaarItemSet(ItemType.ROTTEN_FLESH, "Rotten Flesh",
                     ItemType.ROTTEN_FLESH, ItemType.ENCHANTED_ROTTEN_FLESH),
             new BazaarItemSet(ItemType.BONE, "Bone",
@@ -108,8 +108,8 @@ public enum BazaarCategories {
             new BazaarItemSet(ItemType.FEATHER, "Mythological",
                     ItemType.GRIFFIN_FEATHER, ItemType.DAEDALUS_STICK, ItemType.ANCIENT_CLAW, ItemType.ENCHANTED_ANCIENT_CLAW)
     ),
-    WOODS_AND_FISHES(Material.FISHING_ROD, Material.ORANGE_STAINED_GLASS_PANE, "§6"),
-    ODDITIES(Material.ENCHANTING_TABLE, Material.PINK_STAINED_GLASS_PANE, "§d",
+    WOODS_AND_FISHES(Material.FISHING_ROD, Material.ORANGE_STAINED_GLASS_PANE, "<6>"),
+    ODDITIES(Material.ENCHANTING_TABLE, Material.PINK_STAINED_GLASS_PANE, "<d>",
             new BazaarItemSet(ItemType.ATTRIBUTE_SHARD, "Attribute Shards", AttributeBazaarItems.values())),
     ;
 

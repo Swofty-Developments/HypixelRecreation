@@ -37,9 +37,9 @@ public class AnimatedExplosion {
 
                     Block block = instance.getBlock(blockPos);
 
-                    if (block.isAir()) continue;
+                    if (block.air()) continue;
                     if (block.compare(Block.BEDROCK)) continue;
-                    if (!block.isSolid()) continue;
+                    if (!block.solid()) continue;
 
                     instance.setBlock(blockPos, Block.AIR);
 

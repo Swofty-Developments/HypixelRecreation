@@ -1,14 +1,13 @@
 package net.swofty.type.replayviewer.playback.npc;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.instance.InstanceContainer;
 import net.swofty.type.generic.entity.hologram.ServerHolograms;
 import net.swofty.type.replayviewer.entity.ReplayEntityManager;
+import net.swofty.commons.text.Text;
 import net.swofty.type.replayviewer.playback.ReplaySession;
 
 import java.util.*;
@@ -68,11 +67,11 @@ public class NpcReplayManager {
         if (entity != null) {
             if (visible) {
                 String fullName = data.getFullDisplayName();
-                Component nameComponent = LegacyComponentSerializer.legacySection().deserialize(fullName);
+                Text name = Text.read(fullName);
                 if (nameColor >= 0) {
-                    nameComponent = nameComponent.color(TextColor.color(nameColor));
+                    name = Text.of("<color:{}>{}", TextColor.color(nameColor), name);
                 }
-                entity.set(DataComponents.CUSTOM_NAME, nameComponent);
+                entity.set(DataComponents.CUSTOM_NAME, name.asComponent());
                 entity.setCustomNameVisible(true);
             } else {
                 entity.setCustomNameVisible(false);

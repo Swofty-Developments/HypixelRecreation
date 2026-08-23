@@ -1,8 +1,6 @@
 package net.swofty.type.thepark;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Vec;
@@ -11,6 +9,7 @@ import net.minestom.server.entity.damage.DamageType;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.timer.ExecutionType;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointInteger;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
@@ -55,13 +54,13 @@ public class TrialOfFire {
 				.orElse(null);
 
 		if (trial == null) {
-			sendMessage(player, "§cYou have already completed the §6Trial of Fire§f!");
+			sendMessage(player, "<c>You have already completed the <6>Trial of Fire<f>!");
 			return;
 		}
 
 		// TODO: remove this
 		if (trial == Trial.II) {
-			sendMessage(player, "§cTrials are not finished.");
+			sendMessage(player, "<c>Trials are not finished.");
 			player.notImplemented();
 			return;
 		}
@@ -70,12 +69,12 @@ public class TrialOfFire {
 		MinecraftServer.getSchedulerManager().submitTask(() -> {
 			int iterations = competingPlayers.get(player.getUuid());
 			if (iterations == 0) {
-				sendMessage(player, "Started §6Trial of Fire§f!");
+				sendMessage(player, "Started <6>Trial of Fire<f>!");
 			}
 
 			player.damage(new Damage(DamageType.CAMPFIRE, null, null, player.getPosition(), trial.dps));
 			if (player.getInstance().getBlock(player.getPosition().sub(0, 0.3, 0)).key() != Block.CAMPFIRE.key()) {
-				sendMessage(player, "§cTrial cancelled: §fYou stepped out of the campfire!");
+				sendMessage(player, "<c>Trial cancelled: <f>You stepped out of the campfire!");
 				competingPlayers.remove(player.getUuid());
 				return TaskSchedule.stop();
 			}
@@ -83,12 +82,12 @@ public class TrialOfFire {
 			competingPlayers.put(player.getUuid(), iterations + 1);
 
 			if (iterations + 1 >= 10) {
-				player.showTitle(Title.title(
-						Component.text("Complete!", NamedTextColor.GREEN),
-						Component.space(),
+				player.showTitle(
+						Text.of("<a>Complete!"),
+						Text.literal(" "),
 						Title.Times.times(Duration.ofSeconds(1), Duration.ZERO, Duration.ofSeconds(1))
-				));
-				sendMessage(player, "§aCompleted §6Trial of Fire " + (trial.name()));
+				);
+				sendMessage(player, "<a>Completed <6>Trial of Fire {}", trial.name());
 				player.setVelocity(new Vec(12, 18, 12));
 				competingPlayers.remove(player.getUuid());
 
@@ -114,8 +113,8 @@ public class TrialOfFire {
 		return competingPlayers.containsKey(player.getUuid());
 	}
 
-	private static void sendMessage(SkyBlockPlayer player, String message) {
-		player.sendMessage("§6§lTRIAL OF FIRE! §f" + message);
+	private static void sendMessage(SkyBlockPlayer player, String message, Object... args) {
+		player.sendMessage("<6><l>TRIAL OF FIRE! </l><f>" + message, args);
 	}
 
 	enum Trial {

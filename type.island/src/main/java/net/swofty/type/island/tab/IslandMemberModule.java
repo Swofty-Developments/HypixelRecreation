@@ -1,9 +1,9 @@
 package net.swofty.type.island.tab;
 
 import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointRank;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.generic.tab.TablistSkinRegistry;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -27,10 +27,9 @@ public class IslandMemberModule extends TablistModule {
             toShow = new ArrayList<>(Collections.singletonList(player));
 
         ArrayList<TablistEntry> entries = new ArrayList<>(List.of(
-                new TablistEntry(Component.text(getCentered(I18n.string("tablist.module.island", l, Component.text(String.valueOf(toShow.size()))))), TablistSkinRegistry.CYAN)
+                centered(Text.key("tablist.module.island", toShow.size()), l, TablistSkinRegistry.CYAN)
         ));
 
-        // Sort players by their rank ordinal in reverse
         toShow.sort((o1, o2) -> o2.getDataHandler().get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().ordinal()
                 - o1.getDataHandler().get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().ordinal());
         Collections.reverse(toShow);
@@ -42,7 +41,7 @@ public class IslandMemberModule extends TablistModule {
             }
 
             SkyBlockPlayer tablePlayer = toShow.get(x);
-            entries.add(new TablistEntry(tablePlayer.getRankDisplayName(), TablistSkinRegistry.GRAY));
+            entries.add(new TablistEntry(Text.of("{}", tablePlayer.getRankDisplayName()), TablistSkinRegistry.GRAY));
         }
 
         fillRestWithGray(entries);

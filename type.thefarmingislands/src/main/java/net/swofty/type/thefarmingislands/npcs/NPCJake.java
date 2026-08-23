@@ -14,7 +14,7 @@ public class NPCJake extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Jake", "§e§lCLICK"};
+                return new String[]{"Jake", "<e><l>CLICK"};
             }
 
             @Override

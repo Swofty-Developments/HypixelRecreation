@@ -1,14 +1,13 @@
 package net.swofty.type.skywarslobby.gui;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSoulWellUpgrades;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skywarslobby.soulwell.SoulWellUpgrade;
@@ -24,7 +23,7 @@ public class GUISoulWell extends StatelessView {
 
     @Override
     public ViewConfiguration<DefaultState> configuration() {
-        return new ViewConfiguration<>(Component.text("Soul Well"), InventoryType.CHEST_6_ROW);
+        return new ViewConfiguration<>("Soul Well", InventoryType.CHEST_6_ROW);
     }
 
     @Override
@@ -43,22 +42,19 @@ public class GUISoulWell extends StatelessView {
 
         // Roll Soul Well button (slot 12)
         layout.slot(12,
-                (_, _) -> ItemStackCreator.getStack(
-                        "§aRoll Soul Well",
-                        Material.END_PORTAL_FRAME,
-                        1,
-                        "§7Rolls for a random kit, perk, or coin",
-                        "§7bonus.",
-                        "",
-                        "§7Cost: §b" + rollCost + " Souls",
-                        "",
-                        "§eClick to roll!"
-                ),
+                (_, _) -> ItemStacks.item(Material.END_PORTAL_FRAME, 1, """
+                        <a>Roll Soul Well
+                        <7>Rolls for a random kit, perk, or coin
+                        <7>bonus.
+
+                        <7>Cost: <b>{} Souls
+
+                        <e>Click to roll!""", rollCost),
                 (_, c) -> {
                     if (handler == null) return;
                     long currentSouls = handler.get(SkywarsDataHandler.Data.SOULS, DatapointLong.class).getValue();
                     if (currentSouls < rollCost) {
-                        c.player().sendMessage("§cYou don't have enough souls!");
+                        c.player().sendMessage("<c>You don't have enough souls!");
                         return;
                     }
 
@@ -73,21 +69,20 @@ public class GUISoulWell extends StatelessView {
                 (_, _) -> {
                     int wheels = getWheelCount(handler);
                     int cost = wheels * BASE_ROLL_COST;
-                    String decreaseText = wheels > 1 ? "§eRight-click to decrease!" : "";
-                    String increaseText = wheels < 5 ? "§eLeft-click to increase!" : "";
 
-                    List<String> lore = new ArrayList<>();
-                    lore.add("§8Setting");
-                    lore.add("");
-                    lore.add("§7Change the number of wheels your");
-                    lore.add("§bSoul Well §7will spin each roll. §8(max 5)");
-                    lore.add("");
-                    lore.add("§7# of Wheels: §a" + wheels + " §8(" + cost + " Souls)");
-                    lore.add("");
-                    if (!increaseText.isEmpty()) lore.add(increaseText);
-                    if (!decreaseText.isEmpty()) lore.add(decreaseText);
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.of("<8>Setting"));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>Change the number of wheels your"));
+                    lore.add(Text.of("<b>Soul Well <7>will spin each roll. <8>(max 5)"));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7># of Wheels: <a>{} <8>({} Souls)", wheels, cost));
+                    lore.add(Text.empty());
+                    if (wheels < 5) lore.add(Text.of("<e>Left-click to increase!"));
+                    if (wheels > 1) lore.add(Text.of("<e>Right-click to decrease!"));
 
-                    return ItemStackCreator.getStack("§6Soul Well Wheels", Material.ENCHANTING_TABLE, 1, lore);
+                    return ItemStacks.item(Material.ENCHANTING_TABLE, 1,
+                            Text.of("<6>Soul Well Wheels"), lore);
                 },
                 (click, c) -> {
                     if (handler == null) return;
@@ -109,29 +104,23 @@ public class GUISoulWell extends StatelessView {
         layoutUpgradeItem(layout, 32, "angel_of_death", playerUpgrades, coins);
 
         // Head Collection placeholder (slot 34)
-        layout.slot(34, (_, _) -> ItemStackCreator.getStack(
-                "§cHead Collection",
-                Material.CHEST,
-                1,
-                "§7View your collection of §cHeads§7.",
-                "",
-                "§7Players drop their §cHeads §7when killed",
-                "§7in §5Corrupted Games§7!",
-                "",
-                "§7Total Heads: §a0",
-                "",
-                "§8Coming soon..."
-        ));
+        layout.slot(34, (_, _) -> ItemStacks.item(Material.CHEST, 1, """
+                <c>Head Collection
+                <7>View your collection of <c>Heads</c>.
+
+                <7>Players drop their <c>Heads</c> when killed
+                <7>in <5>Corrupted Games</5>!
+
+                <7>Total Heads: <a>0
+
+                <8>Coming soon..."""));
 
         // Total Coins display (slot 50)
         layout.slot(50, (_, _) -> {
             String formattedCoins = NumberFormat.getNumberInstance(Locale.US).format(coins);
-            return ItemStackCreator.getStack(
-                    "§7Total Coins: §6" + formattedCoins,
-                    Material.EMERALD,
-                    1,
-                    "§6https://store.hypixel.net"
-            );
+            return ItemStacks.item(Material.EMERALD, 1, """
+                    <7>Total Coins: <6>{}
+                    <6>https://store.hypixel.net""", formattedCoins);
         });
 
         // Close button (slot 49)
@@ -152,63 +141,61 @@ public class GUISoulWell extends StatelessView {
 
         layout.slot(slot,
                 (_, _) -> {
-                    List<String> lore = new ArrayList<>();
-                    lore.add("§8Permanent Upgrade");
-                    lore.add("");
-                    lore.add("§7" + upgrade.baseDescription());
-                    lore.add("");
+                    List<Text> lore = new ArrayList<>();
+                    lore.add(Text.of("<8>Permanent Upgrade"));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>{}", upgrade.baseDescription()));
+                    lore.add(Text.empty());
 
                     String colorCode = upgrade.color();
 
                     if (isMaxed) {
                         SoulWellUpgrade.SoulWellUpgradeTier currentTier = upgrade.getTier(currentLevel);
                         if (currentTier != null) {
-                            lore.add("§7Current: §" + colorCode + currentTier.newEffect() + " §7" + currentTier.effectDescription());
+                            lore.add(Text.of("<7>Current: <color:{}>{} <7>{}",
+                                    colorCode, currentTier.newEffect(), currentTier.effectDescription()));
                         }
-                        lore.add("");
-                        lore.add("§aMAXED OUT!");
+                        lore.add(Text.empty());
+                        lore.add(Text.of("<a>MAXED OUT!"));
 
-                        return ItemStackCreator.getStack(
-                                "§" + colorCode + upgrade.name() + " " + StringUtility.getAsRomanNumeral(currentLevel),
-                                upgrade.material(),
-                                1,
-                                lore
-                        );
+                        return ItemStacks.item(upgrade.material(), 1,
+                                Text.of("<color:{}>{} {:roman}", colorCode, upgrade.name(), currentLevel), lore);
                     }
 
                     if (nextTier != null) {
                         lore.add(nextTier.getEffectChangeLine());
-                        lore.add("");
+                        lore.add(Text.empty());
 
                         String formattedCost = NumberFormat.getNumberInstance(Locale.US).format(nextTier.cost());
                         boolean canAfford = coins >= nextTier.cost();
 
-                        lore.add("§7Cost: §6" + formattedCost);
-                        lore.add("");
+                        lore.add(Text.of("<7>Cost: <6>{}", formattedCost));
+                        lore.add(Text.empty());
 
-                        if (canAfford) lore.add("§eClick to purchase!");
-                        else lore.add("§cYou can't afford this!");
+                        if (canAfford) lore.add(Text.of("<e>Click to purchase!"));
+                        else lore.add(Text.of("<c>You can't afford this!"));
 
-                        String displayName;
+                        Text displayName;
                         if (currentLevel == 0) {
-                            displayName = "§" + colorCode + upgrade.name();
+                            displayName = Text.of("<color:{}>{}", colorCode, upgrade.name());
                         } else {
-                            displayName = "§" + colorCode + upgrade.name() + " " + StringUtility.getAsRomanNumeral(currentLevel)
-                                    + " §l→ §" + colorCode + StringUtility.getAsRomanNumeral(currentLevel + 1);
+                            displayName = Text.of("<color:{}>{} {:roman} <l>→ </l>{:roman}",
+                                    colorCode, upgrade.name(), currentLevel, currentLevel + 1);
                         }
 
-                        return ItemStackCreator.getStack(displayName, upgrade.material(), 1, lore);
+                        return ItemStacks.item(upgrade.material(), 1, displayName, lore);
                     }
 
-                    return ItemStackCreator.getStack("§7" + upgrade.name(), upgrade.material(), 1, lore);
+                    return ItemStacks.item(upgrade.material(), 1,
+                            Text.of("<7>{}", upgrade.name()), lore);
                 },
                 (_, c) -> {
                     if (isMaxed) {
-                        c.player().sendMessage("§cThis upgrade is already maxed out!");
+                        c.player().sendMessage("<c>This upgrade is already maxed out!");
                         return;
                     }
                     if (nextTier == null) {
-                        c.player().sendMessage("§cNo upgrade tier found!");
+                        c.player().sendMessage("<c>No upgrade tier found!");
                         return;
                     }
 

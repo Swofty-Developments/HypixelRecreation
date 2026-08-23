@@ -4,21 +4,17 @@ import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.type.hub.gui.elizabeth.subguis.GUIPreviousCityProjects;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-import java.util.ArrayList;
-import java.util.Objects;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 public class GUICityProjects extends HypixelInventoryGUI {
@@ -34,7 +30,7 @@ public class GUICityProjects extends HypixelInventoryGUI {
     };
 
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
 
         GUIAccountAndProfileUpgrades.ShopCategorys[] allShopCategorys = GUIAccountAndProfileUpgrades.ShopCategorys.values();
         int index = 0;
@@ -43,35 +39,13 @@ public class GUICityProjects extends HypixelInventoryGUI {
             set(new GUIClickableItem(slot) {
                 @Override
                 public void run(InventoryPreClickEvent e, HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
                     if (slot != 1) {
-                        shopCategorys.gui.open(player);
+                        shopCategorys.gui.open(p);
                     }
                 }
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    if (slot != 1) {
-                        ItemStack.Builder itemStack = shopCategorys.stack;
-                        ArrayList<String> lore = new ArrayList<>(itemStack.build().get(DataComponents.LORE).stream().map(StringUtility::getTextFromComponent).toList());
-                        if (Objects.equals(lore.getLast(), "§aCurrently selected!")) {
-                            lore.removeLast();
-                            lore.add("§eClick to view!");
-                        } else if (Objects.equals(lore.getLast(), " ")) {
-                            lore.add("§eClick to view!");
-                        }
-                        return ItemStackCreator.updateLore(itemStack, lore);
-                    } else {
-                        ItemStack.Builder itemStack = shopCategorys.stack;
-                        ArrayList<String> lore = new ArrayList<>(itemStack.build().get(DataComponents.LORE).stream().map(StringUtility::getTextFromComponent).toList());
-                        if (Objects.equals(lore.getLast(), "§eClick to view!")) {
-                            lore.removeLast();
-                            lore.add("§aCurrently selected!");
-                        } else if (Objects.equals(lore.getLast(), " ")) {
-                            lore.add("§aCurrently selected!");
-                        }
-                        return ItemStackCreator.updateLore(itemStack, lore);
-                    }
+                    return shopCategorys.buildStack(slot == 1);
                 }
             });
             index++;
@@ -80,20 +54,18 @@ public class GUICityProjects extends HypixelInventoryGUI {
         for (int slot : categoriesItemsSlots) {
             set(new GUIItem(slot) {
                 public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    if (slot != 10) {
-                        return ItemStackCreator.getStack("§8▲ §7Categories", Material.GRAY_STAINED_GLASS_PANE, 1, "§8▼ §7Items");
-                    } else {
-                        return ItemStackCreator.getStack("§8▲ §7Categories", Material.GREEN_STAINED_GLASS_PANE, 1, "§8▼ §7Items");
-                    }
+                    return ItemStacks.item(slot != 10
+                            ? Material.GRAY_STAINED_GLASS_PANE
+                            : Material.GREEN_STAINED_GLASS_PANE, """
+                            <8>▲ <7>Categories
+                            <8>▼ <7>Items""");
                 }
             });
         }
         set(new GUIClickableItem(49) {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                player.openBook(Book.builder()
+                p.openBook(Book.builder()
                         .addPage(Component.text("Purchase ranks, gems and more on our webstore!")
                                 .appendNewline()
                                 .appendNewline()
@@ -106,19 +78,19 @@ public class GUICityProjects extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.enchant(ItemStackCreator.getStack("§aCommunity Shop", Material.EMERALD, 1,
-                        "§8Elizabeth",
-                        " ",
-                        "§7Gems: §a" + StringUtility.commaify(player.getGems()),
-                        "§8Purchase on store.hypixel.net!",
-                        " ",
-                        "§7Bits: §b" + StringUtility.commaify(player.getBits()),
-                        "§8Earn from Booster Cookies!",
-                        " ",
-                        "§7Fame Rank: §e",
-                        "§8Rank up by spending gems & bits!",
-                        "§eClick to get link!"
-                ));
+                return ItemStacks.enchanted(ItemStacks.item(Material.EMERALD, """
+                        <a>Community Shop
+                        <8>Elizabeth
+
+                        <7>Gems: <a>{:,}
+                        <8>Purchase on store.hypixel.net!
+
+                        <7>Bits: <b>{:,}
+                        <8>Earn from Booster Cookies!
+
+                        <7>Fame Rank: <e>
+                        <8>Rank up by spending gems & bits!
+                        <e>Click to get link!""", player.getGems(), player.getBits()));
             }
         });
         set(new GUIClickableItem(50) {
@@ -130,15 +102,15 @@ public class GUICityProjects extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.getStack("§aPrevious Projects", Material.BOOKSHELF, 1,
-                        "§7The community completed §e7 §7projects",
-                        "§7in the past.",
-                        " ",
-                        "§7You contributed to §b0 §7of those",
-                        "§7projects!",
-                        " ",
-                        "§eClick to view them!");
+                return ItemStacks.item(Material.BOOKSHELF, """
+                        <a>Previous Projects
+                        <7>The community completed <e>7 <7>projects
+                        <7>in the past.
+
+                        <7>You contributed to <b>0 <7>of those
+                        <7>projects!
+
+                        <e>Click to view them!""");
             }
         });
         updateItemStacks(getInventory(), getPlayer());

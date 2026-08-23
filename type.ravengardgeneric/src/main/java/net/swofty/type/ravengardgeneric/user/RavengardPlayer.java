@@ -21,6 +21,18 @@ public class RavengardPlayer extends HypixelPlayer {
         return RavengardDataHandler.getUser(this.getUuid());
     }
 
+    public boolean isBlockingWithShield() {
+        var meta = (net.minestom.server.entity.metadata.LivingEntityMeta) getEntityMeta();
+        if (!meta.isHandActive()) {
+            return false;
+        }
+        var type = new net.swofty.type.ravengardgeneric.item.attribute
+                .RavengardItemAttributeHandler(getItemInOffHand()).getType();
+        var standard = type == null ? null : type.component(
+                net.swofty.type.ravengardgeneric.item.components.StandardItemComponent.class);
+        return standard != null && standard.isShield() && type.usableBy(getRavengardClass());
+    }
+
     public @Nullable RavengardClass getRavengardClass() {
         RavengardDataHandler handler = getRavengardDataHandler();
         if (handler == null) {
@@ -57,26 +69,7 @@ public class RavengardPlayer extends HypixelPlayer {
 
     public @Nullable java.util.UUID getSelectedProfile() {
         RavengardDataHandler handler = getRavengardDataHandler();
-        if (handler == null) {
-            return null;
-        }
-        String value = handler
-                .get(RavengardDataHandler.Data.SELECTED_PROFILE, DatapointRavengardString.class)
-                .getValue();
-        try {
-            return value == null || value.isEmpty() ? null : java.util.UUID.fromString(value);
-        } catch (IllegalArgumentException exception) {
-            return null;
-        }
-    }
-
-    public void setSelectedProfile(@Nullable java.util.UUID value) {
-        RavengardDataHandler handler = getRavengardDataHandler();
-        if (handler == null) {
-            return;
-        }
-        handler.get(RavengardDataHandler.Data.SELECTED_PROFILE, DatapointRavengardString.class)
-                .setValue(value == null ? "" : value.toString());
+        return handler == null ? null : handler.getCurrentProfileId();
     }
 
     public boolean isTutorial() {

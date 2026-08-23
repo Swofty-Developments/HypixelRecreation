@@ -2,7 +2,6 @@ package net.swofty.velocity.redis.listeners;
 
 import com.google.gson.Gson;
 import io.sentry.Sentry;
-import net.kyori.adventure.text.Component;
 import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.proxy.to.PunishPlayerProtocol;
 import net.swofty.commons.punishment.PunishmentReason;
@@ -12,7 +11,9 @@ import net.swofty.commons.punishment.PunishmentMessages;
 import net.swofty.commons.punishment.PunishmentType;
 import net.swofty.commons.punishment.template.BanType;
 import net.swofty.commons.punishment.template.MuteType;
+import net.swofty.commons.text.Text;
 import net.swofty.velocity.SkyBlockVelocity;
+import net.swofty.velocity.text.ProxyText;
 import net.swofty.commons.redis.RedisMessageContext;
 import net.swofty.commons.redis.RedisMessageHandler;
 import org.tinylog.Logger;
@@ -68,10 +69,11 @@ public class ListenerPlayerPunished implements RedisMessageHandler<
         SkyBlockVelocity.getServer().getPlayer(target).ifPresent((player) -> {
             ActivePunishment activePunishment = new ActivePunishment(type, id, finalReason, expiresAt, finalTags);
             switch (punishmentType) {
-                case BAN -> player.disconnect(PunishmentMessages.banMessage(activePunishment));
+                case BAN -> ProxyText.disconnect(player, PunishmentMessages.banMessage(activePunishment));
                 case MUTE -> player.sendMessage(PunishmentMessages.muteMessage(activePunishment));
-                case WARNING -> player.sendMessage(Component.text(
-                        "§c[WARNING] §7You have received a warning for the following reason: §e" + finalReason.getReasonString()));
+                case WARNING -> player.sendMessage(Text.of(
+                        "<c>[WARNING] <7>You have received a warning for the following reason: <e>{}",
+                        finalReason.getReasonString()));
                 default -> {}
             }
         });

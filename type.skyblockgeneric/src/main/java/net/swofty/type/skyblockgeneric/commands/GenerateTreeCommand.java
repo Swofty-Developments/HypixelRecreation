@@ -48,12 +48,12 @@ public class GenerateTreeCommand extends HypixelCommand {
             int maxHeight = context.get(maxHeightArg);
 
             if (minHeight > maxHeight) {
-                player.sendMessage("§cMinimum height cannot be greater than maximum height!");
+                player.sendMessage("<c>Minimum height cannot be greater than maximum height!");
                 return;
             }
 
             if (minHeight < 2 || maxHeight > 50) {
-                player.sendMessage("§cHeight must be between 2 and 50!");
+                player.sendMessage("<c>Height must be between 2 and 50!");
                 return;
             }
 
@@ -76,22 +76,22 @@ public class GenerateTreeCommand extends HypixelCommand {
             int maxWidth = context.get(maxWidthArg);
 
             if (minHeight > maxHeight) {
-                player.sendMessage("§cMinimum height cannot be greater than maximum height!");
+                player.sendMessage("<c>Minimum height cannot be greater than maximum height!");
                 return;
             }
 
             if (minWidth > maxWidth) {
-                player.sendMessage("§cMinimum width cannot be greater than maximum width!");
+                player.sendMessage("<c>Minimum width cannot be greater than maximum width!");
                 return;
             }
 
             if (minHeight < 2 || maxHeight > 50) {
-                player.sendMessage("§cHeight must be between 2 and 50!");
+                player.sendMessage("<c>Height must be between 2 and 50!");
                 return;
             }
 
             if (minWidth < 1 || maxWidth > 20) {
-                player.sendMessage("§cWidth must be between 1 and 20!");
+                player.sendMessage("<c>Width must be between 1 and 20!");
                 return;
             }
 
@@ -117,8 +117,8 @@ public class GenerateTreeCommand extends HypixelCommand {
 
         tree.build((SharedInstance) player.getInstance());
 
-        player.sendMessage("§aGenerated " + type.name().toLowerCase().replace("_", " ") +
-                " tree! Height: " + config.minHeight() + "-" + config.maxHeight() +
-                ", Width: " + config.minWidth() + "-" + config.maxWidth());
+        player.sendMessage("<a>Generated {} tree! Height: {}-{}, Width: {}-{}",
+                type.name().toLowerCase().replace("_", " "),
+                config.minHeight(), config.maxHeight(), config.minWidth(), config.maxWidth());
     }
 }

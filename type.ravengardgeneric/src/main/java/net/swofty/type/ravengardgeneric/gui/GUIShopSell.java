@@ -2,10 +2,9 @@ package net.swofty.type.ravengardgeneric.gui;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.ViewNavigator;
@@ -64,16 +63,16 @@ public class GUIShopSell extends RavengardView {
     @Override
     protected void content(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         place(layout, GUIShop.SLOT_BANNER, RavengardItems.button(GUIShop.banner(shop))
-                .label(shop.title())
-                .lore("§7Buy and sell items to help you on.",
-                        "§7your adventures!"));
+                .label(Text.literal(shop.title()))
+                .lore("<7>Buy and sell items to help you on.",
+                        "<7>your adventures!"));
 
         interactive(layout, GUIShop.SLOT_BUY, RavengardItems.button(RavengardButton.BUY)
                         .label("Buy")
-                        .lore("§7Purchase items from this shop to",
-                                "§7help you on your adventures!")
+                        .lore("<7>Purchase items from this shop to",
+                                "<7>help you on your adventures!")
                         .blankLine()
-                        .lore("§eClick to buy!"),
+                        .lore("<e>Click to buy!"),
                 (click, viewContext) -> {
                     returnStaged(viewContext);
                     ViewNavigator.get(viewContext.player()).push(new GUIShop(shop));
@@ -81,10 +80,10 @@ public class GUIShopSell extends RavengardView {
 
         place(layout, GUIShop.SLOT_SELL, RavengardItems.button(RavengardButton.SELL)
                 .label("Sell")
-                .lore("§7Sell items from your inventory for",
-                        "§7some extra cash!")
+                .lore("<7>Sell items from your inventory for",
+                        "<7>some extra cash!")
                 .blankLine()
-                .lore("§aYou are here!"));
+                .lore("<a>You are here!"));
 
         for (int index = 0; index < GRID.length && index < staged.size(); index++) {
             placeStaged(layout, GRID[index], index);
@@ -93,7 +92,7 @@ public class GUIShopSell extends RavengardView {
         interactive(layout, SLOT_TEXT_SELL, RavengardItems.button(RavengardButton.TEXT_SELL)
                         .label("Sell Items")
                         .blankLine()
-                        .lore("§eClick to sell everything above!"),
+                        .lore("<e>Click to sell everything above!"),
                 (click, viewContext) -> sellStaged(viewContext));
     }
 
@@ -131,16 +130,12 @@ public class GUIShopSell extends RavengardView {
         }
         int value = type.getValue();
 
-        List<Component> lore = new ArrayList<>(RavengardItem.loreOf(type, true));
-        lore.add(Component.empty());
-        lore.add(Component.text("Selling for ").color(NamedTextColor.YELLOW)
-                .decoration(TextDecoration.ITALIC, false)
-                .append(Component.text("\uD83D\uDC51").color(NamedTextColor.WHITE))
-                .append(Component.text(String.valueOf(value)).color(TextColor.color(0xFFCE47)))
-                .append(Component.text("! Click to take back.").color(NamedTextColor.YELLOW)));
+        List<Text> lore = new ArrayList<>(RavengardItem.loreOf(type, true));
+        lore.add(Text.empty());
+        lore.add(Text.of("<e>Selling for <f>\uD83D\uDC51<#FFCE47>{}<e>! Click to take back.", value));
 
         ItemStack.Builder display = RavengardItem.displayBuilder(type);
-        display.set(DataComponents.LORE, lore);
+        ItemStacks.lines(display, lore);
 
         layout.slot(gridSlot, display, (click, viewContext) -> {
             if (!(viewContext.player() instanceof RavengardPlayer player)) {

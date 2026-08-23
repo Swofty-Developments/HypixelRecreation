@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.gui.inventories;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.event.inventory.InventoryClickEvent;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
@@ -13,11 +12,11 @@ import net.minestom.server.item.Material;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributePotionData;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.RefreshingGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.block.SkyBlockBlock;
 import net.swofty.type.skyblockgeneric.block.attribute.attributes.BlockAttributeBrewingData;
@@ -30,7 +29,7 @@ import net.swofty.type.skyblockgeneric.potion.PotionModifier;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-import java.util.Locale;
+import java.util.List;
 
 public class GUIBrewingStand extends HypixelInventoryGUI implements RefreshingGUI {
 
@@ -49,7 +48,7 @@ public class GUIBrewingStand extends HypixelInventoryGUI implements RefreshingGU
     private SkyBlockItem[] potionItems = new SkyBlockItem[3];
 
     public GUIBrewingStand(Instance instance, Point position, SkyBlockBlock block) {
-        super(I18n.t("gui_misc.brewing_stand.title"), InventoryType.CHEST_6_ROW);
+        super(Text.key("gui_misc.brewing_stand.title"), InventoryType.CHEST_6_ROW);
         this.instance = instance;
         this.blockPosition = position;
         this.block = block;
@@ -57,7 +56,7 @@ public class GUIBrewingStand extends HypixelInventoryGUI implements RefreshingGU
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
         set(GUIClickableItem.getCloseItem(CLOSE_SLOT));
 
         // Load persisted brewing data into instance variables
@@ -196,24 +195,23 @@ public class GUIBrewingStand extends HypixelInventoryGUI implements RefreshingGU
     }
 
     private void updateAnimationPanes(BlockAttributeBrewingData.BrewingData brewingData, HypixelPlayer player) {
-        Locale l = player.getLocale();
         Material paneMaterial;
-        String paneName;
-        String[] paneLore;
+        Text paneName;
+        List<Text> paneLore;
 
         if (brewingData.isBrewing()) {
             paneMaterial = animationToggle ? Material.RED_STAINED_GLASS_PANE : Material.ORANGE_STAINED_GLASS_PANE;
             long remainingSeconds = brewingData.getRemainingTimeMs() / 1000;
-            paneName = I18n.string("gui_misc.brewing_stand.remaining_time", l, Component.text(String.valueOf(remainingSeconds)));
-            paneLore = new String[0];
+            paneName = Text.key("gui_misc.brewing_stand.remaining_time", remainingSeconds);
+            paneLore = List.of();
         } else {
             paneMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
-            paneName = I18n.string("gui_misc.brewing_stand.place_bottles", l);
-            paneLore = new String[]{I18n.string("gui_misc.brewing_stand.place_bottles_below", l)};
+            paneName = Text.key("gui_misc.brewing_stand.place_bottles");
+            paneLore = List.of(Text.key("gui_misc.brewing_stand.place_bottles_below"));
         }
 
         for (int slot : ANIMATION_SLOTS) {
-            set(slot, ItemStackCreator.getStack(paneName, paneMaterial, 1, paneLore));
+            set(slot, ItemStacks.item(paneMaterial, 1, paneName, paneLore));
         }
     }
 

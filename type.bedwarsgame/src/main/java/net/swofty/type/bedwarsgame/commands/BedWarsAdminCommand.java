@@ -1,9 +1,8 @@
 package net.swofty.type.bedwarsgame.commands;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsTeam;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
@@ -33,7 +32,7 @@ public class BedWarsAdminCommand extends HypixelCommand {
             BedWarsGame game = player.getGame();
 
             if (game == null) {
-                player.sendMessage(Component.text("You are not in a game!", NamedTextColor.RED));
+                player.sendMessage("<c>You are not in a game!");
                 return;
             }
 
@@ -41,12 +40,12 @@ public class BedWarsAdminCommand extends HypixelCommand {
             try {
                 teamKey = TeamKey.valueOf(teamName.toUpperCase());
             } catch (IllegalArgumentException e) {
-                player.sendMessage(Component.text("Invalid team: " + teamName, NamedTextColor.RED));
+                player.sendMessage("<c>Invalid team: {}", teamName);
                 return;
             }
 
             if (!game.isBedAlive(teamKey)) {
-                player.sendMessage(Component.text("That team's bed is already destroyed!", NamedTextColor.RED));
+                player.sendMessage("<c>That team's bed is already destroyed!");
                 return;
             }
 
@@ -62,7 +61,7 @@ public class BedWarsAdminCommand extends HypixelCommand {
             BedWarsGame game = player.getGame();
 
             if (game == null) {
-                player.sendMessage(Component.text("You are not in a game!", NamedTextColor.RED));
+                player.sendMessage("<c>You are not in a game!");
                 return;
             }
 
@@ -70,12 +69,12 @@ public class BedWarsAdminCommand extends HypixelCommand {
             try {
                 teamKey = TeamKey.valueOf(teamName.toUpperCase());
             } catch (IllegalArgumentException e) {
-                player.sendMessage(Component.text("Invalid team: " + teamName, NamedTextColor.RED));
+                player.sendMessage("<c>Invalid team: {}", teamName);
                 return;
             }
 
             if (game.isBedAlive(teamKey)) {
-                player.sendMessage(Component.text("That team's bed is already alive!", NamedTextColor.RED));
+                player.sendMessage("<c>That team's bed is already alive!");
                 return;
             }
 
@@ -91,7 +90,7 @@ public class BedWarsAdminCommand extends HypixelCommand {
             BedWarsGame game = player.getGame();
 
             if (game == null) {
-                player.sendMessage(Component.text("You are not in a game!", NamedTextColor.RED));
+                player.sendMessage("<c>You are not in a game!");
                 return;
             }
 
@@ -102,7 +101,7 @@ public class BedWarsAdminCommand extends HypixelCommand {
                 try {
                     winnerKey = TeamKey.valueOf(winnerTeam.toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    player.sendMessage(Component.text("Invalid team: " + winnerTeam, NamedTextColor.RED));
+                    player.sendMessage("<c>Invalid team: {}", winnerTeam);
                     return;
                 }
             }
@@ -134,7 +133,7 @@ public class BedWarsAdminCommand extends HypixelCommand {
             BedWarsGame game = player.getGame();
 
             if (game == null) {
-                player.sendMessage(Component.text("You are not in a game!", NamedTextColor.RED));
+                player.sendMessage("<c>You are not in a game!");
                 return;
             }
 
@@ -154,22 +153,22 @@ public class BedWarsAdminCommand extends HypixelCommand {
             BedWarsGame game = player.getGame();
 
             if (game == null) {
-                player.sendMessage(Component.text("You are not in a game!", NamedTextColor.RED));
+                player.sendMessage("<c>You are not in a game!");
                 return;
             }
 
-            player.sendMessage(Component.text("=== Game Info ===", NamedTextColor.GOLD));
-            player.sendMessage(Component.text("Game ID: " + game.getGameId(), NamedTextColor.YELLOW));
-            player.sendMessage(Component.text("State: " + game.getState(), NamedTextColor.YELLOW));
-            player.sendMessage(Component.text("Map: " + game.getMapEntry().getName(), NamedTextColor.YELLOW));
-            player.sendMessage(Component.text("Players: " + game.getPlayers().size() + "/" + game.getMaxPlayers(), NamedTextColor.YELLOW));
-            player.sendMessage(Component.text("Recording: " + game.getReplayManager().isRecording(), NamedTextColor.YELLOW));
+            player.sendMessage("<6>=== Game Info ===");
+            player.sendMessage("<e>Game ID: {}", game.getGameId());
+            player.sendMessage("<e>State: {}", game.getState());
+            player.sendMessage("<e>Map: {}", game.getMapEntry().getName());
+            player.sendMessage("<e>Players: {}/{}", game.getPlayers().size(), game.getMaxPlayers());
+            player.sendMessage("<e>Recording: {}", game.getReplayManager().isRecording());
 
-            player.sendMessage(Component.text("=== Teams ===", NamedTextColor.GOLD));
+            player.sendMessage("<6>=== Teams ===");
             for (BedWarsTeam team : game.getTeams()) {
-                String bedStatus = team.isBedAlive() ? "§a✔" : "§c✖";
-                player.sendMessage(Component.text(team.getColorCode() + team.getName() + " " + bedStatus +
-                        " §7(" + team.getPlayerCount() + " players)", NamedTextColor.WHITE));
+                Text bedStatus = team.isBedAlive() ? Text.of("<a>✔") : Text.of("<c>✖");
+                player.sendMessage("{} {} <7>({} players)",
+                        Text.of("<color:{}>{}", team.getColor(), team.getName()), bedStatus, team.getPlayerCount());
             }
         }, ArgumentType.Literal("info"));
 
@@ -178,7 +177,7 @@ public class BedWarsAdminCommand extends HypixelCommand {
             BedWarsPlayer player = (BedWarsPlayer) sender;
             BedWarsGame game = player.getGame();
             if (game == null) {
-                player.sendMessage("§cYou are not in a game.");
+                player.sendMessage("<c>You are not in a game.");
                 return;
             }
 
@@ -190,11 +189,11 @@ public class BedWarsAdminCommand extends HypixelCommand {
                 BedWarsPlayer player = (BedWarsPlayer) sender;
                 BedWarsGame game = player.getGame();
                 if (game == null) {
-                    player.sendMessage("§cYou are not in a game.");
+                    player.sendMessage("<c>You are not in a game.");
                     return;
                 }
                 if (game.getState() != GameState.WAITING && game.getState() != GameState.COUNTDOWN) {
-                    player.sendMessage("§cYou can only force start a game that is waiting.");
+                    player.sendMessage("<c>You can only force start a game that is waiting.");
                     return;
                 }
                 game.start();

@@ -1,15 +1,20 @@
 package net.swofty.packer;
 
-import net.kyori.adventure.text.Component;
 import team.unnamed.creative.BuiltResourcePack;
-import team.unnamed.creative.ResourcePack;
+import team.unnamed.creative.base.Writable;
 import team.unnamed.creative.metadata.pack.FormatVersion;
-import team.unnamed.creative.metadata.pack.PackFormat;
-import team.unnamed.creative.metadata.pack.PackMeta;
-import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackReader;
-import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackWriter;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class HypixelPackBuilder {
     private static final FormatVersion FORMAT_VERSION = FormatVersion.of(FormatVersion.FORMAT_26_1);
@@ -21,16 +26,57 @@ public class HypixelPackBuilder {
     }
 
     public BuiltResourcePack build() {
-        File packDirectory = new File(definition.getPackDirectory()).getAbsoluteFile();
-        if (!packDirectory.isDirectory()) {
-            throw new IllegalStateException("Pack directory does not exist: " + packDirectory.getPath());
+        Path packDirectory = Path.of(definition.getPackDirectory()).toAbsolutePath();
+
+        if (!Files.isDirectory(packDirectory)) {
+            throw new IllegalStateException(
+                    "Pack directory does not exist: " + packDirectory
+            );
         }
 
-        ResourcePack pack = MinecraftResourcePackReader.minecraft()
-                .readFromDirectory(packDirectory);
-        pack.packMeta(PackMeta.of(PackFormat.format(FORMAT_VERSION, FORMAT_VERSION), Component.text("Hypixel")));
+        try {
+            byte[] bytes = zipDirectory(packDirectory);
 
-        return MinecraftResourcePackWriter.minecraft().build(pack);
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            String hash = HexFormat.of().formatHex(digest.digest(bytes));
+
+            return BuiltResourcePack.of(
+                    Writable.bytes(bytes),
+                    hash
+            );
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to build resource pack", e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-1 is unavailable", e);
+        }
+    }
+
+    private byte[] zipDirectory(Path directory) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        try (ZipOutputStream zip = new ZipOutputStream(output);
+             Stream<Path> paths = Files.walk(directory)) {
+
+            paths.filter(Files::isRegularFile).sorted().forEach(path -> {
+                String entryName = directory.relativize(path)
+                        .toString()
+                        .replace('\\', '/');
+
+                try {
+                    ZipEntry entry = new ZipEntry(entryName);
+                    entry.setTime(0);
+                    zip.putNextEntry(entry);
+                    Files.copy(path, zip);
+                    zip.closeEntry();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            });
+        } catch (UncheckedIOException e) {
+            throw e.getCause();
+        }
+
+        return output.toByteArray();
     }
 
 }

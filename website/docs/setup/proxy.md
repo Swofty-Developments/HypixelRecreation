@@ -4,10 +4,10 @@ The Velocity proxy acts as the entry point for all player connections and routes
 
 ## Download Required Files
 
-1. Download `SkyBlockProxy.jar` from the [releases page](https://github.com/Swofty-Developments/HypixelSkyBlock/releases/tag/latest)
-2. Download [Velocity 3.4.0](https://fill-data.papermc.io/v1/objects/ef1a852bfae7397e84907837925e7ad21c6312066290edaae401b77f6f423ac3/velocity-3.4.0-SNAPSHOT-558.jar)
-3. Download [`velocity.toml`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration)
-4. Download [`config.yml`](https://github.com/Swofty-Developments/HypixelSkyBlock/tree/master/configuration)
+1. Download `SkyBlockProxy.jar` from the [releases page](https://github.com/Swofty-Developments/HypixelRecreation/releases/tag/latest)
+2. Download [Velocity 3.5.0-SNAPSHOT](https://fill-data.papermc.io/v1/objects/0ec616020166465dacca3b790d3db2b246f8f7c13b3aaacaae60c825744a66e0/velocity-3.5.0-SNAPSHOT-605.jar) (the same build used by the official Docker setup)
+3. Download [`velocity.toml`](https://github.com/Swofty-Developments/HypixelRecreation/tree/master/configuration)
+4. Download [`config.yml`](https://github.com/Swofty-Developments/HypixelRecreation/tree/master/configuration)
 
 ## Directory Structure
 
@@ -15,7 +15,7 @@ Create the following structure:
 
 ```
 proxy/
-├── velocity-3.4.0-SNAPSHOT-558.jar
+├── velocity-3.5.0-SNAPSHOT-605.jar
 ├── velocity.toml
 ├── configuration/
 │   └── config.yml
@@ -29,7 +29,7 @@ proxy/
 
 2. **First run** - Start the proxy to generate required files:
    ```bash
-   java -jar velocity-3.4.0-SNAPSHOT-558.jar
+   java -jar velocity-3.5.0-SNAPSHOT-605.jar
    ```
 
 3. **Stop the proxy** once the `plugins` folder is generated (Ctrl+C)
@@ -42,7 +42,7 @@ proxy/
 
 7. **Start the proxy**:
    ```bash
-   java -jar velocity-3.4.0-SNAPSHOT-558.jar
+   java -jar velocity-3.5.0-SNAPSHOT-605.jar
    ```
 
 ## Configuration
@@ -63,18 +63,18 @@ This file contains shared configuration used by both the proxy and game servers.
 
 ```yml
 host-name: 0.0.0.0
-transfer-timeout: 800
 mongodb: mongodb://localhost
-redis-url: redis://localhost:6379
+redis-uri: redis://localhost:6379
 velocity-secret: your-forwarding-secret-here
 require-auth: false
-sandbox: false
-spark: false
-anticheat: false
-redis-uri: redis://localhost:6379
+integrations:
+    spark: false
+    anticheat: false
+    via-version: false
+    sentry-dsn: ''
 limbo:
-   host-name: 127.0.0.1
-   port: 65535
+    host-name: 127.0.0.1
+    port: 65535
 ```
 
 :::alert warning

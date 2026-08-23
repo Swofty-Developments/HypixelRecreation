@@ -6,7 +6,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -30,18 +30,15 @@ public class GUIGemstones extends HypixelInventoryGUI {
         set(new GUIItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§dGemstones",
-                        Material.BOOK,
-                        1,
-                        "§8Block Classification",
-                        "",
-                        "§7These blocks are affected by: ",
-                        "§8 - §6☘ Gemstone Fortune",
-                        "§8 - §6☘ Mining Fortune",
-                        "§8 - §e▚ Gemstone Spread",
-                        "§8 - §5✧ Pristine"
-                );
+                return ItemStacks.item(Material.BOOK, """
+                        <d>Gemstones
+                        <8>Block Classification
+
+                        <7>These blocks are affected by:\s
+                        <8> - <6>☘ Gemstone Fortune
+                        <8> - <6>☘ Mining Fortune
+                        <8> - <e>▚ Gemstone Spread
+                        <8> - <5>✧ Pristine""");
             }
         });
 
@@ -54,16 +51,14 @@ public class GUIGemstones extends HypixelInventoryGUI {
             set(new GUIItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§d" + gemstone.getDisplayName() + " Gemstone",
-                            gemstone.getMaterial(),
-                            1,
-                            "§8Gemstone",
-                            "",
-                            "§7Properties",
-                            "§7 Breaking Power: §2" + gemstone.getBreakingPower(),
-                            "§7 Block Strength: §e" + String.format("%,d", gemstone.getBlockStrength())
-                    );
+                    return ItemStacks.item(gemstone.getMaterial(), 1, """
+                            <d>{} Gemstone
+                            <8>Gemstone
+
+                            <7>Properties
+                            <7> Breaking Power: <2>{}
+                            <7> Block Strength: <e>{:,}""",
+                            gemstone.getDisplayName(), gemstone.getBreakingPower(), gemstone.getBlockStrength());
                 }
             });
         }

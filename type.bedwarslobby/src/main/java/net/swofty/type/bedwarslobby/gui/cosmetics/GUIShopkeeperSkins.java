@@ -1,7 +1,7 @@
 package net.swofty.type.bedwarslobby.gui.cosmetics;
 
-import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.collectibles.CollectibleCategory;
 import net.swofty.type.generic.collectibles.CollectibleDefinition;
 import net.swofty.type.generic.collectibles.CollectibleSelectionCheck;
@@ -11,7 +11,7 @@ import net.swofty.type.generic.collectibles.bedwars.BedWarsCollectibleStateServi
 import net.swofty.type.generic.data.datapoints.DatapointLeaderboardLong;
 import net.swofty.type.generic.data.handlers.BedWarsDataHandler;
 import net.swofty.type.generic.gui.impl.collectibles.CollectibleSelectionView;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.ViewSession;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
@@ -66,9 +66,9 @@ public class GUIShopkeeperSkins extends CollectibleSelectionView {
                 return SelectionOutcome.success("");
             }
 
-            String reason = purchaseCheck.reason() != null ? purchaseCheck.reason() : "This collectible cannot be purchased.";
-            String message = reason.indexOf('§') == -1 ? "§c" + reason : reason;
-            return SelectionOutcome.failure(message);
+            return SelectionOutcome.failure(purchaseCheck.reason() != null
+                ? purchaseCheck.reason()
+                : "This collectible cannot be purchased.");
         }
 
         BedWarsCollectibleStateService.SelectionResult result = BedWarsCollectibleStateService.select(player, definition);
@@ -143,9 +143,12 @@ public class GUIShopkeeperSkins extends CollectibleSelectionView {
             ctx.player(), CollectibleCategory.SHOPKEEPER_SKINS, BedWarsCollectibleStateService.RANDOM_FAVORITE_SELECTION_ID);
 
         layout.slot(11,
-            randomOptionStack("§aRandom Shopkeeper Skin", Material.CHEST, randomSelected,
-                "§7Pick a random unlocked shopkeeper",
-                "§7skin every time it is used."),
+            ItemStacks.item(Material.CHEST, """
+                    <a>Random Shopkeeper Skin
+                    <7>Pick a random unlocked shopkeeper
+                    <7>skin every time it is used.
+
+                    {}""", actionLine(randomSelected)),
             (click, context) -> {
                 BedWarsCollectibleStateService.SelectionResult result = BedWarsCollectibleStateService.selectSpecial(
                     context.player(),
@@ -158,8 +161,11 @@ public class GUIShopkeeperSkins extends CollectibleSelectionView {
         );
 
         layout.slot(12,
-            randomOptionStack("§aRandom Favorite Shopkeeper Skin", Material.ENDER_CHEST, randomFavoriteSelected,
-                "§7Use a Random §6✯ Favorite §7Shopkeeper Skin!"),
+            ItemStacks.item(Material.ENDER_CHEST, """
+                    <a>Random Favorite Shopkeeper Skin
+                    <7>Use a Random <6>✯ Favorite <7>Shopkeeper Skin!
+
+                    {}""", actionLine(randomFavoriteSelected)),
             (click, context) -> {
                 BedWarsCollectibleStateService.SelectionResult result = BedWarsCollectibleStateService.selectSpecial(
                     context.player(),
@@ -177,17 +183,7 @@ public class GUIShopkeeperSkins extends CollectibleSelectionView {
 
     }
 
-    private static ItemStack.Builder randomOptionStack(
-        String name,
-        Material material,
-        boolean selected,
-        String... description
-    ) {
-        String[] lore = new String[description.length + 2];
-        System.arraycopy(description, 0, lore, 0, description.length);
-        lore[description.length] = "";
-        lore[description.length + 1] = selected ? "§aSELECTED!" : "§eClick to select!";
-
-        return ItemStackCreator.getStack(name, material, 1, lore);
+    private static Text actionLine(boolean selected) {
+        return selected ? Text.of("<a>SELECTED!") : Text.of("<e>Click to select!");
     }
 }

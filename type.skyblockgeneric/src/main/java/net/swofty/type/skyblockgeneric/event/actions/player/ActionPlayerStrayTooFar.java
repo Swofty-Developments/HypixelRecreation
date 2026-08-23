@@ -36,7 +36,7 @@ public class ActionPlayerStrayTooFar implements HypixelEventClass {
                         player.getOriginServer()
                 ));
                 startedStray.remove(player.getUuid());
-                player.sendMessage("§cYou have strayed too far from the spawn! Teleporting you back...");
+                player.sendMessage("<c>You have strayed too far from the spawn! Teleporting you back...");
             }
         } else {
             startedStray.put(player.getUuid(), System.currentTimeMillis());

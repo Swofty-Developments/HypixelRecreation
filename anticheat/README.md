@@ -273,7 +273,7 @@ public class GameModeManager {
 - `clearBypasses(UUID uuid)` - Clear all bypasses for a player
 
 ## License
-SwoftyAnticheat's directory is licensed under the permissive MIT license. Please see [`LICENSE.txt`](https://github.com/Swofty-Developments/HypixelSkyBlock/blob/master/anticheat/LICENSE.md) for more information.
+SwoftyAnticheat's directory is licensed under the permissive MIT license. Please see [`LICENSE.txt`](https://github.com/Swofty-Developments/HypixelRecreation/blob/master/anticheat/LICENSE.md) for more information.
 
 ## Credits
 Thanks to:

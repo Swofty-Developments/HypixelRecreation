@@ -1,8 +1,8 @@
 name: "Runecrafting"
 displayIcon: "magma_cream"
 description:
-  - "§7Slay bosses and runic mobs, and"
-  - "§7fuse runes to earn Runecrafting XP!"
+  - "<7>Slay bosses and runic mobs, and"
+  - "<7>fuse runes to earn Runecrafting XP!"
 
 rewards:
   - level: 1

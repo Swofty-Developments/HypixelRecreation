@@ -15,7 +15,7 @@ if [[ ! -t 0 && -z "${SKYBLOCK_INSTALLER_REEXEC:-}" ]]; then
   exec env SKYBLOCK_INSTALLER_REEXEC=1 bash "$tmpdir/install.sh" "$@"
 fi
 
-REPO="${SKYBLOCK_INSTALLER_REPO:-Swofty-Developments/HypixelSkyBlock}"
+REPO="${SKYBLOCK_INSTALLER_REPO:-Swofty-Developments/HypixelRecreation}"
 VERSION="${SKYBLOCK_INSTALLER_VERSION:-latest}"
 INSTALLER_NAME="skyblock-installer"
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/skyblock-installer"

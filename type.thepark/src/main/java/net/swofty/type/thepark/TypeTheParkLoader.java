@@ -1,7 +1,5 @@
 package net.swofty.type.thepark;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.BlockVec;
 import net.minestom.server.coordinate.Point;
@@ -17,6 +15,7 @@ import net.swofty.commons.CustomWorlds;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.SkyBlockTypeLoader;
 import net.swofty.type.generic.entity.BlockDisplayEntity;
@@ -79,12 +78,12 @@ public class TypeTheParkLoader implements SkyBlockTypeLoader, RaceInstance {
 				MissionData.ActiveMission activeMission = player.getMissionData().getMission(MissionPlaceTraps.class).getKey();
 				List<Integer> placedTraps = (List<Integer>) activeMission.getCustomData().getOrDefault("placedTraps", new ArrayList<Integer>());
 				if (placedTraps.contains(finalIndex)) {
-					player.sendMessage("§cThis trap has already been placed.");
+					player.sendMessage("<c>This trap has already been placed.");
 					return;
 				}
 				placedTraps.add(finalIndex);
 				activeMission.setCustomData(Map.of("placedTraps", placedTraps));
-				player.sendMessage("§aPlaced trap §7(§e" + placedTraps.size() + "§7/§a3§7)");
+				player.sendMessage("<a>Placed trap <7>(<e>{}<7>/<a>3<7>)", placedTraps.size());
 				TypeTheParkLoader.entities.forEach(Entity::updateViewableRule);
 
 				// check if all placed:
@@ -93,7 +92,7 @@ public class TypeTheParkLoader implements SkyBlockTypeLoader, RaceInstance {
 				}
 			});
 
-			TextDisplayEntity text = new TextDisplayEntity(Component.text("Place Trap Here", NamedTextColor.GREEN), meta -> {});
+			TextDisplayEntity text = new TextDisplayEntity("<a>Place Trap Here", meta -> {});
 			hitbox.setInstance(HypixelConst.getInstanceContainer(), trap);
 			text.setInstance(HypixelConst.getInstanceContainer(), trap.add(0, 1, 0));
 
@@ -279,7 +278,7 @@ public class TypeTheParkLoader implements SkyBlockTypeLoader, RaceInstance {
 
 	@Override
 	public List<ServiceType> getRequiredServices() {
-		return new ArrayList<>(List.of(ServiceType.DATA_MUTEX));
+		return new ArrayList<>();
 	}
 
 	@Override

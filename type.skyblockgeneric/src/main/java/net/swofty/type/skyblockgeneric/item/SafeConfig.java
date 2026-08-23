@@ -32,6 +32,14 @@ public class SafeConfig {
         return value.toString();
     }
 
+    public String getString(String key, String nestedKey, String defaultValue) {
+        Object value = config.get(key);
+        if (value instanceof Map<?, ?>) {
+            return getNested(key).getString(nestedKey, defaultValue);
+        }
+        return value == null ? defaultValue : value.toString();
+    }
+
     public int getInt(String key) {
         return getInt(key, 0);
     }

@@ -18,7 +18,7 @@ public class EnchantmentVicious implements Ench {
     @Override
     public String getDescription(int level) {
         int ferocityBonus = FEROCITY_BONUSES[level - 3];
-        return "Grants §a+" + ferocityBonus + " ⫽Ferocity§7.";
+        return "Grants <a>+" + ferocityBonus + " ⫽Ferocity<7>.";
     }
 
     @Override

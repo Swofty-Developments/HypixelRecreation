@@ -31,7 +31,7 @@ public class NPCPathfindingCommand extends HypixelCommand {
             HypixelNPC npc = HypixelNPC.getRegisteredNPCs().stream().filter(n -> n.getName().equalsIgnoreCase(npcName.replace("_", " "))).findFirst().orElse(null);
 
             if (npc == null) {
-                player.sendMessage("§cNo NPC found with the name '" + npcName + "'.");
+                player.sendMessage("<c>No NPC found with the name '{}'.", npcName);
                 return;
             }
 

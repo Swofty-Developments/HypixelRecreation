@@ -8,11 +8,11 @@ The fastest way to get running. A single command downloads the native installer 
 curl -fsSL skyblock-installer.swofty.net | bash
 ```
 
-This fetches the prebuilt `skyblock-installer` binary for your platform from the [latest release](https://github.com/Swofty-Developments/HypixelSkyBlock/releases/latest), caches it under `~/.cache/skyblock-installer`, and runs it. The installer will:
+This fetches the prebuilt `skyblock-installer` binary for your platform from the [latest release](https://github.com/Swofty-Developments/HypixelRecreation/releases/latest), caches it under `~/.cache/skyblock-installer`, and runs it. The installer will:
 
 1. Check its dependencies (`docker`, `docker compose` v2, a reachable daemon, `git`, `curl`) and offer to install anything missing
-2. Run a system requirements check
-3. Let you pick which server types and services to run
+2. Let you pick which server types and services to run
+3. Show a summary of your choices with an estimated RAM figure for that selection
 4. Generate all configuration and Docker Compose files
 5. Build and start everything in the correct order
 6. Drop you into a management dashboard
@@ -41,12 +41,14 @@ The installer walks you through:
 
 | Step              | What It Does                                                              |
 |-------------------|---------------------------------------------------------------------------|
-| Dependencies      | Checks for Docker, Compose v2, git and curl, and offers to install them   |
-| System Check      | Validates RAM, CPU, disk space, Docker version                            |
+| Dependencies      | Checks for Docker, Compose v2, a reachable daemon, git and curl, and offers to install what is missing |
 | Configuration     | Pick install directory, bind IP, online mode                              |
 | Server Selection  | Choose from 14 SkyBlock servers and 13 lobby/minigame servers             |
-| Service Selection | Pick which microservices to run (DataMutex and Party are required)        |
+| Service Selection | Pick which microservices to run (Party is required)        |
+| Summary           | Recaps your choices and estimates the RAM the selection needs             |
 | Build & Launch    | Builds Docker images, starts containers in order, waits for health checks |
+
+The installer never inspects your machine's RAM, CPU, disk space or Docker version. The figure on the Summary screen is an estimate derived purely from how many servers and services you picked, so treat it as a budget to check against your own hardware rather than a check the installer has already made for you.
 
 ### Management Dashboard
 
@@ -79,8 +81,8 @@ If you prefer to set things up manually or aren't on Linux, you can use Docker C
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Swofty-Developments/HypixelSkyBlock.git
-cd HypixelSkyBlock
+git clone https://github.com/Swofty-Developments/HypixelRecreation.git
+cd HypixelRecreation
 ```
 
 ### 2. Configure

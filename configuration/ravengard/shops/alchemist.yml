@@ -7,5 +7,9 @@ pool:
     price: 6
   - item: BANDAGE
     price: 24
-  - item: HEALTH
+  - item: COMMON_BANDAGE
+    price: 12
+  - item: HEALTH_POTION
     price: 30
+  - item: UNCOMMON_HEALTH_POTION
+    price: 45

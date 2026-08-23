@@ -40,8 +40,8 @@ public class NPCDanteMemorial extends HypixelNPC {
     @Override
     public void onClick(NPCInteractEvent event) {
         HypixelPlayer player = event.player();
-        player.sendMessage("§7In Memoriam");
+        player.sendMessage("<7>In Memoriam");
         player.sendMessage("While Dante will be remembered as a cruel tyrant, his righteous ideals live on in people's hearts.");
-        player.sendMessage("dante §6best§f.");
+        player.sendMessage("dante <6>best<f>.");
     }
 }

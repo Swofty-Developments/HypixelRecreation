@@ -18,7 +18,7 @@ public class MinerArmorSet implements ArmorSet, SetEvents, MuseumableSet {
 	@Override
 	public ArrayList<String> getDescription() {
 		return new ArrayList<>(List.of(
-				"§fDoubles this piece's §aDefense §fwhile on §aMining Islands§f."
+				"<f>Doubles this piece's <a>Defense <f>while on <a>Mining Islands<f>."
 		));
 	}
 

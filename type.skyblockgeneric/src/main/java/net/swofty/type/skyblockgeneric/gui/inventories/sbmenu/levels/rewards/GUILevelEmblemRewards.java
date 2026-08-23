@@ -2,7 +2,8 @@ package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels.rewards;
 
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels.emblem.GUIEmblems;
@@ -33,28 +34,29 @@ public class GUILevelEmblemRewards extends StatelessView {
         Components.back(layout, 48, ctx);
 
         // View Emblems button
-        layout.slot(50, (s, c) -> ItemStackCreator.getStack("§aPrefix Emblems", Material.NAME_TAG, 1,
-                        "§7Add some spice by having an emblem",
-                        "§7next to your name in chat and in tab!",
-                        " ",
-                        "§7Emblems are unlocked through various",
-                        "§7activities such as leveling up",
-                        "§7or completing achievements!",
-                        " ",
-                        "§7Emblems also show important data",
-                        "§7associated with them in chat!",
-                        " ",
-                        "§eClick to view!"),
+        layout.slot(50, (s, c) -> ItemStacks.item(Material.NAME_TAG, 1, """
+                        <a>Prefix Emblems
+                        <7>Add some spice by having an emblem
+                        <7>next to your name in chat and in tab!
+
+                        <7>Emblems are unlocked through various
+                        <7>activities such as leveling up
+                        <7>or completing achievements!
+
+                        <7>Emblems also show important data
+                        <7>associated with them in chat!
+
+                        <e>Click to view!"""),
                 (click, c) -> c.player().openView(new GUIEmblems()));
 
         // Title item
         layout.slot(4, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Emblems to show next to your name");
-            lore.add("§7that signify special achievements.");
-            lore.add(" ");
-            lore.add("§7Next Reward:");
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.of("<7>Emblems to show next to your name"));
+            lore.add(Text.of("<7>that signify special achievements."));
+            lore.add(Text.literal(" "));
+            lore.add(Text.of("<7>Next Reward:"));
 
             List<SkyBlockEmblems.SkyBlockEmblem> levelEmblems = SkyBlockEmblems.getEmblemsWithLevelCause();
             SkyBlockEmblems.SkyBlockEmblem nextEmblem = null;
@@ -65,19 +67,19 @@ public class GUILevelEmblemRewards extends StatelessView {
             }
 
             if (nextEmblem == null) {
-                lore.add("§cNo more rewards!");
+                lore.add(Text.of("<c>No more rewards!"));
             } else {
-                lore.add("§f" + nextEmblem.displayName() + " " + nextEmblem.emblem());
-                lore.add("§8at Level " + ((LevelCause) nextEmblem.cause()).getLevel());
+                lore.add(Text.of("<f>{} ", nextEmblem.displayName()).append(nextEmblem.emblem()));
+                lore.add(Text.of("<8>at Level {}", ((LevelCause) nextEmblem.cause()).getLevel()));
             }
 
-            lore.add(" ");
+            lore.add(Text.literal(" "));
             lore.addAll(GUILevelRewards.getAsDisplay(
                     player.getSkyBlockExperience().getOfType(LevelCause.class).size(),
                     levelEmblems.size()
             ));
 
-            return ItemStackCreator.getStack("§aEmblem Rewards", Material.NAME_TAG, 1, lore);
+            return ItemStacks.item(Material.NAME_TAG, 1, Text.of("<a>Emblem Rewards"), lore);
         });
 
         // Emblem items
@@ -88,13 +90,22 @@ public class GUILevelEmblemRewards extends StatelessView {
 
             layout.slot(slot, (s, c) -> {
                 SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-                return ItemStackCreator.getStack(emblem.displayName() + " " + emblem.emblem(),
-                        Material.NAME_TAG, 1,
-                        "§8Level " + ((LevelCause) emblem.cause()).getLevel(),
-                        " ",
-                        "§7Preview: " + player.getFullDisplayName(emblem),
-                        " ",
-                        (player.getSkyBlockExperience().hasExperienceFor(emblem.cause()) ? "§aYou have unlocked this reward!" : "§7Levels left to unlock: §3" + (((LevelCause) emblem.cause()).getLevel() - player.getSkyBlockExperience().getLevel().asInt())));
+                Text name = Text.of("{} ", emblem.displayName()).append(emblem.emblem());
+
+                Text unlockLine = player.getSkyBlockExperience().hasExperienceFor(emblem.cause())
+                        ? Text.of("<a>You have unlocked this reward!")
+                        : Text.of("<7>Levels left to unlock: <3>{}",
+                                ((LevelCause) emblem.cause()).getLevel() - player.getSkyBlockExperience().getLevel().asInt());
+
+                List<Text> lore = List.of(
+                        Text.of("<8>Level {}", ((LevelCause) emblem.cause()).getLevel()),
+                        Text.literal(" "),
+                        Text.of("<7>Preview: ").append(player.getFullDisplayName(emblem)),
+                        Text.literal(" "),
+                        unlockLine
+                );
+
+                return ItemStacks.item(Material.NAME_TAG, 1, name, lore);
             });
             index++;
         }

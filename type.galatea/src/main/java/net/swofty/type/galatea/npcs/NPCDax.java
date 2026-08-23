@@ -12,7 +12,7 @@ public class NPCDax extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bDax", "§e§lCLICK"};
+                return new String[]{"<b>Dax", "<e><l>CLICK"};
             }
 
             @Override

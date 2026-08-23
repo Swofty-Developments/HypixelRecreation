@@ -1,6 +1,5 @@
 package net.swofty.type.lobby.gui;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
@@ -8,7 +7,8 @@ import net.minestom.server.item.Material;
 import net.minestom.server.network.player.ResolvableProfile;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.StringUtility;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -38,11 +38,18 @@ public class GUIGameMenu extends StatelessView {
     public void layout(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         ServerInfoCache.getServers();
 
-        layout.slot(4, ItemStackCreator.getStack("§aMain Lobby", Material.BOOKSHELF, 1,
-            "", "§7Return to the Main Lobby."), (_, c) -> c.player().sendTo(ServerType.MAIN_LOBBY));
-        layout.slot(13, ItemStackCreator.getStack("§aHypixel SMP", Material.GRASS_BLOCK, 1,
-            "§8Persistent Game", "", "§7Create your own SMP server on", "§7Hypixel and play with your friends.",
-            "", "§a► Click to Connect"), (_, c) -> c.player().notImplemented());
+        layout.slot(4, ItemStacks.item(Material.BOOKSHELF, """
+                <a>Main Lobby
+
+                <7>Return to the Main Lobby."""), (_, c) -> c.player().sendTo(ServerType.MAIN_LOBBY));
+        layout.slot(13, ItemStacks.item(Material.GRASS_BLOCK, """
+                <a>Hypixel SMP
+                <8>Persistent Game
+
+                <7>Create your own SMP server on
+                <7>Hypixel and play with your friends.
+
+                <a>► Click to Connect"""), (_, c) -> c.player().notImplemented());
 
         layout.slot(22, createGameItem(GameType.RAVENGARD), (_, c) -> connect(c, GameType.RAVENGARD));
 
@@ -56,29 +63,33 @@ public class GUIGameMenu extends StatelessView {
     }
 
     private ItemStack.Builder createGameItem(GameType game) {
-        List<String> lore = new ArrayList<>();
-        lore.add("§8" + StringUtility.toNormalCase(game.getCategory().name()));
-        lore.add("");
-        lore.addAll(Arrays.asList(game.getLore()));
-        lore.add("");
-        lore.add(game.isImplemented() ? "§a► Click to Connect" : "§c► Coming soon");
-        lore.add("§7" + (game.isImplemented() ? StringUtility.commaify(game.getPlayerCount()) : "0") + " currently playing!");
-        return ItemStackCreator.appendLore(ItemStackCreator.getFromStack(game.getItem().build()), lore)
-            .customName(Component.text("§a" + game.getDisplayName()));
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<8>{}", StringUtility.toNormalCase(game.getCategory().name())));
+        lore.add(Text.empty());
+        lore.addAll(game.getLore());
+        lore.add(Text.empty());
+        lore.add(game.isImplemented() ? Text.of("<a>► Click to Connect") : Text.of("<c>► Coming soon"));
+        lore.add(game.isImplemented()
+            ? Text.of("<7>{:,} currently playing!", game.getPlayerCount())
+            : Text.of("<7>0 currently playing!"));
+        return ItemStacks.name(ItemStacks.appendLore(ItemStacks.copy(game.getItem().build()), lore),
+            "<a>{}", game.getDisplayName());
     }
 
     private ItemStack.Builder createRandomGameItem() {
         ItemStack base = GameType.values()[ThreadLocalRandom.current().nextInt(GameType.values().length)].getItem().build();
-        ItemStack.Builder builder = ItemStack.builder(base.material()).amount(1)
-            .customName(Component.text("§aRandom Game"))
-            .lore(Component.text("§7Join a random game."), Component.empty(), Component.text("§eClick to Play"));
+        ItemStack.Builder builder = ItemStacks.raw(base.material(), """
+                <a>Random Game
+                <7>Join a random game.
+
+                <e>Click to Play""");
         ResolvableProfile profile = base.get(DataComponents.PROFILE);
         return profile == null ? builder : builder.set(DataComponents.PROFILE, profile);
     }
 
     private void connect(ViewContext ctx, GameType game) {
         if (!game.isImplemented()) {
-            ctx.player().sendMessage("§cThis game is not yet available!");
+            ctx.player().sendMessage("<c>This game is not yet available!");
             return;
         }
         ctx.player().closeInventory();
@@ -88,7 +99,7 @@ public class GUIGameMenu extends StatelessView {
     private void connectRandom(ViewContext ctx) {
         List<GameType> implemented = Arrays.stream(GameType.values()).filter(GameType::isImplemented).toList();
         if (implemented.isEmpty()) {
-            ctx.player().sendMessage("§cNo games available!");
+            ctx.player().sendMessage("<c>No games available!");
             return;
         }
         connect(ctx, implemented.get(ThreadLocalRandom.current().nextInt(implemented.size())));

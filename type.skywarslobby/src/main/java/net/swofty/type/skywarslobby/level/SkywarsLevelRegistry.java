@@ -1,5 +1,6 @@
 package net.swofty.type.skywarslobby.level;
 
+import net.swofty.commons.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.tinylog.Logger;
 
@@ -164,24 +165,21 @@ public class SkywarsLevelRegistry {
         int filledBars = (int) (progress * 10);
         int emptyBars = 10 - filledBars;
 
-        StringBuilder bar = new StringBuilder("§8[§b");
-        bar.append("\u25A0".repeat(filledBars));
-        bar.append("§7");
-        bar.append("\u25A0".repeat(emptyBars));
-        bar.append("§8]");
-
-        return bar.toString();
+        return Text.of("<8>[<b>{}<7>{}<8>]",
+                "\u25A0".repeat(filledBars),
+                "\u25A0".repeat(emptyBars)).serialize();
     }
 
     /**
      * Format XP display (e.g., "550/1,000" or "5k/5k")
      */
-    public static String formatXPDisplay(long xp) {
+    public static Text formatXPDisplay(long xp) {
         long currentProgress = getXPIntoCurrentLevel(xp);
         long xpNeeded = getXPForNextLevel(xp);
 
-        return SkywarsLevelCategory.formatXPRequirement(currentProgress) + "§7/§a" +
-                SkywarsLevelCategory.formatXPRequirement(xpNeeded);
+        return Text.of("{}<7>/<a>{}",
+                SkywarsLevelCategory.formatXPRequirement(currentProgress),
+                SkywarsLevelCategory.formatXPRequirement(xpNeeded));
     }
 
     /**

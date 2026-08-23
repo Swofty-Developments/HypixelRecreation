@@ -8,7 +8,7 @@ public enum FishingMedium {
     LAVA;
 
     public boolean matches(Block block) {
-        if (block == null || !block.isLiquid()) {
+        if (block == null || !block.liquid()) {
             return false;
         }
 

@@ -14,7 +14,7 @@ public class NPCHunterAva extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Hunter Ava", "§e§lCLICK"};
+                return new String[]{"Hunter Ava", "<e><l>CLICK"};
             }
 
             @Override

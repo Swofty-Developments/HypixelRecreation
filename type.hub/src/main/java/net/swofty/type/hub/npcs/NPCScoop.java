@@ -14,7 +14,7 @@ public class NPCScoop extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Scoop", "§e§lCLICK"};
+                return new String[]{"Scoop", "<e><l>CLICK"};
             }
 
             @Override

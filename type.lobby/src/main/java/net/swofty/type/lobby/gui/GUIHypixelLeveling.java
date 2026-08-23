@@ -4,12 +4,12 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.experience.LevelReward;
 import net.swofty.type.generic.experience.LevelRewardRegistry;
 import net.swofty.type.generic.experience.PlayerExperienceHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -49,7 +49,7 @@ public class GUIHypixelLeveling extends HypixelInventoryGUI {
             set(new GUIClickableItem(18) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack("§aPage " + page, Material.ARROW, 1);
+                    return ItemStacks.item(Material.ARROW, "<a>Page {}", page);
                 }
 
                 @Override
@@ -64,7 +64,7 @@ public class GUIHypixelLeveling extends HypixelInventoryGUI {
             set(new GUIClickableItem(26) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack("§aPage " + (page + 2), Material.ARROW, 1);
+                    return ItemStacks.item(Material.ARROW, "<a>Page {}", page + 2);
                 }
 
                 @Override
@@ -84,19 +84,17 @@ public class GUIHypixelLeveling extends HypixelInventoryGUI {
             set(new GUIItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§6" + mult + "x §aCoin Multiplier",
-                            Material.GOLD_BLOCK,
-                            1,
-                            "",
-                            "§7Increases the amount of coins you",
-                            "§7earn when playing games.",
-                            "",
-                            "§8§oAutomatically unlocks upon reaching",
-                            "§8§othe required level.",
-                            "",
-                            unlocked ? "§aUnlocked!" : "§cRequires Level " + reqLevel
-                    );
+                    return ItemStacks.item(Material.GOLD_BLOCK, 1,
+                            Text.of("<6>{}x <a>Coin Multiplier", mult),
+                            List.of(
+                                    Text.empty(),
+                                    Text.of("<7>Increases the amount of coins you"),
+                                    Text.of("<7>earn when playing games."),
+                                    Text.empty(),
+                                    Text.of("<8><o>Automatically unlocks upon reaching"),
+                                    Text.of("<8><o>the required level."),
+                                    Text.empty(),
+                                    unlocked ? Text.of("<a>Unlocked!") : Text.of("<c>Requires Level {}", reqLevel)));
                 }
             });
         }
@@ -105,24 +103,22 @@ public class GUIHypixelLeveling extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 boolean canAccess = currentLevel >= 100;
-                return ItemStackCreator.getStack(
-                        "§6Veteran Rewards",
-                        Material.BEACON,
-                        1,
-                        "§7Rewards for the most dedicated",
-                        "§7players!",
-                        "",
-                        canAccess ? "§eClick to view!" : "§cYou must be Hypixel Level 100 or",
-                        canAccess ? "" : "§chigher to access this menu!"
-                );
+                return ItemStacks.item(Material.BEACON, 1,
+                        Text.of("<6>Veteran Rewards"),
+                        List.of(
+                                Text.of("<7>Rewards for the most dedicated"),
+                                Text.of("<7>players!"),
+                                Text.empty(),
+                                canAccess ? Text.of("<e>Click to view!") : Text.of("<c>You must be Hypixel Level 100 or"),
+                                canAccess ? Text.empty() : Text.of("<c>higher to access this menu!")));
             }
 
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer player) {
                 if (currentLevel >= 100) {
-                    player.sendMessage("§6Veteran Rewards coming soon!");
+                    player.sendMessage("<6>Veteran Rewards coming soon!");
                 } else {
-                    player.sendMessage("§cYou must be Hypixel Level 100 or higher!");
+                    player.sendMessage("<c>You must be Hypixel Level 100 or higher!");
                 }
             }
         });
@@ -130,7 +126,9 @@ public class GUIHypixelLeveling extends HypixelInventoryGUI {
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To My Profile");
+                return ItemStacks.item(Material.ARROW, """
+                        <a>Go Back
+                        <7>To My Profile""");
             }
 
             @Override
@@ -142,42 +140,37 @@ public class GUIHypixelLeveling extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                String progressBar = createProgressBar(progress, 40);
+                Text progressBar = createProgressBar(progress, 40);
                 int progressPercent = (int) (progress * 100);
 
-                return ItemStackCreator.getStack(
-                        "§aHypixel Leveling",
-                        Material.BREWING_STAND,
-                        1,
-                        "§7Playing games and completing quests",
-                        "§7will reward you with §3Hypixel",
-                        "§3Experience§7, which is required to",
-                        "§7level up and acquire new perks and",
-                        "§7rewards!",
-                        "",
-                        "§3Hypixel Level §a" + currentLevel + " §3" + progressBar + " §3" + progressPercent + "%",
-                        "",
-                        "§7Experience until next level: §3" + StringUtility.commaify(xpNeeded)
-                );
+                return ItemStacks.item(Material.BREWING_STAND, """
+                        <a>Hypixel Leveling
+                        <7>Playing games and completing quests
+                        <7>will reward you with <3>Hypixel
+                        <3>Experience<7>, which is required to
+                        <7>level up and acquire new perks and
+                        <7>rewards!
+
+                        <3>Hypixel Level <a>{} {} <3>{}%
+
+                        <7>Experience until next level: <3>{:,}""",
+                        currentLevel, progressBar, progressPercent, xpNeeded);
             }
         });
 
         set(new GUIClickableItem(50) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aQuest Log",
-                        Material.ENCHANTED_BOOK,
-                        1,
-                        "§7Completing quests will reward you",
-                        "§7with §6Coins§7, §3Hypixel Experience §7and",
-                        "§7more!",
-                        "",
-                        "§7Talk to §bQuest Masters §7located in",
-                        "§7game lobbies to accept quests.",
-                        "",
-                        "§eClick to view quest progress!"
-                );
+                return ItemStacks.item(Material.ENCHANTED_BOOK, """
+                        <a>Quest Log
+                        <7>Completing quests will reward you
+                        <7>with <6>Coins<7>, <3>Hypixel Experience <7>and
+                        <7>more!
+
+                        <7>Talk to <b>Quest Masters <7>located in
+                        <7>game lobbies to accept quests.
+
+                        <e>Click to view quest progress!""");
             }
 
             @Override
@@ -207,106 +200,100 @@ public class GUIHypixelLeveling extends HypixelInventoryGUI {
                 boolean claimed = playerLevel >= level;
                 LevelReward reward = LevelRewardRegistry.get(level);
 
-                String nameColor = claimed ? "§c" : "§a";
-
-                List<String> lore = new ArrayList<>();
-                lore.add("");
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.empty());
 
                 if (reward != null && reward.hasAnyReward()) {
                     if (reward.hasCoins()) {
-                        lore.add("§8+§6" + StringUtility.commaify(reward.getCoins()) + " §7Arcade Coins");
-                        lore.add("");
-                        lore.add("§8§oArcade Coins can be exchanged for");
-                        lore.add("§8§oother game coins inside the Arcade");
-                        lore.add("§8§oLobby.");
+                        lore.add(Text.of("<8>+<6>{:,} <7>Arcade Coins", reward.getCoins()));
+                        lore.add(Text.empty());
+                        lore.add(Text.of("<8><o>Arcade Coins can be exchanged for"));
+                        lore.add(Text.of("<8><o>other game coins inside the Arcade"));
+                        lore.add(Text.of("<8><o>Lobby."));
                     }
                     if (reward.hasDust()) {
                         if (reward.getMysteryDust() > 0) {
-                            lore.add("§8+§b" + reward.getMysteryDust() + " Mystery Dust");
+                            lore.add(Text.of("<8>+<b>{} Mystery Dust", reward.getMysteryDust()));
                         }
                         if (reward.getDust() > 0) {
-                            lore.add("§8+§b" + reward.getDust() + " Dust");
+                            lore.add(Text.of("<8>+<b>{} Dust", reward.getDust()));
                         }
                     }
                     if (reward.hasBooster()) {
-                        lore.add("§8+§72x §62.0x §7Personal Coin Booster");
-                        lore.add("§7(§b" + reward.getBoosterDurationDisplay() + "§7)");
-                        lore.add("");
-                        lore.add("§8§oTo activate a coin booster, go to");
-                        lore.add("§aMy Profile > Coin Boosters §8§oor type");
-                        lore.add("§b§o/booster");
+                        lore.add(Text.of("<8>+<7>2x <6>2.0x <7>Personal Coin Booster"));
+                        lore.add(Text.of("<7>(<b>{}<7>)", reward.getBoosterDurationDisplay()));
+                        lore.add(Text.empty());
+                        lore.add(Text.of("<8><o>To activate a coin booster, go to"));
+                        lore.add(Text.of("<a>My Profile > Coin Boosters <8><o>or type"));
+                        lore.add(Text.of("<b><o>/booster"));
                     }
                     if (reward.hasSpecialRewards()) {
                         for (String special : reward.getSpecialRewards()) {
-                            lore.add("§8+§7" + formatSpecialReward(special));
-                            lore.add("");
-                            lore.add("§8§oType §b§o/rankcolor §8§oto change the");
-                            lore.add("§8§ocolor and view all options.");
+                            lore.add(Text.of("<8>+<7>{}", formatSpecialReward(special)));
+                            lore.add(Text.empty());
+                            lore.add(Text.of("<8><o>Type <b>/rankcolor <8>to change the"));
+                            lore.add(Text.of("<8><o>color and view all options."));
                         }
                     }
                 } else {
                     int coins = 40000 + (level * 1000);
-                    lore.add("§8+§6" + StringUtility.commaify(coins) + " §7Arcade Coins");
-                    lore.add("");
-                    lore.add("§8§oArcade Coins can be exchanged for");
-                    lore.add("§8§oother game coins inside the Arcade");
-                    lore.add("§8§oLobby.");
+                    lore.add(Text.of("<8>+<6>{:,} <7>Arcade Coins", coins));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<8><o>Arcade Coins can be exchanged for"));
+                    lore.add(Text.of("<8><o>other game coins inside the Arcade"));
+                    lore.add(Text.of("<8><o>Lobby."));
                 }
 
-                lore.add("");
+                lore.add(Text.empty());
                 if (claimed) {
-                    lore.add("§aYou have already claimed this reward!");
+                    lore.add(Text.of("<a>You have already claimed this reward!"));
                 } else {
-                    lore.add("§eReach Level " + level + " to claim!");
+                    lore.add(Text.of("<e>Reach Level {} to claim!", level));
                 }
 
-                return ItemStackCreator.getStack(
-                        nameColor + "Hypixel Level Reward " + level,
+                return ItemStacks.item(
                         claimed ? Material.MINECART : Material.CHEST_MINECART,
                         1,
-                        lore.toArray(new String[0])
+                        Text.of((claimed ? "<c>" : "<a>") + "Hypixel Level Reward {}", level),
+                        lore
                 );
             }
         };
     }
 
-    private String formatSpecialReward(String reward) {
+    private Text formatSpecialReward(String reward) {
         return switch (reward) {
-            case "rankcolor_yellow" -> "Yellow §e+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_light_purple" -> "Light Purple §d+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_white" -> "White §f+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_aqua" -> "Aqua §b+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_dark_green" -> "Dark Green §2+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_dark_aqua" -> "Dark Aqua §3+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_dark_red" -> "Dark Red §4+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_dark_purple" -> "Dark Purple §5+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_gold" -> "Gold §6+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_gray" -> "Gray §7+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_dark_gray" -> "Dark Gray §8+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_blue" -> "Blue §9+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_green" -> "Green §a+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_red" -> "Red §c+ §7option for §b[MVP§c+§b]";
-            case "rankcolor_black" -> "Black §0+ §7option for §b[MVP§c+§b]";
-            case "multiplier_1.5x" -> "1.5x Coin Multiplier";
-            case "multiplier_2.0x" -> "2.0x Coin Multiplier";
-            case "multiplier_2.5x" -> "2.5x Coin Multiplier";
-            case "multiplier_3.0x" -> "3.0x Coin Multiplier";
-            case "multiplier_3.5x" -> "3.5x Coin Multiplier";
-            case "multiplier_4.0x" -> "4.0x Coin Multiplier";
-            case "multiplier_4.5x" -> "4.5x Coin Multiplier";
-            case "multiplier_5.0x" -> "5.0x Coin Multiplier";
-            case "veteran_status" -> "Veteran Status";
-            default -> reward;
+            case "rankcolor_yellow" -> Text.of("Yellow <e>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_light_purple" -> Text.of("Light Purple <d>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_white" -> Text.of("White <f>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_aqua" -> Text.of("Aqua <b>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_dark_green" -> Text.of("Dark Green <2>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_dark_aqua" -> Text.of("Dark Aqua <3>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_dark_red" -> Text.of("Dark Red <4>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_dark_purple" -> Text.of("Dark Purple <5>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_gold" -> Text.of("Gold <6>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_gray" -> Text.of("Gray <7>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_dark_gray" -> Text.of("Dark Gray <8>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_blue" -> Text.of("Blue <9>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_green" -> Text.of("Green <a>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_red" -> Text.of("Red <c>+ <7>option for <b>[MVP<c>+<b>]");
+            case "rankcolor_black" -> Text.of("Black <0>+ <7>option for <b>[MVP<c>+<b>]");
+            case "multiplier_1.5x" -> Text.of("1.5x Coin Multiplier");
+            case "multiplier_2.0x" -> Text.of("2.0x Coin Multiplier");
+            case "multiplier_2.5x" -> Text.of("2.5x Coin Multiplier");
+            case "multiplier_3.0x" -> Text.of("3.0x Coin Multiplier");
+            case "multiplier_3.5x" -> Text.of("3.5x Coin Multiplier");
+            case "multiplier_4.0x" -> Text.of("4.0x Coin Multiplier");
+            case "multiplier_4.5x" -> Text.of("4.5x Coin Multiplier");
+            case "multiplier_5.0x" -> Text.of("5.0x Coin Multiplier");
+            case "veteran_status" -> Text.of("Veteran Status");
+            default -> Text.literal(reward);
         };
     }
 
-    private String createProgressBar(double progress, int length) {
+    private Text createProgressBar(double progress, int length) {
         int filled = (int) (progress * length);
-        StringBuilder bar = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            bar.append(i < filled ? "|" : "§8|");
-        }
-        return bar.toString();
+        return Text.of("<3>{}<8>{}", "|".repeat(filled), "|".repeat(length - filled));
     }
 
     private int getMaxPages() {

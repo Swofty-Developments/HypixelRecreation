@@ -15,7 +15,7 @@ public class NPCMadRedstoneEngineer extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Mad Redstone Engineer", "§e§lCLICK"};
+                return new String[]{"Mad Redstone Engineer", "<e><l>CLICK"};
             }
 
             @Override
@@ -60,9 +60,9 @@ public class NPCMadRedstoneEngineer extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "Every problem in life can be solved with a little redstone."
-                        }).build(),
+                        ).build(),
         };
     }
 

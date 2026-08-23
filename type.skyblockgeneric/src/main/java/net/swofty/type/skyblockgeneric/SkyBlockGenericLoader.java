@@ -7,7 +7,6 @@ import com.mongodb.client.MongoClients;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.CoordConversion;
 import net.minestom.server.coordinate.Pos;
@@ -24,6 +23,7 @@ import net.swofty.commons.config.ConfigProvider;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.attribute.ItemAttribute;
 import net.swofty.commons.skyblock.item.reforge.ReforgeLoader;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.PlayerTransferDataCache;
 import net.swofty.proxyapi.ProxyPlayer;
 import net.swofty.type.generic.HypixelConst;
@@ -31,6 +31,7 @@ import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.HypixelTypeLoader;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.data.mongodb.AttributeDatabase;
+import net.swofty.type.generic.data.mongodb.ProfilesDatabase;
 import net.swofty.type.generic.entity.hologram.PlayerHolograms;
 import net.swofty.type.generic.entity.hologram.ServerHolograms;
 import net.swofty.type.generic.event.HypixelEventClass;
@@ -40,9 +41,9 @@ import net.swofty.type.generic.packet.HypixelPacketServerListener;
 import net.swofty.type.generic.redis.RedisOriginServer;
 import net.swofty.type.generic.resourcepack.ResourcePackManager;
 import net.swofty.type.generic.user.categories.CustomGroups;
-import net.swofty.type.generic.user.flow.GenericPlayerDataFlow;
 import net.swofty.type.generic.utility.ScheduleUtility;
 import net.swofty.type.skyblockgeneric.abiphone.AbiphoneNPC;
+import net.swofty.type.skyblockgeneric.text.SkyBlockTextScopes;
 import net.swofty.type.skyblockgeneric.abiphone.AbiphoneRegistry;
 import net.swofty.type.skyblockgeneric.block.attribute.BlockAttribute;
 import net.swofty.type.skyblockgeneric.block.placement.BlockPlacementManager;
@@ -50,7 +51,13 @@ import net.swofty.type.skyblockgeneric.calendar.SkyBlockCalendar;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategories;
 import net.swofty.type.skyblockgeneric.collection.CollectionCategory;
 import net.swofty.type.skyblockgeneric.collection.CustomCollectionAward;
+import net.swofty.type.generic.data.PlayerWipeService;
+import net.swofty.type.generic.data.domain.AccountDomain;
+import net.swofty.type.generic.data.domain.PlayerDataService;
+import net.swofty.type.skyblockgeneric.data.CoopSync;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
+import net.swofty.type.skyblockgeneric.data.SkyBlockDomain;
+import net.swofty.type.skyblockgeneric.data.crystals.CrystalCatalog;
 import net.swofty.type.skyblockgeneric.data.monogdb.*;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
 import net.swofty.type.skyblockgeneric.entity.ServerCrystalImpl;
@@ -89,8 +96,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.skyblockgeneric.user.SkyBlockScoreboard;
 import net.swofty.type.skyblockgeneric.user.StashReminder;
 import net.swofty.type.skyblockgeneric.user.fairysouls.FairySoul;
-import net.swofty.type.skyblockgeneric.user.fairysouls.FairySoulZone;
-import net.swofty.type.skyblockgeneric.user.flow.SkyBlockPlayerDataFlow;
 import net.swofty.type.skyblockgeneric.user.island.SkyBlockIsland;
 import net.swofty.type.skyblockgeneric.user.statistics.PlayerStatistics;
 import net.swofty.type.skyblockgeneric.user.statistics.TemporaryStatistic;
@@ -121,6 +126,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
     @SneakyThrows
     public void initialize(MinecraftServer server) {
         SkyBlockGenericLoader.server = server;
+        SkyBlockTextScopes.init();
         CustomWorlds mainInstance = typeLoader.getMainInstance();
 
         /**
@@ -137,11 +143,10 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(cs).build();
         MongoClient mongoClient = MongoClients.create(settings);
 
-        RegionDatabase.connect(mongoClient);
         IslandDatabase.connect(mongoClient);
-        FairySoulDatabase.connect(mongoClient);
         CoopDatabase.connect(mongoClient);
-        CrystalDatabase.connect(mongoClient);
+
+        PlayerWipeService.onIslandDropped(SkyBlockIsland::discard);
 
         /**
          * Register items
@@ -218,48 +223,41 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
 
             if (TPS < 20) {
                 HypixelGenericLoader.getLoadedPlayers().forEach(player -> {
-                    player.getLogHandler().debug("§cServer TPS is below 20! TPS: " + TPS);
+                    player.getLogHandler().debug(Text.of("<c>Server TPS is below 20! TPS: {}", TPS));
                 });
                 Logger.error("Server TPS is below 20! TPS: " + TPS);
             }
 
-            final Component header = Component.text("§bYou are playing on §e§lMC.HYPIXEL.NET")
-                .append(Component.newline())
-                .append(Component.text("§7RAM USAGE: §8" + ramUsage + " MB"))
-                .append(Component.newline())
-                .append(Component.text("§7TPS: §8" + TPS))
-                .append(Component.newline());
+            final Text header = Text.of("""
+                <b>You are playing on <e><l>MC.HYPIXEL.NET</l>
+                <7>RAM USAGE: <8>{0} MB
+                <7>TPS: <8>{1}
+                """, ramUsage, TPS);
 
             // Send per-player footer with their active effects
             for (SkyBlockPlayer player : players) {
-                Component footer = Component.newline()
-                    .append(Component.text("§a§lActive Effects"))
-                    .append(Component.newline());
+                Text footer = Text.of("\n<a><l>Active Effects\n");
 
                 List<TemporaryStatistic> activeEffects = player.getStatistics().getDisplayableActiveEffects();
                 if (activeEffects.isEmpty()) {
-                    footer = footer.append(Component.text("§7No effects active. Drink potions or splash them on the"))
-                        .append(Component.newline())
-                        .append(Component.text("§7ground to buff yourself!"));
+                    footer = footer.append(
+                        "<7>No effects active. Drink potions or splash them on the\n<7>ground to buff yourself!");
                 } else {
                     for (TemporaryStatistic effect : activeEffects) {
-                        String color = effect.getDisplayColor() != null ? effect.getDisplayColor() : "§7";
+                        String color = effect.getDisplayColor() != null ? effect.getDisplayColor() : "<7>";
                         String name = effect.getDisplayName();
                         String duration = formatEffectDuration(effect.getRemainingMs());
-                        footer = footer.append(Component.text(color + name + " §f" + duration))
-                            .append(Component.newline());
+                        footer = footer.append(color + "{} <f>{}\n", name, duration);
                     }
                 }
 
-                footer = footer.append(Component.newline())
-                    .append(Component.text("§d§lCookie Buff"))
-                    .append(Component.newline())
-                    .append(Component.text("§7Not active! Obtain booster cookies from the community"))
-                    .append(Component.newline())
-                    .append(Component.text("§7shop in the hub."))
-                    .append(Component.newline())
-                    .append(Component.newline())
-                    .append(Component.text("§aRanks, Boosters & MORE! §c§lSTORE.HYPIXEL.NET"));
+                footer = footer.append("""
+
+                    <d><l>Cookie Buff</l>
+                    <7>Not active! Obtain booster cookies from the community
+                    <7>shop in the hub.
+
+                    <a>Ranks, Boosters & MORE! <c><l>STORE.HYPIXEL.NET""");
 
                 player.sendPlayerListHeaderAndFooter(header, footer);
             }
@@ -281,17 +279,19 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
          * Start data loop
          */
         SkyBlockDataHandler.startRepeatSetValueLoop();
+        CoopSync.subscribe();
+        PlayerDataService.register(new SkyBlockDomain());
+        ProfilesDatabase.setHostedProfileCheck(SkyBlockDomain::isProfileHosted);
 
         ProxyPlayer.setTransferPreparation((playerUuid, targetServer) -> CompletableFuture.supplyAsync(() -> {
             SkyBlockPlayer player = MinecraftServer.getConnectionManager().getOnlinePlayerByUuid(playerUuid) instanceof SkyBlockPlayer skyBlockPlayer
                     ? skyBlockPlayer : null;
             if (player == null) return null;
 
-            String profileDocument = SkyBlockPlayerDataFlow.saveForTransfer(player);
-            String accountDocument = GenericPlayerDataFlow.saveForTransfer(player);
+            PlayerDataService.flushForTransfer(typeLoader.getType(), player);
             return new org.json.JSONObject()
-                    .put("account_document", PlayerTransferDataCache.encodeDocument(accountDocument))
-                    .put("profile_document", PlayerTransferDataCache.encodeDocument(profileDocument))
+                    .put("account_document", PlayerTransferDataCache.encodeDocument(AccountDomain.transferDocument(player)))
+                    .put("profile_document", PlayerTransferDataCache.encodeDocument(SkyBlockDomain.transferDocument(player)))
                     .toString();
         }));
 
@@ -379,8 +379,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
          */
         if (mainInstance != null) {
             ServerHolograms.spawnAll(HypixelConst.getInstanceContainer());
-            String zone = typeLoader.getType().skyblockName();
-            FairySoul.spawnEntities(HypixelConst.getInstanceContainer(), FairySoulZone.valueOf(zone.toUpperCase()));
+            FairySoul.spawnEntities(HypixelConst.getInstanceContainer(), typeLoader.getType());
         }
 
         /**
@@ -388,7 +387,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
          */
         if (HypixelConst.getInstanceContainer() != null) {
             Thread.startVirtualThread(() -> {
-                CrystalDatabase.getAllCrystals().forEach(crystal -> {
+                CrystalCatalog.getAllCrystals().forEach(crystal -> {
                     if (crystal.serverType != HypixelConst.getTypeLoader().getType()) return;
 
                     ItemType type = crystal.itemType;
@@ -487,7 +486,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
                                         int amount = player.getCollection().get(collection.type());
                                         return new SkyBlockRecipe.CraftingResult(
                                             amount >= reward.requirement(),
-                                            new String[]{"§7You must have §c" + collection.type().getDisplayName()
+                                            new String[]{"<7>You must have <c>" + collection.type().getDisplayName()
                                                 + " Collection "
                                                 + StringUtility.getAsRomanNumeral(collection.getPlacementOf(reward))}
                                         );
@@ -559,9 +558,11 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
             UUID uuid = gameProfile.getPlayer().getUuid();
             String username = gameProfile.getPlayer().getUsername();
 
-            if (RedisOriginServer.origin.containsKey(uuid)) {
-                player.setOriginServer(RedisOriginServer.origin.get(uuid));
-                RedisOriginServer.origin.remove(uuid);
+            ServerType originServer = RedisOriginServer.consume(uuid);
+
+            if (originServer != null) {
+
+                player.setOriginServer(originServer);
             }
 
             Logger.info("Received new player: " + username + " (" + uuid + ")");

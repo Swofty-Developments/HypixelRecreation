@@ -33,9 +33,9 @@ public class GUIDeleteProfile extends RavengardView {
     @Override
     protected void content(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         interactive(layout, SLOT_CONFIRM, RavengardItems.button(RavengardButton.TEXT_CONFIRM)
-                        .label("§aConfirm")
+                        .label("<a>Confirm")
                         .blankLine()
-                        .lore("§eClick to confirm this change!"),
+                        .lore("<e>Click to confirm this change!"),
                 (click, viewContext) -> {
                     if (viewContext.player() instanceof RavengardPlayer player) {
                         player.closeInventory();
@@ -44,9 +44,9 @@ public class GUIDeleteProfile extends RavengardView {
                 });
 
         interactive(layout, SLOT_CANCEL, RavengardItems.button(RavengardButton.TEXT_CANCEL)
-                        .label("§cCancel")
+                        .label("<c>Cancel")
                         .blankLine()
-                        .lore("§eClick to cancel this change!"),
+                        .lore("<e>Click to cancel this change!"),
                 (click, viewContext) -> viewContext.backOrClose());
 
         backButton(layout);

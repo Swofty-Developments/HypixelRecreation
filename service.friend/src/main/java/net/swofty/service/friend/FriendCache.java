@@ -9,6 +9,7 @@ import net.swofty.commons.presence.PresenceInfo;
 import net.swofty.commons.protocol.objects.friend.FriendEventPushProtocol;
 import net.swofty.commons.protocol.objects.messaging.SendMessagePushProtocol;
 import net.swofty.commons.redis.RedisClient;
+import net.swofty.commons.text.Text;
 import org.bson.Document;
 import org.tinylog.Logger;
 
@@ -509,7 +510,7 @@ public class FriendCache {
     }
 
     private static void sendErrorToPlayer(UUID playerUUID, String message) {
-        sendMessageToPlayer(playerUUID, "§9§m-----------------------------------------------------\n§c" + message + "\n§9§m-----------------------------------------------------");
+        sendMessageToPlayer(playerUUID, Text.of("<sep>\n<c>{}\n<sep>", message).serialize());
     }
 
     private static void sendMessageToPlayer(UUID playerUUID, String message) {

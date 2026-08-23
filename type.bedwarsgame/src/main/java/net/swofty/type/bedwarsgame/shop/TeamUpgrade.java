@@ -6,6 +6,7 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.component.TooltipDisplay;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.bedwarsgame.util.BedWarsInventoryManipulator;
@@ -55,18 +56,18 @@ public abstract class TeamUpgrade {
     public void purchase(BedWarsGame game, BedWarsPlayer player) {
         BedWarsMapsConfig.TeamKey teamKey = player.getTeamKey();
         if (teamKey == null) {
-            player.sendMessage("§cYou are not on a team. Report this to the administration.");
+            player.sendMessage("<c>You are not on a team. Report this to the administration.");
             return;
         }
 
         TeamUpgradeTier nextTier = getNextTier(game, teamKey);
         if (nextTier == null) {
-            player.sendMessage("§cYour team has already maxed out this upgrade.");
+            player.sendMessage("<c>Your team has already maxed out this upgrade.");
             return;
         }
 
         if (!hasEnoughCurrency(player, nextTier)) {
-            player.sendMessage("§cYou do not have enough " + nextTier.getCurrency().getName() + " to purchase this.");
+            player.sendMessage("<c>You do not have enough {} to purchase this.", nextTier.getCurrency().getName());
             return;
         }
 
@@ -80,7 +81,7 @@ public abstract class TeamUpgrade {
         game.getPlayers().stream()
             .filter(p -> teamKey.equals(p.getTeamKey()))
             .forEach(p -> {
-                p.sendMessage(teamKey.chatColor() + " §apurchased §6" + name + " " + nextTier.getLevel() + "!");
+                p.sendMessage(Text.of("<color:{}> ", teamKey.chatColor()).append("<a>purchased <6>{} {}!", name, nextTier.getLevel()));
                 p.setTag(id.levelTag(), nextTier.getLevel());
             });
     }

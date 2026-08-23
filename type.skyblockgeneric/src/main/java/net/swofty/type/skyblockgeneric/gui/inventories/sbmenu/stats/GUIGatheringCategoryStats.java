@@ -1,12 +1,14 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.stats;
 
 import lombok.Getter;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.inventory.InventoryType;
+import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIMaterial;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
@@ -52,11 +54,11 @@ public class GUIGatheringCategoryStats extends StatelessView {
 
     @Override
     public ViewConfiguration<DefaultState> configuration() {
-        String title = switch (mode) {
-            case CATEGORY -> "Your Stats Breakdown";
-            case DETAIL -> "Stats ➜ " + statistic.getDisplayName();
-            case FLAT -> statistic.getDisplayName() + " ➜ Flat Bonuses";
-            case ADDITIVE -> statistic.getDisplayName() + " ➜ Additive Buffs";
+        Text title = switch (mode) {
+            case CATEGORY -> Text.of("Your Stats Breakdown");
+            case DETAIL -> Text.of("Stats ➜ {}", statistic.getDisplayName());
+            case FLAT -> Text.of("{} ➜ Flat Bonuses", statistic.getDisplayName());
+            case ADDITIVE -> Text.of("{} ➜ Additive Buffs", statistic.getDisplayName());
         };
         return new ViewConfiguration<>(title, InventoryType.CHEST_6_ROW);
     }
@@ -86,7 +88,7 @@ public class GUIGatheringCategoryStats extends StatelessView {
             int statisticIndex = index;
             layout.slot(DISPLAY_SLOTS[index], (s, c) -> {
                 ItemStatistic stat = visibleStatistics((SkyBlockPlayer) c.player()).get(statisticIndex);
-                return stat == null ? net.minestom.server.item.ItemStack.AIR.builder()
+                return stat == null ? ItemStack.AIR.builder()
                     : createStatisticItem((SkyBlockPlayer) c.player(), stat, true);
             }, (_, c) -> {
                 ItemStatistic stat = visibleStatistics((SkyBlockPlayer) c.player()).get(statisticIndex);
@@ -132,7 +134,7 @@ public class GUIGatheringCategoryStats extends StatelessView {
             int sourceIndex = index;
             layout.slot(DISPLAY_SLOTS[index], (s, c) -> {
                 List<ViewEntry> entries = visibleEntries((SkyBlockPlayer) c.player());
-                if (sourceIndex >= entries.size()) return net.minestom.server.item.ItemStack.AIR.builder();
+                if (sourceIndex >= entries.size()) return ItemStack.AIR.builder();
                 return sourceItem(entries.get(sourceIndex));
             }, (_, c) -> {
                 List<ViewEntry> entries = visibleEntries((SkyBlockPlayer) c.player());
@@ -225,92 +227,117 @@ public class GUIGatheringCategoryStats extends StatelessView {
         return sourceValue(entry.statistics());
     }
 
-    private net.minestom.server.item.ItemStack.Builder summaryItem(SkyBlockPlayer player, Mode summaryMode) {
+    private ItemStack.Builder summaryItem(SkyBlockPlayer player, Mode summaryMode) {
         ItemStatistics values = player.getStatistics().allStatistics();
         double value = summaryMode == Mode.FLAT ? values.getBase(statistic)
             : (values.getAdditive(statistic) - 1D) * 100D;
-        List<String> lore = new ArrayList<>();
-        lore.add("§8" + statistic.getDisplayName() + " Stat");
-        lore.add(summaryMode == Mode.FLAT ? "§7All flat bonuses are summed into" : "§7These buffs are added and converted");
-        lore.add(summaryMode == Mode.FLAT ? "§7a base amount." : "§7and then converted into the");
-        if (summaryMode == Mode.ADDITIVE) lore.add("§7(additive) multiplier.");
-        lore.add("");
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<8>{} Stat", statistic.getDisplayName()));
+        lore.add(Text.of(summaryMode == Mode.FLAT
+            ? "<7>All flat bonuses are summed into" : "<7>These buffs are added and converted"));
+        lore.add(Text.of(summaryMode == Mode.FLAT
+            ? "<7>a base amount." : "<7>and then converted into the"));
+        if (summaryMode == Mode.ADDITIVE) lore.add(Text.of("<7>(additive) multiplier."));
+        lore.add(Text.empty());
         addSourcePreview(player, lore, summaryMode);
-        lore.add("");
-        lore.add("§7Adds up to: " + statistic.getLegacyDisplayColor() + "+" + format(value)
-            + (summaryMode == Mode.FLAT ? statistic.getSymbol() + " " + statistic.getDisplayName() : "%"));
-        if (summaryMode == Mode.ADDITIVE) {
-            lore.add("§7As multiplier: " + statistic.getLegacyDisplayColor() + format(1D + value / 100D) + "x");
-            lore.add("§8Multiplied with flat!");
+        lore.add(Text.empty());
+        if (summaryMode == Mode.FLAT) {
+            lore.add(Text.of("<7>Adds up to: <color:{}>+{:.2}<glyph:'{}'> {}",
+                colour(statistic), value, symbol(statistic), statistic.getDisplayName()));
+        } else {
+            lore.add(Text.of("<7>Adds up to: <color:{}>+{:.2}%", colour(statistic), value));
         }
-        lore.add("");
-        lore.add("§eClick to dig deeper!");
-        return ItemStackCreator.getStack(statistic.getFullDisplayName() +
-                (summaryMode == Mode.FLAT ? " Flat Bonuses" : " Additive Buffs"),
-            summaryMode == Mode.FLAT ? Material.PAPER : Material.BOOK, 1, lore);
+        if (summaryMode == Mode.ADDITIVE) {
+            lore.add(Text.of("<7>As multiplier: <color:{}>{:.2}x", colour(statistic), 1D + value / 100D));
+            lore.add(Text.of("<8>Multiplied with flat!"));
+        }
+        lore.add(Text.empty());
+        lore.add(Text.of("<e>Click to dig deeper!"));
+        return ItemStacks.item(summaryMode == Mode.FLAT ? Material.PAPER : Material.BOOK, 1,
+            Text.of(summaryMode == Mode.FLAT
+                    ? "<color:{}><stat:'{}'> Flat Bonuses" : "<color:{}><stat:'{}'> Additive Buffs",
+                colour(statistic), statistic.name()),
+            lore);
     }
 
-    private void addSourcePreview(SkyBlockPlayer player, List<String> lore, Mode summaryMode) {
+    private void addSourcePreview(SkyBlockPlayer player, List<Text> lore, Mode summaryMode) {
         int shown = 0;
         for (PlayerStatistics.StatisticSource source : player.getStatistics().statisticSources()) {
             double value = summaryMode == Mode.FLAT ? source.statistics().getBase(statistic)
                 : (source.statistics().getAdditive(statistic) - 1D) * 100D;
             if (value == 0D) continue;
             if (shown++ == 7) {
-                lore.add("  §8And more...");
+                lore.add(Text.of("  <8>And more..."));
                 break;
             }
-            lore.add(" " + statistic.getLegacyDisplayColor() + "+" + format(value)
-                + (summaryMode == Mode.FLAT ? statistic.getSymbol() : "%") + " §f" + source.name());
+            if (summaryMode == Mode.FLAT) {
+                lore.add(Text.of(" <color:{}>+{:.2}<glyph:'{}'> <f>{}",
+                    colour(statistic), value, symbol(statistic), line(source.name())));
+            } else {
+                lore.add(Text.of(" <color:{}>+{:.2}% <f>{}", colour(statistic), value, line(source.name())));
+            }
         }
     }
 
-    private net.minestom.server.item.ItemStack.Builder sourceItem(ViewEntry source) {
+    private ItemStack.Builder sourceItem(ViewEntry source) {
         double value = entryValue(source);
-        List<String> lore = new ArrayList<>();
-        lore.add(source.grouped() ? "§8Grouped" : "§8" + source.categoryName());
-        lore.add("");
-        lore.add("§7Value: " + statistic.getLegacyDisplayColor() + "+" + format(value)
-            + (mode == Mode.FLAT ? statistic.getSymbol() : "%"));
-        lore.add("");
+        List<Text> lore = new ArrayList<>();
+        lore.add(source.grouped() ? Text.of("<8>Grouped") : Text.of("<8>{}", line(source.categoryName())));
+        lore.add(Text.empty());
+        if (mode == Mode.FLAT) {
+            lore.add(Text.of("<7>Value: <color:{}>+{:.2}<glyph:'{}'>",
+                colour(statistic), value, symbol(statistic)));
+        } else {
+            lore.add(Text.of("<7>Value: <color:{}>+{:.2}%", colour(statistic), value));
+        }
+        lore.add(Text.empty());
         int shown = 0;
         if (source.children().size() > 1) {
             for (ViewEntry child : source.children()) {
                 double childValue = entryValue(child);
                 if (childValue == 0D) continue;
                 if (shown++ == 7) {
-                    lore.add("  §8And more...");
+                    lore.add(Text.of("  <8>And more..."));
                     break;
                 }
-                lore.add(" " + statistic.getLegacyDisplayColor() + "+" + format(childValue)
-                    + (mode == Mode.FLAT ? statistic.getSymbol() : "%") + " §f" + child.name());
+                if (mode == Mode.FLAT) {
+                    lore.add(Text.of(" <color:{}>+{:.2}<glyph:'{}'> <f>{}",
+                        colour(statistic), childValue, symbol(statistic), line(child.name())));
+                } else {
+                    lore.add(Text.of(" <color:{}>+{:.2}% <f>{}", colour(statistic), childValue, line(child.name())));
+                }
             }
-            lore.add("");
+            lore.add(Text.empty());
         }
         if (source.parentName() != null) {
-            lore.add("§7Modifier flattened from:");
-            lore.add("§9" + source.parentName());
-            lore.add("");
+            lore.add(Text.of("<7>Modifier flattened from:"));
+            lore.add(Text.of("<9>{}", line(source.parentName())));
+            lore.add(Text.empty());
         }
-        lore.addAll(source.description());
+        source.description().forEach(entry -> lore.add(Text.parse(entry)));
         if (source.grouped()) {
-            lore.add("");
-            lore.add("§eClick to dig even deeper!");
+            lore.add(Text.empty());
+            lore.add(Text.of("<e>Click to dig even deeper!"));
         }
-        String name = statistic.getFullDisplayName() + " " +
-            (source.grouped() ? "Category: " : "") + source.name();
+        Text name = Text.of(source.grouped()
+                ? "<color:{}><stat:'{}'> Category: {}" : "<color:{}><stat:'{}'> {}",
+            colour(statistic), statistic.name(), line(source.name()));
         GUIMaterial icon = source.texture() == null
             ? new GUIMaterial(source.material()) : new GUIMaterial(source.texture());
-        return ItemStackCreator.getUsingGUIMaterial(name, icon, 1, lore);
+        return ItemStacks.of(icon, 1, name, lore);
     }
 
-    private net.minestom.server.item.ItemStack.Builder capItem() {
-        return ItemStackCreator.getStack(statistic.getFullDisplayName() + " Cap",
-            Material.LEATHER_HELMET, 1, "§8" + statistic.getDisplayName() + " Stat",
-            "§7There is a " + statistic.getDisplayName().toLowerCase() + " limit in SkyBlock!",
-            "§7Some magic may let you change it!", "",
-            "§7Value: " + statistic.getLegacyDisplayColor() + format(statistic.getCap())
-                + statistic.getSymbol());
+    private ItemStack.Builder capItem() {
+        return ItemStacks.item(Material.LEATHER_HELMET, 1, """
+                <color:{}><stat:'{}'> Cap</color>
+                <8>{} Stat
+                <7>There is a {} limit in SkyBlock!
+                <7>Some magic may let you change it!
+
+                <7>Value: <color:{}>{:.2}<glyph:'{}'>""",
+            colour(statistic), statistic.name(), statistic.getDisplayName(),
+            statistic.getDisplayName().toLowerCase(),
+            colour(statistic), statistic.getCap(), symbol(statistic));
     }
 
     private record ViewEntry(String name, Material material, String texture, ItemStatistics statistics,
@@ -353,53 +380,76 @@ public class GUIGatheringCategoryStats extends StatelessView {
         }
     }
 
-    private net.minestom.server.item.ItemStack.Builder toggleItem() {
-        return ItemStackCreator.getStack("§aToggle Show All Stats", Material.PUFFERFISH, 1,
-            "§7Toggle whether you want to see", "§aALL §7SkyBlock statistics, or just",
-            "§7the ones you have.", "", "§7Show all stats: " + (showAll ? "§aYes" : "§cNo"),
-            "", "§eClick to toggle!");
+    private ItemStack.Builder toggleItem() {
+        return ItemStacks.item(Material.PUFFERFISH, 1, """
+                <a>Toggle Show All Stats
+                <7>Toggle whether you want to see
+                <a>ALL <7>SkyBlock statistics, or just
+                <7>the ones you have.
+
+                <7>Show all stats: {}
+
+                <e>Click to toggle!""",
+            showAll ? Text.of("<a>Yes") : Text.of("<c>No"));
     }
 
-    private static net.minestom.server.item.ItemStack.Builder optionItem(String name, Material material, boolean enabled) {
-        return ItemStackCreator.getStack("§a" + name, material, 1,
-            name.startsWith("Group") ? "§7Groups modifiers from the same category." :
-                "§7Breaks down modifiers for comparison.",
-            "", "§7Enabled: " + (enabled ? "§aON" : "§cOFF"), "",
-            "§eClick to " + (enabled ? "disable!" : "enable!"));
+    private static ItemStack.Builder optionItem(String name, Material material, boolean enabled) {
+        return ItemStacks.item(material, 1, """
+                <a>{}
+                <7>{}
+
+                <7>Enabled: {}
+
+                <e>Click to {}""",
+            name,
+            name.startsWith("Group") ? "Groups modifiers from the same category."
+                : "Breaks down modifiers for comparison.",
+            enabled ? Text.of("<a>ON") : Text.of("<c>OFF"),
+            enabled ? "disable!" : "enable!");
     }
 
-    private static net.minestom.server.item.ItemStack.Builder createStatisticItem(
+    private static ItemStack.Builder createStatisticItem(
         SkyBlockPlayer player, ItemStatistic stat, boolean clickable) {
         ItemStatistics values = player.getStatistics().allStatistics();
         double value = values.getOverall(stat);
-        List<String> lore = new ArrayList<>(ItemStatistics.getDescription(stat));
-        lore.add("");
+        List<Text> lore = new ArrayList<>();
+        ItemStatistics.getDescription(stat).forEach(entry -> lore.add(Text.parse(entry)));
+        lore.add(Text.empty());
         double base = values.getBase(stat);
         double additive = values.getAdditive(stat) - 1D;
-        if (base != 0D) lore.add("§7Flat: " + stat.getLegacyDisplayColor() + "+" + format(base) + stat.getSymbol());
-        if (additive != 0D) lore.add("§7Additive: " + stat.getLegacyDisplayColor() + "+" + format(additive * 100D) + "%");
-        if (stat.getCap() != null) lore.add("§7Stat Cap: " + stat.getLegacyDisplayColor()
-            + format(stat.getCap()) + stat.getSymbol() + " " + stat.getDisplayName());
-        if (base != 0D || additive != 0D) lore.add("");
+        if (base != 0D) lore.add(Text.of("<7>Flat: <color:{}>+{:.2}<glyph:'{}'>",
+            colour(stat), base, symbol(stat)));
+        if (additive != 0D) lore.add(Text.of("<7>Additive: <color:{}>+{:.2}%", colour(stat), additive * 100D));
+        if (stat.getCap() != null) lore.add(Text.of("<7>Stat Cap: <color:{}>{:.2}<glyph:'{}'> {}",
+            colour(stat), stat.getCap(), symbol(stat), stat.getDisplayName()));
+        if (base != 0D || additive != 0D) lore.add(Text.empty());
         if (stat.name().endsWith("_FORTUNE")) {
-            lore.add("§7Bonus drops: " + stat.getLegacyDisplayColor() + "+" + (int) (value / 100D) + "!");
-            lore.add("§7Chance for 1 more: " + stat.getLegacyDisplayColor() + format(value % 100D) + "%");
-            lore.add("");
+            lore.add(Text.of("<7>Bonus drops: <color:{}>+{}!", colour(stat), (int) (value / 100D)));
+            lore.add(Text.of("<7>Chance for 1 more: <color:{}>{:.2}%", colour(stat), value % 100D));
+            lore.add(Text.empty());
         }
-        if (value == 0D) lore.add("§8You have none of this stat!");
-        if (clickable) lore.add("§eClick to view!");
+        if (value == 0D) lore.add(Text.of("<8>You have none of this stat!"));
+        if (clickable) lore.add(Text.of("<e>Click to view!"));
         GUIMaterial material = stat.getIconTexture() == null
             ? new GUIMaterial(stat.getIconMaterial()) : new GUIMaterial(stat.getIconTexture());
-        return ItemStackCreator.getUsingGUIMaterial(stat.getFullDisplayName() + " §f" + format(value)
-            + stat.getSuffix(), material, 1, lore);
+        return ItemStacks.of(material, 1,
+            Text.of("<stat:'{}'> <f>{:.2}{}", stat.name(), value, stat.getSuffix()), lore);
     }
 
     private static double overall(SkyBlockPlayer player, ItemStatistic statistic) {
         return player.getStatistics().allStatistics().getOverall(statistic);
     }
 
-    private static String format(double value) {
-        return StringUtility.decimalify(value, 2);
+    private static TextColor colour(ItemStatistic statistic) {
+        return statistic.getDisplayColor();
+    }
+
+    private static String symbol(ItemStatistic statistic) {
+        return statistic.getSymbol().name();
+    }
+
+    private static Text line(String raw) {
+        return Text.parse(raw);
     }
 
     @Override
@@ -411,36 +461,36 @@ public class GUIGatheringCategoryStats extends StatelessView {
 
     @Getter
     public enum Category {
-        COMBAT("§cCombat Stats", Material.STONE_SWORD, List.of("§7Stats that influence damage dealt", "§7and damage taken in combat."), List.of(
+        COMBAT("<c>Combat Stats", Material.STONE_SWORD, List.of("<7>Stats that influence damage dealt", "<7>and damage taken in combat."), List.of(
             ItemStatistic.HEALTH, ItemStatistic.DEFENSE, ItemStatistic.TRUE_DEFENSE, ItemStatistic.STRENGTH,
             ItemStatistic.CRITICAL_CHANCE, ItemStatistic.CRITICAL_DAMAGE, ItemStatistic.BONUS_ATTACK_SPEED,
             ItemStatistic.FEROCITY, ItemStatistic.SWING_RANGE, ItemStatistic.INTELLIGENCE,
             ItemStatistic.ABILITY_DAMAGE, ItemStatistic.HEALTH_REGENERATION, ItemStatistic.VITALITY, ItemStatistic.MENDING)),
-        MINING("§6Mining Stats", Material.STONE_PICKAXE, List.of("§7Stats that influence mining speed,", "§7power, spread, and drops."), List.of(
+        MINING("<6>Mining Stats", Material.STONE_PICKAXE, List.of("<7>Stats that influence mining speed,", "<7>power, spread, and drops."), List.of(
             ItemStatistic.BREAKING_POWER, ItemStatistic.MINING_SPEED, ItemStatistic.MINING_SPREAD,
             ItemStatistic.GEMSTONE_SPREAD, ItemStatistic.PRISTINE, ItemStatistic.MINING_FORTUNE,
             ItemStatistic.ORE_FORTUNE, ItemStatistic.BLOCK_FORTUNE, ItemStatistic.DWARVEN_METAL_FORTUNE,
             ItemStatistic.GEMSTONE_FORTUNE)),
-        FARMING("§aFarming Stats", Material.GOLDEN_HOE, List.of("§7Stats that influence crop drops", "§7and pest spawns."), List.of(
+        FARMING("<a>Farming Stats", Material.GOLDEN_HOE, List.of("<7>Stats that influence crop drops", "<7>and pest spawns."), List.of(
             ItemStatistic.BONUS_PEST_CHANCE, ItemStatistic.OVERBLOOM, ItemStatistic.FARMING_FORTUNE,
             ItemStatistic.WHEAT_FORTUNE, ItemStatistic.CARROT_FORTUNE, ItemStatistic.POTATO_FORTUNE,
             ItemStatistic.PUMPKIN_FORTUNE, ItemStatistic.SUGAR_CANE_FORTUNE, ItemStatistic.MELON_FORTUNE,
             ItemStatistic.CACTUS_FORTUNE, ItemStatistic.COCOA_BEANS_FORTUNE, ItemStatistic.MUSHROOM_FORTUNE,
             ItemStatistic.NETHER_WART_FORTUNE, ItemStatistic.SUNFLOWER_FORTUNE,
             ItemStatistic.MOONFLOWER_FORTUNE, ItemStatistic.WILD_ROSE_FORTUNE)),
-        FORAGING("§2Foraging Stats", Material.JUNGLE_SAPLING, List.of("§7Stats that influence drops", "§7received while foraging."), List.of(
+        FORAGING("<2>Foraging Stats", Material.JUNGLE_SAPLING, List.of("<7>Stats that influence drops", "<7>received while foraging."), List.of(
             ItemStatistic.SWEEP, ItemStatistic.FORAGING_FORTUNE, ItemStatistic.FIG_FORTUNE, ItemStatistic.MANGROVE_FORTUNE)),
-        FISHING("§bFishing Stats", Material.FISHING_ROD, List.of("§7Stats that influence what and", "§7how quickly you catch fish."), List.of(
+        FISHING("<b>Fishing Stats", Material.FISHING_ROD, List.of("<7>Stats that influence what and", "<7>how quickly you catch fish."), List.of(
             ItemStatistic.FISHING_SPEED, ItemStatistic.SEA_CREATURE_CHANCE, ItemStatistic.DOUBLE_HOOK_CHANCE,
             ItemStatistic.TROPHY_FISH_CHANCE, ItemStatistic.TREASURE_CHANCE)),
-        HUNTING("§eHunting Stats", Material.LEAD, List.of("§7Stats that influence hunting speed", "§7and shard drops."), List.of(
+        HUNTING("<e>Hunting Stats", Material.LEAD, List.of("<7>Stats that influence hunting speed", "<7>and shard drops."), List.of(
             ItemStatistic.PULL, ItemStatistic.HUNTER_FORTUNE)),
-        WISDOM("§3Wisdom Stats", Material.BOOK, List.of("§7Increases the §3XP §7you gain", "§7for your skills."), List.of(
+        WISDOM("<3>Wisdom Stats", Material.BOOK, List.of("<7>Increases the <3>XP</3> you gain", "<7>for your skills."), List.of(
             ItemStatistic.COMBAT_WISDOM, ItemStatistic.FARMING_WISDOM, ItemStatistic.FISHING_WISDOM,
             ItemStatistic.MINING_WISDOM, ItemStatistic.FORAGING_WISDOM, ItemStatistic.ENCHANTING_WISDOM,
             ItemStatistic.ALCHEMY_WISDOM, ItemStatistic.CARPENTRY_WISDOM, ItemStatistic.RUNE_CRAFTING_WISDOM,
             ItemStatistic.TAMING_WISDOM, ItemStatistic.SOCIAL_WISDOM, ItemStatistic.HUNTING_WISDOM)),
-        MISC("§dMisc Stats", Material.CLOCK, List.of("§7Augments various aspects", "§7of your gameplay."), List.of(
+        MISC("<d>Misc Stats", Material.CLOCK, List.of("<7>Augments various aspects", "<7>of your gameplay."), List.of(
             ItemStatistic.SPEED, ItemStatistic.MAGIC_FIND, ItemStatistic.PET_LUCK, ItemStatistic.HEAT_RESISTANCE,
             ItemStatistic.COLD_RESISTANCE, ItemStatistic.RESPIRATION, ItemStatistic.PRESSURE_RESISTANCE,
             ItemStatistic.FEAR, ItemStatistic.TRACKING));
@@ -457,21 +507,22 @@ public class GUIGatheringCategoryStats extends StatelessView {
             this.statistics = statistics;
         }
 
-        public net.minestom.server.item.ItemStack.Builder createProfileSummary(SkyBlockPlayer player) {
+        public ItemStack.Builder createProfileSummary(SkyBlockPlayer player) {
             return createSummary(player, true);
         }
 
-        private net.minestom.server.item.ItemStack.Builder createSummary(SkyBlockPlayer player, boolean clickable) {
-            List<String> lore = new ArrayList<>(description);
-            lore.add("");
+        private ItemStack.Builder createSummary(SkyBlockPlayer player, boolean clickable) {
+            List<Text> lore = new ArrayList<>();
+            description.forEach(entry -> lore.add(Text.of(entry)));
+            lore.add(Text.empty());
             for (ItemStatistic stat : statistics) {
-                lore.add(" " + stat.getFullDisplayName() + " §f" + format(overall(player, stat)) + stat.getSuffix());
+                lore.add(Text.of(" <stat:'{}'> <f>{:.2}{}", stat.name(), overall(player, stat), stat.getSuffix()));
             }
             if (clickable) {
-                lore.add("");
-                lore.add("§eClick for details!");
+                lore.add(Text.empty());
+                lore.add(Text.of("<e>Click for details!"));
             }
-            return ItemStackCreator.getStack(title, material, 1, lore);
+            return ItemStacks.item(material, 1, Text.of(title), lore);
         }
     }
 }

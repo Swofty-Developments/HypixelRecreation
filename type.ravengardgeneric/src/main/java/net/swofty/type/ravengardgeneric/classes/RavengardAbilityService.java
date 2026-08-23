@@ -40,13 +40,13 @@ public final class RavengardAbilityService {
         long readyAt = COOLDOWNS.computeIfAbsent(player.getUuid(), ignored -> new ConcurrentHashMap<>())
                 .getOrDefault(ability, 0L);
         if (readyAt > now) {
-            player.sendMessage("§cThis ability is on cooldown for " + ((readyAt - now) / 1000 + 1) + "s!");
+            player.sendMessage("<c>This ability is on cooldown for {}s!", (readyAt - now) / 1000 + 1);
             return;
         }
         COOLDOWNS.get(player.getUuid()).put(ability, now + ability.getCooldownSeconds() * 1000L);
 
         apply(player, ability);
-        player.sendMessage("§aYou used §f" + ability.getDisplayName() + "§a!");
+        player.sendMessage("<a>You used <f>{}<a>!", ability.getDisplayName());
     }
 
     private static void apply(RavengardPlayer player, RavengardAbility ability) {

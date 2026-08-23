@@ -25,12 +25,12 @@ public class CrownsCommand extends HypixelCommand {
             RavengardPlayer player = (RavengardPlayer) sender;
             RavengardProfiles.setCrowns(player, context.get(amountArgument));
 
-            sender.sendMessage("§aSuccessfully set crowns to §e" + context.getRaw(amountArgument) + "§a.");
+            player.sendMessage("<a>Successfully set crowns to <e>{}<a>.", context.getRaw(amountArgument));
         }, amountArgument);
 
         command.addSyntax((sender, context) -> {
             RavengardPlayer player = (RavengardPlayer) sender;
-            player.sendMessage("§aYou have §e👑" + RavengardProfiles.getCrowns(player) + " Crowns§a.");
+            player.sendMessage("<a>You have <e>👑{} Crowns<a>.", RavengardProfiles.getCrowns(player));
         });
     }
 }

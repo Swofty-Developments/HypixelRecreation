@@ -12,7 +12,7 @@ public class NPCRosemary extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§aRosemary", "§e§lCLICK"};
+                return new String[]{"<a>Rosemary", "<e><l>CLICK"};
             }
 
             @Override

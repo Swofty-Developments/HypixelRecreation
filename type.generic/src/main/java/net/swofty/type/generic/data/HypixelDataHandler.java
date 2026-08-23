@@ -7,13 +7,17 @@ import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.scoreboard.Team;
 import net.minestom.server.scoreboard.TeamBuilder;
+import net.swofty.PlayerField;
+import net.swofty.codec.Codecs;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.TeamColorUtil;
+import net.swofty.commons.data.NameIndex;
+import net.swofty.commons.data.SwoftyData;
+import net.swofty.type.generic.data.domain.AccountDomain;
+import net.swofty.type.generic.data.domain.PlayerDataService;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.data.datapoints.*;
-import net.swofty.type.generic.data.mongodb.ProfilesDatabase;
-import net.swofty.type.generic.data.mongodb.UserDatabase;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.generic.utility.ScheduleUtility;
@@ -21,7 +25,6 @@ import org.bson.Document;
 import org.jetbrains.annotations.Blocking;
 import org.jetbrains.annotations.Nullable;
 import org.tinylog.Logger;
-import tools.jackson.core.JacksonException;
 
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -33,17 +36,15 @@ public class HypixelDataHandler extends DataHandler {
     public HypixelDataHandler(UUID uuid) { super(uuid); }
 
     public static HypixelDataHandler getUser(UUID uuid) {
-        HypixelDataHandler handler = (HypixelDataHandler) userCache.get(uuid);
-        if (handler == null) throw new RuntimeException("User " + uuid + " does not exist!");
-        return handler;
+        return PlayerDataService.get(AccountDomain.KEY, uuid);
     }
 
     public static @Nullable HypixelDataHandler getUser(Player player) {
-        return (HypixelDataHandler) userCache.get(player.getUuid());
+        return PlayerDataService.find(AccountDomain.KEY, player.getUuid()).orElse(null);
     }
 
     public static java.util.Optional<HypixelDataHandler> findHypixelUser(UUID uuid) {
-        return java.util.Optional.ofNullable((HypixelDataHandler) userCache.get(uuid));
+        return PlayerDataService.find(AccountDomain.KEY, uuid);
     }
 
     public static java.util.Optional<HypixelDataHandler> awaitHypixelUser(UUID uuid, long timeoutMillis) {
@@ -54,7 +55,8 @@ public class HypixelDataHandler extends DataHandler {
     public HypixelDataHandler fromDocument(Document document) {
         if (document == null) return initUserWithDefaultData(this.uuid);
 
-        this.uuid = UUID.fromString(document.getString("_id"));
+        String owner = document.getString("_id") != null ? document.getString("_id") : document.getString("_owner");
+        if (owner != null) this.uuid = UUID.fromString(owner);
         for (Data data : Data.values()) {
             String key = data.getKey();
             if (!document.containsKey(key)) {
@@ -88,8 +90,9 @@ public class HypixelDataHandler extends DataHandler {
         for (Data data : Data.values()) {
             try {
                 document.put(data.getKey(), getDatapoint(data.getKey()).getSerializedValue());
-            } catch (JacksonException e) {
+            } catch (Exception e) {
                 Logger.error(e, "Failed to serialize datapoint {} for user {}", data.getKey(), this.uuid);
+                Sentry.captureException(e);
             }
         }
         return document;
@@ -114,6 +117,7 @@ public class HypixelDataHandler extends DataHandler {
                 data.onLoad.accept(player, get(data));
             }
         }
+        Thread.startVirtualThread(this::indexName);
     }
 
     @Override
@@ -145,37 +149,73 @@ public class HypixelDataHandler extends DataHandler {
         return h;
     }
 
-    public static HypixelDataHandler getOfOfflinePlayer(UUID uuid) throws RuntimeException {
-        if (userCache.containsKey(uuid))
-            return (HypixelDataHandler) userCache.get(uuid);
+    public void loadFromApi() {
+        SwoftyData.account().load(uuid);
+        loadBackedData();
+        indexName();
+    }
 
-        UserDatabase userDatabase = new UserDatabase(uuid.toString());
-        Document doc = userDatabase.getHypixelData();
-        return createFromDocument(doc);
+    public void loadFromTransferDocument(Document document) {
+        SwoftyData.account().load(uuid);
+        fromDocument(document);
+        saveBackedData();
+        indexName();
+    }
+
+    public void saveToApi() {
+        saveBackedData();
+    }
+
+    private void indexName() {
+        String ign = get(Data.IGN, DatapointString.class).getValue();
+        if (ign != null && !ign.equals("null")) NameIndex.index(ign, uuid);
+    }
+
+    public static HypixelDataHandler getOfOfflinePlayer(UUID uuid) throws RuntimeException {
+        HypixelDataHandler cached = PlayerDataService.find(AccountDomain.KEY, uuid).orElse(null);
+        if (cached != null) return cached;
+
+        HypixelDataHandler handler = initUserWithDefaultData(uuid);
+        try {
+            handler.loadFromApi();
+        } finally {
+            releaseOfflineAccount(uuid);
+        }
+        return handler;
+    }
+
+    private static void releaseOfflineAccount(UUID uuid) {
+        if (PlayerDataService.isLoaded(AccountDomain.KEY, uuid)) return;
+        try {
+            SwoftyData.account().unload(uuid);
+        } catch (Exception e) {
+            Logger.error(e, "Failed to release offline account container for user {}", uuid);
+        }
     }
 
     @Blocking
     public static String getPotentialIGNFromUUID(UUID uuid) {
-        if (userCache.containsKey(uuid))
-            return ((HypixelDataHandler) userCache.get(uuid)).get(Data.IGN, DatapointString.class).getValue();
-        Document doc = ProfilesDatabase.collection.find(new Document("_id", uuid.toString())).first();
-        HypixelDataHandler handler = HypixelDataHandler.createFromDocument(doc);
-        return handler.get(Data.IGN, DatapointString.class).getValue();
+        HypixelDataHandler cached = PlayerDataService.find(AccountDomain.KEY, uuid).orElse(null);
+        if (cached != null) return cached.get(Data.IGN, DatapointString.class).getValue();
+
+        String stored;
+        try {
+            stored = SwoftyData.account().get(uuid, Data.IGN.field);
+        } finally {
+            releaseOfflineAccount(uuid);
+        }
+        if (stored == null) return "null";
+        DatapointString dp = new DatapointString("ign");
+        dp.deserializeValue(stored);
+        return dp.getValue();
     }
 
     @Blocking
     public static @Nullable UUID getPotentialUUIDFromName(String name) throws RuntimeException {
-        Document doc = UserDatabase.collection.find(
-                new Document("ignLowercase", "\"" + name.toLowerCase() + "\"")
-        ).first();
-
-        if (doc == null)
-            return null;
-        return UUID.fromString(doc.getString("_id"));
+        return NameIndex.lookup(name);
     }
 
-    /** Account-wide data (non-generic enum). */
-    public enum Data {
+    public enum Data implements BackedField {
         RANK("rank", DatapointRank.class, new DatapointRank("rank", Rank.DEFAULT),
                 (player, datapoint) -> {
             player.sendPacket(MinecraftServer.getCommandManager().createDeclareCommandsPacket(player));
@@ -318,6 +358,7 @@ public class HypixelDataHandler extends DataHandler {
         @Getter private final String key;
         @Getter private final Class<? extends Datapoint<?>> type;
         @Getter private final Datapoint<?> defaultDatapoint;
+        private final PlayerField<String> field;
         public final BiConsumer<Player, Datapoint<?>> onChange;
         public final BiConsumer<Player, Datapoint<?>> onLoad;
         public final Function<Player, Datapoint<?>> onQuit;
@@ -329,7 +370,22 @@ public class HypixelDataHandler extends DataHandler {
              BiConsumer<Player, Datapoint<?>> onLoad,
              Function<Player, Datapoint<?>> onQuit) {
             this.key = key; this.type = type; this.defaultDatapoint = defaultDatapoint;
+            this.field = PlayerField.create("hypixel", key, Codecs.STRING, null);
             this.onChange = onChange; this.onLoad = onLoad; this.onQuit = onQuit;
+        }
+
+        @Override
+        public String readData(DataHandler handler) {
+            return SwoftyData.account().get(handler.getUuid(), field);
+        }
+
+        @Override
+        public void writeData(DataHandler handler, String serialized) {
+            SwoftyData.account().set(handler.getUuid(), field, serialized);
+        }
+
+        public PlayerField<String> accountField() {
+            return field;
         }
         Data(String key, Class<? extends Datapoint<?>> type, Datapoint<?> defaultDatapoint,
              BiConsumer<Player, Datapoint<?>> onChange, BiConsumer<Player, Datapoint<?>> onLoad) {

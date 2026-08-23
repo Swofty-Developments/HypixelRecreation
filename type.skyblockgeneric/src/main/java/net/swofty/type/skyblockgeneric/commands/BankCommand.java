@@ -18,11 +18,11 @@ public class BankCommand extends HypixelCommand {
             if (!permissionCheck(sender)) return;
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
             if (!player.isBoosterCookieActive()) {
-                player.sendMessage("§cYou need an active Booster Cookie to use /bank!");
+                player.sendMessage("<c>You need an active Booster Cookie to use /bank!");
                 return;
             }
             if (!PersonalBankService.isUnlocked(player) || PersonalBankService.remaining(player) > 0) {
-                player.sendMessage("§cYour Personal Bank is locked or still on cooldown!");
+                player.sendMessage("<c>Your Personal Bank is locked or still on cooldown!");
                 return;
             }
             new GUIBanker().open(player);

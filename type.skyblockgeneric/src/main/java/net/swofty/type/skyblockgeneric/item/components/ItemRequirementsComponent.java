@@ -25,7 +25,7 @@ public class ItemRequirementsComponent extends SkyBlockItemComponent {
                 .findFirst()
                 .orElse(null);
         if (unmet == null) return true;
-        player.sendMessage("§cYou do not meet this item's " + unmet.display() + " requirement!");
+        player.sendMessage("<c>You do not meet this item's {} requirement!", unmet.display());
         return false;
     }
 

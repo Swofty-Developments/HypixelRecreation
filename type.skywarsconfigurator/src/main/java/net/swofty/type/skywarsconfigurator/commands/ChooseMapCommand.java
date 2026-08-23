@@ -4,14 +4,12 @@ import net.hollowcube.polar.AnvilPolar;
 import net.hollowcube.polar.PolarLoader;
 import net.hollowcube.polar.PolarWorld;
 import net.hollowcube.polar.PolarWriter;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.arguments.ArgumentType;
-import net.minestom.server.command.builder.suggestion.SuggestionEntry;
-import net.minestom.server.entity.Player;
 import net.minestom.server.instance.InstanceContainer;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
+import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.skywarsconfigurator.MapConfigurationSession;
 import net.swofty.type.skywarsconfigurator.TypeSkyWarsConfiguratorLoader;
@@ -50,7 +48,7 @@ public class ChooseMapCommand extends HypixelCommand {
                     for (File polarFile : polarFiles) {
                         String mapId = polarFile.getName().replace(".polar", "");
                         if (!addedIds.contains(mapId.toLowerCase())) {
-                            suggestion.addEntry(new SuggestionEntry(mapId, Component.text(mapId + " §a(polar)")));
+                            suggest(suggestion, mapId, "{} <a>(polar)", mapId);
                             addedIds.add(mapId.toLowerCase());
                         }
                     }
@@ -67,7 +65,7 @@ public class ChooseMapCommand extends HypixelCommand {
                     for (File anvilFolder : anvilFolders) {
                         String mapId = anvilFolder.getName();
                         if (!addedIds.contains(mapId.toLowerCase())) {
-                            suggestion.addEntry(new SuggestionEntry(mapId, Component.text(mapId + " §c(anvil - needs conversion)")));
+                            suggest(suggestion, mapId, "{} <c>(anvil - needs conversion)", mapId);
                         }
                     }
                 }
@@ -75,8 +73,8 @@ public class ChooseMapCommand extends HypixelCommand {
         });
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof Player player)) {
-                sender.sendMessage(Component.text("§cThis command can only be executed by a player."));
+            if (!(sender instanceof HypixelPlayer player)) {
+                sender.sendMessage("<c>This command can only be executed by a player.");
                 return;
             }
             String mapId = context.get("map");
@@ -87,13 +85,13 @@ public class ChooseMapCommand extends HypixelCommand {
 
             // Check if we need to convert from Anvil
             if (!polarFile.exists() && anvilFolder.exists() && regionDir.exists()) {
-                player.sendMessage(Component.text("§eFound Anvil world folder for: " + mapId));
-                player.sendMessage(Component.text("§eConverting to Polar format... This may take a moment."));
+                player.sendMessage("<e>Found Anvil world folder for: {}", mapId);
+                player.sendMessage("<e>Converting to Polar format... This may take a moment.");
 
                 try {
                     convertAnvilToPolar(player, mapId, anvilFolder, polarFile);
                 } catch (Exception e) {
-                    player.sendMessage(Component.text("§cFailed to convert world: " + e.getMessage()));
+                    player.sendMessage("<c>Failed to convert world: {}", e.getMessage());
                     Logger.error("Failed to convert Anvil to Polar", e);
                     return;
                 }
@@ -101,8 +99,8 @@ public class ChooseMapCommand extends HypixelCommand {
 
             // Now check if polar file exists
             if (!polarFile.exists()) {
-                sender.sendMessage(Component.text("§cNo polar file or Anvil world found for map: " + mapId));
-                sender.sendMessage(Component.text("§7Place a .polar file or Anvil world folder in: " + CONFIG_PATH.toAbsolutePath()));
+                player.sendMessage("<c>No polar file or Anvil world found for map: {}", mapId);
+                player.sendMessage("<7>Place a .polar file or Anvil world folder in: {}", CONFIG_PATH.toAbsolutePath());
                 return;
             }
 
@@ -111,7 +109,7 @@ public class ChooseMapCommand extends HypixelCommand {
             try {
                 mapInstance.setChunkLoader(new PolarLoader(polarFile.toPath()));
             } catch (IOException e) {
-                sender.sendMessage(Component.text("§cFailed to load map: " + mapId));
+                player.sendMessage("<c>Failed to load map: {}", mapId);
                 Logger.error("Failed to load polar file", e);
                 return;
             }
@@ -120,14 +118,14 @@ public class ChooseMapCommand extends HypixelCommand {
             MapConfigurationSession session = new MapConfigurationSession(mapId, mapId);
             TypeSkyWarsConfiguratorLoader.setCurrentSession(session);
 
-            player.sendMessage(Component.text("§aLoaded map: §f" + mapId));
-            player.sendMessage(Component.text("§7Use §b/swconfig §7to configure the map."));
+            player.sendMessage("<a>Loaded map: <f>{}", mapId);
+            player.sendMessage("<7>Use <b>/swconfig <7>to configure the map.");
 
             player.setInstance(mapInstance);
         }, mapArg);
     }
 
-    private void convertAnvilToPolar(Player player, String mapId, File anvilFolder, File polarFile) throws Exception {
+    private void convertAnvilToPolar(HypixelPlayer player, String mapId, File anvilFolder, File polarFile) throws Exception {
         // Find all populated chunks from region files
         File regionDir = new File(anvilFolder, "region");
         File[] regionFiles = regionDir.listFiles((dir, name) -> name.endsWith(".mca"));
@@ -136,7 +134,7 @@ public class ChooseMapCommand extends HypixelCommand {
             throw new Exception("No region files found in " + regionDir.getAbsolutePath());
         }
 
-        player.sendMessage(Component.text("§7Found " + regionFiles.length + " region file(s)..."));
+        player.sendMessage("<7>Found {} region file(s)...", regionFiles.length);
 
         // Collect all populated chunk coordinates
         Set<Long> populatedChunks = new HashSet<>();
@@ -157,7 +155,7 @@ public class ChooseMapCommand extends HypixelCommand {
             }
         }
 
-        player.sendMessage(Component.text("§7Converting " + populatedChunks.size() + " chunks to Polar format..."));
+        player.sendMessage("<7>Converting {} chunks to Polar format...", populatedChunks.size());
 
         // Convert Anvil to Polar using only populated chunks
         PolarWorld polarWorld = AnvilPolar.anvilToPolar(
@@ -169,12 +167,10 @@ public class ChooseMapCommand extends HypixelCommand {
         byte[] polarBytes = PolarWriter.write(polarWorld);
         Files.write(polarFile.toPath(), polarBytes);
 
-        player.sendMessage(Component.text("§aPolar file created: " + polarFile.getName()));
+        player.sendMessage("<a>Polar file created: {}", polarFile.getName());
 
-        // Delete the original Anvil folder
-        player.sendMessage(Component.text("§7Deleting original Anvil folder..."));
         deleteDirectory(anvilFolder.toPath());
-        player.sendMessage(Component.text("§aOriginal Anvil folder deleted."));
+        player.sendMessage("<a>Original Anvil folder deleted.");
     }
 
     /**

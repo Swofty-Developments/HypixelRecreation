@@ -30,7 +30,6 @@ public class ServiceInitializer {
         ItemAttribute.registerItemAttributes();
 
         ServiceRedisManager.connect(ConfigProvider.settings().getRedisUri(), service.getType());
-        // ServiceToServerManager.initialize(service.getType());
         RedisClient.registerResponseChannel(RedisChannels.SERVICE_RESPONSE);
         RedisClient.registerResponseChannel(RedisChannels.SERVICE_BROADCAST_RESPONSE);
 
@@ -57,6 +56,14 @@ public class ServiceInitializer {
         });
 
         RedisAPI.getInstance().startListeners();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                RedisAPI.getInstance().shutdown();
+            } catch (Exception exception) {
+                Logger.error(exception, "Failed to shut down Redis for service {}", service.getType().name());
+            }
+        }, "service-redis-shutdown"));
+
         Logger.info("Service {} initialized!", service.getType().name());
         service.onReady();
 

@@ -4,7 +4,8 @@ import lombok.Getter;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skyblockgeneric.levels.SkyBlockLevelUnlock;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
@@ -29,28 +30,28 @@ public class SkyBlockLevelStatisticUnlock extends SkyBlockLevelUnlock {
         List<String> statisticsDisplay = new ArrayList<>();
         statistics.getStatisticsAdditive().forEach((key, value) -> {
             if (value > 0)
-                statisticsDisplay.add("§8 +§a" + value + key.getSuffix() + " " + key.getFullDisplayName());
+                statisticsDisplay.add("<8> +<a>" + value + key.getSuffix() + " <stat:" + key.name().toLowerCase() + ">");
         });
 
         if (statisticsDisplay.isEmpty()) {
-            statisticsDisplay.add("§8No statistics unlocked");
+            statisticsDisplay.add("<8>No statistics unlocked");
         }
 
-        List<String> lore = new ArrayList<>();
+        List<Text> lore = new ArrayList<>();
         for (int i = 1; i < statisticsDisplay.size(); i++) {
-            lore.add(statisticsDisplay.get(i));
+            lore.add(Text.of(statisticsDisplay.get(i)));
         }
-        lore.add("§8Level " + level);
+        lore.add(Text.of("<8>Level {}", level));
 
-        return ItemStackCreator.getStack(statisticsDisplay.getFirst(), Material.APPLE, 1, lore);
+        return ItemStacks.item(Material.APPLE, 1, Text.of(statisticsDisplay.getFirst()), lore);
     }
 
     @Override
-    public List<String> getDisplay(SkyBlockPlayer player, int level) {
-        ArrayList<String> lore = new ArrayList<>();
+    public List<Text> getDisplay(SkyBlockPlayer player, int level) {
+        ArrayList<Text> lore = new ArrayList<>();
         statistics.getStatisticsAdditive().forEach((key, value) -> {
             if (value > 0)
-                lore.add("§8 +§a" + value + key.getSuffix() + " " + key.getFullDisplayName());
+                lore.add(Text.of("<8> +<a>" + value + key.getSuffix() + " <stat:" + key.name().toLowerCase() + ">"));
         });
         return lore;
     }

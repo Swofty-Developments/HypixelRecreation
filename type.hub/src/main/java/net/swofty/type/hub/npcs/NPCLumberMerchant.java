@@ -14,7 +14,7 @@ public class NPCLumberMerchant extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§2Lumber Merchant", "§e§lCLICK"};
+                return new String[]{"<2>Lumber Merchant", "<e><l>CLICK"};
             }
 
             @Override
@@ -59,10 +59,10 @@ public class NPCLumberMerchant extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[]{
             DialogueSet.builder()
-                .key("hello").lines(new String[]{
+                .key("hello").lines(
                     "Buy and sell wood and axes with me!",
                     "Click me again to open the Lumberjack Shop!"
-                }).build(),
+                ).build(),
         };
     }
 }

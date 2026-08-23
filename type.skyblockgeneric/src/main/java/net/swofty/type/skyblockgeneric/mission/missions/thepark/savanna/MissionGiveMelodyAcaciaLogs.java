@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.thepark.savanna;
 
+
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.skyblockgeneric.levels.SkyBlockLevelCause;
 import net.swofty.type.skyblockgeneric.mission.LocationAssociatedMission;
@@ -48,11 +49,11 @@ public class MissionGiveMelodyAcaciaLogs extends SkyBlockMission implements Loca
 		mission.getObjectiveCompleteText(
 				"QUEST COMPLETE",
 				new ArrayList<>(List.of(
-						"§8+§7Access to §dMelody's Harp",
-						"§8+§62,000 §7Coins",
-						"§8+§31,500 §7Foraging Experience",
-						"§8+§b5 SkyBlock XP",
-						"§fMelody's Shoes"
+						"<8>+<7>Access to <d>Melody's Harp",
+						"<8>+<6>2,000 <7>Coins",
+						"<8>+<3>1,500 <7>Foraging Experience",
+						"<8>+<b>5 SkyBlock XP",
+						"<f>Melody's Shoes"
 				))
 		).forEach(player::sendMessage);
 

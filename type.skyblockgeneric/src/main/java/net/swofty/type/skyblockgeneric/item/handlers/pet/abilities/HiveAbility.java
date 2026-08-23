@@ -37,11 +37,11 @@ public final class HiveAbility implements PetAbility {
         double perPlayerDef = DEFENSE + DEFENSE_BONUSES.getForRarity(rarity) * level;
 
         return Arrays.asList(
-                "§7For each player within §a25 §7blocks:",
-                " " + ItemStatistic.INTELLIGENCE.getLegacyDisplayColor() + "+" + decimalify(perPlayerIntel, 2) + " " + ItemStatistic.INTELLIGENCE.getFullDisplayName(),
-                " " + ItemStatistic.STRENGTH.getLegacyDisplayColor() + "+" + decimalify(perPlayerStr, 2) + " " + ItemStatistic.STRENGTH.getFullDisplayName(),
-                " " + ItemStatistic.DEFENSE.getLegacyDisplayColor() + "+" + decimalify(perPlayerDef, 2) + " " + ItemStatistic.DEFENSE.getFullDisplayName(),
-                "§8Max 15 players"
+                "<7>For each player within <a>25 <7>blocks:",
+                " <stat:intelligence:+" + decimalify(perPlayerIntel, 2) + ">",
+                " <stat:strength:+" + decimalify(perPlayerStr, 2) + ">",
+                " <stat:defense:+" + decimalify(perPlayerDef, 2) + ">",
+                "<8>Max 15 players"
         );
     }
 

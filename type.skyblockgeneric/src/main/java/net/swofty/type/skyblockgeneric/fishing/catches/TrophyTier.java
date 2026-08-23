@@ -1,5 +1,8 @@
 package net.swofty.type.skyblockgeneric.fishing.catches;
 
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,20 +11,20 @@ import java.util.Optional;
  * deduction that scanned item IDs for "_DIAMOND"/"_GOLD" substrings.
  */
 public enum TrophyTier {
-    BRONZE("§c", "Bronze"),
-    SILVER("§7", "Silver"),
-    GOLD("§6", "Gold"),
-    DIAMOND("§b", "Diamond");
+    BRONZE(NamedTextColor.RED, "Bronze"),
+    SILVER(NamedTextColor.GRAY, "Silver"),
+    GOLD(NamedTextColor.GOLD, "Gold"),
+    DIAMOND(NamedTextColor.AQUA, "Diamond");
 
-    private final String colour;
+    private final TextColor colour;
     private final String displayName;
 
-    TrophyTier(String colour, String displayName) {
+    TrophyTier(TextColor colour, String displayName) {
         this.colour = colour;
         this.displayName = displayName;
     }
 
-    public String colour() {
+    public TextColor colour() {
         return colour;
     }
 

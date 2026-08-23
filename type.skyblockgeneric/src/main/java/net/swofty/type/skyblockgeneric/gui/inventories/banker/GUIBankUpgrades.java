@@ -1,13 +1,14 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.banker;
 
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.bank.BankAccountTier;
@@ -25,6 +26,7 @@ public class GUIBankUpgrades extends HypixelInventoryGUI {
         "2b3b73ee2c9c725d807f35a988cb743732b75d7390796621324c207a8c407a90";
     private static final String PALATIAL_TEXTURE =
         "3366a9633a88d038db2771e32ed851845cb1d88b0ac8b7be8ac07299b5f2050";
+    private static final Text CLICK_TO_UPGRADE = Text.of("<e>Click to upgrade!");
 
     public GUIBankUpgrades() {
         super("Bank Account Upgrades", InventoryType.CHEST_4_ROW);
@@ -56,80 +58,83 @@ public class GUIBankUpgrades extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To Bank");
+                return ItemStacks.item(Material.ARROW, """
+                        <a>Go Back
+                        <7>To Bank""");
             }
         });
     }
 
     private ItemStack.Builder createTierItem(SkyBlockPlayer player, BankAccountTier tier) {
         DatapointBankData.BankData data = PersonalBankService.data(player);
-        List<String> lore = new ArrayList<>();
-        String color = tierColor(tier);
+        List<Text> lore = new ArrayList<>();
+        TextColor color = tier.getColor();
 
-        lore.add(tier == BankAccountTier.STARTER ? "§8Not upgraded" : "§8Bank Upgrade");
-        lore.add("");
-        lore.add(color + ">§m------- §r  §6Interest Tranches" + color + "  §m-------" + color + "<");
+        lore.add(Text.of(tier == BankAccountTier.STARTER ? "<8>Not upgraded" : "<8>Bank Upgrade"));
+        lore.add(Text.empty());
+        lore.add(Text.of("<color:{0}>><m>------- </m><r>  <6>Interest Tranches<color:{0}>  <m>-------</m><color:{0}>\\<",
+            color));
         addInterestTranches(lore, tier);
-        lore.add("");
+        lore.add(Text.empty());
 
         double multiplier = 1D + Math.clamp(data.getMuseumMilestone(), 0, 30) * 0.02D;
-        lore.add(" §7Max interest: §6" + StringUtility.commaify(tier.getBaseMaximumInterest() * multiplier));
-        lore.add(" §8 (With " + StringUtility.commaify(interestBalance(tier)) + " balance)");
-        lore.add(color + ">§m---------------------------------" + color + "<");
-        lore.add("");
-        lore.add("§7Max balance: §6" + balanceLabel(tier));
-        lore.add("");
+        lore.add(Text.of(" <7>Max interest: <6>{:,}", tier.getBaseMaximumInterest() * multiplier));
+        lore.add(Text.of(" <8> (With {:,} balance)", interestBalance(tier)));
+        lore.add(Text.of("<color:{0}>><m>---------------------------------</m><color:{0}>\\<", color));
+        lore.add(Text.empty());
+        lore.add(Text.of("<7>Max balance: <6>{}", balanceLabel(tier)));
+        lore.add(Text.empty());
         addCostAndRequirements(lore, tier);
         lore.add(status(player, data, tier));
 
-        String name = tier.getDisplayName() + " Account";
+        Text name = Text.of("<color:{0}>{1} Account", tier.getColor(), tier.getDisplayName());
         return switch (tier) {
-            case LUXURIOUS -> ItemStackCreator.getStackHead(name, LUXURIOUS_TEXTURE, 1, lore);
-            case PALATIAL -> ItemStackCreator.getStackHead(name, PALATIAL_TEXTURE, 1, lore);
-            default -> ItemStackCreator.getStack(name, tierMaterial(tier), 1, lore);
+            case LUXURIOUS -> ItemStacks.head(LUXURIOUS_TEXTURE, name, lore);
+            case PALATIAL -> ItemStacks.head(PALATIAL_TEXTURE, name, lore);
+            default -> ItemStacks.item(tierMaterial(tier), 1, name, lore);
         };
     }
 
-    private void addCostAndRequirements(List<String> lore, BankAccountTier tier) {
+    private void addCostAndRequirements(List<Text> lore, BankAccountTier tier) {
         if (tier == BankAccountTier.STARTER) {
-            lore.add("§7Cost: §aComplimentary");
-            lore.add("");
+            lore.add(Text.of("<7>Cost: <a>Complimentary"));
+            lore.add(Text.empty());
             return;
         }
 
-        lore.add("§7Cost");
-        lore.add("§6" + StringUtility.commaify(tier.getCoinCost()) + " Coins");
-        lore.add("§9Enchanted Gold Block §8x" + tier.getEnchantedGoldBlocks());
-        lore.add("");
+        lore.add(Text.of("<7>Cost"));
+        lore.add(Text.of("<6>{:,} Coins", tier.getCoinCost()));
+        lore.add(Text.of("<9>Enchanted Gold Block <8>x{}", tier.getEnchantedGoldBlocks()));
+        lore.add(Text.empty());
 
         if (tier.getMuseumMilestone() > 0)
-            lore.add("§cRequires Museum Milestone " + tier.getMuseumMilestone() + "!");
+            lore.add(Text.of("<c>Requires Museum Milestone {}!", tier.getMuseumMilestone()));
         if (tier.getGoldCollection() > 0)
-            lore.add("§cRequires " + compactNumber(tier.getGoldCollection()) + " gold collection!");
-        lore.add("");
+            lore.add(Text.of("<c>Requires {} gold collection!", compactNumber(tier.getGoldCollection())));
+        lore.add(Text.empty());
     }
 
-    private String status(SkyBlockPlayer player, DatapointBankData.BankData data, BankAccountTier tier) {
+    private Text status(SkyBlockPlayer player, DatapointBankData.BankData data, BankAccountTier tier) {
         BankAccountTier current = data.getAccountTier();
-        if (tier.ordinal() < current.ordinal()) return "§cYou have a better account!";
-        if (tier == current) return "§aThis is your account!";
-        if (tier.ordinal() > current.ordinal() + 1) return "§cNeed previous upgrade!";
+        if (tier.ordinal() < current.ordinal()) return Text.of("<c>You have a better account!");
+        if (tier == current) return Text.of("<a>This is your account!");
+        if (tier.ordinal() > current.ordinal() + 1) return Text.of("<c>Need previous upgrade!");
         if (data.getMuseumMilestone() < tier.getMuseumMilestone())
-            return "§cMuseum Milestone too low!";
+            return Text.of("<c>Museum Milestone too low!");
         if (player.getCollection().get(ItemType.GOLD_INGOT) < tier.getGoldCollection())
-            return "§cGold collection too low!";
-        if (player.getCoins() < tier.getCoinCost()) return "§cNot enough coins!";
+            return Text.of("<c>Gold collection too low!");
+        if (player.getCoins() < tier.getCoinCost()) return Text.of("<c>Not enough coins!");
         if (player.getAmountInInventory(ItemType.ENCHANTED_GOLD_BLOCK) < tier.getEnchantedGoldBlocks())
-            return "§cNot enough Enchanted Gold Blocks!";
-        return "§eClick to upgrade!";
+            return Text.of("<c>Not enough Enchanted Gold Blocks!");
+        return CLICK_TO_UPGRADE;
     }
 
     private void tryUpgrade(SkyBlockPlayer player, BankAccountTier selected) {
         DatapointBankData.BankData data = PersonalBankService.data(player);
         if (data.getAccountTier().next() != selected) return;
 
-        String status = status(player, data, selected);
-        if (!status.equals("§eClick to upgrade!")) {
+        Text status = status(player, data, selected);
+        if (!status.equals(CLICK_TO_UPGRADE)) {
             player.sendMessage(status);
             return;
         }
@@ -140,24 +145,25 @@ public class GUIBankUpgrades extends HypixelInventoryGUI {
         player.getSkyblockDataHandler()
             .get(SkyBlockDataHandler.Data.BANK_DATA, DatapointBankData.class)
             .setValue(data);
-        player.sendMessage("§aUpgraded your bank account to " + selected.getDisplayName() + "§a!");
+        player.sendMessage("<a>Upgraded your bank account to <color:{0}>{1}<a>!",
+            selected.getColor(), selected.getDisplayName());
         new GUIBankUpgrades().open(player);
     }
 
-    private void addInterestTranches(List<String> lore, BankAccountTier tier) {
-        lore.add(" §eFirst §610M §ecoins yields §b2% §einterest.");
-        lore.add(" §eFrom §610M §eto §6" + (tier == BankAccountTier.STARTER ? "15M" : "20M")
-            + " §ecoins yields §b1% §einterest.");
+    private void addInterestTranches(List<Text> lore, BankAccountTier tier) {
+        lore.add(Text.of(" <e>First <6>10M <e>coins yields <b>2% <e>interest."));
+        lore.add(Text.of(" <e>From <6>10M <e>to <6>{} <e>coins yields <b>1% <e>interest.",
+            tier == BankAccountTier.STARTER ? "15M" : "20M"));
         if (tier.ordinal() >= BankAccountTier.DELUXE.ordinal())
-            lore.add(" §eFrom §620M §eto §630M §ecoins yields §b0.5% §einterest.");
+            lore.add(Text.of(" <e>From <6>20M <e>to <6>30M <e>coins yields <b>0.5% <e>interest."));
         if (tier.ordinal() >= BankAccountTier.SUPER_DELUXE.ordinal())
-            lore.add(" §eFrom §630M §eto §650M §ecoins yields §b0.2% §einterest.");
+            lore.add(Text.of(" <e>From <6>30M <e>to <6>50M <e>coins yields <b>0.2% <e>interest."));
         if (tier.ordinal() >= BankAccountTier.PREMIER.ordinal())
-            lore.add(" §eFrom §650M §eto §6160M §ecoins yields §b0.1% §einterest.");
+            lore.add(Text.of(" <e>From <6>50M <e>to <6>160M <e>coins yields <b>0.1% <e>interest."));
         if (tier.ordinal() >= BankAccountTier.LUXURIOUS.ordinal())
-            lore.add(" §eFrom §6160M §eto §65.2B §ecoins yields §b0.01% §einterest.");
+            lore.add(Text.of(" <e>From <6>160M <e>to <6>5.2B <e>coins yields <b>0.01% <e>interest."));
         if (tier.ordinal() >= BankAccountTier.PALATIAL.ordinal())
-            lore.add(" §eFrom §65.2B §eto §655.2B §ecoins yields §b0.001% §einterest.");
+            lore.add(Text.of(" <e>From <6>5.2B <e>to <6>55.2B <e>coins yields <b>0.001% <e>interest."));
     }
 
     private Material tierMaterial(BankAccountTier tier) {
@@ -168,18 +174,6 @@ public class GUIBankUpgrades extends HypixelInventoryGUI {
             case SUPER_DELUXE -> Material.GOLDEN_CHESTPLATE;
             case PREMIER -> Material.GOLDEN_HORSE_ARMOR;
             default -> throw new IllegalArgumentException("Tier uses a custom head: " + tier);
-        };
-    }
-
-    private String tierColor(BankAccountTier tier) {
-        return switch (tier) {
-            case STARTER -> "§a";
-            case GOLD -> "§6";
-            case DELUXE -> "§d";
-            case SUPER_DELUXE -> "§5";
-            case PREMIER -> "§c";
-            case LUXURIOUS -> "§3";
-            case PALATIAL -> "§4";
         };
     }
 

@@ -1,6 +1,7 @@
 package net.swofty.type.generic.gui.v2;
 
 import net.swofty.type.generic.gui.v2.context.ClickContext;
+import net.swofty.type.generic.gui.v2.context.RawClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 
 public interface View<S> {
@@ -23,6 +24,10 @@ public interface View<S> {
     }
 
     default boolean onBottomClick(ClickContext<S> click, ViewContext ctx) {
+        return false;
+    }
+
+    default boolean onRawClick(RawClickContext<S> click, ViewContext ctx) {
         return false;
     }
 }

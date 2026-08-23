@@ -17,7 +17,7 @@ public class NPCSlumberTourGuide extends HypixelNPC {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
 				return new String[]{
-						"§eSlumber Tour Guide",
+						"<e>Slumber Tour Guide",
 				};
 			}
 
@@ -55,10 +55,10 @@ public class NPCSlumberTourGuide extends HypixelNPC {
 	@Override
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return Stream.of(
-				DialogueSet.builder().key("1").lines(new String[]{"Where to?"}).build(),
-				DialogueSet.builder().key("2").lines(new String[]{"Top o' the mornin te ya."}).build(),
-				DialogueSet.builder().key("3").lines(new String[]{"Where can I take you to today?"}).build(),
-				DialogueSet.builder().key("4").lines(new String[]{"Tips are appreciated!"}).build()
+				DialogueSet.builder().key("1").lines("Where to?").build(),
+				DialogueSet.builder().key("2").lines("Top o' the mornin te ya.").build(),
+				DialogueSet.builder().key("3").lines("Where can I take you to today?").build(),
+				DialogueSet.builder().key("4").lines("Tips are appreciated!").build()
 		).toArray(DialogueSet[]::new);
 	}
 }

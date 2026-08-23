@@ -62,7 +62,7 @@ public final class BlockUtility {
 
         int direction = (int) (relativeAngle / 45.0f);
 
-        String color = from.distance(to) > 20 ? "§e§l" : "§a§l";
+        String color = from.distance(to) > 20 ? "<e><l>" : "<a><l>";
         return switch (direction) {
             case 0 -> color + "⬆";  // Straight ahead
             case 1 -> color + "⬈";  // Forward-right

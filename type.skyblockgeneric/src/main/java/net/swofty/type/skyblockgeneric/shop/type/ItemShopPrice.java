@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.shop.ShopPrice;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
@@ -19,8 +20,8 @@ public class ItemShopPrice implements ShopPrice {
     int amount;
 
     @Override
-    public List<String> getGUIDisplay() {
-        return List.of("§6" + type.rarity.getLegacyColor() + type.getDisplayName() + " §8x" + amount);
+    public List<Text> getGUIDisplay() {
+        return List.of(Text.of("<6>" + Text.colorTag(type.rarity.getColor()) + type.getDisplayName() + " <8>x" + amount));
     }
 
     @Override

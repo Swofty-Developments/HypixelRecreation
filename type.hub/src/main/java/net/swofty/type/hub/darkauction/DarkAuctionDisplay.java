@@ -53,7 +53,7 @@ public class DarkAuctionDisplay {
             }
 
             if (!DarkAuctionHandler.isPlayerInAuction(skyBlockPlayer.getUuid())) {
-                skyBlockPlayer.sendMessage("§cYou must join the Dark Auction to bid!");
+                skyBlockPlayer.sendMessage("<c>You must join the Dark Auction to bid!");
                 return;
             }
 

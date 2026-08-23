@@ -12,7 +12,10 @@ public class NPCEinary extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§6Einary", "§e§lCLICK"};
+				return new String[]{
+						"<6>Einary",
+						"<e><l>CLICK"
+				};
 			}
 
 			@Override

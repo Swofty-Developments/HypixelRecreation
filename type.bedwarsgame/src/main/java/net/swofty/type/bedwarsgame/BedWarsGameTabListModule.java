@@ -1,10 +1,8 @@
 package net.swofty.type.bedwarsgame;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.PlayerSkin;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
+import net.swofty.commons.text.Text;
 import net.swofty.commons.party.FullParty;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
@@ -55,9 +53,9 @@ public class BedWarsGameTabListModule extends TablistModule {
                     skin = new CustomTablistSkin(playerSkin);
                 }
 
-                Component displayName = shouldObfuscate
-                        ? Component.text(UUID.randomUUID().toString().replace("-", "").substring(0, new Random().nextInt(10) + 4), Style.style(TextDecoration.OBFUSCATED))
-                        : bedWarsPlayer.getColouredName();
+                Text displayName = shouldObfuscate
+                        ? Text.of("<k>{}", UUID.randomUUID().toString().replace("-", "").substring(0, new Random().nextInt(10) + 4))
+                        : Text.component(bedWarsPlayer.getColouredName());
                 entries.add(new TablistEntry(displayName, skin));
             }
             return entries;
@@ -66,10 +64,9 @@ public class BedWarsGameTabListModule extends TablistModule {
             for (BedWarsPlayer bedWarsPlayer : players.stream()
                     .sorted(playerOrder)
                     .toList()) {
-                Component displayName = bedWarsPlayer.getDisplayName();
-                if (displayName == null) {
-                    displayName = Component.text(bedWarsPlayer.getUsername());
-                }
+                Text displayName = bedWarsPlayer.getDisplayName() == null
+                        ? Text.literal(bedWarsPlayer.getUsername())
+                        : Text.component(bedWarsPlayer.getDisplayName());
                 TablistSkin skin;
                 PlayerSkin playerSkin = bedWarsPlayer.getSkin();
                 if (playerSkin == null) {

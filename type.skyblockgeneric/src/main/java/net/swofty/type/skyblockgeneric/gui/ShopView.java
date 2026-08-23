@@ -6,17 +6,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointDouble;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulPaginatedView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -80,17 +76,16 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
     };
     public static final int[] SINGLE_SLOT = new int[]{22};
 
-    private final Component title;
+    private final Text title;
     private final int[] interiorSlots;
 
-    public ShopView(Component title, int[] interiorSlots) {
+    public ShopView(Text title, int[] interiorSlots) {
         this.title = title;
         this.interiorSlots = interiorSlots;
     }
 
-    @Deprecated
-    public ShopView(String title, int[] interiorSlots) {
-        this.title = Component.text(title);
+    public ShopView(String title, int[] interiorSlots, Object... arguments) {
+        this.title = Text.of(title, arguments);
         this.interiorSlots = interiorSlots;
     }
 
@@ -112,12 +107,12 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return ViewConfiguration.withTitle((state, _) -> {
+        return ViewConfiguration.withText((state, _) -> {
             int totalPages = Math.max(1, (int) Math.ceil((double) getFilteredItems(state).size() / interiorSlots.length));
             if (totalPages == 1) {
                 return title;
             }
-            return title.append(Component.text("§f | Page " + (state.page() + 1) + "/" + totalPages));
+            return title.append("<f> | Page {}/{}", state.page() + 1, totalPages);
         }, InventoryType.CHEST_6_ROW);
     }
 
@@ -154,9 +149,10 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
                 (s, c) -> {
                     SkyBlockPlayer player = (SkyBlockPlayer) c.player();
                     if (!player.getShoppingData().hasAnythingToBuyback()) {
-                        return ItemStackCreator.getStack("§aSell Item", Material.HOPPER, 1,
-                                "§7Click items in your inventory to",
-                                "§7sell them to this Shop!");
+                        return ItemStacks.item(Material.HOPPER, 1, """
+                                <a>Sell Item
+                                <7>Click items in your inventory to
+                                <7>sell them to this Shop!""");
                     }
 
                     SkyBlockItem last = new SkyBlockItem(player.getShoppingData().lastBuyback().getKey());
@@ -165,16 +161,15 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
 
                     double buyBackPrice = last.getComponent(SellableComponent.class).getSellValue() * amountOfLast;
 
-                    List<String> lore = new ArrayList<>(itemStack.build().get(DataComponents.LORE)
-                            .stream().map(StringUtility::getTextFromComponent).toList());
-                    lore.add("");
-                    lore.add("§7Cost");
-                    lore.add("§6" + StringUtility.commaify(buyBackPrice) + " Coin" + (buyBackPrice != 1 ? "s" : ""));
-                    lore.add("");
-                    lore.add("§eClick to buyback!");
+                    List<Text> lore = ItemStacks.loreText(itemStack);
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<7>Cost"));
+                    lore.add(Text.of("<6>{:,} Coin{}", buyBackPrice, buyBackPrice != 1 ? "s" : ""));
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<e>Click to buyback!"));
 
                     itemStack.amount(amountOfLast);
-                    return ItemStackCreator.updateLore(itemStack, lore);
+                    return ItemStacks.lore(itemStack, lore);
                 },
                 (click, c) -> {
                     SkyBlockPlayer player = (SkyBlockPlayer) c.player();
@@ -190,7 +185,7 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
                     double playerCoins = player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.COINS, DatapointDouble.class).getValue();
 
                     if (playerCoins < value) {
-                        player.sendMessage("§cYou don't have enough coins!");
+                        player.sendMessage("<c>You don't have enough coins!");
                         return;
                     }
 
@@ -216,39 +211,37 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
             itemStack.amount(item.amount);
 
             if (item.getDisplayName() != null) {
-                itemStack.set(DataComponents.CUSTOM_NAME, Component.text(item.getDisplayName())
-                        .decoration(TextDecoration.ITALIC, false));
+                ItemStacks.name(itemStack, Text.read(item.getDisplayName()));
             }
 
-            List<String> lore;
             if (item.getLore() != null) {
-                lore = new ArrayList<>(item.lore);
+                ItemStacks.lore(itemStack, item.getLore());
             } else {
-                lore = new ArrayList<>(itemStack.build().get(DataComponents.LORE)
-                        .stream().map(StringUtility::getTextFromComponent).toList());
+                ItemStacks.lore(itemStack, ItemStacks.loreText(itemStack));
             }
 
-            lore.add("");
-            lore.add("§7Cost");
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.empty());
+            lore.add(Text.of("<7>Cost"));
             lore.addAll(price.getGUIDisplay());
-            lore.add("");
+            lore.add(Text.empty());
 
             if (item.hasStock) {
-                lore.add("§7Stock");
-                lore.add("§6" + player.getShoppingData().getStock(item.getItem().toUnderstandable()) + " §7remaining");
-                lore.add("");
+                lore.add(Text.of("<7>Stock"));
+                lore.add(Text.of("<6>{} <7>remaining", player.getShoppingData().getStock(item.getItem().toUnderstandable())));
+                lore.add(Text.empty());
             }
 
-            lore.add("§eClick to trade!");
+            lore.add(Text.of("<e>Click to trade!"));
             if (item.stackable) {
-                lore.add("§eRight-click for more trading options!");
+                lore.add(Text.of("<e>Right-click for more trading options!"));
             }
 
-            return ItemStackCreator.updateLore(itemStack, lore);
+            return ItemStacks.appendLore(itemStack, lore);
         } catch (Exception e) {
-            p.sendMessage("§cThere was an error processing item " + item.getItem().getDisplayName() + "!");
+            p.sendMessage("<c>There was an error processing item {}!", item.getItem().getDisplayName());
             Logger.error(e, "Error loading shop view");
-            return ItemStackCreator.getStack("§cError", Material.BARRIER, 1);
+            return ItemStacks.item(Material.BARRIER, 1, "<c>Error");
         }
     }
 
@@ -257,7 +250,7 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
         SkyBlockPlayer player = (SkyBlockPlayer) ctx.player();
 
         if (item.isHasStock() && !player.getShoppingData().canPurchase(item.item.toUnderstandable(), item.amount)) {
-            player.sendMessage("§cYou have reached the maximum amount of items you can buy!");
+            player.sendMessage("<c>You have reached the maximum amount of items you can buy!");
             return;
         }
 
@@ -270,7 +263,7 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
         }
 
         if (!price.canAfford(player)) {
-            player.sendMessage("§cYou don't have enough " + price.getNamePlural() + "!");
+            player.sendMessage("<c>You don't have enough {}!", price.getNamePlural());
             return;
         }
 
@@ -310,7 +303,7 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
 
         SkyBlockItem item = new SkyBlockItem(stack);
         if (!item.hasComponent(SellableComponent.class)) {
-            player.sendMessage("§cYou can't sell this item!");
+            player.sendMessage("<c>You can't sell this item!");
             return true;
         }
 
@@ -322,10 +315,9 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
                 player.getSkyblockDataHandler().get(SkyBlockDataHandler.Data.COINS, DatapointDouble.class).getValue() + sellPrice
         );
 
-        player.sendMessage(
-                "§aYou sold §f" + StringUtility.getTextFromComponent(stack.get(DataComponents.CUSTOM_NAME)) + "§a for §6"
-                        + StringUtility.commaify(sellPrice) + " Coin" + (sellPrice != 1 ? "s" : "") + "§a!"
-        );
+        player.sendMessage("<a>You sold <f>{} <a>for <6>{:,} Coin{}<a>!",
+                ItemStacks.nameText(stack, Text.literal(item.getDisplayName())),
+                sellPrice, sellPrice != 1 ? "s" : "");
 
         player.getInventory().setItemStack(click.slot(), ItemStack.AIR);
         ctx.session(Object.class).refresh();
@@ -352,7 +344,7 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
         private final int amount;
         private final ShopPrice price;
         private final boolean stackable;
-        private List<String> lore = null;
+        private List<Text> lore = null;
         @Setter
         private String displayName = null;
         private boolean hasStock = true;
@@ -373,14 +365,12 @@ public abstract class ShopView extends StatefulPaginatedView<ShopView.ShopItem, 
             return new ShopItem(item, amount, price, false);
         }
 
-        public void setComponentLore(List<Component> lore) {
-            // TODO: don't move to a string
-            this.lore = lore.stream().map(inp -> LegacyComponentSerializer.legacySection().serialize(inp)).toList();
+        public void setLore(List<Text> lore) {
+            this.lore = lore;
         }
 
-        @Deprecated(forRemoval = true)
-        public void setLore(List<String> lore) {
-            this.lore = lore;
+        public void setLore(String textBlock, Object... arguments) {
+            this.lore = Text.of(textBlock, arguments).lines();
         }
 
     }

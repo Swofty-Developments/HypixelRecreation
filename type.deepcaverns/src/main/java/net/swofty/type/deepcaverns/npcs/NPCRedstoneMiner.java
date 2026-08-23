@@ -13,7 +13,7 @@ public class NPCRedstoneMiner extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Redstone Miner", "§e§lCLICK"};
+				return new String[]{"Redstone Miner", "<e><l>CLICK"};
 			}
 
 			@Override

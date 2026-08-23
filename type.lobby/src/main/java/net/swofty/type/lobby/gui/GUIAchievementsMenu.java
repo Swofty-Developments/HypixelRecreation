@@ -4,14 +4,17 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.achievement.AchievementCategory;
 import net.swofty.type.generic.achievement.AchievementRegistry;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
+
+import java.util.List;
 
 public class GUIAchievementsMenu extends HypixelInventoryGUI {
 
@@ -55,22 +58,23 @@ public class GUIAchievementsMenu extends HypixelInventoryGUI {
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 int totalPoints = handler.getTotalPoints();
                 boolean unlocked = totalPoints >= 10000;
-                return ItemStackCreator.getStack(
-                        unlocked ? "§6Gold Achievement Menu" : "§cGold Achievement Menu",
-                        Material.CLOCK,
-                        1,
-                        "§7Changes achievement unlocks within",
-                        "§7the menu to gold.",
-                        "",
-                        unlocked ? "§aUnlocked!" : "§cUnlocked with §b10,000 §cAchievement Points"
-                );
+                return ItemStacks.item(Material.CLOCK, 1,
+                        unlocked ? Text.of("<6>Gold Achievement Menu") : Text.of("<c>Gold Achievement Menu"),
+                        List.of(
+                                Text.of("<7>Changes achievement unlocks within"),
+                                Text.of("<7>the menu to gold."),
+                                Text.empty(),
+                                unlocked ? Text.of("<a>Unlocked!")
+                                        : Text.of("<c>Unlocked with <b>10,000 <c>Achievement Points")));
             }
         });
 
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To My Profile");
+                return ItemStacks.item(Material.ARROW, """
+                        <a>Go Back
+                        <7>To My Profile""");
             }
 
             @Override
@@ -89,64 +93,53 @@ public class GUIAchievementsMenu extends HypixelInventoryGUI {
                 double unlockedPercent = totalAchievements > 0 ? (totalUnlocked * 100.0 / totalAchievements) : 0;
                 double pointsPercent = maxPoints > 0 ? (totalPoints * 100.0 / maxPoints) : 0;
 
-                String displayName = player.getFullDisplayName();
+                return ItemStacks.item(Material.DIAMOND, """
+                        <a>Hypixel Achievements Completion
+                        <7>Player: {}
+                        <7>Unlocked: <b>{}<7>/<b>{} <8>({}%)
+                        <7>Points: <e>{}<7>/<e>{} <8>({}%)
 
-                return ItemStackCreator.getStack(
-                        "§aHypixel Achievements Completion",
-                        Material.DIAMOND,
-                        1,
-                        "§7Player: " + displayName,
-                        "§7Unlocked: §b" + totalUnlocked + "§7/§b" + totalAchievements + " §8(" + (int) unlockedPercent + "%)",
-                        "§7Points: §e" + totalPoints + "§7/§e" + maxPoints + " §8(" + (int) pointsPercent + "%)",
-                        "",
-                        "§7Legacy Unlocked: §b0",
-                        "§7Legacy Points: §e0"
-                );
+                        <7>Legacy Unlocked: <b>0
+                        <7>Legacy Points: <e>0""",
+                        player.getFullDisplayName(),
+                        totalUnlocked, totalAchievements, (int) unlockedPercent,
+                        totalPoints, maxPoints, (int) pointsPercent);
             }
         });
 
         set(new GUIItem(50) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aAchievements Tracking §b[MVP§c+§b]",
-                        Material.REPEATER,
-                        1,
-                        "§7Track achievements to access them",
-                        "§7quickly in this menu and get instant",
-                        "§7feedback of your progress."
-                );
+                return ItemStacks.item(Material.REPEATER, """
+                        <a>Achievements Tracking <b>[MVP<c>+<b>]
+                        <7>Track achievements to access them
+                        <7>quickly in this menu and get instant
+                        <7>feedback of your progress.""");
             }
         });
 
         set(new GUIClickableItem(51) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§6Achievement Rewards",
-                        Material.GOLD_INGOT,
-                        1,
-                        "§7Unlock exclusive rewards for",
-                        "§7achievement hunting efforts."
-                );
+                return ItemStacks.item(Material.GOLD_INGOT, """
+                        <6>Achievement Rewards
+                        <7>Unlock exclusive rewards for
+                        <7>achievement hunting efforts.""");
             }
 
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer player) {
-                player.sendMessage("§6Achievement Rewards coming soon!");
+                player.sendMessage("<6>Achievement Rewards coming soon!");
             }
         });
 
         set(new GUIItem(53) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aSearch",
-                        Material.OAK_SIGN,
-                        1,
-                        "§7Search for an achievement by name,",
-                        "§7description or points value."
-                );
+                return ItemStacks.item(Material.OAK_SIGN, """
+                        <a>Search
+                        <7>Search for an achievement by name,
+                        <7>description or points value.""");
             }
         });
 
@@ -164,15 +157,15 @@ public class GUIAchievementsMenu extends HypixelInventoryGUI {
                 double unlockedPercent = total > 0 ? (unlocked * 100.0 / total) : 0;
                 double pointsPercent = maxPoints > 0 ? (points * 100.0 / maxPoints) : 0;
 
-                return ItemStackCreator.getUsingGUIMaterial(
-                        "§a" + category.getDisplayName() + " Achievements",
-                        category.getMaterial(),
-                        1,
-                        "§7Unlocked: §b" + unlocked + "§7/§b" + total + " §8(" + (int) unlockedPercent + "%)",
-                        "§7Points: §e" + points + "§7/§e" + maxPoints + " §8(" + (int) pointsPercent + "%)",
-                        "",
-                        "§eClick to view achievements!"
-                );
+                return ItemStacks.of(category.getMaterial(), 1, """
+                        <a>{} Achievements
+                        <7>Unlocked: <b>{}<7>/<b>{} <8>({}%)
+                        <7>Points: <e>{}<7>/<e>{} <8>({}%)
+
+                        <e>Click to view achievements!""",
+                        category.getDisplayName(),
+                        unlocked, total, (int) unlockedPercent,
+                        points, maxPoints, (int) pointsPercent);
             }
 
             @Override
@@ -186,15 +179,12 @@ public class GUIAchievementsMenu extends HypixelInventoryGUI {
         return new GUIItem(slot) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aClassic Games Achievements",
-                        Material.JUKEBOX,
-                        1,
-                        "§7Unlocked: §b0§7/§b376 §8(0%)",
-                        "§7Points: §e0§7/§e4,065 §8(0%)",
-                        "",
-                        "§eClick to view achievements!"
-                );
+                return ItemStacks.item(Material.JUKEBOX, """
+                        <a>Classic Games Achievements
+                        <7>Unlocked: <b>0<7>/<b>376 <8>(0%)
+                        <7>Points: <e>0<7>/<e>4,065 <8>(0%)
+
+                        <e>Click to view achievements!""");
             }
         };
     }
@@ -203,20 +193,17 @@ public class GUIAchievementsMenu extends HypixelInventoryGUI {
         return new GUIClickableItem(slot) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                        "§aSeasonal Achievements",
-                        "f5612dc7b86d71afc1197301c15fd979e9f39e7b1f41d8f1ebdf8115576e2e",
-                        1,
-                        "§7Unlocked: §b0§7/§b251 §8(0%)",
-                        "§7Points: §e0§7/§e2,500 §8(0%)",
-                        "",
-                        "§eClick to view achievements!"
-                );
+                return ItemStacks.head("f5612dc7b86d71afc1197301c15fd979e9f39e7b1f41d8f1ebdf8115576e2e", """
+                        <a>Seasonal Achievements
+                        <7>Unlocked: <b>0<7>/<b>251 <8>(0%)
+                        <7>Points: <e>0<7>/<e>2,500 <8>(0%)
+
+                        <e>Click to view achievements!""");
             }
 
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer player) {
-                player.sendMessage("§6Seasonal achievements browser coming soon!");
+                player.sendMessage("<6>Seasonal achievements browser coming soon!");
             }
         };
     }
@@ -225,24 +212,21 @@ public class GUIAchievementsMenu extends HypixelInventoryGUI {
         return new GUIItem(slot) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aLegacy Achievements",
-                        Material.DIAMOND_BLOCK,
-                        1,
-                        "§7Unlocked: §b0",
-                        "§7Points: §e0",
-                        "",
-                        "§7Due to events and games that are no",
-                        "§7longer available, these achievements",
-                        "§7cannot be earned anymore.",
-                        "",
-                        "§7Points from these achievements still",
-                        "§7count towards achievement rewards,",
-                        "§7but do not count towards",
-                        "§7leaderboards.",
-                        "",
-                        "§eClick to view achievements!"
-                );
+                return ItemStacks.item(Material.DIAMOND_BLOCK, """
+                        <a>Legacy Achievements
+                        <7>Unlocked: <b>0
+                        <7>Points: <e>0
+
+                        <7>Due to events and games that are no
+                        <7>longer available, these achievements
+                        <7>cannot be earned anymore.
+
+                        <7>Points from these achievements still
+                        <7>count towards achievement rewards,
+                        <7>but do not count towards
+                        <7>leaderboards.
+
+                        <e>Click to view achievements!""");
             }
         };
     }

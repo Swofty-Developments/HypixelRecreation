@@ -5,6 +5,7 @@ import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.LivingEntity;
 import net.minestom.server.entity.metadata.item.ItemEntityMeta;
 import net.minestom.server.entity.metadata.other.InteractionMeta;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointMuseum;
 import net.swofty.type.generic.entity.hologram.PlayerHolograms;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -30,7 +31,10 @@ public class ItemMuseumDisplayHandler extends MuseumDisplay {
         if (empty) {
             hologram = PlayerHolograms.ExternalPlayerHologram.builder()
                     .player(player)
-                    .text(new String[]{"§7" + display + " Slot #" + (position + 1), "§e§lCLICK TO EDIT"})
+                    .text(new String[]{
+                            "<7>" + display + " Slot #" + (position + 1),
+                            "<e><l>CLICK TO EDIT"
+                    })
                     .pos(pos.add(0, 1, 0))
                     .build();
             PlayerHolograms.addExternalPlayerHologram(hologram);
@@ -50,7 +54,7 @@ public class ItemMuseumDisplayHandler extends MuseumDisplay {
 
             hologram = PlayerHolograms.ExternalPlayerHologram.builder()
                     .player(player)
-                    .text(new String[]{item.getDisplayName()})
+                    .text(new String[]{Text.literal(item.getDisplayName()).serialize()})
                     .pos(pos.add(0, 0.6, 0))
                     .build();
             PlayerHolograms.addExternalPlayerHologram(hologram);

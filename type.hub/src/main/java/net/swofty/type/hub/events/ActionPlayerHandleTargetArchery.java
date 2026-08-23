@@ -1,6 +1,5 @@
 package net.swofty.type.hub.events;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
@@ -8,7 +7,7 @@ import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.tag.Tag;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
@@ -81,7 +80,7 @@ public class ActionPlayerHandleTargetArchery implements HypixelEventClass {
         if (isNearArchery) {
             Map<Integer, SkyBlockItem> bows = player.getAllOfComponentInInventory(BowComponent.class);
             if (bows.isEmpty()) {
-                player.sendMessage("§cYou need a bow to shoot the targets! Purchase one from the Weaponsmith upstairs!");
+                player.sendMessage("<c>You need a bow to shoot the targets! Purchase one from the Weaponsmith upstairs!");
                 return;
             }
 
@@ -89,7 +88,7 @@ public class ActionPlayerHandleTargetArchery implements HypixelEventClass {
             DatapointArcheryPractice.TargetPracticeLevels practiceLevel = data.getTargetPracticeLevel();
 
             if (practiceLevel == DatapointArcheryPractice.TargetPracticeLevels.CONCLUDED) {
-                player.sendMessage("§cYou have already completed all Target Practice levels!");
+                player.sendMessage("<c>You have already completed all Target Practice levels!");
                 return;
             }
 
@@ -110,25 +109,25 @@ public class ActionPlayerHandleTargetArchery implements HypixelEventClass {
                 .countdownSeconds(3)
                 .activityDurationSeconds(practiceLevel.getTimeLimitSeconds())
                 .onCountdownTick((p, remaining) -> {
-                    String color = switch (remaining) {
-                        case 3 -> "§e";
-                        case 2 -> "§6";
-                        case 1 -> "§c";
-                        default -> "§f";
+                    Text countdown = switch (remaining) {
+                        case 3 -> Text.of("<e>{}", remaining);
+                        case 2 -> Text.of("<6>{}", remaining);
+                        case 1 -> Text.of("<c>{}", remaining);
+                        default -> Text.of("<f>{}", remaining);
                     };
 
-                    p.showTitle(Title.title(
-                            Component.text(color + remaining),
-                            Component.text("§cShoot all the lanterns!"),
+                    p.showTitle(
+                            countdown,
+                            Text.of("<c>Shoot all the lanterns!"),
                             Title.Times.times(Duration.ZERO, Duration.ofMillis(1100), Duration.ZERO)
-                    ));
+                    );
                 })
                 .onActivityStart(p -> {
-                    p.showTitle(Title.title(
-                            Component.text("§aGO!"),
-                            Component.empty(),
+                    p.showTitle(
+                            Text.of("<a>GO!"),
+                            Text.empty(),
                             Title.Times.times(Duration.ZERO, Duration.ofSeconds(1), Duration.ofMillis(250))
-                    ));
+                    );
 
                     updateActionBar(p, practiceLevel.getTimeLimitSeconds(), 0);
                 })
@@ -140,14 +139,14 @@ public class ActionPlayerHandleTargetArchery implements HypixelEventClass {
                 .onActivityComplete(p -> {
                     int targetsHit = p.getArcheryPracticeData().getTargetsHitList().size();
                     if (targetsHit >= TOTAL_TARGETS) {
-                        p.sendMessage("§aYou've successfully completed Target Practice " + StringUtility.getAsRomanNumeral(practiceLevel.getLevelNumber()));
+                        p.sendMessage("<a>You've successfully completed Target Practice {:roman}", practiceLevel.getLevelNumber());
                     } else {
-                        p.sendMessage("§cYou ran out of time!");
+                        p.sendMessage("<c>You ran out of time!");
                     }
                     p.getArcheryPracticeData().resetTargetsHit();
                 })
                 .onActivityCancelled(p -> {
-                    p.sendMessage("§cCancelled! You cannot leave the pressure plate!");
+                    p.sendMessage("<c>Cancelled! You cannot leave the pressure plate!");
                     p.getArcheryPracticeData().resetTargetsHit();
                 })
                 .build();
@@ -158,34 +157,25 @@ public class ActionPlayerHandleTargetArchery implements HypixelEventClass {
     private static void updateActionBar(SkyBlockPlayer player, int timeRemaining, int targetsHit) {
         SkyBlockActionBar actionBar = SkyBlockActionBar.getFor(player);
 
-        // Health section: "Time Left: Xs"
         actionBar.addReplacement(
                 SkyBlockActionBar.BarSection.HEALTH,
-                new SkyBlockActionBar.DisplayReplacement(
-                        "§eTime Left: §f" + timeRemaining + "s",
-                        25,
-                        100
-                )
+                Text.of("<e>Time Left: <f>{}s", timeRemaining),
+                25,
+                100
         );
 
-        // Defense section: empty
         actionBar.addReplacement(
                 SkyBlockActionBar.BarSection.DEFENSE,
-                new SkyBlockActionBar.DisplayReplacement(
-                        "",
-                        25,
-                        100
-                )
+                Text.empty(),
+                25,
+                100
         );
 
-        // Mana section: "Targets: X/16"
         actionBar.addReplacement(
                 SkyBlockActionBar.BarSection.MANA,
-                new SkyBlockActionBar.DisplayReplacement(
-                        "§eTargets: §a" + targetsHit + " §e/ §a" + TOTAL_TARGETS,
-                        25,
-                        100
-                )
+                Text.of("<e>Targets: <a>{} <e>/ <a>{}", targetsHit, TOTAL_TARGETS),
+                25,
+                100
         );
     }
 }

@@ -15,7 +15,7 @@ public class NPCZog extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Zog", "§e§lCLICK"};
+                return new String[]{"Zog", "<e><l>CLICK"};
             }
 
             @Override
@@ -60,11 +60,11 @@ public class NPCZog extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "Hello! Have you heard of pet items?",
                                 "Pet items give your companions bonuses!",
                                 "I sell all kinds of them if you'd like to try one out!"
-                        }).build(),
+                        ).build(),
         };
     }
 }

@@ -1,9 +1,6 @@
 package net.swofty.type.skyblockgeneric.hunting;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.swofty.type.generic.i18n.HypixelTranslator;
+import net.swofty.commons.text.Text;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -42,45 +39,13 @@ public final class AttributeText {
         return result.replaceAll("<[^>]+>", "").replaceAll("\\s+", " ").trim();
     }
 
-    public static List<String> wrap(String input, String color, int width) {
+    public static List<Text> wrapTexts(String input, int width) {
         if (input == null || input.isBlank()) return List.of();
-        String rendered = LegacyComponentSerializer.legacySection().serialize(MiniMessage.builder()
-                .tags(TagResolver.builder().resolver(TagResolver.standard())
-                        .resolver(HypixelTranslator.SKYBLOCK_STAT_TAG_RESOLVER).build())
-                .build().deserialize(input));
-        String visible = plain(input);
-        if (visible.isBlank() && rendered.isBlank()) return List.of();
-        List<String> result = new ArrayList<>();
-        StringBuilder line = new StringBuilder();
-        int visibleLength = 0;
-        for (String word : rendered.split(" ")) {
-            int wordLength = LegacyComponentSerializer.legacySection().deserialize(word).content().length();
-            if (!line.isEmpty() && visibleLength + wordLength + 1 > width) {
-                result.add(color + line);
-                line.setLength(0);
-                visibleLength = 0;
-            }
-            if (!line.isEmpty()) line.append(' ');
-            line.append(word);
-            visibleLength += wordLength + (visibleLength == 0 ? 0 : 1);
-        }
-        if (!line.isEmpty()) result.add(color + line);
-        return result;
+        Text parsed = Text.parseLenient(input);
+        if (plain(input).isBlank() && parsed.plain().isBlank()) return List.of();
+        return Text.of("<wrap:{0}>{1}</wrap>", width, parsed).lines();
     }
 
-    public static List<String> huntingLore(String input) {
-        List<String> result = new ArrayList<>();
-        if (input == null) return result;
-        for (String line : input.split("\\n")) {
-            String cleaned = plain(line.replaceFirst("^\\*\\s*", ""));
-            if (!cleaned.isBlank()) result.addAll(wrap(cleaned, "§7", 34));
-        }
-        return result;
-    }
-
-    /**
-     * Renders the description at one level. Descriptions remain MiniMessage strings in attributes.yml.
-     */
     public static String atLevel(AttributeDefinition definition, int level) {
         String result = definition.effect();
         for (AttributeDefinition.AttributeEffect effect : definition.effects()) {
@@ -92,9 +57,6 @@ public final class AttributeText {
         return result;
     }
 
-    /**
-     * Adds Hypixel's grey old value, arrow and green next value to every scaling value.
-     */
     public static String upgrade(AttributeDefinition definition, int oldLevel, int newLevel) {
         String result = definition.effect();
         for (AttributeDefinition.AttributeEffect effect : definition.effects()) {
@@ -121,13 +83,13 @@ public final class AttributeText {
         return result;
     }
 
-    public static List<String> huntInfo(AttributeDefinition definition) {
-        if (definition.huntInfo().isEmpty()) return List.of("§7 §7- §7Unknown");
-        List<String> result = new ArrayList<>();
+    public static List<Text> huntInfo(AttributeDefinition definition) {
+        if (definition.huntInfo().isEmpty()) return List.of(Text.of("<7> <7>- <7>Unknown"));
+        List<Text> result = new ArrayList<>();
         for (String entry : definition.huntInfo()) {
-            List<String> wrapped = wrap(entry, "§7", 34);
+            List<Text> wrapped = wrapTexts(entry, 34);
             for (int i = 0; i < wrapped.size(); i++)
-                result.add((i == 0 ? "§7 §7- " : "§7   ") + wrapped.get(i));
+                result.add(Text.of(i == 0 ? "<7> <7>- {}" : "<7>   {}", wrapped.get(i)));
         }
         return result;
     }

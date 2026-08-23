@@ -5,11 +5,12 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
@@ -81,24 +82,21 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
         set(new GUIClickableItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                List<String> lore = new ArrayList<>();
-                lore.add("§7Selection of unique perks for " + modeName);
-                lore.add("§7games.");
-                lore.add("");
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<7>Selection of unique perks for {}", modeName));
+                lore.add(Text.of("<7>games."));
+                lore.add(Text.empty());
                 if (hasEmptySlot) {
                     int emptySlots = 6 - (selectedPerks == null ? 0 : selectedPerks.size());
-                    lore.add("§cYou have " + emptySlots + " empty Perk Slot" + (emptySlots > 1 ? "s" : "") + " in this");
-                    lore.add("§cmode!");
-                    lore.add("");
+                    lore.add(Text.of("<c>You have {} empty Perk Slot{} in this",
+                            emptySlots, emptySlots > 1 ? "s" : ""));
+                    lore.add(Text.of("<c>mode!"));
+                    lore.add(Text.empty());
                 }
-                lore.add("§eClick to browse!");
+                lore.add(Text.of("<e>Click to browse!"));
 
-                return ItemStackCreator.getStack(
-                        "§aSelect " + modeName + " Perks",
-                        Material.CAULDRON,
-                        1,
-                        lore
-                );
+                return ItemStacks.item(Material.CAULDRON, 1,
+                        Text.of("<a>Select {} Perks", modeName), lore);
             }
 
             @Override
@@ -126,20 +124,17 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 String currentSort = lowestFirst ? "Lowest rarity first" : "Highest rarity first";
                 String nextSort = lowestFirst ? "Highest rarity first" : "Lowest rarity first";
-                String ownedFirstStatus = ownedFirst ? "§aYes" : "§cNo";
+                Text ownedFirstStatus = Text.of(ownedFirst ? "<a>Yes" : "<c>No");
 
-                return ItemStackCreator.getStack(
-                        "§6Sorted by: §a" + currentSort,
-                        Material.HOPPER,
-                        1,
-                        "§7Sorts by rarity: " + currentSort,
-                        "",
-                        "§7Next sort: §a" + nextSort,
-                        "§eLeft click to use!",
-                        "",
-                        "§7Owned items first: " + ownedFirstStatus,
-                        "§eRight click to toggle!"
-                );
+                return ItemStacks.item(Material.HOPPER, 1, """
+                        <6>Sorted by: <a>{}
+                        <7>Sorts by rarity: {0}
+
+                        <7>Next sort: <a>{}
+                        <e>Left click to use!
+
+                        <7>Owned items first: {}
+                        <e>Right click to toggle!""", currentSort, nextSort, ownedFirstStatus);
             }
 
             @Override
@@ -156,37 +151,31 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
         set(new GUIClickableItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aSkyWars Challenges §7(Right Click)",
-                        Material.BLAZE_POWDER,
-                        1,
-                        "§7View your active SkyWars Challenges",
-                        "§7for this game. Win games with",
-                        "§7different Challenges activated to",
-                        "§7show off your skills and earn",
-                        "§7bragging rights!",
-                        "",
-                        "§eClick to open!"
-                );
+                return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                        <a>SkyWars Challenges <7>(Right Click)
+                        <7>View your active SkyWars Challenges
+                        <7>for this game. Win games with
+                        <7>different Challenges activated to
+                        <7>show off your skills and earn
+                        <7>bragging rights!
+
+                        <e>Click to open!""");
             }
 
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer player) {
-                player.sendMessage("§cSkyWars Challenges coming soon!");
+                player.sendMessage("<c>SkyWars Challenges coming soon!");
             }
         });
 
         set(new GUIClickableItem(50) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                        "§eRandom Kit",
-                        RANDOM_KIT_TEXTURE,
-                        1,
-                        "§7Chooses a random kit that you own!",
-                        "",
-                        "§eClick to select!"
-                );
+                return ItemStacks.head(RANDOM_KIT_TEXTURE, """
+                        <e>Random Kit
+                        <7>Chooses a random kit that you own!
+
+                        <e>Click to select!""");
             }
 
             @Override
@@ -204,13 +193,13 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
                         .toList();
 
                 if (ownedKits.isEmpty()) {
-                    player.sendMessage("§cYou don't own any kits for this mode!");
+                    player.sendMessage("<c>You don't own any kits for this mode!");
                     return;
                 }
 
                 SkywarsKit randomKit = ownedKits.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(ownedKits.size()));
                 currentUnlocks.selectKitForMode(mode, randomKit.getId());
-                player.sendMessage("§aRandomly selected the §e" + randomKit.getName() + " §akit!");
+                player.sendMessage("<a>Randomly selected the <e>{} <a>kit!", randomKit.getName());
 
                 new GUICageKitSelector(mode, game, page, lowestFirst, ownedFirst).open(player);
             }
@@ -221,12 +210,9 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
             set(new GUIClickableItem(45) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§aPrevious Page",
-                            Material.ARROW,
-                            1,
-                            "§ePage " + prevPage
-                    );
+                    return ItemStacks.item(Material.ARROW, 1, """
+                            <a>Previous Page
+                            <e>Page {}""", prevPage);
                 }
 
                 @Override
@@ -242,12 +228,9 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
             set(new GUIClickableItem(53) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§aNext Page",
-                            Material.ARROW,
-                            1,
-                            "§ePage " + nextPage
-                    );
+                    return ItemStacks.item(Material.ARROW, 1, """
+                            <a>Next Page
+                            <e>Page {}""", nextPage);
                 }
 
                 @Override
@@ -268,24 +251,23 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
                 boolean owned = unlocks.hasKit(kit.getId());
                 boolean selected = unlocks.getSelectedKitForMode(mode).equals(kit.getId());
 
-                List<String> lore = new ArrayList<>(kit.getItemsLore(mode));
+                List<Text> lore = new ArrayList<>(kit.getItemsLore(mode));
                 if (selected) {
-                    lore.add("§aSELECTED");
+                    lore.add(Text.of("<a>SELECTED"));
                 } else if (owned) {
-                    lore.add("§eClick to select!");
+                    lore.add(Text.of("<e>Click to select!"));
                 } else {
-                    lore.add("§cNot unlocked yet!");
+                    lore.add(Text.of("<c>Not unlocked yet!"));
                 }
 
-                String nameColor = owned ? "§a" : "§c";
-                String name = nameColor + kit.getName();
+                Text name = Text.of(owned ? "<a>{}" : "<c>{}", kit.getName());
 
                 if (!owned) {
-                    return ItemStackCreator.getStack(name, Material.GUNPOWDER, 1, lore);
+                    return ItemStacks.item(Material.GUNPOWDER, 1, name, lore);
                 } else if (kit.hasCustomTexture()) {
-                    return ItemStackCreator.getStackHead(name, kit.getIconTexture(), 1, lore);
+                    return ItemStacks.head(kit.getIconTexture(), 1, name, lore);
                 } else {
-                    return ItemStackCreator.getStack(name, kit.getIconMaterial(), 1, lore);
+                    return ItemStacks.item(kit.getIconMaterial(), 1, name, lore);
                 }
             }
 
@@ -309,17 +291,17 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
 
                 if (owned) {
                     currentUnlocks.selectKitForMode(mode, kit.getId());
-                    player.sendMessage("§aYou selected the §e" + kit.getName() + " §akit for " + mode + " mode!");
+                    player.sendMessage("<a>You selected the <e>{} <a>kit for {} mode!", kit.getName(), mode);
                     new GUICageKitSelector(mode, game, page, lowestFirst, ownedFirst).open(player);
                 } else if (kit.costsCoin()) {
                     long currentCoins = handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class).getValue();
                     if (currentCoins >= kit.getCost()) {
                         new GUIKitPurchaseConfirm(kit, mode, page).open(player);
                     } else {
-                        player.sendMessage("§cYou don't have enough coins to purchase this kit!");
+                        player.sendMessage("<c>You don't have enough coins to purchase this kit!");
                     }
                 } else {
-                    player.sendMessage("§cThis kit cannot be purchased with coins.");
+                    player.sendMessage("<c>This kit cannot be purchased with coins.");
                 }
             }
         };

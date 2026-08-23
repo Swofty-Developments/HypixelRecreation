@@ -29,7 +29,7 @@ public class AnvilGUICommand extends HypixelCommand {
                     return;
                 }
 
-                player.sendMessage("§7You wrote: §a" + line);
+                player.sendMessage("<7>You wrote: <a>{}", line);
             });
         }, text);
     }

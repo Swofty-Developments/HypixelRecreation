@@ -32,7 +32,7 @@ public class ActionPlayerDungeonAssign implements HypixelEventClass {
             return;
         }
         if (instance == null) {
-            player.sendMessage("§cYour dungeon instance no longer exists.");
+            player.sendMessage("<c>Your dungeon instance no longer exists.");
             return;
         }
         DungeonInstanceRegistry.sendPlayerIn(player, instance);

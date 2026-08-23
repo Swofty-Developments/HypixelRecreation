@@ -18,8 +18,8 @@ public class EnchantmentExpertise implements Ench {
 
     @Override
     public String getDescription(int level) {
-        return "Tracks §3Sea Creature §7kills on this rod. Every kill grants §b+0.1☂ Fishing Wisdom§7. "
-            + "Current tier grants §3+" + SEA_CREATURE_CHANCE_BONUS[level - 1] + "% Sea Creature Chance§7.";
+        return "Tracks <3>Sea Creature <7>kills on this rod. Every kill grants <b>+0.1☂ Fishing Wisdom<7>. "
+            + "Current tier grants <3>+" + SEA_CREATURE_CHANCE_BONUS[level - 1] + "% Sea Creature Chance<7>.";
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions;
 
+
 import net.minestom.server.entity.EntityType;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.skyblockgeneric.event.custom.PlayerKilledSkyBlockMobEvent;
@@ -45,7 +46,7 @@ public class MissionKillZombies extends SkyBlockProgressMission {
 
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§b5 SkyBlock XP", "§3100 §7Combat XP"))).forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<b>5 SkyBlock XP", "<3>100 <7>Combat XP"))).forEach(player::sendMessage);
         player.getSkills().increase(player, SkillCategories.COMBAT, 100D);
         player.getSkyBlockExperience().addExperience(SkyBlockLevelCause.getMissionCause(getID()));
         player.getMissionData().startMission(MissionTalkToBartender.class);

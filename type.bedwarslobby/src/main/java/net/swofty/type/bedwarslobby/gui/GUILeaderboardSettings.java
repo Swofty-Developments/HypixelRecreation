@@ -9,10 +9,11 @@ import net.swofty.commons.bedwars.BedwarsLeaderboardMode;
 import net.swofty.commons.bedwars.BedwarsLeaderboardPeriod;
 import net.swofty.commons.bedwars.BedwarsLeaderboardView;
 import net.swofty.commons.bedwars.BedwarsTextAlignment;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarslobby.hologram.LeaderboardHologramManager;
 import net.swofty.type.bedwarslobby.hologram.LeaderboardHologramManager.PlayerLeaderboardState;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 
@@ -47,25 +48,24 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
 		set(new GUIClickableItem(11) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				List<String> lore = new ArrayList<>();
-				lore.add("");
+				List<Text> lore = new ArrayList<>();
+				lore.add(Text.empty());
 				for (BedwarsLeaderboardMode mode : BedwarsLeaderboardMode.values()) {
 					if (mode == selectedMode) {
-						lore.add("§a➠ §7" + mode.getDisplayName());
+						lore.add(Text.of("<a>➠ <7>{}", mode.getDisplayName()));
 					} else {
-						lore.add("   §7" + mode.getDisplayName());
+						lore.add(Text.of("   <7>{}", mode.getDisplayName()));
 					}
 				}
-				lore.add("");
-				lore.add("§8This setting will save across lobbies.");
-				lore.add("");
-				lore.add("§8Leaderboard data is cached and");
-				lore.add("§8does not update immediately.");
-				lore.add("");
-				lore.add("§eLeft/Right Click to change!");
+				lore.add(Text.empty());
+				lore.add(Text.of("<8>This setting will save across lobbies."));
+				lore.add(Text.empty());
+				lore.add(Text.of("<8>Leaderboard data is cached and"));
+				lore.add(Text.of("<8>does not update immediately."));
+				lore.add(Text.empty());
+				lore.add(Text.of("<e>Left/Right Click to change!"));
 
-				return ItemStackCreator.getStack("§aSelect the Mode!",
-						Material.RED_BED, 1, lore.toArray(new String[0]));
+				return ItemStacks.item(Material.RED_BED, 1, Text.of("<a>Select the Mode!"), lore);
 			}
 
 			@Override
@@ -83,25 +83,24 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
 		set(new GUIClickableItem(12) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				List<String> lore = new ArrayList<>();
-				lore.add("");
+				List<Text> lore = new ArrayList<>();
+				lore.add(Text.empty());
 				for (BedwarsLeaderboardPeriod period : BedwarsLeaderboardPeriod.values()) {
 					if (period == selectedPeriod) {
-						lore.add("§a➠ §7" + period.getDisplayName());
+						lore.add(Text.of("<a>➠ <7>{}", period.getDisplayName()));
 					} else {
-						lore.add("   §7" + period.getDisplayName());
+						lore.add(Text.of("   <7>{}", period.getDisplayName()));
 					}
 				}
-				lore.add("");
-				lore.add("§8This setting will save across lobbies.");
-				lore.add("");
-				lore.add("§8Leaderboard data is cached and");
-				lore.add("§8does not update immediately.");
-				lore.add("");
-				lore.add("§eLeft/Right Click to change!");
+				lore.add(Text.empty());
+				lore.add(Text.of("<8>This setting will save across lobbies."));
+				lore.add(Text.empty());
+				lore.add(Text.of("<8>Leaderboard data is cached and"));
+				lore.add(Text.of("<8>does not update immediately."));
+				lore.add(Text.empty());
+				lore.add(Text.of("<e>Left/Right Click to change!"));
 
-				return ItemStackCreator.getStack("§aSelect the Time!",
-						Material.CLOCK, 1, lore.toArray(new String[0]));
+				return ItemStacks.item(Material.CLOCK, 1, Text.of("<a>Select the Time!"), lore);
 			}
 
 			@Override
@@ -119,23 +118,22 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
 		set(new GUIClickableItem(13) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				List<String> lore = new ArrayList<>();
-				lore.add("");
+				List<Text> lore = new ArrayList<>();
+				lore.add(Text.empty());
 				for (BedwarsLeaderboardView view : BedwarsLeaderboardView.values()) {
 					if (view == selectedView) {
-						lore.add("§a➠ §7" + view.getDisplayName());
+						lore.add(Text.of("<a>➠ <7>{}", view.getDisplayName()));
 					} else {
-						lore.add("   §7" + view.getDisplayName());
+						lore.add(Text.of("   <7>{}", view.getDisplayName()));
 					}
 				}
-				lore.add("");
-				lore.add("§8Leaderboard data is cached and");
-				lore.add("§8does not update immediately.");
-				lore.add("");
-				lore.add("§eLeft/Right Click to change!");
+				lore.add(Text.empty());
+				lore.add(Text.of("<8>Leaderboard data is cached and"));
+				lore.add(Text.of("<8>does not update immediately."));
+				lore.add(Text.empty());
+				lore.add(Text.of("<e>Left/Right Click to change!"));
 
-				return ItemStackCreator.getStack("§aSelect the View!",
-						Material.LADDER, 1, lore.toArray(new String[0]));
+				return ItemStacks.item(Material.LADDER, 1, Text.of("<a>Select the View!"), lore);
 			}
 
 			@Override
@@ -153,16 +151,16 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
 		set(new GUIClickableItem(14) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				return ItemStackCreator.getStack("§aSelect the Players!",
-						Material.SKELETON_SKULL, 1,
-						"",
-						"§a➠ §7All",
-						"   §8Friends §c(Coming Soon)",
-						"   §8Best Friends §c(Coming Soon)",
-						"   §8Guild Members §c(Coming Soon)",
-						"",
-						"§8Leaderboard data is cached and",
-						"§8does not update immediately.");
+				return ItemStacks.item(Material.SKELETON_SKULL, 1, Text.of("<a>Select the Players!"), List.of(
+						Text.empty(),
+						Text.of("<a>➠ <7>All"),
+						Text.of("   <8>Friends <c>(Coming Soon)"),
+						Text.of("   <8>Best Friends <c>(Coming Soon)"),
+						Text.of("   <8>Guild Members <c>(Coming Soon)"),
+						Text.empty(),
+						Text.of("<8>Leaderboard data is cached and"),
+						Text.of("<8>does not update immediately.")
+				));
 			}
 
 			@Override
@@ -174,29 +172,28 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
 		set(new GUIClickableItem(15) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				List<String> lore = new ArrayList<>();
-				lore.add("");
+				List<Text> lore = new ArrayList<>();
+				lore.add(Text.empty());
 				for (BedwarsTextAlignment alignment : BedwarsTextAlignment.values()) {
 					if (alignment == selectedAlignment) {
-						lore.add("§a➠ §7" + alignment.getDisplayName());
+						lore.add(Text.of("<a>➠ <7>{}", alignment.getDisplayName()));
 					} else {
-						lore.add("   §7" + alignment.getDisplayName());
+						lore.add(Text.of("   <7>{}", alignment.getDisplayName()));
 					}
 				}
-				lore.add("");
-				lore.add("§cBlock alignment is showing correctly");
-				lore.add("§conly for Vanilla Minecraft font sizes.");
-				lore.add("");
-				lore.add("§8This setting will save across the");
-				lore.add("§8network.");
-				lore.add("");
-				lore.add("§8Leaderboard data is cached and");
-				lore.add("§8does not update immediately.");
-				lore.add("");
-				lore.add("§eLeft/Right Click to change!");
+				lore.add(Text.empty());
+				lore.add(Text.of("<c>Block alignment is showing correctly"));
+				lore.add(Text.of("<c>only for Vanilla Minecraft font sizes."));
+				lore.add(Text.empty());
+				lore.add(Text.of("<8>This setting will save across the"));
+				lore.add(Text.of("<8>network."));
+				lore.add(Text.empty());
+				lore.add(Text.of("<8>Leaderboard data is cached and"));
+				lore.add(Text.of("<8>does not update immediately."));
+				lore.add(Text.empty());
+				lore.add(Text.of("<e>Left/Right Click to change!"));
 
-				return ItemStackCreator.getStack("§aSelect the Text Alignment!",
-						Material.ITEM_FRAME, 1, lore.toArray(new String[0]));
+				return ItemStacks.item(Material.ITEM_FRAME, 1, Text.of("<a>Select the Text Alignment!"), lore);
 			}
 
 			@Override
@@ -214,9 +211,9 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
 		set(new GUIClickableItem(30) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				return ItemStackCreator.getStack("§aApply changes",
-						Material.GREEN_TERRACOTTA, 1,
-						"§eClick to apply the changes!");
+				return ItemStacks.item(Material.GREEN_TERRACOTTA, """
+						<a>Apply changes
+						<e>Click to apply the changes!""");
 			}
 
 			@Override
@@ -228,7 +225,7 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
 				LeaderboardHologramManager.saveStateToDataHandler(player, newState);
 				LeaderboardHologramManager.refreshAllHologramsForPlayer(player);
 
-				player.sendMessage("§aLeaderboard settings applied!");
+				player.sendMessage("<a>Leaderboard settings applied!");
 				player.closeInventory();
 			}
 		});
@@ -236,10 +233,10 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
 		set(new GUIClickableItem(32) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				return ItemStackCreator.getStack("§cDiscard changes",
-						Material.RED_TERRACOTTA, 1,
-						"§eClose the menu without applying",
-						"§echanges!");
+				return ItemStacks.item(Material.RED_TERRACOTTA, """
+						<c>Discard changes
+						<e>Close the menu without applying
+						<e>changes!""");
 			}
 
 			@Override

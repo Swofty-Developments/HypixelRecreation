@@ -3,9 +3,6 @@ package net.swofty.type.skyblockgeneric.rabbits;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointChocolateFactory;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointChocolateFactory.EmployeeType;
@@ -36,7 +33,6 @@ public class ChocolateFactoryHelper {
 
     private static final NumberFormat NUMBER_FORMAT = NumberFormat.getNumberInstance(Locale.US);
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,##0.0");
-    private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
 
     public static void updateProduction(SkyBlockPlayer player) {
         mutateData(player, DatapointChocolateFactory.ChocolateFactoryData::updateChocolateFromProduction);
@@ -60,12 +56,6 @@ public class ChocolateFactoryHelper {
 
     public static String formatChocolate(long amount) {
         return NUMBER_FORMAT.format(amount);
-    }
-
-    // Use Components just properly in where they need to be passed.
-    @Deprecated(forRemoval = true)
-    public static String serializeColor(TextColor color) {
-        return LEGACY_SERIALIZER.serialize(Component.empty().color(color));
     }
 
     public static String formatProductionPerSecond(double production) {
@@ -418,13 +408,13 @@ public class ChocolateFactoryHelper {
     @Getter
     @AllArgsConstructor
     public enum Prestige {
-        NEWCOMER(0, "Newcomer", "§7"),
-        APPRENTICE(1, "Apprentice", "§a"),
-        WORKER(2, "Worker", "§9"),
-        JOURNEYMAN(3, "Journeyman", "§5"),
-        EXPERT(4, "Expert", "§6"),
-        MASTER(5, "Master", "§d"),
-        GRANDMASTER(6, "Grandmaster", "§b");
+        NEWCOMER(0, "Newcomer", "<7>"),
+        APPRENTICE(1, "Apprentice", "<a>"),
+        WORKER(2, "Worker", "<9>"),
+        JOURNEYMAN(3, "Journeyman", "<5>"),
+        EXPERT(4, "Expert", "<6>"),
+        MASTER(5, "Master", "<d>"),
+        GRANDMASTER(6, "Grandmaster", "<b>");
 
         private final int level;
         private final String name;

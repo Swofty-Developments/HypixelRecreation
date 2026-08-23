@@ -36,7 +36,7 @@ public class EnchantmentFireAspect implements Ench, EnchFromTable, DamageEventEn
     public String getDescription(int level) {
         int duration = DURATION_SECONDS[level - 1];
         int damagePercent = (int) (DAMAGE_PERCENTAGES[level - 1] * 100);
-        return "Ignites your enemies for §a" + duration + "s§7, dealing §a" + damagePercent + "%§7 of your damage per second.";
+        return "Ignites your enemies for <a>" + duration + "s<7>, dealing <a>" + damagePercent + "%<7> of your damage per second.";
     }
 
     @Override

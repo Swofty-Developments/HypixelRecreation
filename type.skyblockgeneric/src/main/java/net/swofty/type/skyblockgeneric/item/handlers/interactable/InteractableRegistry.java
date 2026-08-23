@@ -28,7 +28,7 @@ public class InteractableRegistry {
         register("MOVE_JERRY_INTERACT", InteractableItemConfig.builder().rightClickHandler(
                 ((player, skyBlockItem) -> {
                     if (!HypixelConst.isIslandServer()) {
-                        player.sendMessage("§cYou can't move Jerry here! He doesn't belong here!");
+                        player.sendMessage("<c>You can't move Jerry here! He doesn't belong here!");
                         return;
                     }
 

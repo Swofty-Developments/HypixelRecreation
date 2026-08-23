@@ -63,7 +63,7 @@ func (r *Runner) install(ctx context.Context, cfg Config, sourceConfigDir string
 		return err
 	}
 
-	repoDir, err := r.cloneAssets(ctx, cfg.InstallDir)
+	repoDir, err := r.cloneAssets(ctx, cfg)
 	if err != nil {
 		return err
 	}
@@ -102,10 +102,21 @@ func (r *Runner) install(ctx context.Context, cfg Config, sourceConfigDir string
 		return err
 	}
 
+	if cfg.NoStart {
+		r.emit("Skipping container start")
+		return nil
+	}
+
 	return r.Start(ctx, cfg.InstallDir)
 }
 
-func (r *Runner) cloneAssets(ctx context.Context, installDir string) (string, error) {
+func (r *Runner) cloneAssets(ctx context.Context, cfg Config) (string, error) {
+	if cfg.SourceRepo != "" {
+		r.emit("Using repository assets from %s", cfg.SourceRepo)
+		return cfg.SourceRepo, nil
+	}
+
+	installDir := cfg.InstallDir
 	repoDir := filepath.Join(installDir, "_repo")
 	if _, err := os.Stat(filepath.Join(repoDir, ".git")); err == nil {
 		r.emit("Updating sparse checkout")
@@ -153,7 +164,7 @@ func (r *Runner) Start(ctx context.Context, dir string) error {
 }
 
 func (r *Runner) Reconfigure(ctx context.Context, cfg Config) error {
-	repoDir, err := r.cloneAssets(ctx, cfg.InstallDir)
+	repoDir, err := r.cloneAssets(ctx, cfg)
 	if err != nil {
 		return err
 	}

@@ -3,7 +3,8 @@ package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -14,6 +15,8 @@ import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.PlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.loadout.LoadoutManager;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
+
+import java.util.List;
 
 public class GUIEquipmentSets implements StatefulView<GUIEquipmentSets.EquipmentState> {
     private static final Material[] COLORS = {
@@ -39,7 +42,7 @@ public class GUIEquipmentSets implements StatefulView<GUIEquipmentSets.Equipment
 
     @Override
     public ViewConfiguration<EquipmentState> configuration() {
-        return ViewConfiguration.withString((state, _) -> "(" + (state.page + 1) + "/2) Equipment Sets", InventoryType.CHEST_6_ROW);
+        return ViewConfiguration.withText((state, _) -> Text.of("({}/2) Equipment Sets", state.page + 1), InventoryType.CHEST_6_ROW);
     }
 
     @Override
@@ -57,48 +60,67 @@ public class GUIEquipmentSets implements StatefulView<GUIEquipmentSets.Equipment
                 int guiSlot = row * 9 + column;
                 int equipmentComponent = row;
                 if (!available) {
-                    layout.slot(guiSlot, ItemStackCreator.getStack("§7Slot " + (setIndex + 1) + ": §cLocked",
-                            Material.BLACK_STAINED_GLASS_PANE, 1, "§7Unlock this equipment set from", "§dElizabeth §7at the §bCommunity Center§7."));
+                    layout.slot(guiSlot, ItemStacks.item(Material.BLACK_STAINED_GLASS_PANE, 1, """
+                            <7>Slot {}: <c>Locked
+                            <7>Unlock this equipment set from
+                            <d>Elizabeth <7>at the <b>Community Center<7>.""", setIndex + 1));
                 } else {
                     layout.slot(guiSlot, (s, c) -> equipmentPiece((SkyBlockPlayer) c.player(), setIndex, equipmentComponent),
                             (_, c) -> editPiece((SkyBlockPlayer) c.player(), setIndex, equipmentComponent, c));
                 }
             }
             if (available) {
-                layout.slot(36 + column, ItemStackCreator.getStack("Slot " + (setIndex + 1) + ":§a Ready", Material.GRAY_DYE, 1,
-                                "§7This slot is ready to be selected.", "", "§eClick to equip to loadout!"),
+                layout.slot(36 + column, ItemStacks.item(Material.GRAY_DYE, 1, """
+                                Slot {}:<a> Ready
+                                <7>This slot is ready to be selected.
+
+                                <e>Click to equip to loadout!""", setIndex + 1),
                         (_, c) -> select((SkyBlockPlayer) c.player(), setIndex));
             } else {
-                layout.slot(36 + column, ItemStackCreator.getStack("§7Slot " + (setIndex + 1) + ": §cLocked", Material.RED_DYE, 1,
-                        "§7This equipment set is locked.", "", "§cUnlock more slots from §dElizabeth §cat", "§cthe §bCommunity Center"));
+                layout.slot(36 + column, ItemStacks.item(Material.RED_DYE, 1, """
+                        <7>Slot {}: <c>Locked
+                        <7>This equipment set is locked.
+
+                        <c>Unlock more slots from <d>Elizabeth <c>at
+                        <c>the <b>Community Center""", setIndex + 1));
             }
         }
 
         if (state.page > 0) {
-            layout.slot(45, ItemStackCreator.getStack("§aPrevious Page", Material.ARROW, 1, "§ePage 1"),
+            layout.slot(45, ItemStacks.item(Material.ARROW, 1, """
+                            <a>Previous Page
+                            <e>Page 1"""),
                     (_, c) -> c.session(EquipmentState.class).update(s -> new EquipmentState(0)));
         }
         if (state.page < 1) {
-            layout.slot(53, ItemStackCreator.getStack("§aNext Page", Material.ARROW, 1, "§ePage 2"),
+            layout.slot(53, ItemStacks.item(Material.ARROW, 1, """
+                            <a>Next Page
+                            <e>Page 2"""),
                     (_, c) -> c.session(EquipmentState.class).update(s -> new EquipmentState(1)));
         }
-        layout.slot(48, ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To Loadout " + (loadout + 1)), (_, c) -> c.pop());
-        layout.slot(50, ItemStackCreator.getStack("§cClear Selection", Material.LAVA_BUCKET, 1,
-                        "§7Clears your current selection for", "§7this component of your loadout.", "", "§eClick to clear!"),
+        layout.slot(48, ItemStacks.item(Material.ARROW, 1, """
+                <a>Go Back
+                <7>To Loadout {}""", loadout + 1), (_, c) -> c.pop());
+        layout.slot(50, ItemStacks.item(Material.LAVA_BUCKET, 1, """
+                        <c>Clear Selection
+                        <7>Clears your current selection for
+                        <7>this component of your loadout.
+
+                        <e>Click to clear!"""),
                 (_, c) -> clear((SkyBlockPlayer) c.player()));
     }
 
     private ItemStack.Builder equipmentPiece(SkyBlockPlayer player, int setIndex, int equipmentComponent) {
         SkyBlockItem item = LoadoutManager.data(player).getEquipmentSets()[setIndex].getPieces()[equipmentComponent];
         if (item != null && !item.isNA()) return PlayerItemUpdater.playerUpdate(player, item.getItemStack());
-        String[] lore = switch (equipmentComponent) {
-            case 0 -> new String[]{"§7Place a necklace here to add it to", "§7this set."};
-            case 1 -> new String[]{"§7Place a cloak here to add it to this", "§7set."};
-            case 2 -> new String[]{"§7Place a belt here to add it to this set."};
-            default -> new String[]{"§7Place a pair of gloves or a bracelet", "§7here to add it to this set."};
+        List<Text> lore = switch (equipmentComponent) {
+            case 0 -> List.of(Text.of("<7>Place a necklace here to add it to"), Text.of("<7>this set."));
+            case 1 -> List.of(Text.of("<7>Place a cloak here to add it to this"), Text.of("<7>set."));
+            case 2 -> List.of(Text.of("<7>Place a belt here to add it to this set."));
+            default -> List.of(Text.of("<7>Place a pair of gloves or a bracelet"), Text.of("<7>here to add it to this set."));
         };
-        return ItemStackCreator.getStack("§aSlot " + (setIndex + 1) + " " + COMPONENTS[equipmentComponent],
-                COLORS[setIndex % 9], 1, lore);
+        return ItemStacks.item(COLORS[setIndex % 9], 1,
+                Text.of("<a>Slot {} {}", setIndex + 1, COMPONENTS[equipmentComponent]), lore);
     }
 
     private void editPiece(SkyBlockPlayer player, int setIndex, int equipmentComponent, ViewContext ctx) {
@@ -112,7 +134,7 @@ public class GUIEquipmentSets implements StatefulView<GUIEquipmentSets.Equipment
         } else {
             SkyBlockItem cursorItem = new SkyBlockItem(cursor);
             if (!LoadoutManager.acceptsEquipment(equipmentComponent, cursorItem)) {
-                player.sendMessage("§cThat item does not fit in this equipment slot!");
+                player.sendMessage("<c>That item does not fit in this equipment slot!");
                 return;
             }
             set.getPieces()[equipmentComponent] = new SkyBlockItem(cursor.withAmount(1));

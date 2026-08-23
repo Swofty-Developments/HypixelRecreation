@@ -1,24 +1,22 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.bazaar.selections;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIQueryItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 public class GUIBazaarOrderAmountSelection extends HypixelInventoryGUI {
@@ -39,9 +37,9 @@ public class GUIBazaarOrderAmountSelection extends HypixelInventoryGUI {
             int maxAmount,
             double unitPrice
     ) {
-        super(isInstant
-                ? (isBuy ? I18n.t("gui_bazaar.amount_selection.title_instant_buy") : I18n.t("gui_bazaar.amount_selection.title_instant_sell"))
-                : (isBuy ? I18n.t("gui_bazaar.amount_selection.title_buy") : I18n.t("gui_bazaar.amount_selection.title_sell")),
+        super(Text.key(isInstant
+                        ? (isBuy ? "gui_bazaar.amount_selection.title_instant_buy" : "gui_bazaar.amount_selection.title_instant_sell")
+                        : (isBuy ? "gui_bazaar.amount_selection.title_buy" : "gui_bazaar.amount_selection.title_sell")),
                 InventoryType.CHEST_4_ROW);
 
         this.isBuy = isBuy;
@@ -50,7 +48,7 @@ public class GUIBazaarOrderAmountSelection extends HypixelInventoryGUI {
         this.maxAmount = maxAmount;
         this.unitPrice = unitPrice;
 
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
         set(GUIClickableItem.getGoBackItem(31, previous));
     }
 
@@ -101,20 +99,20 @@ public class GUIBazaarOrderAmountSelection extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                Locale l = p.getLocale();
-                List<String> lore = new ArrayList<>();
-                lore.add("§7" + subtitle);
-                lore.add(I18n.string("gui_bazaar.amount_selection.per_unit", l, Component.text(F.format(unitPrice))));
-                lore.add(isBuy
-                    ? I18n.string("gui_bazaar.amount_selection.total_cost", l, Component.text(F.format(unitPrice * qty)))
-                    : I18n.string("gui_bazaar.amount_selection.total_rev", l, Component.text(F.format(unitPrice * qty))));
-                lore.add(" ");
-                lore.add(isBuy
-                        ? I18n.string("gui_bazaar.amount_selection.click_buy", l)
-                        : I18n.string("gui_bazaar.amount_selection.click_sell", l));
-                return ItemStackCreator.getStack(
-                        (isBuy ? "§a" : "§6") + title,
-                        itemType.material, qty, lore
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<7>{}", subtitle));
+                lore.add(Text.key("gui_bazaar.amount_selection.per_unit", F.format(unitPrice)));
+                lore.add(Text.key(isBuy
+                        ? "gui_bazaar.amount_selection.total_cost"
+                        : "gui_bazaar.amount_selection.total_rev", F.format(unitPrice * qty)));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key(isBuy
+                        ? "gui_bazaar.amount_selection.click_buy"
+                        : "gui_bazaar.amount_selection.click_sell"));
+                return ItemStacks.item(
+                        itemType.material, qty,
+                        Text.of(isBuy ? "<a>{}" : "<6>{}", title),
+                        lore
                 );
             }
         });
@@ -131,17 +129,17 @@ public class GUIBazaarOrderAmountSelection extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                Locale l = p.getLocale();
-                List<String> lore = new ArrayList<>();
-                lore.add(I18n.string("gui_bazaar.amount_selection.limit_subtitle", l));
-                lore.add("§7" + amountLine);
-                lore.add(I18n.string("gui_bazaar.amount_selection.per_unit", l, Component.text(F.format(unitPrice))));
-                lore.add(" ");
-                lore.add(I18n.string("gui_bazaar.amount_selection.limit_click", l));
-                return ItemStackCreator.getStack(
-                        "§b" + title,
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.key("gui_bazaar.amount_selection.limit_subtitle"));
+                lore.add(Text.of("<7>{}", amountLine));
+                lore.add(Text.key("gui_bazaar.amount_selection.per_unit", F.format(unitPrice)));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key("gui_bazaar.amount_selection.limit_click"));
+                return ItemStacks.item(
                         slot == 13 ? Material.CHEST : itemType.material,
-                        qty, lore
+                        qty,
+                        Text.of("<b>{}", title),
+                        lore
                 );
             }
         });
@@ -151,33 +149,32 @@ public class GUIBazaarOrderAmountSelection extends HypixelInventoryGUI {
         set(new GUIQueryItem(slot) {
             @Override
             public HypixelInventoryGUI onQueryFinish(String q, HypixelPlayer pl) {
-                Locale l = pl.getLocale();
                 try {
                     int v = Integer.parseInt(q);
                     if (v < 1 || v > maxAmount) {
-                        pl.sendMessage(I18n.t("gui_bazaar.amount_selection.invalid_range", Component.text(maxAmount)));
+                        pl.sendMessage(Text.key("gui_bazaar.amount_selection.invalid_range", maxAmount));
                         return null;
                     }
                     future.complete(v);
                 } catch (NumberFormatException ex) {
-                    pl.sendMessage(I18n.t("gui_bazaar.amount_selection.invalid_number"));
+                    pl.sendMessage(Text.key("gui_bazaar.amount_selection.invalid_number"));
                 }
                 return null;
             }
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                Locale l = p.getLocale();
-                List<String> lore = new ArrayList<>();
-                lore.add(isInstant
-                        ? I18n.string("gui_bazaar.amount_selection.custom_instant", l)
-                        : I18n.string("gui_bazaar.amount_selection.custom_limit", l));
-                lore.add(I18n.string("gui_bazaar.amount_selection.custom_max", l, Component.text(maxAmount)));
-                lore.add(" ");
-                lore.add(I18n.string("gui_bazaar.amount_selection.custom_click", l));
-                return ItemStackCreator.getStack(
-                        I18n.string("gui_bazaar.amount_selection.custom_amount", l),
-                        Material.OAK_SIGN, 1, lore
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.key(isInstant
+                        ? "gui_bazaar.amount_selection.custom_instant"
+                        : "gui_bazaar.amount_selection.custom_limit"));
+                lore.add(Text.key("gui_bazaar.amount_selection.custom_max", maxAmount));
+                lore.add(Text.literal(" "));
+                lore.add(Text.key("gui_bazaar.amount_selection.custom_click"));
+                return ItemStacks.item(
+                        Material.OAK_SIGN, 1,
+                        Text.key("gui_bazaar.amount_selection.custom_amount"),
+                        lore
                 );
             }
         });

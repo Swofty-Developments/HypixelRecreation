@@ -4,19 +4,19 @@ items:
     name: "Small Agronomy Sack"
     rarity: UNCOMMON
     lore:
-      - '§7Item pickups go directly into your'
-      - '§7sacks.'
+      - '<7>Item pickups go directly into your'
+      - '<7>sacks.'
       - ''
-      - '§7§7Items: §aBrown Mushroom§7, §aCactus§7, §aCactus Green§7, §aCarrot§7,'
-      - "§7§aCocoa Beans§7, §aGolden Carrot§7, §aHay Bale§7, §aJack o' Lantern§7,"
-      - '§7§aMelon Slice§7, §aMoonflower§7, §aNether Wart§7, §aPoisonous Potato§7,'
-      - '§7§aPotato§7, §aPumpkin§7, §aRed Mushroom§7, §aSeeds§7, §aSugar Cane§7,'
-      - '§7§aSunflower§7, §aWheat§7, §aWild Rose'
+      - '<7><7>Items: <a>Brown Mushroom<7>, <a>Cactus<7>, <a>Cactus Green<7>, <a>Carrot<7>,'
+      - "<7><a>Cocoa Beans<7>, <a>Golden Carrot<7>, <a>Hay Bale<7>, <a>Jack o' Lantern<7>,"
+      - '<7><a>Melon Slice<7>, <a>Moonflower<7>, <a>Nether Wart<7>, <a>Poisonous Potato<7>,'
+      - '<7><a>Potato<7>, <a>Pumpkin<7>, <a>Red Mushroom<7>, <a>Seeds<7>, <a>Sugar Cane<7>,'
+      - '<7><a>Sunflower<7>, <a>Wheat<7>, <a>Wild Rose'
       - ''
-      - '§7Capacity: §e2,240 per item'
-      - '§8Sacks sum their capacity.'
+      - '<7>Capacity: <e>2,240 per item'
+      - '<8>Sacks sum their capacity.'
       - ''
-      - '§eRight Click to open sack!'
+      - '<e>Right Click to open sack!'
     components:
       - id: SKULL_HEAD
         texture: 2ab879e1e590041146bc78c018af5877d39e5475eb7db368fcaf2acda373833d
@@ -68,19 +68,19 @@ items:
     name: "Medium Agronomy Sack"
     rarity: RARE
     lore:
-      - '§7Item pickups go directly into your'
-      - '§7sacks.'
+      - '<7>Item pickups go directly into your'
+      - '<7>sacks.'
       - ''
-      - '§7§7Items: §aBrown Mushroom§7, §aCactus§7, §aCactus Green§7, §aCarrot§7,'
-      - "§7§aCocoa Beans§7, §aGolden Carrot§7, §aHay Bale§7, §aJack o' Lantern§7,"
-      - '§7§aMelon Slice§7, §aMoonflower§7, §aNether Wart§7, §aPoisonous Potato§7,'
-      - '§7§aPotato§7, §aPumpkin§7, §aRed Mushroom§7, §aSeeds§7, §aSugar Cane§7,'
-      - '§7§aSunflower§7, §aWheat§7, §aWild Rose'
+      - '<7><7>Items: <a>Brown Mushroom<7>, <a>Cactus<7>, <a>Cactus Green<7>, <a>Carrot<7>,'
+      - "<7><a>Cocoa Beans<7>, <a>Golden Carrot<7>, <a>Hay Bale<7>, <a>Jack o' Lantern<7>,"
+      - '<7><a>Melon Slice<7>, <a>Moonflower<7>, <a>Nether Wart<7>, <a>Poisonous Potato<7>,'
+      - '<7><a>Potato<7>, <a>Pumpkin<7>, <a>Red Mushroom<7>, <a>Seeds<7>, <a>Sugar Cane<7>,'
+      - '<7><a>Sunflower<7>, <a>Wheat<7>, <a>Wild Rose'
       - ''
-      - '§7Capacity: §e6,720 per item'
-      - '§8Sacks sum their capacity.'
+      - '<7>Capacity: <e>6,720 per item'
+      - '<8>Sacks sum their capacity.'
       - ''
-      - '§eRight Click to open sack!'
+      - '<e>Right Click to open sack!'
     components:
       - id: SKULL_HEAD
         texture: 294c8341a535f80b3f43c5c243d03006bd325c9e96ff3ab957ccc37062830ac6
@@ -132,19 +132,19 @@ items:
     name: "Large Agronomy Sack"
     rarity: EPIC
     lore:
-      - '§7Item pickups go directly into your'
-      - '§7sacks.'
+      - '<7>Item pickups go directly into your'
+      - '<7>sacks.'
       - ''
-      - '§7§7Items: §aBrown Mushroom§7, §aCactus§7, §aCactus Green§7, §aCarrot§7,'
-      - "§7§aCocoa Beans§7, §aGolden Carrot§7, §aHay Bale§7, §aJack o' Lantern§7,"
-      - '§7§aMelon Slice§7, §aMoonflower§7, §aNether Wart§7, §aPoisonous Potato§7,'
-      - '§7§aPotato§7, §aPumpkin§7, §aRed Mushroom§7, §aSeeds§7, §aSugar Cane§7,'
-      - '§7§aSunflower§7, §aWheat§7, §aWild Rose'
+      - '<7><7>Items: <a>Brown Mushroom<7>, <a>Cactus<7>, <a>Cactus Green<7>, <a>Carrot<7>,'
+      - "<7><a>Cocoa Beans<7>, <a>Golden Carrot<7>, <a>Hay Bale<7>, <a>Jack o' Lantern<7>,"
+      - '<7><a>Melon Slice<7>, <a>Moonflower<7>, <a>Nether Wart<7>, <a>Poisonous Potato<7>,'
+      - '<7><a>Potato<7>, <a>Pumpkin<7>, <a>Red Mushroom<7>, <a>Seeds<7>, <a>Sugar Cane<7>,'
+      - '<7><a>Sunflower<7>, <a>Wheat<7>, <a>Wild Rose'
       - ''
-      - '§7Capacity: §e20,160 per item'
-      - '§8Sacks sum their capacity.'
+      - '<7>Capacity: <e>20,160 per item'
+      - '<8>Sacks sum their capacity.'
       - ''
-      - '§eRight Click to open sack!'
+      - '<e>Right Click to open sack!'
     components:
       - id: SKULL_HEAD
         texture: ef835b8941fe319931749b87fe8e84c5d1f4a271b5fbce5e700a60004d881f79
@@ -196,20 +196,20 @@ items:
     name: "Large Enchanted Agronomy Sack"
     rarity: EPIC
     lore:
-      - '§7Item pickups go directly into your'
-      - '§7sacks.'
+      - '<7>Item pickups go directly into your'
+      - '<7>sacks.'
       - ''
-      - '§7This sack can contain all enchanted versions'
-      - '§7of these materials:'
-      - '§7§aBrown Mushroom§7, §aCactus§7, §aCarrot§7, §aCocoa Beans§7,'
-      - '§7§aMelon Slice§7, §aMoonflower§7, §aNether Wart§7, §aPotato§7,'
-      - '§7§aPumpkin§7, §aRed Mushroom§7, §aSeeds§7, §aSugar Cane§7,'
-      - '§7§aWheat'
+      - '<7>This sack can contain all enchanted versions'
+      - '<7>of these materials:'
+      - '<7><a>Brown Mushroom<7>, <a>Cactus<7>, <a>Carrot<7>, <a>Cocoa Beans<7>,'
+      - '<7><a>Melon Slice<7>, <a>Moonflower<7>, <a>Nether Wart<7>, <a>Potato<7>,'
+      - '<7><a>Pumpkin<7>, <a>Red Mushroom<7>, <a>Seeds<7>, <a>Sugar Cane<7>,'
+      - '<7><a>Wheat'
       - ''
-      - '§7Capacity: §e20,160 per item'
-      - '§8Sacks sum their capacity.'
+      - '<7>Capacity: <e>20,160 per item'
+      - '<8>Sacks sum their capacity.'
       - ''
-      - '§eRight Click to open sack!'
+      - '<e>Right Click to open sack!'
     components:
       - id: SKULL_HEAD
         texture: 184d2ff1e177357574f9f71e19397fff3a210a94e78c0d2a4360cc5df1eb807b

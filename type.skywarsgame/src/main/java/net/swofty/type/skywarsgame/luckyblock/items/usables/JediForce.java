@@ -1,18 +1,14 @@
 package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class JediForce implements LuckyBlockConsumable {
 
@@ -31,19 +27,12 @@ public class JediForce implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.BLAZE_ROD)
-                .customName(Component.text(getDisplayName(), NamedTextColor.AQUA)
-                        .decoration(TextDecoration.ITALIC, false)
-                        .decoration(TextDecoration.BOLD, true))
-                .lore(List.of(
-                        Component.text("Use the Force to push", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("your enemies away!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to use!", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                ))
+        return ItemStacks.item(Material.BLAZE_ROD, """
+                <b><l>Jedi Force</l>
+                <7>Use the Force to push
+                <7>your enemies away!
+
+                <e>Right-click to use!""")
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
@@ -75,14 +64,14 @@ public class JediForce implements LuckyBlockConsumable {
         }
 
         if (target == null) {
-            player.sendMessage(Component.text("No target in range!", NamedTextColor.RED));
+            player.sendMessage("<c>No target in range!");
             return;
         }
 
         Vec pushDirection = Vec.fromPoint(target.getPosition().sub(player.getPosition())).normalize();
         target.setVelocity(pushDirection.mul(PUSH_POWER));
 
-        player.sendMessage(Component.text("The Force is with you!", NamedTextColor.AQUA));
-        target.sendMessage(Component.text("You were pushed by the Force!", NamedTextColor.RED));
+        player.sendMessage("<b>The Force is with you!");
+        target.sendMessage("<c>You were pushed by the Force!");
     }
 }

@@ -1,10 +1,9 @@
 package net.swofty.type.skyblockgeneric.foraging;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.minestom.server.entity.Player;
 import net.minestom.server.instance.Instance;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.hunting.AttributeDefinition;
@@ -33,7 +32,7 @@ public final class TreeGiftService {
             double share = total == 0 ? 0 : entry.getValue() / (double) total;
             double rewardScale = share < 0.20 ? 0 : share < 0.33 ? 0.5 : 1;
             if (rewardScale == 0) {
-                player.sendMessage("§cYou need to cut at least 20% of the tree to receive a Tree Gift!");
+                player.sendMessage("<c>You need to cut at least 20% of the tree to receive a Tree Gift!");
                 continue;
             }
             awardPlayer(player, treeType, sizeMultiplier, rewardScale, share);
@@ -42,8 +41,8 @@ public final class TreeGiftService {
 
     private static void awardPlayer(SkyBlockPlayer player, String treeType, int multiplier,
                                     double rewardScale, double share) {
-        List<String> rewards = new ArrayList<>();
-        List<String> bonusMessages = new ArrayList<>();
+        List<Text> rewards = new ArrayList<>();
+        List<Text> bonusMessages = new ArrayList<>();
         int scaled = Math.max(1, (int) Math.round(multiplier * rewardScale));
         int essence = switch (treeType) {
             case "MANGROVE" -> 3;
@@ -58,26 +57,26 @@ public final class TreeGiftService {
         increase(player, SkyBlockDataHandler.Data.FOREST_ESSENCE, essence);
         increase(player, SkyBlockDataHandler.Data.HOTF_EXPERIENCE, 10L * scaled);
         player.getSkills().increase(player, SkillCategories.FORAGING, (double) foragingXp);
-        rewards.add("§aForest Essence §7x§f" + essence);
-        rewards.add("§aForaging Experience §7x§f" + foragingXp);
-        rewards.add("§aHOTF Experience §7x§f" + 10 * scaled);
+        rewards.add(Text.of("<a>Forest Essence <7>x<f>{}", essence));
+        rewards.add(Text.of("<a>Foraging Experience <7>x<f>{}", foragingXp));
+        rewards.add(Text.of("<a>HOTF Experience <7>x<f>{}", 10 * scaled));
         if (treeType.equals("FIG")) {
             int tender = ThreadLocalRandom.current().nextInt(scaled + 1);
             if (tender > 0) player.addAndUpdateItem(ItemType.TENDER_WOOD, tender);
-            rewards.add("§aTender Wood §7x§f0-" + scaled);
+            rewards.add(Text.of("<a>Tender Wood <7>x<f>0-{}", scaled));
         } else if (treeType.equals("MANGROVE")) {
             int vinesap = ThreadLocalRandom.current().nextInt(scaled + 1);
             if (vinesap > 0) player.addAndUpdateItem(ItemType.VINESAP, vinesap);
-            rewards.add("§aVinesap §7x§f0-" + scaled);
+            rewards.add(Text.of("<a>Vinesap <7>x<f>0-{}", scaled));
         }
         if (treeType.equals("HELIX")) {
             increase(player, SkyBlockDataHandler.Data.FOREST_WHISPERS, 225L * scaled);
-            rewards.add("§aForest Whispers §7x§f" + 75 * scaled);
-            rewards.add("§aForest Whispers §7x§f" + 150 * scaled);
+            rewards.add(Text.of("<a>Forest Whispers <7>x<f>{}", 75 * scaled));
+            rewards.add(Text.of("<a>Forest Whispers <7>x<f>{}", 150 * scaled));
         } else {
             int whispers = ThreadLocalRandom.current().nextInt(20 * scaled, 40 * scaled + 1);
             increase(player, SkyBlockDataHandler.Data.FOREST_WHISPERS, whispers);
-            rewards.add("§aForest Whispers §7x§f" + whispers);
+            rewards.add(Text.of("<a>Forest Whispers <7>x<f>{}", whispers));
         }
         List<Bonus> bonuses = bonuses(treeType);
         int guaranteedRewards = rewards.size();
@@ -90,30 +89,38 @@ public final class TreeGiftService {
                 AttributeDefinition definition = AttributeRegistry.findByShard(bonus.shard).orElse(null);
                 if (definition == null) continue;
                 player.getHuntingData().addShards(definition.id(), 1);
-                rewards.add(definition.rarity().itemRarity().getLegacyColor() + definition.shardName());
-                bonusMessages.add(definition.rarity().itemRarity().getLegacyColor() + definition.shardName()
-                        + " §7(§a" + chance(bonus.chance) + "§7)");
+                Text shardText = Text.of("<color:{}>{}", definition.rarity().itemRarity().getColor(), definition.shardName());
+                rewards.add(shardText);
+                bonusMessages.add(shardText.append(" <7>(<a>{}<7>)", chance(bonus.chance)));
             } else if (bonus.item != null) {
                 player.addAndUpdateItem(bonus.item);
-                rewards.add(bonus.item.rarity.getLegacyColor() + bonus.item.getDisplayName());
-                bonusMessages.add(bonus.item.rarity.getLegacyColor() + bonus.item.getDisplayName()
-                        + " §7(§a" + chance(bonus.chance) + "§7)");
+                Text itemText = Text.of("<color:{}>{}", bonus.item.rarity.getColor(), bonus.item.getDisplayName());
+                rewards.add(itemText);
+                bonusMessages.add(itemText.append(" <7>(<a>{}<7>)", chance(bonus.chance)));
             }
         }
         double signalChance = AttributeEffectService.value(player.getHuntingData(), AttributeId.parse("R7")) / 100D;
         if (signalChance > 0 && ThreadLocalRandom.current().nextDouble() < signalChance) {
             player.addAndUpdateItem(ItemType.SIGNAL_ENHANCER);
-            rewards.add("§6Signal Enhancer");
-            bonusMessages.add("§6Signal Enhancer §7(§a" + chance(signalChance) + "§7)");
+            rewards.add(Text.of("<6>Signal Enhancer"));
+            bonusMessages.add(Text.of("<6>Signal Enhancer <7>(<a>{}<7>)", chance(signalChance)));
         }
         int percent = (int) Math.round(share * 100);
-        Component message = Component.text("§2§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n"
-                        + "§a§lTREE GIFT\n§fYou helped cut §a" + percent + "% §fof the "
-                        + pretty(treeType) + " Tree.\n§6+" + guaranteedRewards + " rewards gained! §7(hover)\n"
-                        + (bonusMessages.isEmpty() ? "" : "§d§lBONUS GIFT\n" + String.join("\n", bonusMessages) + "\n")
-                        + "§2§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
-                .hoverEvent(HoverEvent.showText(Component.text(String.join("\n", rewards))));
-        player.sendMessage(message);
+        Text body = Text.of("<2><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n")
+                .append("""
+                        <a><l>TREE GIFT</l>
+                        <f>You helped cut <a>{0}% <f>of the {1} Tree.
+                        <6>+{2} rewards gained! <7>(hover)
+                        """, percent, pretty(treeType), guaranteedRewards);
+        if (!bonusMessages.isEmpty()) {
+            body = body.append("<d><l>BONUS GIFT</l>\n")
+                    .append(Text.join(Text.literal("\n"), bonusMessages))
+                    .append(Text.literal("\n"));
+        }
+        body = body.append("<2><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+
+        player.sendMessage(Text.of("<hover:'{0}'>{1}</hover>",
+                Text.join(Text.literal("\n"), rewards), body));
     }
 
     private static List<Bonus> bonuses(String treeType) {

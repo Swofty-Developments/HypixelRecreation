@@ -53,7 +53,7 @@ public class TurtleEggPlacement extends PlacementRule {
                 oppositeState.set(EGGS, eggs);
                 instance.setBlock(oppositeBlock.position(), oppositeState.block());
             } else {
-                if (selfBlock.getBlock().isAir()) {
+                if (selfBlock.getBlock().air()) {
                     return;
                 }
 

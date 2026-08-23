@@ -26,7 +26,7 @@ public enum LobbyDestination {
     SKYBLOCK(
         ServerType.SKYBLOCK_HUB,
         Set.of("sb", "skyblock", "hub"),
-        Set.of(ServerType.PROTOTYPE_LOBBY)
+        Set.of()
     ),
     PROTOTYPE(
         ServerType.PROTOTYPE_LOBBY,
@@ -41,7 +41,7 @@ public enum LobbyDestination {
     RAVENGARD(
         ServerType.RAVENGARD_LOBBY,
         Set.of("ravengard", "rg"),
-        Set.of(ServerType.RAVENGARD_LOBBY)
+        Set.of()
     );
 
     private final ServerType destination;
@@ -94,6 +94,20 @@ public enum LobbyDestination {
         return resolveDefaultDestination(currentType);
     }
 
+    public static boolean isSessionType(@Nullable ServerType type) {
+        if (type == null) {
+            return false;
+        }
+
+        for (LobbyDestination value : values()) {
+            if (value.sourceTypes.contains(type) && value.destination != type) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static Set<String> allAliases() {
         Set<String> all = new LinkedHashSet<>();
         Arrays.stream(values()).forEach(value -> all.addAll(value.aliases));
@@ -101,9 +115,6 @@ public enum LobbyDestination {
     }
 
     private boolean handlesSource(ServerType sourceType) {
-        if (this == SKYBLOCK) {
-            return sourceType.isSkyBlock();
-        }
         return sourceTypes.contains(sourceType);
     }
 

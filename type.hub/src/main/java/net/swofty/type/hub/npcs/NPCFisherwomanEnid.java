@@ -16,7 +16,7 @@ public class NPCFisherwomanEnid extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§9Fisherwoman Enid", "§e§lCLICK"};
+                return new String[]{"<9>Fisherwoman Enid", "<e><l>CLICK"};
             }
 
             @Override
@@ -71,38 +71,38 @@ public class NPCFisherwomanEnid extends HypixelNPC {
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
             DialogueSet.builder()
-                .key("first-interaction").lines(new String[]{
+                .key("first-interaction").lines(
                     "To fish, cast your rod into the water and wait for a fish to bite!"
-                }).build(),
+                ).build(),
             DialogueSet.builder()
-                .key("after-catching-fish").lines(new String[]{
+                .key("after-catching-fish").lines(
                     "This part of the hub is a popular area for fishing because of the Fishing Outpost!",
                     "If you follow the river that flows under the bridge downstream, you'll find your way to it.",
                     "And tell Gerald I won't be home tonight! I'm tired of him making salmon."
-                }).build(),
+                ).build(),
             DialogueSet.builder()
-                .key("after-gerald").lines(new String[]{
+                .key("after-gerald").lines(
                     "If you like fishin', you'll love the Backwater Bayou!",
                     "You should go there sometime soon!"
-                }).build(),
+                ).build(),
             DialogueSet.builder()
-                .key("idle-1").lines(new String[]{
+                .key("idle-1").lines(
                     "Using Bait is important to get better results!",
                     "My favorite kind of bait is Dark Bait because I prefer fishing at night.",
                     "Angler Angus knows a lot more about Bait than I do. I think he's fishing somewhere along this river if you're interested in learning more."
-                }).build(),
+                ).build(),
             DialogueSet.builder()
-                .key("idle-2").lines(new String[]{
+                .key("idle-2").lines(
                     "I know that Gavin uses /scg instead of looking in his Fishing Skill menu.",
                     "He thinks he's being sneaky, but everyone knows about it.",
                     "Little does he know, I use it too!"
-                }).build(),
+                ).build(),
             DialogueSet.builder()
-                .key("idle-3").lines(new String[]{
+                .key("idle-3").lines(
                     "The Backwater Bayou has all sorts of wild Sea Creatures native to the area.",
                     "I've heard stories of Frog Man, but I've never quite worked out if he's a frog or a man.",
                     "Perhaps he is both, perhaps neither."
-                }).build()
+                ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

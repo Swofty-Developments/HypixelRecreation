@@ -1,6 +1,6 @@
 package net.swofty.type.skyblockgeneric.entity;
 
-import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.EntityType;
@@ -61,7 +61,7 @@ public class GlassDisplay extends LivingEntity {
 		itemEntity.setNoGravity(true);
 		itemEntity.setInstance(getInstance(), getPosition().add(0.5, -0.1, 0.5));
 
-		nameDisplay = new HologramEntity(Component.text(item.getDisplayName()));
+		nameDisplay = new HologramEntity(Text.literal(item.getDisplayName()));
 		nameDisplay.setInstance(getInstance(), getPosition().add(0.5, 0.5, 0.5));
 
 		interactionEntity = new InteractionEntity(scale, scale, onClick);

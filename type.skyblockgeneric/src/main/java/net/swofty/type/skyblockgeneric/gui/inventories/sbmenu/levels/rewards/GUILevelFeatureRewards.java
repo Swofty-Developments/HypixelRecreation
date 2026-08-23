@@ -1,12 +1,10 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels.rewards;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkyBlockExperience;
@@ -14,7 +12,6 @@ import net.swofty.type.skyblockgeneric.levels.CustomLevelAward;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -38,25 +35,25 @@ public class GUILevelFeatureRewards extends StatelessView {
         layout.slot(4, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             DatapointSkyBlockExperience.PlayerSkyBlockExperience experience = player.getSkyBlockExperience();
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Specific game features such as the");
-            lore.add("§7Bazaar or Community Shop.");
-            lore.add(" ");
-            lore.add("§7Next Reward:");
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.of("<7>Specific game features such as the"));
+            lore.add(Text.of("<7>Bazaar or Community Shop."));
+            lore.add(Text.literal(" "));
+            lore.add(Text.of("<7>Next Reward:"));
 
             Map.Entry<Integer, List<CustomLevelAward>> nextAward = CustomLevelAward.getNextReward(experience.getLevel().asInt());
             if (nextAward == null) {
-                lore.add("§cNo more rewards!");
+                lore.add(Text.of("<c>No more rewards!"));
             } else {
-                nextAward.getValue().forEach(award -> lore.add("§7" + award.getDisplay()));
-                lore.add("§8at Level " + nextAward.getKey());
+                nextAward.getValue().forEach(award -> lore.add(Text.of("<7>{}", award.getDisplay())));
+                lore.add(Text.of("<8>at Level {}", nextAward.getKey()));
             }
 
-            lore.add(" ");
+            lore.add(Text.literal(" "));
             lore.addAll(GUILevelRewards.getAsDisplay(CustomLevelAward.getFromLevel(experience.getLevel().asInt()).size(),
                     CustomLevelAward.getTotalLevelAwards()));
 
-            return ItemStackCreator.getStack("§aFeature Rewards", Material.NETHER_STAR, 1, lore);
+            return ItemStacks.item(Material.NETHER_STAR, 1, Text.of("<a>Feature Rewards"), lore);
         });
 
         // Award items
@@ -70,18 +67,18 @@ public class GUILevelFeatureRewards extends StatelessView {
                 boolean unlocked = player.getSkyBlockExperience().getLevel().asInt() >= level;
 
                 ItemStack.Builder item = award.getItem();
-                List<String> lore = new ArrayList<>(Arrays.asList("§8Level " + level, " "));
+                List<Text> lore = new ArrayList<>(List.of(
+                        Text.of("<8>Level {}", level),
+                        Text.literal(" ")
+                ));
 
                 if (unlocked) {
-                    lore.add("§aYou have unlocked this reward!");
+                    lore.add(Text.of("<a>You have unlocked this reward!"));
                 } else {
-                    lore.add("§7Levels left to Unlock: §3" + (level - player.getSkyBlockExperience().getLevel().asInt()));
+                    lore.add(Text.of("<7>Levels left to Unlock: <3>{}", level - player.getSkyBlockExperience().getLevel().asInt()));
                 }
 
-                return ItemStackCreator.updateLore(item, lore).set(
-                        DataComponents.CUSTOM_NAME,
-                        Component.text(award.getDisplay()).decoration(TextDecoration.ITALIC, false)
-                );
+                return ItemStacks.name(ItemStacks.lore(item, lore), award.getDisplay());
             });
         }
     }

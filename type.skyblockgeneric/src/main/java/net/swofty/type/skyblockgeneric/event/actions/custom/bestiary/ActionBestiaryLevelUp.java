@@ -1,8 +1,6 @@
 package net.swofty.type.skyblockgeneric.event.actions.custom.bestiary;
 
-import net.swofty.commons.ChatUtility;
-import net.swofty.commons.StringUtility;
-import net.swofty.commons.skyblock.statistics.ItemStatistic;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
@@ -33,41 +31,38 @@ public class ActionBestiaryLevelUp implements HypixelEventClass {
 		int newTier = bestiaryData.getCurrentBestiaryTier(mob, newKills);
 
 		if (newKills == 1) {
-			player.sendMessage("  §3§lBESTIARY FAMILY UNLOCKED §b" + mobName);
+			player.sendMessage("  <3><l>BESTIARY FAMILY UNLOCKED </l><b>{}", mobName);
 			return;
 		}
 
 		if (newTier == oldTier + 1) {
-			String romanNew = StringUtility.getAsRomanNumeral(newTier);
-			String transitionLine = oldTier == 0
-					? "§b" + mobName + " §b" + romanNew
-					: "§b" + mobName + " §8" + StringUtility.getAsRomanNumeral(oldTier) + " ➡ §b" + romanNew;
+			Text transitionLine = oldTier == 0
+					? Text.of("<center><b>{} {:roman}</center>", mobName, newTier)
+					: Text.of("<center><b>{} <8>{:roman} ➡ <b>{:roman}</center>", mobName, oldTier, newTier);
 
 			int magicFind = bestiaryData.getMagicFind(newTier);
 			int strength = bestiaryData.getStrength(newTier);
 			int coinBonus = bestiaryData.getExtraCoinPercentage(newTier);
 			int xpBonus = bestiaryData.getExtraXpPercentage(newTier);
 
-			List<String> lines = new ArrayList<>();
-			lines.add("");
-			lines.add("§6§lBESTIARY");
+			List<Text> lines = new ArrayList<>();
+			lines.add(Text.empty());
+			lines.add(Text.of("<center><6><l>BESTIARY</center>"));
 			lines.add(transitionLine);
-			lines.add("");
-			lines.add("§6§lREWARDS");
-			lines.add("§8+§a" + magicFind + " " + mobName + " " + ItemStatistic.MAGIC_FIND.getFullDisplayName());
-			lines.add("§8+§a" + strength + " " + mobName + " " + ItemStatistic.STRENGTH.getFullDisplayName());
-			lines.add("§8+§6" + coinBonus + "% §a" + mobName + " §7coins");
-			lines.add("§8+§a" + xpBonus + "% §7chance for extra XP orbs");
-			lines.add("§8+§b1 SkyBlock XP");
-			lines.add("");
+			lines.add(Text.empty());
+			lines.add(Text.of("<center><6><l>REWARDS</center>"));
+			lines.add(Text.of("<center><8>+<a>{} {} <stat:magic_find></center>", magicFind, mobName));
+			lines.add(Text.of("<center><8>+<a>{} {} <stat:strength></center>", strength, mobName));
+			lines.add(Text.of("<center><8>+<6>{}% <a>{} <7>coins</center>", coinBonus, mobName));
+			lines.add(Text.of("<center><8>+<a>{}% <7>chance for extra XP orbs</center>", xpBonus));
+			lines.add(Text.of("<center><8>+<b>1 SkyBlock XP</center>"));
+			lines.add(Text.empty());
 
-			// This could be sent in a single message, but the way it was done was incorrect. So we'll keep it like this for now.
-			List<String> centered = ChatUtility.FontInfo.centerLines(lines);
-			player.sendMessage("§3§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
-			for (String line : centered) {
+			player.sendMessage("<3><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+			for (Text line : lines) {
 				player.sendMessage(line);
 			}
-			player.sendMessage("§3§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+			player.sendMessage("<3><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
 		}
 	}
 }

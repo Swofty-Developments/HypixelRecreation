@@ -6,9 +6,8 @@ import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.type.hub.gui.elizabeth.GUIBitsShop;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -26,7 +25,7 @@ public class GUIBitsConfirmBuy extends HypixelInventoryGUI {
     }
 
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(new GUIClickableItem(11) {
 
             @Override
@@ -39,10 +38,11 @@ public class GUIBitsConfirmBuy extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p; 
-                return ItemStackCreator.getStack("§aConfirm", Material.LIME_TERRACOTTA, 1,
-                        "§7Buying: " + item.getDisplayName(),
-                        "§7Cost: §b" + StringUtility.commaify(price));
+                SkyBlockPlayer player = (SkyBlockPlayer) p;
+                return ItemStacks.item(Material.LIME_TERRACOTTA, """
+                        <a>Confirm
+                        <7>Buying: {}
+                        <7>Cost: <b>{:,}""", item.getDisplayName(), price);
             }
         });
         set(new GUIClickableItem(15) {
@@ -54,8 +54,8 @@ public class GUIBitsConfirmBuy extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p; 
-                return ItemStackCreator.getStack("§cCancel", Material.RED_TERRACOTTA, 1);
+                SkyBlockPlayer player = (SkyBlockPlayer) p;
+                return ItemStacks.item(Material.RED_TERRACOTTA, "<c>Cancel");
             }
         });
         updateItemStacks(getInventory(), getPlayer());

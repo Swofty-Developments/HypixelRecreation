@@ -1,18 +1,14 @@
 package net.swofty.type.skywarsgame.luckyblock.items.armor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class SpeedsterBoots implements LuckyBlockArmor {
 
@@ -41,27 +37,20 @@ public class SpeedsterBoots implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.LEATHER_BOOTS)
-                .customName(Component.text("Speedster Boots", NamedTextColor.AQUA)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Grants ", NamedTextColor.GRAY)
-                                .append(Component.text("Speed II", NamedTextColor.WHITE))
-                                .append(Component.text(" while worn.", NamedTextColor.GRAY))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.LEATHER_BOOTS, """
+                        <b>Speedster Boots
+
+                        <7>Grants <f>Speed II<7> while worn.
+
+                        <6><l>LUCKY BLOCK ITEM
+                        """)
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }
 
     @Override
     public void onEquip(SkywarsPlayer player) {
-        player.sendMessage(Component.text("You feel faster!", NamedTextColor.AQUA));
+        player.sendMessage("<b>You feel faster!");
         applySpeedEffect(player);
     }
 

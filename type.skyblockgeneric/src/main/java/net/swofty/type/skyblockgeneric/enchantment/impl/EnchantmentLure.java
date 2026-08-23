@@ -15,7 +15,7 @@ import java.util.Map;
 public class EnchantmentLure implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Grants §b+" + (level * 4) + "☂ Fishing Speed§7.";
+        return "Grants <b>+" + (level * 4) + "☂ Fishing Speed<7>.";
     }
 
     @Override

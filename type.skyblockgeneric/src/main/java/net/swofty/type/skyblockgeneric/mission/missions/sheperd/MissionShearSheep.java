@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.sheperd;
 
+
 import net.minestom.server.entity.EntityType;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.skyblockgeneric.event.custom.PlayerKilledSkyBlockMobEvent;
@@ -46,7 +47,7 @@ public class MissionShearSheep extends SkyBlockProgressMission {
 
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§b20 Farming XP", "§6100 §7Coins"))).forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<b>20 Farming XP", "<6>100 <7>Coins"))).forEach(player::sendMessage);
         player.getSkills().increase(player, SkillCategories.FARMING, 20D);
         player.addCoins(100);
         player.getSkyBlockExperience().addExperience(SkyBlockLevelCause.getMissionCause(getID()));

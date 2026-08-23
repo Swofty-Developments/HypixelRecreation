@@ -18,7 +18,7 @@ public class InstantWeaponUpgradeLuckyReward extends LuckyReward {
     public void apply(BedWarsPlayer player, Pos openedAt) {
         Material bestSword = bestSword(player);
         if (bestSword == Material.DIAMOND_SWORD) {
-            player.sendMessage("§cYou already have the best sword.");
+            player.sendMessage("<c>You already have the best sword.");
             return;
         }
         Material next;
@@ -31,7 +31,7 @@ public class InstantWeaponUpgradeLuckyReward extends LuckyReward {
         }
         new ReplaceAdderItem("lucky_weapon_upgrade", "Weapon Upgrade", "", 0, null, next, bestSword,
             DatapointBedWarsHotbar.HotbarItemType.MELEE).onPurchase(player);
-        player.sendMessage("§aYour weapon was upgraded.");
+        player.sendMessage("<a>Your weapon was upgraded.");
     }
 
     private Material bestSword(BedWarsPlayer player) {

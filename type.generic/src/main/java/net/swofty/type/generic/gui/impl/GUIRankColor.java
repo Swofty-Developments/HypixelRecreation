@@ -4,7 +4,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -32,9 +32,17 @@ public class GUIRankColor extends StatelessView {
         if (ctx.player().getRank() == Rank.MVP_PLUS_PLUS) {
             layout.slot(44, (_, c) -> {
                 boolean aqua = c.player().isMvpPlusPlusAqua();
-                return ItemStackCreator.getStack("§aToggle Prefix Color", Material.NETHER_STAR, 1,
-                    "§7Selected: " + (aqua ? "§bAqua" : "§6Gold"), "",
-                    "§7Click to change the color to " + (aqua ? "§6Gold" : "§bAqua"));
+                return ItemStacks.item(Material.NETHER_STAR, 1, aqua
+                    ? """
+                        <a>Toggle Prefix Color
+                        <7>Selected: <b>Aqua
+
+                        <7>Click to change the color to <6>Gold"""
+                    : """
+                        <a>Toggle Prefix Color
+                        <7>Selected: <6>Gold
+
+                        <7>Click to change the color to <b>Aqua""");
             }, (_, c) -> {
                 var data = c.player().getDataHandler().get(net.swofty.type.generic.data.HypixelDataHandler.Data.MVP_PLUS_PLUS_AQUA,
                     net.swofty.type.generic.data.datapoints.DatapointBoolean.class);
@@ -48,13 +56,15 @@ public class GUIRankColor extends StatelessView {
         layout.slot(slot, (_, ctx) -> render(ctx.player(), color), (_, ctx) -> {
             HypixelPlayer player = ctx.player();
             if (!player.getRank().isEqualOrHigherThan(Rank.MVP_PLUS)) {
-                player.sendMessage("§cYou must be MVP+ or higher to use rank colors!");
+                player.sendMessage("<c>You must be MVP+ or higher to use rank colors!");
                 return;
             }
             if (!color.isUnlocked(player)) {
-                player.sendMessage(color == RankColor.DARK_BLUE
-                    ? "§cYou must gift 100 ranks to unlock this rank color!"
-                    : "§cYou must be Hypixel Level " + color.getRequiredLevel() + " to unlock this rank color!");
+                if (color == RankColor.DARK_BLUE) {
+                    player.sendMessage("<c>You must gift 100 ranks to unlock this rank color!");
+                } else {
+                    player.sendMessage("<c>You must be Hypixel Level {} to unlock this rank color!", color.getRequiredLevel());
+                }
                 return;
             }
             player.setRankColor(color);
@@ -67,18 +77,25 @@ public class GUIRankColor extends StatelessView {
         boolean unlocked = hasRank && color.isUnlocked(player);
         boolean selected = player.getRankColor() == color;
         String code = legacyCode(color.getColor());
-        String ending = selected ? "§aCurrently selected!" : unlocked ? "§eClick to select!"
-                                                             : color == RankColor.DARK_BLUE ? "§6Unlock by claiming 100 Ranks Gifted Reward!"
-                                                               : "§3Unlocked at Hypixel Level " + color.getRequiredLevel();
-        return ItemStackCreator.getStack((unlocked ? "§a" : "§c") + color.getDisplayName() + " Rank Color",
-            unlocked ? color.getMaterial() : Material.GRAY_DYE, 1,
-            "§7Changes the color of the plus in §bMVP§c+",
-            "§7to " + color.getDisplayName().toLowerCase() + ", turning it into §bMVP" + code + "+",
-            "", "§7Shown in tab list also when chatting", "§7and joining lobbies.", "", ending);
+        String ending = selected ? "<a>Currently selected!"
+                : unlocked ? "<e>Click to select!"
+                : color == RankColor.DARK_BLUE ? "<6>Unlock by claiming 100 Ranks Gifted Reward!"
+                : "<3>Unlocked at Hypixel Level {}";
+
+        return ItemStacks.item(unlocked ? color.getMaterial() : Material.GRAY_DYE, 1,
+                (unlocked ? "<a>" : "<c>") + "{} Rank Color\n"
+                        + "<7>Changes the color of the plus in <b>MVP<c>+\n"
+                        + "<7>to {}, turning it into <b>MVP" + code + "+\n"
+                        + "\n"
+                        + "<7>Shown in tab list also when chatting\n"
+                        + "<7>and joining lobbies.\n"
+                        + "\n"
+                        + ending,
+                color.getDisplayName(), color.getDisplayName().toLowerCase(), color.getRequiredLevel());
     }
 
     private String legacyCode(NamedTextColor color) {
-        return "§" + Integer.toHexString(color.value() == 0x000000 ? 0 : switch (color.toString()) {
+        return "<" + Integer.toHexString(color.value() == 0x000000 ? 0 : switch (color.toString()) {
             case "dark_blue" -> 1;
             case "dark_green" -> 2;
             case "dark_aqua" -> 3;
@@ -94,6 +111,6 @@ public class GUIRankColor extends StatelessView {
             case "light_purple" -> 13;
             case "yellow" -> 14;
             default -> 15;
-        });
+        }) + ">";
     }
 }

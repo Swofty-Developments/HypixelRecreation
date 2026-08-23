@@ -1,9 +1,6 @@
 package net.swofty.type.dwarvenmines;
 
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
@@ -13,6 +10,7 @@ import net.swofty.commons.CustomWorlds;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.text.Text;
 import net.swofty.type.dwarvenmines.gui.GUIGemstoneGrinder;
 import net.swofty.type.generic.tab.AreaServerModule;
 import net.swofty.type.generic.HypixelConst;
@@ -51,8 +49,8 @@ public class TypeDwarvenMinesLoader implements SkyBlockTypeLoader {
         InteractionEntity gemstoneGrinder = new InteractionEntity(1.1f, 1.1f, (p, event) -> {
            new GUIGemstoneGrinder().open(p);
         });
-        TextDisplayEntity gemstoneGrinderText = new TextDisplayEntity(Component.text("Gemstone Grinder", NamedTextColor.LIGHT_PURPLE), meta -> {});
-        TextDisplayEntity gemstoneGrinderClick = new TextDisplayEntity(Component.text("CLICK").color(NamedTextColor.YELLOW).decorate(TextDecoration.BOLD), meta -> {});
+        TextDisplayEntity gemstoneGrinderText = new TextDisplayEntity("<d>Gemstone Grinder", meta -> {});
+        TextDisplayEntity gemstoneGrinderClick = new TextDisplayEntity("<e><l>CLICK", meta -> {});
 
         gemstoneGrinder.setInstance(HypixelConst.getInstanceContainer(), gemstoneGrinderPos);
         gemstoneGrinderText.setInstance(HypixelConst.getInstanceContainer(), gemstoneGrinderPos.add(0, 1.3, 0));
@@ -110,7 +108,7 @@ public class TypeDwarvenMinesLoader implements SkyBlockTypeLoader {
 
     @Override
     public List<ServiceType> getRequiredServices() {
-        return new ArrayList<>(List.of(ServiceType.DATA_MUTEX));
+        return new ArrayList<>();
     }
 
     @Override

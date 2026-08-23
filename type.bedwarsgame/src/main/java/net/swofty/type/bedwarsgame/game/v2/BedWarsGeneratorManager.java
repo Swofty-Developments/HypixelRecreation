@@ -1,10 +1,7 @@
 package net.swofty.type.bedwarsgame.game.v2;
 
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
@@ -21,6 +18,7 @@ import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.MapTeam;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
 import net.swofty.commons.mc.HypixelPosition;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.entity.TextDisplayEntity;
 import net.swofty.type.bedwarsgame.item.impl.LuckyBlockItem;
@@ -136,15 +134,17 @@ public class BedWarsGeneratorManager {
             BedWarsMapsConfig.GlobalGeneratorKey generatorType = entry.getKey();
             String tierLabel = getTierLabelFor(generatorType);
             String capitalizedType = StringUtility.capitalize(generatorType.name());
+            NamedTextColor titleColor = generatorType == BedWarsMapsConfig.GlobalGeneratorKey.DIAMOND
+                ? NamedTextColor.AQUA : NamedTextColor.DARK_GREEN;
 
             List<GeneratorDisplay> displays = entry.getValue();
             for (int i = 0; i < displays.size(); i++) {
                 GeneratorDisplay display = displays.get(i);
                 Pos position = display.spawnDisplay.getPosition();
                 List<String> textLines = List.of(
-                    "§e" + tierLabel,
-                    (generatorType.equals(BedWarsMapsConfig.GlobalGeneratorKey.DIAMOND) ? "§b§l" : "§2§l") + capitalizedType,
-                    "§eSpawns in §c" + display.countdown + "§e seconds!"
+                    Text.of("<e>{}", tierLabel).serialize(),
+                    Text.of("<color:{}><l>{}", titleColor, capitalizedType).serialize(),
+                    Text.of("<e>Spawns in <c>{}</c> seconds!", display.countdown).serialize()
                 );
 
                 game.getReplayManager().recordGeneratorDisplay(
@@ -190,18 +190,15 @@ public class BedWarsGeneratorManager {
         for (HypixelPosition location : locations) {
             double locY = location.y() + 5.0;
 
-            TextDisplayEntity tierDisplay = new TextDisplayEntity(
-                Component.text("Tier I").color(NamedTextColor.YELLOW));
+            TextDisplayEntity tierDisplay = new TextDisplayEntity("<e>Tier I");
             tierDisplay.setInstance(game.getInstance(), new Pos(location.x(), locY, location.z()));
 
             locY -= 0.3;
-            TextDisplayEntity titleDisplay = new TextDisplayEntity(
-                Component.text(capitalizedType).color(color).decorate(TextDecoration.BOLD));
+            TextDisplayEntity titleDisplay = new TextDisplayEntity("<color:{}><l>{}", color, capitalizedType);
             titleDisplay.setInstance(game.getInstance(), new Pos(location.x(), locY, location.z()));
 
             locY -= 0.3;
-            TextDisplayEntity spawnDisplay = new TextDisplayEntity(
-                MiniMessage.miniMessage().deserialize("<yellow>Spawns in <red>" + delaySeconds + "</red> seconds!</yellow>"));
+            TextDisplayEntity spawnDisplay = new TextDisplayEntity("<e>Spawns in <c>{}</c> seconds!", delaySeconds);
             spawnDisplay.setInstance(game.getInstance(), new Pos(location.x(), locY, location.z()));
 
             float size = 0.6f;
@@ -219,9 +216,9 @@ public class BedWarsGeneratorManager {
 
             if (game.getReplayManager().isRecording()) {
                 List<String> textLines = List.of(
-                    "§eTier I",
-                    (isDiamond ? "§b§l" : "§2§l") + capitalizedType,
-                    "§eSpawns in §c" + delaySeconds + "§e seconds!"
+                    Text.of("<e>Tier I").serialize(),
+                    Text.of("<color:{}><l>{}", color, capitalizedType).serialize(),
+                    Text.of("<e>Spawns in <c>{}</c> seconds!", delaySeconds).serialize()
                 );
                 game.getReplayManager().recordGeneratorDisplay(
                     spawnDisplay.getEntityId(),
@@ -291,15 +288,14 @@ public class BedWarsGeneratorManager {
     private void updateGeneratorDisplays() {
         for (List<GeneratorDisplay> displays : generatorDisplays.values()) {
             for (GeneratorDisplay display : displays) {
-                String newText = "§eSpawns in §c" + display.countdown + "§e seconds!";
-                display.spawnDisplay.setText(MiniMessage.miniMessage().deserialize(
-                    "<yellow>Spawns in <red>" + display.countdown + "</red> seconds!</yellow>"));
+                Text spawnText = Text.of("<e>Spawns in <c>{}</c> seconds!", display.countdown);
+                display.spawnDisplay.setText(spawnText);
 
                 // Record display update for replay
                 if (game.getReplayManager().isRecording()) {
                     game.getReplayManager().recordTextDisplayUpdate(
                         display.spawnDisplay.getEntityId(),
-                        List.of(newText),
+                        List.of(spawnText.serialize()),
                         false,
                         2 // Update third line (spawn timer)
                     );
@@ -319,7 +315,7 @@ public class BedWarsGeneratorManager {
             for (GeneratorDisplay d : e.getValue()) {
                 d.maxCountdown = max;
                 d.countdown = max;
-                d.tierDisplay.setText(Component.text(tierLabel).color(NamedTextColor.YELLOW));
+                d.tierDisplay.setText("<e>{}", tierLabel);
             }
         }
     }

@@ -5,7 +5,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -25,7 +25,7 @@ public class GUIConfirmKat extends HypixelInventoryGUI {
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
 
         set(new GUIClickableItem(11) {
             @Override
@@ -46,15 +46,16 @@ public class GUIConfirmKat extends HypixelInventoryGUI {
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p; 
                 if (pet.getComponent(PetComponent.class).getKatUpgrades().getForRarity(pet.getAttributeHandler().getRarity().upgrade()) == null) {
-                    return ItemStackCreator.getStack("§aSomething went wrong!", Material.RED_TERRACOTTA, 1);
+                    return ItemStacks.item(Material.RED_TERRACOTTA, "<a>Something went wrong!");
                 }
                 KatUpgrade katUpgrade = pet.getComponent(PetComponent.class).getKatUpgrades().getForRarity(pet.getAttributeHandler().getRarity().upgrade());
                 long time = katUpgrade.getTime();
-                return ItemStackCreator.getStack("§aConfirm", Material.GREEN_TERRACOTTA, 1,
-                        "§cWARNING: You will not be able to",
-                        "§cretrieve your pet for " + StringUtility.formatTimeLeftWrittenOut(time) + " and its",
-                        "§clevel will change as a result of the",
-                        "§crarity upgrade.");
+                return ItemStacks.item(Material.GREEN_TERRACOTTA, """
+                        <a>Confirm
+                        <c>WARNING: You will not be able to
+                        <c>retrieve your pet for {} and its
+                        <c>level will change as a result of the
+                        <c>rarity upgrade.""", StringUtility.formatTimeLeftWrittenOut(time));
             }
         });
 
@@ -68,8 +69,8 @@ public class GUIConfirmKat extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                SkyBlockPlayer player = (SkyBlockPlayer) p; 
-                return ItemStackCreator.getStack("§cCancel", Material.RED_TERRACOTTA, 1);
+                SkyBlockPlayer player = (SkyBlockPlayer) p;
+                return ItemStacks.item(Material.RED_TERRACOTTA, "<c>Cancel");
             }
         });
         updateItemStacks(getInventory(), getPlayer());

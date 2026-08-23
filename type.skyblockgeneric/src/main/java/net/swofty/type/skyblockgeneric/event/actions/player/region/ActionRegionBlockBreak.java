@@ -9,6 +9,7 @@ import net.minestom.server.item.Material;
 import net.minestom.server.tag.Tag;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.HypixelConst;
+import net.swofty.type.generic.entity.drop.ItemDrops;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.HypixelEventHandler;
@@ -44,7 +45,7 @@ public class ActionRegionBlockBreak implements HypixelEventClass {
             }
             region.setPos1(event.getBlockPosition());
             RegionSelectorComponent.getPlayerRegionSelection().put(player, region);
-            player.sendMessage("§aPosition 1 set to §e" + event.getBlockPosition() + "§a.");
+            player.sendMessage("<a>Position 1 set to <e>{}<a>.", event.getBlockPosition());
             event.setCancelled(true);
             return;
         }
@@ -193,7 +194,7 @@ public class ActionRegionBlockBreak implements HypixelEventClass {
                         Pos adjacentPos = orePos.add(offset);
                         Block block2 = player.getInstance().getBlock(adjacentPos);
 
-                        if (block2.isAir()) {
+                        if (block2.air()) {
                             double distanceSquared = adjacentPos.distanceSquared(playerPos);
                             if (distanceSquared < closestDistanceSquared) {
                                 closestDistanceSquared = distanceSquared;
@@ -203,12 +204,11 @@ public class ActionRegionBlockBreak implements HypixelEventClass {
                     }
 
                     // Use the nearest air block or fallback to default position
-                    Pos dropPos = (nearestAirBlock != null) ? nearestAirBlock.add(0.5, 0.5, 0.5) : orePos.add(0.5, 1.5, 0.5);
+                    Pos dropBlock = (nearestAirBlock != null) ? nearestAirBlock : orePos.add(0, 1, 0);
 
                     // Spawn the item
-                    DroppedItemEntityImpl droppedItem = new DroppedItemEntityImpl(dropItem, player);
-                    droppedItem.setInstance(player.getInstance(), dropPos);
-                    droppedItem.addViewer(player);
+                    ItemDrops.dropFromBlock(new DroppedItemEntityImpl(dropItem, player),
+                            player.getInstance(), dropBlock);
                 }
             }
         }
@@ -285,7 +285,7 @@ public class ActionRegionBlockBreak implements HypixelEventClass {
         double nearestDistance = Double.MAX_VALUE;
         for (Pos offset : offsets) {
             Pos candidate = source.add(offset);
-            if (!player.getInstance().getBlock(candidate).isAir()) continue;
+            if (!player.getInstance().getBlock(candidate).air()) continue;
             double distance = candidate.distanceSquared(player.getPosition());
             if (distance < nearestDistance) {
                 nearest = candidate;
@@ -293,9 +293,7 @@ public class ActionRegionBlockBreak implements HypixelEventClass {
             }
         }
 
-        Pos dropPosition = nearest == null ? source.add(0.5, 1.5, 0.5) : nearest.add(0.5, 0.5, 0.5);
-        DroppedItemEntityImpl entity = new DroppedItemEntityImpl(dropItem, player);
-        entity.setInstance(player.getInstance(), dropPosition);
-        entity.addViewer(player);
+        Pos dropBlock = nearest == null ? source.add(0, 1, 0) : nearest;
+        ItemDrops.dropFromBlock(new DroppedItemEntityImpl(dropItem, player), player.getInstance(), dropBlock);
     }
 }

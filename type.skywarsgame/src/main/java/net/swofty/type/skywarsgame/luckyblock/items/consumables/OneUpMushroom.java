@@ -1,15 +1,11 @@
 package net.swofty.type.skywarsgame.luckyblock.items.consumables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class OneUpMushroom implements LuckyBlockConsumable {
 
@@ -27,17 +23,11 @@ public class OneUpMushroom implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.RED_MUSHROOM)
-                .customName(Component.text(getDisplayName(), NamedTextColor.RED)
-                        .decoration(TextDecoration.ITALIC, false)
-                        .decoration(TextDecoration.BOLD, true))
-                .lore(List.of(
-                        Component.text("Instantly restores 5 hearts!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to use!", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                ))
+        return ItemStacks.item(Material.RED_MUSHROOM, """
+                <c><l>1-up Mushroom</l>
+                <7>Instantly restores 5 hearts!
+
+                <e>Right-click to use!""")
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
@@ -47,6 +37,6 @@ public class OneUpMushroom implements LuckyBlockConsumable {
         float newHealth = Math.min(player.getHealth() + HEAL_AMOUNT, 20.0f);
         player.setHealth(newHealth);
 
-        player.sendMessage(Component.text("1-UP! Health restored!", NamedTextColor.GREEN));
+        player.sendMessage("<a>1-UP! Health restored!");
     }
 }

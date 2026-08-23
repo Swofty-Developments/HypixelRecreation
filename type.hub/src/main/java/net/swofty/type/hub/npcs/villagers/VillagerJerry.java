@@ -13,7 +13,7 @@ public class VillagerJerry extends HypixelNPC {
         super(new VillagerConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Jerry", "§e§lCLICK"};
+                return new String[]{"Jerry", "<e><l>CLICK"};
             }
 
             @Override

@@ -85,7 +85,7 @@ public class MinionKillMobAction extends MinionAction {
         Collections.shuffle(verticalCheckPositions);
         Pos positionToSpawn = null;
         for (Pos pos : verticalCheckPositions) {
-            if (island.getBlock(pos).isAir() && island.getBlock(pos.add(0, 1, 0)).isAir()) {
+            if (island.getBlock(pos).air() && island.getBlock(pos.add(0, 1, 0)).air()) {
                 positionToSpawn = pos;
                 break;
             }

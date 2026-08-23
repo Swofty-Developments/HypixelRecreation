@@ -6,7 +6,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 
@@ -27,11 +27,7 @@ public class GUISlumberLocations extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aTeleport to Doorman Dave",
-                        Material.OAK_DOOR,
-                        1
-                );
+                return ItemStacks.item(Material.OAK_DOOR, "<a>Teleport to Doorman Dave");
             }
         });
         set(new GUIClickableItem(13) {
@@ -43,11 +39,7 @@ public class GUISlumberLocations extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§eTeleport to Reception",
-                        Material.RED_BED,
-                        1
-                );
+                return ItemStacks.item(Material.RED_BED, "<e>Teleport to Reception");
             }
         });
         set(new GUIClickableItem(15) {
@@ -59,11 +51,7 @@ public class GUISlumberLocations extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§6Teleport to the Ticket Machine",
-                        Material.NAME_TAG,
-                        1
-                );
+                return ItemStacks.item(Material.NAME_TAG, "<6>Teleport to the Ticket Machine");
             }
         });
         updateItemStacks(getInventory(), getPlayer());

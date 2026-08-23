@@ -8,7 +8,10 @@ import net.minestom.server.component.DataComponent;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.component.TooltipDisplay;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.ravengardgeneric.classes.RavengardClass;
+import net.swofty.type.ravengardgeneric.gui.RavengardFont;
 import net.swofty.type.ravengardgeneric.data.monogdb.RavengardTrackedItemsDatabase;
 import net.swofty.type.ravengardgeneric.item.attribute.attributes.ItemAttributeItemId;
 import net.swofty.type.ravengardgeneric.item.attribute.attributes.ItemAttributeStatBoost;
@@ -21,19 +24,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Builds the real stack for an item type, generating the captured tooltip: a rarity and type tag
  * line, the defense statistic behind its icon, and a tag line of every class that can use it.
  */
 public final class RavengardItem {
-    private static final TextColor DEFENSE_COLOR = TextColor.color(0x5FEC7B);
-    private static final int DEFENSE_ICON = 0xE231;
 
-    /** Class tag order as the captured Old Boots tooltip lists them. */
+    /**
+     * Class tag order as the captured Old Boots tooltip lists them. Restricted items instead show
+     * their tags in the order the item declares its classes, which is how the captured Weathered
+     * Pants row reads.
+     */
     private static final RavengardClass[] CLASS_TAG_ORDER = {
             RavengardClass.KNIGHT, RavengardClass.HUNTER,
-            RavengardClass.ASSASSIN, RavengardClass.WARRIOR};
+            RavengardClass.ASSASSIN, RavengardClass.WARRIOR, RavengardClass.SORCERER};
 
     private static final Set<DataComponent<?>> HIDDEN = Set.of(
             DataComponents.PAINTING_VARIANT,
@@ -51,15 +58,17 @@ public final class RavengardItem {
             DataComponents.POTION_CONTENTS,
             DataComponents.DYED_COLOR);
 
+    private static final Pattern EFFECT_HIGHLIGHT = Pattern.compile(
+            "(?<hp>[+-]?\\d+(?:\\.\\d+)? ?HP(?: over)?)|(?<seconds>\\d+ seconds?)");
+
+    private static final Text BLANK = Text.empty();
+
     private RavengardItem() {
     }
 
     public static ItemStack of(String id) {
         return of(id, null);
     }
-
-    private static final TextColor STAR_COLOR = TextColor.color(0xF0F05C);
-    private static final TextColor BOOST_COLOR = TextColor.color(0xA3A3C2);
 
     public static ItemStack of(String id, RavengardPlayer owner) {
         RavengardItemType type = RavengardItemRegistry.get(id);
@@ -83,12 +92,12 @@ public final class RavengardItem {
         return build(type, owner, true, boost).build();
     }
 
-    public static List<Component> loreOf(RavengardItemType type) {
+    public static List<Text> loreOf(RavengardItemType type) {
         return loreOf(type, false);
     }
 
     /** Shop menus include the crown value line; the item itself never carries it. */
-    public static List<Component> loreOf(RavengardItemType type, boolean shopContext) {
+    public static List<Text> loreOf(RavengardItemType type, boolean shopContext) {
         return type.component(PlaceholderSlotComponent.class) != null
                 ? placeholderLore(type)
                 : lore(type, shopContext, 1.0);
@@ -108,8 +117,7 @@ public final class RavengardItem {
                         : TextColor.color(type.getRarity().getNameColor()))
                 .decoration(TextDecoration.ITALIC, false);
         if (boosted(boost)) {
-            name = name.append(Component.text(" "))
-                    .append(Component.text("⭐").color(STAR_COLOR));
+            name = name.append(Text.of(" <#f0f05c>⭐</color>"));
         }
         builder.set(DataComponents.CUSTOM_NAME, name);
 
@@ -126,9 +134,9 @@ public final class RavengardItem {
             builder = component.apply(builder, type);
         }
 
-        List<Component> lore = placeholder ? placeholderLore(type) : lore(type, false, boost);
+        List<Text> lore = placeholder ? placeholderLore(type) : lore(type, false, boost);
         if (!lore.isEmpty()) {
-            builder.set(DataComponents.LORE, lore);
+            ItemStacks.lines(builder, lore);
         }
         return builder;
     }
@@ -153,7 +161,9 @@ public final class RavengardItem {
     private static void applyTrackedAttributes(ItemStack.Builder builder, RavengardItemType type,
                                                RavengardPlayer owner, double boost) {
         UUID itemUuid = UUID.randomUUID();
-        String trackedId = type.getRarity().name() + "_" + type.getId();
+        String trackedId = type.getTrackedId() != null
+                ? type.getTrackedId()
+                : type.getRarity().name() + "_" + type.getId();
         RavengardTrackedItemsDatabase.record(itemUuid, trackedId,
                 owner == null ? null : owner.getUuid(),
                 owner == null ? null : owner.getSelectedProfile());
@@ -179,106 +189,128 @@ public final class RavengardItem {
         return name.toString();
     }
 
-    private static List<Component> lore(RavengardItemType type, boolean shopContext, double boost) {
-        List<Component> lore = new ArrayList<>();
+    private static List<Text> lore(RavengardItemType type, boolean shopContext, double boost) {
+        List<Text> lore = new ArrayList<>();
 
-        StringBuilder tags = new StringBuilder();
-        tags.appendCodePoint(type.getRarity().getTagGlyph());
+        Component tags = glyph(type.getRarity().getTagGlyph());
         StandardItemComponent standard = type.component(StandardItemComponent.class);
         boolean consumable = standard != null && "CONSUMABLE".equals(standard.getStandardItemType());
         if (standard != null && standard.tagGlyph() != 0) {
-            tags.append(' ').appendCodePoint(standard.tagGlyph());
+            tags = tags.append(Component.text(" ").font(RavengardFont.DEFAULT)
+                    .append(glyph(standard.tagGlyph())));
         }
-        lore.add(white(tags.toString()));
-        lore.add(Component.empty());
+        lore.add(Text.of("<f>{}", tags));
+        lore.add(BLANK);
 
         boolean stats = false;
         for (var statistic : net.swofty.type.ravengardgeneric.item.statistics.RavengardItemStatistic.values()) {
             boolean scaled = statistic.isBoostable() && boosted(boost);
-            stats |= stat(lore, statistic.getIconGlyph(),
+            stats |= stat(lore, statistic,
                     type.statistic(statistic) * (scaled ? boost : 1.0),
-                    statistic.getDisplayName(), scaled ? boost : 0);
+                    scaled ? boost : 0);
         }
         if (stats) {
-            lore.add(Component.empty());
+            lore.add(BLANK);
         }
 
         if (!type.getDescription().isEmpty()) {
-            type.getDescription().forEach(line ->
-                    lore.add(Component.text(line).color(NamedTextColor.GRAY)
-                            .decoration(TextDecoration.ITALIC, false)));
-            lore.add(Component.empty());
+            type.getDescription().forEach(line -> lore.add(Text.of("<7>" + highlightNumbers(line))));
+            lore.add(BLANK);
         }
         if (type.getEffect() != null) {
-            lore.add(white(highlightEffect(type.getEffect())));
-            lore.add(Component.empty());
+            lore.add(highlightEffect(type.getEffect()));
+            lore.add(BLANK);
         }
 
         if (type.getValue() > 0) {
-            lore.add(crowns(type.getValue(), " Crowns"));
-            lore.add(Component.empty());
+            lore.add(crowns(type.getValue(), type.getValue() == 1 ? " Crown" : " Crowns"));
+            lore.add(BLANK);
         }
 
         if (!consumable) {
-            StringBuilder classes = new StringBuilder();
-            for (RavengardClass tag : CLASS_TAG_ORDER) {
-                if (type.usableBy(tag)) {
-                    classes.appendCodePoint(tag.getTagGlyph()).append(' ');
-                }
+            Iterable<RavengardClass> order = type.getRestrictedTo().isEmpty()
+                    ? List.of(CLASS_TAG_ORDER) : type.getRestrictedTo();
+            Component classes = Component.empty()
+                    .color(NamedTextColor.WHITE)
+                    .shadowColor(net.kyori.adventure.text.format.ShadowColor.shadowColor(0));
+            for (RavengardClass tag : order) {
+                classes = classes.append(glyph(tag.getTagGlyph())).append(Component.text(" "));
             }
-            lore.add(white(classes.toString()));
+            lore.add(Text.of("{}", classes));
         }
-        while (!lore.isEmpty() && Component.empty().equals(lore.getLast())) {
+        while (!lore.isEmpty() && lore.getLast() == BLANK) {
             lore.removeLast();
         }
         return lore;
     }
 
-    private static boolean stat(List<Component> lore, int icon, double amount, String label, double boost) {
+    private static boolean stat(List<Text> lore,
+                                net.swofty.type.ravengardgeneric.item.statistics.RavengardItemStatistic statistic,
+                                double amount, double boost) {
         if (amount <= 0) {
             return false;
         }
         double rounded = Math.round(amount * 100.0) / 100.0;
         String value = rounded == Math.floor(rounded)
                 ? String.valueOf((int) rounded) : String.valueOf(rounded);
-        Component line = Component.text(new String(Character.toChars(icon)) + value)
-                .color(DEFENSE_COLOR)
-                .decoration(TextDecoration.ITALIC, false)
-                .append(Component.text(" "))
-                .append(Component.text(label).color(NamedTextColor.WHITE));
-        if (boost > 0) {
-            line = line.append(Component.text(" "))
-                    .append(Component.text("(+" + boostText(boost) + "x)").color(BOOST_COLOR));
+        if (statistic.isPercent()) {
+            value = "+" + value + "%";
         }
-        lore.add(line);
+        Component iconValue = glyph(statistic.getIconGlyph())
+                .append(Component.text(value).font(RavengardFont.DEFAULT));
+        String label = statistic.getDisplayName();
+        lore.add(boost > 0
+                ? Text.of("<#5fec7b>{}</color> <f>{}</f> <#a3a3c2>(+{}x)</color>", iconValue, label, boostText(boost))
+                : Text.of("<#5fec7b>{}</color> <f>{}</f>", iconValue, label));
         return true;
     }
 
-    /** The crown glyph in white with the amount and trailing text in the gold the captures use. */
-    public static Component crowns(int amount, String suffix) {
-        return Component.text("\uD83D\uDC51")
-                .color(NamedTextColor.WHITE)
-                .decoration(TextDecoration.ITALIC, false)
-                .append(Component.text(amount + suffix).color(TextColor.color(0xFFCE47)));
+    private static Component glyph(int codePoint) {
+        return Component.text(new String(Character.toChars(codePoint)))
+                .font(RavengardFont.RAVENGARD);
     }
 
-    private static String highlightEffect(String effect) {
-        return "\u00a77" + effect
-                .replaceAll("([+-]?\\d+(?:\\.\\d+)? ?HP(?: over)?)", "\u00a7c$1\u00a77")
-                .replaceAll("(\\d+ seconds?)", "\u00a7e$1\u00a77");
+    public static Text crowns(int amount, String suffix) {
+        return Text.of("<f>👑</f><#ffce47>{}{}</color>", amount, suffix);
     }
 
-    private static List<Component> placeholderLore(RavengardItemType type) {
+    private static String highlightNumbers(String line) {
+        return line
+                .replaceAll("([+-]?\\d+(?:\\.\\d+)? ?HP)", "<c>$1</c>")
+                .replaceAll("(\\d+(?:\\.\\d+)?%)", "<a>$1</a>")
+                .replaceAll("(\\d+ seconds?)", "<e>$1</e>");
+    }
+
+    private static Text highlightEffect(String effect) {
+        Matcher matcher = EFFECT_HIGHLIGHT.matcher(effect);
+        StringBuilder markup = new StringBuilder("<7>");
+        List<Object> arguments = new ArrayList<>();
+        int last = 0;
+        while (matcher.find()) {
+            if (matcher.start() > last) {
+                markup.append("{}");
+                arguments.add(effect.substring(last, matcher.start()));
+            }
+            markup.append(matcher.group("hp") != null ? "<c>{}</c>" : "<e>{}</e>");
+            arguments.add(matcher.group());
+            last = matcher.end();
+        }
+        if (last < effect.length()) {
+            markup.append("{}");
+            arguments.add(effect.substring(last));
+        }
+        return Text.of(markup.toString(), arguments.toArray());
+    }
+
+    private static List<Text> placeholderLore(RavengardItemType type) {
         PlaceholderSlotComponent slot = type.component(PlaceholderSlotComponent.class);
         if (slot == null) {
             return List.of();
         }
-        return List.of(Component.empty(), white(slot.getLoreOne()), white(slot.getLoreTwo()));
+        return List.of(BLANK, white(slot.getLoreOne()), white(slot.getLoreTwo()));
     }
 
-    private static Component white(String text) {
-        return Component.text(text)
-                .color(NamedTextColor.WHITE)
-                .decoration(TextDecoration.ITALIC, false);
+    private static Text white(String text) {
+        return Text.of("<f>{}", text);
     }
 }

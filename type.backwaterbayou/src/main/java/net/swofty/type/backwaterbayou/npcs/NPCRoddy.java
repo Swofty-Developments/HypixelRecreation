@@ -17,7 +17,11 @@ public class NPCRoddy extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6§lROD MECHANIC", "§2Roddy", "§e§lCLICK"};
+                return new String[]{
+                    "<6><l>ROD MECHANIC",
+                    "<2>Roddy",
+                    "<e><l>CLICK"
+                };
             }
 
             @Override
@@ -64,11 +68,11 @@ public class NPCRoddy extends HypixelNPC {
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
             DialogueSet.builder()
-                .key("first-interaction").lines(new String[]{
+                .key("first-interaction").lines(
                     "If your rod's missing some punch, you've come to the right mechanic.",
                     "Hooks, lines, and sinkers can change what your rod is best at catching.",
-                    "Put a §aFishing Rod §fin the slot and I'll show you what parts fit."
-                }).build()
+                    "Put a <a>Fishing Rod <f>in the slot and I'll show you what parts fit."
+                ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

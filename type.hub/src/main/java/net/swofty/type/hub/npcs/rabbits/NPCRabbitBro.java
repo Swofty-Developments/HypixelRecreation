@@ -30,55 +30,55 @@ public class NPCRabbitBro extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("dialogue-1").lines(new String[]{
-                                "You should hire me! I can help you boost your §6Chocolate Factory §fproduction §dtenfold §fby next quarter!"
-                        }).build(),
+                        .key("dialogue-1").lines(
+                                "You should hire me! I can help you boost your <6>Chocolate Factory <f>production <d>tenfold <f>by next quarter!"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-2").lines(new String[]{
+                        .key("dialogue-2").lines(
                                 "Hire me, bro!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-3").lines(new String[]{
-                                "Get me a job at your §6Chocolate Factory§f!"
-                        }).build(),
+                        .key("dialogue-3").lines(
+                                "Get me a job at your <6>Chocolate Factory<f>!"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-4").lines(new String[]{
-                                "§aHoppity §fthinks he's all that with his chocolate empire.",
+                        .key("dialogue-4").lines(
+                                "<a>Hoppity <f>thinks he's all that with his chocolate empire.",
                                 "But ask him this...who can hop the highest?"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-5").lines(new String[]{
+                        .key("dialogue-5").lines(
                                 "Rise and grind, as I say. The early rabbit gets the cocoa beans."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-6").lines(new String[]{
-                                "§aHoppity §fmay run the factory, but who do you think inspires the work ethic?"
-                        }).build(),
+                        .key("dialogue-6").lines(
+                                "<a>Hoppity <f>may run the factory, but who do you think inspires the work ethic?"
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-7").lines(new String[]{
+                        .key("dialogue-7").lines(
                                 "My morning routine? A quick hop around the fields, a bit of carrot juice, and then straight to work on the next big chocolate innovation."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-8").lines(new String[]{
+                        .key("dialogue-8").lines(
                                 "Sleep is for the weak!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-9").lines(new String[]{
-                                "Working out before dawn has its perks; you get to see §aHoppity§f's 'inspirational' morning pep talks.",
+                        .key("dialogue-9").lines(
+                                "Working out before dawn has its perks; you get to see <a>Hoppity<f>'s 'inspirational' morning pep talks.",
                                 "It's like a shot of espresso, but with more hopping and less coffee."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-10").lines(new String[]{
-                                "§aHoppity's §fliving the sweet life now, but who's the one who taught him to dodge those garden gnomes? Bro knows best."
-                        }).build(),
+                        .key("dialogue-10").lines(
+                                "<a>Hoppity's <f>living the sweet life now, but who's the one who taught him to dodge those garden gnomes? Bro knows best."
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-11").lines(new String[]{
+                        .key("dialogue-11").lines(
                                 "It's like a shot of espresso, but with more hopping and less coffee."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-12").lines(new String[]{
-                                "§aHoppity's §fliving the sweet life now, but who's the one who taught him to dodge those garden gnomes? Bro knows best."
-                        }).build()
+                        .key("dialogue-12").lines(
+                                "<a>Hoppity's <f>living the sweet life now, but who's the one who taught him to dodge those garden gnomes? Bro knows best."
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

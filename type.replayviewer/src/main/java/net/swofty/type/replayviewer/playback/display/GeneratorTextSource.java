@@ -1,7 +1,6 @@
 package net.swofty.type.replayviewer.playback.display;
 
-import net.kyori.adventure.text.minimessage.translation.Argument;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,10 +77,10 @@ public class GeneratorTextSource implements DynamicTextSource {
         List<String> result = new ArrayList<>();
 
         // Format based on generator type
-        result.add(ReplayDisplayTranslations.toLegacy(I18n.t(
+        result.add(ReplayDisplayTranslations.toLegacy(Text.key(
                 generatorType.equalsIgnoreCase("diamond") ? "replays.generator_diamond" : "replays.generator_emerald")));
-        result.add(ReplayDisplayTranslations.toLegacy(I18n.t(
-                "replays.generator_tier", Argument.numeric("tier", tier))));
+        result.add(ReplayDisplayTranslations.toLegacy(Text.key(
+                "replays.generator_tier", tier)));
 
         if (tier < 3) {
             String spawnRate = switch (tier) {
@@ -89,10 +88,10 @@ public class GeneratorTextSource implements DynamicTextSource {
                 case 2 -> generatorType.equalsIgnoreCase("diamond") ? "23s" : "45s";
                 default -> "???";
             };
-            result.add(ReplayDisplayTranslations.toLegacy(I18n.t(
-                    "replays.generator_spawn_rate", Argument.string("rate", spawnRate))));
+            result.add(ReplayDisplayTranslations.toLegacy(Text.key(
+                    "replays.generator_spawn_rate", spawnRate)));
         } else {
-            result.add(ReplayDisplayTranslations.toLegacy(I18n.t("replays.generator_max_tier")));
+            result.add(ReplayDisplayTranslations.toLegacy(Text.key("replays.generator_max_tier")));
         }
 
         return result;

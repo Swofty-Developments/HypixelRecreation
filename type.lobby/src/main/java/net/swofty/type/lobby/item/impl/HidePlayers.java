@@ -1,8 +1,6 @@
 package net.swofty.type.lobby.item.impl;
 
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.event.item.ItemDropEvent;
 import net.minestom.server.event.player.PlayerUseItemEvent;
@@ -12,8 +10,9 @@ import net.minestom.server.event.trait.PlayerInstanceEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.item.component.CustomData;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.lobby.item.LobbyItem;
 import net.swofty.type.lobby.visibility.PlayerVisibilityManager;
@@ -37,10 +36,9 @@ public class HidePlayers extends LobbyItem {
         boolean showPlayers = player.getToggles().get(DatapointToggles.Toggles.ToggleType.LOBBY_SHOW_PLAYERS);
 
         Material toggleMaterial = showPlayers ? Material.LIME_DYE : Material.GRAY_DYE;
-        String toggleText = showPlayers ? "§aShown" : "§cHidden";
+        Text toggleLabel = showPlayers ? Text.of("<a>Shown") : Text.of("<c>Hidden");
 
-        return ItemStackCreator.createNamedItemStack(toggleMaterial, "§fPlayers: " + toggleText + " §7(Right Click)")
-                .lore(Component.text("§7Right-click to toggle player visibility!", NamedTextColor.GRAY))
+        return ItemStacks.item(toggleMaterial, "<f>Players: {} <7>(Right Click)\n<7>Right-click to toggle player visibility!", toggleLabel)
                 .set(DataComponents.CUSTOM_DATA, new CustomData(CompoundBinaryTag.builder().putString("item", this.getId()).build())).build();
     }
 

@@ -13,7 +13,7 @@ public class NPCBubu extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§5Bubu", "§e§lCLICK"};
+				return new String[]{"<5>Bubu", "<e><l>CLICK"};
 			}
 
 			@Override

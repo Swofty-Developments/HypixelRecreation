@@ -81,12 +81,20 @@ public class DatapointLocale extends Datapoint<DatapointLocale.LocaleType> {
         }
 
         public static SupportedLocale fromLocale(Locale locale) {
+            if (locale == null) {
+                return ENGLISH;
+            }
             for (SupportedLocale sl : values()) {
-                if (sl.locale.equals(locale)) {
+                if (locale.equals(sl.locale)) {
                     return sl;
                 }
             }
-            throw new IllegalArgumentException("Unsupported locale: " + locale);
+            for (SupportedLocale sl : values()) {
+                if (sl.locale != null && sl.locale.getLanguage().equals(locale.getLanguage())) {
+                    return sl;
+                }
+            }
+            return ENGLISH;
         }
     }
 }

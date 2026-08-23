@@ -1,9 +1,15 @@
 package net.swofty.type.ravengardgeneric.item.components;
 
 import lombok.Getter;
+import net.minestom.server.component.DataComponents;
 import net.minestom.server.entity.EquipmentSlot;
+import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.component.BlocksAttacks;
+import net.minestom.server.sound.SoundEvent;
 import net.swofty.type.ravengardgeneric.item.RavengardItemComponent;
+import net.swofty.type.ravengardgeneric.item.RavengardItemType;
 
+import java.util.List;
 import java.util.Map;
 
 /** Marks what kind of item this is; armour types also give the slot it equips into. */
@@ -48,9 +54,29 @@ public class StandardItemComponent implements RavengardItemComponent {
             case "BELT" -> 0xE22C;
             case "RING" -> 0xE22D;
             case "TRINKET" -> 0xE21B;
+            case "STAFF" -> 0xF237;
+            case "ORB" -> 0xF234;
             case "CONSUMABLE" -> 0xE205;
             default -> 0xE224;
         };
+    }
+
+    public boolean isShield() {
+        return "SHIELD".equals(standardItemType);
+    }
+
+    public boolean isTwoHanded() {
+        return "HALBERD".equals(standardItemType);
+    }
+
+    @Override
+    public ItemStack.Builder apply(ItemStack.Builder builder, RavengardItemType type) {
+        if (!isShield()) {
+            return builder;
+        }
+        return builder.set(DataComponents.BLOCKS_ATTACKS, new BlocksAttacks(
+                0.25f, 1.0f, List.of(), BlocksAttacks.ItemDamageFunction.DEFAULT, null,
+                SoundEvent.ITEM_SHIELD_BLOCK, SoundEvent.ITEM_SHIELD_BREAK));
     }
 
     public EquipmentSlot equipmentSlot() {

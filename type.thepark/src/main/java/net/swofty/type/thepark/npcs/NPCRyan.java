@@ -1,7 +1,6 @@
 package net.swofty.type.thepark.npcs;
 
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
@@ -27,7 +26,7 @@ public class NPCRyan extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§cRyan", "§e§lCLICK"};
+				return new String[]{"<c>Ryan", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -42,7 +41,7 @@ public class NPCRyan extends HypixelNPC {
 
 			@Override
             public String chatName(HypixelPlayer player) {
-				return "§cRyan";
+				return "<c>Ryan";
 			}
 
 			@Override
@@ -107,7 +106,7 @@ public class NPCRyan extends HypixelNPC {
 		}
 
 		if (data.isCurrentlyActive(MissionCompleteTrialOfFireOne.class)) {
-			sendNPCMessage(player, "If you can last for §a10 seconds §fwhile standing in the campfire, I'll give you a reward!");
+			sendNPCMessage(player, "If you can last for <a>10 seconds <f>while standing in the campfire, I'll give you a reward!");
 			return;
 		}
 
@@ -119,13 +118,13 @@ public class NPCRyan extends HypixelNPC {
 		}
 
 		if (data.isCurrentlyActive(MissionCollectDarkOakLogs.class)) {
-			sendNPCMessage(player, "Grab me §a256 Dark Oak Logs §fand I'll make you a badge! You don't have enough yet!");
+			sendNPCMessage(player, "Grab me <a>256 Dark Oak Logs <f>and I'll make you a badge! You don't have enough yet!");
 			return;
 		}
 
 		if (data.isCurrentlyActive(MissionGiveRyanDarkOakLogs.class)) {
 			if (!player.removeItemFromPlayer(ItemType.DARK_OAK_LOG, 256)) {
-				sendNPCMessage(player, "Grab me §a256 Dark Oak Logs §fand I'll make you a badge! You don't have enough yet!");
+				sendNPCMessage(player, "Grab me <a>256 Dark Oak Logs <f>and I'll make you a badge! You don't have enough yet!");
 				return;
 			}
 			setDialogue(player, "give_logs").thenRun(() -> {
@@ -140,32 +139,30 @@ public class NPCRyan extends HypixelNPC {
 	@Override
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return List.of(
-				DialogueSet.builder().key("startled").lines(new String[]{
-						"§cAAAHHHHH! §fDon't startle me like that bro!",
-						"§fY'know, someone as stealthy as you could be a useful member of the §cCampfire Cult§f.",
-						"§fWhat do you say to that?"
-				}).build(),
-				DialogueSet.builder().key("accept").lines(new String[]{
+				DialogueSet.builder().key("startled").lines(
+						"<c>AAAHHHHH! <f>Don't startle me like that bro!",
+						"<f>Y'know, someone as stealthy as you could be a useful member of the <c>Campfire Cult<f>.",
+						"<f>What do you say to that?"
+				).build(),
+				DialogueSet.builder().key("accept").lines(
 						"Cool! Anyways, there's just one thing you have to do before you can join.",
-						"Stand in the §6§lCAMPFIRE§f!"
-				}).build(),
-				DialogueSet.builder().key("accept_2").lines(new String[]{
+						"Stand in the <6><l>CAMPFIRE</l><f>!"
+				).build(),
+				DialogueSet.builder().key("accept_2").lines(
 						"Yeah don't worry, it's not as hot as it looks.",
-						"If you can last for §a10 seconds §fwhile standing in the campfire, I'll give you a reward!"
-				}).build(),
-				DialogueSet.builder().key("talk").lines(new String[]{
+						"If you can last for <a>10 seconds <f>while standing in the campfire, I'll give you a reward!"
+				).build(),
+				DialogueSet.builder().key("talk").lines(
 						"Wow, you did it!",
 						"Nice job, hotshot! I'd give you the Campfire Initiate Badge I right now, but I'm out of wood to make one with...",
 						"Sorry about that...",
-						"I need to keep watch and make sure nobody blows out thee §6Campfire§f, but if you can grab me §a256 Dark Oak Logs§f, I'll make one for ya!"
-				}).build(),
-				DialogueSet.builder().key("give_logs").lines(new String[]{
-						"Thanks for the wood! Here's your badge, as promised!",
-						"A Campfire Initiate Badge I, for our latest initiate, " + LegacyComponentSerializer.legacyAmpersand().serialize(player.getColouredName()) + "§f!",
-						"I can upgrade that badge for you as you survive more §cCampfire Trials§f, you know?",
-						"§fSimply stand in the §6campfire §fwhenever you think you're ready!",
-						"§fBut be careful, though, as each trial burns a little hotter than the last!"
-				}).build()
+						"I need to keep watch and make sure nobody blows out thee <6>Campfire<f>, but if you can grab me <a>256 Dark Oak Logs<f>, I'll make one for ya!"
+				).build(),
+				DialogueSet.builder().key("give_logs").line("Thanks for the wood! Here's your badge, as promised!")
+						.line("A Campfire Initiate Badge I, for our latest initiate, {}<f>!", player.getColouredName())
+						.line("I can upgrade that badge for you as you survive more <c>Campfire Trials<f>, you know?")
+						.line("<f>Simply stand in the <6>campfire <f>whenever you think you're ready!")
+						.line("<f>But be careful, though, as each trial burns a little hotter than the last!").build()
 		).toArray(DialogueSet[]::new);
 	}
 }

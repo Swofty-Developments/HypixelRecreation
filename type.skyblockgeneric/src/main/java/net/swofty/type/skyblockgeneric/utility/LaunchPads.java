@@ -36,20 +36,20 @@ public enum LaunchPads {
         new Pos(116.5, 74, -210.5),
         player -> player.sendTo(ServerType.SKYBLOCK_THE_FARMING_ISLANDS),
         player -> player.getSkills().getCurrentLevel(SkillCategories.FARMING) >= 5,
-        "§cYou must be at least Farming Level V to join this island!",
+        "<c>You must be at least Farming Level V to join this island!",
         player -> {
             boolean hasRequirement = player.getSkills().getCurrentLevel(SkillCategories.FARMING) >= 5;
             if (!hasRequirement) {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(87.5, 74, -153.5))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aThe Farming Islands", "§cRequires Farming Level 5"})
+                    .text(new String[]{"<b>Travel to:", "<a>The Farming Islands", "<c>Requires Farming Level 5"})
                     .build();
             } else {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(87.5, 74, -153.5))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aThe Farming Islands"})
+                    .text(new String[]{"<b>Travel to:", "<a>The Farming Islands"})
                     .build();
             }
         }
@@ -66,7 +66,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(111.5, 71.7, -202.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aThe Village"})
+            .text(new String[]{"<b>Travel to:", "<a>The Village"})
             .build()
     ),
 
@@ -77,20 +77,20 @@ public enum LaunchPads {
         new Pos(-202.5, 83, -233.5),
         player -> player.sendTo(ServerType.SKYBLOCK_SPIDERS_DEN),
         player -> player.getSkills().getCurrentLevel(SkillCategories.COMBAT) >= 1,
-        "§cYou must be at least Combat Level I to join this island!",
+        "<c>You must be at least Combat Level I to join this island!",
         player -> {
             boolean hasRequirement = player.getSkills().getCurrentLevel(SkillCategories.COMBAT) >= 1;
             if (!hasRequirement) {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-145, 77, -186))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aSpider's Den", "§cRequires Combat Level 1"})
+                    .text(new String[]{"<b>Travel to:", "<a>Spider's Den", "<c>Requires Combat Level 1"})
                     .build();
             } else {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-145, 77, -187))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aSpider's Den"})
+                    .text(new String[]{"<b>Travel to:", "<a>Spider's Den"})
                     .build();
             }
         }
@@ -107,7 +107,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-197.5, 84, -228.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aHub Island"})
+            .text(new String[]{"<b>Travel to:", "<a>Hub Island"})
             .build()
     ),
 
@@ -118,20 +118,20 @@ public enum LaunchPads {
         new Pos(-503, 101, -275),
         player -> player.sendTo(ServerType.SKYBLOCK_THE_END),
         player -> player.getSkills().getCurrentLevel(SkillCategories.COMBAT) >= 12,
-        "§cYou must be at least Combat Level XII to join this island!",
+        "<c>You must be at least Combat Level XII to join this island!",
         player -> {
             boolean hasRequirement = player.getSkills().getCurrentLevel(SkillCategories.COMBAT) >= 12;
             if (!hasRequirement) {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-383, 119.5, -261))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aThe End", "§cRequires Combat Level 12"})
+                    .text(new String[]{"<b>Travel to:", "<a>The End", "<c>Requires Combat Level 12"})
                     .build();
             } else {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-383, 119.5, -261))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aThe End"})
+                    .text(new String[]{"<b>Travel to:", "<a>The End"})
                     .build();
             }
         }
@@ -148,7 +148,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-495, 101.7, -275))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aSpider's Den"})
+            .text(new String[]{"<b>Travel to:", "<a>Spider's Den"})
             .build()
     ),
 
@@ -159,20 +159,20 @@ public enum LaunchPads {
         new Pos(-361, 80, -425),
         player -> player.sendTo(ServerType.SKYBLOCK_CRIMSON_ISLE),
         player -> player.getSkills().getCurrentLevel(SkillCategories.COMBAT) >= 22,
-        "§cYou must be at least Combat Level XXII to join this island!",
+        "<c>You must be at least Combat Level XXII to join this island!",
         player -> {
             boolean hasRequirement = player.getSkills().getCurrentLevel(SkillCategories.COMBAT) >= 22;
             if (!hasRequirement) {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-356, 87, -353))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aCrimson Isle", "§cRequires Combat Level 22"})
+                    .text(new String[]{"<b>Travel to:", "<a>Crimson Isle", "<c>Requires Combat Level 22"})
                     .build();
             } else {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-356, 87, -353))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aCrimson Isle"})
+                    .text(new String[]{"<b>Travel to:", "<a>Crimson Isle"})
                     .build();
             }
         }
@@ -189,7 +189,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-360.5, 80, -420))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aSpider's Den"})
+            .text(new String[]{"<b>Travel to:", "<a>Spider's Den"})
             .build()
     ),
 
@@ -200,20 +200,20 @@ public enum LaunchPads {
         new Pos(-5, 73, -269),
         player -> player.sendTo(ServerType.SKYBLOCK_GOLD_MINE),
         player -> player.getSkills().getCurrentLevel(SkillCategories.MINING) >= 1,
-        "§cYou must be at least Mining Level I to join this island!",
+        "<c>You must be at least Mining Level I to join this island!",
         player -> {
             boolean hasRequirement = player.getSkills().getCurrentLevel(SkillCategories.MINING) >= 1;
             if (!hasRequirement) {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-0.5, 65.7, -192.5))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aGold Mine", "§cRequires Mining Level 1"})
+                    .text(new String[]{"<b>Travel to:", "<a>Gold Mine", "<c>Requires Mining Level 1"})
                     .build();
             } else {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-0.5, 65.7, -192))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aGold Mine"})
+                    .text(new String[]{"<b>Travel to:", "<a>Gold Mine"})
                     .build();
             }
         }
@@ -230,7 +230,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-4.5, 73.3, -268.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aThe Village"})
+            .text(new String[]{"<b>Travel to:", "<a>The Village"})
             .build()
     ),
 
@@ -245,7 +245,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-7, 69, -396))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aDeep Caverns"})
+            .text(new String[]{"<b>Travel to:", "<a>Deep Caverns"})
             .build()
     ),
 
@@ -260,7 +260,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(4, 158.5, 89))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aGold Mine"})
+            .text(new String[]{"<b>Travel to:", "<a>Gold Mine"})
             .build()
     ),
 
@@ -271,20 +271,20 @@ public enum LaunchPads {
         new Pos(-265.5, 79, -17.5),
         player -> player.sendTo(ServerType.SKYBLOCK_THE_PARK),
         player -> player.getSkills().getCurrentLevel(SkillCategories.FORAGING) >= 1,
-        "§cYou must be at least Foraging Level I to join this island!",
+        "<c>You must be at least Foraging Level I to join this island!",
         player -> {
             boolean hasRequirement = player.getSkills().getCurrentLevel(SkillCategories.FORAGING) >= 1;
             if (!hasRequirement) {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-224.5, 75.5, -15.5))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aThe Park", "§cRequires Foraging Level 1"})
+                    .text(new String[]{"<b>Travel to:", "<a>The Park", "<c>Requires Foraging Level 1"})
                     .build();
             } else {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-224.5, 75.5, -15.5))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aThe Park"})
+                    .text(new String[]{"<b>Travel to:", "<a>The Park"})
                     .build();
             }
         }
@@ -301,7 +301,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-261.5, 79.5, -17.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aHub Island"})
+            .text(new String[]{"<b>Travel to:", "<a>Hub Island"})
             .build()
     ),
 
@@ -316,7 +316,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-314.5, 81.5, -9.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aSpruce Woods"})
+            .text(new String[]{"<b>Travel to:", "<a>Spruce Woods"})
             .build()
     ),
 
@@ -331,7 +331,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-343.5, 90.5, -4.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aBirch Park"})
+            .text(new String[]{"<b>Travel to:", "<a>Birch Park"})
             .build()
     ),
 
@@ -346,7 +346,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-364.5, 90.5, -18.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aDark Thicket"})
+            .text(new String[]{"<b>Travel to:", "<a>Dark Thicket"})
             .build()
     ),
 
@@ -361,7 +361,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-376.5, 97.5, -32.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aSpruce Woods"})
+            .text(new String[]{"<b>Travel to:", "<a>Spruce Woods"})
             .build()
     ),
 
@@ -376,7 +376,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-400.5, 98.5, -33.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aSavanna Woodland"})
+            .text(new String[]{"<b>Travel to:", "<a>Savanna Woodland"})
             .build()
     ),
 
@@ -391,7 +391,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-415.5, 109.5, -16.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aDark Thicket"})
+            .text(new String[]{"<b>Travel to:", "<a>Dark Thicket"})
             .build()
     ),
 
@@ -406,7 +406,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-439.5, 111.5, -17.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aJungle Island"})
+            .text(new String[]{"<b>Travel to:", "<a>Jungle Island"})
             .build()
     ),
 
@@ -421,7 +421,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-461.5, 121.5, -28.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aSavanna Woodland"})
+            .text(new String[]{"<b>Travel to:", "<a>Savanna Woodland"})
             .build()
     ),
 
@@ -432,20 +432,20 @@ public enum LaunchPads {
         new Pos(-542.5, 108, -26.5),
         player -> player.sendTo(ServerType.SKYBLOCK_GALATEA),
         player -> player.getSkills().getCurrentLevel(SkillCategories.FORAGING) >= 12,
-        "§cYou must be at least Foraging Level XII to join this island!",
+        "<c>You must be at least Foraging Level XII to join this island!",
         player -> {
             boolean hasRequirement = player.getSkills().getCurrentLevel(SkillCategories.FORAGING) >= 12;
             if (!hasRequirement) {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-489.5, 116.5, -40))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aGalatea", "§cRequires Foraging Level 12"})
+                    .text(new String[]{"<b>Travel to:", "<a>Galatea", "<c>Requires Foraging Level 12"})
                     .build();
             } else {
                 return PlayerHolograms.ExternalPlayerHologram.builder()
                     .pos(new Pos(-489.5, 116.5, -40))
                     .player(player)
-                    .text(new String[]{"§bTravel to:", "§aGalatea"})
+                    .text(new String[]{"<b>Travel to:", "<a>Galatea"})
                     .build();
             }
         }
@@ -462,7 +462,7 @@ public enum LaunchPads {
         player -> PlayerHolograms.ExternalPlayerHologram.builder()
             .pos(new Pos(-538.5, 108.5, -28.5))
             .player(player)
-            .text(new String[]{"§bTravel to:", "§aThe Park"})
+            .text(new String[]{"<b>Travel to:", "<a>The Park"})
             .build()
     ),
     ;

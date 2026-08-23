@@ -19,9 +19,9 @@ public class ElegantTuxedoSet extends SkyBlockValueEvent implements ArmorSet {
     @Override
     public ArrayList<String> getDescription() {
         return new ArrayList<>(List.of(
-                "Max health set to §c250♥§7.",
-                "Deal §c+150% §7damage!",
-                "§8Very stylish."
+                "Max health set to <c>250♥<7>.",
+                "Deal <c>+150% <7>damage!",
+                "<8>Very stylish."
         ));
     }
 

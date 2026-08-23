@@ -1,7 +1,6 @@
 package net.swofty.type.bedwarsgame.item.impl;
 
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.text.Component;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.BlockVec;
 import net.minestom.server.coordinate.Point;
@@ -18,11 +17,13 @@ import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.component.CustomData;
 import net.minestom.server.tag.Tag;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.item.SimpleInteractableItem;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,12 +38,11 @@ public class LuckyBlockItem extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return stackForTier(LuckyBlockTier.NORMAL, "§7Place, then break to open.");
+        return stackForTier(LuckyBlockTier.NORMAL, Text.of("<7>Place, then break to open."));
     }
 
     public ItemStack getItemStack(LuckyBlockTier tier) {
-        return stackForTier(tier, "§7Place, then break to open.")
-            .with(DataComponents.CUSTOM_NAME, Component.text(tier.displayName()))
+        return stackForTier(tier, Text.of("<7>Place, then break to open."))
             .with(DataComponents.CUSTOM_DATA, new CustomData(CompoundBinaryTag.builder()
                 .putString("item", getId())
                 .putString("lucky_tier", tier.name())
@@ -113,8 +113,8 @@ public class LuckyBlockItem extends SimpleInteractableItem {
         return LuckyBlockTier.valueOf(tierName);
     }
 
-    private static ItemStack stackForTier(LuckyBlockTier tier, String... lore) {
-        return ItemStackCreator.getStackHead(tier.displayName(), tier.headTexture(), 1, lore).build();
+    private static ItemStack stackForTier(LuckyBlockTier tier, Text... lore) {
+        return ItemStacks.head(tier.headTexture(), tier.displayName(), List.of(lore)).build();
     }
 
     private static Entity spawnHeadDisplay(Instance instance, Point point, LuckyBlockTier tier) {

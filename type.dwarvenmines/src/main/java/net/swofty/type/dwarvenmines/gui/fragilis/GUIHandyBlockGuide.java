@@ -5,7 +5,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -22,16 +22,13 @@ public class GUIHandyBlockGuide extends HypixelInventoryGUI {
         set(new GUIItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§2Handy Block Guide",
-                        Material.BOOK,
-                        1,
-                        "§7View a list of important mineable blocks:",
-                        "§8 - §6Ores",
-                        "§8 - §9Blocks",
-                        "§8 - §aDwarven Metals",
-                        "§8 - §dGemstones"
-                );
+                return ItemStacks.item(Material.BOOK, """
+                        <2>Handy Block Guide
+                        <7>View a list of important mineable blocks:
+                        <8> - <6>Ores
+                        <8> - <9>Blocks
+                        <8> - <a>Dwarven Metals
+                        <8> - <d>Gemstones""");
             }
         });
         set(new GUIClickableItem(19) {
@@ -42,19 +39,16 @@ public class GUIHandyBlockGuide extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§6Ores",
-                        Material.GOLD_ORE,
-                        1,
-                        "§8Block Classification",
-                        "",
-                        "§7These blocks are affected by: ",
-                        "§8 - §6☘ Ore Fortune",
-                        "§8 - §6☘ Mining Fortune",
-                        "§8 - §e▚ Mining Spread",
-                        "",
-                        "§eClick to view!"
-                );
+                return ItemStacks.item(Material.GOLD_ORE, """
+                        <6>Ores
+                        <8>Block Classification
+
+                        <7>These blocks are affected by:\s
+                        <8> - <6>☘ Ore Fortune
+                        <8> - <6>☘ Mining Fortune
+                        <8> - <e>▚ Mining Spread
+
+                        <e>Click to view!""");
             }
         });
         set(new GUIClickableItem(21) {
@@ -65,19 +59,16 @@ public class GUIHandyBlockGuide extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§9Blocks",
-                        Material.COBBLESTONE,
-                        1,
-                        "§8Block Classification",
-                        "",
-                        "§7These blocks are affected by: ",
-                        "§8 - §6☘ Block Fortune",
-                        "§8 - §6☘ Mining Fortune",
-                        "§8 - §e▚ Mining Spread",
-                        "",
-                        "§eClick to view!"
-                );
+                return ItemStacks.item(Material.COBBLESTONE, """
+                        <9>Blocks
+                        <8>Block Classification
+
+                        <7>These blocks are affected by:\s
+                        <8> - <6>☘ Block Fortune
+                        <8> - <6>☘ Mining Fortune
+                        <8> - <e>▚ Mining Spread
+
+                        <e>Click to view!""");
             }
         });
         set(new GUIClickableItem(23) {
@@ -88,19 +79,16 @@ public class GUIHandyBlockGuide extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aDwarven Metals",
-                        Material.PRISMARINE,
-                        1,
-                        "§8Block Classification",
-                        "",
-                        "§7These blocks are affected by: ",
-                        "§8 - §6☘ Dwarven Metal Fortune",
-                        "§8 - §6☘ Mining Fortune",
-                        "§8 - §e▚ Mining Spread",
-                        "",
-                        "§eClick to view!"
-                );
+                return ItemStacks.item(Material.PRISMARINE, """
+                        <a>Dwarven Metals
+                        <8>Block Classification
+
+                        <7>These blocks are affected by:\s
+                        <8> - <6>☘ Dwarven Metal Fortune
+                        <8> - <6>☘ Mining Fortune
+                        <8> - <e>▚ Mining Spread
+
+                        <e>Click to view!""");
             }
         });
         set(new GUIClickableItem(25) {
@@ -111,20 +99,17 @@ public class GUIHandyBlockGuide extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§dGemstones",
-                        Material.RED_STAINED_GLASS,
-                        1,
-                        "§8Block Classification",
-                        "",
-                        "§7These blocks are affected by: ",
-                        "§8 - §6☘ Gemstone Fortune",
-                        "§8 - §6☘ Mining Fortune",
-                        "§8 - §e▚ Gemstone Spread",
-                        "§8 - §5✧ Pristine",
-                        "",
-                        "§eClick to view!"
-                );
+                return ItemStacks.item(Material.RED_STAINED_GLASS, """
+                        <d>Gemstones
+                        <8>Block Classification
+
+                        <7>These blocks are affected by:\s
+                        <8> - <6>☘ Gemstone Fortune
+                        <8> - <6>☘ Mining Fortune
+                        <8> - <e>▚ Gemstone Spread
+                        <8> - <5>✧ Pristine
+
+                        <e>Click to view!""");
             }
         });
         set(GUIClickableItem.getCloseItem(40));

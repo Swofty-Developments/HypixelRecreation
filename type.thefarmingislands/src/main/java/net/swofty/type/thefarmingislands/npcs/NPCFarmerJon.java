@@ -14,7 +14,7 @@ public class NPCFarmerJon extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Farmer Jon", "§e§lCLICK"};
+                return new String[]{"Farmer Jon", "<e><l>CLICK"};
             }
 
             @Override

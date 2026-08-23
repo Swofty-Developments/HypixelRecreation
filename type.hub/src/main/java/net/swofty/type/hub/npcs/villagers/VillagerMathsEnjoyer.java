@@ -13,7 +13,7 @@ public class VillagerMathsEnjoyer extends HypixelNPC {
         super(new VillagerConfiguration(){
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§fMaths Enjoyer", "§e§lCLICK"};
+                return new String[]{"<f>Maths Enjoyer", "<e><l>CLICK"};
             }
 
             @Override
@@ -43,12 +43,12 @@ public class VillagerMathsEnjoyer extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[]{
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
-                                "§fHey if you really want to know...",
-                                "§fThe formula to §6Magical Power §fis...",
-                                "§dStats Mult. §f= §b29.97§e(§aln(§b0.0019§6MP§a+1)§e)^§b1.2",
-                                "§fHave fun with that!"
-                        }).build()
+                        .key("hello").lines(
+                                "<f>Hey if you really want to know...",
+                                "<f>The formula to <6>Magical Power <f>is...",
+                                "<d>Stats Mult. <f>= <b>29.97<e>(<a>ln(<b>0.0019<6>MP<a>+1)<e>)^<b>1.2",
+                                "<f>Have fun with that!"
+                        ).build()
         };
     }
 }

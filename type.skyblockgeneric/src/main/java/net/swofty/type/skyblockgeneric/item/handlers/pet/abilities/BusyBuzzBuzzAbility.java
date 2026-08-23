@@ -27,10 +27,10 @@ public final class BusyBuzzBuzzAbility implements PetAbility {
         double bonus = rarity.isAtLeast(Rarity.EPIC) ? level * 0.3 : level * 0.2;
 
         return Arrays.asList(
-                "§7Grants §a+" + decimalify(bonus, 1) + " §7of each to your pet:",
-                ItemStatistic.FARMING_FORTUNE.getFullDisplayName(),
-                ItemStatistic.FORAGING_FORTUNE.getFullDisplayName(),
-                ItemStatistic.MINING_FORTUNE.getFullDisplayName()
+                "<7>Grants <a>+" + decimalify(bonus, 1) + " <7>of each to your pet:",
+                "<stat:farming_fortune>",
+                "<stat:foraging_fortune>",
+                "<stat:mining_fortune>"
         );
     }
 

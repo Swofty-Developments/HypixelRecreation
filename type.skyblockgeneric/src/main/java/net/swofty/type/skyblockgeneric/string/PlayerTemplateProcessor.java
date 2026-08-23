@@ -1,7 +1,6 @@
 package net.swofty.type.skyblockgeneric.string;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 public class PlayerTemplateProcessor {
@@ -34,10 +33,8 @@ public class PlayerTemplateProcessor {
                         String[] split = templateKey.split(":");
 
                         PlayerTemplates template = PlayerTemplates.valueOf(split[0].toUpperCase());
-                        Component processedTag = template.process(player, templateKey);
-                        processedString.append(
-                                LegacyComponentSerializer.legacySection().serialize(processedTag)
-                        );
+                        Text processedTag = template.process(player, templateKey);
+                        processedString.append(processedTag.plain());
                     } else {
                         processedString.append('%').append(tag).append('%');
                     }

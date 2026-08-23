@@ -1,6 +1,5 @@
 package net.swofty.type.hub.npcs;
 
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.coordinate.Pos;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
@@ -16,7 +15,7 @@ public class NPCTiaTheFairy extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§dTia the Fairy", "§e§lCLICK"};
+                return new String[]{"<d>Tia the Fairy", "<e><l>CLICK"};
             }
 
             @Override
@@ -60,12 +59,10 @@ public class NPCTiaTheFairy extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
-                                "Welcome to the §dFairy Pond§f, " + LegacyComponentSerializer.legacySection().serialize(player.getColouredName()) + "! I am Tia.",
-                                "You may have noticed some strange orbs laying around the island.",
-                                "They are the souls of my fallen sisters.",
-                                "If you find any more during your travels, please bring them back to me!"
-                        }).build()
+                        .key("hello").line("Welcome to the <d>Fairy Pond<f>, {}! I am Tia.", player.getColouredName())
+                                .line("You may have noticed some strange orbs laying around the island.")
+                                .line("They are the souls of my fallen sisters.")
+                                .line("If you find any more during your travels, please bring them back to me!").build()
         ).toArray(DialogueSet[]::new);
     }
 }

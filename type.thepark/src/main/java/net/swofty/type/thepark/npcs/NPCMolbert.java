@@ -24,7 +24,7 @@ public class NPCMolbert extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Molbert", "§e§lCLICK"};
+				return new String[]{"Molbert", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -96,13 +96,13 @@ public class NPCMolbert extends HypixelNPC {
 		}
 
 		if (data.isCurrentlyActive(MissionCollectJungleLogs.class)) {
-			sendNPCMessage(player, "If you can bring me §a512 Jungle Logs§f, we can make some §5traps§f!");
+			sendNPCMessage(player, "If you can bring me <a>512 Jungle Logs<f>, we can make some <5>traps<f>!");
 			return;
 		}
 
 		if (data.isCurrentlyActive(MissionGiveMolbertJungleLogs.class)) {
 			if (!player.removeItemFromPlayer(ItemType.JUNGLE_LOG, 512)) {
-				sendNPCMessage(player, "You don't have §a512 Jungle Logs§f on you.");
+				sendNPCMessage(player, "You don't have <a>512 Jungle Logs<f> on you.");
 				return;
 			}
 
@@ -187,60 +187,60 @@ public class NPCMolbert extends HypixelNPC {
 	@Override
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return List.of(
-				DialogueSet.builder().key("intro").lines(new String[]{
-						"§6Moles§f, you see. They have been burrowing everywhere, their tunnels are disrupting the landscape, they ruined the §5§obeauty §fof this place. It's gotten hard to ignore.",
+				DialogueSet.builder().key("intro").lines(
+						"<6>Moles<f>, you see. They have been burrowing everywhere, their tunnels are disrupting the landscape, they ruined the <5><o>beauty </o><f>of this place. It's gotten hard to ignore.",
 						"You need an experienced person to handle the situation.",
 						"Those troublesome creatures are ruining everything and must be dealt with. Do you understand?",
 						"This park deserves better and I want see it flourish like it used to be.",
-						"Let us keep this between us, and I will §agenerously reward §fyou for your efforts.",
+						"Let us keep this between us, and I will <a>generously reward <f>you for your efforts.",
 						"The moles must be dealt with, and I am sure you will do so quickly and quietly."
-				}).build(),
-				DialogueSet.builder().key("option-mole").lines(new String[]{
-						"§c§lRidiculous! §fHow could I be a mole if I am §bwearing human clothes§f, huh?",
+				).build(),
+				DialogueSet.builder().key("option-mole").lines(
+						"<c><l>Ridiculous! </l><f>How could I be a mole if I am <b>wearing human clothes<f>, huh?",
 						"Have you seen moles wearing human clothes before?",
 						"I don't think so. Now get back to the issue!"
-				}).build(),
-				DialogueSet.builder().key("quick-intro").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("quick-intro").lines(
 						"The moles must be dealt with, and I am sure you will do so quickly and quietly."
-				}).build(),
-				DialogueSet.builder().key("option-sure").lines(new String[]{
-						"Great. First thing we need is to build some §5traps§f.",
-						"For that however, I need §a512 Jungle Logs§f, should be enough to get things going.",
-						"Moles §6loooove carrots§f, they are just too good to resist.",
+				).build(),
+				DialogueSet.builder().key("option-sure").lines(
+						"Great. First thing we need is to build some <5>traps<f>.",
+						"For that however, I need <a>512 Jungle Logs<f>, should be enough to get things going.",
+						"Moles <6>loooove carrots<f>, they are just too good to resist.",
 						"Don't worry, I've got a stash ready.",
-						"Just thinking about them §omakes me§f... Uhm I mean §omakes them §fcome out of their hiding space."
-				}).build(),
-				DialogueSet.builder().key("after-resources").lines(new String[]{
-						"Fantastic, that's all I needed to build the §5traps§f.",
-						"It will take some time to assemble them, so you should §acome back later§f."
-				}).build(),
-				DialogueSet.builder().key("after-coming-back").lines(new String[]{
-						"The §5traps §fare ready for use; All that remains is to set them up in the §aright place§f. Once you find the ideal spots, go ahead and deploy them."
-				}).build(),
-				DialogueSet.builder().key("after-placing-traps").lines(new String[]{
-						"Good job, partner. Now we only need to §6wait §ffor the §aright moment §ffor these pests to show up.",
+						"Just thinking about them <o>makes me</o><f>... Uhm I mean <o>makes them </o><f>come out of their hiding space."
+				).build(),
+				DialogueSet.builder().key("after-resources").lines(
+						"Fantastic, that's all I needed to build the <5>traps<f>.",
+						"It will take some time to assemble them, so you should <a>come back later<f>."
+				).build(),
+				DialogueSet.builder().key("after-coming-back").lines(
+						"The <5>traps <f>are ready for use; All that remains is to set them up in the <a>right place<f>. Once you find the ideal spots, go ahead and deploy them."
+				).build(),
+				DialogueSet.builder().key("after-placing-traps").lines(
+						"Good job, partner. Now we only need to <6>wait <f>for the <a>right moment <f>for these pests to show up.",
 						"This might take some time, so you should come back later."
-				}).build(),
-				DialogueSet.builder().key("stuck").lines(new String[]{
-						"Hey.. §ouhm §fpartner! I §lswear §fit's not what you think!",
-						"Could you lend me a hand here, I can §aexplain everything§f!"
-				}).build(),
-				DialogueSet.builder().key("explain").lines(new String[]{
-						"§aThank you so much§f, I was stuck there for §oat least ??? minutes§f, I was almost gone for good.",
-						"§oI.. I §fmust have §dslipped by accident §fand then fell right into the §5trap§f! ... §oYes§f, §lthat's what happened§f!",
-						"...and then I ate the §6carrot §fbecause I was almost starving in there!"
-				}).build(),
-				DialogueSet.builder().key("option-iknow").lines(new String[]{
-						"§fOk, fine you caught me. But §cplease don't tell the others§f, they wouldn't want to be my friends anymore if they knew the truth.",
-						"Here, take this §acompensation §ffor all the trouble I made you go through.",
-						"I hope you forgive me after this and we can still be §6friends§f."
-				}).build(),
-				DialogueSet.builder().key("idle-1").lines(new String[]{
-						"I wish I could be in love just like §9Romero §f& §dJuliette§f."
-				}).build(),
-				DialogueSet.builder().key("idle-2").lines(new String[]{
-						"I hope you forgive me after this and we can still be §6friends§f."
-				}).build()
+				).build(),
+				DialogueSet.builder().key("stuck").lines(
+						"Hey.. <o>uhm </o><f>partner! I <l>swear </l><f>it's not what you think!",
+						"Could you lend me a hand here, I can <a>explain everything<f>!"
+				).build(),
+				DialogueSet.builder().key("explain").lines(
+						"<a>Thank you so much<f>, I was stuck there for <o>at least ??? minutes</o><f>, I was almost gone for good.",
+						"<o>I.. I </o><f>must have <d>slipped by accident <f>and then fell right into the <5>trap<f>! ... <o>Yes</o><f>, <l>that's what happened</l><f>!",
+						"...and then I ate the <6>carrot <f>because I was almost starving in there!"
+				).build(),
+				DialogueSet.builder().key("option-iknow").lines(
+						"<f>Ok, fine you caught me. But <c>please don't tell the others<f>, they wouldn't want to be my friends anymore if they knew the truth.",
+						"Here, take this <a>compensation <f>for all the trouble I made you go through.",
+						"I hope you forgive me after this and we can still be <6>friends<f>."
+				).build(),
+				DialogueSet.builder().key("idle-1").lines(
+						"I wish I could be in love just like <9>Romero <f>& <d>Juliette<f>."
+				).build(),
+				DialogueSet.builder().key("idle-2").lines(
+						"I hope you forgive me after this and we can still be <6>friends<f>."
+				).build()
 		).toArray(DialogueSet[]::new);
 	}
 }

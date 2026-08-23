@@ -5,7 +5,8 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.guild.GuildData;
 import net.swofty.commons.guild.GuildMember;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.PaginatedView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
@@ -13,7 +14,6 @@ import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.generic.user.HypixelPlayer;
 
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -48,28 +48,24 @@ public class GUIGuildMembers extends PaginatedView<GuildMember, GUIGuildMembers.
 
     @Override
     protected void layoutCustom(ViewLayout<MembersState> layout, MembersState state, ViewContext ctx) {
-        layout.slot(49, ItemStackCreator.getStack(
-            "§aGo Back",
-            Material.ARROW,
-            1,
-            "§7To Guild"
-        ), (click, viewCtx) -> viewCtx.navigator().pop());
+        layout.slot(49, ItemStacks.item(Material.ARROW, """
+                <a>Go Back
+                <7>To Guild"""), (click, viewCtx) -> viewCtx.navigator().pop());
     }
 
     @Override
     protected ItemStack.Builder renderItem(GuildMember member, int index, HypixelPlayer player) {
-        String displayName = HypixelPlayer.getDisplayName(member.getUuid());
-        NumberFormat nf = NumberFormat.getInstance();
+        Text displayName = HypixelPlayer.getDisplayName(member.getUuid());
 
-        return ItemStackCreator.getStack(
-            displayName,
-            Material.PLAYER_HEAD,
-            1,
-            "§7Guild Rank: §b" + member.getRankName(),
-            "§7Member since: §b" + formatDuration(System.currentTimeMillis() - member.getJoinedAt()),
-            "§7Weekly GEXP: §6" + nf.format(member.getWeeklyGexp()),
-            "§7Total GEXP: §6" + nf.format(member.getTotalGexp())
-        );
+        return ItemStacks.item(Material.PLAYER_HEAD, 1, displayName, Text.of("""
+                <7>Guild Rank: <b>{}
+                <7>Member since: <b>{}
+                <7>Weekly GEXP: <6>{:,}
+                <7>Total GEXP: <6>{:,}""",
+            member.getRankName(),
+            formatDuration(System.currentTimeMillis() - member.getJoinedAt()),
+            member.getWeeklyGexp(),
+            member.getTotalGexp()).lines());
     }
 
     @Override

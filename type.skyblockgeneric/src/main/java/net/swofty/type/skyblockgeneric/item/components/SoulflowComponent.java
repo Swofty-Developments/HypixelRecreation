@@ -14,8 +14,8 @@ public class SoulflowComponent extends SkyBlockItemComponent {
 	public SoulflowComponent(int amount) {
 		addInheritedComponent(new LoreUpdateComponent(
 				List.of(
-						"§7Hold and right-click to consume,",
-						"§7gaining §3+" + amount + "⸎ Soulflow§7."
+						"<7>Hold and right-click to consume,",
+						"<7>gaining <3>+" + amount + "⸎ Soulflow<7>."
 				), false
 		));
 		addInheritedComponent(

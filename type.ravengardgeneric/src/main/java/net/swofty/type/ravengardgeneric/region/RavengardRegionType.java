@@ -1,20 +1,22 @@
 package net.swofty.type.ravengardgeneric.region;
 
 import lombok.Getter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 
 @Getter
 public enum RavengardRegionType {
-    NEVERMORE("The Nevermore", "§b"),
-    RAVENPORT("Ravenport", "§e");
+    NEVERMORE("The Nevermore", NamedTextColor.AQUA),
+    RAVENPORT("Ravenport", NamedTextColor.YELLOW);
 
     private final String displayName;
-    private final String color;
+    private final TextColor color;
 
     RavengardRegionType(String displayName) {
-        this(displayName, "§f");
+        this(displayName, NamedTextColor.WHITE);
     }
 
-    RavengardRegionType(String displayName, String color) {
+    RavengardRegionType(String displayName, TextColor color) {
         this.displayName = displayName;
         this.color = color;
     }

@@ -18,7 +18,7 @@ public class LapisArmorSet implements ArmorSet, SetEvents, MuseumableSet {
 	@Override
 	public ArrayList<String> getDescription() {
 		return new ArrayList<>(List.of(
-				"§fEarn §a50% §fmore Exp when mining" // piece bonus
+				"<f>Earn <a>50% <f>more Exp when mining"
 		));
 	}
 

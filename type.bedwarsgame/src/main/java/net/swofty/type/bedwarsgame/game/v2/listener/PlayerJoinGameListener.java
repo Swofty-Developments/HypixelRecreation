@@ -1,13 +1,10 @@
 package net.swofty.type.bedwarsgame.game.v2.listener;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
 import net.swofty.commons.mc.HypixelPosition;
 import net.swofty.commons.party.FullParty;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
@@ -45,7 +42,7 @@ public class PlayerJoinGameListener implements HypixelEventClass {
         player.setGameId(event.game().getGameId());
         String randomLetters = UUID.randomUUID().toString().replace("-", "")
             .substring(0, new Random().nextInt(10) + 4);
-        player.setDisplayName(Component.text(randomLetters, NamedTextColor.WHITE, TextDecoration.OBFUSCATED));
+        player.setDisplayName("<f><k>{}", randomLetters);
 
         FullParty party = PartyManager.getPartyFromPlayer(player);
 
@@ -57,8 +54,10 @@ public class PlayerJoinGameListener implements HypixelEventClass {
             if (shouldObfuscate && p.getUuid().compareTo(player.getUuid()) == 0) {
                 shouldObfuscate = false;
             }
-            String name = shouldObfuscate ? "§k" + randomLetters : LegacyComponentSerializer.legacySection().serialize(player.getColouredName());
-            p.sendMessage(name + " §ehas joined (§b" + game.getPlayers().size() + "§e/§b" + game.getMaxPlayers() + "§e)!");
+            Text name = shouldObfuscate
+                ? Text.of("<k>{}", randomLetters)
+                : Text.of("{}", player.getColouredName());
+            p.sendMessage("{} <e>has joined (<b>{}<e>/<b>{}<e>)!", name, game.getPlayers().size(), game.getMaxPlayers());
         }
     }
 

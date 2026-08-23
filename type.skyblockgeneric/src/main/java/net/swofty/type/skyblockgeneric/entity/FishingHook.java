@@ -84,7 +84,7 @@ public class FishingHook {
 	}
 
 	private static boolean blockMatchesMedium(@NotNull Block block, @NotNull FishingMedium medium) {
-		if (!block.isLiquid()) {
+		if (!block.liquid()) {
 			return false;
 		}
 		String blockName = block.name();
@@ -241,7 +241,7 @@ public class FishingHook {
 	}
 
 	private double getWaterSurface(Block block, int blockY) {
-		if (!block.isLiquid()) return blockY + 1.0;
+		if (!block.liquid()) return blockY + 1.0;
 
 		String levelStr = block.getProperty("level");
 		int level = (levelStr == null) ? 0 : Integer.parseInt(levelStr);

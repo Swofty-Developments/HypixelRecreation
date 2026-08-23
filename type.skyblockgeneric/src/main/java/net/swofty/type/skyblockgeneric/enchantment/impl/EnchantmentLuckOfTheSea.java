@@ -15,7 +15,7 @@ import java.util.Map;
 public class EnchantmentLuckOfTheSea implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Grants §b+" + level + "✯ Magic Find§7.";
+        return "Grants <b>+" + level + "✯ Magic Find<7>.";
     }
 
     @Override

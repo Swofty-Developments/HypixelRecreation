@@ -25,7 +25,7 @@ public class StaffChatCommand extends HypixelCommand {
             String message = String.join(" ", messageArray);
 
             if (message.isEmpty()) {
-                player.sendMessage("§cUsage: /sc <message>");
+                player.sendMessage("<c>Usage: {}", "/sc <message>");
                 return;
             }
 

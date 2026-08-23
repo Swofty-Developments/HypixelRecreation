@@ -1,6 +1,7 @@
 package net.swofty.type.ravengardgeneric.gui;
 
 import net.minestom.server.inventory.click.Click;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.ViewNavigator;
@@ -58,22 +59,22 @@ public class GUIProfiles extends RavengardView {
         boolean isSelected = profile.getId().equals(selected);
 
         RavengardItems.Builder button = RavengardItems.button(statue)
-                .label(profileClass == null ? "Unclaimed" : profileClass.getDisplayName())
-                .lore("§8" + profile.getId())
+                .label(Text.literal(profileClass == null ? "Unclaimed" : profileClass.getDisplayName()))
+                .lore(Text.of("<8>{}", profile.getId()))
                 .blankLine()
-                .lore("§7Class: §e" + (profileClass == null ? "None" : profileClass.getDisplayName()),
-                        "§7Playtime: §e" + profile.playtimeText(),
-                        "§7Crowns: §e" + profile.getCrowns(),
-                        "§7Ability Points§e: " + profile.getAbilityPoints(),
-                        "§7Level: §e" + profile.getLevel(),
-                        "§7Experience: §e" + profile.getExperience() + "/" + profile.experienceForNextLevel())
+                .lore(Text.of("<7>Class: <e>{}", profileClass == null ? "None" : profileClass.getDisplayName()),
+                        Text.of("<7>Playtime: <e>{}", profile.playtimeText()),
+                        Text.of("<7>Crowns: <e>{}", profile.getCrowns()),
+                        Text.of("<7>Ability Points<e>: {}", profile.getAbilityPoints()),
+                        Text.of("<7>Level: <e>{}", profile.getLevel()),
+                        Text.of("<7>Experience: <e>{}/{}", profile.getExperience(), profile.experienceForNextLevel()))
                 .blankLine()
                 .origin(origin);
 
         if (isSelected) {
-            button.lore("§aSelected!");
+            button.lore("<a>Selected!");
         } else {
-            button.lore("§eLeft-Click to select!", "§cRight-Click to delete!");
+            button.lore("<e>Left-Click to select!", "<c>Right-Click to delete!");
         }
 
         interactive(layout, origin, button, (click, viewContext) -> {
@@ -93,9 +94,9 @@ public class GUIProfiles extends RavengardView {
 
     private void placeCreate(ViewLayout<DefaultState> layout, int origin) {
         RavengardItems.Builder button = RavengardItems.button(RavengardButton.ADD)
-                .label("§aCreate Profile")
+                .label("<a>Create Profile")
                 .blankLine()
-                .lore("§eClick to create!")
+                .lore("<e>Click to create!")
                 .origin(origin);
 
         interactive(layout, origin, button, (click, viewContext) -> {

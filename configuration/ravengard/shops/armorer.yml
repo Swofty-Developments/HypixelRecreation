@@ -41,3 +41,35 @@ pool:
     price: 28
   - item: WAR_LEGGINGS
     price: 15
+  - item: APPRENTICE_PANTS
+    price: 14
+  - item: APPRENTICE_BOOTS
+    price: 7
+  - item: UNCOMMON_APPRENTICE_PANTS
+    price: 22
+  - item: UNCOMMON_APPRENTICE_BOOTS
+    price: 10
+  - item: EMBER_PANTS
+    price: 28
+  - item: EMBER_BOOTS
+    price: 13
+  - item: EMBER_ROBE
+    price: 32
+  - item: ONYX_PANTS
+    price: 30
+  - item: LEATHER_LEGGINGS
+    price: 8
+  - item: UNCOMMON_LEATHER_LEGGINGS
+    price: 14
+  - item: UNCOMMON_LEATHER_TUNIC
+    price: 14
+  - item: UNCOMMON_LEATHER_HARNESS
+    price: 20
+  - item: UNCOMMON_SOLDIERS_SABATONS
+    price: 18
+  - item: COMMON_LIGHT_LEGGINGS
+    price: 13
+  - item: CHAINMAIL
+    price: 22
+  - item: PLATE_CUISSES
+    price: 28

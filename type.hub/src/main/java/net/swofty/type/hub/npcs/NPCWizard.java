@@ -14,7 +14,7 @@ public class NPCWizard extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§dWizard", "§e§lCLICK"};
+                return new String[]{"<d>Wizard", "<e><l>CLICK"};
             }
 
             @Override

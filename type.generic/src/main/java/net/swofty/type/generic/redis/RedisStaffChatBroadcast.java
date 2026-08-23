@@ -3,6 +3,7 @@ package net.swofty.type.generic.redis;
 import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.proxy.from.BroadcastStaffChatProtocol;
 import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.command.commands.ChatCommand;
 import net.swofty.type.generic.data.HypixelDataHandler;
@@ -26,7 +27,7 @@ public class RedisStaffChatBroadcast implements RedisMessageHandler<BroadcastSta
         switch (type) {
             case "message" -> {
                 String formattedMessage = message.formattedMessage();
-                sendToLocalStaff(formattedMessage, null);
+                sendToLocalStaff(Text.read(formattedMessage), null);
             }
             case "join" -> {
                 UUID playerUuid = UUID.fromString(message.uuid());
@@ -51,16 +52,15 @@ public class RedisStaffChatBroadcast implements RedisMessageHandler<BroadcastSta
             }
 
             String ign = handler.get(HypixelDataHandler.Data.IGN, DatapointString.class).getValue();
-            String displayName = rank.getPrefix() + ign;
+            Text displayName = Text.of("{}", rank.displayName(ign));
             String action = isJoin ? "joined" : "left";
-            String formattedMessage = "§b[STAFF] §7" + displayName + " §7" + action + ".";
 
-            sendToLocalStaff(formattedMessage, playerUuid);
+            sendToLocalStaff(Text.of("<b>[STAFF] <7>{} <7>{}.", displayName, action), playerUuid);
         } catch (Exception e) {
         }
     }
 
-    private void sendToLocalStaff(String message, UUID senderUuid) {
+    private void sendToLocalStaff(Text message, UUID senderUuid) {
         HypixelGenericLoader.getLoadedPlayers().stream()
                 .filter(player -> player.getRank().isStaff())
                 .filter(player -> ChatCommand.isStaffViewEnabled(player.getUuid()) ||

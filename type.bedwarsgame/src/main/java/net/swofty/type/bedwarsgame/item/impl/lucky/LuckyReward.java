@@ -6,7 +6,7 @@ import net.minestom.server.item.Material;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.bedwarsgame.util.BedWarsInventoryManipulator;
 import net.swofty.type.generic.data.datapoints.DatapointBedWarsHotbar;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 
 public abstract class LuckyReward {
     private final String name;
@@ -25,7 +25,7 @@ public abstract class LuckyReward {
         BedWarsInventoryManipulator.addItemWithHotbarPriority(player, item, DatapointBedWarsHotbar.HotbarItemType.UTILITY);
     }
 
-    protected static ItemStack named(Material material, String name) {
-        return ItemStackCreator.getStack(name, material, 1).build();
+    protected static ItemStack named(Material material, String markup) {
+        return ItemStacks.named(material, markup).build();
     }
 }

@@ -8,9 +8,10 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.protocol.objects.orchestrator.GetMapsProtocol;
 import net.swofty.commons.skywars.SkywarsGameType;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.lobby.GameQueueValidator;
@@ -25,7 +26,7 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
     private boolean mapsLoaded = false;
 
     public GUIMapSelectionSkywars(SkywarsGameType gameType) {
-        super("Map Selection - " + gameType.getDisplayName(), InventoryType.CHEST_4_ROW);
+        super(Text.of("Map Selection - {}", gameType.getDisplayName()), InventoryType.CHEST_4_ROW);
         this.gameType = gameType;
     }
 
@@ -37,12 +38,10 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
             set(new GUIClickableItem(13) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§eLoading maps...",
-                            Material.CLOCK, 1,
-                            "§7Please wait while we fetch",
-                            "§7available maps for " + gameType.getDisplayName()
-                    );
+                    return ItemStacks.item(Material.CLOCK, 1, """
+                            <e>Loading maps...
+                            <7>Please wait while we fetch
+                            <7>available maps for {}""", gameType.getDisplayName());
                 }
 
                 @Override
@@ -75,7 +74,7 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
                 })
                 .exceptionally(throwable -> {
                     throwable.printStackTrace();
-                    player.sendMessage("§cFailed to load maps: " + throwable.getMessage());
+                    player.sendMessage("<c>Failed to load maps: {}", throwable.getMessage());
                     player.closeInventory();
                     return null;
                 });
@@ -86,14 +85,12 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
             set(new GUIClickableItem(13) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§cNo maps available",
-                            Material.BARRIER, 1,
-                            "§7No maps are currently available",
-                            "§7for " + gameType.getDisplayName(),
-                            "",
-                            "§eClick to go back"
-                    );
+                    return ItemStacks.item(Material.BARRIER, 1, """
+                            <c>No maps available
+                            <7>No maps are currently available
+                            <7>for {}
+
+                            <e>Click to go back""", gameType.getDisplayName());
                 }
 
                 @Override
@@ -108,11 +105,9 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
         set(new GUIClickableItem(31) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§cBack",
-                        Material.ARROW, 1,
-                        "§7Go back to game selection"
-                );
+                return ItemStacks.item(Material.ARROW, 1, """
+                        <c>Back
+                        <7>Go back to game selection""");
             }
 
             @Override
@@ -131,15 +126,13 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
             set(new GUIClickableItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§a" + mapName,
-                            Material.FIREWORK_STAR, 1,
-                            "§7" + gameType.getDisplayName(),
-                            "",
-                            "§7Available Games: §aUnknown",
-                            "",
-                            "§aClick to Play"
-                    );
+                    return ItemStacks.item(Material.FIREWORK_STAR, 1, """
+                            <a>{}
+                            <7>{}
+
+                            <7>Available Games: <a>Unknown
+
+                            <a>Click to Play""", mapName, gameType.getDisplayName());
                 }
 
                 @Override

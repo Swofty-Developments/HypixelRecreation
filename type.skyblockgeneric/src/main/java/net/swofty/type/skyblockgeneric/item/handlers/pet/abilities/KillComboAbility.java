@@ -54,21 +54,21 @@ public final class KillComboAbility implements PetAbility {
         int wisdom20 = COMBAT_WISDOM_20.getForRarity(rarity);
 
         return Arrays.asList(
-                "§7Gain buffs for combo kills. Effects",
-                "§7stack as you increase your combo.",
+                "<7>Gain buffs for combo kills. Effects",
+                "<7>stack as you increase your combo.",
                 "",
-                "§a5 Combo §8(lasts §a" + d5 + "§8s)",
-                " §b+" + mf5 + "% " + ItemStatistic.MAGIC_FIND.getFullDisplayName(),
-                "§a10 Combo §8(lasts " + d10 + "s)",
-                " §8+§6" + coins10 + " §7coins per kill",
-                "§a15 Combo §8(lasts " + d15 + "s)",
-                " §b+" + mf15 + "% " + ItemStatistic.MAGIC_FIND.getFullDisplayName(),
-                "§a20 Combo §8(lasts " + d20 + "s)",
-                " §3+" + wisdom20 + " " + ItemStatistic.COMBAT_WISDOM.getFullDisplayName(),
-                "§a25 Combo §8(lasts " + d25 + "s)",
-                " §b+" + mf25 + "% " + ItemStatistic.MAGIC_FIND.getFullDisplayName(),
-                "§a30 Combo §8(lasts " + d30 + "s)",
-                " §8+§6" + coins30 + " §7coins per kill"
+                "<a>5 Combo <8>(lasts <a>" + d5 + "<8>s)",
+                " <stat:magic_find:+" + mf5 + "%>",
+                "<a>10 Combo <8>(lasts " + d10 + "s)",
+                " <8>+<6>" + coins10 + " <7>coins per kill",
+                "<a>15 Combo <8>(lasts " + d15 + "s)",
+                " <stat:magic_find:+" + mf15 + "%>",
+                "<a>20 Combo <8>(lasts " + d20 + "s)",
+                " <stat:combat_wisdom:+" + wisdom20 + ">",
+                "<a>25 Combo <8>(lasts " + d25 + "s)",
+                " <stat:magic_find:+" + mf25 + "%>",
+                "<a>30 Combo <8>(lasts " + d30 + "s)",
+                " <8>+<6>" + coins30 + " <7>coins per kill"
         );
     }
 

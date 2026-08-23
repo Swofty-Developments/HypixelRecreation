@@ -12,7 +12,8 @@ import net.swofty.type.skywarsgame.user.SkywarsPlayer;
         description = "Skips to the next game event (refill, dragon spawn)",
         usage = "/skipevent",
         permission = Rank.STAFF,
-        allowsConsole = false
+        allowsConsole = false,
+        labels = "skipevent"
 )
 public class SkipEventCommand extends HypixelCommand {
 
@@ -24,12 +25,12 @@ public class SkipEventCommand extends HypixelCommand {
 
             SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(player);
             if (game == null) {
-                player.sendMessage("§cYou are not in a game!");
+                player.sendMessage("<c>You are not in a game!");
                 return;
             }
 
             if (game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) {
-                player.sendMessage("§cThe game is not in progress!");
+                player.sendMessage("<c>The game is not in progress!");
                 return;
             }
 
@@ -37,15 +38,15 @@ public class SkipEventCommand extends HypixelCommand {
             SkywarsGame.GameEvent nextEvent = currentEvent.getNext();
 
             if (nextEvent == SkywarsGame.GameEvent.GAME_END) {
-                player.sendMessage("§cNo more events to skip to! Current event: " + currentEvent.getDisplayName());
+                player.sendMessage("<c>No more events to skip to! Current event: {}", currentEvent.getDisplayName());
                 return;
             }
 
             SkywarsGame.GameEvent triggeredEvent = game.skipToNextEvent();
             if (triggeredEvent != null) {
-                player.sendMessage("§aSkipped to: §e" + triggeredEvent.getDisplayName());
+                player.sendMessage("<a>Skipped to: <e>{}", triggeredEvent.getDisplayName());
             } else {
-                player.sendMessage("§cFailed to skip to next event.");
+                player.sendMessage("<c>Failed to skip to next event.");
             }
         });
     }

@@ -17,7 +17,7 @@ public class NPCMadameEleanorQGoldsworthIII extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6Madame Eleanor Q. Goldsworth III", "§e§lCLICK"};
+                return new String[]{"<6>Madame Eleanor Q. Goldsworth III", "<e><l>CLICK"};
             }
 
             @Override
@@ -65,20 +65,20 @@ public class NPCMadameEleanorQGoldsworthIII extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("pre-curator").lines(new String[]{
-                                "The §bCurator §fhas advised me to direct you back to him.",
+                        .key("pre-curator").lines(
+                                "The <b>Curator <f>has advised me to direct you back to him.",
                                 "Please hear what he has to say before coming to me"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("post-curator").lines(new String[]{
-                                "Don't trust what the §bCurator §ftold you, I am in no way his assistant.",
+                        .key("post-curator").lines(
+                                "Don't trust what the <b>Curator <f>told you, I am in no way his assistant.",
                                 "I serve someone much more important.",
-                                "I offer a §6Museum Appraisal Service§f, which allows you to determine the value of your Museum.",
+                                "I offer a <6>Museum Appraisal Service<f>, which allows you to determine the value of your Museum.",
                                 "For a one-time fee, I will appraise your Museum's worth each time you modify your Museum.",
-                                "You may even find yourself atop the §6Top Valued Museums §fin the §9Museum Browser§f!",
-                                "Additionally, reaching certain valuation thresholds will allow you to purchase §6bank upgrades§f.",
+                                "You may even find yourself atop the <6>Top Valued Museums <f>in the <9>Museum Browser<f>!",
+                                "Additionally, reaching certain valuation thresholds will allow you to purchase <6>bank upgrades<f>.",
                                 "In the future, reaching these thresholds will reward even more!"
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

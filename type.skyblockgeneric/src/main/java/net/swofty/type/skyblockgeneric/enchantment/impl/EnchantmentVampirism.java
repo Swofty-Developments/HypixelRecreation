@@ -20,7 +20,7 @@ public class EnchantmentVampirism implements Ench, EnchFromTable, KillEventEncha
     @Override
     public String getDescription(int level) {
         double healPercent = HEAL_PERCENTAGES[level - 1] * 100;
-        return "Heals for §a" + healPercent + "%§7 of your missing health whenever you kill an enemy.";
+        return "Heals for <a>" + healPercent + "%<7> of your missing health whenever you kill an enemy.";
     }
 
     @Override

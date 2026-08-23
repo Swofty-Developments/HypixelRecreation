@@ -35,7 +35,7 @@ public final class LuckyBlockTrap {
         Entity display = spawnSmallCarpet(owner.getInstance(), blockPoint);
         TRAP_DISPLAYS.computeIfAbsent(owner.getInstance(), _ -> new ConcurrentHashMap<>())
             .put(BlockPoint.of(blockPoint), display);
-        owner.sendMessage("§aPlaced " + trap + " Trap!");
+        owner.sendMessage("<a>Placed {} Trap!", trap);
     }
 
     public static boolean trigger(BedWarsPlayer player, Point point, Block block) {
@@ -70,7 +70,7 @@ public final class LuckyBlockTrap {
             display.remove();
         }
         player.getInstance().setBlock(point, Block.AIR);
-        player.sendMessage("§cYou triggered a " + trap + " Trap!");
+        player.sendMessage("<c>You triggered a {} Trap!", trap);
         return true;
     }
 

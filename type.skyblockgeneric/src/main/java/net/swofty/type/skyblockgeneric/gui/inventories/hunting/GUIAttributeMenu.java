@@ -4,8 +4,9 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.HypixelSignGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulPaginatedView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -48,7 +49,8 @@ public class GUIAttributeMenu extends StatefulPaginatedView<AttributeDefinition,
     }
 
     public ViewConfiguration<State> configuration() {
-        return ViewConfiguration.withString((s, c) -> "(" + (s.page() + 1) + "/" + Math.max(1, (s.items().size() + DEFAULT_SLOTS.length - 1) / DEFAULT_SLOTS.length) + ") Attribute Menu", InventoryType.CHEST_6_ROW);
+        return ViewConfiguration.withText((s, c) -> Text.of("({}/{}) Attribute Menu", s.page() + 1,
+                Math.max(1, (s.items().size() + DEFAULT_SLOTS.length - 1) / DEFAULT_SLOTS.length)), InventoryType.CHEST_6_ROW);
     }
 
     protected int[] getPaginatedSlots() {
@@ -82,31 +84,66 @@ public class GUIAttributeMenu extends StatefulPaginatedView<AttributeDefinition,
         DatapointHunting.HuntingData data = ((SkyBlockPlayer) ctx.player()).getHuntingData();
         int totalXp = AttributeRegistry.values().stream().mapToInt(d -> data.level(d.id())).sum();
         long maxed = AttributeRegistry.values().stream().filter(d -> data.level(d.id()) >= 10).count();
-        layout.slot(4, ItemStackCreator.getStack("§3Attribute Menu", Material.LEAD, 1,
-                "§7Syphon Shards to unlock and level", "§7up your §aAttributes§7!", "§7Each Attribute grants its own unique",
-                "§dpower§7, active at all times, no matter", "§7where you are.", "§aAttributes §7can reach up to level §b10§7,",
-                "§7with shard costs scaling based on", "§7their §drarity§7.", "", "§7Attributes Found: §e" + data.uniqueAttributes() + "§6/§e" + AttributeRegistry.values().size(),
-                "§7Attributes Maxed: §e" + maxed + "§6/§e" + AttributeRegistry.values().size(), "§7Total XP: §b" + totalXp + "§3/§b" + AttributeRegistry.values().size() * 10,
-                "", "§eClick to swap to the Hunting Box!"), (_, c) -> c.push(new GUIHuntingBox()));
-        layout.slot(46, ItemStackCreator.getStack("§aSearch Attributes", Material.OAK_SIGN, 1,
-                "§7Search for specific attributes in", "§7your Attribute Menu. You can enter", "§7the Attribute Name, ID, Family, or",
-                "§7Attribute Category!", "", "§eClick to search!"), (_, c) -> new HypixelSignGUI(c.player()).open(new String[]{"Enter query", state.query()})
+        int total = AttributeRegistry.values().size();
+        layout.slot(4, ItemStacks.item(Material.LEAD, """
+                <3>Attribute Menu
+                <7>Syphon Shards to unlock and level
+                <7>up your <a>Attributes<7>!
+                <7>Each Attribute grants its own unique
+                <d>power<7>, active at all times, no matter
+                <7>where you are.
+                <a>Attributes <7>can reach up to level <b>10<7>,
+                <7>with shard costs scaling based on
+                <7>their <d>rarity<7>.
+
+                <7>Attributes Found: <e>{}<6>/<e>{}
+                <7>Attributes Maxed: <e>{}<6>/<e>{}
+                <7>Total XP: <b>{}<3>/<b>{}
+
+                <e>Click to swap to the Hunting Box!""",
+                data.uniqueAttributes(), total, maxed, total, totalXp, total * 10), (_, c) -> c.push(new GUIHuntingBox()));
+        layout.slot(46, ItemStacks.item(Material.OAK_SIGN, """
+                <a>Search Attributes
+                <7>Search for specific attributes in
+                <7>your Attribute Menu. You can enter
+                <7>the Attribute Name, ID, Family, or
+                <7>Attribute Category!
+
+                <e>Click to search!"""), (_, c) -> new HypixelSignGUI(c.player()).open(new String[]{"Enter query", state.query()})
                 .thenAccept(q -> {
                     if (q != null) refresh(c, state.filter(), state.sort(), state.advanced(), q);
                 }));
-        layout.slot(47, cycleItem("§aFilter by SkyBlock Skill", Material.ENDER_EYE, SkillFilter.values(), state.filter()), (click, c) -> {
+        layout.slot(47, cycleItem("<a>Filter by SkyBlock Skill", Material.ENDER_EYE, SkillFilter.values(), state.filter()), (click, c) -> {
             int direction = isRight(click.click()) ? -1 : 1;
             SkillFilter next = SkillFilter.values()[Math.floorMod(state.filter().ordinal() + direction, SkillFilter.values().length)];
             refresh(c, next, state.sort(), state.advanced(), state.query());
         });
-        layout.slot(48, ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To Hunting Box"), (_, c) -> c.navigator().pop());
-        layout.slot(50, cycleItem("§aSort", Material.HOPPER, Sort.values(), state.sort()), (click, c) -> {
+        layout.slot(48, ItemStacks.item(Material.ARROW, """
+                <a>Go Back
+                <7>To Hunting Box"""), (_, c) -> c.navigator().pop());
+        layout.slot(50, cycleItem("<a>Sort", Material.HOPPER, Sort.values(), state.sort()), (click, c) -> {
             int direction = isRight(click.click()) ? -1 : 1;
             Sort next = Sort.values()[Math.floorMod(state.sort().ordinal() + direction, Sort.values().length)];
             refresh(c, state.filter(), next, state.advanced(), state.query());
         });
-        layout.slot(51, ItemStackCreator.getStack("§aAttribute Transfer", Material.ANVIL, 1, "§7Do you still have old items, with", "§7greyed out Attributes on them?", "", "§7You can use this Anvil to transfer", "§7those Attributes to the new system!", "", "§eClick to view!"));
-        layout.slot(52, ItemStackCreator.getStack("§6Advanced Mode", Material.COMPARATOR, 1, "§7Advanced Mode lets you see every", "§7attribute, and find out how to obtain", "§7them.", "", "§7Toggled: " + (state.advanced() ? "§aON" : "§cOFF"), "", "§eClick to toggle!"),
+        layout.slot(51, ItemStacks.item(Material.ANVIL, """
+                <a>Attribute Transfer
+                <7>Do you still have old items, with
+                <7>greyed out Attributes on them?
+
+                <7>You can use this Anvil to transfer
+                <7>those Attributes to the new system!
+
+                <e>Click to view!"""));
+        layout.slot(52, ItemStacks.item(Material.COMPARATOR, """
+                <6>Advanced Mode
+                <7>Advanced Mode lets you see every
+                <7>attribute, and find out how to obtain
+                <7>them.
+
+                <7>Toggled: {}
+
+                <e>Click to toggle!""", state.advanced() ? Text.of("<a>ON") : Text.of("<c>OFF")),
                 (_, c) -> refresh(c, state.filter(), state.sort(), !state.advanced(), state.query()));
         Components.close(layout, 49);
     }
@@ -130,16 +167,18 @@ public class GUIAttributeMenu extends StatefulPaginatedView<AttributeDefinition,
     }
 
     private <E extends Enum<E>> ItemStack.Builder cycleItem(String name, Material material, E[] values, E selected) {
-        List<String> lore = new ArrayList<>(List.of(""));
+        List<Text> lore = new ArrayList<>(List.of(Text.empty()));
         for (int i = 0; i < values.length; i++) {
             if (i >= 8) {
-                lore.add("  §eAnd " + (values.length - i) + " more options");
+                lore.add(Text.of("  <e>And {} more options", values.length - i));
                 break;
             }
-            lore.add((values[i] == selected ? "§b▶ " : "§7   ") + values[i].name().replace('_', ' '));
+            lore.add(Text.of(values[i] == selected ? "<b>▶ {}" : "<7>   {}", values[i].name().replace('_', ' ')));
         }
-        lore.addAll(List.of("", "§bRight-click to go backwards!", "§eClick to switch!"));
-        return ItemStackCreator.getStack(name, material, 1, lore);
+        lore.add(Text.empty());
+        lore.add(Text.of("<b>Right-click to go backwards!"));
+        lore.add(Text.of("<e>Click to switch!"));
+        return ItemStacks.item(material, 1, Text.of(name), lore);
     }
 
     private boolean isRight(Click click) {

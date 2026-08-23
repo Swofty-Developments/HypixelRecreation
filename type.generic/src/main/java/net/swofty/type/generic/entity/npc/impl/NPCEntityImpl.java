@@ -8,6 +8,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.network.packet.server.play.EntityMetaDataPacket;
 import net.minestom.server.network.player.ResolvableProfile;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.hologram.PlayerHolograms;
 import net.swofty.type.generic.entity.npc.NPCMovementController;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
@@ -147,7 +148,9 @@ public class NPCEntityImpl extends EntityCreature implements NPCViewable {
             if (!PlayerHolograms.externalPlayerHolograms.containsKey(holo)) {
                 PlayerHolograms.addExternalPlayerHologram(holo);
             }
-            String[] newHolograms = config.holograms(viewer);
+            String[] newHolograms = config.hologramTexts(viewer).stream()
+                    .map(Text::serialize)
+                    .toArray(String[]::new);
             if (!Arrays.equals(newHolograms, holograms)) {
                 PlayerHolograms.updateExternalPlayerHologramText(holo, newHolograms);
                 this.holograms = newHolograms;

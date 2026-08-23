@@ -4,11 +4,11 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.commands.replay.ReplaysCommand;
 import net.swofty.type.generic.experience.PlayerExperienceHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.guild.GuildManager;
@@ -39,7 +39,7 @@ public class GUIMyProfile extends HypixelInventoryGUI {
             set(new GUIItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.createNamedItemStack(Material.ORANGE_STAINED_GLASS_PANE);
+                    return ItemStacks.named(Material.ORANGE_STAINED_GLASS_PANE, "");
                 }
             });
         }
@@ -47,29 +47,25 @@ public class GUIMyProfile extends HypixelInventoryGUI {
         set(new GUIItem(2) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                String displayName = player.getFullDisplayName();
-                return ItemStackCreator.getStackHead(
-                    displayName,
+                return ItemStacks.head(
                     player.getSkin(),
-                    1,
-                    "§7Hypixel Level: §6" + level,
-                    "§7Achievement Points: §e" + StringUtility.commaify(achievementPoints),
-                    "§7Guild: §bNone"
+                    player.getFullDisplayName(),
+                    Text.of("""
+                            <7>Hypixel Level: <6>{}
+                            <7>Achievement Points: <e>{:,}
+                            <7>Guild: <b>None""", level, achievementPoints).lines()
                 );
             }
         });
         set(new GUIClickableItem(3) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                    "§aFriends",
-                    "e063eedb2184354bd43a19deffba51b53dd6b7222f8388caa239cabcdce84",
-                    1,
-                    "§7View your Hypixel friends' profiles,",
-                    "§7and interact with your online friends!",
-                    "",
-                    "§eClick to view!"
-                );
+                return ItemStacks.head("e063eedb2184354bd43a19deffba51b53dd6b7222f8388caa239cabcdce84", """
+                        <a>Friends
+                        <7>View your Hypixel friends' profiles,
+                        <7>and interact with your online friends!
+
+                        <e>Click to view!""");
             }
 
             @Override
@@ -80,16 +76,13 @@ public class GUIMyProfile extends HypixelInventoryGUI {
         set(new GUIClickableItem(4) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                    "§aParty",
-                    "667963ca1ffdc24a10b397ff8161d0da82d6a3f4788d5f67f1a9f9bfbc1eb1",
-                    1,
-                    "§7Create a party and join up with",
-                    "§7other players to play games",
-                    "§7together!",
-                    "",
-                    "§eClick to manage!"
-                );
+                return ItemStacks.head("667963ca1ffdc24a10b397ff8161d0da82d6a3f4788d5f67f1a9f9bfbc1eb1", """
+                        <a>Party
+                        <7>Create a party and join up with
+                        <7>other players to play games
+                        <7>together!
+
+                        <e>Click to manage!""");
             }
 
             @Override
@@ -107,137 +100,110 @@ public class GUIMyProfile extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                    "§aGuild",
-                    "fe8b59f8cce510809427c3843cf575fae8fe6a8b7d1560dd46958d148563815",
-                    1,
-                    "§7Form a guild with other Hypixel",
-                    "§7players to conquer game modes and",
-                    "§7work towards common Hypixel",
-                    "§7rewards."
-                );
+                return ItemStacks.head("fe8b59f8cce510809427c3843cf575fae8fe6a8b7d1560dd46958d148563815", """
+                        <a>Guild
+                        <7>Form a guild with other Hypixel
+                        <7>players to conquer game modes and
+                        <7>work towards common Hypixel
+                        <7>rewards.""");
             }
         });
         set(new GUIItem(6) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                    "§aRecent Players",
-                    "9993a356809532d696841a37a0549b81b159b79a7b2919cff4e5abdfea83d66",
-                    1,
-                    "§7View players you have played recent",
-                    "§7games with."
-                );
+                return ItemStacks.head("9993a356809532d696841a37a0549b81b159b79a7b2919cff4e5abdfea83d66", """
+                        <a>Recent Players
+                        <7>View players you have played recent
+                        <7>games with.""");
             }
         });
         set(new GUIItem(20) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aGo to Housing",
-                    Material.DARK_OAK_DOOR,
-                    1
-                );
+                return ItemStacks.item(Material.DARK_OAK_DOOR, "<a>Go to Housing");
             }
         });
         set(new GUIItem(21) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                    "§aSocial Media",
-                    "3685a0be743e9067de95cd8c6d1ba21ab21d37371b3d597211bb75e43279",
-                    1,
-                    "§7Click to edit your Social Media links."
-                );
+                return ItemStacks.head("3685a0be743e9067de95cd8c6d1ba21ab21d37371b3d597211bb75e43279", """
+                        <a>Social Media
+                        <7>Click to edit your Social Media links.""");
             }
         });
         set(new GUIItem(22) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                    "§aCharacter Information",
-                    player.getSkin(),
-                    1,
-                    "§7Rank: " + player.getLegacyRankPrefix().trim(),
-                    "§7Level: §6" + level,
-                    "§7Experience until next Level: §6" + StringUtility.commaify(xpNeeded),
-                    "§7Achievement Points: §e" + StringUtility.commaify(achievementPoints),
-                    "§7Mystery Dust: §b0",
-                    "§7Quests Completed: §60",
-                    "§7Karma: §d0",
-                    "§7Hypixel Gold: §60",
-                    "",
-                    "§eClick to see the Hypixel Store link."
-                );
+                return ItemStacks.head(player.getSkin(), """
+                        <a>Character Information
+                        <7>Rank: {}
+                        <7>Level: <6>{}
+                        <7>Experience until next Level: <6>{:,}
+                        <7>Achievement Points: <e>{:,}
+                        <7>Mystery Dust: <b>0
+                        <7>Quests Completed: <6>0
+                        <7>Karma: <d>0
+                        <7>Hypixel Gold: <6>0
+
+                        <e>Click to see the Hypixel Store link.""",
+                        player.getRankPrefix(), level, xpNeeded, achievementPoints);
             }
         });
         set(new GUIItem(23) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aStats Viewer",
-                    Material.PAPER,
-                    1,
-                    "§7Showcases your stats for each",
-                    "§7game and an overview of all.",
-                    "",
-                    "§7Players ranked §bMVP §7or higher",
-                    "§7can use §f/stats (username) §7to view",
-                    "§7other players' stats.",
-                    "",
-                    "§eClick to view your stats!"
-                );
+                return ItemStacks.item(Material.PAPER, """
+                        <a>Stats Viewer
+                        <7>Showcases your stats for each
+                        <7>game and an overview of all.
+
+                        <7>Players ranked <b>MVP <7>or higher
+                        <7>can use <f>/stats (username) <7>to view
+                        <7>other players' stats.
+
+                        <e>Click to view your stats!""");
             }
         });
         set(new GUIItem(24) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aCoin Boosters",
-                    Material.POTION,
-                    1,
-                    "§7Activate your personal and",
-                    "§7network boosters for extra",
-                    "§7coins.",
-                    "",
-                    "§eClick to activate boosters!"
-                );
+                return ItemStacks.item(Material.POTION, """
+                        <a>Coin Boosters
+                        <7>Activate your personal and
+                        <7>network boosters for extra
+                        <7>coins.
+
+                        <e>Click to activate boosters!""");
             }
         });
         set(new GUIItem(29) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aCustomize Appearances",
-                    Material.LEATHER_CHESTPLATE,
-                    1,
-                    "",
-                    "§7Customize the following visual options",
-                    "§7for your player!",
-                    "§f∙ MVP+ Rank Color",
-                    "§f∙ Punch Messages",
-                    "§f∙ Glow",
-                    "§f∙ Status",
-                    "",
-                    "§eClick to view!"
-                );
+                return ItemStacks.item(Material.LEATHER_CHESTPLATE, """
+                        <a>Customize Appearances
+
+                        <7>Customize the following visual options
+                        <7>for your player!
+                        <f>∙ MVP+ Rank Color
+                        <f>∙ Punch Messages
+                        <f>∙ Glow
+                        <f>∙ Status
+
+                        <e>Click to view!""");
             }
         });
 
         set(new GUIClickableItem(30) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aAchievements",
-                    Material.DIAMOND,
-                    1,
-                    "§7Track your progress as you unlock",
-                    "§7Achievements and rack up points.",
-                    "",
-                    "§7Total Points: §e" + StringUtility.commaify(achievementPoints),
-                    "",
-                    "§eClick to view your achievements!"
-                );
+                return ItemStacks.item(Material.DIAMOND, """
+                        <a>Achievements
+                        <7>Track your progress as you unlock
+                        <7>Achievements and rack up points.
+
+                        <7>Total Points: <e>{:,}
+
+                        <e>Click to view your achievements!""", achievementPoints);
             }
 
             @Override
@@ -249,25 +215,23 @@ public class GUIMyProfile extends HypixelInventoryGUI {
         set(new GUIClickableItem(31) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                String progressBar = createProgressBar(progress, 40);
+                Text progressBar = createProgressBar(progress, 40);
                 int progressPercent = (int) (progress * 100);
 
-                return ItemStackCreator.getStack(
-                    "§aHypixel Leveling",
-                    Material.BREWING_STAND,
-                    1,
-                    "§7Playing games and completing quests",
-                    "§7will reward you with §3Hypixel",
-                    "§3Experience§7, which is required to",
-                    "§7level up and acquire new perks and",
-                    "§7rewards!",
-                    "",
-                    "§3Hypixel Level §a" + level + " §3" + progressBar + " §3" + progressPercent + "%",
-                    "",
-                    "§7Experience until next level: §3" + StringUtility.commaify(xpNeeded),
-                    "",
-                    "§eClick to see your rewards!"
-                );
+                return ItemStacks.item(Material.BREWING_STAND, """
+                        <a>Hypixel Leveling
+                        <7>Playing games and completing quests
+                        <7>will reward you with <3>Hypixel
+                        <3>Experience<7>, which is required to
+                        <7>level up and acquire new perks and
+                        <7>rewards!
+
+                        <3>Hypixel Level <a>{} {} <3>{}%
+
+                        <7>Experience until next level: <3>{:,}
+
+                        <e>Click to see your rewards!""",
+                        level, progressBar, progressPercent, xpNeeded);
             }
 
             @Override
@@ -281,21 +245,18 @@ public class GUIMyProfile extends HypixelInventoryGUI {
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 int challengesCompleted = 15 - questData.getRemainingChallenges();
 
-                return ItemStackCreator.getStack(
-                    "§aQuests & Challenges",
-                    Material.ENCHANTED_BOOK,
-                    1,
-                    "§7Completing quests and challenges",
-                    "§7will reward you with §6Coins§7, §3Hypixel",
-                    "§3Experience§7 and more!",
-                    "",
-                    "§7You can complete a maximum of §a15 ",
-                    "§7challenges every day.",
-                    "",
-                    "§7Challenges completed today: §a" + challengesCompleted,
-                    "",
-                    "§eClick to view Quests & Challenges."
-                );
+                return ItemStacks.item(Material.ENCHANTED_BOOK, """
+                        <a>Quests & Challenges
+                        <7>Completing quests and challenges
+                        <7>will reward you with <6>Coins<7>, <3>Hypixel
+                        <3>Experience<7> and more!
+
+                        <7>You can complete a maximum of <a>15\s
+                        <7>challenges every day.
+
+                        <7>Challenges completed today: <a>{}
+
+                        <e>Click to view Quests & Challenges.""", challengesCompleted);
             }
 
             @Override
@@ -307,15 +268,12 @@ public class GUIMyProfile extends HypixelInventoryGUI {
         set(new GUIItem(33) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aSettings & Visibility",
-                    Material.COMPARATOR,
-                    1,
-                    "§7Allows you to edit and control",
-                    "§7various personal settings.",
-                    "",
-                    "§eClick to edit your settings!"
-                );
+                return ItemStacks.item(Material.COMPARATOR, """
+                        <a>Settings & Visibility
+                        <7>Allows you to edit and control
+                        <7>various personal settings.
+
+                        <e>Click to edit your settings!""");
             }
         });
 
@@ -327,28 +285,22 @@ public class GUIMyProfile extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aRecent Games",
-                    Material.BOOK,
-                    1,
-                    "§7View your recently played games.",
-                    "",
-                    "§eClick to view!"
-                );
+                return ItemStacks.item(Material.BOOK, """
+                        <a>Recent Games
+                        <7>View your recently played games.
+
+                        <e>Click to view!""");
             }
         });
         set(new GUIItem(40) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aAccount Status",
-                    Material.ANVIL,
-                    1,
-                    "§7Check your punishment history and",
-                    "§7see where you stand.",
-                    "",
-                    "§eClick to view!"
-                );
+                return ItemStacks.item(Material.ANVIL, """
+                        <a>Account Status
+                        <7>Check your punishment history and
+                        <7>see where you stand.
+
+                        <e>Click to view!""");
             }
         });
         set(new GUIClickableItem(41) {
@@ -359,66 +311,53 @@ public class GUIMyProfile extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStackHead(
-                    "§aSelect Language",
-                    "98daa1e3ed94ff3e33e1d4c6e43f024c47d78a57ba4d38e75e7c9264106",
-                    1,
-                    "§7Change your language.",
-                    "",
-                    "§7Currently available:",
-                    "§7   ∙ §fEnglish",
-                        "§7   ∙ §fFinnish",
-                    "",
-                    "§7More languages coming soon!",
-                    "",
-                    "§eClick to change your language!"
-                );
+                return ItemStacks.head("98daa1e3ed94ff3e33e1d4c6e43f024c47d78a57ba4d38e75e7c9264106", """
+                        <a>Select Language
+                        <7>Change your language.
+
+                        <7>Currently available:
+                        <7>   ∙ <f>English
+                        <7>   ∙ <f>Finnish
+
+                        <7>More languages coming soon!
+
+                        <e>Click to change your language!""");
             }
         });
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aHypixel Store",
-                    Material.GOLD_INGOT,
-                    1,
-                    "§7View the Hypixel Store from right",
-                    "§7here in-game!",
-                    "",
-                    "§7Your Hypixel Gold: §60",
-                    "",
-                    "§eClick to view!"
-                );
+                return ItemStacks.item(Material.GOLD_INGOT, """
+                        <a>Hypixel Store
+                        <7>View the Hypixel Store from right
+                        <7>here in-game!
+
+                        <7>Your Hypixel Gold: <6>0
+
+                        <e>Click to view!""");
             }
         });
         set(new GUIItem(53) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                    "§aEvent Shop",
-                    Material.EMERALD,
-                    1,
-                    "§7Level up during events by playing",
-                    "§7games and completing quests.",
-                    "",
-                    "§7Earn §fEvent Silver §7when you gain an",
-                    "§7Event Level. §fSilver §7can be used to",
-                    "§7purchase event-themed cosmetics!",
-                    "",
-                    "§eClick to view shop!"
-                );
+                return ItemStacks.item(Material.EMERALD, """
+                        <a>Event Shop
+                        <7>Level up during events by playing
+                        <7>games and completing quests.
+
+                        <7>Earn <f>Event Silver <7>when you gain an
+                        <7>Event Level. <f>Silver <7>can be used to
+                        <7>purchase event-themed cosmetics!
+
+                        <e>Click to view shop!""");
             }
         });
         updateItemStacks(getInventory(), player);
     }
 
-    private String createProgressBar(double progress, int length) {
+    private Text createProgressBar(double progress, int length) {
         int filled = (int) (progress * length);
-        StringBuilder bar = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            bar.append(i < filled ? "|" : "§8|");
-        }
-        return bar.toString();
+        return Text.of("<3>{}<8>{}", "|".repeat(filled), "|".repeat(length - filled));
     }
 
     @Override

@@ -23,7 +23,7 @@ public class NPCMelody extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Melody §d♫", "§e§lCLICK"};
+				return new String[]{"Melody <d>♫", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -73,12 +73,12 @@ public class NPCMelody extends HypixelNPC {
 			return;
 		}
 		if (data.isCurrentlyActive(MissionCollectAcaciaLogs.class)) {
-			sendNPCMessage(player, "If you can bring me §a512 Acacia Logs§f, I can craft another §dHarp§f!");
+			sendNPCMessage(player, "If you can bring me <a>512 Acacia Logs<f>, I can craft another <d>Harp<f>!");
 			return;
 		}
 		if (data.isCurrentlyActive(MissionGiveMelodyAcaciaLogs.class)) {
 			if (!player.removeItemFromPlayer(ItemType.ACACIA_LOG, 256)) {
-				sendNPCMessage(player, "It seems like you don't have enough §aAcacia Logs§f with you. Please come back when you have collected enough!");
+				sendNPCMessage(player, "It seems like you don't have enough <a>Acacia Logs<f> with you. Please come back when you have collected enough!");
 				return;
 			}
 			player.openView(new ClaimRewardView(), new ClaimRewardView.State(ItemType.MELODY_SHOES, () -> {
@@ -90,23 +90,23 @@ public class NPCMelody extends HypixelNPC {
 	@Override
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return List.of(
-				DialogueSet.builder().key("intro").lines(new String[]{
-						"Hello! §d♫"
-				}).build(),
-				DialogueSet.builder().key("option").lines(new String[]{
-						"Yes, I'm fine, though my beloved §dHarp §fwas broken to pieces by the storm.",
+				DialogueSet.builder().key("intro").lines(
+						"Hello! <d>♫"
+				).build(),
+				DialogueSet.builder().key("option").lines(
+						"Yes, I'm fine, though my beloved <d>Harp <f>was broken to pieces by the storm.",
 						"If you would be so willing, could you bring me the materials so that I may make another?",
 						"My brother was on his way to help, but you got here first.",
-						"If you'd be so kind as to bring me §a512 Acacia Logs§f, I'll be able to do the rest"
-				}).build(),
-				DialogueSet.builder().key("thank_you").lines(new String[]{
-						"Thank you so much! §d❤",
+						"If you'd be so kind as to bring me <a>512 Acacia Logs<f>, I'll be able to do the rest"
+				).build(),
+				DialogueSet.builder().key("thank_you").lines(
+						"Thank you so much! <d>❤",
 						"I already have some string, so I can just use this wood to fashion the frame of the harp.",
 						"Now, if I'm doing this right, this goes here and...",
-						"It worked! This harp looks and sounds even more beautiful than the last! §d♪",
+						"It worked! This harp looks and sounds even more beautiful than the last! <d>♪",
 						"Thank you for your help - please take this as a reward.",
-						"Talk to me again if you ever want to givee my §dHarp §fa try!"
-				}).build()
+						"Talk to me again if you ever want to givee my <d>Harp <f>a try!"
+				).build()
 		).toArray(DialogueSet[]::new);
 	}
 

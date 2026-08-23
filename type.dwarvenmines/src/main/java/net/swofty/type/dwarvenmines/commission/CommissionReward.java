@@ -1,5 +1,7 @@
 package net.swofty.type.dwarvenmines.commission;
 
+import net.swofty.commons.text.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -47,8 +49,8 @@ public record CommissionReward(int hotmXp, int miningXp, int mithrilPowder, bool
 		);
 	}
 
-	public static String[] getRewardLore(int hotmTier, boolean isHotmMaxed, boolean isDailyBonus) {
-		List<String> lore = new ArrayList<>();
+	public static List<Text> getRewardLore(int hotmTier, boolean isHotmMaxed, boolean isDailyBonus) {
+		List<Text> lore = new ArrayList<>();
 
 		if (!isHotmMaxed) {
 			int baseHotmXp;
@@ -61,25 +63,25 @@ public record CommissionReward(int hotmXp, int miningXp, int mithrilPowder, bool
 			}
 
 			if (isDailyBonus) {
-				lore.add("§7- §5+" + (baseHotmXp + 900) + " Heart of the Mountain XP §e(Daily Bonus)");
+				lore.add(Text.of("<7>- <5>+{} Heart of the Mountain XP <e>(Daily Bonus)", baseHotmXp + 900));
 			} else {
-				lore.add("§7- §5+" + baseHotmXp + " Heart of the Mountain XP");
+				lore.add(Text.of("<7>- <5>+{} Heart of the Mountain XP", baseHotmXp));
 			}
 		}
 
 		if (!isHotmMaxed) {
 			if (isDailyBonus) {
-				lore.add("§7- §2+100 Mithril Powder");
+				lore.add(Text.of("<7>- <2>+100 Mithril Powder"));
 			} else {
-				lore.add("§7- §2+100 Mithril Powder");
+				lore.add(Text.of("<7>- <2>+100 Mithril Powder"));
 			}
 		} else {
-			lore.add("§7- §2+500 Mithril Powder");
+			lore.add(Text.of("<7>- <2>+500 Mithril Powder"));
 		}
 
-		lore.add("§7- §3+7.5k Mining XP");
+		lore.add(Text.of("<7>- <3>+7.5k Mining XP"));
 
-		return lore.toArray(new String[0]);
+		return lore;
 	}
 }
 

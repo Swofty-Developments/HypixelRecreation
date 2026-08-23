@@ -87,7 +87,7 @@ public class RecipeParser {
             String operation = (String) requirement.get("operation");
             String rightVar = (String) requirement.get("right");
             String failMessage = (String) requirement.getOrDefault("fail-message",
-                    "§cRequirement not met: " + entry.getKey());
+                    "<c>Requirement not met: " + entry.getKey());
 
             requirements.add(new RequirementCheck(leftVar, operation, rightVar, failMessage));
         }

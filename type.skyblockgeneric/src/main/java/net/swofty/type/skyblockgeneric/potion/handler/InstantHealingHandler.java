@@ -19,7 +19,7 @@ public class InstantHealingHandler implements PotionEffectHandler {
         float currentHealth = player.getHealth();
         float maxHealth = player.getMaxHealth();
         player.setHealth(Math.min(maxHealth, currentHealth + (float) healAmount));
-        player.sendMessage("§c+" + (int) healAmount + " ❤");
+        player.sendMessage("<c>+{} ❤", (int) healAmount);
     }
 
     @Override

@@ -2,8 +2,6 @@ package net.swofty.type.murdermysterygame.gold;
 
 import net.swofty.commons.mc.HypixelPosition;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
@@ -85,7 +83,7 @@ public class GoldManager {
 
                         addGoldToSlot(player, 1);
 
-                        player.sendMessage(Component.text("+1 Gold", NamedTextColor.GOLD));
+                        player.sendMessage("<6>+1 Gold");
 
                         trackGoldAchievements(player, 1);
 

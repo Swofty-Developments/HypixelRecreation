@@ -1,7 +1,5 @@
 package net.swofty.type.ravengarddungeon.interactables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
@@ -15,6 +13,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.particle.Particle;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.type.generic.gui.inventory.Inventories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,8 +101,9 @@ public final class DungeonChest extends DungeonInteractable {
             ).delay(TaskSchedule.tick(step)).schedule();
         }
 
-        Inventory inventory = new Inventory(InventoryType.CHEST_3_ROW,
-                Component.text(TITLE_GLYPHS, NamedTextColor.WHITE));
+        Inventory inventory = Inventories.of(InventoryType.CHEST_3_ROW, "<f>{}",
+                net.kyori.adventure.text.Component.text(TITLE_GLYPHS)
+                        .font(net.swofty.type.ravengardgeneric.gui.RavengardFont.RAVENGARD));
         double distance = Math.hypot(base.x(), base.z());
         double tierBonus = tier.equals("gold") ? 200 : tier.equals("silver") ? 100 : 0;
         int rolls = 2 + random.nextInt(2) + (tier.equals("normal") ? 0 : 1);

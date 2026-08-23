@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,17 +107,17 @@ public class SkywarsKit {
     /**
      * Get formatted cost string for display
      */
-    public String getFormattedCost() {
+    public Text getFormattedCost() {
         if (isDefault) {
-            return "§aFREE";
+            return Text.of("<a>FREE");
         } else if (opalCost > 0) {
-            return "§9" + opalCost + " Opal" + (opalCost > 1 ? "s" : "");
+            return Text.of("<9>{} Opal{}", opalCost, opalCost > 1 ? "s" : "");
         } else if (cost > 0) {
-            return "§6" + String.format("%,d", cost);
+            return Text.of("<6>{:,}", cost);
         } else if (unlockMethod != null) {
-            return "§5" + formatUnlockMethod(unlockMethod);
+            return Text.of("<5>{}", formatUnlockMethod(unlockMethod));
         }
-        return "§aFREE";
+        return Text.of("<a>FREE");
     }
 
     private String formatUnlockMethod(String method) {
@@ -129,8 +130,8 @@ public class SkywarsKit {
     /**
      * Generate lore lines describing the kit's items for a specific mode
      */
-    public List<String> getItemsLore(String mode) {
-        List<String> lore = new ArrayList<>();
+    public List<Text> getItemsLore(String mode) {
+        List<Text> lore = new ArrayList<>();
         List<ItemStack> items = getStartingItems(mode);
 
         for (ItemStack item : items) {
@@ -142,18 +143,16 @@ public class SkywarsKit {
                         .plainText().serialize(item.get(net.minestom.server.component.DataComponents.CUSTOM_NAME));
             }
 
-            String line = "§7" + itemName;
-            if (item.amount() > 1) {
-                line += " x" + item.amount();
-            }
-            lore.add(line);
+            lore.add(item.amount() > 1
+                    ? Text.of("<7>{} x{}", itemName, item.amount())
+                    : Text.of("<7>{}", itemName));
 
             // Add enchantments if present
             var enchantments = item.get(net.minestom.server.component.DataComponents.ENCHANTMENTS);
             if (enchantments != null && !enchantments.enchantments().isEmpty()) {
                 for (var entry : enchantments.enchantments().entrySet()) {
                     String enchantName = formatEnchantmentName(entry.getKey().name());
-                    lore.add("§7   §8∙ " + enchantName + " " + StringUtility.getAsRomanNumeral(entry.getValue()));
+                    lore.add(Text.of("<7>   <8>∙ {} {:roman}", enchantName, entry.getValue()));
                 }
             }
         }

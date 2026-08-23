@@ -14,7 +14,10 @@ public class NPCHattie extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§dHattie", "§e§lCLICK"};
+                return new String[]{
+                    "<d>Hattie",
+                    "<e><l>CLICK"
+                };
             }
 
             @Override
@@ -53,17 +56,17 @@ public class NPCHattie extends HypixelNPC {
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
             DialogueSet.builder()
-                .key("hotspots-1").lines(new String[]{
+                .key("hotspots-1").lines(
                     "Hotspots are temporary rings that appear above the water or lava.",
                     "Fish inside one and you'll get a bonus while your bobber stays in it.",
                     "The Bayou, Hub, Spider's Den, and Crimson Isle all have them. Keep your eyes open!"
-                }).build(),
+                ).build(),
             DialogueSet.builder()
-                .key("hotspots-2").lines(new String[]{
-                    "Hotspots can boost your §bFishing Speed§f, §3Sea Creature Chance§f, §6Treasure Chance§f, or even §5Trophy Fish Chance§f.",
+                .key("hotspots-2").lines(
+                    "Hotspots can boost your <b>Fishing Speed<f>, <3>Sea Creature Chance<f>, <6>Treasure Chance<f>, or even <5>Trophy Fish Chance<f>.",
                     "Some creatures only show up when you're fishing inside one.",
                     "If the water starts glowing, don't waste the opportunity."
-                }).build()
+                ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

@@ -147,11 +147,11 @@ public class DatapointSkyBlockExperience extends SkyBlockDatapoint<DatapointSkyB
          * Returns a formatted display showing the player's progress to the next level.
          * This includes a visual loading bar based on the experience gained.
          *
-         * @return a String representation of the next level's progress or "§cMAX" if the maximum level is reached.
+         * @return a String representation of the next level's progress or "<c>MAX" if the maximum level is reached.
          */
         public String getNextLevelDisplay() {
             SkyBlockLevelRequirement nextLevel = getLevel().getNextLevel();
-            if (nextLevel == null) return "§cMAX";
+            if (nextLevel == null) return "<c>MAX";
 
             int nextLevelXP = nextLevel.getExperience() - nextLevel.getExperienceOfAllPreviousLevels();
             double totalXP = getTotalXP() - nextLevel.getExperienceOfAllPreviousLevels();
@@ -160,14 +160,10 @@ public class DatapointSkyBlockExperience extends SkyBlockDatapoint<DatapointSkyB
             int maxBarLength = baseLoadingBar.length();
             int completedLength = (int) ((totalXP / (double) nextLevelXP) * maxBarLength);
 
-            String completedLoadingBar = "§3§m" + baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
-            int formattingCodeLength = 4;  // Adjust this if you add or remove formatting codes
-            String uncompletedLoadingBar = "§f§m" + baseLoadingBar.substring(Math.min(
-                    completedLoadingBar.length() - formattingCodeLength, // Adjust for added formatting codes
-                    maxBarLength
-            ));
+            String completedLoadingBar = baseLoadingBar.substring(0, Math.min(completedLength, maxBarLength));
+            String uncompletedLoadingBar = baseLoadingBar.substring(Math.min(completedLoadingBar.length(), maxBarLength));
 
-            return "§7" + completedLoadingBar + uncompletedLoadingBar + "§r §b" + Math.round(totalXP) + "§3/§b" + nextLevelXP;
+            return "<7><3><m>" + completedLoadingBar + "<f>" + uncompletedLoadingBar + "<r> <b>" + Math.round(totalXP) + "<3>/<b>" + nextLevelXP;
         }
 
         /**

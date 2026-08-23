@@ -16,7 +16,7 @@ public class WardrobeCommand extends HypixelCommand {
             SkyBlockPlayer player = (SkyBlockPlayer) sender;
             // doesn't seem to be a thing in the loadout update
             /*if (player.getSkyBlockExperience().getLevel().getLevel() < 5) {
-                player.sendMessage("§cYou must be SkyBlock Level 5 to use the Wardrobe!");
+                player.sendMessage("<c>You must be SkyBlock Level 5 to use the Wardrobe!");
                 return;
             }*/
             player.openView(new GUIWardrobe());

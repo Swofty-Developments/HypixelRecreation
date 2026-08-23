@@ -2,35 +2,26 @@ package net.swofty.type.generic.collectibles;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.translation.Argument;
-import net.swofty.type.generic.i18n.I18n;
+import net.swofty.commons.text.Text;
 
-import java.util.Arrays;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CollectibleDescriptionService {
 
-    public static List<Component> resolveLore(CollectibleDefinition definition) {
+    public static List<Text> resolveLore(CollectibleDefinition definition) {
         String categoryDescriptionKey = definition.categoryDescriptionKey();
         if (categoryDescriptionKey != null && !categoryDescriptionKey.isBlank()) {
-            Component nameComponent = Component.text(definition.name());
             try {
-                Component[] lines = I18n.iterable(categoryDescriptionKey, Argument.component("name", nameComponent));
-                return Arrays.stream(lines)
-                    .map(line -> line.colorIfAbsent(NamedTextColor.GRAY))
+                return Text.keyLines(categoryDescriptionKey, definition.name()).stream()
+                    .map(line -> Text.of("<7>{}", line))
                     .toList();
             } catch (IllegalStateException exception) {
                 if (!isMissingIterableKey(exception)) {
                     throw exception;
                 }
 
-                return List.of(
-                    I18n.t(categoryDescriptionKey, Argument.component("name", nameComponent))
-                        .colorIfAbsent(NamedTextColor.GRAY)
-                );
+                return List.of(Text.of("<7>{}", Text.key(categoryDescriptionKey, definition.name())));
             }
         }
 
@@ -39,7 +30,7 @@ public final class CollectibleDescriptionService {
         }
 
         return definition.description().stream()
-            .map(line -> (Component) Component.text(line, NamedTextColor.GRAY))
+            .map(line -> Text.of("<7>{}", line))
             .toList();
     }
 

@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.Material;
@@ -65,31 +64,6 @@ public final class StringUtility {
 			}
 		}
 		return "Just now";
-	}
-
-	public static String createLineProgressBar(int length, ChatColor progressColor, double current, double max) {
-		double percent = Math.min(current, max) / max;
-		long completed = Math.round((double) length * percent);
-		StringBuilder builder = new StringBuilder().append(progressColor);
-		for (int i = 0; i < completed; i++)
-			builder.append("-");
-		builder.append(ChatColor.WHITE);
-		for (int i = 0; i < length - completed; i++)
-			builder.append("-");
-		builder.append(" ").append(ChatColor.YELLOW).append(commaify(current)).append(ChatColor.GOLD).append("/")
-				.append(ChatColor.YELLOW).append(commaify(max));
-		return builder.toString();
-	}
-
-	public static String createProgressText(String text, double current, double max) {
-		double percent;
-		if (max != 0)
-			percent = (current / max) * 100.0;
-		else
-			percent = 0.0;
-		percent = roundTo(percent, 1);
-		return ChatColor.GRAY + text + ": " + (percent < 100.0 ? ChatColor.YELLOW + commaify(percent)
-				+ ChatColor.GOLD + "%" : ChatColor.GREEN + "100.0%");
 	}
 
 	public static double roundTo(double d, int decimalPlaces) {
@@ -264,9 +238,7 @@ public final class StringUtility {
 
 	public static String getTextFromComponent(Component component) {
 		if (component == null)
-			throw new IllegalArgumentException("Component cannot be null");
-		if (!(component instanceof TextComponent))
-			throw new IllegalArgumentException("Component must be a TextComponent, but got: " + component.getClass().getSimpleName());
+			return "";
 		return PlainTextComponentSerializer.plainText().serialize(component);
 	}
 
@@ -318,88 +290,6 @@ public final class StringUtility {
 		DecimalFormat df = new DecimalFormat(builder);
 		df.setRoundingMode(RoundingMode.CEILING);
 		return df.format(d);
-	}
-
-	public static List<String> splitByWordAndLength(String string, int splitLength) {
-		List<String> result = new ArrayList<>();
-		String[] lines = string.split("\n", -1);
-		for (String line : lines) {
-			if (line.isEmpty()) {
-				result.add("");
-				continue;
-			}
-
-			String[] words = line.split(" ");
-			StringBuilder currentString = new StringBuilder();
-
-			for (String word : words) {
-				if (word.isEmpty()) {
-					continue; // skip extra spaces
-				}
-				// Check if adding the next word exceeds the split length (considering the space)
-				int extraSpace = currentString.isEmpty() ? 0 : 1;
-				if (currentString.length() + extraSpace + word.length() > splitLength) {
-					// Add the currentString to the result and reset it
-					if (!currentString.isEmpty()) {
-						result.add(currentString.toString());
-						currentString = new StringBuilder();
-					}
-				}
-				// Add a space before the word if it's not the first word in the currentString
-				if (!currentString.isEmpty()) {
-					currentString.append(" ");
-				}
-				currentString.append(word);
-			}
-
-			// Add any remaining text to the result
-			result.add(currentString.toString());
-		}
-
-		return result;
-	}
-
-	public static List<String> splitByWordAndLengthKeepLegacyColor(String string, int splitLength) {
-		List<String> result = new ArrayList<>();
-		String lastColorCode = "";
-
-		for (String line : string.split("\n", -1)) {
-			if (line.isEmpty()) {
-				result.add("");
-				continue;
-			}
-
-			StringBuilder currentLine = new StringBuilder(lastColorCode);
-
-			for (String word : line.split(" ")) {
-				if (word.isEmpty()) continue;
-
-				int extraSpace = currentLine.length() == lastColorCode.length() ? 0 : 1;
-
-				if (currentLine.length() + extraSpace + word.length() > splitLength) {
-					if (currentLine.length() > lastColorCode.length()) {
-						result.add(currentLine.toString());
-						currentLine = new StringBuilder(lastColorCode);
-					}
-				} else if (extraSpace == 1) {
-					currentLine.append(' ');
-				}
-
-				currentLine.append(word);
-
-				// this wont work with bold/italic and those but if you need those don't use this method
-				int colorIndex = word.lastIndexOf('§');
-				if (colorIndex != -1 && colorIndex < word.length() - 1) {
-					lastColorCode = "§" + word.charAt(colorIndex + 1);
-				}
-			}
-
-			if (currentLine.length() > lastColorCode.length()) {
-				result.add(currentLine.toString());
-			}
-		}
-
-		return result;
 	}
 
 	public static List<String> splitByNewLine(String string) {

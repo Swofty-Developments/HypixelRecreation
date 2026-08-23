@@ -1,27 +1,29 @@
 package net.swofty.commons.skywars;
 
 import lombok.Getter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 public enum SoulWellRewardType {
-    KIT_UNLOCK(20, "Kit Unlock", "§a"),
-    PERK_UNLOCK(15, "Perk Unlock", "§b"),
-    SOUL_RETURN(25, "Soul Return", "§e"),
-    COSMETIC_UNLOCK(10, "Cosmetic", "§d"),
-    COINS_SMALL(15, "Coins", "§6"),
-    COINS_LARGE(10, "Jackpot!", "§6"),
-    EXPERIENCE_BOOST(5, "XP Boost", "§a");
+    KIT_UNLOCK(20, "Kit Unlock", NamedTextColor.GREEN),
+    PERK_UNLOCK(15, "Perk Unlock", NamedTextColor.AQUA),
+    SOUL_RETURN(25, "Soul Return", NamedTextColor.YELLOW),
+    COSMETIC_UNLOCK(10, "Cosmetic", NamedTextColor.LIGHT_PURPLE),
+    COINS_SMALL(15, "Coins", NamedTextColor.GOLD),
+    COINS_LARGE(10, "Jackpot!", NamedTextColor.GOLD),
+    EXPERIENCE_BOOST(5, "XP Boost", NamedTextColor.GREEN);
 
     private final int weight;
     private final String displayName;
-    private final String colorCode;
+    private final TextColor color;
 
-    SoulWellRewardType(int weight, String displayName, String colorCode) {
+    SoulWellRewardType(int weight, String displayName, TextColor color) {
         this.weight = weight;
         this.displayName = displayName;
-        this.colorCode = colorCode;
+        this.color = color;
     }
 
     public static SoulWellRewardType rollRandom() {

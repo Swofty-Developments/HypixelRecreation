@@ -14,10 +14,10 @@ public class NPCDeliveryMan extends HypixelNPC {
             @Override
             public String[] holograms(HypixelPlayer player) {
                 return new String[]{
-                    "§aThe Delivery Man",
-                    "§e§lRIGHT CLICK",
-                    "§a0 Daily Reward Tokens!" // this changes colors
-                    // shows "Free Daily Reward" (§6, §b, §5) if not claimed, and "1 Delivery!" (§c, §f) if not claimed.
+                    "<a>The Delivery Man",
+                    "<e><l>RIGHT CLICK",
+                    "<a>0 Daily Reward Tokens!" // this changes colors
+                    // shows "Free Daily Reward" (<6>, <b>, <5>) if not claimed, and "1 Delivery!" (<c>, <f>) if not claimed.
                 };
             }
 

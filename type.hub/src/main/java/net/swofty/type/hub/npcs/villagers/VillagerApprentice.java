@@ -12,7 +12,7 @@ public class VillagerApprentice extends HypixelNPC {
         super(new VillagerConfiguration(){
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§fApprentice", "§e§lCLICK"};
+                return new String[]{"<f>Apprentice", "<e><l>CLICK"};
             }
 
             @Override

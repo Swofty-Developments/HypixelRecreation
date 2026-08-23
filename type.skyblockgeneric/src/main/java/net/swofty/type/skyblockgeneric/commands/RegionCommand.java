@@ -5,6 +5,7 @@ import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.utils.location.RelativeVec;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
@@ -43,12 +44,12 @@ public class RegionCommand extends HypixelCommand {
             SkyBlockRegion region = SkyBlockRegion.getFromID(regionId);
 
             if (region == null) {
-                sender.sendMessage("§cUnable to find a region by the ID §e" + regionId + "§c.");
+                sender.sendMessage(Text.of("<c>Unable to find a region by the ID <e>{}<c>.", regionId));
                 return;
             }
 
             region.delete();
-            sender.sendMessage("§aSuccessfully deleted region §e" + regionId + "§a.");
+            sender.sendMessage(Text.of("<a>Successfully deleted region <e>{}<a>.", regionId));
         }, removeRegion);
 
         command.addSyntax((sender, context) -> {
@@ -61,9 +62,9 @@ public class RegionCommand extends HypixelCommand {
             Vec vectorPosition2 = position2.from((SkyBlockPlayer) sender);
             RegionType regionType = context.get(addRegion).get("region_type");
 
-            sender.sendMessage("§aSuccessfully created region §e" + regionId + "§a with type §e" + regionType.name() + "§a.");
-            sender.sendMessage("§aPosition 1: §e" + vectorPosition1.x() + ", " + vectorPosition1.y() + ", " + vectorPosition1.z());
-            sender.sendMessage("§aPosition 2: §e" + vectorPosition2.x() + ", " + vectorPosition2.y() + ", " + vectorPosition2.z());
+            sender.sendMessage(Text.of("<a>Successfully created region <e>{}<a> with type <e>{}<a>.", regionId, regionType.name()));
+            sender.sendMessage(Text.of("<a>Position 1: <e>{}, {}, {}", vectorPosition1.x(), vectorPosition1.y(), vectorPosition1.z()));
+            sender.sendMessage(Text.of("<a>Position 2: <e>{}, {}, {}", vectorPosition2.x(), vectorPosition2.y(), vectorPosition2.z()));
 
             new SkyBlockRegion(regionId,
                 new Pos(vectorPosition1.x(), vectorPosition1.y(), vectorPosition1.z()),
@@ -75,16 +76,16 @@ public class RegionCommand extends HypixelCommand {
         command.addSyntax((sender, context) -> {
             RegionSelectorComponent.SelectedRegion region = RegionSelectorComponent.getPlayerRegionSelection().get((SkyBlockPlayer) sender);
             if (region == null || region.getPos1() == null || region.getPos2() == null) {
-                sender.sendMessage("§cYou must select a region first using the region selector item.");
+                sender.sendMessage("<c>You must select a region first using the region selector item.");
                 return;
             }
 
             String regionId = context.get(wandRegion).get("region_id");
             RegionType regionType = context.get(wandRegion).get("region_type");
 
-            sender.sendMessage("§aSuccessfully created region §e" + regionId + "§a with type §e" + regionType.name() + "§a.");
-            sender.sendMessage("§aPosition 1: §e" + region.getPos1().x() + ", " + region.getPos1().y() + ", " + region.getPos1().z());
-            sender.sendMessage("§aPosition 2: §e" + region.getPos2().x() + ", " + region.getPos2().y() + ", " + region.getPos2().z());
+            sender.sendMessage(Text.of("<a>Successfully created region <e>{}<a> with type <e>{}<a>.", regionId, regionType.name()));
+            sender.sendMessage(Text.of("<a>Position 1: <e>{}, {}, {}", region.getPos1().x(), region.getPos1().y(), region.getPos1().z()));
+            sender.sendMessage(Text.of("<a>Position 2: <e>{}, {}, {}", region.getPos2().x(), region.getPos2().y(), region.getPos2().z()));
 
             new SkyBlockRegion(regionId,
                 new Pos(region.getPos1().x(), region.getPos1().y(), region.getPos1().z()),

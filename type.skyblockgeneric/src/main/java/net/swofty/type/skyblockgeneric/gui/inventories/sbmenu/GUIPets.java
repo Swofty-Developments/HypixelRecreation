@@ -1,7 +1,5 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu;
 
-import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
@@ -9,15 +7,14 @@ import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributePetData;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.PaginatedView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.PetComponent;
@@ -27,7 +24,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class GUIPets extends PaginatedView<SkyBlockItem, GUIPets.PetsState> {
     private static final int[] PAGINATED_SLOTS = {
@@ -39,8 +35,9 @@ public class GUIPets extends PaginatedView<SkyBlockItem, GUIPets.PetsState> {
 
     @Override
     public ViewConfiguration<PetsState> configuration() {
-        return ViewConfiguration.withString(
-            (state, ctx) -> I18n.string("gui_sbmenu.pets.title", ctx.player().getLocale(), Component.text(String.valueOf(state.page() + 1)), Component.text(String.valueOf(Math.max(1, (int) Math.ceil((double) getFilteredItems(state).size() / PAGINATED_SLOTS.length))))),
+        return ViewConfiguration.withText(
+            (state, ctx) -> Text.key("gui_sbmenu.pets.title", state.page() + 1,
+                Math.max(1, (int) Math.ceil((double) getFilteredItems(state).size() / PAGINATED_SLOTS.length))),
                 InventoryType.CHEST_6_ROW
         );
     }
@@ -100,23 +97,21 @@ public class GUIPets extends PaginatedView<SkyBlockItem, GUIPets.PetsState> {
         boolean isPetEnabled = skyBlockPlayer.getPetData().getEnabledPet() == item;
 
         ItemStack.Builder itemStack = new NonPlayerItemUpdater(item).getUpdatedItem();
-        List<String> lore = new ArrayList<>(itemStack.build().get(DataComponents.LORE).stream().map(StringUtility::getTextFromComponent).toList());
-        Locale l = player.getLocale();
-        lore.add(" ");
+        List<Text> lore = ItemStacks.loreText(itemStack);
+        lore.add(Text.literal(" "));
         if (isPetEnabled) {
-            ItemStackCreator.enchant(itemStack);
-            lore.add(I18n.string("gui_sbmenu.pets.currently_active", l));
-            lore.add(I18n.string("gui_sbmenu.pets.click_to_deselect", l));
+            ItemStacks.enchanted(itemStack);
+            lore.add(Text.key("gui_sbmenu.pets.currently_active"));
+            lore.add(Text.key("gui_sbmenu.pets.click_to_deselect"));
         } else {
-            lore.add(I18n.string("gui_sbmenu.pets.click_to_summon", l));
+            lore.add(Text.key("gui_sbmenu.pets.click_to_summon"));
         }
-        return ItemStackCreator.updateLore(itemStack, lore);
+        return ItemStacks.lore(itemStack, lore);
     }
 
     @Override
     protected void onItemClick(ClickContext<PetsState> click, ViewContext ctx, SkyBlockItem item, int index) {
         SkyBlockPlayer player = (SkyBlockPlayer) ctx.player();
-        Locale l = player.getLocale();
         PetsState state = click.state();
         boolean selected = player.getPetData().getEnabledPet() == item;
 
@@ -124,7 +119,7 @@ public class GUIPets extends PaginatedView<SkyBlockItem, GUIPets.PetsState> {
             player.getPetData().deselectCurrent();
             player.getPetData().updatePetEntityImpl(player);
             ctx.session(PetsState.class).update(s -> (PetsState) s.withItems(getPetsFromPlayer(player)));
-            player.sendMessage(I18n.string("gui_sbmenu.pets.msg.deselected", l, Component.text(item.getDisplayName())));
+            player.sendMessage(Text.key("gui_sbmenu.pets.msg.deselected", item.getDisplayName()));
             return;
         }
 
@@ -132,13 +127,13 @@ public class GUIPets extends PaginatedView<SkyBlockItem, GUIPets.PetsState> {
             player.addAndUpdateItem(item);
             player.getPetData().removePet(item.getAttributeHandler().getPotentialType());
             ctx.session(PetsState.class).update(s -> (PetsState) s.withItems(getPetsFromPlayer(player)));
-            player.sendMessage(I18n.string("gui_sbmenu.pets.msg.picked_up", l));
+            player.sendMessage(Text.key("gui_sbmenu.pets.msg.picked_up"));
             return;
         }
 
         player.getPetData().setEnabled(item.getAttributeHandler().getPotentialType(), true);
         player.getPetData().updatePetEntityImpl(player);
-        player.sendMessage(I18n.string("gui_sbmenu.pets.msg.selected", l, Component.text(item.getDisplayName())));
+        player.sendMessage(Text.key("gui_sbmenu.pets.msg.selected", item.getDisplayName()));
         ctx.session(PetsState.class).update(s -> (PetsState) s.withItems(getPetsFromPlayer(player)));
     }
 
@@ -154,42 +149,43 @@ public class GUIPets extends PaginatedView<SkyBlockItem, GUIPets.PetsState> {
 
         layout.slot(4, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-            String selectedPet = player.getPetData().getEnabledPet() == null ? "§cNone" : player.getPetData().getEnabledPet().getDisplayName();
-            return TranslatableItemStackCreator.getStack("gui_sbmenu.pets.info", Material.BONE, 1,
-                "gui_sbmenu.pets.info.lore", Component.text(selectedPet));
+            Text selectedPet = player.getPetData().getEnabledPet() == null
+                ? Text.of("<c>None")
+                : Text.literal(player.getPetData().getEnabledPet().getDisplayName());
+            return ItemStacks.item(Material.BONE, 1,
+                Text.key("gui_sbmenu.pets.info"),
+                Text.keyLines("gui_sbmenu.pets.info.lore", selectedPet));
         });
 
         layout.slot(47, (s, c) -> {
-            String status = s.convertToItem() ? "§aEnabled" : "§cDisabled";
-            ItemStack.Builder itemStack = TranslatableItemStackCreator.getStack("gui_sbmenu.pets.convert_to_item", Material.DIAMOND, 1,
-                "gui_sbmenu.pets.convert_to_item.lore", Component.text(status));
+            Text status = s.convertToItem() ? Text.of("<a>Enabled") : Text.of("<c>Disabled");
+            ItemStack.Builder itemStack = ItemStacks.item(Material.DIAMOND, 1,
+                Text.key("gui_sbmenu.pets.convert_to_item"),
+                Text.keyLines("gui_sbmenu.pets.convert_to_item.lore", status));
             if (s.convertToItem())
-                ItemStackCreator.enchant(itemStack);
+                ItemStacks.enchanted(itemStack);
             return itemStack;
         }, (click, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
-            Locale l = player.getLocale();
-            String status = !click.state().convertToItem() ? "§aENABLED" : "§cDISABLED";
-            player.sendMessage(I18n.string("gui_sbmenu.pets.msg.conversion_toggle", l, Component.text(status)));
+            Text status = !click.state().convertToItem() ? Text.of("<a>ENABLED") : Text.of("<c>DISABLED");
+            player.sendMessage(Text.key("gui_sbmenu.pets.msg.conversion_toggle", status));
             c.session(PetsState.class).update(s -> s.withConvertToItem(!s.convertToItem()));
         });
 
         layout.slot(51, (s, c) -> {
-            Locale l = c.player().getLocale();
-            List<String> lore = new ArrayList<>();
-            lore.add(" ");
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.literal(" "));
 
             for (SortType randomSortType : SortType.values()) {
-                lore.add(randomSortType == s.sortType() ?
-                        "§e> " + StringUtility.toNormalCase(randomSortType.name())
-                        : "§7> " + StringUtility.toNormalCase(randomSortType.name()));
+                lore.add(Text.of(randomSortType == s.sortType() ? "<e>> {}" : "<7>> {}",
+                        StringUtility.toNormalCase(randomSortType.name())));
             }
 
-            lore.add(" ");
-            lore.add(I18n.string("gui_sbmenu.pets.sort.right_click", l));
-            lore.add(I18n.string("gui_sbmenu.pets.sort.click", l));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_sbmenu.pets.sort.right_click"));
+            lore.add(Text.key("gui_sbmenu.pets.sort.click"));
 
-            return TranslatableItemStackCreator.getStack("gui_sbmenu.pets.sort", Material.HOPPER, 1, lore);
+            return ItemStacks.item(Material.HOPPER, 1, Text.key("gui_sbmenu.pets.sort"), lore);
         }, (click, c) -> {
             boolean isRightClick = click.click() instanceof Click.Right;
 

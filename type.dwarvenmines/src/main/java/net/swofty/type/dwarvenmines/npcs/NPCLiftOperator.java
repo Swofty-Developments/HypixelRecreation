@@ -13,7 +13,7 @@ public class NPCLiftOperator extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Lift Operator", "§e§lCLICK"};
+				return new String[]{"Lift Operator", "<e><l>CLICK"};
 			}
 
 			@Override

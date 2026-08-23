@@ -74,7 +74,7 @@ public class WallPlacement extends PlacementRule {
     public WallHeight getWallHeight(boolean connected, Directional directional, BlockUtils selfBlock) {
         if (connected) {
             BlockUtils upBlock = selfBlock.above();
-            if (upBlock.getBlock().isSolid() && !isWall(upBlock.getState()))
+            if (upBlock.getBlock().solid() && !isWall(upBlock.getState()))
                 return WallHeight.TALL;
             else if (isWall(upBlock.getState())) {
                 BlockState upState = upBlock.getState();
@@ -133,7 +133,7 @@ public class WallPlacement extends PlacementRule {
     }
 
     public boolean isSolidBlock(Block block) {
-        return block.isSolid();
+        return block.solid();
     }
 
     public boolean isFenceGate(Block block) {

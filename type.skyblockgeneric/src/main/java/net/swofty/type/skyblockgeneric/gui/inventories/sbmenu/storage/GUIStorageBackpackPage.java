@@ -1,11 +1,10 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.storage;
 
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -14,28 +13,27 @@ import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.ViewSession;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.utility.MathUtility;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointBackpacks;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.components.BackpackComponent;
-import net.swofty.type.skyblockgeneric.item.updater.NonPlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.item.updater.PlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
+
+import java.util.List;
 
 public class GUIStorageBackpackPage extends StatelessView {
     private final int page;
     private final int slots;
     private final SkyBlockItem item;
-    private final String title;
+    private final Text title;
     private final InventoryType inventoryType;
 
     public GUIStorageBackpackPage(int page, SkyBlockItem item) {
         this.page = page;
         this.item = item;
         this.slots = item.getComponent(BackpackComponent.class).getRows() * 9;
-        this.title = StringUtility.getTextFromComponent(new NonPlayerItemUpdater(item).getUpdatedItem().build()
-                .get(DataComponents.CUSTOM_NAME)) + " (Slot #" + page + ")";
+        this.title = Text.of("{} (Slot #{})", item.getDisplayNameText(), page);
         this.inventoryType = MathUtility.getFromSize(9 + slots);
     }
 
@@ -52,24 +50,22 @@ public class GUIStorageBackpackPage extends StatelessView {
 
         // Fill top row with glass panes
         for (int i = 0; i < 9; i++) {
-            layout.slot(i, ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+            layout.slot(i, ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
         }
 
         Components.close(layout, 0);
 
-        layout.slot(1, (s, c) -> {
-                    java.util.Locale l = c.player().getLocale();
-                    return ItemStackCreator.getStack(I18n.string("gui_sbmenu.storage.backpack_page.go_back", l), Material.ARROW, 1,
-                        I18n.iterable("gui_sbmenu.storage.backpack_page.go_back.lore"));
-                },
+        layout.slot(1, (s, c) -> ItemStacks.item(Material.ARROW, 1,
+                        Text.key("gui_sbmenu.storage.backpack_page.go_back"),
+                        Text.keyLines("gui_sbmenu.storage.backpack_page.go_back.lore")),
                 (click, c) -> {
                     saveItems((SkyBlockPlayer) c.player(), c);
                     c.player().openView(new GUIStorage());
                 });
 
         if (page != data.getHighestBackpackSlot()) {
-            layout.slot(8, (s, c) -> ItemStackCreator.getStackHead(I18n.string("gui_sbmenu.storage.backpack_page.last_page", c.player().getLocale()),
-                            "1ceb50d0d79b9fb790a7392660bc296b7ad2f856c5cbe1c566d99cfec191e668"),
+            layout.slot(8, (s, c) -> ItemStacks.head("1ceb50d0d79b9fb790a7392660bc296b7ad2f856c5cbe1c566d99cfec191e668",
+                            Text.key("gui_sbmenu.storage.backpack_page.last_page"), List.of()),
                     (click, c) -> {
                         saveItems((SkyBlockPlayer) c.player(), c);
                         SkyBlockPlayer p = (SkyBlockPlayer) c.player();
@@ -80,8 +76,8 @@ public class GUIStorageBackpackPage extends StatelessView {
                     });
 
             if (data.getBackpacks().containsKey(page + 1)) {
-                layout.slot(7, (s, c) -> ItemStackCreator.getStackHead(I18n.string("gui_sbmenu.storage.backpack_page.next_page", c.player().getLocale()),
-                                "848ca732a6e35dafd15e795ebc10efedd9ef58ff2df9b17af6e3d807bdc0708b"),
+                layout.slot(7, (s, c) -> ItemStacks.head("848ca732a6e35dafd15e795ebc10efedd9ef58ff2df9b17af6e3d807bdc0708b",
+                                Text.key("gui_sbmenu.storage.backpack_page.next_page"), List.of()),
                         (click, c) -> {
                             saveItems((SkyBlockPlayer) c.player(), c);
                             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
@@ -93,8 +89,8 @@ public class GUIStorageBackpackPage extends StatelessView {
         }
 
         if (page != data.getLowestBackpackSlot()) {
-            layout.slot(5, (s, c) -> ItemStackCreator.getStackHead(I18n.string("gui_sbmenu.storage.backpack_page.first_page", c.player().getLocale()),
-                            "8af22a97292de001079a5d98a0ae3a82c427172eabc370ed6d4a31c7e3a0024f"),
+            layout.slot(5, (s, c) -> ItemStacks.head("8af22a97292de001079a5d98a0ae3a82c427172eabc370ed6d4a31c7e3a0024f",
+                            Text.key("gui_sbmenu.storage.backpack_page.first_page"), List.of()),
                     (click, c) -> {
                         saveItems((SkyBlockPlayer) c.player(), c);
                         SkyBlockPlayer p = (SkyBlockPlayer) c.player();
@@ -105,8 +101,8 @@ public class GUIStorageBackpackPage extends StatelessView {
                     });
 
             if (data.getBackpacks().containsKey(page - 1)) {
-                layout.slot(6, (s, c) -> ItemStackCreator.getStackHead(I18n.string("gui_sbmenu.storage.backpack_page.previous_page", c.player().getLocale()),
-                                "9c042597eda9f061794fe11dacf78926d247f9eea8ddef39dfbe6022989b8395"),
+                layout.slot(6, (s, c) -> ItemStacks.head("9c042597eda9f061794fe11dacf78926d247f9eea8ddef39dfbe6022989b8395",
+                                Text.key("gui_sbmenu.storage.backpack_page.previous_page"), List.of()),
                         (click, c) -> {
                             saveItems((SkyBlockPlayer) c.player(), c);
                             SkyBlockPlayer p = (SkyBlockPlayer) c.player();

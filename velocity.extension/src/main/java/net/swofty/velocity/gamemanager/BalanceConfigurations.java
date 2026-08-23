@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import com.velocitypowered.api.proxy.Player;
 import net.swofty.commons.ServerType;
+import net.swofty.commons.text.Text;
 import net.swofty.velocity.gamemanager.impl.IslandCheck;
 import net.swofty.velocity.gamemanager.impl.LowestPlayerCount;
 import net.swofty.velocity.testflow.TestFlowManager;
@@ -54,9 +55,9 @@ public final class BalanceConfigurations {
     public static @Nullable GameManager.GameServer getServerFor(Player player, ServerType type) {
         final boolean inTestFlow = TestFlowManager.isPlayerInTestFlow(player.getUsername());
         if (inTestFlow) {
-            player.sendPlainMessage("§eYou are currently in a network-isolated test flow, load balancing will be restricted to test flow servers!");
-            player.sendPlainMessage("§8Executing test flow " +
-                    TestFlowManager.getTestFlowForPlayer(player.getUsername()).getName() + "...");
+            player.sendMessage(Text.of("<e>You are currently in a network-isolated test flow, load balancing will be restricted to test flow servers!"));
+            player.sendMessage(Text.of("<8>Executing test flow {}...",
+                    TestFlowManager.getTestFlowForPlayer(player.getUsername()).getName()));
         }
 
         try {
@@ -71,7 +72,7 @@ public final class BalanceConfigurations {
                 GameManager.GameServer server = configuration.getServer(player, serversToConsider);
                 if (server != null) {
                     if (inTestFlow) {
-                        player.sendPlainMessage("§8Done overriding the server manager for your test flow.");
+                        player.sendMessage(Text.of("<8>Done overriding the server manager for your test flow."));
                     }
                     return server;
                 }

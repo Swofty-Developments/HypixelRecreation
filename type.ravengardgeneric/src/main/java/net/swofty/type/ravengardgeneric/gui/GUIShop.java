@@ -2,10 +2,10 @@ package net.swofty.type.ravengardgeneric.gui;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.ViewNavigator;
@@ -49,9 +49,9 @@ public class GUIShop extends RavengardView {
     @Override
     protected void content(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         place(layout, SLOT_BANNER, RavengardItems.button(banner(shop))
-                .label(shop.title())
-                .lore("§7Buy and sell items to help you on.",
-                        "§7your adventures!"));
+                .label(Text.literal(shop.title()))
+                .lore("<7>Buy and sell items to help you on.",
+                        "<7>your adventures!"));
 
         for (int slot : shop.shelfSlots()) {
             placeStock(layout, slot);
@@ -60,25 +60,25 @@ public class GUIShop extends RavengardView {
         layout.autoUpdating(SLOT_HOURGLASS,
                 (state2, ctx2) -> RavengardItems.button(RavengardButton.HOURGLASS)
                         .label("Stock Refresh")
-                        .lore("§7This shop's stock will refresh in:",
-                                "§e" + net.swofty.type.ravengardgeneric.shop.RavengardShopStock.refreshText())
+                        .lore("<7>This shop's stock will refresh in:")
+                        .lore(Text.of("<e>{}", net.swofty.type.ravengardgeneric.shop.RavengardShopStock.refreshText()))
                         .origin(SLOT_HOURGLASS)
                         .toBuilder(),
                 java.time.Duration.ofSeconds(1));
 
         place(layout, SLOT_BUY, RavengardItems.button(RavengardButton.BUY)
                 .label("Buy")
-                .lore("§7Purchase items from this shop to",
-                        "§7help you on your adventures!")
+                .lore("<7>Purchase items from this shop to",
+                        "<7>help you on your adventures!")
                 .blankLine()
-                .lore("§aYou are here!"));
+                .lore("<a>You are here!"));
 
         interactive(layout, SLOT_SELL, RavengardItems.button(RavengardButton.SELL)
                         .label("Sell")
-                        .lore("§7Sell items from your inventory for",
-                                "§7some extra cash!")
+                        .lore("<7>Sell items from your inventory for",
+                                "<7>some extra cash!")
                         .blankLine()
-                        .lore("§eClick to sell!"),
+                        .lore("<e>Click to sell!"),
                 (click, viewContext) -> ViewNavigator.get(viewContext.player()).push(new GUIShopSell(shop)));
     }
 
@@ -100,24 +100,20 @@ public class GUIShop extends RavengardView {
                 && !type.usableBy(viewer.getRavengardClass());
 
         ItemStack.Builder display = RavengardItem.displayBuilder(type);
-        List<Component> lore = new ArrayList<>(RavengardItem.loreOf(type, true));
-        lore.add(Component.empty());
+        List<Text> lore = new ArrayList<>(RavengardItem.loreOf(type, true));
+        lore.add(Text.empty());
         if (!entry.inStock()) {
             display.set(DataComponents.ITEM_MODEL, type.getItemModel() + "_greyed");
-            lore.add(Component.text("Out of stock!").color(NamedTextColor.RED)
-                    .decoration(TextDecoration.ITALIC, false));
+            lore.add(Text.of("<c>Out of stock!"));
         } else if (wrongClass) {
             display.set(DataComponents.ITEM_MODEL, type.getItemModel() + "_greyed");
-            lore.add(Component.text("Your class cannot use this item!").color(NamedTextColor.RED)
-                    .decoration(TextDecoration.ITALIC, false));
+            lore.add(Text.of("<c>Your class cannot use this item!"));
+        } else if (entry.price() == 0) {
+            lore.add(Text.of("<e>Click to get for FREE!"));
         } else {
-            lore.add(Component.text("Click to buy for ").color(NamedTextColor.YELLOW)
-                    .decoration(TextDecoration.ITALIC, false)
-                    .append(Component.text("\uD83D\uDC51").color(NamedTextColor.WHITE))
-                    .append(Component.text(String.valueOf(entry.price())).color(TextColor.color(0xFFCE47)))
-                    .append(Component.text("!").color(NamedTextColor.YELLOW)));
+            lore.add(Text.of("<e>Click to buy for <f>\uD83D\uDC51<#FFCE47>{}<e>!", entry.price()));
         }
-        display.set(DataComponents.LORE, lore);
+        ItemStacks.lines(display, lore);
         return display;
     }
 
@@ -131,16 +127,16 @@ public class GUIShop extends RavengardView {
             return;
         }
         if (!entry.inStock()) {
-            player.sendMessage("§cThat item is out of stock!");
+            player.sendMessage("<c>That item is out of stock!");
             return;
         }
         if (!RavengardProfiles.tryPurchase(player, entry.price())) {
-            player.sendMessage("§cYou don't have enough Crowns!");
+            player.sendMessage("<c>You don't have enough Crowns!");
             return;
         }
         if (!entry.take()) {
             RavengardProfiles.addCrowns(player, entry.price());
-            player.sendMessage("§cThat item is out of stock!");
+            player.sendMessage("<c>That item is out of stock!");
             return;
         }
         player.getInventory().addItemStack(RavengardItem.of(type, player, entry.boost()));
@@ -156,6 +152,7 @@ public class GUIShop extends RavengardView {
         return switch (shop.banner()) {
             case "armorer" -> RavengardButton.BANNER_ARMORER;
             case "alchemist" -> RavengardButton.BANNER_ALCHEMIST;
+            case "free_gear" -> RavengardButton.BANNER_FREE_GEAR;
             default -> RavengardButton.BANNER_BLACKSMITH;
         };
     }

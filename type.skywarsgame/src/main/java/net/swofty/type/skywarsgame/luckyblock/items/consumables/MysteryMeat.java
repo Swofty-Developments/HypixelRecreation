@@ -1,17 +1,14 @@
 package net.swofty.type.skywarsgame.luckyblock.items.consumables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
-import java.util.List;
 import java.util.Random;
 
 public class MysteryMeat implements LuckyBlockConsumable {
@@ -56,19 +53,12 @@ public class MysteryMeat implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.ROTTEN_FLESH)
-                .customName(Component.text(getDisplayName(), NamedTextColor.DARK_PURPLE)
-                        .decoration(TextDecoration.ITALIC, false)
-                        .decoration(TextDecoration.BOLD, true))
-                .lore(List.of(
-                        Component.text("Apply 3 random effects...", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Could be good or bad!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to use!", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                ))
+        return ItemStacks.item(Material.ROTTEN_FLESH, """
+                <5><l>Mystery Meat</l>
+                <7>Apply 3 random effects...
+                <7>Could be good or bad!
+
+                <e>Right-click to use!""")
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
@@ -96,8 +86,8 @@ public class MysteryMeat implements LuckyBlockConsumable {
             effectsMessage.append(formatEffectName(effect.name()));
         }
 
-        player.sendMessage(Component.text("Mystery Meat consumed!", NamedTextColor.DARK_PURPLE));
-        player.sendMessage(Component.text(effectsMessage.toString(), NamedTextColor.GRAY));
+        player.sendMessage("<5>Mystery Meat consumed!");
+        player.sendMessage("<7>{}", effectsMessage.toString());
     }
 
     private String formatEffectName(String name) {

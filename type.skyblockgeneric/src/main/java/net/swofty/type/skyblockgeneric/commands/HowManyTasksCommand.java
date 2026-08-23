@@ -3,6 +3,7 @@ package net.swofty.type.skyblockgeneric.commands;
 import net.minestom.server.MinecraftServer;
 import org.tinylog.Logger;
 import net.minestom.server.timer.SchedulerManager;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -31,7 +32,7 @@ public class HowManyTasksCommand extends HypixelCommand {
                 return;
             }
 
-            sender.sendMessage(TASK_COUNTER.get() + " tasks running");
+            sender.sendMessage(Text.of("{} tasks running", TASK_COUNTER.get()));
         });
     }
 }

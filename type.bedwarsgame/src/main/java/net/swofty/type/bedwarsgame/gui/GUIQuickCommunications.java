@@ -6,9 +6,10 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
+import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -20,6 +21,7 @@ import net.swofty.type.generic.user.HypixelPlayer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class GUIQuickCommunications extends StatelessView {
 
@@ -33,104 +35,104 @@ public class GUIQuickCommunications extends StatelessView {
         addSendButton(
             layout,
             10,
-            "§aHello ( ﾟ◡ﾟ)/!",
+            "<a>Hello ( ﾟ◡ﾟ)/!",
             Material.BOOK,
-            "§aHello ( ﾟ◡ﾟ)/!"
+            "<a>Hello ( ﾟ◡ﾟ)/!"
         );
         addSendButton(
             layout,
             11,
-            "§aI'm coming back to base!",
+            "<a>I'm coming back to base!",
             Material.BOOK,
-            "§aI'm coming back to base!"
+            "<a>I'm coming back to base!"
         );
         addSendButton(
             layout,
             12,
-            "§aI'm defending!",
+            "<a>I'm defending!",
             Material.IRON_BARS,
-            "§aI'm defending!"
+            "<a>I'm defending!"
         );
         addSelectButton(
             layout,
             13,
-            "§aI'm attacking!",
+            "<a>I'm attacking!",
             Material.IRON_SWORD,
             () -> GUISelectAnOption.forTeamCommunication("I'm attacking"),
-            "§7You will be able to select the Team.",
+            "<7>You will be able to select the Team.",
             "",
-            "§eClick to select!"
+            "<e>Click to select!"
         );
         addSelectButton(
             layout,
             14,
-            "§aI'm collecting resources!",
+            "<a>I'm collecting resources!",
             Material.DIAMOND,
             () -> GUISelectAnOption.forResourceCommunication("I'm collecting"),
-            "§7You will be able to select the",
-            "§7Resource.",
+            "<7>You will be able to select the",
+            "<7>Resource.",
             "",
-            "§eClick to select!"
+            "<e>Click to select!"
         );
         addSelectButton(
             layout,
             15,
-            "§aI have resources!",
+            "<a>I have resources!",
             Material.CHEST,
             () -> GUISelectAnOption.forResourceCommunication("I have"),
-            "§7You will be able to select the",
-            "§7Resource.",
+            "<7>You will be able to select the",
+            "<7>Resource.",
             "",
-            "§eClick to select!"
+            "<e>Click to select!"
         );
         addSendButton(
             layout,
             20,
-            "§aThank You!",
+            "<a>Thank You!",
             Material.BOOK,
-            "§aThank You!"
+            "<a>Thank You!"
         );
         addSendButton(
             layout,
             21,
-            "§aGet back to base!",
+            "<a>Get back to base!",
             Material.BOOK,
-            "§aGet back to base!"
+            "<a>Get back to base!"
         );
         addSendButton(
             layout,
             22,
-            "§aPlease defend!",
+            "<a>Please defend!",
             Material.IRON_BARS,
-            "§aPlease defend!"
+            "<a>Please defend!"
         );
         addSelectButton(
             layout,
             23,
-            "§aLet's attack!",
+            "<a>Let's attack!",
             Material.IRON_SWORD,
             () -> GUISelectAnOption.forTeamCommunication("Let's attack"),
-            "§7You will be able to select the Team.",
+            "<7>You will be able to select the Team.",
             "",
-            "§eClick to select!"
+            "<e>Click to select!"
         );
         addSelectButton(
             layout,
             24,
-            "§aWe need resources!",
+            "<a>We need resources!",
             Material.DIAMOND,
             () -> GUISelectAnOption.forResourceCommunication("We need"),
-            "§7You will be able to select the",
-            "§7Resource.",
+            "<7>You will be able to select the",
+            "<7>Resource.",
             "",
-            "§eClick to select!"
+            "<e>Click to select!"
         );
         addSendButton(
             layout,
             25,
-            "§aPlayer incoming!!",
+            "<a>Player incoming!!",
             Material.FEATHER,
-            "§aPlayer incoming!!"
+            "<a>Player incoming!!"
         );
 
         Components.back(layout, 40, ctx);
@@ -141,18 +143,15 @@ public class GUIQuickCommunications extends StatelessView {
                                String title,
                                Material icon,
                                String message) {
-        layout.slot(slot, ItemStackCreator.getStack(
-            title,
-            icon,
-            1,
-            "",
-            "§eClick to send!"
-        ), (click, context) -> {
+        layout.slot(slot, ItemStacks.item(icon, 1, Text.of(title), List.of(
+            Text.empty(),
+            Text.of("<e>Click to send!")
+        )), (click, context) -> {
             if (!(click.player() instanceof BedWarsPlayer player)) {
                 return;
             }
 
-            sendTeamQuickMessage(player, message);
+            sendTeamQuickMessage(player, Text.of(message));
             playClickSound(player);
             player.closeInventory();
         });
@@ -164,13 +163,14 @@ public class GUIQuickCommunications extends StatelessView {
                                  Material icon,
                                  Supplier<GUISelectAnOption> selectViewSupplier,
                                  String... lore) {
-        layout.slot(slot, ItemStackCreator.getStack(title, icon, 1, lore), (click, context) -> {
+        layout.slot(slot, ItemStacks.item(icon, 1, Text.of(title),
+            Stream.of(lore).map(Text::of).toList()), (click, context) -> {
             playClickSound(click.player());
             context.push(selectViewSupplier.get());
         });
     }
 
-    static void sendTeamQuickMessage(BedWarsPlayer player, String message) {
+    static void sendTeamQuickMessage(BedWarsPlayer player, Text message) {
         BedWarsGame game = player.getGame();
         if (game == null) {
             return;
@@ -184,7 +184,8 @@ public class GUIQuickCommunications extends StatelessView {
             receivers = game.getPlayersOnTeam(teamKey);
         }
 
-        String formatted = "§a§lTEAM > §r" + player.getFullDisplayName() + "§f: " + message;
+        Text formatted = Text.of("<a><l>TEAM > <r>{}<f>: {}",
+            player.getFullDisplayName(), message);
         receivers.forEach(receiver -> receiver.sendMessage(formatted));
     }
 

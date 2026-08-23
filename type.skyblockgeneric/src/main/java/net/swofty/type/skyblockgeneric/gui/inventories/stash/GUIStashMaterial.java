@@ -8,11 +8,10 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelPaginatedGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.PaginationList;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointStash;
@@ -57,7 +56,7 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
     @Override
     public void performSearch(HypixelPlayer p, String query, int page, int maxPage) {
         // Border
-        border(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        border(ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
 
         // Close button (slot 49)
         set(GUIClickableItem.getCloseItem(49));
@@ -67,7 +66,6 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                Locale l = player.getLocale();
                 e.setCancelled(true);
 
                 DatapointStash.PlayerStash stash = player.getStash();
@@ -85,7 +83,7 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
                             SkyBlockItem newItem = new SkyBlockItem(type);
                             newItem.setAmount(removed);
                             player.addAndUpdateItem(newItem);
-                            player.sendMessage(I18n.string("gui_stash.material.from_stash", l, Component.text(type.getDisplayName()), Component.text(String.valueOf(removed))));
+                            player.sendMessage(Text.key("gui_stash.material.from_stash", type.getDisplayName(), removed));
                             pickedUp += removed;
                             amount -= removed;
                         } else {
@@ -97,11 +95,11 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
                 }
 
                 if (pickedUp == 0) {
-                    player.sendMessage(I18n.t("gui_stash.material.inventory_full"));
+                    player.sendMessage(Text.key("gui_stash.material.inventory_full"));
                 } else if (stash.getMaterialStashCount() == 0) {
-                    player.sendMessage(I18n.t("gui_stash.material.all_picked_up"));
+                    player.sendMessage(Text.key("gui_stash.material.all_picked_up"));
                 } else {
-                    player.sendMessage(I18n.string("gui_stash.material.remaining", l, Component.text(String.valueOf(stash.getMaterialStashCount())), Component.text(String.valueOf(stash.getMaterialTypeCount()))));
+                    player.sendMessage(Text.key("gui_stash.material.remaining", stash.getMaterialStashCount(), stash.getMaterialTypeCount()));
                 }
 
                 player.closeInventory();
@@ -112,10 +110,8 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 int count = player.getStash().getMaterialStashCount();
                 int types = player.getStash().getMaterialTypeCount();
-                return TranslatableItemStackCreator.getStack("gui_stash.material.fill_inventory", Material.EMERALD, 1,
-                    "gui_stash.material.fill_inventory.lore",
-                    Component.text(StringUtility.commaify(count)),
-                    Component.text(String.valueOf(types)));
+                return ItemStacks.item(Material.EMERALD, 1, Text.key("gui_stash.material.fill_inventory"),
+                    Text.keyLines("gui_stash.material.fill_inventory.lore", StringUtility.commaify(count), types));
             }
         });
 
@@ -124,7 +120,6 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                Locale l = player.getLocale();
                 e.setCancelled(true);
 
                 DatapointStash.PlayerStash stash = player.getStash();
@@ -141,9 +136,9 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
                 }
 
                 if (inserted > 0) {
-                    player.sendMessage(I18n.t("gui_stash.material.transferred_to_sacks"));
+                    player.sendMessage(Text.key("gui_stash.material.transferred_to_sacks"));
                 } else {
-                    player.sendMessage(I18n.t("gui_stash.material.no_transfer"));
+                    player.sendMessage(Text.key("gui_stash.material.no_transfer"));
                 }
 
                 new GUIStashMaterial().open(player, query, 1);
@@ -151,8 +146,8 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return TranslatableItemStackCreator.getStack("gui_stash.material.insert_into_sacks", Material.CHEST, 1,
-                        "gui_stash.material.insert_into_sacks.lore");
+                return ItemStacks.item(Material.CHEST, 1, Text.key("gui_stash.material.insert_into_sacks"),
+                        Text.keyLines("gui_stash.material.insert_into_sacks.lore"));
             }
         });
 
@@ -166,13 +161,12 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
     }
 
     @Override
-    public String getTitle(HypixelPlayer player, String query, int page, PaginationList<Map.Entry<ItemType, Integer>> paged) {
+    public Text getTitleText(HypixelPlayer player, String query, int page, PaginationList<Map.Entry<ItemType, Integer>> paged) {
         int maxPage = paged.getPageCount();
-        Locale l = player.getLocale();
         if (maxPage <= 1) {
-            return I18n.string("gui_stash.material.title", l);
+            return Text.key("gui_stash.material.title");
         }
-        return I18n.string("gui_stash.material.title_paged", l, Component.text(String.valueOf(page)), Component.text(String.valueOf(maxPage)));
+        return Text.key("gui_stash.material.title_paged", page, maxPage);
     }
 
     @Override
@@ -184,7 +178,6 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                Locale l = player.getLocale();
                 e.setCancelled(true);
 
                 int currentAmount = player.getStash().getMaterialStash().getOrDefault(itemType, 0);
@@ -199,7 +192,7 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
 
                 // Check if player has inventory space
                 if (!player.hasEmptySlots(1)) {
-                    player.sendMessage(I18n.t("gui_stash.material.inventory_full"));
+                    player.sendMessage(Text.key("gui_stash.material.inventory_full"));
                     return;
                 }
 
@@ -209,12 +202,12 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
                     SkyBlockItem newItem = new SkyBlockItem(itemType);
                     newItem.setAmount(removed);
                     player.addAndUpdateItem(newItem);
-                    player.sendMessage(I18n.string("gui_stash.material.from_stash", l, Component.text(itemType.getDisplayName()), Component.text(String.valueOf(removed))));
+                    player.sendMessage(Text.key("gui_stash.material.from_stash", itemType.getDisplayName(), removed));
 
                     if (player.getStash().getMaterialStashCount() == 0) {
-                        player.sendMessage(I18n.t("gui_stash.material.all_picked_up"));
+                        player.sendMessage(Text.key("gui_stash.material.all_picked_up"));
                     } else {
-                        player.sendMessage(I18n.string("gui_stash.material.remaining", l, Component.text(String.valueOf(player.getStash().getMaterialStashCount())), Component.text(String.valueOf(player.getStash().getMaterialTypeCount()))));
+                        player.sendMessage(Text.key("gui_stash.material.remaining", player.getStash().getMaterialStashCount(), player.getStash().getMaterialTypeCount()));
                     }
                 }
 
@@ -225,18 +218,17 @@ public class GUIStashMaterial extends HypixelPaginatedGUI<Map.Entry<ItemType, In
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                Locale l = player.getLocale();
                 int currentAmount = player.getStash().getMaterialStash().getOrDefault(itemType, amount);
 
                 SkyBlockItem item = new SkyBlockItem(itemType);
                 item.setAmount(Math.min(currentAmount, 64));
                 ItemStack.Builder stack = new NonPlayerItemUpdater(item.getItemStack()).getUpdatedItem();
-                ArrayList<String> lore = new ArrayList<>(item.getLore());
-                lore.add("");
-                lore.add(I18n.string("gui_stash.material.amount_label", l, Component.text(StringUtility.commaify(currentAmount))));
-                lore.add("");
-                lore.add(I18n.string("gui_stash.material.click_to_pickup", l));
-                return ItemStackCreator.updateLore(stack, lore);
+                List<Text> lore = new ArrayList<>(item.getLore().stream().map(Text::legacy).toList());
+                lore.add(Text.empty());
+                lore.add(Text.key("gui_stash.material.amount_label", StringUtility.commaify(currentAmount)));
+                lore.add(Text.empty());
+                lore.add(Text.key("gui_stash.material.click_to_pickup"));
+                return ItemStacks.lore(stack, lore);
             }
         };
     }

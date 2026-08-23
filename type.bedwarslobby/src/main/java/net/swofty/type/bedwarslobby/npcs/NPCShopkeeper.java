@@ -13,7 +13,7 @@ public class NPCShopkeeper extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§e§lCLICK TO OPEN", "§bShopkeeper"};
+                return new String[]{"<e><l>CLICK TO OPEN", "<b>Shopkeeper"};
             }
 
             @Override

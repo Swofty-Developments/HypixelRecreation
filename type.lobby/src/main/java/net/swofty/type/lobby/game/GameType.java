@@ -4,146 +4,150 @@ import lombok.Getter;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.ServerType;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.lobby.ServerInfoCache;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 public enum GameType {
-    DISASTERS("Disasters §c§lRELEASED TO ARCADE!", Material.LAVA_BUCKET, GameType.Category.CASUAL_GAMES,
+    DISASTERS("Disasters <c><l>RELEASED TO ARCADE!", Material.LAVA_BUCKET, GameType.Category.CASUAL_GAMES,
         null, // arcade lobby
-        "§7From a zombie apocalypse to meteor",
-        "§7showers, work alone or with friends",
-        "§7to survive!"),
+        "<7>From a zombie apocalypse to meteor",
+        "<7>showers, work alone or with friends",
+        "<7>to survive!"),
 
     WOOL_GAMES("Wool Games", Material.WHITE_WOOL, Category.COMPETITIVE,
         null, // wool games lobby
-        "§7A series of team-based PvP games",
-        "§7with wool as the theme!"),
+        "<7>A series of team-based PvP games",
+        "<7>with wool as the theme!"),
 
-    SKYBLOCK("SkyBlock §2§l0.24.3 §b§lABIPHONE CONTACTS & JERRY'S WORKSHOP",
-        ItemStackCreator.getStackHead("686718d85e25b006f2c8f160f619b23c8fd6ae75ddf1c06308ec0f539d931703"),
+    SKYBLOCK("SkyBlock <2><l>0.24.3 <b><l>ABIPHONE CONTACTS & JERRY'S WORKSHOP",
+        ItemStacks.head("686718d85e25b006f2c8f160f619b23c8fd6ae75ddf1c06308ec0f539d931703", Text.empty(), List.of()),
         Category.PERSISTENT_GAME,
         ServerType.SKYBLOCK_ISLAND,
-        "§7SkyBlock has finally arrived on",
-        "§7Hypixel! Play with friends (or solo!),",
-        "§7build your private islands and",
-        "§7collect all the items!"),
+        "<7>SkyBlock has finally arrived on",
+        "<7>Hypixel! Play with friends (or solo!),",
+        "<7>build your private islands and",
+        "<7>collect all the items!"),
 
     BED_WARS("Bed Wars",
         Material.RED_BED,
         Category.TEAM_SURVIVAL,
         ServerType.BEDWARS_LOBBY,
-        "§7Protect your bed along with your",
-        "§7teammates and destroy enemy beds",
-        "§7to win!"),
+        "<7>Protect your bed along with your",
+        "<7>teammates and destroy enemy beds",
+        "<7>to win!"),
 
-    SKYWARS("SkyWars §d§lOLD EMBLEMS + QOL CHANGES",
+    SKYWARS("SkyWars <d><l>OLD EMBLEMS + QOL CHANGES",
         Material.ENDER_EYE,
         Category.SURVIVAL,
         ServerType.SKYWARS_LOBBY,
-        "§7Hypixel's take on the SkyWars",
-        "§7gamemode. Featuring the angel of",
-        "§7Death, Soul Well, and §cINSANE MODE§7!",
-        "§7Play on your own or in teams."
+        "<7>Hypixel's take on the SkyWars",
+        "<7>gamemode. Featuring the angel of",
+        "<7>Death, Soul Well, and <c>INSANE MODE</c>!",
+        "<7>Play on your own or in teams."
     ),
 
     MURDER_MYSTERY("Murder Mystery",
         Material.BOW,
         Category.TEAM_SURVIVAL,
         ServerType.MURDER_MYSTERY_LOBBY,
-        "§71 Murderer. 1 Detective. And a whole",
-        "§7lot of Innocents. Can you survive",
-        "§7this tense social game of betrayal",
-        "§7and murder?"),
+        "<7>1 Murderer. 1 Detective. And a whole",
+        "<7>lot of Innocents. Can you survive",
+        "<7>this tense social game of betrayal",
+        "<7>and murder?"),
 
     HOUSING("Housing",
         Material.DARK_OAK_DOOR,
         Category.HOUSING,
         null,
-        "§7Customize and build on your own",
-        "§7personal plot, hang out with your",
-        "§7friends, visit other people's houses,",
-        "§7and more!"),
+        "<7>Customize and build on your own",
+        "<7>personal plot, hang out with your",
+        "<7>friends, visit other people's houses,",
+        "<7>and more!"),
 
     THE_TNT_GAMES("The TNT Games",
         Material.TNT,
         Category.CASUAL_GAMES,
         null,
-        "§7Fun minigames with TNT involved!"),
+        "<7>Fun minigames with TNT involved!"),
 
     BUILD_BATTLE("Build Battle",
         Material.CRAFTING_TABLE,
         Category.CASUAL_GAMES,
         null,
-        "§7Create a build based on a theme in",
-        "§7just 5 minutes! Vote on competing",
-        "§7builds with ratings ranging from",
-        "§7\"Super-Poop\" to \"Legendary\". Get",
-        "§7the most votes out of 16 players to",
-        "§7win!"),
+        "<7>Create a build based on a theme in",
+        "<7>just 5 minutes! Vote on competing",
+        "<7>builds with ratings ranging from",
+        "<7>\"Super-Poop\" to \"Legendary\". Get",
+        "<7>the most votes out of 16 players to",
+        "<7>win!"),
 
     DUELS("Duels", Material.FISHING_ROD, Category.COMPETITIVE,
         null,
-        "§7Quick paced 1v1, 2v2, 4v4!",
-        "§f∙ UHC Duels",
-        "§f∙ SkyWars Duels",
-        "§f∙ The Bridge",
-        "§f∙ Sumo Duels",
-        "§f∙ OP Duels",
-        "§f∙ Classic Duels",
-        "§f∙ NoDebuff Duels",
-        "§f∙ Blitz Duels",
-        "§f∙ Combo Duels",
-        "§f∙ Bow Duels",
-        "§f∙ Spleef Duels",
-        "§f∙ Mega Walls Duels",
-        "§f∙ Boxing Duels",
-        "§f∙ Parkour Duels",
-        "§f∙ Bed Wars Duels",
-        "§f∙ Quakecraft Duels"),
+        "<7>Quick paced 1v1, 2v2, 4v4!",
+        "<f>∙ UHC Duels",
+        "<f>∙ SkyWars Duels",
+        "<f>∙ The Bridge",
+        "<f>∙ Sumo Duels",
+        "<f>∙ OP Duels",
+        "<f>∙ Classic Duels",
+        "<f>∙ NoDebuff Duels",
+        "<f>∙ Blitz Duels",
+        "<f>∙ Combo Duels",
+        "<f>∙ Bow Duels",
+        "<f>∙ Spleef Duels",
+        "<f>∙ Mega Walls Duels",
+        "<f>∙ Boxing Duels",
+        "<f>∙ Parkour Duels",
+        "<f>∙ Bed Wars Duels",
+        "<f>∙ Quakecraft Duels"),
 
-    PROTOTYPE("Prototype §c§lDISASTERS RELEASED TO ARCADE!",
+    PROTOTYPE("Prototype <c><l>DISASTERS RELEASED TO ARCADE!",
         Material.ANVIL,
         Category.CASUAL_GAMES,
         ServerType.PROTOTYPE_LOBBY,
-        "§7PTL is a place for testing fun and",
-        "§7creative new minigames and systems",
-        "§7on Hypixel.",
+        "<7>PTL is a place for testing fun and",
+        "<7>creative new minigames and systems",
+        "<7>on Hypixel.",
         " ",
-        "§cEverything in this lobby is currently",
-        "§cin development, and may be removed",
-        "§cat any time."),
+        "<c>Everything in this lobby is currently",
+        "<c>in development, and may be removed",
+        "<c>at any time."),
 
     RAVENGARD("Ravengard",
         Material.IRON_AXE,
         Category.PERSISTENT_GAME,
         ServerType.RAVENGARD_LOBBY,
-        "§7Battle your way through dangerous",
-        "§7monsters and bosses. Collect",
-        "§7valuable loot and extract before the",
-        "§7dungeon is consumed by the curse!"),
+        "<7>Battle your way through dangerous",
+        "<7>monsters and bosses. Collect",
+        "<7>valuable loot and extract before the",
+        "<7>dungeon is consumed by the curse!"),
     ;
 
-    private final String displayName;
+    private final Text displayName;
     private final ItemStack.Builder item;
     private final Category category;
     private final ServerType lobbyType;
-    private final String[] lore;
+    private final List<Text> lore;
 
     GameType(String displayName, ItemStack.Builder item, Category category, ServerType lobbyType, String... lore) {
-        this.displayName = displayName;
+        this.displayName = Text.of(displayName);
         this.item = item;
         this.category = category;
         this.lobbyType = lobbyType;
-        this.lore = lore;
+        this.lore = Arrays.stream(lore).map(Text::of).toList();
     }
 
     GameType(String displayName, Material item, Category category, ServerType lobbyType, String... lore) {
-        this.displayName = displayName;
-        this.item = ItemStackCreator.getStack("", item, 1);
+        this.displayName = Text.of(displayName);
+        this.item = ItemStacks.item(item, 1, Text.empty(), List.of());
         this.category = category;
         this.lobbyType = lobbyType;
-        this.lore = lore;
+        this.lore = Arrays.stream(lore).map(Text::of).toList();
     }
 
     /**

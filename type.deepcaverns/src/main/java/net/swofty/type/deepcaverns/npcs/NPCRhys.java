@@ -13,7 +13,7 @@ public class NPCRhys extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Rhys", "§e§lCLICK"};
+				return new String[]{"Rhys", "<e><l>CLICK"};
 			}
 
 			@Override

@@ -23,30 +23,15 @@ public class RavengardProfile {
     private long playtimeSeconds;
     private long created;
     private final Map<Integer, String> inventory = new HashMap<>();
+    private final Map<Integer, String> lockBox = new HashMap<>();
+    private int lockBoxTier = 1;
     private final java.util.Set<String> intros = new java.util.HashSet<>();
+    private final java.util.Set<String> discoveredRegions = new java.util.HashSet<>();
 
     public RavengardProfile(UUID id, UUID owner) {
         this.id = id;
         this.owner = owner;
         this.created = System.currentTimeMillis();
-    }
-
-    public Document toDocument() {
-        Document document = new Document("_id", id.toString());
-        document.put("_owner", owner.toString());
-        document.put("class", profileClass == null ? "" : profileClass.name());
-        document.put("level", level);
-        document.put("experience", experience);
-        document.put("crowns", crowns);
-        document.put("ability_points", abilityPoints);
-        document.put("tutorial", tutorial);
-        document.put("playtime_seconds", playtimeSeconds);
-        document.put("created", created);
-        document.put("intros", new java.util.ArrayList<>(intros));
-        Document inventoryDocument = new Document();
-        inventory.forEach((slot, snbt) -> inventoryDocument.put(String.valueOf(slot), snbt));
-        document.put("inventory", inventoryDocument);
-        return document;
     }
 
     public static RavengardProfile fromDocument(Document document) {
@@ -65,6 +50,9 @@ public class RavengardProfile {
                 ? number.longValue() : System.currentTimeMillis();
         if (document.get("intros") instanceof java.util.List<?> introList) {
             introList.forEach(name -> profile.intros.add(String.valueOf(name)));
+        }
+        if (document.get("discovered_regions") instanceof java.util.List<?> regionList) {
+            regionList.forEach(name -> profile.discoveredRegions.add(String.valueOf(name)));
         }
         if (document.get("inventory") instanceof Document inventoryDocument) {
             inventoryDocument.forEach((slot, snbt) ->

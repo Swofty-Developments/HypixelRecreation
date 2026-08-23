@@ -6,11 +6,11 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -66,7 +66,7 @@ public class GUISeymour extends HypixelInventoryGUI {
     }
 
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(GUIClickableItem.getCloseItem(31));
 
         set(new GUIClickableItem(11) {
@@ -75,7 +75,7 @@ public class GUISeymour extends HypixelInventoryGUI {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 double coins = player.getCoins();
                 if (coins < cheapTuxedoPrice) {
-                    player.sendMessage("§cYou don't have enough coins!");
+                    player.sendMessage("<c>You don't have enough coins!");
                     return;
                 }
                 cheapTuxedoSet.forEach(player::addAndUpdateItem);
@@ -86,21 +86,23 @@ public class GUISeymour extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                ItemStack.Builder builder = ItemStackCreator.getStack("§5Cheap Tuxedo", Material.LEATHER_CHESTPLATE, 1,
-                        "",
-                        "§8Complete suit",
-                        "§7Crit Damage: §c+" + (int) cheapTuxedoCritDamage + "%",
-                        "§7Intelligence: §a+" + (int) cheapTuxedoIntelligence,
-                        "",
-                        "§6Full Set Bonus: Dashing §7(0/3)",
-                        "§7Max Health set to §c75♥§7.",
-                        "§7Deal §c+50% §7damage!",
-                        "§8Very stylish.",
-                        "",
-                        "§7Cost: §6" + StringUtility.commaify(cheapTuxedoPrice) + " Coins",
-                        "",
-                        player.getCoins() >= cheapTuxedoPrice ? "§eClick to purchase" : "§cCan't afford this!"
-                );
+                ItemStack.Builder builder = ItemStacks.item(Material.LEATHER_CHESTPLATE, """
+                        <5>Cheap Tuxedo
+
+                        <8>Complete suit
+                        <7>Crit Damage: <c>+{}%
+                        <7>Intelligence: <a>+{}
+
+                        <6>Full Set Bonus: Dashing <7>(0/3)
+                        <7>Max Health set to <c>75♥</c>.
+                        <7>Deal <c>+50% </c>damage!
+                        <8>Very stylish.
+
+                        <7>Cost: <6>{:,} Coins
+
+                        {}""",
+                        (int) cheapTuxedoCritDamage, (int) cheapTuxedoIntelligence, cheapTuxedoPrice,
+                        Text.of(player.getCoins() >= cheapTuxedoPrice ? "<e>Click to purchase" : "<c>Can't afford this!"));
 
                 builder.set(DataComponents.DYED_COLOR, new Color(56, 56, 56));
                 return builder;
@@ -113,7 +115,7 @@ public class GUISeymour extends HypixelInventoryGUI {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 double coins = player.getCoins();
                 if (coins < fancyTuxedoPrice) {
-                    player.sendMessage("§cYou don't have enough coins!");
+                    player.sendMessage("<c>You don't have enough coins!");
                     return;
                 }
                 fancyTuxedoSet.forEach(player::addAndUpdateItem);
@@ -124,21 +126,23 @@ public class GUISeymour extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                ItemStack.Builder builder = ItemStackCreator.getStack("§6Fancy Tuxedo", Material.LEATHER_CHESTPLATE, 1,
-                        "",
-                        "§8Complete suit",
-                        "§7Crit Damage: §c+" + (int) fancyTuxedoCritDamage + "%",
-                        "§7Intelligence: §a+" + (int) fancyTuxedoIntelligence,
-                        "",
-                        "§6Full Set Bonus: Dashing §7(0/3)",
-                        "§7Max Health set to §c150♥§7.",
-                        "§7Deal §c+100% §7damage!",
-                        "§8Very stylish.",
-                        "",
-                        "§7Cost: §6" + StringUtility.commaify(fancyTuxedoPrice) + " Coins",
-                        "",
-                        player.getCoins() >= fancyTuxedoPrice ? "§eClick to purchase" : "§cCan't afford this!"
-                );
+                ItemStack.Builder builder = ItemStacks.item(Material.LEATHER_CHESTPLATE, """
+                        <6>Fancy Tuxedo
+
+                        <8>Complete suit
+                        <7>Crit Damage: <c>+{}%
+                        <7>Intelligence: <a>+{}
+
+                        <6>Full Set Bonus: Dashing <7>(0/3)
+                        <7>Max Health set to <c>150♥</c>.
+                        <7>Deal <c>+100% </c>damage!
+                        <8>Very stylish.
+
+                        <7>Cost: <6>{:,} Coins
+
+                        {}""",
+                        (int) fancyTuxedoCritDamage, (int) fancyTuxedoIntelligence, fancyTuxedoPrice,
+                        Text.of(player.getCoins() >= fancyTuxedoPrice ? "<e>Click to purchase" : "<c>Can't afford this!"));
 
                 builder.set(DataComponents.DYED_COLOR, new Color(51, 42, 42));
 
@@ -152,7 +156,7 @@ public class GUISeymour extends HypixelInventoryGUI {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 double coins = player.getCoins();
                 if (coins < elegantTuxedoPrice) {
-                    player.sendMessage("§cYou don't have enough coins!");
+                    player.sendMessage("<c>You don't have enough coins!");
                     return;
                 }
                 elegantTuxedoSet.forEach(player::addAndUpdateItem);
@@ -163,21 +167,23 @@ public class GUISeymour extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                ItemStack.Builder builder = ItemStackCreator.getStack("§6Elegant Tuxedo", Material.LEATHER_CHESTPLATE, 1,
-                        "",
-                        "§8Complete suit",
-                        "§7Crit Damage: §c+" + (int) elegantTuxedoCritDamage + "%",
-                        "§7Intelligence: §a+" + (int) elegantTuxedoIntelligence,
-                        "",
-                        "§6Full Set Bonus: Dashing §7(0/3)",
-                        "§7Max Health set to §c1250♥§7.",
-                        "§7Deal §c+150% §7damage!",
-                        "§8Very stylish.",
-                        "",
-                        "§7Cost: §6" + StringUtility.commaify(elegantTuxedoPrice) + " Coins",
-                        "",
-                        player.getCoins() >= elegantTuxedoPrice ? "§eClick to purchase" : "§cCan't afford this!"
-                );
+                ItemStack.Builder builder = ItemStacks.item(Material.LEATHER_CHESTPLATE, """
+                        <6>Elegant Tuxedo
+
+                        <8>Complete suit
+                        <7>Crit Damage: <c>+{}%
+                        <7>Intelligence: <a>+{}
+
+                        <6>Full Set Bonus: Dashing <7>(0/3)
+                        <7>Max Health set to <c>1250♥</c>.
+                        <7>Deal <c>+150% </c>damage!
+                        <8>Very stylish.
+
+                        <7>Cost: <6>{:,} Coins
+
+                        {}""",
+                        (int) elegantTuxedoCritDamage, (int) elegantTuxedoIntelligence, elegantTuxedoPrice,
+                        Text.of(player.getCoins() >= elegantTuxedoPrice ? "<e>Click to purchase" : "<c>Can't afford this!"));
 
                 builder.set(DataComponents.DYED_COLOR, new Color(25, 25, 25));
                 return builder;

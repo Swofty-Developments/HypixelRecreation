@@ -3,8 +3,6 @@ package net.swofty.type.skywarsgame.game;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
@@ -20,11 +18,13 @@ import net.swofty.commons.skywars.SkywarsGameType;
 import net.swofty.commons.skywars.SkywarsLeaderboardMode;
 import net.swofty.commons.skywars.SkywarsModeStats;
 import net.swofty.commons.skywars.map.SkywarsMapsConfig;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsKitStats;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsModeStats;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
+import net.swofty.type.generic.utility.Titles;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.luckyblock.LuckyBlock;
 import net.swofty.type.skywarsgame.luckyblock.oprule.OPRuleManager;
@@ -125,13 +125,13 @@ public class SkywarsGame {
 
     public void join(SkywarsPlayer player) {
         if (gameStatus != SkywarsGameStatus.WAITING) {
-            player.sendMessage(Component.text("Game already in progress!", NamedTextColor.RED));
+            player.sendMessage("<c>Game already in progress!");
             player.sendTo(ServerType.SKYWARS_LOBBY);
             return;
         }
 
         if (players.size() >= gameType.getMaxPlayers()) {
-            player.sendMessage(Component.text("Game is full!", NamedTextColor.RED));
+            player.sendMessage("<c>Game is full!");
             player.sendTo(ServerType.SKYWARS_LOBBY);
             return;
         }
@@ -141,14 +141,8 @@ public class SkywarsGame {
         assignToTeam(player);
         player.setTag(Tag.String("gameId"), gameId);
 
-        broadcastMessage(Component.empty()
-                .append(Component.text(player.getFullDisplayName()))
-                .append(Component.text(" has joined ", NamedTextColor.YELLOW))
-                .append(Component.text("(", NamedTextColor.YELLOW))
-                .append(Component.text(players.size(), NamedTextColor.AQUA))
-                .append(Component.text("/", NamedTextColor.YELLOW))
-                .append(Component.text(gameType.getMaxPlayers(), NamedTextColor.AQUA))
-                .append(Component.text(")!", NamedTextColor.YELLOW)));
+        broadcastMessage(Text.of("{}<e> has joined (<b>{}<e>/<b>{}<e>)!",
+                player.getFullDisplayName(), players.size(), gameType.getMaxPlayers()));
 
         if (hasMinimumPlayers() && !countdown.isActive()) {
             countdown.startCountdown();
@@ -163,8 +157,7 @@ public class SkywarsGame {
             player.setTag(ELIMINATED_TAG, true);
             broadcastMessage(EnvironmentalDeathType.QUIT.formatMessage(player));
         } else if (gameStatus == SkywarsGameStatus.WAITING || gameStatus == SkywarsGameStatus.STARTING) {
-            broadcastMessage(Component.text(player.getFullDisplayName())
-                    .append(Component.text(" has quit!", NamedTextColor.YELLOW)));
+            broadcastMessage(Text.of("{}<e> has quit!", player.getFullDisplayName()));
         }
 
         players.remove(player);
@@ -289,11 +282,11 @@ public class SkywarsGame {
         player.resetGameState();
 
         if (gameType == SkywarsGameType.SOLO_LUCKY_BLOCK) {
-            player.sendActionBar(Component.text("Kits and perks are disabled in Lucky Block SkyWars", NamedTextColor.RED));
+            player.sendActionBar(Text.of("<c>Kits and perks are disabled in Lucky Block SkyWars"));
         }
     }
 
-    private static final String THICK_BAR = "§a§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
+    private static final Text THICK_BAR = Text.of("<a><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
 
     public void startGame() {
         gameStatus = SkywarsGameStatus.IN_PROGRESS;
@@ -312,19 +305,18 @@ public class SkywarsGame {
 
         sendGameIntroMessage();
 
-        broadcastMessage(Component.text("Cages opened! ", NamedTextColor.YELLOW)
-                .append(Component.text("FIGHT!", NamedTextColor.RED)));
+        broadcastMessage(Text.of("<e>Cages opened! <c>FIGHT!"));
 
-        Title title = Title.title(
-                Component.text("FIGHT!", NamedTextColor.RED),
-                Component.empty(),
+        Title title = Titles.title(
+                Text.of("<c>FIGHT!"),
+                Text.empty(),
                 Title.Times.times(Duration.ZERO, Duration.ofSeconds(2), Duration.ofMillis(500))
         );
         players.forEach(p -> p.showTitle(title));
 
         chestManager.scheduleRefills(
-                () -> broadcastMessage(Component.text("Chests have been refilled!", NamedTextColor.GOLD)),
-                () -> broadcastMessage(Component.text("Chests have been refilled for the last time!", NamedTextColor.GOLD))
+                () -> broadcastMessage(Text.of("<6>Chests have been refilled!")),
+                () -> broadcastMessage(Text.of("<6>Chests have been refilled for the last time!"))
         );
 
         dragonManager.scheduleDragonSpawn(this::broadcastMessage);
@@ -336,20 +328,15 @@ public class SkywarsGame {
 
     private void sendGameIntroMessage() {
         for (SkywarsPlayer player : players) {
-            player.sendMessage(Component.text(THICK_BAR));
-            player.sendMessage(Component.text("                         ")
-                    .append(Component.text("SkyWars", NamedTextColor.WHITE, net.kyori.adventure.text.format.TextDecoration.BOLD)));
-            player.sendMessage(Component.empty());
-            player.sendMessage(Component.text("       ")
-                    .append(Component.text("Gather resources and equipment on your", NamedTextColor.YELLOW, net.kyori.adventure.text.format.TextDecoration.BOLD)));
-            player.sendMessage(Component.text("    ")
-                    .append(Component.text("island in order to eliminate every other player.", NamedTextColor.YELLOW, net.kyori.adventure.text.format.TextDecoration.BOLD)));
-            player.sendMessage(Component.text("       ")
-                    .append(Component.text("Go to the center island for special chests", NamedTextColor.YELLOW, net.kyori.adventure.text.format.TextDecoration.BOLD)));
-            player.sendMessage(Component.text("                   ")
-                    .append(Component.text("with special items!", NamedTextColor.YELLOW, net.kyori.adventure.text.format.TextDecoration.BOLD)));
-            player.sendMessage(Component.empty());
-            player.sendMessage(Component.text(THICK_BAR));
+            player.sendMessage(THICK_BAR);
+            player.sendMessage("                         <f><l>SkyWars");
+            player.sendMessage("");
+            player.sendMessage("       <e><l>Gather resources and equipment on your");
+            player.sendMessage("    <e><l>island in order to eliminate every other player.");
+            player.sendMessage("       <e><l>Go to the center island for special chests");
+            player.sendMessage("                   <e><l>with special items!");
+            player.sendMessage("");
+            player.sendMessage(THICK_BAR);
         }
     }
 
@@ -381,7 +368,7 @@ public class SkywarsGame {
             if (bounds != null && !bounds.isWithinBounds(playerX, playerY, playerZ)) {
                 if (!boundaryWarningStartTime.containsKey(player.getUuid())) {
                     boundaryWarningStartTime.put(player.getUuid(), System.currentTimeMillis());
-                    player.sendMessage(Component.text("You are outside the border! Return within " + BOUNDARY_WARNING_SECONDS + " seconds!", NamedTextColor.RED));
+                    player.sendMessage("<c>You are outside the border! Return within {} seconds!", BOUNDARY_WARNING_SECONDS);
                 } else {
                     long warningStart = boundaryWarningStartTime.get(player.getUuid());
                     long elapsed = (System.currentTimeMillis() - warningStart) / 1000;
@@ -391,7 +378,7 @@ public class SkywarsGame {
                         boundaryWarningStartTime.remove(player.getUuid());
                     } else {
                         int remaining = BOUNDARY_WARNING_SECONDS - (int) elapsed;
-                        player.sendActionBar(Component.text("Return to border: " + remaining + "s", NamedTextColor.RED));
+                        player.sendActionBar(Text.of("<c>Return to border: {}s", remaining));
                     }
                 }
             } else {
@@ -440,7 +427,7 @@ public class SkywarsGame {
             SkywarsPlayer assistant = getPlayerByUuid(assistDamager);
             if (assistant != null && !assistant.isEliminated()) {
                 assistant.addAssist();
-                assistant.sendMessage(Component.text("+1 Assist!", NamedTextColor.YELLOW));
+                assistant.sendMessage("<e>+1 Assist!");
                 recordAssistStats(assistant);
             }
         }
@@ -564,7 +551,7 @@ public class SkywarsGame {
     public void onDragonKilled(UUID killerUuid) {
         SkywarsPlayer killer = getPlayerByUuid(killerUuid);
         if (killer != null) {
-            broadcastMessage(Component.text(killer.getUsername() + " has slain the Ender Dragon!", NamedTextColor.LIGHT_PURPLE));
+            broadcastMessage(Text.of("<d>{} has slain the Ender Dragon!", killer.getUsername()));
         }
         endGame(SkywarsWinCondition.DRAGON_DEATH);
     }
@@ -590,40 +577,35 @@ public class SkywarsGame {
 
     private void sendGameResults(SkywarsPlayer winner) {
         for (SkywarsPlayer player : players) {
-            player.sendMessage(Component.text(THICK_BAR));
-            player.sendMessage(Component.text("                         ")
-                    .append(Component.text("SkyWars", NamedTextColor.WHITE, net.kyori.adventure.text.format.TextDecoration.BOLD)));
+            player.sendMessage(THICK_BAR);
+            player.sendMessage("                         <f><l>SkyWars");
 
             if (winner != null) {
-                player.sendMessage(Component.empty());
-                player.sendMessage(Component.text(" §7Winner: ")
-                        .append(Component.text(winner.getFullDisplayName()))
-                        .append(Component.text(" §7- §6" + winner.getKillsThisGame() + " kills")));
+                player.sendMessage("");
+                player.sendMessage(" <7>Winner: {} <7>- <6>{} kills",
+                        winner.getFullDisplayName(), winner.getKillsThisGame());
             } else {
-                player.sendMessage(Component.text("                  ")
-                        .append(Component.text("Winner: ", NamedTextColor.WHITE, net.kyori.adventure.text.format.TextDecoration.BOLD))
-                        .append(Component.text("None", NamedTextColor.GRAY)));
-                player.sendMessage(Component.empty());
+                player.sendMessage("                  <f><l>Winner: </l><7>None");
+                player.sendMessage("");
             }
 
-            player.sendMessage(Component.empty());
-            player.sendMessage(Component.text(" §7Your Stats:"));
-            player.sendMessage(Component.text("   §7Kills: §a" + player.getKillsThisGame()));
-            player.sendMessage(Component.text("   §7Assists: §e" + player.getAssistsThisGame()));
+            player.sendMessage("");
+            player.sendMessage(" <7>Your Stats:");
+            player.sendMessage("   <7>Kills: <a>{}", player.getKillsThisGame());
+            player.sendMessage("   <7>Assists: <e>{}", player.getAssistsThisGame());
 
-            player.sendMessage(Component.text(THICK_BAR));
+            player.sendMessage(THICK_BAR);
 
             int coinsEarned = calculateCoinsEarned(player, winner);
             int expEarned = 150 + (player.getKillsThisGame() * 25);
 
-            player.sendMessage(Component.text("                 ")
-                    .append(Component.text("Reward Summary", NamedTextColor.WHITE, net.kyori.adventure.text.format.TextDecoration.BOLD)));
-            player.sendMessage(Component.text("   §7You earned:"));
-            player.sendMessage(Component.text("   §6+" + coinsEarned + " coins"));
-            player.sendMessage(Component.text("   §a+" + player.getSoulsEarnedThisGame() + " souls"));
-            player.sendMessage(Component.text("   §b+" + expEarned + " Hypixel Experience"));
+            player.sendMessage("                 <f><l>Reward Summary");
+            player.sendMessage("   <7>You earned:");
+            player.sendMessage("   <6>+{} coins", coinsEarned);
+            player.sendMessage("   <a>+{} souls", player.getSoulsEarnedThisGame());
+            player.sendMessage("   <b>+{} Hypixel Experience", expEarned);
 
-            player.sendMessage(Component.text(THICK_BAR));
+            player.sendMessage(THICK_BAR);
 
             net.swofty.type.generic.experience.PlayerExperienceHandler expHandler =
                     new net.swofty.type.generic.experience.PlayerExperienceHandler(player);
@@ -721,7 +703,7 @@ public class SkywarsGame {
         countdown.forceStart(seconds);
     }
 
-    public void broadcastMessage(Component message) {
+    public void broadcastMessage(Text message) {
         Audience.audience(players).sendMessage(message);
     }
 
@@ -768,10 +750,11 @@ public class SkywarsGame {
             this.reason = reason;
         }
 
-        public Component formatMessage(SkywarsPlayer victim, SkywarsPlayer killer) {
-            return Component.text(victim.getFullDisplayName())
-                    .append(Component.text(reason, NamedTextColor.YELLOW))
-                    .append(Component.text(killer.getFullDisplayName()));
+        public Text formatMessage(SkywarsPlayer victim, SkywarsPlayer killer) {
+            return Text.of("{}<e>{}</e>{}",
+                    victim.getFullDisplayName(),
+                    reason,
+                    killer.getFullDisplayName());
         }
     }
 
@@ -788,14 +771,12 @@ public class SkywarsGame {
             this.reason = reason;
         }
 
-        public Component formatMessage(SkywarsPlayer victim) {
-            return Component.text(victim.getFullDisplayName())
-                    .append(Component.text(reason, NamedTextColor.YELLOW));
+        public Text formatMessage(SkywarsPlayer victim) {
+            return Text.of("{}<e>{}", victim.getFullDisplayName(), reason);
         }
 
-        public Component formatMessage(String victimName) {
-            return Component.text(victimName)
-                    .append(Component.text(reason, NamedTextColor.YELLOW));
+        public Text formatMessage(String victimName) {
+            return Text.of("{}<e>{}", victimName, reason);
         }
     }
 
@@ -835,11 +816,11 @@ public class SkywarsGame {
         switch (nextEvent) {
             case FIRST_REFILL -> {
                 chestManager.triggerRefill(true);
-                broadcastMessage(Component.text("Chests have been refilled!", NamedTextColor.GOLD));
+                broadcastMessage(Text.of("<6>Chests have been refilled!"));
             }
             case SECOND_REFILL -> {
                 chestManager.triggerRefill(false);
-                broadcastMessage(Component.text("Chests have been refilled for the last time!", NamedTextColor.GOLD));
+                broadcastMessage(Text.of("<6>Chests have been refilled for the last time!"));
             }
             case DRAGON_SPAWN -> {
                 dragonManager.spawnDragonNow(this::broadcastMessage);

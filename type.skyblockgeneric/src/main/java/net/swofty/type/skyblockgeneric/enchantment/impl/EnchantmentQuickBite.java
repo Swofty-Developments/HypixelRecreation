@@ -13,7 +13,7 @@ import java.util.Map;
 public class EnchantmentQuickBite implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Decreases the time for your hook to get a bite by §a" + (level * 5) + "%§7.";
+        return "Decreases the time for your hook to get a bite by <a>" + (level * 5) + "%<7>.";
     }
 
     @Override

@@ -38,26 +38,26 @@ public class ActionPlayerJoin implements HypixelEventClass {
                 MathUtility.delay(() -> tryJoinGame(player, true), 20);
                 return;
             }
-            player.sendMessage("§cNo game assignment found! Returning to lobby...");
+            player.sendMessage("<c>No game assignment found! Returning to lobby...");
             player.sendTo(ServerType.SKYWARS_LOBBY);
             return;
         }
 
         SkywarsGame assignedGame = TypeSkywarsGameLoader.getGameById(assignedGameId);
         if (assignedGame == null) {
-            player.sendMessage("§cThe assigned game no longer exists! Returning to lobby...");
+            player.sendMessage("<c>The assigned game no longer exists! Returning to lobby...");
             player.sendTo(ServerType.SKYWARS_LOBBY);
             return;
         }
 
         if (assignedGame.getGameStatus() != SkywarsGameStatus.WAITING) {
-            player.sendMessage("§cThe game has already started! Returning to lobby...");
+            player.sendMessage("<c>The game has already started! Returning to lobby...");
             player.sendTo(ServerType.SKYWARS_LOBBY);
             return;
         }
 
         if (assignedGame.getPlayers().size() >= assignedGame.getGameType().getMaxPlayers()) {
-            player.sendMessage("§cThe game is full! Returning to lobby...");
+            player.sendMessage("<c>The game is full! Returning to lobby...");
             player.sendTo(ServerType.SKYWARS_LOBBY);
             return;
         }

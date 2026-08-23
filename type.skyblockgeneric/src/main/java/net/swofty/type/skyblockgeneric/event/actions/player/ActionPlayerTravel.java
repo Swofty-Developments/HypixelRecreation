@@ -2,12 +2,12 @@ package net.swofty.type.skyblockgeneric.event.actions.player;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.sound.SoundEventKeys;
 import net.swofty.commons.ServerType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
@@ -45,7 +45,7 @@ public class ActionPlayerTravel implements HypixelEventClass {
             if (!MissionSet.GETTING_STARTED.hasCompleted(player)
                     && !data.isCurrentlyActive(MissionUseTeleporter.class)
             ) {
-                player.sendMessage("§cYou must complete your starting missions!");
+                player.sendMessage("<c>You must complete your starting missions!");
                 return;
             }
 
@@ -67,7 +67,7 @@ public class ActionPlayerTravel implements HypixelEventClass {
                                 1f, 1f
                         )
                 );
-                player.sendMessage("§dWarped to §b" + LegacyComponentSerializer.legacySection().serialize(warp.text()) + "§d!");
+                player.sendMessage("<d>Warped to <b>{}<d>!", warp.text());
             }
         });
     }

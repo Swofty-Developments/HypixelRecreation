@@ -1,9 +1,8 @@
 package net.swofty.type.skywarsgame.luckyblock.oprule;
 
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
+import net.swofty.commons.text.Text;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
@@ -25,7 +24,7 @@ public enum OPRule {
             NamedTextColor.GREEN,
             (game, activator) -> {
                 // Double jump is handled by the OPRuleManager checking if this rule is active
-                game.broadcastMessage(Component.text("Double Jump enabled! Press space twice to fly!", NamedTextColor.GREEN));
+                game.broadcastMessage(Text.of("<a>Double Jump enabled! Press space twice to fly!"));
             }
     ),
 
@@ -60,7 +59,7 @@ public enum OPRule {
             NamedTextColor.RED,
             (game, activator) -> {
                 // TNT rain is handled by the OPRuleManager with a scheduled task
-                game.broadcastMessage(Component.text("Watch out! TNT is falling from the sky!", NamedTextColor.RED));
+                game.broadcastMessage(Text.of("<c>Watch out! TNT is falling from the sky!"));
             }
     ),
 
@@ -70,7 +69,7 @@ public enum OPRule {
             NamedTextColor.GREEN,
             (game, activator) -> {
                 // Creeper spawning is handled by the OPRuleManager with a scheduled task
-                game.broadcastMessage(Component.text("Creepers are invading the map!", NamedTextColor.GREEN));
+                game.broadcastMessage(Text.of("<a>Creepers are invading the map!"));
             }
     ),
 
@@ -80,7 +79,7 @@ public enum OPRule {
             NamedTextColor.YELLOW,
             (game, activator) -> {
                 // Projectile velocity modification is handled in projectile launch event
-                game.broadcastMessage(Component.text("Projectiles now travel twice as far!", NamedTextColor.YELLOW));
+                game.broadcastMessage(Text.of("<e>Projectiles now travel twice as far!"));
             }
     );
 
@@ -107,17 +106,15 @@ public enum OPRule {
     }
 
     /**
-     * Get the announcement component for this rule.
+     * Get the announcement text for this rule.
      */
-    public Component getAnnouncementComponent() {
-        return Component.text("\n")
-                .append(Component.text("★ OP RULE ACTIVATED ★", color)
-                        .decoration(TextDecoration.BOLD, true))
-                .append(Component.text("\n"))
-                .append(Component.text(displayName, color))
-                .append(Component.text("\n"))
-                .append(Component.text(description, NamedTextColor.GRAY))
-                .append(Component.text("\n"));
+    public Text getAnnouncement() {
+        return Text.of("""
+
+                <color:{0}><l>★ OP RULE ACTIVATED ★</l></color>
+                <color:{0}>{1}</color>
+                <7>{2}</7>
+                """, color, displayName, description);
     }
 
     /**

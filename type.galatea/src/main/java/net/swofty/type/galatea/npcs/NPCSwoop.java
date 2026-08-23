@@ -12,7 +12,7 @@ public class NPCSwoop extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§bSwoop", "§e§lCLICK"};
+                return new String[]{"<b>Swoop", "<e><l>CLICK"};
             }
 
             @Override

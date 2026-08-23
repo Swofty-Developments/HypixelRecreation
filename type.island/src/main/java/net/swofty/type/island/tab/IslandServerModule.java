@@ -1,9 +1,7 @@
 package net.swofty.type.island.tab;
 
-import net.kyori.adventure.text.Component;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.generic.tab.TablistSkinRegistry;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -30,30 +28,28 @@ public class IslandServerModule extends TablistModule {
         ).getValue();
 
         ArrayList<TablistEntry> entries = new ArrayList<>(List.of(
-                new TablistEntry(Component.text(getCentered(I18n.string("tablist.module.server_info", l))), TablistSkinRegistry.CYAN)
+                centered(Text.key("tablist.module.server_info"), l, TablistSkinRegistry.CYAN)
         ));
 
-        entries.add(new TablistEntry(I18n.t("tablist.server_info.area.private_island"), TablistSkinRegistry.GRAY));
-        entries.add(new TablistEntry(I18n.t("tablist.server_info.server_label", Component.text(HypixelConst.getServerName())), TablistSkinRegistry.GRAY));
-        entries.add(new TablistEntry(I18n.t("tablist.island.minions_label", Component.text(String.valueOf(minions.size())), Component.text(String.valueOf(data.getSlots()))), TablistSkinRegistry.GRAY));
+        entries.add(new TablistEntry(Text.key("tablist.server_info.area.private_island"), TablistSkinRegistry.GRAY));
+        entries.add(new TablistEntry(Text.key("tablist.server_info.server_label", HypixelConst.getServerName()), TablistSkinRegistry.GRAY));
+        entries.add(new TablistEntry(Text.key("tablist.island.minions_label", minions.size(), data.getSlots()), TablistSkinRegistry.GRAY));
 
         entries.add(getGrayEntry());
-        entries.add(new TablistEntry(I18n.t("tablist.module.minions", Component.text(String.valueOf(minions.size()))), TablistSkinRegistry.GRAY));
+        entries.add(new TablistEntry(Text.key("tablist.module.minions", minions.size()), TablistSkinRegistry.GRAY));
 
         minions.forEach(minion -> {
-            String content = " " + minion.getMinion().getDisplay().replace(" Minion", "");
-
-            content = content + " " + StringUtility.getAsRomanNumeral(minion.getTier());
-
             MinionHandler.InternalMinionTags.State minionState = minion.getInternalMinionTags().getState();
+            String stateKey = switch (minionState) {
+                case BAD_FULL -> "tablist.island.minion_state.full";
+                case BAD_LOCATION -> "tablist.island.minion_state.blocked";
+                default -> "tablist.island.minion_state.active";
+            };
 
-            switch (minionState) {
-                case BAD_FULL -> content = content + " " + I18n.string("tablist.island.minion_state.full", l);
-                case BAD_LOCATION -> content = content + " " + I18n.string("tablist.island.minion_state.blocked", l);
-                default -> content = content + " " + I18n.string("tablist.island.minion_state.active", l);
-            }
-
-            entries.add(new TablistEntry(Component.text(content), TablistSkinRegistry.GRAY));
+            Text rendered = Text.of(" {} {:roman} ",
+                            minion.getMinion().getDisplay().replace(" Minion", ""), minion.getTier())
+                    .append(Text.key(stateKey));
+            entries.add(new TablistEntry(rendered, TablistSkinRegistry.GRAY));
         });
 
         fillRestWithGray(entries);

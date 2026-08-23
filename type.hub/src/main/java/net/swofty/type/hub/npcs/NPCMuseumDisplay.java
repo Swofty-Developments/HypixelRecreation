@@ -1,7 +1,10 @@
 package net.swofty.type.hub.npcs;
 
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.minestom.server.coordinate.Pos;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointString;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
@@ -37,12 +40,14 @@ public class NPCMuseumDisplay extends HypixelNPC {
             if (dataHandler == null) {
                 dataHandler = HypixelDataHandler.getOfOfflinePlayer(currentlyViewing);
             }
-			String username = LegacyComponentSerializer.legacySection().serialize(p.getColouredName());
+			Component colouredName = p.getColouredName();
+			TextColor nameColour = colouredName.color();
+			String username = PlainTextComponentSerializer.plainText().serialize(colouredName);
 			String profileName = skyblockHandler.get(SkyBlockDataHandler.Data.PROFILE_NAME, DatapointString.class).getValue();
 
 			return new String[]{
-					"§b" + username,
-					"§eProfile: §a" + profileName
+					Text.of("<color:{}>{}", nameColour, username).serialize(),
+					Text.of("<e>Profile: <a>{}", profileName).serialize()
 			};
 		}
 

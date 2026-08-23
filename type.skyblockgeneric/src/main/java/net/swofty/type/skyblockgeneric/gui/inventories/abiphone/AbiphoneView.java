@@ -1,14 +1,13 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.abiphone;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.timer.TaskSchedule;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
@@ -30,8 +29,8 @@ public final class AbiphoneView extends PaginatedView<AbiphoneNPC, AbiphoneView.
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return ViewConfiguration.withString(
-                (state, ctx) -> state.abiphone().getCleanName(),
+        return ViewConfiguration.withText(
+                (state, ctx) -> Text.literal(state.abiphone().getCleanName()),
                 InventoryType.CHEST_6_ROW
         );
     }
@@ -43,13 +42,13 @@ public final class AbiphoneView extends PaginatedView<AbiphoneNPC, AbiphoneView.
 
     @Override
     protected ItemStack.Builder renderItem(AbiphoneNPC npc, int index, HypixelPlayer player) {
-        return ItemStackCreator.updateLore(
-                npc.getIcon().set(DataComponents.CUSTOM_NAME, Component.text("§f" + npc.getName())),
+        return ItemStacks.lore(
+                ItemStacks.name(npc.getIcon(), "<f>{}", npc.getName()),
                 List.of(
-                        "§7" + npc.getDescription(),
-                        "",
-                        "§8Right-click to manage!",
-                        "§eLeft-click to call!"
+                        Text.of("<7>{}", npc.getDescription()),
+                        Text.empty(),
+                        Text.key("gui_abiphone.contact_manage_hint"),
+                        Text.key("gui_abiphone.contact_call_hint")
                 )
         );
     }
@@ -65,11 +64,11 @@ public final class AbiphoneView extends PaginatedView<AbiphoneNPC, AbiphoneView.
     }
 
     private void initiateCall(HypixelPlayer player, AbiphoneNPC npc) {
-        player.sendMessage(Component.text("§e✆ RING..."));
+        player.sendMessage(Text.key("gui_abiphone.ring_1"));
         MinecraftServer.getSchedulerManager().buildTask(() -> {
-            player.sendMessage(Component.text("§e✆ RING... RING..."));
+            player.sendMessage(Text.key("gui_abiphone.ring_2"));
             MinecraftServer.getSchedulerManager().buildTask(() -> {
-                player.sendMessage(Component.text("§e✆ RING... RING... RING..."));
+                player.sendMessage(Text.key("gui_abiphone.ring_3"));
                 MinecraftServer.getSchedulerManager().buildTask(() -> {
                     npc.onCall(player);
                 }).delay(TaskSchedule.seconds(1)).schedule();
@@ -79,41 +78,29 @@ public final class AbiphoneView extends PaginatedView<AbiphoneNPC, AbiphoneView.
 
     @Override
     protected boolean shouldFilterFromSearch(State state, AbiphoneNPC item) {
-        return !item.getName().toLowerCase().contains(state.query.toLowerCase());
+        return !item.getName().plain().toLowerCase().contains(state.query.toLowerCase());
     }
 
     @Override
     protected void layoutCustom(ViewLayout<State> layout, State state, ViewContext ctx) {
         List<AbiphoneNPC> contacts = state.abiphone().getAttributeHandler().getAbiphoneNPCs();
         Components.close(layout, 49);
-        layout.slot(50, (s, c) -> ItemStackCreator.getStack(
-                "§aSort §bTO-DO",
+        layout.slot(50, (s, c) -> ItemStacks.item(
                 Material.HOPPER,
                 1,
-                "",
-                "§7  First Added",
-                "§7  Alphabetical",
-                "§7  Last Called",
-                "§7  Most Called",
-                "§7  Do Not Disturb First",
-                "",
-                "§bRight-click to go backwards!",
-                "§eClick to switch!"
+                Text.key("gui_abiphone.sort_button"),
+                Text.keyLines("gui_abiphone.sort_button.lore")
         ), (click, viewCtx) -> {
             // TODO: Implement sorting
         });
 
-        layout.slot(51, (s, c) -> ItemStackCreator.getStack(
-                "§aContacts Directory §bTO-DO",
+        layout.slot(51, (s, c) -> ItemStacks.item(
                 Material.BOOK,
                 1,
-                "§7Browse through all NPCs in SkyBlock",
-                "§7which both own an Abiphone AND are",
-                "§7willing to add you as a contact.",
-                "",
-                "§7Your contacts: §a" + contacts.size() + "§b/" + AbiphoneRegistry.getRegisteredContactNPCs().size(),
-                "",
-                "§eClick to view contacts!"
+                Text.key("gui_abiphone.contacts_directory"),
+                Text.keyLines("gui_abiphone.contacts_directory.lore",
+                        contacts.size(),
+                        AbiphoneRegistry.getRegisteredContactNPCs().size())
         ), (click, viewCtx) -> {
             // TODO: Open contacts directory
         });

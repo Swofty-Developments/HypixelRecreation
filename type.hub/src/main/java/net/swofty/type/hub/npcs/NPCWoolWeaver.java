@@ -15,7 +15,7 @@ public class NPCWoolWeaver extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Wool Weaver", "§e§lCLICK"};
+                return new String[]{"Wool Weaver", "<e><l>CLICK"};
             }
 
             @Override
@@ -60,10 +60,10 @@ public class NPCWoolWeaver extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return new DialogueSet[] {
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "If wool shrinks when you wash it...",
                                 "...why don't sheep get smaller when it rains?"
-                        }).build(),
+                        ).build(),
         };
     }
 }

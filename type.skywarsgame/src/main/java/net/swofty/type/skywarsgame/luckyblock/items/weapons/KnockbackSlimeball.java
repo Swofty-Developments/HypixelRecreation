@@ -1,13 +1,12 @@
 package net.swofty.type.skywarsgame.luckyblock.items.weapons;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.LivingEntity;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -36,21 +35,15 @@ public class KnockbackSlimeball implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.SLIME_BALL)
-                .customName(Component.text("Knockback Slimeball", NamedTextColor.GREEN)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Knockback X", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("\"Boing!\"", NamedTextColor.DARK_GRAY)
-                                .decoration(TextDecoration.ITALIC, true),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.SLIME_BALL,
+                        Text.of("<a>Knockback Slimeball"),
+                        List.of(
+                                Text.empty(),
+                                Text.of("<7>Knockback X"),
+                                Text.empty(),
+                                Text.of("<8><o>\"Boing!\""),
+                                Text.empty(),
+                                Text.of("<6><l>LUCKY BLOCK ITEM")))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }

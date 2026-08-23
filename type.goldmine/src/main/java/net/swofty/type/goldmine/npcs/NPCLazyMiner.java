@@ -22,7 +22,7 @@ public class NPCLazyMiner extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Lazy Miner", "§e§lCLICK"};
+                return new String[]{"Lazy Miner", "<e><l>CLICK"};
             }
 
             @Override
@@ -99,38 +99,36 @@ public class NPCLazyMiner extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("first-interaction").lines(new String[]{
+                        .key("first-interaction").lines(
                                 "Whoops! I lost my good pickaxe again in the mines! That's why I always come prepared with a backup!",
                                 "It's probably down in the mine somewhere. Can you go find it?"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("no-pickaxe-found").lines(new String[]{
+                        .key("no-pickaxe-found").lines(
                                 "Find my pickaxe in the Gold Mines! I'm not going back down there..."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("found-pick-intro").lines(new String[]{
+                        .key("found-pick-intro").lines(
                                 "Oh! You already found my pickaxe! That's amazing!",
                                 "Keep it, it has a special enchantment. Come talk to me when you're ready!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("quest-complete").lines(new String[]{
+                        .key("quest-complete").lines(
                                 "You found it! Thank you so much!",
                                 "Keep it as a reward. That pickaxe has Smelting Touch - it automatically smelts ores into ingots!",
                                 "It'll be very useful for collecting iron and gold."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("not-reached-deep-caverns").lines(new String[]{
+                        .key("not-reached-deep-caverns").lines(
                                 "The Deep Caverns are full of strange creatures and expensive treasures.",
                                 "Reach Mining Level V to gain access!",
                                 "Have you spelunked the Deep Caverns?",
                                 "They are full of bountiful treasures, but watch out for those Lapis Zombies!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("idle").lines(new String[]{
-                                SkyBlockCalendar.getMonthName() + " " + SkyBlockCalendar.getDay() + " is my resting day!",
-                                "I'd go mining but I'm too lazy.",
-                                "Maybe some day I'll go back down there."
-                        }).build()
+                        .key("idle").line("{} {} is my resting day!", SkyBlockCalendar.getMonthName(), SkyBlockCalendar.getDay())
+                                .line("I'd go mining but I'm too lazy.")
+                                .line("Maybe some day I'll go back down there.").build()
         ).toArray(DialogueSet[]::new);
     }
 }

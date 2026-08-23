@@ -15,7 +15,7 @@ public class NPCJuliette extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Juliette", "§e§lCLICK"};
+				return new String[]{"Juliette", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -53,64 +53,62 @@ public class NPCJuliette extends HypixelNPC {
 		return List.of(
 
 				DialogueSet.builder().key("completing-step-not-holding").lines(
-						new String[]{
-								"You found §eRomero§f?",
+								"You found <e>Romero<f>?",
 								"Did he have anything for me?"
-						}
-				).build(),
+						).build(),
 
 				// Quest Step 1 – Savanna Woodland
-				DialogueSet.builder().key("q1-start").lines(new String[]{
+				DialogueSet.builder().key("q1-start").lines(
 						"Nice to meet you!",
-						"Could you find my dear §eRomero§f?",
-						"He's in a cave somewhere under the §aSavanna Woodland§f.",
+						"Could you find my dear <e>Romero<f>?",
+						"He's in a cave somewhere under the <a>Savanna Woodland<f>.",
 						"...",
 						"Oh!",
 						"He wears glasses and blends well in a crowd!"
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q1-complete").lines(new String[]{
+				DialogueSet.builder().key("q1-complete").lines(
 						"You found Romero? That's weird, I just saw him!",
 						"He wanted me to have this? So sweet!",
 						"...",
 						"A yellow rock? What's the point of that?",
 						"Here, you keep it!"
-				}).build(),
+				).build(),
 
 				// Quest Step 2 – Flower House
-				DialogueSet.builder().key("q2-start").lines(new String[]{
+				DialogueSet.builder().key("q2-start").lines(
 						"Since you're here, can you find Romero again?",
 						"He said he was getting groceries at the downtown markets."
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q2-complete").lines(new String[]{
+				DialogueSet.builder().key("q2-complete").lines(
 						"Romero? He just came over with the groceries.",
 						"These flowers are for me?",
 						"That's so kind of you!",
 						"You know I'm with Romero, right?"
-				}).build(),
+				).build(),
 
 				// Quest Step 3 – Graveyard
-				DialogueSet.builder().key("q3-start").lines(new String[]{
+				DialogueSet.builder().key("q3-start").lines(
 						"Dear, sorry for the inconvenience...",
 						"Can you please find Romero again?",
 						"He's at some sort of emerald altar..."
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q3-complete").lines(new String[]{
+				DialogueSet.builder().key("q3-complete").lines(
 						"Oof! Why did you bring this all the way here?",
 						"How is that a gift?",
 						"Just keep it! I don't want this!"
-				}).build(),
+				).build(),
 
 				// Quest Step 4 – Crimson Isle
-				DialogueSet.builder().key("q4-start").lines(new String[]{
+				DialogueSet.builder().key("q4-start").lines(
 						"What I want is Romero!",
 						"For some reason, he's now looking for...",
 						"The largest, most evil patch of fungus ever!"
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q4-complete").lines(new String[]{
+				DialogueSet.builder().key("q4-complete").lines(
 						"Stew? I love stew!",
 						"...",
 						"!!!",
@@ -122,87 +120,87 @@ public class NPCJuliette extends HypixelNPC {
 						"DISGUSTING!",
 						"Is that a stew from hell?",
 						"Maybe Romero should give you cooking lessons!"
-				}).build(),
+				).build(),
 
 				// Quest Step 5 – Mountain
-				DialogueSet.builder().key("q5-start").lines(new String[]{
+				DialogueSet.builder().key("q5-start").lines(
 						"Oh! I love Romero! He has so many skills.",
 						"Did you know he likes photography?",
 						"Just now, he went to take pictures of the old castle.",
 						"Go find him!"
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q5-complete").lines(new String[]{
+				DialogueSet.builder().key("q5-complete").lines(
 						"You really believe that this is from the Moon?",
 						"How? Someone flew up there?",
 						"Thanks, I guess.",
 						"Actually, I heard Romero flew close to the Sun.",
 						"Sounds more like a metaphor, like..."
-				}).build(),
+				).build(),
 
 				// Quest Step 6 – Gold Mine
-				DialogueSet.builder().key("q6-start").lines(new String[]{
+				DialogueSet.builder().key("q6-start").lines(
 						"He went to where gold is smelted.",
 						"Please find him, wherever that is!"
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q6-complete").lines(new String[]{
+				DialogueSet.builder().key("q6-complete").lines(
 						"This is a wonderful gift!",
 						"I will keep this one for myself.",
 						"Sometimes, some things have to remain a mystery."
-				}).build(),
+				).build(),
 
 				// Quest Step 7 – Wilderness
-				DialogueSet.builder().key("q7-start").lines(new String[]{
+				DialogueSet.builder().key("q7-start").lines(
 						"About something not so secret, can you get in touch with Romero?",
 						"He told me he's in his home."
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q7-complete").lines(new String[]{
+				DialogueSet.builder().key("q7-complete").lines(
 						"Uh? Romero solved his cube?",
 						"That's unbelievable.",
 						"No, really, I don't believe it at all."
-				}).build(),
+				).build(),
 
 				// Quest Step 8 – Colosseum
-				DialogueSet.builder().key("q8-start").lines(new String[]{
+				DialogueSet.builder().key("q8-start").lines(
 						"I don't know why Romero is trying to be so unlike himself lately.",
 						"I like him just the way he is!",
 						"He says he's getting equipment for a duel.",
 						"Can you find Romero before he hurts himself?"
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q8-complete").lines(new String[]{
+				DialogueSet.builder().key("q8-complete").lines(
 						"This is a wonderful poem.",
 						"But, does he really think there's someone else?",
 						"I can't possibly imagine why he'd think that."
-				}).build(),
+				).build(),
 
 				// Quest Step 9 – Mushroom Desert
-				DialogueSet.builder().key("q9-start").lines(new String[]{
+				DialogueSet.builder().key("q9-start").lines(
 						"Romero went to meditate at his retreat.",
 						"It's the smallest house in SkyBlock.",
 						"Please find him, I'm worried!"
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q9-complete").lines(new String[]{
+				DialogueSet.builder().key("q9-complete").lines(
 						"Another gift from Romero?",
 						"Thank you for delivering it.",
 						"I don't know how Romero has such hard a time understanding that I LOVE HIM.",
 						"I like him just the way he is!",
 						"I don't need tons of gifts to know that."
-				}).build(),
+				).build(),
 
 				// Quest Step 10 – Jungle Island
-				DialogueSet.builder().key("q10-before-suit").lines(new String[]{
+				DialogueSet.builder().key("q10-before-suit").lines(
 						"It's decided, this is the day!",
 						"We're making it official!"
-				}).build(),
+				).build(),
 
-				DialogueSet.builder().key("q10-after-suit").lines(new String[]{
+				DialogueSet.builder().key("q10-after-suit").lines(
 						"We can't thank you enough for bringing us together!",
 						"You're the best, <player>!"
-				}).build()
+				).build()
 
 		).toArray(DialogueSet[]::new);
 	}

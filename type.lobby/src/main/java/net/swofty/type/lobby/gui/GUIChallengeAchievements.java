@@ -5,6 +5,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.achievement.AchievementCategory;
 import net.swofty.type.generic.achievement.AchievementDefinition;
 import net.swofty.type.generic.achievement.AchievementRegistry;
@@ -12,7 +13,7 @@ import net.swofty.type.generic.achievement.AchievementStatisticsService;
 import net.swofty.type.generic.achievement.AchievementType;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -62,7 +63,7 @@ public class GUIChallengeAchievements extends HypixelInventoryGUI {
     }
 
     public GUIChallengeAchievements(AchievementCategory category) {
-        super(category.getDisplayName() + " Challenge Achievements", InventoryType.CHEST_6_ROW);
+        super(Text.literal(category.getDisplayName() + " Challenge Achievements"), InventoryType.CHEST_6_ROW);
         this.category = category;
     }
 
@@ -89,18 +90,16 @@ public class GUIChallengeAchievements extends HypixelInventoryGUI {
         set(new GUIClickableItem(47) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§6Sorted by: §a" + sortMode.display,
-                        Material.HOPPER,
-                        1,
-                        "§7" + sortMode.description,
-                        "",
-                        "§7Next sort: §a" + sortMode.next,
-                        "§eLeft click to use!",
-                        "",
-                        "§7Completion sort: §8" + completionSort.display,
-                        "§eRight click to cycle!"
-                );
+                return ItemStacks.item(Material.HOPPER, """
+                        <6>Sorted by: <a>{}
+                        <7>{}
+
+                        <7>Next sort: <a>{}
+                        <e>Left click to use!
+
+                        <7>Completion sort: <8>{}
+                        <e>Right click to cycle!""",
+                        sortMode.display, sortMode.description, sortMode.next, completionSort.display);
             }
 
             @Override
@@ -119,7 +118,9 @@ public class GUIChallengeAchievements extends HypixelInventoryGUI {
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To " + category.getDisplayName() + " Achievements");
+                return ItemStacks.item(Material.ARROW, """
+                        <a>Go Back
+                        <7>To {} Achievements""", category.getDisplayName());
             }
 
             @Override
@@ -131,27 +132,24 @@ public class GUIChallengeAchievements extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getUsingGUIMaterial(
-                        "§aChallenge Achievements",
-                        category.getMaterial(),
-                        1,
-                        "§8" + category.getDisplayName(),
-                        "§7Unlocked: §b" + unlockedCount + "§7/§b" + totalCount + " §8(" + (int) unlockedPercent + "%)",
-                        "§7Points: §e" + totalPoints + "§7/§e" + maxPoints + " §8(" + (int) pointsPercent + "%)"
-                );
+                return ItemStacks.of(category.getMaterial(), 1, """
+                        <a>Challenge Achievements
+                        <8>{}
+                        <7>Unlocked: <b>{}<7>/<b>{} <8>({}%)
+                        <7>Points: <e>{}<7>/<e>{} <8>({}%)""",
+                        category.getDisplayName(),
+                        unlockedCount, totalCount, (int) unlockedPercent,
+                        totalPoints, maxPoints, (int) pointsPercent);
             }
         });
 
         set(new GUIClickableItem(50) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aGo to Tiered Achievements",
-                        Material.DIAMOND_BLOCK,
-                        1,
-                        "§7Click to view " + category.getDisplayName() + " Tiered",
-                        "§7Achievements."
-                );
+                return ItemStacks.item(Material.DIAMOND_BLOCK, """
+                        <a>Go to Tiered Achievements
+                        <7>Click to view {} Tiered
+                        <7>Achievements.""", category.getDisplayName());
             }
 
             @Override
@@ -166,26 +164,17 @@ public class GUIChallengeAchievements extends HypixelInventoryGUI {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
                     if (page == 0 && maxPages > 1) {
-                        return ItemStackCreator.getStack(
-                                "§eLeft-click for next page!",
-                                Material.ARROW,
-                                1,
-                                "§bRight-click for last page!"
-                        );
+                        return ItemStacks.item(Material.ARROW, """
+                                <e>Left-click for next page!
+                                <b>Right-click for last page!""");
                     } else if (page == maxPages - 1) {
-                        return ItemStackCreator.getStack(
-                                "§eLeft-click for first page!",
-                                Material.ARROW,
-                                1,
-                                "§bRight-click for previous page!"
-                        );
+                        return ItemStacks.item(Material.ARROW, """
+                                <e>Left-click for first page!
+                                <b>Right-click for previous page!""");
                     } else {
-                        return ItemStackCreator.getStack(
-                                "§eLeft-click for next page!",
-                                Material.ARROW,
-                                1,
-                                "§bRight-click for previous page!"
-                        );
+                        return ItemStacks.item(Material.ARROW, """
+                                <e>Left-click for next page!
+                                <b>Right-click for previous page!""");
                     }
                 }
 
@@ -253,30 +242,29 @@ public class GUIChallengeAchievements extends HypixelInventoryGUI {
                 boolean unlocked = handler.hasAchievement(achievement.getId());
 
                 Material mat = unlocked ? Material.DIAMOND : Material.COAL;
-                String nameColor = unlocked ? "§a" : "§c";
 
-                List<String> lore = new ArrayList<>();
-                lore.add("§7" + achievement.getDescription());
-                lore.add("");
-                lore.add("§7Reward:");
-                lore.add("§8+§e" + achievement.getPoints() + " §7Achievement Points");
-                lore.add("");
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<7>{}", achievement.getDescription()));
+                lore.add(Text.empty());
+                lore.add(Text.of("<7>Reward:"));
+                lore.add(Text.of("<8>+<e>{} <7>Achievement Points", achievement.getPoints()));
+                lore.add(Text.empty());
 
                 String unlockPct = AchievementStatisticsService.getFormattedPercentage(achievement.getId());
-                lore.add("§7Unlocked by §f" + unlockPct + "§7% of players!");
-                lore.add("");
+                lore.add(Text.of("<7>Unlocked by <f>{}<7>% of players!", unlockPct));
+                lore.add(Text.empty());
 
                 if (unlocked) {
-                    lore.add("§aAchievement unlocked!");
+                    lore.add(Text.of("<a>Achievement unlocked!"));
                 } else {
-                    lore.add("§cAchievement locked!");
+                    lore.add(Text.of("<c>Achievement locked!"));
                 }
 
-                return ItemStackCreator.getStack(
-                        nameColor + achievement.getName(),
+                return ItemStacks.item(
                         mat,
                         achievement.getPoints(),
-                        lore.toArray(new String[0])
+                        Text.of((unlocked ? "<a>" : "<c>") + "{}", achievement.getName()),
+                        lore
                 );
             }
         };

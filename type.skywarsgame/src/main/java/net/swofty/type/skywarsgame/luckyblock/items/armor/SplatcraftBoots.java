@@ -1,8 +1,5 @@
 package net.swofty.type.skywarsgame.luckyblock.items.armor;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.color.Color;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
@@ -13,11 +10,11 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
-import java.util.List;
 import java.util.Random;
 
 public class SplatcraftBoots implements LuckyBlockArmor {
@@ -64,27 +61,17 @@ public class SplatcraftBoots implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.LEATHER_BOOTS)
-                .customName(Component.text("Splatcraft Boots", NamedTextColor.YELLOW)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Protection I", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Projectile Protection III", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Turns blocks to ", NamedTextColor.GRAY)
-                                .append(Component.text("colored Terracotta", NamedTextColor.YELLOW))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("Grants ", NamedTextColor.GRAY)
-                                .append(Component.text("Speed I", NamedTextColor.AQUA))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.LEATHER_BOOTS, """
+                        <e>Splatcraft Boots
+
+                        <7>Protection I
+                        <7>Projectile Protection III
+
+                        <7>Turns blocks to <e>colored Terracotta
+                        <7>Grants <b>Speed I
+
+                        <6><l>LUCKY BLOCK ITEM
+                        """)
                 .set(DataComponents.DYED_COLOR, new Color(255, 165, 0))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
@@ -92,7 +79,7 @@ public class SplatcraftBoots implements LuckyBlockArmor {
 
     @Override
     public void onEquip(SkywarsPlayer player) {
-        player.sendMessage(Component.text("You're a squid now! Paint everything!", NamedTextColor.YELLOW));
+        player.sendMessage("<e>You're a squid now! Paint everything!");
         applySpeed(player);
     }
 
@@ -128,7 +115,7 @@ public class SplatcraftBoots implements LuckyBlockArmor {
         );
 
         Block currentBlock = instance.getBlock(blockBelow);
-        if (!currentBlock.isSolid() || currentBlock.compare(Block.BEDROCK)) {
+        if (!currentBlock.solid() || currentBlock.compare(Block.BEDROCK)) {
             return;
         }
 

@@ -3,6 +3,7 @@ package net.swofty.type.skyblockgeneric.commands;
 import net.swofty.commons.skyblock.item.reforge.Reforge;
 import net.swofty.commons.skyblock.item.reforge.ReforgeLoader;
 import net.swofty.commons.skyblock.item.reforge.ReforgeType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
@@ -33,7 +34,7 @@ public class ReforgeCommand extends HypixelCommand {
                 List<Reforge> validReforges = ReforgeLoader.getReforgesForType(reforgeType);
 
                 if (validReforges.isEmpty()) {
-                    sender.sendMessage("§cNo reforges available for this item type!");
+                    sender.sendMessage("<c>No reforges available for this item type!");
                     return;
                 }
 
@@ -43,7 +44,7 @@ public class ReforgeCommand extends HypixelCommand {
                 try {
                     itemAttributeHandler.setReforge(reforge);
                 } catch (IllegalArgumentException e) {
-                    sender.sendMessage("§c" + e.getMessage());
+                    sender.sendMessage(Text.of("<c>{}", e.getMessage()));
                 }
             });
         });

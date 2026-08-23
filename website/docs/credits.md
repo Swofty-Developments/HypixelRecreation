@@ -8,7 +8,7 @@ import contributors from '../.vitepress/theme/contributors.vue'
 
 This project is maintained by [Swofty Developments](https://github.com/Swofty-Developments) and all the amazing contributors.
 
-View all contributors on [GitHub](https://github.com/Swofty-Developments/HypixelSkyBlock/graphs/contributors).
+View all contributors on [GitHub](https://github.com/Swofty-Developments/HypixelRecreation/graphs/contributors).
 
 <contributors />
 
@@ -34,11 +34,13 @@ View all contributors on [GitHub](https://github.com/Swofty-Developments/Hypixel
 
 ## License
 
-This project is open source. See the repository for license details.
+This project is licensed under the [GNU Affero General Public License v3.0](https://github.com/Swofty-Developments/HypixelRecreation/blob/master/LICENSE).
+
+The `anticheat/` directory is the one exception: it is licensed under the permissive MIT license, as described in [`anticheat/LICENSE.md`](https://github.com/Swofty-Developments/HypixelRecreation/blob/master/anticheat/LICENSE.md).
 
 ## Links
 
-- [GitHub Repository](https://github.com/Swofty-Developments/HypixelSkyBlock)
-- [Discord Server](https://discord.gg/ZaGW5wzUJ3)
-- [Javadocs](https://swofty-developments.github.io/HypixelSkyBlock/)
-- [Releases](https://github.com/Swofty-Developments/HypixelSkyBlock/releases)
+- [GitHub Repository](https://github.com/Swofty-Developments/HypixelRecreation)
+- [Discord Server](https://discord.swofty.net)
+- [Javadocs](https://swofty-developments.github.io/HypixelRecreation/)
+- [Releases](https://github.com/Swofty-Developments/HypixelRecreation/releases)

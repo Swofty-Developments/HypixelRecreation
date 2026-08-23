@@ -13,7 +13,7 @@ public class NPCHubSelector extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"Hub Selector", "§e§lCLICK"};
+                return new String[]{"Hub Selector", "<e><l>CLICK"};
             }
 
             @Override

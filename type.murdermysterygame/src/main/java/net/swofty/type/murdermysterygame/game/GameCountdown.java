@@ -1,12 +1,12 @@
 package net.swofty.type.murdermysterygame.game;
 
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.utility.Titles;
 
 import java.time.Duration;
 
@@ -56,9 +56,7 @@ public class GameCountdown {
             countdownTask = null;
         }
 
-        game.getPlayersAsAudience().sendMessage(
-                Component.text("Countdown cancelled - not enough players!", NamedTextColor.RED)
-        );
+        game.getPlayers().forEach(player -> player.sendMessage("<c>Countdown cancelled - not enough players!"));
     }
 
     public void checkCountdownConditions() {
@@ -74,9 +72,7 @@ public class GameCountdown {
         active = true;
         secondsRemaining = seconds;
 
-        game.getPlayersAsAudience().sendMessage(
-                Component.text("Game force started! Starting in " + seconds + " seconds!", NamedTextColor.GREEN)
-        );
+        game.getPlayers().forEach(player -> player.sendMessage("<a>Game force started! Starting in {} seconds!", seconds));
 
         countdownTask = MinecraftServer.getSchedulerManager().buildTask(() -> {
             if (!active) return;
@@ -93,21 +89,17 @@ public class GameCountdown {
     }
 
     private void announceCountdown(int seconds) {
-        NamedTextColor numberColor = seconds <= 5 ? NamedTextColor.RED : NamedTextColor.AQUA;
         String word = seconds == 1 ? "second" : "seconds";
 
-        // Format: "The game is starting in X seconds!"
-        game.getPlayersAsAudience().sendMessage(
-                Component.empty()
-                        .append(Component.text("The game is starting in ", NamedTextColor.YELLOW))
-                        .append(Component.text(seconds, numberColor))
-                        .append(Component.text(" " + word + "!", NamedTextColor.YELLOW))
-        );
+        Text message = seconds <= 5
+                ? Text.of("<e>The game is starting in <c>{}<e> {}!", seconds, word)
+                : Text.of("<e>The game is starting in <b>{}<e> {}!", seconds, word);
+        game.getPlayers().forEach(player -> player.sendMessage(message));
 
         if (seconds <= 5) {
-            Title title = Title.title(
-                    Component.text(String.valueOf(seconds), numberColor),
-                    Component.empty(),
+            Title title = Titles.title(
+                    Text.of("<c>{}", seconds),
+                    Text.empty(),
                     Title.Times.times(Duration.ZERO, Duration.ofMillis(800), Duration.ofMillis(200))
             );
             game.getPlayers().forEach(p -> p.showTitle(title));

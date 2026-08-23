@@ -1,12 +1,12 @@
 package net.swofty.type.replayviewer.entity;
 
 import lombok.Getter;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.metadata.display.AbstractDisplayMeta;
 import net.minestom.server.entity.metadata.display.TextDisplayMeta;
+import net.swofty.commons.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class ReplayTextDisplayEntity extends Entity {
     private void updateTextDisplay() {
         if (this.entityMeta instanceof TextDisplayMeta textMeta) {
             String combinedText = String.join("\n", currentTextLines);
-            textMeta.setText(LegacyComponentSerializer.legacySection().deserialize(combinedText));
+            textMeta.setText(Text.read(combinedText).asComponent());
             textMeta.setBillboardRenderConstraints(AbstractDisplayMeta.BillboardConstraints.CENTER);
             textMeta.setSeeThrough(true);
             textMeta.setBackgroundColor(0);

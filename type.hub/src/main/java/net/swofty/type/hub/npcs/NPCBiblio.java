@@ -13,7 +13,7 @@ public class NPCBiblio extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§6§lSkyBlock Wiki", "Biblio", "§e§lCLICK"};
+                return new String[]{"<6><l>SkyBlock Wiki", "Biblio", "<e><l>CLICK"};
             }
 
             @Override

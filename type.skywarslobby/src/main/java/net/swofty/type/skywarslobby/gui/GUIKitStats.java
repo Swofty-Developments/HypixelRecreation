@@ -4,11 +4,12 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsKitStats;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -26,7 +27,7 @@ public class GUIKitStats extends HypixelInventoryGUI {
     private final String mode;
 
     public GUIKitStats(SkywarsKit kit, String mode) {
-        super(kit.getName() + " Stats", InventoryType.CHEST_6_ROW);
+        super(Text.of("{} Stats", kit.getName()), InventoryType.CHEST_6_ROW);
         this.kit = kit;
         this.mode = mode;
     }
@@ -50,13 +51,13 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIItem(13) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                List<String> lore = new ArrayList<>(kit.getItemsLore(mode));
+                List<Text> lore = new ArrayList<>(kit.getItemsLore(mode));
 
-                String name = "§a" + kit.getName();
+                Text name = Text.of("<a>{}", kit.getName());
                 if (kit.hasCustomTexture()) {
-                    return ItemStackCreator.getStackHead(name, kit.getIconTexture(), 1, lore);
+                    return ItemStacks.head(kit.getIconTexture(), name, lore);
                 } else {
-                    return ItemStackCreator.getStack(name, kit.getIconMaterial(), 1, lore);
+                    return ItemStacks.item(kit.getIconMaterial(), 1, name, lore);
                 }
             }
         });
@@ -68,21 +69,21 @@ public class GUIKitStats extends HypixelInventoryGUI {
                 String timePlayed = stats.getFormattedTimePlayed();
                 String fastestWin = stats.getFormattedFastestWin();
 
-                return ItemStackCreator.getStack(
-                        "§aGeneral Stats with " + kit.getName(),
-                        Material.ITEM_FRAME,
-                        1,
-                        "§7Time Played: §a" + timePlayed,
-                        "",
-                        "§7Wins: §a" + stats.getWins(),
-                        "§7Fastest Win: §a" + fastestWin,
-                        "",
-                        "§7Most Kills in a Game: §a" + stats.getMostKillsInGame(),
-                        "§7Mobs Killed: §a" + stats.getMobsKilled(),
-                        "§7Chests Opened: §a" + stats.getChestsOpened(),
-                        "",
-                        "§7Heads Gathered: §a" + stats.getHeadsGathered()
-                );
+                return ItemStacks.item(Material.ITEM_FRAME, 1, """
+                        <a>General Stats with {}
+                        <7>Time Played: <a>{}
+
+                        <7>Wins: <a>{}
+                        <7>Fastest Win: <a>{}
+
+                        <7>Most Kills in a Game: <a>{}
+                        <7>Mobs Killed: <a>{}
+                        <7>Chests Opened: <a>{}
+
+                        <7>Heads Gathered: <a>{}""",
+                        kit.getName(), timePlayed, stats.getWins(), fastestWin,
+                        stats.getMostKillsInGame(), stats.getMobsKilled(), stats.getChestsOpened(),
+                        stats.getHeadsGathered());
             }
         });
 
@@ -90,18 +91,17 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIItem(30) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aKills with " + kit.getName(),
-                        Material.REDSTONE,
-                        1,
-                        "§7Kills: §a" + stats.getKills(),
-                        "§7Assists: §a" + stats.getAssists(),
-                        "",
-                        "§7Melee Kills: §a" + stats.getMeleeKills(),
-                        "§7Bow Kills: §a" + stats.getBowKills(),
-                        "§7Void Kills: §a" + stats.getVoidKills(),
-                        "§7Kills by Mobs: §a" + stats.getMobKills()
-                );
+                return ItemStacks.item(Material.REDSTONE, 1, """
+                        <a>Kills with {}
+                        <7>Kills: <a>{}
+                        <7>Assists: <a>{}
+
+                        <7>Melee Kills: <a>{}
+                        <7>Bow Kills: <a>{}
+                        <7>Void Kills: <a>{}
+                        <7>Kills by Mobs: <a>{}""",
+                        kit.getName(), stats.getKills(), stats.getAssists(), stats.getMeleeKills(),
+                        stats.getBowKills(), stats.getVoidKills(), stats.getMobKills());
             }
         });
 
@@ -109,16 +109,15 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIItem(32) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aArchery with " + kit.getName(),
-                        Material.BOW,
-                        1,
-                        "§7Accuracy: §a" + String.format("%.0f", stats.getAccuracy()) + "%",
-                        "§7Bow Kills: §a" + stats.getBowKills(),
-                        "",
-                        "§7Longest Bow Kill: §a" + stats.getLongestBowKill() + " blocks",
-                        "§7Longest Bow Shot: §a" + stats.getLongestBowShot() + " blocks"
-                );
+                return ItemStacks.item(Material.BOW, 1, """
+                        <a>Archery with {}
+                        <7>Accuracy: <a>{}%
+                        <7>Bow Kills: <a>{}
+
+                        <7>Longest Bow Kill: <a>{} blocks
+                        <7>Longest Bow Shot: <a>{} blocks""",
+                        kit.getName(), String.format("%.0f", stats.getAccuracy()), stats.getBowKills(),
+                        stats.getLongestBowKill(), stats.getLongestBowShot());
             }
         });
 
@@ -126,19 +125,19 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIItem(34) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aSkyWars Challenges with " + kit.getName(),
-                        Material.BLAZE_POWDER,
-                        1,
-                        "§7Archer Wins: §a" + stats.getArcherWins(),
-                        "§7Half Health Wins: §a" + stats.getHalfHealthWins(),
-                        "§7No Block Wins: §a" + stats.getNoBlockWins(),
-                        "§7No Chest Wins: §a" + stats.getNoChestWins(),
-                        "§7Paper Wins: §a" + stats.getPaperWins(),
-                        "§7Rookie Wins: §a" + stats.getRookieWins(),
-                        "§7UHC Wins: §a" + stats.getUhcWins(),
-                        "§7Ultimate Warrior Wins: §a" + stats.getUltimateWarriorWins()
-                );
+                return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                        <a>SkyWars Challenges with {}
+                        <7>Archer Wins: <a>{}
+                        <7>Half Health Wins: <a>{}
+                        <7>No Block Wins: <a>{}
+                        <7>No Chest Wins: <a>{}
+                        <7>Paper Wins: <a>{}
+                        <7>Rookie Wins: <a>{}
+                        <7>UHC Wins: <a>{}
+                        <7>Ultimate Warrior Wins: <a>{}""",
+                        kit.getName(), stats.getArcherWins(), stats.getHalfHealthWins(),
+                        stats.getNoBlockWins(), stats.getNoChestWins(), stats.getPaperWins(),
+                        stats.getRookieWins(), stats.getUhcWins(), stats.getUltimateWarriorWins());
             }
         });
 
@@ -146,12 +145,9 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aGo Back",
-                        Material.ARROW,
-                        1,
-                        "§7To " + kit.getName() + " Kit"
-                );
+                return ItemStacks.item(Material.ARROW, 1, """
+                        <a>Go Back
+                        <7>To {} Kit""", kit.getName());
             }
 
             @Override
@@ -164,12 +160,9 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§7Total Coins: §6" + String.format("%,d", coins),
-                        Material.EMERALD,
-                        1,
-                        "§6https://store.hypixel.net"
-                );
+                return ItemStacks.item(Material.EMERALD, 1, """
+                        <7>Total Coins: <6>{:,}
+                        <6>https://store.hypixel.net""", coins);
             }
         });
 

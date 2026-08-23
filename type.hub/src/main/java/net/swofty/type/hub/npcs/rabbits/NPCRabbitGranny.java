@@ -30,75 +30,75 @@ public class NPCRabbitGranny extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("dialogue-1").lines(new String[]{
-                                "I'm looking to come out of retirement for §done last job§f.",
+                        .key("dialogue-1").lines(
+                                "I'm looking to come out of retirement for <d>one last job<f>.",
                                 "Plus, I decided I don't think I could ever give up chocolate."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-2").lines(new String[]{
-                                "The §6Chocolate Factory §fused to be different before §aHoppity§f arrived.",
+                        .key("dialogue-2").lines(
+                                "The <6>Chocolate Factory <f>used to be different before <a>Hoppity<f> arrived.",
                                 "You never know that you're in the glory days until it's too late."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-3").lines(new String[]{
-                                "In my day, we made sweets from whatever was in the garden. §aHoppity§f just added cocoa.",
+                        .key("dialogue-3").lines(
+                                "In my day, we made sweets from whatever was in the garden. <a>Hoppity<f> just added cocoa.",
                                 "Kids these days think they've invented sugar."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-4").lines(new String[]{
-                                "Every time §aHoppity§f talks about 'expanding the business', I remind him: 'Don't forget to expand your heart too.'",
+                        .key("dialogue-4").lines(
+                                "Every time <a>Hoppity<f> talks about 'expanding the business', I remind him: 'Don't forget to expand your heart too.'",
                                 "He's a good boy, he listens."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-5").lines(new String[]{
-                                "§aHoppity§f wants to automate the chocolate wrapping. I told him, 'Nothing beats the personal touch.'",
+                        .key("dialogue-5").lines(
+                                "<a>Hoppity<f> wants to automate the chocolate wrapping. I told him, 'Nothing beats the personal touch.'",
                                 "He gave me a computerized knitting machine."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-6").lines(new String[]{
+                        .key("dialogue-6").lines(
                                 "I've watched this family business grow from a single carrot patch to rows of cocoa trees.",
                                 "Each bar we produce carries that legacy. Makes an old bunny proud."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-7").lines(new String[]{
+                        .key("dialogue-7").lines(
                                 "They say you can't choose your family. But if I could, I'd choose this chocolate-crazed bunch every time.",
                                 "From Dust Bowl to chocolate empire, we've come a long way."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-8").lines(new String[]{
+                        .key("dialogue-8").lines(
                                 "In my days, we settled disputes over a hot cup of cocoa.",
                                 "Maybe that's what Sis and my son need - a reminder of what binds us."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-9").lines(new String[]{
-                                "I'm looking to come out of retirement for §done last job§f.",
+                        .key("dialogue-9").lines(
+                                "I'm looking to come out of retirement for <d>one last job<f>.",
                                 "Plus, I decided I don't think I could ever give up chocolate."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-10").lines(new String[]{
-                                "The §6Chocolate Factory §fused to be different before §aHoppity§f arrived.",
+                        .key("dialogue-10").lines(
+                                "The <6>Chocolate Factory <f>used to be different before <a>Hoppity<f> arrived.",
                                 "You never know that you're in the glory days until it's too late."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-11").lines(new String[]{
-                                "In my day, we made sweets from whatever was in the garden. §aHoppity§f just added cocoa.",
+                        .key("dialogue-11").lines(
+                                "In my day, we made sweets from whatever was in the garden. <a>Hoppity<f> just added cocoa.",
                                 "Kids these days think they've invented sugar."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-12").lines(new String[]{
-                                "Every time §aHoppity§f talks about 'expanding the business', I remind him: 'Don't forget to expand your heart too.'",
+                        .key("dialogue-12").lines(
+                                "Every time <a>Hoppity<f> talks about 'expanding the business', I remind him: 'Don't forget to expand your heart too.'",
                                 "He's a good boy, he listens."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-13").lines(new String[]{
-                                "§aHoppity§f wants to automate the chocolate wrapping. I told him, 'Nothing beats the personal touch.'",
+                        .key("dialogue-13").lines(
+                                "<a>Hoppity<f> wants to automate the chocolate wrapping. I told him, 'Nothing beats the personal touch.'",
                                 "He gave me a computerized knitting machine."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-14").lines(new String[]{
+                        .key("dialogue-14").lines(
                                 "I've watched this family business grow from a single carrot patch to rows of cocoa trees.",
                                 "Each bar we produce carries that legacy. Makes an old bunny proud."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

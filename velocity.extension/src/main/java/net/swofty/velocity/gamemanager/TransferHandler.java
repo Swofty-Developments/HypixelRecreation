@@ -2,11 +2,12 @@ package net.swofty.velocity.gamemanager;
 
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import net.kyori.adventure.text.Component;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.protocol.objects.proxy.from.GivePlayersOriginTypeProtocol;
 import net.swofty.commons.protocol.objects.proxy.from.PlayerSwitchedProtocol;
+import net.swofty.commons.text.Text;
 import net.swofty.velocity.SkyBlockVelocity;
+import net.swofty.velocity.text.ProxyText;
 import net.swofty.commons.redis.RedisClient;
 
 import java.util.Map;
@@ -46,7 +47,7 @@ public record TransferHandler(Player player) {
 	public CompletableFuture<Boolean> sendToLimbo() {
 		CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-		new Thread(() -> {
+		Thread.startVirtualThread(() -> {
 			if (isInLimbo() && player.getCurrentServer()
 				.map(server -> server.getServer().equals(SkyBlockVelocity.getLimboServer()))
 				.orElse(false)) {
@@ -62,7 +63,7 @@ public record TransferHandler(Player player) {
 			RegisteredServer limboServer = SkyBlockVelocity.getLimboServer();
 			player.createConnectionRequest(limboServer).connectWithIndication();
 			future.complete(true);
-		}).start();
+		});
 
 		return future;
 	}
@@ -70,7 +71,7 @@ public record TransferHandler(Player player) {
 	public CompletableFuture<Boolean> sendToLimboFromAfk(ServerType originType) {
 		CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-		new Thread(() -> {
+		Thread.startVirtualThread(() -> {
 			if (isInAfkLimbo() && player.getCurrentServer()
 				.map(server -> server.getServer().equals(SkyBlockVelocity.getLimboServer()))
 				.orElse(false)) {
@@ -89,13 +90,13 @@ public record TransferHandler(Player player) {
 			RegisteredServer limboServer = SkyBlockVelocity.getLimboServer();
 			player.createConnectionRequest(limboServer).connectWithIndication();
 			future.complete(true);
-		}).start();
+		});
 
 		return future;
 	}
 
 	public void returnFromAfkLimbo() {
-		new Thread(() -> {
+		Thread.startVirtualThread(() -> {
 			UUID uuid = player.getUniqueId();
 			if (!afkReturnInProgress.add(uuid)) {
 				return;
@@ -127,21 +128,21 @@ public record TransferHandler(Player player) {
 				}
 
 				if (destination == null) {
-					player.sendMessage(Component.text("§cThere are no lobby servers available right now."));
+					player.sendMessage(Text.of("<c>There are no lobby servers available right now."));
 					return;
 				}
 
 				afkOriginLobbyType.remove(uuid);
-				player.sendMessage(Component.text("§7Sending to server " + destination.displayName() + "..."));
+				player.sendMessage(Text.of("<7>Sending to server {}...", destination.displayName()));
 				player.createConnectionRequest(destination.registeredServer()).connectWithIndication();
 			} finally {
 				afkReturnInProgress.remove(uuid);
 			}
-		}).start();
+		});
 	}
 
 	public void previousServerIsFinished(RegisteredServer manualPick) {
-		new Thread(() -> {
+		Thread.startVirtualThread(() -> {
 			if (disregard.contains(player)) return;
 
 			RegisteredServer originServer = playersOriginServer.get(player);
@@ -159,17 +160,17 @@ public record TransferHandler(Player player) {
 			playersOriginServer.remove(player);
 
 			GameManager.GameServer manualPickAsGame = GameManager.getFromUUID(serverUUID);
-			player.sendMessage(Component.text("§7Sending to server " + manualPickAsGame.displayName() + "..."));
+			player.sendMessage(Text.of("<7>Sending to server {}...", manualPickAsGame.displayName()));
 			player.createConnectionRequest(manualPick).connectWithIndication();
 
 			RedisClient.requestServer(originServerUUID,
 					new PlayerSwitchedProtocol(),
 					new PlayerSwitchedProtocol.Request(player.getUniqueId().toString()));
-		}).start();
+		});
 	}
 
 	public void previousServerIsFinished() {
-		new Thread(() -> {
+		Thread.startVirtualThread(() -> {
 			if (disregard.contains(player) || !isInLimbo()) return;
 
 			ServerType type = playersGoalServerType.get(player);
@@ -183,7 +184,7 @@ public record TransferHandler(Player player) {
 			if (server == null) {
 				playersGoalServerType.remove(player);
 				playersOriginServer.remove(player);
-				player.disconnect(Component.text("§cThere are no Hypixel (type=" + type.name() + ") servers available at the moment."));
+				ProxyText.disconnect(player, "<c>There are no Hypixel (type={}) servers available at the moment.", type.name());
 				return;
 			}
 
@@ -204,13 +205,13 @@ public record TransferHandler(Player player) {
 			playersOriginServer.remove(player);
 			playersGoalServerType.remove(player);
 
-			player.sendMessage(Component.text("§7Sending to server " + server.displayName() + "..."));
+			player.sendMessage(Text.of("<7>Sending to server {}...", server.displayName()));
 			player.createConnectionRequest(server.registeredServer()).connectWithIndication();
 
 			RedisClient.requestServer(originServerUUID,
 					new PlayerSwitchedProtocol(),
 					new PlayerSwitchedProtocol.Request(player.getUniqueId().toString()));
-		}).start();
+		});
 	}
 
 	public void transferTo(ServerType type) {
@@ -220,11 +221,11 @@ public record TransferHandler(Player player) {
 
 		GameManager.GameServer server = BalanceConfigurations.getServerFor(player, type);
 		if (server == null) {
-			player.sendMessage(Component.text("§cThere are no Hypixel (type=" + type.name() + ") servers available at the moment."));
+			player.sendMessage(Text.of("<c>There are no Hypixel (type={}) servers available at the moment.", type.name()));
 			return;
 		}
 
-		player.sendMessage(Component.text("§7Sending to server " + server.displayName() + "..."));
+		player.sendMessage(Text.of("<7>Sending to server {}...", server.displayName()));
 		transferTo(server.registeredServer());
 	}
 
@@ -236,7 +237,7 @@ public record TransferHandler(Player player) {
 
 	public CompletableFuture<Void> transferTo(RegisteredServer toTransferTo) {
 		CompletableFuture<Void> future = new CompletableFuture<>();
-		new Thread(() -> {
+		Thread.startVirtualThread(() -> {
 			try {
 				RegisteredServer originServer = playersOriginServer.get(player);
 				if (originServer == null) {
@@ -262,7 +263,7 @@ public record TransferHandler(Player player) {
 			} catch (Exception e) {
 				future.completeExceptionally(e);
 			}
-		}).start();
+		});
 		return future;
 	}
 

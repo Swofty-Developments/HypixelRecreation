@@ -9,13 +9,13 @@ import net.minestom.server.item.Material;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.protocol.objects.auctions.AuctionFetchItemProtocol;
 import net.swofty.commons.skyblock.auctions.AuctionItem;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.RefreshingGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.auction.AuctionItemLoreHandler;
 import net.swofty.type.skyblockgeneric.gui.inventories.auction.view.AuctionViewSelfBIN;
@@ -27,7 +27,6 @@ import net.swofty.type.skyblockgeneric.item.updater.PlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 public class GUIAuctionViewItem extends HypixelInventoryGUI implements RefreshingGUI {
     public final UUID auctionID;
@@ -36,7 +35,7 @@ public class GUIAuctionViewItem extends HypixelInventoryGUI implements Refreshin
     public long minimumBidAmount = 0;
 
     public GUIAuctionViewItem(UUID auctionID, HypixelInventoryGUI previousGUI) {
-        super(I18n.t("gui_auction.view.title"), InventoryType.CHEST_6_ROW);
+        super(Text.key("gui_auction.view.title"), InventoryType.CHEST_6_ROW);
 
         this.auctionID = auctionID;
         this.previousGUI = previousGUI;
@@ -46,7 +45,7 @@ public class GUIAuctionViewItem extends HypixelInventoryGUI implements Refreshin
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.named(Material.BLACK_STAINED_GLASS_PANE, ""));
     }
 
     public void updateItems() {
@@ -61,9 +60,9 @@ public class GUIAuctionViewItem extends HypixelInventoryGUI implements Refreshin
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
                     SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    return ItemStackCreator.updateLore(
+                    return ItemStacks.lore(
                             PlayerItemUpdater.playerUpdate(player, new SkyBlockItem(item.getItem()).getItemStack()),
-                            new AuctionItemLoreHandler(item).getLore(player)
+                            new AuctionItemLoreHandler(item).getLoreTexts(player)
                     );
                 }
             });
@@ -90,7 +89,7 @@ public class GUIAuctionViewItem extends HypixelInventoryGUI implements Refreshin
     public void refreshItems(HypixelPlayer player) {
         new ProxyService(ServiceType.AUCTION_HOUSE).isOnline().thenAccept(online -> {
             if (!online) {
-                player.sendMessage(I18n.t("gui_auction.view.offline_message"));
+                player.sendMessage(Text.key("gui_auction.view.offline_message"));
                 player.closeInventory();
                 return;
             }

@@ -1,8 +1,5 @@
 package net.swofty.type.skywarsgame.luckyblock.items.weapons;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -12,11 +9,10 @@ import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-
-import java.util.List;
 
 public class Railgun implements LuckyBlockWeapon {
 
@@ -42,32 +38,20 @@ public class Railgun implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.BLAZE_ROD)
-                .customName(Component.text("Railgun", NamedTextColor.GOLD)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Single-shot weapon.", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to fire a", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("devastating ray that deals", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("12 true damage", NamedTextColor.RED)
-                                .append(Component.text(" to the first", NamedTextColor.GRAY))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("target within 50 blocks.", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Uses: ", NamedTextColor.GRAY)
-                                .append(Component.text("1", NamedTextColor.GREEN))
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.BLAZE_ROD, """
+                        <6>Railgun
+
+                        <7>Single-shot weapon.
+
+                        <7>Right-click to fire a
+                        <7>devastating ray that deals
+                        <c>12 true damage<7> to the first
+                        <7>target within 50 blocks.
+
+                        <7>Uses: <a>1
+
+                        <6><l>LUCKY BLOCK ITEM
+                        """)
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }
@@ -84,9 +68,9 @@ public class Railgun implements LuckyBlockWeapon {
 
         if (target != null) {
             target.damage(Damage.fromEntity(holder, TRUE_DAMAGE));
-            holder.sendMessage(Component.text("Direct hit!", NamedTextColor.RED));
+            holder.sendMessage("<c>Direct hit!");
         } else {
-            holder.sendMessage(Component.text("Missed!", NamedTextColor.GRAY));
+            holder.sendMessage("<7>Missed!");
         }
 
         return true;

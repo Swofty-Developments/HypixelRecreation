@@ -40,6 +40,9 @@ public final class RavengardItemConfigParser {
         if (config.get("display_name") != null) {
             type.setDisplayName(String.valueOf(config.get("display_name")));
         }
+        if (config.get("tracked_id") != null) {
+            type.setTrackedId(String.valueOf(config.get("tracked_id")).toUpperCase());
+        }
 
         if (config.get("value") != null) {
             type.setValue(Integer.parseInt(config.get("value").toString()));

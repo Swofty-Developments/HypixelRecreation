@@ -3,6 +3,7 @@ package net.swofty.type.skyblockgeneric.enchantment;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -32,7 +33,7 @@ public class EnchantmentSource {
         String levelString = minLevel == maxLevel
                 ? StringUtility.getAsRomanNumeral(minLevel)
                 : StringUtility.getAsRomanNumeral(minLevel) + "-" + StringUtility.getAsRomanNumeral(maxLevel);
-        return " §7- " + source + " §7(§a" + levelString + "§7)";
+        return Text.of(" <7>- {} <7>(<a>{}</a>)", source, levelString).serialize();
     }
 
     /**

@@ -19,8 +19,8 @@ public class LeafletSet extends SkyBlockValueEvent implements ArmorSet {
     @Override
     public ArrayList<String> getDescription() {
         return new ArrayList<>(List.of(
-                "While in a Forest zone you regain §a5.0",
-                "§c♥ Health §7every second."
+                "While in a Forest zone you regain <a>5.0",
+                "<c>♥ Health <7>every second."
         ));
     }
 

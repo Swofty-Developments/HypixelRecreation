@@ -22,7 +22,7 @@ public class NPCMelancholicViking extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§bMelancholic Viking", "§e§lCLICK"};
+				return new String[]{"<b>Melancholic Viking", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -47,7 +47,7 @@ public class NPCMelancholicViking extends HypixelNPC {
 
 			@Override
             public @NonNull String chatName(HypixelPlayer player) {
-				return "§bViking";
+				return "<b>Viking";
 			}
 		});
 	}
@@ -87,43 +87,41 @@ public class NPCMelancholicViking extends HypixelNPC {
 		int months = period.getMonths();
 
 		return List.of(
-				DialogueSet.builder().key("intro").lines(new String[]{
-						"I last saw the sea §b" + years + " years, " + months + " months §fago.",
-						"I wish I could remember what it felt like!",
-						"Sadly, my memory is now my worst enemy.",
-						"Please, help me remember the §bsea§f."
-				}).sound(Sound.sound().type(SoundEventKeys.ENTITY_VILLAGER_HURT.key()).pitch(0.5f).volume(0.9f).build()).build(),
-				DialogueSet.builder().key("holding-boat").lines(new String[]{
+				DialogueSet.builder().key("intro").line("I last saw the sea <b>{} years, {} months <f>ago.", years, months)
+						.line("I wish I could remember what it felt like!")
+						.line("Sadly, my memory is now my worst enemy.")
+						.line("Please, help me remember the <b>sea<f>.").sound(Sound.sound().type(SoundEventKeys.ENTITY_VILLAGER_HURT.key()).pitch(0.5f).volume(0.9f).build()).build(),
+				DialogueSet.builder().key("holding-boat").lines(
 						"Wow!",
 						"A boat!",
 						"Throw them at people you hate"
-				}).build(),
-				DialogueSet.builder().key("starting-to-splash").lines(new String[]{
-						"§aYES! §fThis totally reminds me of the sea!",
-						"Although... there were §amore §ffishes back then."
-				}).build(),
-				DialogueSet.builder().key("enough-splashes").lines(new String[]{
-						"§a§lWOW! §fThis §bfeels §fjust like on my Drakkar!",
+				).build(),
+				DialogueSet.builder().key("starting-to-splash").lines(
+						"<a>YES! <f>This totally reminds me of the sea!",
+						"Although... there were <a>more <f>fishes back then."
+				).build(),
+				DialogueSet.builder().key("enough-splashes").lines(
+						"<a><l>WOW! </l><f>This <b>feels <f>just like on my Drakkar!",
 						"I suddenly feel so great!",
-						"Thanks for bringing §ejoy §ejoy §fto an old viking!",
+						"Thanks for bringing <e>joy <e>joy <f>to an old viking!",
 						"Take a look at my wares!"
-				}).build(),
-				DialogueSet.builder().key("splashing-no-requirements").lines(new String[]{
-						"§eWow! Nice move! §fThere just isn't the ambience to fully appreciate it."
-				}).build(),
-				DialogueSet.builder().key("holding-ice").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("splashing-no-requirements").lines(
+						"<e>Wow! Nice move! <f>There just isn't the ambience to fully appreciate it."
+				).build(),
+				DialogueSet.builder().key("holding-ice").lines(
 						"Don't you have some liquid water?"
-				}).build(),
-				DialogueSet.builder().key("holding-raw-fish").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("holding-raw-fish").lines(
 						"I prefer when the fishes are lively and go splish-splash in the water!"
-				}).build(),
-				DialogueSet.builder().key("holding-fishing-rod").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("holding-fishing-rod").lines(
 						"It's a nice thought, but I don't feel like fishing right now."
-				}).build(),
-				DialogueSet.builder().key("holding-magical-water-bucket").lines(new String[]{
+				).build(),
+				DialogueSet.builder().key("holding-magical-water-bucket").lines(
 						"There's as much water here as an ocean.",
 						"If only you could pour it somewhere!"
-				}).build()
+				).build()
 		).toArray(DialogueSet[]::new);
 	}
 }

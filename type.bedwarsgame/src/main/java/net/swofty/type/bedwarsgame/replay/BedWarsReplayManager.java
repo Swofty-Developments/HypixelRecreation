@@ -4,9 +4,7 @@ import lombok.Getter;
 import net.kyori.adventure.nbt.BinaryTagIO;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
@@ -23,6 +21,7 @@ import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
 import net.swofty.commons.protocol.objects.replay.ReplayMapUploadProtocolObject;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.death.BedWarsDeathType;
@@ -132,8 +131,7 @@ public class BedWarsReplayManager {
         for (BedWarsPlayer player : game.getPlayers()) {
             BedWarsTeam team = game.getTeam(player.getTeamKey().name()).orElse(null);
             var skin = player.getSkin();
-            Component prefix = team == null ? Component.empty() : Component.text(team.firstLetter() + " ", TextColor.color(team.getTeamKey().rgb()))
-                    .decorate(TextDecoration.BOLD);
+            Text prefix = team == null ? Text.empty() : Text.of("<color:{}><b>{} ", TextColor.color(team.getTeamKey().rgb()), team.firstLetter());
             participants.add(new ReplayParticipant(
                     player.getUuid(),
                     player.getEntityId(),
@@ -141,8 +139,8 @@ public class BedWarsReplayManager {
                     skin != null ? skin.textures() : null,
                     skin != null ? skin.signature() : null,
                     componentSerializer.serialize(player.getDisplayName()),
-                    componentSerializer.serialize(prefix),
-                    componentSerializer.serialize(Component.empty())
+                    componentSerializer.serialize(prefix.asComponent()),
+                    componentSerializer.serialize(Text.empty().asComponent())
             ));
         }
 
@@ -237,16 +235,16 @@ public class BedWarsReplayManager {
         if (!recording) return;
 
         if (isFinalKill) {
-            recorder.recordEvent(new ReplayBookmarkEvent(Component.text("Final Death"), victim.getUuid()));
+            recorder.recordEvent(new ReplayBookmarkEvent(Text.literal("Final Death").asComponent(), victim.getUuid()));
         }
     }
 
-    public void recordPlayerDeath(BedWarsPlayer victim, BedWarsPlayer killer, Component deathMessage) {
+    public void recordPlayerDeath(BedWarsPlayer victim, BedWarsPlayer killer, Text deathMessage) {
         if (!recording) return;
         adapter.markDying(victim.getUuid());
         recorder.recordEvent(new ReplayEntityAnimationEvent(victim.getEntityId(),
                 ReplayEntityAnimationEvent.Animation.TAKE_DAMAGE));
-        recorder.recordEvent(new ReplayComponentEvent(ReplayComponentEvent.Kind.DEATH_MESSAGE, deathMessage));
+        recorder.recordEvent(new ReplayComponentEvent(ReplayComponentEvent.Kind.DEATH_MESSAGE, deathMessage.asComponent()));
         MinecraftServer.getSchedulerManager().buildTask(() -> {
             if (!recording) return;
             adapter.markDead(victim.getUuid());
@@ -288,8 +286,8 @@ public class BedWarsReplayManager {
 
         var team = game.getMapEntry().getConfiguration().getTeams().get(teamKey);
         recorder.recordEvent(new ReplayComponentEvent(ReplayComponentEvent.Kind.ANNOUNCEMENT,
-                BedWarsReplayMessages.bedDestroyed(teamKey, destroyer)));
-        recorder.recordEvent(new ReplayBookmarkEvent(Component.text(teamKey.getName() + " Bed Destroyed"),
+                BedWarsReplayMessages.bedDestroyed(teamKey, destroyer).asComponent()));
+        recorder.recordEvent(new ReplayBookmarkEvent(Text.of("{} Bed Destroyed", teamKey.getName()).asComponent(),
                 destroyer == null ? null : destroyer.getUuid()));
 
         // Also record the block change
@@ -314,7 +312,7 @@ public class BedWarsReplayManager {
         if (!recording) return;
         recorder.recordDelta(adapter.teamEliminationDelta(teamKey.name()));
         recorder.recordEvent(new ReplayComponentEvent(ReplayComponentEvent.Kind.ANNOUNCEMENT,
-                BedWarsReplayMessages.teamEliminated(teamKey)));
+                BedWarsReplayMessages.teamEliminated(teamKey).asComponent()));
     }
 
     /**
@@ -343,10 +341,10 @@ public class BedWarsReplayManager {
         recorder.recordDelta(new ReplayEntityRemoveDelta(entityId));
     }
 
-    public void recordPlayerChat(BedWarsPlayer player, Component message, boolean isShout) {
+    public void recordPlayerChat(BedWarsPlayer player, Text message, boolean isShout) {
         if (!recording) return;
         recorder.recordEvent(new ReplayComponentEvent(ReplayComponentEvent.Kind.CHAT,
-                BedWarsReplayMessages.chat(player, message, isShout)));
+                BedWarsReplayMessages.chat(player, message, isShout).asComponent()));
     }
 
     public void recordParticle(ParticlePacket particlePacket) {

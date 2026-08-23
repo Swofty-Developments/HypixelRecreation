@@ -1,10 +1,9 @@
 package net.swofty.type.skywarsgame.luckyblock.items.weapons;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 
@@ -31,23 +30,16 @@ public class HappyLittleTree implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.OAK_SAPLING)
-                .customName(Component.text("Happy Little Tree", NamedTextColor.GREEN)
-                        .decoration(TextDecoration.ITALIC, false))
-                .lore(List.of(
-                        Component.empty(),
-                        Component.text("Sharpness III", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("\"There are no mistakes,", NamedTextColor.DARK_GRAY)
-                                .decoration(TextDecoration.ITALIC, true),
-                        Component.text("only happy accidents.\"", NamedTextColor.DARK_GRAY)
-                                .decoration(TextDecoration.ITALIC, true),
-                        Component.empty(),
-                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false)
-                                .decoration(TextDecoration.BOLD, true)
-                ))
+        return ItemStacks.raw(Material.OAK_SAPLING,
+                        Text.of("<a>Happy Little Tree"),
+                        List.of(
+                                Text.empty(),
+                                Text.of("<7>Sharpness III"),
+                                Text.empty(),
+                                Text.of("<8><o>\"There are no mistakes,"),
+                                Text.of("<8><o>only happy accidents.\""),
+                                Text.empty(),
+                                Text.of("<6><l>LUCKY BLOCK ITEM")))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }

@@ -7,6 +7,7 @@ import net.swofty.commons.murdermystery.MurderMysteryLeaderboardPeriod;
 import net.swofty.commons.murdermystery.MurderMysteryLeaderboardView;
 import net.swofty.commons.murdermystery.MurderMysteryStatType;
 import net.swofty.commons.murdermystery.MurderMysteryTextAlignment;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.leaderboard.LeaderboardService;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -37,16 +38,16 @@ public enum MurderMysteryLeaderboardHologram {
         this.position = position;
     }
 
-    public String[] getHologramLines(HypixelPlayer player, PlayerLeaderboardState state) {
+    public List<Text> getHologramLines(HypixelPlayer player, PlayerLeaderboardState state) {
         MurderMysteryLeaderboardPeriod period = state.period();
         MurderMysteryLeaderboardMode mode = state.mode();
         MurderMysteryLeaderboardView view = state.view();
         MurderMysteryTextAlignment alignment = state.textAlignment();
 
-        List<String> lines = new ArrayList<>();
+        List<Text> lines = new ArrayList<>();
 
-        lines.add("§b§l" + period.getDisplayName() + " " + statType.getDisplayName());
-        lines.add("§7" + mode.getDisplayName());
+        lines.add(Text.of("<b><l>{} {}", period.getDisplayName(), statType.getDisplayName()));
+        lines.add(Text.of("<7>{}", mode.getDisplayName()));
 
         String leaderboardKey = getLeaderboardKey(period, mode);
         List<LeaderboardService.LeaderboardEntry> entries;
@@ -60,50 +61,50 @@ public enum MurderMysteryLeaderboardHologram {
         int maxNameWidth = 0;
         if (alignment == MurderMysteryTextAlignment.BLOCK && !entries.isEmpty()) {
             for (LeaderboardService.LeaderboardEntry entry : entries) {
-                String name = HypixelPlayer.getDisplayName(entry.playerUuid());
-                maxNameWidth = Math.max(maxNameWidth, getMinecraftStringWidth(name));
+                Text name = HypixelPlayer.getDisplayName(entry.playerUuid());
+                maxNameWidth = Math.max(maxNameWidth, getMinecraftStringWidth(name.plain()));
             }
         }
 
         if (entries.isEmpty()) {
-            lines.add("§7No data available");
+            lines.add(Text.of("<7>No data available"));
         } else {
             int displayRank = 1;
             for (LeaderboardService.LeaderboardEntry entry : entries) {
-                String playerName = HypixelPlayer.getDisplayName(entry.playerUuid());
+                Text playerName = HypixelPlayer.getDisplayName(entry.playerUuid());
                 String formattedScore = formatScore(entry.scoreAsLong());
 
-                String paddedName = playerName;
+                Text paddedName = playerName;
                 if (alignment == MurderMysteryTextAlignment.BLOCK) {
                     paddedName = padToWidth(playerName, maxNameWidth);
                 }
 
                 int rank = view == MurderMysteryLeaderboardView.PLAYERS_AROUND_YOU ? displayRank : entry.rank();
-                lines.add(String.format("§e%d. §f%s §7- §a%s", rank, paddedName, formattedScore));
+                lines.add(Text.of("<e>{}. <f>{} <7>- <a>{}", rank, paddedName, formattedScore));
                 displayRank++;
             }
         }
 
         while (lines.size() < 12) {
-            lines.add("§8---");
+            lines.add(Text.of("<8>---"));
         }
 
         LeaderboardService.LeaderboardEntry playerEntry = LeaderboardService.getPlayerRankEntry(leaderboardKey, player.getUuid());
 
         if (playerEntry != null) {
             String formattedScore = formatScore(playerEntry.scoreAsLong());
-            lines.add(String.format("§eYou: §f%d. §7(§a%s§7)", playerEntry.rank(), formattedScore));
+            lines.add(Text.of("<e>You: <f>{}. <7>(<a>{}</a>)", playerEntry.rank(), formattedScore));
         } else {
-            lines.add("§eYou: §7Not ranked");
+            lines.add(Text.of("<e>You: <7>Not ranked"));
         }
 
         if (period != MurderMysteryLeaderboardPeriod.LIFETIME) {
-            lines.add("§7Resets in §f" + getTimeUntilReset(period));
+            lines.add(Text.of("<7>Resets in <f>{}", getTimeUntilReset(period)));
         }
 
-        lines.add("§6Click to change filters!");
+        lines.add(Text.of("<6>Click to change filters!"));
 
-        return lines.toArray(new String[0]);
+        return lines;
     }
 
     private List<LeaderboardService.LeaderboardEntry> getPlayersInLobby(HypixelPlayer viewer, String leaderboardKey) {
@@ -169,12 +170,12 @@ public enum MurderMysteryLeaderboardHologram {
         return width;
     }
 
-    private String padToWidth(String text, int targetWidth) {
-        int currentWidth = getMinecraftStringWidth(text);
+    private Text padToWidth(Text text, int targetWidth) {
+        int currentWidth = getMinecraftStringWidth(text.plain());
         int spaceWidth = CHAR_WIDTHS[' '];
         int spacesNeeded = (targetWidth - currentWidth) / spaceWidth;
         if (spacesNeeded <= 0) return text;
-        return text + " ".repeat(spacesNeeded);
+        return text.append(Text.literal(" ".repeat(spacesNeeded)));
     }
 
     private String getTimeUntilReset(MurderMysteryLeaderboardPeriod period) {

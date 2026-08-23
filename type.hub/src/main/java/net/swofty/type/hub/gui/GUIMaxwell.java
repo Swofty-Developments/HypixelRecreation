@@ -6,9 +6,8 @@ import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.Rarity;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
 import net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.bags.GUIAccessoryBag;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
@@ -23,7 +22,7 @@ public class GUIMaxwell extends HypixelInventoryGUI {
     }
 
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(GUIClickableItem.getCloseItem(49));
 
         set(new GUIClickableItem(47) {
@@ -34,11 +33,12 @@ public class GUIMaxwell extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStackHead("§aAccessory Bag Shortcut", "961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff", 1,
-                        "§7Quickly access your accessory bag",
-                        "§7from right here!",
-                        "",
-                        "§eClick to open!");
+                return ItemStacks.head("961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff", """
+                        <a>Accessory Bag Shortcut
+                        <7>Quickly access your accessory bag
+                        <7>from right here!
+
+                        <e>Click to open!""");
             }
         });
         set(new GUIItem(48) {
@@ -54,19 +54,29 @@ public class GUIMaxwell extends HypixelInventoryGUI {
                 int special = player.getAccessoryBag().getUniqueAccessories(Rarity.SPECIAL).size();
                 int verySpecial = player.getAccessoryBag().getUniqueAccessories(Rarity.VERY_SPECIAL).size();
 
-                return ItemStackCreator.getStack("§aAccessories Breakdown", Material.FILLED_MAP, 1,
-                        "§8From your bag",
-                        "",
-                        "§622 MP §7x §d" + mythic + " Accs. §7= §6" + mythic*22 + " MP",
-                        "§616 MP §7x §6" + legendary + " Accs. §7= §6" + legendary*16 + " MP",
-                        "§612 MP §7x §5" + epic + " Accs. §7= §6" + epic*12 + " MP",
-                        "§68 MP §7x §9" + rare + " Accs. §7= §6" + rare*8 + " MP",
-                        "§65 MP §7x §a" + uncommon + " Accs. §7= §6" + uncommon*5 + " MP",
-                        "§63 MP §7x §f" + common + " Accs. §7= §6" + common*3 + " MP",
-                        "§63 MP §7x §c" + special + " Accs. §7= §6" + special*3 + " MP",
-                        "§65 MP §7x §c" + verySpecial + " Accs. §7= §6" + verySpecial*5 + " MP",
-                        "",
-                        "§7Total: §6" + StringUtility.commaify(player.getMagicalPower()) + " Magical Power");
+                return ItemStacks.item(Material.FILLED_MAP, """
+                        <a>Accessories Breakdown
+                        <8>From your bag
+
+                        <6>22 MP <7>x <d>{} Accs. <7>= <6>{} MP
+                        <6>16 MP <7>x <6>{} Accs. <7>= <6>{} MP
+                        <6>12 MP <7>x <5>{} Accs. <7>= <6>{} MP
+                        <6>8 MP <7>x <9>{} Accs. <7>= <6>{} MP
+                        <6>5 MP <7>x <a>{} Accs. <7>= <6>{} MP
+                        <6>3 MP <7>x <f>{} Accs. <7>= <6>{} MP
+                        <6>3 MP <7>x <c>{} Accs. <7>= <6>{} MP
+                        <6>5 MP <7>x <c>{} Accs. <7>= <6>{} MP
+
+                        <7>Total: <6>{:,} Magical Power""",
+                        mythic, mythic * 22,
+                        legendary, legendary * 16,
+                        epic, epic * 12,
+                        rare, rare * 8,
+                        uncommon, uncommon * 5,
+                        common, common * 3,
+                        special, special * 3,
+                        verySpecial, verySpecial * 5,
+                        player.getMagicalPower());
             }
         });
         updateItemStacks(getInventory(), getPlayer());

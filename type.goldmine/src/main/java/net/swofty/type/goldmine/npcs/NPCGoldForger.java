@@ -16,7 +16,7 @@ public class NPCGoldForger extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Gold Forger", "§e§lCLICK"};
+				return new String[]{"Gold Forger", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -61,10 +61,10 @@ public class NPCGoldForger extends HypixelNPC {
 	public DialogueSet[] dialogues(HypixelPlayer player) {
 		return new DialogueSet[] {
 				DialogueSet.builder()
-						.key("hello").lines(new String[]{
+						.key("hello").lines(
 						"I love goooold!",
 						"Click me again to open the Gold Forger Shop!"
-						}).build(),
+						).build(),
 		};
 	}
 }

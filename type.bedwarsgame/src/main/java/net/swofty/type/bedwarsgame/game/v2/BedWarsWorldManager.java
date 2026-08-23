@@ -132,7 +132,7 @@ public class BedWarsWorldManager {
             if (itemShopPos != null) {
                 Pos npcPos = new Pos(itemShopPos.x(), itemShopPos.y(), itemShopPos.z(),
                     itemShopPos.yaw(), itemShopPos.pitch());
-                String[] holograms = new String[]{"§bITEM SHOP", "§e§lRIGHT CLICK"};
+                String[] holograms = new String[]{"<b>ITEM SHOP", "<e><l>RIGHT CLICK"};
 
                 new Pos(0, 0, 0, 0, 0);
 
@@ -160,7 +160,7 @@ public class BedWarsWorldManager {
             if (teamShopPos != null) {
                 Pos npcPos = new Pos(teamShopPos.x(), teamShopPos.y(), teamShopPos.z(),
                     teamShopPos.yaw(), teamShopPos.pitch());
-                String[] holograms = new String[]{"§bTEAM", "§bUPGRADES", "§e§lRIGHT CLICK"};
+                String[] holograms = new String[]{"<b>TEAM", "<b>UPGRADES", "<e><l>RIGHT CLICK"};
 
                 BedWarsShopkeeperAppearanceService.ShopkeeperAppearance appearance =
                     resolveShopkeeperAppearance(sources.teamShopPlayer());
@@ -320,7 +320,7 @@ public class BedWarsWorldManager {
             BedWarsShopkeeperAppearanceService.defaultAppearance();
         HypixelNPC shopNpc = createShopNpc(
             position,
-            new String[]{"§bITEM SHOP", "§e§lRIGHT CLICK", "§7Disappears in 30 seconds"},
+            new String[]{"<b>ITEM SHOP", "<e><l>RIGHT CLICK", "<7>Disappears in 30 seconds"},
             appearance,
             event -> {
                 BedWarsPlayer player = (BedWarsPlayer) event.player();

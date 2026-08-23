@@ -33,43 +33,43 @@ public class SwapLobbyCommand extends HypixelCommand {
             int requestedLobby = context.get(lobbyNumberArg);
 
             if (requestedLobby < 1) {
-                player.sendMessage("§cLobby number must be at least 1.");
+                player.sendMessage("<c>Lobby number must be at least 1.");
                 return;
             }
 
             ServerType currentType = HypixelConst.getTypeLoader().getType();
             if (!currentType.name().endsWith("_LOBBY")) {
-                player.sendMessage("§cThis command can only be used in lobbies.");
+                player.sendMessage("<c>This command can only be used in lobbies.");
                 return;
             }
 
             ServerInfoCache.getServersByType(currentType).thenAccept(servers -> {
                 List<UnderstandableProxyServer> ordered = LobbyServerOrder.sortBySelectorOrder(servers);
                 if (ordered.isEmpty()) {
-                    player.sendMessage("§cNo lobbies are currently available.");
+                    player.sendMessage("<c>No lobbies are currently available.");
                     return;
                 }
 
                 UnderstandableProxyServer target = LobbyServerOrder.getBySelectorIndex(ordered, requestedLobby);
                 if (target == null) {
-                    player.sendMessage("§cInvalid lobby number. Pick between 1 and " + ordered.size() + ".");
+                    player.sendMessage("<c>Invalid lobby number. Pick between 1 and {}.", ordered.size());
                     return;
                 }
 
                 if (target.uuid().equals(HypixelConst.getServerUUID())) {
-                    player.sendMessage("§cYou are already connected to this lobby!");
+                    player.sendMessage("<c>You are already connected to this lobby!");
                     return;
                 }
 
                 if (target.players().size() >= target.maxPlayers()) {
-                    player.sendMessage("§cThat lobby is full.");
+                    player.sendMessage("<c>That lobby is full.");
                     return;
                 }
 
-                player.sendMessage("§aSending you to lobby #" + requestedLobby + "...");
+                player.sendMessage("<a>Sending you to lobby #{}...", requestedLobby);
                 player.asProxyPlayer().transferToWithIndication(target.uuid());
             }).exceptionally(throwable -> {
-                player.sendMessage("§cFailed to load lobbies. Please try again.");
+                player.sendMessage("<c>Failed to load lobbies. Please try again.");
                 return null;
             });
         }, lobbyNumberArg);

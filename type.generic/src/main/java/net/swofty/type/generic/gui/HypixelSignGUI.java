@@ -55,7 +55,7 @@ public class HypixelSignGUI {
 
 		player.sendPackets(
 				new BlockChangePacket(pos, Block.OAK_SIGN),
-				new BlockEntityDataPacket(pos, Block.OAK_SIGN.registry().blockEntityType(), compound)
+				new BlockEntityDataPacket(pos, Block.OAK_SIGN.blockEntityType(), compound)
 		);
 		MinecraftServer.getSchedulerManager().scheduleTask(() -> {
             player.sendPacket(new OpenSignEditorPacket(pos, true));

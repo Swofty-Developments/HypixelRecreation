@@ -33,7 +33,7 @@ public class TestParticleEngineCommand extends HypixelCommand
 
                  SkyBlockPlayer player = (SkyBlockPlayer) sender;
 
-                 if (player.getFullDisplayName().contains("dified")) {
+                 if (player.getUsername().contains("dified")) {
                      return;
                  }
 

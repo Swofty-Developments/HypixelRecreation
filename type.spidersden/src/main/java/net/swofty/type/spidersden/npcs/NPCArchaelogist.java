@@ -1,7 +1,6 @@
 package net.swofty.type.spidersden.npcs;
 
 import net.minestom.server.coordinate.Pos;
-import net.swofty.commons.ChatColor;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
@@ -13,8 +12,8 @@ public class NPCArchaelogist extends HypixelNPC {
             @Override
             public String[] holograms(HypixelPlayer player) {
                 return new String[]{
-                        ChatColor.AQUA + "Archaeologist",
-                        ChatColor.YELLOW + "" + ChatColor.BOLD + "CLICK"
+                        "<b>Archaeologist",
+                        "<e><l>CLICK"
                 };
             }
 

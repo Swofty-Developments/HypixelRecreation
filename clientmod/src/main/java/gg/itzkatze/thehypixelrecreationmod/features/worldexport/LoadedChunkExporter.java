@@ -19,6 +19,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.chunk.storage.RegionFile;
+import net.minecraft.world.level.chunk.storage.RegionFileStorage;
 import net.minecraft.world.level.chunk.storage.RegionStorageInfo;
 import net.minecraft.world.level.chunk.storage.SerializableChunkData;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -31,10 +32,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public final class LoadedChunkExporter {
@@ -78,6 +81,57 @@ public final class LoadedChunkExporter {
             chunkSnapshots.add(new CapturedChunk(chunkKey, serializeChunk(level, chunk)));
         }
         return chunkSnapshots;
+    }
+
+    public static Optional<CapturedChunk> captureChunk(ClientLevel level, int chunkX, int chunkZ) {
+        if (level == null || !level.hasChunk(chunkX, chunkZ)) {
+            return Optional.empty();
+        }
+
+        LevelChunk chunk = level.getChunkSource().getChunk(chunkX, chunkZ, ChunkStatus.FULL, false);
+        if (chunk == null) {
+            return Optional.empty();
+        }
+
+        long chunkKey = ((long) chunkX << 32) | (chunkZ & 0xFFFFFFFFL);
+        return Optional.of(new CapturedChunk(chunkKey, serializeChunk(level, chunk)));
+    }
+
+    public static ExportResult writeChunksTo(
+        Path outputPath,
+        SessionContext context,
+        Map<Long, CompoundTag> chunks,
+        boolean replaceExisting
+    ) throws IOException {
+        ExportAccumulator accumulator = new ExportAccumulator();
+        prepareOutputDirectory(outputPath, replaceExisting);
+        writeVanillaWorld(outputPath, context, chunks, accumulator);
+        return new ExportResult(outputPath, chunks.size(), accumulator.sectionCount, accumulator.blockEntityCount);
+    }
+
+    public static Map<Long, CompoundTag> readChunks(
+        Path worldPath,
+        String dimension,
+        Collection<Long> packedPositions
+    ) throws IOException {
+        Map<Long, CompoundTag> chunks = new LinkedHashMap<>();
+        RegionStorageInfo storageInfo = new RegionStorageInfo(
+            worldPath.getFileName().toString(),
+            toMinecraftDimension(dimension),
+            "region"
+        );
+
+        try (RegionFileStorage storage = new RegionFileStorage(storageInfo, worldPath.resolve("region"), false)) {
+            for (long packedPosition : packedPositions) {
+                ChunkPos chunkPos = new ChunkPos((int) (packedPosition >> 32), (int) packedPosition);
+                CompoundTag chunkTag = storage.read(chunkPos);
+                if (chunkTag != null) {
+                    chunks.put(packedPosition, chunkTag);
+                }
+            }
+        }
+
+        return chunks;
     }
 
     public static ExportResult writeRecordedChunks(

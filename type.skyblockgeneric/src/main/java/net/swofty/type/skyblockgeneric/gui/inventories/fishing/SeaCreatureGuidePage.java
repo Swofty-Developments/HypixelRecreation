@@ -4,7 +4,8 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -21,7 +22,8 @@ import java.util.List;
  *
  * Entries are modelled as a sealed {@link Entry} hierarchy: {@code Head} for
  * player heads (the common case — most creatures use one) and {@code Block}
- * for the handful that render as a regular item (dragon eggs, etc.).
+ * for the handful that render as a regular item (dragon eggs, etc.). Each
+ * entry carries one markup text block whose first line is the item name.
  */
 public abstract sealed class SeaCreatureGuidePage extends StatelessView
     permits GUI13SeaCreatureGuide, GUI23SeaCreatureGuide, GUI33SeaCreatureGuide {
@@ -35,7 +37,7 @@ public abstract sealed class SeaCreatureGuidePage extends StatelessView
     @Override
     public final ViewConfiguration<DefaultState> configuration() {
         return new ViewConfiguration<>(
-            "(" + pageNumber() + "/" + TOTAL_PAGES + ") Sea Creature Guide",
+            Text.of("({}/{}) Sea Creature Guide", pageNumber(), TOTAL_PAGES),
             InventoryType.CHEST_6_ROW
         );
     }
@@ -44,107 +46,84 @@ public abstract sealed class SeaCreatureGuidePage extends StatelessView
     public final void layout(ViewLayout<DefaultState> layout, DefaultState state, ViewContext ctx) {
         Components.close(layout, 49);
 
-        layout.slot(4, ItemStackCreator.getStack(
-            "§aSea Creature Guide",
-            Material.BOOK,
-            1,
-            "§7Your guide to the creatures of the",
-            "§7deep! Can also be accessed with",
-            "§a/scg§7!",
-            "",
-            "§7Beware, Sea Creatures spawn much",
-            "§7less often on your private island.",
-            "",
-            "§7Your Fishing: §aLevel XVIII"
-        ));
+        layout.slot(4, ItemStacks.item(Material.BOOK, """
+                <a>Sea Creature Guide
+                <7>Your guide to the creatures of the
+                <7>deep! Can also be accessed with
+                <a>/scg<7>!
+
+                <7>Beware, Sea Creatures spawn much
+                <7>less often on your private island.
+
+                <7>Your Fishing: <a>Level XVIII"""));
 
         for (Entry entry : entries()) {
             layout.slot(entry.slot(), entry.render());
         }
 
         if (pageNumber() > 1) {
-            layout.slot(45, ItemStackCreator.getStack(
-                "§aPrevious Page",
-                Material.ARROW,
-                1,
-                "§ePage " + (pageNumber() - 1)
-            ));
+            layout.slot(45, ItemStacks.item(Material.ARROW, """
+                    <a>Previous Page
+                    <e>Page {}""", pageNumber() - 1));
         }
 
-        layout.slot(48, ItemStackCreator.getStack(
-            "§aGo Back",
-            Material.ARROW,
-            1,
-            "§7To Fishing Skill"
-        ));
+        layout.slot(48, ItemStacks.item(Material.ARROW, """
+                <a>Go Back
+                <7>To Fishing Skill"""));
 
-        layout.slot(50, ItemStackCreator.getStack(
-            "§aSort",
-            Material.HOPPER,
-            1,
-            "",
-            "§b▶ Fishing Level Req",
-            "§7  Alphabetical",
-            "§7  Mob Level",
-            "§7  Killed Most",
-            "§7  Ascending Rarity",
-            "§7  Descending Rarity",
-            "",
-            "§bRight-click to go backwards!",
-            "§eClick to switch!"
-        ));
+        layout.slot(50, ItemStacks.item(Material.HOPPER, """
+                <a>Sort
 
-        layout.slot(51, ItemStackCreator.getStack(
-            "§aFilter",
-            Material.ENDER_EYE,
-            1,
-            "",
-            "§f▶ All Sea Creatures",
-            "§7  Has Level Requirement",
-            "§7  Has Never Killed",
-            "",
-            "§bRight-click to go backwards!",
-            "§eClick to switch!"
-        ));
+                <b>▶ Fishing Level Req
+                <7>  Alphabetical
+                <7>  Mob Level
+                <7>  Killed Most
+                <7>  Ascending Rarity
+                <7>  Descending Rarity
 
-        layout.slot(52, ItemStackCreator.getStack(
-            "§aCategory",
-            Material.CAULDRON,
-            1,
-            "",
-            "§a▶ Any Category",
-            "§7  Water",
-            "§7  Lava",
-            "§7  Winter",
-            "§7  Spooky",
-            "§7  Shark",
-            "§7  Oasis",
-            "§7  Bayou",
-            "§7  Hotspot",
-            "§7  Galatea",
-            "",
-            "§bRight-click to go backwards!",
-            "§eClick to switch!"
-        ));
+                <b>Right-click to go backwards!
+                <e>Click to switch!"""));
+
+        layout.slot(51, ItemStacks.item(Material.ENDER_EYE, """
+                <a>Filter
+
+                <f>▶ All Sea Creatures
+                <7>  Has Level Requirement
+                <7>  Has Never Killed
+
+                <b>Right-click to go backwards!
+                <e>Click to switch!"""));
+
+        layout.slot(52, ItemStacks.item(Material.CAULDRON, """
+                <a>Category
+
+                <a>▶ Any Category
+                <7>  Water
+                <7>  Lava
+                <7>  Winter
+                <7>  Spooky
+                <7>  Shark
+                <7>  Oasis
+                <7>  Bayou
+                <7>  Hotspot
+                <7>  Galatea
+
+                <b>Right-click to go backwards!
+                <e>Click to switch!"""));
 
         if (pageNumber() < TOTAL_PAGES) {
-            layout.slot(53, ItemStackCreator.getStack(
-                "§aNext Page",
-                Material.ARROW,
-                1,
-                "§ePage " + (pageNumber() + 1)
-            ));
+            layout.slot(53, ItemStacks.item(Material.ARROW, """
+                    <a>Next Page
+                    <e>Page {}""", pageNumber() + 1));
         }
     }
 
-    /** Convenience builder for a head-rendered entry. */
-    protected static Entry head(int slot, String name, String texture, String... lore) {
-        return new Entry.Head(slot, name, texture, lore);
+    protected static Entry head(int slot, String texture, String textBlock) {
+        return new Entry.Head(slot, texture, textBlock);
     }
 
-    /** Convenience builder for a material-rendered entry. */
-    protected static Entry block(int slot, String name, Material material, String... lore) {
-        return new Entry.Block(slot, name, material, lore);
+    protected static Entry block(int slot, Material material, String textBlock) {
+        return new Entry.Block(slot, material, textBlock);
     }
 
     public sealed interface Entry {
@@ -152,17 +131,17 @@ public abstract sealed class SeaCreatureGuidePage extends StatelessView
 
         ItemStack.Builder render();
 
-        record Head(int slot, String name, String texture, String... lore) implements Entry {
+        record Head(int slot, String texture, String textBlock) implements Entry {
             @Override
             public ItemStack.Builder render() {
-                return ItemStackCreator.getStackHead(name, texture, 1, lore);
+                return ItemStacks.head(texture, textBlock);
             }
         }
 
-        record Block(int slot, String name, Material material, String... lore) implements Entry {
+        record Block(int slot, Material material, String textBlock) implements Entry {
             @Override
             public ItemStack.Builder render() {
-                return ItemStackCreator.getStack(name, material, 1, lore);
+                return ItemStacks.item(material, textBlock);
             }
         }
     }

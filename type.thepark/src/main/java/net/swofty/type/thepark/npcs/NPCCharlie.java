@@ -20,7 +20,7 @@ public class NPCCharlie extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"Charlie", "§e§lCLICK"};
+				return new String[]{"Charlie", "<e><l>CLICK"};
 			}
 
 			@Override
@@ -59,12 +59,12 @@ public class NPCCharlie extends HypixelNPC {
 		}
 
 		if (data.isCurrentlyActive(MissionCollectBirchLogs.class)) {
-			sendNPCMessage(player, "I don't see §a64 Birch Logs§f. Where are they?");
+			sendNPCMessage(player, "I don't see <a>64 Birch Logs<f>. Where are they?");
 			return;
 		}
 
 		if (data.isCurrentlyActive(MissionGiveCharlieBirchLogs.class)) {
-			sendNPCMessage(player, "Cheers! Here, take these §atrousers §ffor payment!");
+			sendNPCMessage(player, "Cheers! Here, take these <a>trousers <f>for payment!");
 			data.endMission(MissionGiveCharlieBirchLogs.class);
 			return;
 		}
@@ -83,30 +83,30 @@ public class NPCCharlie extends HypixelNPC {
 	protected DialogueSet[] dialogues(HypixelPlayer player) {
 		return List.of(
 				DialogueSet.builder()
-						.key("initial-hello").lines(new String[]{
-								"Howdy! Yer a friend of §aLumber Jack§f, are ya?",
+						.key("initial-hello").lines(
+								"Howdy! Yer a friend of <a>Lumber Jack<f>, are ya?",
 								"Well, works for me!",
-								"I need §a64 Birch Logs§f. Could you grab 'em for me?",
+								"I need <a>64 Birch Logs<f>. Could you grab 'em for me?",
 								"Do that, and then we can talk!"
-						}).build(),
+						).build(),
 				DialogueSet.builder()
-						.key("talk-again").lines(new String[]{
-								"§aThe Park §fis home to many different kinds of wood. Each kind has its own §ecollection§f.",
+						.key("talk-again").lines(
+								"<a>The Park <f>is home to many different kinds of wood. Each kind has its own <e>collection<f>.",
 								"Me and my mates each gather a specific type of wood, and then split it all evenly so we can all increase our different collections!",
-								"I wanted §eKelly §fto get some §aSpruce Logs §ffor us today, but I've not seen her in a while... Can you maybe look for her in the §aSpruce Woods§f?"
-						}).build(),
+								"I wanted <e>Kelly <f>to get some <a>Spruce Logs <f>for us today, but I've not seen her in a while... Can you maybe look for her in the <a>Spruce Woods<f>?"
+						).build(),
 				DialogueSet.builder()
-						.key("idle-1").lines(new String[]{
-								"So much wood to chop, such little time...",
-						}).build(),
+						.key("idle-1").lines(
+								"So much wood to chop, such little time..."
+						).build(),
 				DialogueSet.builder()
-						.key("idle-2").lines(new String[]{
-								"So you heard about that weird §cCult §fover in the §aDark Thicket§f? I'm considerin' joining them.",
-						}).build(),
+						.key("idle-2").lines(
+								"So you heard about that weird <c>Cult <f>over in the <a>Dark Thicket<f>? I'm considerin' joining them."
+						).build(),
 				DialogueSet.builder()
-						.key("idle-3").lines(new String[]{
-								"What? §aLumber Jack §fsaid I have a §5Treecapitator§f? In my dreams...",
-						}).build()
+						.key("idle-3").lines(
+								"What? <a>Lumber Jack <f>said I have a <5>Treecapitator<f>? In my dreams..."
+						).build()
 		).toArray(DialogueSet[]::new);
 	}
 }

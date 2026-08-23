@@ -22,12 +22,13 @@ public class GamemodeCommand extends HypixelCommand {
 
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
+            HypixelPlayer player = (HypixelPlayer) sender;
 
             final GameMode gamemodeType = context.get(gamemode);
 
-            ((HypixelPlayer) sender).setGameMode(gamemodeType);
+            player.setGameMode(gamemodeType);
 
-            sender.sendMessage("§aSet your gamemode to §e" + gamemodeType.name() + "§a.");
+            player.sendMessage("<a>Set your gamemode to <e>{}<a>.", gamemodeType.name());
         }, gamemode);
     }
 }

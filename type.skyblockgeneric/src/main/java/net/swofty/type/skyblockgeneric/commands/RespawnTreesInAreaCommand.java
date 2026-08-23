@@ -36,7 +36,7 @@ public class RespawnTreesInAreaCommand extends HypixelCommand {
             long newSeed = context.get(seedArg);
 
             if (distance <= 0 || distance > 200) {
-                player.sendMessage("§cDistance must be between 1 and 200 blocks!");
+                player.sendMessage("<c>Distance must be between 1 and 200 blocks!");
                 return;
             }
 
@@ -51,7 +51,7 @@ public class RespawnTreesInAreaCommand extends HypixelCommand {
             );
 
             if (treesInRange.isEmpty()) {
-                player.sendMessage("§cNo registered trees found within " + distance + " blocks!");
+                player.sendMessage("<c>No registered trees found within {} blocks!", distance);
                 return;
             }
 
@@ -91,8 +91,8 @@ public class RespawnTreesInAreaCommand extends HypixelCommand {
                 treesRespawned++;
             }
 
-            player.sendMessage("§aRespawned §e" + treesRespawned + "§a tree(s)!");
-            player.sendMessage("§7Removed §e" + blocksRemoved + "§7 blocks, regenerated with seeds §e" + newSeed + "§7-§e" + (newSeed + treesRespawned - 1));
+            player.sendMessage("<a>Respawned <e>{}<a> tree(s)!", treesRespawned);
+            player.sendMessage("<7>Removed <e>{}<7> blocks, regenerated with seeds <e>{}<7>-<e>{}", blocksRemoved, newSeed, (newSeed + treesRespawned - 1));
         }, distanceArg, seedArg);
     }
 }

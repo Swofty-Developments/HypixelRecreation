@@ -1,14 +1,12 @@
 package net.swofty.type.skywarsgame.gui;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 
@@ -32,21 +30,18 @@ public class GUISpectatorTeleporter extends HypixelInventoryGUI {
             set(new GUIClickableItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStackHead(
-                            "§a" + targetPlayer.getUsername(),
-                            targetPlayer.getPlayerSkin(),
-                            1,
-                            "§7Status: §aAlive",
-                            "",
-                            "§eClick to teleport!"
-                    );
+                    return ItemStacks.head(targetPlayer.getPlayerSkin(), """
+                            <a>{}
+                            <7>Status: <a>Alive
+
+                            <e>Click to teleport!""", targetPlayer.getUsername());
                 }
 
                 @Override
                 public void run(InventoryPreClickEvent e, HypixelPlayer player) {
                     player.closeInventory();
                     player.teleport(targetPlayer.getPosition());
-                    player.sendMessage(Component.text("Teleported to " + targetPlayer.getUsername(), NamedTextColor.GREEN));
+                    player.sendMessage("<a>Teleported to {}", targetPlayer.getUsername());
                 }
             });
             slot++;

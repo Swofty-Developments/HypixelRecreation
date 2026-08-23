@@ -1,12 +1,10 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.hunting;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.minestom.server.component.DataComponents;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.StringUtility;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointHunting;
 import net.swofty.type.skyblockgeneric.hunting.AttributeDefinition;
 import net.swofty.type.skyblockgeneric.hunting.AttributeText;
@@ -30,67 +28,89 @@ final class AttributeGUIItems {
     static ItemStack.Builder huntingShard(AttributeDefinition definition, DatapointHunting.HuntingData data) {
         int level = data.level(definition.id());
         int owned = data.shardCount(definition.id());
-        List<String> lore = new ArrayList<>();
+        TextColor rarityColour = definition.rarity().itemRarity().getColor();
+        List<Text> lore = new ArrayList<>();
         if (definition.family() != AttributeDefinition.AttributeFamily.NONE)
-            lore.add("§8" + familyName(definition) + " Family");
-        lore.add("");
-        lore.add("§6" + definition.name() + (level > 0 ? " " + StringUtility.getAsRomanNumeral(level) : "") + " §8(" + title(definition.skill().name()) + ")");
-        lore.addAll(AttributeText.wrap(level >= 10 ? AttributeText.atLevel(definition, 10)
-                : AttributeText.upgrade(definition, level, level + 1), "§7", 34));
-        lore.add("");
-        lore.add("§7Owned: §b" + owned + (owned == 1 ? " Shard" : " Shards"));
-        if (level >= 10) lore.add("§a§lAttribute Maxed!");
-        else lore.add("§7Syphon §b" + Math.max(0, definition.rarity().nextRequirement(data.syphoned(definition.id()))
-                - data.syphoned(definition.id())) + " §7more to level up!");
-        lore.add("");
-        if (level < 10) lore.addAll(List.of("§eLeft-click to syphon!", "§eShift Left-click to syphon all!"));
-        lore.addAll(List.of("§eRight-click to convert to an item!", "§eShift Right-click to convert to a stack of items!", "",
-                definition.rarity().itemRarity().getLegacyColor() + "§l" + definition.rarity() + " " + definition.category() + " SHARD §8(ID " + definition.id() + ")"));
+            lore.add(Text.of("<8>{} Family", familyName(definition)));
+        lore.add(Text.empty());
+        lore.add(Text.of("<6>{}", definition.name())
+                .appendIf(level > 0, "<6> {:roman}", level)
+                .append("<6> <8>({})", title(definition.skill().name())));
+        lore.addAll(description(definition, level));
+        lore.add(Text.empty());
+        lore.add(Text.of("<7>Owned: <b>{} {}", owned, owned == 1 ? "Shard" : "Shards"));
+        if (level >= 10) lore.add(Text.of("<a><l>Attribute Maxed!"));
+        else lore.add(Text.of("<7>Syphon <b>{} <7>more to level up!",
+                Math.max(0, definition.rarity().nextRequirement(data.syphoned(definition.id()))
+                        - data.syphoned(definition.id()))));
+        lore.add(Text.empty());
+        if (level < 10) {
+            lore.add(Text.of("<e>Left-click to syphon!"));
+            lore.add(Text.of("<e>Shift Left-click to syphon all!"));
+        }
+        lore.add(Text.of("<e>Right-click to convert to an item!"));
+        lore.add(Text.of("<e>Shift Right-click to convert to a stack of items!"));
+        lore.add(Text.empty());
+        lore.add(Text.of("<color:{}><l>{} {} SHARD </l><8>(ID {})", rarityColour,
+                definition.rarity(), definition.category(), definition.id()));
         ItemStack.Builder builder = new NonPlayerItemUpdater(AttributeShardComponent.create(definition, 1)).getUpdatedItem();
-        builder.set(DataComponents.CUSTOM_NAME, Component.text(definition.rarity().itemRarity().getLegacyColor() + definition.shard())
-                .decoration(TextDecoration.ITALIC, false));
-        return ItemStackCreator.updateLore(builder, lore);
+        ItemStacks.name(builder, "<color:{}>{}", rarityColour, definition.shard());
+        return ItemStacks.lore(builder, lore);
     }
 
     static ItemStack.Builder attribute(AttributeDefinition definition, DatapointHunting.HuntingData data,
                                        boolean advanced) {
         int level = data.level(definition.id());
         int syphoned = data.syphoned(definition.id());
-        List<String> lore = new ArrayList<>();
-        lore.add("§8" + title(definition.skill().name()));
-        lore.add("");
-        lore.addAll(AttributeText.wrap(level >= 10 ? AttributeText.atLevel(definition, 10)
-                : AttributeText.upgrade(definition, level, level + 1), "§7", 34));
-        lore.add("");
-        lore.add("§7Source: " + definition.rarity().itemRarity().getLegacyColor() + definition.shardName() + " §8(" + definition.id() + ")");
-        lore.add("§7Rarity: " + definition.rarity().itemRarity().getLegacyColor() + "§l" + definition.rarity());
+        TextColor rarityColour = definition.rarity().itemRarity().getColor();
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.of("<8>{}", title(definition.skill().name())));
+        lore.add(Text.empty());
+        lore.addAll(description(definition, level));
+        lore.add(Text.empty());
+        lore.add(Text.of("<7>Source: <color:{}>{} <8>({})", rarityColour, definition.shardName(), definition.id()));
+        lore.add(Text.of("<7>Rarity: <color:{}><l>{}", rarityColour, definition.rarity()));
         if (level > 0) {
-            lore.add("§7Enabled: " + (data.enabled(definition.id()) ? "§aYes" : "§cNo"));
-            lore.add("");
-            lore.add("§7Attribute Level: §a" + level);
+            lore.add(Text.of("<7>Enabled: {}", data.enabled(definition.id())
+                    ? Text.of("<a>Yes") : Text.of("<c>No")));
+            lore.add(Text.empty());
+            lore.add(Text.of("<7>Attribute Level: <a>{}", level));
             if (level < 10)
-                lore.add("§7Syphon §b" + (definition.rarity().nextRequirement(syphoned) - syphoned) + " §7shards to level up!");
-            lore.add("§7Syphon §b" + (definition.rarity().cumulativeForLevel(10) - syphoned) + " §7shards to max!");
-            lore.add("");
-            lore.add("§eLeft-Click to open!");
-            lore.add("§eRight-Click to toggle!");
+                lore.add(Text.of("<7>Syphon <b>{} <7>shards to level up!",
+                        definition.rarity().nextRequirement(syphoned) - syphoned));
+            lore.add(Text.of("<7>Syphon <b>{} <7>shards to max!",
+                    definition.rarity().cumulativeForLevel(10) - syphoned));
+            lore.add(Text.empty());
+            lore.add(Text.of("<e>Left-Click to open!"));
+            lore.add(Text.of("<e>Right-Click to toggle!"));
         } else {
-            lore.add("");
-            lore.add("§7Syphon §b1 §7shard to unlock!");
-            lore.add("§7Syphon §b" + definition.rarity().cumulativeForLevel(10) + " §7more to max!");
-            lore.add("");
-            lore.add("§eLeft-Click to open!");
+            lore.add(Text.empty());
+            lore.add(Text.of("<7>Syphon <b>1 <7>shard to unlock!"));
+            lore.add(Text.of("<7>Syphon <b>{} <7>more to max!", definition.rarity().cumulativeForLevel(10)));
+            lore.add(Text.empty());
+            lore.add(Text.of("<e>Left-Click to open!"));
         }
-        String color = "§6";
-        if (level == 0) return ItemStackCreator.getStack(color + definition.name(), Material.GRAY_DYE, 1, lore);
+        Text name = Text.of("<6>{}", definition.name());
+        if (level == 0) return ItemStacks.item(Material.GRAY_DYE, 1, name, lore);
         ItemStack.Builder builder = new NonPlayerItemUpdater(AttributeShardComponent.create(definition, 1)).getUpdatedItem();
-        builder.set(DataComponents.CUSTOM_NAME, Component.text(color + definition.name())
-                .decoration(TextDecoration.ITALIC, false));
-        return ItemStackCreator.updateLore(builder, lore);
+        ItemStacks.name(builder, name);
+        return ItemStacks.lore(builder, lore);
     }
 
     static int pages(int size) {
         return Math.max(1, (size + CONTENT_SLOTS.length - 1) / CONTENT_SLOTS.length);
+    }
+
+    static List<Text> description(AttributeDefinition definition, int level) {
+        return wrapped(level >= 10 ? AttributeText.atLevel(definition, 10)
+                : AttributeText.upgrade(definition, level, level + 1));
+    }
+
+    static List<Text> wrapped(String markup) {
+        List<Text> result = new ArrayList<>();
+        for (Text line : AttributeText.wrapTexts(markup, 34))
+            result.add(Text.of("<7>{}", line));
+        return result;
     }
 
     private static String familyName(AttributeDefinition definition) {

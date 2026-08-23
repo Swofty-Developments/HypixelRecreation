@@ -1,8 +1,5 @@
 package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.component.DataComponents;
@@ -12,11 +9,11 @@ import net.minestom.server.item.component.EnchantmentList;
 import net.minestom.server.item.enchant.Enchantment;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -36,32 +33,19 @@ public class SuperDie implements LuckyBlockItem {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.MAGMA_CREAM)
-                .customName(Component.text(getDisplayName(), NamedTextColor.RED)
-                        .decoration(TextDecoration.ITALIC, false)
-                        .decoration(TextDecoration.BOLD, true))
-                .lore(List.of(
-                        Component.text("Roll the die and test", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("your luck!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("1: Instant death", NamedTextColor.DARK_RED)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("2: Half health", NamedTextColor.RED)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("3: Absorption II", NamedTextColor.GOLD)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("4: Diamond Sword (Sharp I)", NamedTextColor.AQUA)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("5: Diamond Sword (Fire II)", NamedTextColor.LIGHT_PURPLE)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("6: Full Diamond Armor!", NamedTextColor.GREEN)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to roll!", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                ))
+        return ItemStacks.item(Material.MAGMA_CREAM, """
+                <c><l>Super Die</l>
+                <7>Roll the die and test
+                <7>your luck!
+
+                <4>1: Instant death
+                <c>2: Half health
+                <6>3: Absorption II
+                <b>4: Diamond Sword (Sharp I)
+                <d>5: Diamond Sword (Fire II)
+                <a>6: Full Diamond Armor!
+
+                <e>Right-click to roll!""")
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
@@ -70,40 +54,38 @@ public class SuperDie implements LuckyBlockItem {
     public boolean onUse(SkywarsPlayer holder) {
         int roll = RANDOM.nextInt(6) + 1;
 
-        holder.sendMessage(Component.text("You rolled a ", NamedTextColor.GOLD)
-                .append(Component.text(roll, NamedTextColor.YELLOW, TextDecoration.BOLD))
-                .append(Component.text("!", NamedTextColor.GOLD)));
+        holder.sendMessage("<6>You rolled a <e><l>{}</l><6>!", roll);
 
         switch (roll) {
             case 1 -> {
-                holder.sendMessage(Component.text("UNLUCKY! You die instantly!", NamedTextColor.DARK_RED));
+                holder.sendMessage("<4>UNLUCKY! You die instantly!");
                 holder.damage(Damage.fromEntity(null, 1000f));
             }
             case 2 -> {
-                holder.sendMessage(Component.text("Your health is halved!", NamedTextColor.RED));
+                holder.sendMessage("<c>Your health is halved!");
                 float currentHealth = holder.getHealth();
                 holder.setHealth(Math.max(1, currentHealth / 2));
             }
             case 3 -> {
-                holder.sendMessage(Component.text("You gained Absorption II!", NamedTextColor.GOLD));
+                holder.sendMessage("<6>You gained Absorption II!");
                 holder.addEffect(new Potion(PotionEffect.ABSORPTION, (byte) 1, Integer.MAX_VALUE));
             }
             case 4 -> {
-                holder.sendMessage(Component.text("You received a Diamond Sword with Sharpness I!", NamedTextColor.AQUA));
+                holder.sendMessage("<b>You received a Diamond Sword with Sharpness I!");
                 ItemStack sword = ItemStack.builder(Material.DIAMOND_SWORD)
                         .set(DataComponents.ENCHANTMENTS, new EnchantmentList(Map.of(Enchantment.SHARPNESS, 1)))
                         .build();
                 holder.getInventory().addItemStack(sword);
             }
             case 5 -> {
-                holder.sendMessage(Component.text("You received a Diamond Sword with Fire Aspect II!", NamedTextColor.LIGHT_PURPLE));
+                holder.sendMessage("<d>You received a Diamond Sword with Fire Aspect II!");
                 ItemStack sword = ItemStack.builder(Material.DIAMOND_SWORD)
                         .set(DataComponents.ENCHANTMENTS, new EnchantmentList(Map.of(Enchantment.FIRE_ASPECT, 2)))
                         .build();
                 holder.getInventory().addItemStack(sword);
             }
             case 6 -> {
-                holder.sendMessage(Component.text("JACKPOT! Full Diamond Armor!", NamedTextColor.GREEN));
+                holder.sendMessage("<a>JACKPOT! Full Diamond Armor!");
                 holder.setEquipment(EquipmentSlot.HELMET, ItemStack.of(Material.DIAMOND_HELMET));
                 holder.setEquipment(EquipmentSlot.CHESTPLATE, ItemStack.of(Material.DIAMOND_CHESTPLATE));
                 holder.setEquipment(EquipmentSlot.LEGGINGS, ItemStack.of(Material.DIAMOND_LEGGINGS));

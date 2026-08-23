@@ -19,8 +19,8 @@ public class PumpkinSet extends SkyBlockValueEvent implements ArmorSet {
     @Override
     public ArrayList<String> getDescription() {
         return new ArrayList<>(List.of(
-                "Reduces all taken damage by §a+10%",
-                "and deal &a+10% §7more damage."
+                "Reduces all taken damage by <a>+10%",
+                "and deal &a+10% <7>more damage."
         ));
     }
 

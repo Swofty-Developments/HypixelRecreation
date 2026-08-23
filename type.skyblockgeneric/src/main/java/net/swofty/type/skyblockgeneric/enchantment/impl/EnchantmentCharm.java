@@ -12,7 +12,7 @@ import java.util.Map;
 public class EnchantmentCharm implements Ench {
     @Override
     public String getDescription(int level) {
-        return "§7Increases the chance to receive higher-tiered Trophy Fish by §a" + (level * 2) + "%§7.";
+        return "<7>Increases the chance to receive higher-tiered Trophy Fish by <a>" + level * 2 + "%</a>.";
     }
 
     @Override

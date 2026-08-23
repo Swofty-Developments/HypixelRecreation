@@ -4,7 +4,7 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
@@ -17,7 +17,7 @@ public class GUIRosetta extends HypixelInventoryGUI {
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(GUIClickableItem.getCloseItem(49));
 
         set(new GUIClickableItem(19) {
@@ -30,10 +30,11 @@ public class GUIRosetta extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.getStack("§eIron Armor", Material.IRON_HELMET, 1,
-                        "§7Plain old iron armor.",
-                        "",
-                        "§eClick to view set!");
+                return ItemStacks.item(Material.IRON_HELMET, """
+                        <e>Iron Armor
+                        <7>Plain old iron armor.
+
+                        <e>Click to view set!""");
             }
         });
 
@@ -47,11 +48,12 @@ public class GUIRosetta extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.getStack("§eRosetta's Armor", Material.DIAMOND_HELMET, 1,
-                        "§7Custom-designed and",
-                        "§7hand-crafted diamond armor.",
-                        "",
-                        "§eClick to view set!");
+                return ItemStacks.item(Material.DIAMOND_HELMET, """
+                        <e>Rosetta's Armor
+                        <7>Custom-designed and
+                        <7>hand-crafted diamond armor.
+
+                        <e>Click to view set!""");
             }
         });
 
@@ -64,11 +66,12 @@ public class GUIRosetta extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§eSquire Armor", Material.CHAINMAIL_HELMET, 1,
-                        "§7Solid set to venture into the",
-                        "§7deep caverns.",
-                        "",
-                        "§eClick to view set!");
+                return ItemStacks.item(Material.CHAINMAIL_HELMET, """
+                        <e>Squire Armor
+                        <7>Solid set to venture into the
+                        <7>deep caverns.
+
+                        <e>Click to view set!""");
             }
         });
 
@@ -82,11 +85,12 @@ public class GUIRosetta extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                return ItemStackCreator.getStack("§eMercenary Armor", Material.IRON_HELMET, 1,
-                        "§7Kickstart your warrior",
-                        "§7journey!",
-                        "",
-                        "§eClick to view set!");
+                return ItemStacks.item(Material.IRON_HELMET, """
+                        <e>Mercenary Armor
+                        <7>Kickstart your warrior
+                        <7>journey!
+
+                        <e>Click to view set!""");
             }
         });
 
@@ -99,11 +103,12 @@ public class GUIRosetta extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§eCeleste Armor", Material.LEATHER_HELMET, 1,
-                        "§7Dip a toe into the world of",
-                        "§7magic.",
-                        "",
-                        "§eClick to view set!");
+                return ItemStacks.item(Material.LEATHER_HELMET, """
+                        <e>Celeste Armor
+                        <7>Dip a toe into the world of
+                        <7>magic.
+
+                        <e>Click to view set!""");
             }
         });
 
@@ -116,11 +121,12 @@ public class GUIRosetta extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer p) {
-                return ItemStackCreator.getStack("§eStarlight Armor", Material.GOLDEN_HELMET, 1,
-                        "§7This set was designed with the",
-                        "§7help of Barry the Wizard.",
-                        "",
-                        "§eClick to view set!");
+                return ItemStacks.item(Material.GOLDEN_HELMET, """
+                        <e>Starlight Armor
+                        <7>This set was designed with the
+                        <7>help of Barry the Wizard.
+
+                        <e>Click to view set!""");
             }
         });
         updateItemStacks(getInventory(), getPlayer());

@@ -13,7 +13,7 @@ public class NPCPuzzler extends HypixelNPC {
 		super(new HumanConfiguration() {
 			@Override
 			public String[] holograms(HypixelPlayer player) {
-				return new String[]{"§dPuzzler", "§e§lCLICK"};
+				return new String[]{"<d>Puzzler", "<e><l>CLICK"};
 			}
 
 			@Override

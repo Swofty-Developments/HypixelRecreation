@@ -1,10 +1,9 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.calendar;
 
-import net.kyori.adventure.text.Component;
-import net.minestom.server.component.DataComponents;
 import net.minestom.server.inventory.InventoryType;
-import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class GUICalendar extends StatelessView {
 
@@ -59,27 +57,18 @@ public class GUICalendar extends StatelessView {
                     .orElse(null);
 
                 if (freshInfo == null) {
-                    return event.representation().builder()
-                        .set(DataComponents.CUSTOM_NAME, Component.text(event.getDisplayName(0)))
-                        .set(DataComponents.LORE, List.of());
+                    return ItemStacks.text(event.representation().builder(), event.getDisplayName(0), List.of());
                 }
 
-                List<Component> loreHeader = new ArrayList<>(List.of(
-                    Component.text("§7Starts in: §e" + StringUtility.formatTimeLeft(freshInfo.timeUntilBegin() * 50L))
-                ));
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<7>Starts in: <e>{:time}", freshInfo.timeUntilBegin() * 50L));
                 if (!freshInfo.duration().isZero()) {
-                    loreHeader.add(Component.text("§7Event lasts for §e" + StringUtility.formatTimeLeft(freshInfo.duration().toMillis()) + "§7!"));
+                    lore.add(Text.of("<7>Event lasts for <e>{:time}<7>!", freshInfo.duration().toMillis()));
                 }
-                loreHeader.add(Component.text(" "));
+                lore.add(Text.literal(" "));
+                lore.addAll(event.description());
 
-                List<Component> lore = Stream.concat(
-                    loreHeader.stream(),
-                    event.description().stream().map(line -> (Component) Component.text(line))
-                ).toList();
-
-                return event.representation().builder()
-                    .set(DataComponents.CUSTOM_NAME, Component.text(event.getDisplayName(freshInfo.year())))
-                    .set(DataComponents.LORE, lore);
+                return ItemStacks.text(event.representation().builder(), event.getDisplayName(freshInfo.year()), lore);
             }, Duration.ofSeconds(1));
         }
     }

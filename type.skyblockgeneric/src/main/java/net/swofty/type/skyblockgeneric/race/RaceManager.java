@@ -9,6 +9,7 @@ import net.minestom.server.coordinate.Point;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.timer.ExecutionType;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.data.datapoints.DatapointMapStringLong;
 import net.swofty.type.generic.entity.hologram.PlayerHolograms;
@@ -52,22 +53,23 @@ public class RaceManager {
 
 			if (!playerHasHolograms) {
 				HologramCache cache = new HologramCache();
+				String titleMarkup = titleMarkup();
 				String[] startHolograms = new String[]{
-						getRace().getTitle(),
-						"§aStart"
+						titleMarkup,
+						"<a>Start"
 				};
 
 				if (perPlayerStartTime.containsKey(player.getUuid())) {
 					RunData runData = perPlayerStartTime.get(player.getUuid());
 					if (runData.lastCheckpointIndex() == -1) {
 						startHolograms = new String[]{
-								getRace().getTitle(),
-								"§aReset Timer",
+								titleMarkup,
+								"<a>Reset Timer",
 						};
 					} else if (isSame) {
 						startHolograms = new String[]{
-								getRace().getTitle(),
-								"§aFinish"
+								titleMarkup,
+								"<a>Finish"
 						};
 					}
 				}
@@ -83,8 +85,8 @@ public class RaceManager {
 
 				for (Point checkpointPos : checkpoints) {
 					String[] checkpointHolograms = new String[]{
-							getRace().getTitle(),
-							"§aCheckpoint"
+							titleMarkup,
+							"<a>Checkpoint"
 					};
 					PlayerHolograms.ExternalPlayerHologram checkpointHolo = PlayerHolograms.ExternalPlayerHologram.builder()
 							.pos(checkpointPos.asPos().add(0.5, 0, 0.5))
@@ -98,8 +100,8 @@ public class RaceManager {
 
 				if (!isSame) {
 					String[] endHolograms = new String[]{
-							getRace().getTitle(),
-							"§aFinish"
+							titleMarkup,
+							"<a>Finish"
 					};
 					PlayerHolograms.ExternalPlayerHologram endHolo = PlayerHolograms.ExternalPlayerHologram.builder()
 							.pos(end.asPos().add(0.5, 0, 0.5))
@@ -125,14 +127,14 @@ public class RaceManager {
 		if (perPlayerStartTime.containsKey(player.getUuid())) {
 			perPlayerStartTime.remove(player.getUuid());
 			perPlayerStartTime.put(player.getUuid(), new RunData(System.currentTimeMillis(), -1));
-			player.sendMessage(race.getTitle() + " §eTimer reset to §a0:00§e!");
+			player.sendMessage("{} <e>Timer reset to <a>0:00<e>!", title());
 			return;
 		}
 
 		if (!getRace().canStart(player)) return;
 
 		perPlayerStartTime.put(player.getUuid(), new RunData(System.currentTimeMillis(), -1));
-		player.sendMessage(race.getTitle() + " §eRace started! Good luck!");
+		player.sendMessage("{} <e>Race started! Good luck!", title());
 		updateForPlayer(HypixelConst.getInstanceContainer(), player);
 
 		MinecraftServer.getSchedulerManager().submitTask(() -> {
@@ -145,7 +147,7 @@ public class RaceManager {
 				long timeElapsed = System.currentTimeMillis() - perPlayerStartTime.get(player.getUuid()).startTime();
 				if (timeElapsed >= race.timeLimit() * 1000L) {
 					perPlayerStartTime.remove(player.getUuid());
-					player.sendMessage(race.getTitle() + " §cRace cancelled! Time limit reached!");
+					player.sendMessage("{} <c>Race cancelled! Time limit reached!", title());
 					player.playSound(Sound.sound(
 							Key.key("block.note_block.pling"), Sound.Source.NEUTRAL,
 							.3f, 0.75f
@@ -159,11 +161,9 @@ public class RaceManager {
 			String timeString = String.format("%02d:%05.2f", timeElapsed / 60000, (timeElapsed % 60000) / 1000.0);
 			SkyBlockActionBar.getFor(player).addReplacement(
 					SkyBlockActionBar.BarSection.HEALTH,
-					new SkyBlockActionBar.DisplayReplacement(
-							race.getTitle() + " §e" + timeString,
-							25,
-							5
-					)
+					Text.of(titleMarkup() + " <e>{}", timeString),
+					25,
+					5
 			);
 			return TaskSchedule.millis(200);
 		}, ExecutionType.TICK_END);
@@ -172,7 +172,7 @@ public class RaceManager {
 	public void checkpointPlayer(SkyBlockPlayer player, int checkpointIndex) {
 		RunData runData = perPlayerStartTime.get(player.getUuid());
 		if (runData == null) {
-			player.sendMessage(race.getTitle() + " §cThis is the end of a race, usually you start at the beginning!");
+			player.sendMessage("{} <c>This is the end of a race, usually you start at the beginning!", title());
 			return;
 		}
 		if (checkpointIndex <= runData.lastCheckpointIndex()) {
@@ -186,12 +186,12 @@ public class RaceManager {
 	public void finishedRace(SkyBlockPlayer player) {
 		RunData runData = perPlayerStartTime.get(player.getUuid());
 		if (runData == null) {
-			player.sendMessage(race.getTitle() + " §cThis is the end of a race, usually you start at the beginning!");
+			player.sendMessage("{} <c>This is the end of a race, usually you start at the beginning!", title());
 			return;
 		}
 
 		if (runData.lastCheckpointIndex() < race.getCheckpoints().size() - 1) {
-			player.sendMessage(race.getTitle() + " §cYou haven't passed all the checkpoints yet!");
+			player.sendMessage("{} <c>You haven't passed all the checkpoints yet!", title());
 			return;
 		}
 
@@ -224,6 +224,15 @@ public class RaceManager {
 		if (!perPlayerStartTime.containsKey(player.getUuid())) return;
 		perPlayerStartTime.remove(player.getUuid());
 		updateForPlayer(HypixelConst.getInstanceContainer(), player);
+	}
+
+	private Text title() {
+		String raw = race.getTitle();
+		return Text.read(raw);
+	}
+
+	private String titleMarkup() {
+		return title().serialize();
 	}
 
 	public record RunData(Long startTime, int lastCheckpointIndex) {

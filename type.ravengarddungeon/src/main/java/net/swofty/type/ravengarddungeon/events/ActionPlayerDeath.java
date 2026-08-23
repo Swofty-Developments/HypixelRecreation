@@ -13,6 +13,22 @@ public class ActionPlayerDeath implements HypixelEventClass {
     public void run(PlayerDeathEvent event) {
         event.setChatMessage(null);
         RavengardDungeonPlayer player = (RavengardDungeonPlayer) event.getPlayer();
-        ScheduleUtility.nextTick(() -> TypeRavengardDungeonLoader.getGame().eliminate(player));
+        String killer = killerName(player.getLastDamageSource());
+        ScheduleUtility.nextTick(() -> TypeRavengardDungeonLoader.getGame().eliminate(player, killer));
+    }
+
+    private static String killerName(net.minestom.server.entity.damage.Damage damage) {
+        if (damage == null) {
+            return null;
+        }
+        net.minestom.server.entity.Entity attacker = damage.getAttacker() != null
+                ? damage.getAttacker() : damage.getSource();
+        if (attacker instanceof net.swofty.type.ravengardgeneric.entity.mob.RavengardMob mob) {
+            return mob.displayName();
+        }
+        if (attacker instanceof net.minestom.server.entity.Player other) {
+            return other.getUsername();
+        }
+        return null;
     }
 }

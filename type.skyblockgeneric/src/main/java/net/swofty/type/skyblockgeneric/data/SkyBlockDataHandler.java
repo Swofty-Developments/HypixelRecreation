@@ -6,12 +6,20 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.LinkedField;
+import net.swofty.PlayerField;
+import net.swofty.codec.Codecs;
+import net.swofty.commons.data.NameIndex;
+import net.swofty.commons.data.SwoftyData;
+import net.swofty.commons.skyblock.CoopLinks;
 import net.swofty.commons.skyblock.PlayerShopData;
 import net.swofty.commons.skyblock.SkyBlockPlayerProfiles;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.type.generic.data.BackedField;
 import net.swofty.type.generic.data.DataHandler;
 import net.swofty.type.generic.data.Datapoint;
 import net.swofty.type.generic.data.datapoints.*;
+import net.swofty.type.generic.data.domain.PlayerDataService;
 import net.swofty.type.generic.data.mongodb.ProfilesDatabase;
 import net.swofty.type.generic.data.mongodb.UserDatabase;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -37,9 +45,6 @@ import java.util.function.Function;
 
 public class SkyBlockDataHandler extends DataHandler {
 
-    // SkyBlock specific cache
-    public static final Map<UUID, SkyBlockDataHandler> skyBlockCache = new ConcurrentHashMap<>();
-
     @Getter
     private UUID currentProfileId;
 
@@ -53,16 +58,11 @@ public class SkyBlockDataHandler extends DataHandler {
     }
 
     public static SkyBlockDataHandler getUser(UUID uuid) {
-        if (!skyBlockCache.containsKey(uuid)) throw new RuntimeException("User " + uuid + " does not exist!");
-        return skyBlockCache.get(uuid);
+        return PlayerDataService.get(SkyBlockDomain.KEY, uuid);
     }
 
     public static @Nullable SkyBlockDataHandler getUser(HypixelPlayer player) {
-        try {
-            return getUser(player.getUuid());
-        } catch (Exception e) {
-            return null;
-        }
+        return PlayerDataService.find(SkyBlockDomain.KEY, player.getUuid()).orElse(null);
     }
 
     public static SkyBlockDataHandler createFromProfileOnly(Document profileDoc) {
@@ -93,7 +93,7 @@ public class SkyBlockDataHandler extends DataHandler {
         for (Data data : Data.values()) {
             String key = data.getKey();
             if (!document.containsKey(key)) {
-                datapoints.put(key, data.getDefaultDatapoint().setUser(this).setData(data));
+                datapoints.put(key, data.getDefaultDatapoint().deepClone().setUser(this).setData(data));
                 continue;
             }
             String jsonValue = document.getString(key);
@@ -103,7 +103,7 @@ public class SkyBlockDataHandler extends DataHandler {
                 dp.deserializeValue(jsonValue);
                 datapoints.put(key, dp.setUser(this).setData(data));
             } catch (Exception e) {
-                datapoints.put(key, data.getDefaultDatapoint().setUser(this).setData(data));
+                datapoints.put(key, data.getDefaultDatapoint().deepClone().setUser(this).setData(data));
                 Logger.error(e, "Issue with SkyBlock datapoint {} for user {} - defaulting to default value", key, this.uuid);
             }
         }
@@ -135,7 +135,7 @@ public class SkyBlockDataHandler extends DataHandler {
                     datapoints.put(data.getKey(), datapoint);
                 }
                 document.put(data.getKey(), datapoint.getSerializedValue());
-            } catch (JacksonException e) {
+            } catch (Exception e) {
                 Logger.error(e, "Failed to serialize SkyBlock datapoint {} for user {}", data.getKey(), this.uuid);
             }
         }
@@ -157,14 +157,28 @@ public class SkyBlockDataHandler extends DataHandler {
     }
 
     public static SkyBlockDataHandler getProfileOfOfflinePlayer(UUID uuid, UUID profileUUID) throws RuntimeException {
-        if (skyBlockCache.containsKey(uuid))
-            return skyBlockCache.get(uuid);
+        SkyBlockDataHandler cached = PlayerDataService.find(SkyBlockDomain.KEY, uuid).orElse(null);
+        if (cached != null) return cached;
 
         if (profileUUID == null)
             throw new RuntimeException("No profile selected for user " + uuid.toString());
 
-        Document profile = ProfilesDatabase.fetchDocument(profileUUID);
+        Document profile;
+        try {
+            profile = ProfilesDatabase.fetchDocument(profileUUID);
+        } finally {
+            releaseOfflineProfile(uuid, profileUUID);
+        }
         return createFromProfileOnly(profile);
+    }
+
+    private static void releaseOfflineProfile(UUID uuid, UUID profileUUID) {
+        if (PlayerDataService.isLoaded(SkyBlockDomain.KEY, uuid)) return;
+        try {
+            SwoftyData.profile().unload(profileUUID);
+        } catch (Exception e) {
+            Logger.error(e, "Failed to release offline profile container {} for user {}", profileUUID, uuid);
+        }
     }
 
     /**
@@ -210,6 +224,40 @@ public class SkyBlockDataHandler extends DataHandler {
         return h;
     }
 
+    public void loadFromApi() {
+        SwoftyData.profile().load(currentProfileId);
+        loadBackedData();
+    }
+
+    public void loadFromTransferDocument(Document document) {
+        loadSkyBlock(document);
+        SwoftyData.profile().load(currentProfileId);
+        readCoopBackedData();
+        saveBackedData(datapoint -> !isCoopBacked(datapoint));
+        SwoftyData.profile().set(currentProfileId, ProfilesDatabase.DOCUMENT, toProfileDocument().toJson());
+    }
+
+    private void readCoopBackedData() {
+        for (Datapoint<?> datapoint : datapoints.values()) {
+            if (!isCoopBacked(datapoint)) continue;
+            try {
+                String stored = ((Data) datapoint.getData()).readData(this);
+                if (stored != null) datapoint.deserializeValue(stored);
+            } catch (Exception e) {
+                Logger.error(e, "Failed to read coop datapoint {} for user {}", datapoint.getKey(), this.uuid);
+            }
+        }
+    }
+
+    private static boolean isCoopBacked(Datapoint<?> datapoint) {
+        return datapoint.getData() instanceof Data data && data.coopField() != null;
+    }
+
+    public void saveToApi() {
+        saveBackedData();
+        SwoftyData.profile().set(currentProfileId, ProfilesDatabase.DOCUMENT, toProfileDocument().toJson());
+    }
+
     public Map<String, Object> getCoopValues() {
         Map<String, Object> values = new HashMap<>();
         Arrays.stream(Data.values()).forEach(data -> {
@@ -221,14 +269,10 @@ public class SkyBlockDataHandler extends DataHandler {
     }
 
     public static @Nullable UUID getPotentialUUIDFromName(String name) throws RuntimeException {
-        Document doc = UserDatabase.collection.find(new Document("ignLowercase", name.toLowerCase())).first();
-        if (doc == null) return null;
-        String id = doc.getString("_id");
-        return id != null ? UUID.fromString(id) : null;
+        return NameIndex.lookup(name);
     }
 
-    // Same Data enum as before - unchanged
-    public enum Data {
+    public enum Data implements BackedField {
         EXPERIENCED_STATISTICS("experienced_statistics", false, false, false,
                 DatapointStringList.class, new DatapointStringList("experienced_statistics")),
         PROFILE_NAME("profile_name", false, true, false,
@@ -544,6 +588,8 @@ public class SkyBlockDataHandler extends DataHandler {
         private final Class<? extends Datapoint<?>> type;
         @Getter
         private final Datapoint<?> defaultDatapoint;
+        private final PlayerField<String> profileField;
+        private final LinkedField<UUID, String> coopField;
         public final BiConsumer<Player, Datapoint<?>> onChange;
         public final BiConsumer<SkyBlockPlayer, Datapoint<?>> onLoad;
         public final Function<SkyBlockPlayer, Datapoint<?>> onQuit;
@@ -560,6 +606,39 @@ public class SkyBlockDataHandler extends DataHandler {
             this.onChange = onChange;
             this.onLoad = onLoad;
             this.onQuit = onQuit;
+            if (Boolean.TRUE.equals(isCoopPersistent)) {
+                this.coopField = LinkedField.create("coop", key, Codecs.STRING, null, CoopLinks.COOP);
+                this.profileField = null;
+            } else {
+                this.profileField = PlayerField.create("skyblock", key, Codecs.STRING, null);
+                this.coopField = null;
+            }
+        }
+
+        @Override
+        public String readData(DataHandler handler) {
+            UUID profileId = ((SkyBlockDataHandler) handler).getCurrentProfileId();
+            return coopField != null
+                    ? SwoftyData.profile().get(profileId, coopField)
+                    : SwoftyData.profile().get(profileId, profileField);
+        }
+
+        @Override
+        public void writeData(DataHandler handler, String serialized) {
+            UUID profileId = ((SkyBlockDataHandler) handler).getCurrentProfileId();
+            if (coopField != null) {
+                SwoftyData.profile().set(profileId, coopField, serialized);
+            } else {
+                SwoftyData.profile().set(profileId, profileField, serialized);
+            }
+        }
+
+        public LinkedField<UUID, String> coopField() {
+            return coopField;
+        }
+
+        public PlayerField<String> profileField() {
+            return profileField;
         }
 
         Data(String key, Boolean isProfilePersistent, Boolean isCoopPersistent, Boolean repeatSetValue,
@@ -587,13 +666,18 @@ public class SkyBlockDataHandler extends DataHandler {
     public static void startRepeatSetValueLoop() {
         MinecraftServer.getSchedulerManager().submitTask(() -> {
             SkyBlockGenericLoader.getLoadedPlayers().forEach(player -> {
-                SkyBlockDataHandler h = player.getSkyblockDataHandler();
+                SkyBlockDataHandler h = PlayerDataService.find(SkyBlockDomain.KEY, player.getUuid()).orElse(null);
+                if (h == null) return;
                 for (Data data : Data.values()) {
-                    if (data.repeatSetValue) {
+                    if (!data.repeatSetValue) continue;
+                    try {
                         Datapoint<?> dp = h.get(data);
                         @SuppressWarnings("unchecked")
                         Datapoint<Object> any = (Datapoint<Object>) dp;
                         any.setValue(any.getValue());
+                    } catch (Exception e) {
+                        Logger.error(e, "Failed to repeat set SkyBlock datapoint {} for user {}",
+                                data.getKey(), player.getUuid());
                     }
                 }
             });

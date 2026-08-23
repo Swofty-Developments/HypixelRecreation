@@ -40,14 +40,14 @@ public class ActionPlayerJoin implements HypixelEventClass {
                 return;
             }
             Logger.error("Failed to find game assignment for player " + player.getUsername());
-            player.sendMessage("§cNo game assignment found! Returning to lobby...");
+            player.sendMessage("<c>No game assignment found! Returning to lobby...");
             player.sendTo(ServerType.MURDER_MYSTERY_LOBBY);
             return;
         }
 
         Game preferred = TypeMurderMysteryGameLoader.getGameById(preferredGameId);
         if (preferred == null) {
-            player.sendMessage("§cThe assigned game no longer exists! Returning to lobby...");
+            player.sendMessage("<c>The assigned game no longer exists! Returning to lobby...");
             player.sendTo(ServerType.MURDER_MYSTERY_LOBBY);
             return;
         }

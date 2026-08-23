@@ -25,7 +25,7 @@ final class TarantulaBroodfatherAbility extends SlayerAbilitySupport {
             }
             Pos behind = owner.getPosition().sub(owner.getPosition().direction().mul(2)).withY(owner.getPosition().y());
             boss.teleport(behind);
-            owner.sendMessage("§5Backstab!");
+            owner.sendMessage("<5>Backstab!");
         });
 
         repeating(boss, 20, 20, () -> {
@@ -51,7 +51,7 @@ final class TarantulaBroodfatherAbility extends SlayerAbilitySupport {
             conjoined = true;
             boss.setHealth((float) boss.getProfile().tier().bossHealth());
             boss.getAttribute(net.minestom.server.entity.attribute.Attribute.MAX_HEALTH).setBaseValue(boss.getProfile().tier().bossHealth() * 2D);
-            nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§5Til Death Do Us Part! §dThe Conjoined Brood awakens!"));
+            nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<5>Til Death Do Us Part! <d>The Conjoined Brood awakens!"));
             return 0F;
         }
         return amount;
@@ -66,7 +66,7 @@ final class TarantulaBroodfatherAbility extends SlayerAbilitySupport {
     }
 
     private void webOfLies(SlayerBossMob boss) {
-        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§5Web of Lies! §dDestroy the egg sacs!"));
+        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<5>Web of Lies! <d>Destroy the egg sacs!"));
         heal(boss, boss.getProfile().tier().bossHealth() * 0.05D);
         int sacs = boss.getProfile().tier().tier().number() >= 5 ? 3 : 2;
         for (int i = 0; i < sacs; i++) {
@@ -85,7 +85,7 @@ final class TarantulaBroodfatherAbility extends SlayerAbilitySupport {
     }
 
     private void batBarrage(SlayerBossMob boss) {
-        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("§5Bat Barrage!"));
+        nearbyPlayers(boss, 16).forEach(player -> player.sendMessage("<5>Bat Barrage!"));
         int bats = boss.getProfile().tier().tier().number() >= 5 ? 6 : 4;
         for (int i = 0; i < bats; i++) {
             spawnMinion(boss, new SlayerMinionMob.SlayerMinionProfile(

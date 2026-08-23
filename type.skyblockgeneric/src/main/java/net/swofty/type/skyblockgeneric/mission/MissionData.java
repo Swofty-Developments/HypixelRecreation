@@ -3,6 +3,7 @@ package net.swofty.type.skyblockgeneric.mission;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.calendar.SkyBlockCalendar;
 import net.swofty.type.skyblockgeneric.levels.SkyBlockLevelCause;
 import net.swofty.type.skyblockgeneric.region.RegionType;
@@ -205,52 +206,52 @@ public class MissionData {
             }
         }
 
-        public List<String> getObjectiveCompleteText(ArrayList<String> rewards) {
+        public List<Text> getObjectiveCompleteText(ArrayList<String> rewards) {
             return getObjectiveCompleteText("OBJECTIVE COMPLETE", rewards);
         }
 
-        public List<String> getObjectiveCompleteText(String title, ArrayList<String> rewards) {
+        public List<Text> getObjectiveCompleteText(String title, ArrayList<String> rewards) {
             SkyBlockMission mission = getMissionFromCache(missionID);
 
             if (rewards == null || rewards.isEmpty())
-                return Arrays.asList(
-                        "§7 ",
-                        "§6§l  " + title,
-                        "§f  " + mission.getName(),
-                        "§7 ");
+                return List.of(
+                        Text.of("<7> "),
+                        Text.of("<6><l>  {}", title),
+                        Text.of("<f>  {}", mission.getName()),
+                        Text.of("<7> "));
 
-            ArrayList<String> display = new ArrayList<>(Arrays.asList(
-                    "§7 ",
-                    "§6§l  " + title,
-                    "§f  " + mission.getName(),
-                    "§7 ",
-                    "§a§l    REWARDS"
+            List<Text> display = new ArrayList<>(List.of(
+                    Text.of("<7> "),
+                    Text.of("<6><l>  {}", title),
+                    Text.of("<f>  {}", mission.getName()),
+                    Text.of("<7> "),
+                    Text.of("<a><l>    REWARDS")
             ));
-            display.addAll(rewards.stream().map(reward -> "§8    +" + reward).toList());
-            display.add("§7 ");
+            display.addAll(rewards.stream().map(reward -> Text.parse("<8>    +" + reward)).toList());
+            display.add(Text.of("<7> "));
             return display;
         }
 
-        public List<String> getQuestCompleteText(ArrayList<String> rewards) {
-            ArrayList<String> display = new ArrayList<>(Arrays.asList(
-                    "§7 ",
-                    "§6§l  QUEST COMPLETE",
-                    "§7 ",
-                    "§a§l    REWARDS"
+        public List<Text> getQuestCompleteText(ArrayList<String> rewards) {
+            List<Text> display = new ArrayList<>(List.of(
+                    Text.of("<7> "),
+                    Text.of("<6><l>  QUEST COMPLETE"),
+                    Text.of("<7> "),
+                    Text.of("<a><l>    REWARDS")
             ));
-            display.addAll(rewards.stream().map(reward -> "§8    +" + reward).toList());
-            display.add("§7 ");
+            display.addAll(rewards.stream().map(reward -> Text.parse("<8>    +" + reward)).toList());
+            display.add(Text.of("<7> "));
             return display;
         }
 
-        public List<String> getNewObjectiveText() {
+        public List<Text> getNewObjectiveText() {
             SkyBlockMission mission = getMissionFromCache(missionID);
 
-            return Arrays.asList(
-                    "§7 ",
-                    "§6§l  NEW OBJECTIVE",
-                    "§f  " + mission.getName(),
-                    "§7 ");
+            return List.of(
+                    Text.of("<7> "),
+                    Text.of("<6><l>  NEW OBJECTIVE"),
+                    Text.of("<f>  {}", mission.getName()),
+                    Text.of("<7> "));
         }
     }
 

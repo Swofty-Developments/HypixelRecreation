@@ -25,7 +25,7 @@ public class EnchantmentProsecute implements Ench, EnchFromTable, EventBasedEnch
     @Override
     public String getDescription(int level) {
         double damagePercent = DAMAGE_BONUSES[level - 1] * 100;
-        return "Increases damage dealt by §a" + damagePercent + "%§7 for each percent of health your target has.";
+        return "Increases damage dealt by <a>" + damagePercent + "%<7> for each percent of health your target has.";
     }
 
     @Override

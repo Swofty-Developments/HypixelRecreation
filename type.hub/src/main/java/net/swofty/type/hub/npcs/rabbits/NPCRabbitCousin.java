@@ -31,40 +31,40 @@ public class NPCRabbitCousin extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("dialogue-1").lines(new String[]{
+                        .key("dialogue-1").lines(
                                 "My parents have been hounding me to get a job! Please hire me!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-2").lines(new String[]{
+                        .key("dialogue-2").lines(
                                 "I need a job soon, or my parents will kick me out of the warren."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-3").lines(new String[]{
-                                "I tell ya, family gatherings got a lot more interesting when §aHoppity§f started bringing those experimental chocolates.",
+                        .key("dialogue-3").lines(
+                                "I tell ya, family gatherings got a lot more interesting when <a>Hoppity<f> started bringing those experimental chocolates.",
                                 "Remember the carrot crunch debacle?"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-4").lines(new String[]{
+                        .key("dialogue-4").lines(
                                 "Working hard or hardly working? With chocolate, it's both. I might drift in past noon, but when I'm on, I'm on fire.",
                                 "They say genius often looks like laziness. Guess I'm living proof."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-5").lines(new String[]{
-                                "When I finally get to it, even §aGranny's§f impressed with the flavors I whip up."
-                        }).build(),
+                        .key("dialogue-5").lines(
+                                "When I finally get to it, even <a>Granny's<f> impressed with the flavors I whip up."
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-6").lines(new String[]{
-                                "I suggested chocolate-covered carrots to §aHoppity§f once. He laughed until he tried it. Now, who's laughing?",
+                        .key("dialogue-6").lines(
+                                "I suggested chocolate-covered carrots to <a>Hoppity<f> once. He laughed until he tried it. Now, who's laughing?",
                                 "Still him, because it was a terrible idea."
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-7").lines(new String[]{
+                        .key("dialogue-7").lines(
                                 "My parents have been hounding me to get a job! Please hire me!"
-                        }).build(),
+                        ).build(),
                 DialogueSet.builder()
-                        .key("dialogue-8").lines(new String[]{
+                        .key("dialogue-8").lines(
                                 "I need a job soon, or my parents will kick me out of the warren."
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

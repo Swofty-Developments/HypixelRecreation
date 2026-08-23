@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.mission.missions.farmer;
 
+
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.skyblockgeneric.event.custom.CustomBlockBreakEvent;
@@ -46,7 +47,7 @@ public class MissionCollectWheat extends SkyBlockProgressMission {
 
     @Override
     public void onEnd(SkyBlockPlayer player, Map<String, Object> customData, MissionData.ActiveMission mission) {
-        mission.getObjectiveCompleteText(new ArrayList<>(List.of("§b20 Farming XP"))).forEach(player::sendMessage);
+        mission.getObjectiveCompleteText(new ArrayList<>(List.of("<b>20 Farming XP"))).forEach(player::sendMessage);
         player.getSkills().increase(player, SkillCategories.FARMING, 20D);
         player.getMissionData().startMission(MissionTalkToFarmerAgain.class);
     }

@@ -22,7 +22,7 @@ public class EnchantmentLifeSteal implements Ench, EnchFromTable, DamageEventEnc
     @Override
     public String getDescription(int level) {
         double healPercent = HEAL_PERCENTAGES[level - 1] * 100;
-        return "Heals for §a" + healPercent + "%§7 of your max health each time you hit a mob.";
+        return "Heals for <a>" + healPercent + "%<7> of your max health each time you hit a mob.";
     }
 
     @Override

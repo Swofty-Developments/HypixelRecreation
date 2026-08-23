@@ -4,7 +4,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
-import net.kyori.adventure.text.Component;
+import net.swofty.commons.text.Text;
 
 import java.util.List;
 
@@ -18,6 +18,6 @@ public class ProtocolVersionCommand implements SimpleCommand {
 		}
 		ProtocolVersion version = player.getProtocolVersion();
 		List<String> versionsSupportedBy = version.getVersionsSupportedBy();
-		player.sendMessage(Component.text(version.getProtocol() + " §7(" + String.join(", ", versionsSupportedBy) + ")"));
+		player.sendMessage(Text.of("{} <7>({})", version.getProtocol(), String.join(", ", versionsSupportedBy)));
 	}
 }

@@ -1,5 +1,6 @@
 package net.swofty.type.generic.tab;
 
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointRank;
@@ -41,7 +42,7 @@ public class StandardTabModule extends TablistModule{
                 continue;
             }
 
-            entries.add(new TablistEntry(toShow.get(x).getRankDisplayName(), TablistSkinRegistry.GRAY));
+            entries.add(new TablistEntry(Text.of("{}", toShow.get(x).getRankDisplayName()), TablistSkinRegistry.GRAY));
         }
 
         return entries;

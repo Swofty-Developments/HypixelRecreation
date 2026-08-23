@@ -4,6 +4,8 @@ import net.swofty.commons.redis.RedisConnectionPool;
 import org.tinylog.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.resps.ScanResult;
 import redis.clients.jedis.resps.Tuple;
 
 import java.util.ArrayList;
@@ -225,6 +227,27 @@ public class LeaderboardService {
         } catch (Exception e) {
             Logger.warn(e, "Failed to remove {} from {}", playerUuid, leaderboardKey);
         }
+    }
+
+    public static int removeFromAllLeaderboards(UUID playerUuid) {
+        if (!isInitialized()) return 0;
+
+        int removed = 0;
+        try (Jedis jedis = jedisPool.getResource()) {
+            ScanParams params = new ScanParams().match(PREFIX + "*").count(500);
+            String cursor = ScanParams.SCAN_POINTER_START;
+            do {
+                ScanResult<String> scan = jedis.scan(cursor, params);
+                for (String key : scan.getResult()) {
+                    if (!"zset".equals(jedis.type(key))) continue;
+                    if (jedis.zrem(key, playerUuid.toString()) > 0) removed++;
+                }
+                cursor = scan.getCursor();
+            } while (!ScanParams.SCAN_POINTER_START.equals(cursor));
+        } catch (Exception e) {
+            Logger.warn(e, "Failed to remove {} from every leaderboard", playerUuid);
+        }
+        return removed;
     }
 
     /**

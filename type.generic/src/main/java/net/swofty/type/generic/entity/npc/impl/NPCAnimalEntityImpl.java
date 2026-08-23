@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.*;
 import net.minestom.server.item.ItemStack;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.hologram.PlayerHolograms;
 import net.swofty.type.generic.entity.npc.NPCMovementController;
 import net.swofty.type.generic.entity.npc.configuration.AnimalConfiguration;
@@ -83,7 +84,9 @@ public class NPCAnimalEntityImpl extends EntityCreature implements NPCViewable {
             setPose(config.pose(viewer));
         }
 
-        String[] newHolograms = config.holograms(viewer);
+        String[] newHolograms = config.hologramTexts(viewer).stream()
+                .map(Text::serialize)
+                .toArray(String[]::new);
         if (!Arrays.equals(newHolograms, holograms)) {
             PlayerHolograms.updateExternalPlayerHologramText(holo, newHolograms);
             this.holograms = newHolograms;

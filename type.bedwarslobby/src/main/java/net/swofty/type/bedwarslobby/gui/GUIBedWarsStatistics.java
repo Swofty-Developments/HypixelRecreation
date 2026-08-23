@@ -7,10 +7,11 @@ import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.BedWarsModeStats;
 import net.swofty.commons.bedwars.BedwarsLeaderboardMode;
 import net.swofty.commons.bedwars.BedwarsLeaderboardPeriod;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointBedWarsModeStats;
 import net.swofty.type.generic.data.handlers.BedWarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.leaderboard.LeaderboardService;
@@ -39,7 +40,7 @@ public class GUIBedWarsStatistics extends HypixelInventoryGUI {
 		HypixelPlayer player = getPlayer();
 		BedWarsDataHandler handler = BedWarsDataHandler.getUser(player);
 		if (handler == null) {
-			player.sendMessage("§cFailed to load your statistics.");
+			player.sendMessage("<c>Failed to load your statistics.");
 			player.closeInventory();
 			return;
 		}
@@ -69,13 +70,10 @@ public class GUIBedWarsStatistics extends HypixelInventoryGUI {
 		set(new GUIItem(53) {
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer player) {
-				return ItemStackCreator.getStack(
-						"§aDream Statistics",
-						Material.ENDER_EYE,
-						1,
-						"",
-						"§eView your statistics for Dream modes!"
-				);
+				return ItemStacks.item(Material.ENDER_EYE, """
+						<a>Dream Statistics
+
+						<e>View your statistics for Dream modes!""");
 			}
 		});
 
@@ -109,37 +107,37 @@ public class GUIBedWarsStatistics extends HypixelInventoryGUI {
 				// Use CORE mode for leaderboard rankings in overall stats
 				BedwarsLeaderboardMode coreMode = BedwarsLeaderboardMode.CORE;
 
-				List<String> lore = new ArrayList<>();
-				lore.add("§7Games Played: §a" + formatNumber(gamesPlayed));
-				lore.add("");
-				lore.add("§7Wins: §a" + formatNumber(wins));
-				lore.add("§7Losses: §a" + formatNumber(losses));
-				lore.add("");
-				lore.add("§7Beds Broken: §a" + formatNumber(bedsBroken));
-				lore.add("§7Beds Lost: §a" + formatNumber(bedsLost));
-				lore.add("");
-				lore.add("§7Kills: §a" + formatNumber(kills));
-				lore.add("§7Deaths: §a" + formatNumber(deaths));
-				lore.add("§7Final Kills: §a" + formatNumber(finalKills));
-				lore.add("§7Final Deaths: §a" + formatNumber(finalDeaths));
-				lore.add("§7Final K/D Ratio: §a" + RATIO_FORMAT.format(fkdr));
-				lore.add("");
-				lore.add("§aCore Mode Leaderboards");
-				lore.add("§7Lifetime Wins: §a" + formatNumber(stats.getWins(coreMode, BedwarsLeaderboardPeriod.LIFETIME)) + " " + getRankDisplay(uuid, "wins", coreMode, BedwarsLeaderboardPeriod.LIFETIME));
-				lore.add("§7Monthly Wins: §a" + formatNumber(stats.getWins(coreMode, BedwarsLeaderboardPeriod.MONTHLY)) + " " + getRankDisplay(uuid, "wins", coreMode, BedwarsLeaderboardPeriod.MONTHLY));
-				lore.add("§7Weekly Wins: §a" + formatNumber(stats.getWins(coreMode, BedwarsLeaderboardPeriod.WEEKLY)) + " " + getRankDisplay(uuid, "wins", coreMode, BedwarsLeaderboardPeriod.WEEKLY));
-				lore.add("§7Daily Wins: §a" + formatNumber(stats.getWins(coreMode, BedwarsLeaderboardPeriod.DAILY)) + " " + getRankDisplay(uuid, "wins", coreMode, BedwarsLeaderboardPeriod.DAILY));
-				lore.add("§7Lifetime Beds Broken: §a" + formatNumber(stats.getBedsBroken(coreMode, BedwarsLeaderboardPeriod.LIFETIME)) + " " + getRankDisplay(uuid, "beds_broken", coreMode, BedwarsLeaderboardPeriod.LIFETIME));
-				lore.add("§7Weekly Beds Broken: §a" + formatNumber(stats.getBedsBroken(coreMode, BedwarsLeaderboardPeriod.WEEKLY)) + " " + getRankDisplay(uuid, "beds_broken", coreMode, BedwarsLeaderboardPeriod.WEEKLY));
-				lore.add("§7Daily Beds Broken: §a" + formatNumber(stats.getBedsBroken(coreMode, BedwarsLeaderboardPeriod.DAILY)) + " " + getRankDisplay(uuid, "beds_broken", coreMode, BedwarsLeaderboardPeriod.DAILY));
-				lore.add("§7Lifetime Final Kills: §a" + formatNumber(stats.getFinalKills(coreMode, BedwarsLeaderboardPeriod.LIFETIME)) + " " + getRankDisplay(uuid, "final_kills", coreMode, BedwarsLeaderboardPeriod.LIFETIME));
-				lore.add("§7Weekly Final Kills: §a" + formatNumber(stats.getFinalKills(coreMode, BedwarsLeaderboardPeriod.WEEKLY)) + " " + getRankDisplay(uuid, "final_kills", coreMode, BedwarsLeaderboardPeriod.WEEKLY));
-				lore.add("§7Daily Final Kills: §a" + formatNumber(stats.getFinalKills(coreMode, BedwarsLeaderboardPeriod.DAILY)) + " " + getRankDisplay(uuid, "final_kills", coreMode, BedwarsLeaderboardPeriod.DAILY));
-				lore.add("");
-				lore.add("§7Winstreak: §a" + formatNumber(winstreak));
-				lore.add("");
+				List<Text> lore = new ArrayList<>();
+				lore.add(Text.of("<7>Games Played: <a>{}", formatNumber(gamesPlayed)));
+				lore.add(Text.empty());
+				lore.add(Text.of("<7>Wins: <a>{}", formatNumber(wins)));
+				lore.add(Text.of("<7>Losses: <a>{}", formatNumber(losses)));
+				lore.add(Text.empty());
+				lore.add(Text.of("<7>Beds Broken: <a>{}", formatNumber(bedsBroken)));
+				lore.add(Text.of("<7>Beds Lost: <a>{}", formatNumber(bedsLost)));
+				lore.add(Text.empty());
+				lore.add(Text.of("<7>Kills: <a>{}", formatNumber(kills)));
+				lore.add(Text.of("<7>Deaths: <a>{}", formatNumber(deaths)));
+				lore.add(Text.of("<7>Final Kills: <a>{}", formatNumber(finalKills)));
+				lore.add(Text.of("<7>Final Deaths: <a>{}", formatNumber(finalDeaths)));
+				lore.add(Text.of("<7>Final K/D Ratio: <a>{}", RATIO_FORMAT.format(fkdr)));
+				lore.add(Text.empty());
+				lore.add(Text.of("<a>Core Mode Leaderboards"));
+				lore.add(Text.of("<7>Lifetime Wins: <a>{} {}", formatNumber(stats.getWins(coreMode, BedwarsLeaderboardPeriod.LIFETIME)), getRankDisplay(uuid, "wins", coreMode, BedwarsLeaderboardPeriod.LIFETIME)));
+				lore.add(Text.of("<7>Monthly Wins: <a>{} {}", formatNumber(stats.getWins(coreMode, BedwarsLeaderboardPeriod.MONTHLY)), getRankDisplay(uuid, "wins", coreMode, BedwarsLeaderboardPeriod.MONTHLY)));
+				lore.add(Text.of("<7>Weekly Wins: <a>{} {}", formatNumber(stats.getWins(coreMode, BedwarsLeaderboardPeriod.WEEKLY)), getRankDisplay(uuid, "wins", coreMode, BedwarsLeaderboardPeriod.WEEKLY)));
+				lore.add(Text.of("<7>Daily Wins: <a>{} {}", formatNumber(stats.getWins(coreMode, BedwarsLeaderboardPeriod.DAILY)), getRankDisplay(uuid, "wins", coreMode, BedwarsLeaderboardPeriod.DAILY)));
+				lore.add(Text.of("<7>Lifetime Beds Broken: <a>{} {}", formatNumber(stats.getBedsBroken(coreMode, BedwarsLeaderboardPeriod.LIFETIME)), getRankDisplay(uuid, "beds_broken", coreMode, BedwarsLeaderboardPeriod.LIFETIME)));
+				lore.add(Text.of("<7>Weekly Beds Broken: <a>{} {}", formatNumber(stats.getBedsBroken(coreMode, BedwarsLeaderboardPeriod.WEEKLY)), getRankDisplay(uuid, "beds_broken", coreMode, BedwarsLeaderboardPeriod.WEEKLY)));
+				lore.add(Text.of("<7>Daily Beds Broken: <a>{} {}", formatNumber(stats.getBedsBroken(coreMode, BedwarsLeaderboardPeriod.DAILY)), getRankDisplay(uuid, "beds_broken", coreMode, BedwarsLeaderboardPeriod.DAILY)));
+				lore.add(Text.of("<7>Lifetime Final Kills: <a>{} {}", formatNumber(stats.getFinalKills(coreMode, BedwarsLeaderboardPeriod.LIFETIME)), getRankDisplay(uuid, "final_kills", coreMode, BedwarsLeaderboardPeriod.LIFETIME)));
+				lore.add(Text.of("<7>Weekly Final Kills: <a>{} {}", formatNumber(stats.getFinalKills(coreMode, BedwarsLeaderboardPeriod.WEEKLY)), getRankDisplay(uuid, "final_kills", coreMode, BedwarsLeaderboardPeriod.WEEKLY)));
+				lore.add(Text.of("<7>Daily Final Kills: <a>{} {}", formatNumber(stats.getFinalKills(coreMode, BedwarsLeaderboardPeriod.DAILY)), getRankDisplay(uuid, "final_kills", coreMode, BedwarsLeaderboardPeriod.DAILY)));
+				lore.add(Text.empty());
+				lore.add(Text.of("<7>Winstreak: <a>{}", formatNumber(winstreak)));
+				lore.add(Text.empty());
 
-				return ItemStackCreator.getStack("§aOverall Statistics", Material.PAPER, 1, lore.toArray(new String[0]));
+				return ItemStacks.item(Material.PAPER, 1, Text.of("<a>Overall Statistics"), lore);
 			}
 		};
 	}
@@ -163,34 +161,34 @@ public class GUIBedWarsStatistics extends HypixelInventoryGUI {
 				double fkdr = finalDeaths > 0 ? (double) finalKills / finalDeaths : finalKills;
 				long winstreak = stats.getWinstreak(mode);
 
-				List<String> lore = new ArrayList<>();
-				lore.add("§7Games Played: §a" + formatNumber(gamesPlayed));
-				lore.add("");
-				lore.add("§7Lifetime Wins: §a" + formatNumber(stats.getWins(mode, BedwarsLeaderboardPeriod.LIFETIME)) + " " + getRankDisplay(uuid, "wins", mode, BedwarsLeaderboardPeriod.LIFETIME));
-				lore.add("§7Monthly Wins: §a" + formatNumber(stats.getWins(mode, BedwarsLeaderboardPeriod.MONTHLY)) + " " + getRankDisplay(uuid, "wins", mode, BedwarsLeaderboardPeriod.MONTHLY));
-				lore.add("§7Weekly Wins: §a" + formatNumber(stats.getWins(mode, BedwarsLeaderboardPeriod.WEEKLY)) + " " + getRankDisplay(uuid, "wins", mode, BedwarsLeaderboardPeriod.WEEKLY));
-				lore.add("§7Daily Wins: §a" + formatNumber(stats.getWins(mode, BedwarsLeaderboardPeriod.DAILY)) + " " + getRankDisplay(uuid, "wins", mode, BedwarsLeaderboardPeriod.DAILY));
-				lore.add("§7Losses: §a" + formatNumber(losses));
-				lore.add("");
-				lore.add("§7Lifetime Beds Broken: §a" + formatNumber(stats.getBedsBroken(mode, BedwarsLeaderboardPeriod.LIFETIME)) + " " + getRankDisplay(uuid, "beds_broken", mode, BedwarsLeaderboardPeriod.LIFETIME));
-				lore.add("§7Monthly Beds Broken: §a" + formatNumber(stats.getBedsBroken(mode, BedwarsLeaderboardPeriod.MONTHLY)) + " " + getRankDisplay(uuid, "beds_broken", mode, BedwarsLeaderboardPeriod.MONTHLY));
-				lore.add("§7Weekly Beds Broken: §a" + formatNumber(stats.getBedsBroken(mode, BedwarsLeaderboardPeriod.WEEKLY)) + " " + getRankDisplay(uuid, "beds_broken", mode, BedwarsLeaderboardPeriod.WEEKLY));
-				lore.add("§7Daily Beds Broken: §a" + formatNumber(stats.getBedsBroken(mode, BedwarsLeaderboardPeriod.DAILY)) + " " + getRankDisplay(uuid, "beds_broken", mode, BedwarsLeaderboardPeriod.DAILY));
-				lore.add("§7Beds Lost: §a" + formatNumber(bedsLost));
-				lore.add("");
-				lore.add("§7Kills: §a" + formatNumber(kills));
-				lore.add("§7Deaths: §a" + formatNumber(deaths));
-				lore.add("§7Lifetime Final Kills: §a" + formatNumber(stats.getFinalKills(mode, BedwarsLeaderboardPeriod.LIFETIME)) + " " + getRankDisplay(uuid, "final_kills", mode, BedwarsLeaderboardPeriod.LIFETIME));
-				lore.add("§7Monthly Final Kills: §a" + formatNumber(stats.getFinalKills(mode, BedwarsLeaderboardPeriod.MONTHLY)) + " " + getRankDisplay(uuid, "final_kills", mode, BedwarsLeaderboardPeriod.MONTHLY));
-				lore.add("§7Weekly Final Kills: §a" + formatNumber(stats.getFinalKills(mode, BedwarsLeaderboardPeriod.WEEKLY)) + " " + getRankDisplay(uuid, "final_kills", mode, BedwarsLeaderboardPeriod.WEEKLY));
-				lore.add("§7Daily Final Kills: §a" + formatNumber(stats.getFinalKills(mode, BedwarsLeaderboardPeriod.DAILY)) + " " + getRankDisplay(uuid, "final_kills", mode, BedwarsLeaderboardPeriod.DAILY));
-				lore.add("§7Final Deaths: §a" + formatNumber(finalDeaths));
-				lore.add("§7Final K/D Ratio: §a" + RATIO_FORMAT.format(fkdr));
-				lore.add("");
-				lore.add("§7Winstreak: §a" + formatNumber(winstreak));
-				lore.add("");
+				List<Text> lore = new ArrayList<>();
+				lore.add(Text.of("<7>Games Played: <a>{}", formatNumber(gamesPlayed)));
+				lore.add(Text.empty());
+				lore.add(Text.of("<7>Lifetime Wins: <a>{} {}", formatNumber(stats.getWins(mode, BedwarsLeaderboardPeriod.LIFETIME)), getRankDisplay(uuid, "wins", mode, BedwarsLeaderboardPeriod.LIFETIME)));
+				lore.add(Text.of("<7>Monthly Wins: <a>{} {}", formatNumber(stats.getWins(mode, BedwarsLeaderboardPeriod.MONTHLY)), getRankDisplay(uuid, "wins", mode, BedwarsLeaderboardPeriod.MONTHLY)));
+				lore.add(Text.of("<7>Weekly Wins: <a>{} {}", formatNumber(stats.getWins(mode, BedwarsLeaderboardPeriod.WEEKLY)), getRankDisplay(uuid, "wins", mode, BedwarsLeaderboardPeriod.WEEKLY)));
+				lore.add(Text.of("<7>Daily Wins: <a>{} {}", formatNumber(stats.getWins(mode, BedwarsLeaderboardPeriod.DAILY)), getRankDisplay(uuid, "wins", mode, BedwarsLeaderboardPeriod.DAILY)));
+				lore.add(Text.of("<7>Losses: <a>{}", formatNumber(losses)));
+				lore.add(Text.empty());
+				lore.add(Text.of("<7>Lifetime Beds Broken: <a>{} {}", formatNumber(stats.getBedsBroken(mode, BedwarsLeaderboardPeriod.LIFETIME)), getRankDisplay(uuid, "beds_broken", mode, BedwarsLeaderboardPeriod.LIFETIME)));
+				lore.add(Text.of("<7>Monthly Beds Broken: <a>{} {}", formatNumber(stats.getBedsBroken(mode, BedwarsLeaderboardPeriod.MONTHLY)), getRankDisplay(uuid, "beds_broken", mode, BedwarsLeaderboardPeriod.MONTHLY)));
+				lore.add(Text.of("<7>Weekly Beds Broken: <a>{} {}", formatNumber(stats.getBedsBroken(mode, BedwarsLeaderboardPeriod.WEEKLY)), getRankDisplay(uuid, "beds_broken", mode, BedwarsLeaderboardPeriod.WEEKLY)));
+				lore.add(Text.of("<7>Daily Beds Broken: <a>{} {}", formatNumber(stats.getBedsBroken(mode, BedwarsLeaderboardPeriod.DAILY)), getRankDisplay(uuid, "beds_broken", mode, BedwarsLeaderboardPeriod.DAILY)));
+				lore.add(Text.of("<7>Beds Lost: <a>{}", formatNumber(bedsLost)));
+				lore.add(Text.empty());
+				lore.add(Text.of("<7>Kills: <a>{}", formatNumber(kills)));
+				lore.add(Text.of("<7>Deaths: <a>{}", formatNumber(deaths)));
+				lore.add(Text.of("<7>Lifetime Final Kills: <a>{} {}", formatNumber(stats.getFinalKills(mode, BedwarsLeaderboardPeriod.LIFETIME)), getRankDisplay(uuid, "final_kills", mode, BedwarsLeaderboardPeriod.LIFETIME)));
+				lore.add(Text.of("<7>Monthly Final Kills: <a>{} {}", formatNumber(stats.getFinalKills(mode, BedwarsLeaderboardPeriod.MONTHLY)), getRankDisplay(uuid, "final_kills", mode, BedwarsLeaderboardPeriod.MONTHLY)));
+				lore.add(Text.of("<7>Weekly Final Kills: <a>{} {}", formatNumber(stats.getFinalKills(mode, BedwarsLeaderboardPeriod.WEEKLY)), getRankDisplay(uuid, "final_kills", mode, BedwarsLeaderboardPeriod.WEEKLY)));
+				lore.add(Text.of("<7>Daily Final Kills: <a>{} {}", formatNumber(stats.getFinalKills(mode, BedwarsLeaderboardPeriod.DAILY)), getRankDisplay(uuid, "final_kills", mode, BedwarsLeaderboardPeriod.DAILY)));
+				lore.add(Text.of("<7>Final Deaths: <a>{}", formatNumber(finalDeaths)));
+				lore.add(Text.of("<7>Final K/D Ratio: <a>{}", RATIO_FORMAT.format(fkdr)));
+				lore.add(Text.empty());
+				lore.add(Text.of("<7>Winstreak: <a>{}", formatNumber(winstreak)));
+				lore.add(Text.empty());
 
-				return ItemStackCreator.getStack("§a" + mode.getDisplayName() + " Statistics", Material.PAPER, amount, lore.toArray(new String[0]));
+				return ItemStacks.item(Material.PAPER, amount, Text.of("<a>{} Statistics", mode.getDisplayName()), lore);
 			}
 		};
 	}

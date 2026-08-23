@@ -1,8 +1,8 @@
 name: "Fishing"
 displayIcon: "fishing_rod"
 description:
-  - "§7Visit your local pond to fish and"
-  - "§7earn Fishing XP!"
+  - "<7>Visit your local pond to fish and"
+  - "<7>earn Fishing XP!"
 
 rewards:
   - level: 1

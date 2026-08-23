@@ -6,12 +6,12 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.ChatColor;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributeGemData;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -56,25 +56,22 @@ public class GUIGemstoneGrinder extends HypixelInventoryGUI {
 
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aGemstone Guide",
-                        Material.REDSTONE_TORCH,
-                        1,
-                        "§7Many items can have §dGemstones",
-                        "§7applied to them. Gemstones increase",
-                        "§7the stats of an item based on the",
-                        "§7type of Gemstone used.",
-                        "",
-                        "§7There are several §aqualities §7of",
-                        "§7Gemstones, ranging from §fRough §7to",
-                        "§6Perfect§7. The higher the quality, the",
-                        "§7better the stat!",
-                        "",
-                        "§7This guide shows the items that can",
-                        "§7have Gemstones applied to them.",
-                        "",
-                        "§eClick to view!"
-                );
+                return ItemStacks.item(Material.REDSTONE_TORCH, """
+                        <a>Gemstone Guide
+                        <7>Many items can have <d>Gemstones
+                        <7>applied to them. Gemstones increase
+                        <7>the stats of an item based on the
+                        <7>type of Gemstone used.
+
+                        <7>There are several <a>qualities <7>of
+                        <7>Gemstones, ranging from <f>Rough <7>to
+                        <6>Perfect<7>. The higher the quality, the
+                        <7>better the stat!
+
+                        <7>This guide shows the items that can
+                        <7>have Gemstones applied to them.
+
+                        <e>Click to view!""");
             }
         });
 
@@ -94,7 +91,7 @@ public class GUIGemstoneGrinder extends HypixelInventoryGUI {
 
                     if (stack.get(DataComponents.CUSTOM_NAME) == null) return;
                     if (!item.hasComponent(GemstoneComponent.class)) {
-                        player.sendMessage("§cOnly items that can have Gemstones applied to them can be put in the Grinder!");
+                        player.sendMessage("<c>Only items that can have Gemstones applied to them can be put in the Grinder!");
                         return;
                     }
 
@@ -118,12 +115,10 @@ public class GUIGemstoneGrinder extends HypixelInventoryGUI {
                 set(new GUIItem(slot) {
                     @Override
                     public ItemStack.Builder getItem(HypixelPlayer p) {
-                        SkyBlockPlayer player = (SkyBlockPlayer) p;
-                        return ItemStackCreator.getStack(
-                                "§dGemstone Slot", Material.GRAY_STAINED_GLASS_PANE, 1,
-                                "§7Place an item above to apply",
-                                "§7Gemstones to it!"
-                        );
+                        return ItemStacks.item(Material.GRAY_STAINED_GLASS_PANE, """
+                                <d>Gemstone Slot
+                                <7>Place an item above to apply
+                                <7>Gemstones to it!""");
                     }
                 });
             }
@@ -191,7 +186,7 @@ public class GUIGemstoneGrinder extends HypixelInventoryGUI {
 
                                 updateFromItem(item);
                             } else {
-                                player.sendMessage("§cYou don't have enough coins to remove this!");
+                                player.sendMessage("<c>You don't have enough coins to remove this!");
                             }
                         }
 
@@ -202,40 +197,44 @@ public class GUIGemstoneGrinder extends HypixelInventoryGUI {
                             ItemStack.Builder itemStack = PlayerItemUpdater.playerUpdate(
                                     player, appliedGem.getItemStack()
                             );
-                            ArrayList<String> lore = new ArrayList<>(appliedGem.getLore());
+                            List<Text> lore = appliedGem.getLoreText();
 
-                            lore.add("");
-                            lore.add("§7Cost to Remove");
-                            lore.add("§6" + StringUtility.commaify(appliedGem.getComponent(GemstoneImplComponent.class).getGemRarity().costToRemove) + " Coins");
-                            lore.add("");
-                            lore.add("§eClick to remove!");
+                            lore.add(Text.empty());
+                            lore.add(Text.of("<7>Cost to Remove"));
+                            lore.add(Text.of("<6>{:,} Coins",
+                                    appliedGem.getComponent(GemstoneImplComponent.class).getGemRarity().costToRemove));
+                            lore.add(Text.empty());
+                            lore.add(Text.of("<e>Click to remove!"));
 
-                            return ItemStackCreator.updateLore(itemStack, lore);
+                            return ItemStacks.lore(itemStack, lore);
                         }
                     });
                 } else {
                     set(new GUIItem(slot) {
                         @Override
                         public ItemStack.Builder getItem(HypixelPlayer player) {
-                            String title = gemSlot.getColor() + gemSlot.getSymbol() + " " + gemSlot.getName() + " Gemstone Slot";
-                            List<String> lore = new ArrayList<>();
+                            Text title = Text.of("<color:{}>{} {} Gemstone Slot",
+                                    gemSlot.getColor(), gemSlot.getSymbol(), gemSlot.getName());
+                            List<Text> lore = new ArrayList<>();
 
                             if (gemSlot.getValidGemstones().size() > 1) { // Universal Slot
-                                lore.add("§7Click §aany Gemstone §7of any quality in");
-                                lore.add("§7your inventory to apply it to this item!");
-                                lore.add("");
-                                lore.add("§7Applicable Gemstones");
+                                lore.add(Text.of("<7>Click <a>any Gemstone <7>of any quality in"));
+                                lore.add(Text.of("<7>your inventory to apply it to this item!"));
+                                lore.add(Text.empty());
+                                lore.add(Text.of("<7>Applicable Gemstones"));
                                 for (Gemstone gemstone : gemSlot.getValidGemstones()) {
-                                    lore.add(gemstone.getColor() + StringUtility.toNormalCase(gemstone.name()) + " Gemstone");
+                                    lore.add(Text.of("<color:{}>{} Gemstone", gemstone.getColor(),
+                                            StringUtility.toNormalCase(gemstone.name())));
                                 }
                             } else { // Specific Gem Slot
                                 Gemstone gemstone = gemSlot.getValidGemstones().getFirst();
-                                lore.add("§7Click a " + gemstone.getColor() + StringUtility.toNormalCase(gemstone.name()) + " Gemstone §7of any");
-                                lore.add("§7quality in your inventory to apply it");
-                                lore.add("§7to this item!");
+                                lore.add(Text.of("<7>Click a <color:{}>{} Gemstone <7>of any",
+                                        gemstone.getColor(), StringUtility.toNormalCase(gemstone.name())));
+                                lore.add(Text.of("<7>quality in your inventory to apply it"));
+                                lore.add(Text.of("<7>to this item!"));
                             }
 
-                            return ItemStackCreator.getStack(title, gemSlot.paneColor, 1, lore);
+                            return ItemStacks.item(gemSlot.paneColor, 1, title, lore);
                         }
                     });
                 }
@@ -256,12 +255,12 @@ public class GUIGemstoneGrinder extends HypixelInventoryGUI {
                         }
 
                         if (player.getCoins() < coins) {
-                            player.sendMessage("§cYou don't have the required items!");
+                            player.sendMessage("<c>You don't have the required items!");
                             return;
                         }
 
                         if (!player.removeItemsFromPlayer(itemRequirements)) {
-                            player.sendMessage("§cYou don't have the required items!");
+                            player.sendMessage("<c>You don't have the required items!");
                             return;
                         }
 
@@ -273,40 +272,47 @@ public class GUIGemstoneGrinder extends HypixelInventoryGUI {
 
                     @Override
                     public ItemStack.Builder getItem(HypixelPlayer player) {
-                        String title = gemSlot.getColor() + gemSlot.getSymbol() + " " + gemSlot.getName() + " Gemstone Slot";
+                        Text title = Text.of("<color:{}>{} {} Gemstone Slot",
+                                gemSlot.getColor(), gemSlot.getSymbol(), gemSlot.getName());
 
-                        List<String> lore = new ArrayList<>();
-                        lore.add("§7This slot is locked! Purchasing this");
-                        lore.add("§7slot allows you to apply a");
-                        lore.add(gemSlot.getColor() + gemSlot.getSymbol() + " " + gemSlot.getName() + " Gemstone §7to it!");
-                        lore.add("");
+                        List<Text> lore = new ArrayList<>();
+                        lore.add(Text.of("<7>This slot is locked! Purchasing this"));
+                        lore.add(Text.of("<7>slot allows you to apply a"));
+                        lore.add(Text.of("<color:{}>{} {} Gemstone <7>to it!",
+                                gemSlot.getColor(), gemSlot.getSymbol(), gemSlot.getName()));
+                        lore.add(Text.empty());
 
                         if (gemSlot.getValidGemstones().size() > 1) {
                             for (Gemstone gemstone : gemSlot.getValidGemstones()) {
-                                lore.add(gemstone.getColor() + StringUtility.toNormalCase(gemstone.name()) + " Gemstone");
+                                lore.add(Text.of("<color:{}>{} Gemstone", gemstone.getColor(),
+                                        StringUtility.toNormalCase(gemstone.name())));
                             }
-                            lore.add("");
+                            lore.add(Text.empty());
                         }
 
                         if (!gemstoneSlot.itemRequirements().isEmpty() || gemstoneSlot.unlockPrice() > 0) {
-                            lore.add("§7Cost");
+                            lore.add(Text.of("<7>Cost"));
                             if (gemstoneSlot.unlockPrice() > 0) {
-                                lore.add(ChatColor.GOLD + StringUtility.commaify(gemstoneSlot.unlockPrice()) + " Coins");
+                                lore.add(Text.of("<6>{:,} Coins", gemstoneSlot.unlockPrice()));
                             }
                             if (!gemstoneSlot.itemRequirements().isEmpty()) {
                                 for (GemstoneComponent.ItemRequirement requirement : gemstoneSlot.itemRequirements()) {
                                     Gemstone.Slots slots = Gemstone.Slots.getFromGemstone(Gemstone.getFromItemType(requirement.itemId()));
                                     SkyBlockItem skyBlockItem = new SkyBlockItem(requirement.itemId());
-                                    lore.add(skyBlockItem.getComponent(GemstoneImplComponent.class).getGemRarity().getRarity().getLegacyColor() +
-                                            slots.getSymbol() + " " + skyBlockItem.getDisplayName() + " §8x" + requirement.amount());
+                                    lore.add(Text.of("<color:{}>{} {} <8>x{}",
+                                            skyBlockItem.getComponent(GemstoneImplComponent.class).getGemRarity()
+                                                    .getRarity().getColor().asHexString(),
+                                            slots.getSymbol(),
+                                            skyBlockItem.getDisplayName(),
+                                            requirement.amount()));
                                 }
                             }
                         }
 
-                        lore.add("");
-                        lore.add("§eClick to unlock!");
+                        lore.add(Text.empty());
+                        lore.add(Text.of("<e>Click to unlock!"));
 
-                        return ItemStackCreator.getStack(title, Material.GRAY_STAINED_GLASS_PANE, 1, lore);
+                        return ItemStacks.item(Material.GRAY_STAINED_GLASS_PANE, 1, title, lore);
                     }
                 });
             }
@@ -329,7 +335,7 @@ public class GUIGemstoneGrinder extends HypixelInventoryGUI {
         if (item == null) return;
 
         if (!clickedItem.hasComponent(GemstoneImplComponent.class)) {
-            player.sendMessage("§cYou cannot apply that to this item!");
+            player.sendMessage("<c>You cannot apply that to this item!");
             e.setCancelled(true);
             return;
         }

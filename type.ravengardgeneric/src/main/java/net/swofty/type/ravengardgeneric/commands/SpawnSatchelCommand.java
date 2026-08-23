@@ -3,6 +3,7 @@ package net.swofty.type.ravengardgeneric.commands;
 import net.minestom.server.entity.Player;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
+import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 
 import java.util.function.Consumer;
@@ -20,14 +21,14 @@ public class SpawnSatchelCommand extends HypixelCommand {
     public void registerUsage(MinestomCommand command) {
         command.addSyntax((sender, context) -> {
             if (!permissionCheck(sender)) return;
-            Player player = (Player) sender;
+            HypixelPlayer player = (HypixelPlayer) sender;
             Consumer<Player> hook = spawner;
             if (hook == null) {
-                player.sendMessage("§cSatchels only exist on dungeon servers.");
+                player.sendMessage("<c>Satchels only exist on dungeon servers.");
                 return;
             }
             hook.accept(player);
-            player.sendMessage("§aSatchel dropped.");
+            player.sendMessage("<a>Satchel dropped.");
         });
     }
 }

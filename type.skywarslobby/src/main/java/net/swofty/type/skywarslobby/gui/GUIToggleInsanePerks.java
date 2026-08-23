@@ -1,14 +1,17 @@
 package net.swofty.type.skywarslobby.gui;
 
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelPaginatedGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.PaginationList;
@@ -63,12 +66,9 @@ public class GUIToggleInsanePerks extends HypixelPaginatedGUI<SkywarsPerk> {
             set(new GUIClickableItem(53) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStackCreator.getStack(
-                            "§eLeft-click for next page!",
-                            Material.ARROW,
-                            1,
-                            "§bRight-click for last page!"
-                    );
+                    return ItemStacks.item(Material.ARROW, 1, """
+                            <e>Left-click for next page!
+                            <b>Right-click for last page!""");
                 }
 
                 @Override
@@ -104,58 +104,59 @@ public class GUIToggleInsanePerks extends HypixelPaginatedGUI<SkywarsPerk> {
                 boolean enabled = unlocks.isInsanePerkEnabled(MODE, perk.getId());
                 long coins = handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class).getValue();
 
-                List<String> lore = new ArrayList<>();
-                lore.add("§8Perk");
-                lore.add("");
-                lore.add("§7" + perk.getEffectDescription());
-                lore.add("");
-                lore.add("§7Rarity: " + perk.getRarity().getFormattedName());
-                lore.add("");
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<8>Perk"));
+                lore.add(Text.empty());
+                lore.add(Text.of("<7>{}", perk.getEffectDescription()));
+                lore.add(Text.empty());
+                lore.add(Text.of("<7>Rarity: {}", perk.getRarity().getFormattedName()));
+                lore.add(Text.empty());
 
                 String specialStatus = perk.getSpecialStatus();
                 if (specialStatus != null) {
-                    lore.add("§c§l!! " + specialStatus);
+                    lore.add(Text.of("<c><l>!! {}", specialStatus));
                 } else if (owned) {
                     if (enabled) {
-                        lore.add("§a§lENABLED");
+                        lore.add(Text.of("<a><l>ENABLED"));
                     } else {
-                        lore.add("§c§lDISABLED");
+                        lore.add(Text.of("<c><l>DISABLED"));
                     }
-                    lore.add("");
-                    lore.add("§eClick to toggle!");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<e>Click to toggle!"));
                 } else if (perk.isPurchasableWithCoins()) {
-                    lore.add("§7Cost: §6" + String.format("%,d", perk.getCost()));
+                    lore.add(Text.of("<7>Cost: <6>{:,}", perk.getCost()));
                     if (perk.isSoulWellDrop()) {
-                        lore.add("§bAlso found in the Soul Well!");
+                        lore.add(Text.of("<b>Also found in the Soul Well!"));
                     }
-                    lore.add("");
+                    lore.add(Text.empty());
                     if (coins >= perk.getCost()) {
-                        lore.add("§eClick to purchase!");
+                        lore.add(Text.of("<e>Click to purchase!"));
                     } else {
-                        lore.add("§cNot enough coins!");
+                        lore.add(Text.of("<c>Not enough coins!"));
                     }
                 } else if (perk.costsOpal()) {
-                    lore.add("§7Cost: §9" + perk.getOpalCost() + " Opal" + (perk.getOpalCost() > 1 ? "s" : ""));
+                    lore.add(Text.of("<7>Cost: <9>{} Opal{}", perk.getOpalCost(), perk.getOpalCost() > 1 ? "s" : ""));
                     if (perk.isSoulWellDrop()) {
-                        lore.add("§bAlso found in the Soul Well!");
+                        lore.add(Text.of("<b>Also found in the Soul Well!"));
                     }
-                    lore.add("");
-                    lore.add("§9Purchase with Opals in Angel's Descent");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<9>Purchase with Opals in Angel's Descent"));
                 } else if (perk.isFree()) {
-                    lore.add("§aFREE");
+                    lore.add(Text.of("<a>FREE"));
                     if (perk.isSoulWellDrop()) {
-                        lore.add("§bAlso found in the Soul Well!");
+                        lore.add(Text.of("<b>Also found in the Soul Well!"));
                     }
-                    lore.add("");
-                    lore.add("§eClick to unlock!");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<e>Click to unlock!"));
                 }
 
-                String nameColor = owned ? "§a" : (specialStatus != null ? "§c" : "§a");
-                ItemStack.Builder builder = ItemStackCreator.getStack(nameColor + perk.getName(), perk.getIconMaterial(), 1, lore);
+                TextColor nameColor = owned || specialStatus == null ? NamedTextColor.GREEN : NamedTextColor.RED;
+                ItemStack.Builder builder = ItemStacks.item(perk.getIconMaterial(), 1,
+                        Text.of("<color:{}>{}", nameColor, perk.getName()), lore);
 
                 // Add enchant glow if enabled
                 if (owned && enabled) {
-                    return ItemStackCreator.enchant(builder);
+                    return ItemStacks.enchanted(builder);
                 }
                 return builder;
             }
@@ -172,7 +173,7 @@ public class GUIToggleInsanePerks extends HypixelPaginatedGUI<SkywarsPerk> {
 
                 String specialStatus = perk.getSpecialStatus();
                 if (specialStatus != null) {
-                    player.sendMessage("§c" + specialStatus + " - cannot purchase here.");
+                    player.sendMessage("<c>{} - cannot purchase here.", specialStatus);
                     return;
                 }
 
@@ -184,9 +185,9 @@ public class GUIToggleInsanePerks extends HypixelPaginatedGUI<SkywarsPerk> {
                     unlocks.toggleInsanePerk(MODE, perk.getId());
 
                     if (wasEnabled) {
-                        player.sendMessage("§c✖ §7Disabled §e" + perk.getName() + " §7for Insane mode.");
+                        player.sendMessage("<c>✖ <7>Disabled <e>{} <7>for Insane mode.", perk.getName());
                     } else {
-                        player.sendMessage("§a✔ §7Enabled §e" + perk.getName() + " §7for Insane mode.");
+                        player.sendMessage("<a>✔ <7>Enabled <e>{} <7>for Insane mode.", perk.getName());
                     }
                     new GUIToggleInsanePerks().open(player);
                 } else if (perk.isPurchasableWithCoins()) {
@@ -195,17 +196,17 @@ public class GUIToggleInsanePerks extends HypixelPaginatedGUI<SkywarsPerk> {
                         handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class)
                                 .setValue(coins - perk.getCost());
                         unlocks.unlockPerk(perk.getId());
-                        player.sendMessage("§aYou purchased §e" + perk.getName() + "§a! It is now enabled.");
+                        player.sendMessage("<a>You purchased <e>{}<a>! It is now enabled.", perk.getName());
                         new GUIToggleInsanePerks().open(player);
                     } else {
-                        player.sendMessage("§cYou don't have enough coins to purchase this perk!");
+                        player.sendMessage("<c>You don't have enough coins to purchase this perk!");
                     }
                 } else if (perk.isFree()) {
                     unlocks.unlockPerk(perk.getId());
-                    player.sendMessage("§aUnlocked §e" + perk.getName() + "§a! It is now enabled.");
+                    player.sendMessage("<a>Unlocked <e>{}<a>! It is now enabled.", perk.getName());
                     new GUIToggleInsanePerks().open(player);
                 } else {
-                    player.sendMessage("§cThis perk cannot be purchased here.");
+                    player.sendMessage("<c>This perk cannot be purchased here.");
                 }
             }
         };

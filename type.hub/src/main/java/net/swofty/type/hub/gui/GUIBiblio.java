@@ -5,7 +5,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
@@ -18,7 +18,7 @@ public class GUIBiblio extends HypixelInventoryGUI {
 
 	@Override
 	public void onOpen(InventoryGUIOpenEvent e) {
-		fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+		fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
 		set(GUIClickableItem.getCloseItem(31));
 		set(new GUIClickableItem(11) {
 			@Override
@@ -30,10 +30,16 @@ public class GUIBiblio extends HypixelInventoryGUI {
 
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer p) {
-				return ItemStackCreator.getStack("§dWiki Command", Material.PAINTING, 1,
-						"§7Visit the Wiki using §a/wiki §7and browse", "§7the many pages and utilities.",
-						"", "§7You can also specify an extra", "§7argument when using §6/wiki <id> §7to",
-						"§7search via an item ID.", "", "§eClick to visit the Wiki!");
+				return ItemStacks.item(Material.PAINTING, """
+						<d>Wiki Command
+						<7>Visit the Wiki using <a>/wiki </a>and browse
+						<7>the many pages and utilities.
+
+						<7>You can also specify an extra
+						<7>argument when using <6>/wiki \\<id> </6>to
+						<7>search via an item ID.
+
+						<e>Click to visit the Wiki!""");
 			}
 		});
 		set(new GUIClickableItem(13) {
@@ -43,13 +49,26 @@ public class GUIBiblio extends HypixelInventoryGUI {
 
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer p) {
-				return ItemStackCreator.getStack("§6The Skyblock Wiki", Material.WRITABLE_BOOK, 1,
-						"§7The newly finished §aOfficial SkyBlock", "§aWiki §7has launched and contains lots",
-						"§7of useful information on items, mobs,", "§7drop rates, areas, trivia, and more.",
-						"§7This is a §6Hypixel-led§7, §dcommunity", "§dmaintained §7Wiki which aims to provide",
-						"§7the most accurate information in the", "§7best way possible.", "§8Edits",
-						" §6> 100,000+", "", "§8Pages", " §d> 27,000+", "", "§8Files", " §a> 15,000+", "",
-						"§eSee more @ §fwiki.hypixel.net");
+				return ItemStacks.item(Material.WRITABLE_BOOK, """
+						<6>The Skyblock Wiki
+						<7>The newly finished <a>Official SkyBlock
+						<a>Wiki <7>has launched and contains lots
+						<7>of useful information on items, mobs,
+						<7>drop rates, areas, trivia, and more.
+						<7>This is a <6>Hypixel-led</6>, <d>community
+						<d>maintained <7>Wiki which aims to provide
+						<7>the most accurate information in the
+						<7>best way possible.
+						<8>Edits
+						 <6>> 100,000+
+
+						<8>Pages
+						 <d>> 27,000+
+
+						<8>Files
+						 <a>> 15,000+
+
+						<e>See more @ <f>wiki.hypixel.net""");
 			}
 		});
 		set(new GUIClickableItem(15) {
@@ -62,11 +81,18 @@ public class GUIBiblio extends HypixelInventoryGUI {
 
 			@Override
 			public ItemStack.Builder getItem(HypixelPlayer p) {
-				return ItemStackCreator.getStack("§aWikithis Command", Material.OAK_SIGN, 1,
-						"§7Want to view more information about",
-						"§7the item you are currently §dholding §7?", "§7Then this is the command for §eyou§7!",
-						"", "§7Running §6/wikithis §7whilst §aholding an", "§aitem §7will attempt to find a Wiki page",
-						"§7for the item and then link you to it", "§7in-game.", "", "§eClick to search your held item!");
+				return ItemStacks.item(Material.OAK_SIGN, """
+						<a>Wikithis Command
+						<7>Want to view more information about
+						<7>the item you are currently <d>holding </d>?
+						<7>Then this is the command for <e>you</e>!
+
+						<7>Running <6>/wikithis </6>whilst <a>holding an
+						<a>item <7>will attempt to find a Wiki page
+						<7>for the item and then link you to it
+						<7>in-game.
+
+						<e>Click to search your held item!""");
 			}
 		});
 		updateItemStacks(getInventory(), getPlayer());
@@ -82,4 +108,3 @@ public class GUIBiblio extends HypixelInventoryGUI {
 		e.setCancelled(true);
 	}
 }
-

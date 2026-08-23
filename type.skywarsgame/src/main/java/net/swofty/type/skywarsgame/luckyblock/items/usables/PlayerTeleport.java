@@ -1,10 +1,8 @@
 package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
@@ -30,19 +28,12 @@ public class PlayerTeleport implements LuckyBlockItem {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStack.builder(Material.ENDER_PEARL)
-                .customName(Component.text(getDisplayName(), NamedTextColor.DARK_PURPLE)
-                        .decoration(TextDecoration.ITALIC, false)
-                        .decoration(TextDecoration.BOLD, true))
-                .lore(List.of(
-                        Component.text("Teleport to a random", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.text("alive player!", NamedTextColor.GRAY)
-                                .decoration(TextDecoration.ITALIC, false),
-                        Component.empty(),
-                        Component.text("Right-click to use!", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                ))
+        return ItemStacks.item(Material.ENDER_PEARL, """
+                <5><l>Player Teleport</l>
+                <7>Teleport to a random
+                <7>alive player!
+
+                <e>Right-click to use!""")
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
@@ -51,7 +42,7 @@ public class PlayerTeleport implements LuckyBlockItem {
     public boolean onUse(SkywarsPlayer holder) {
         SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(holder);
         if (game == null) {
-            holder.sendMessage(Component.text("You are not in a game!", NamedTextColor.RED));
+            holder.sendMessage("<c>You are not in a game!");
             return false;
         }
 
@@ -60,15 +51,13 @@ public class PlayerTeleport implements LuckyBlockItem {
                 .toList();
 
         if (alivePlayers.isEmpty()) {
-            holder.sendMessage(Component.text("No other players to teleport to!", NamedTextColor.RED));
+            holder.sendMessage("<c>No other players to teleport to!");
             return false;
         }
 
         SkywarsPlayer target = alivePlayers.get(RANDOM.nextInt(alivePlayers.size()));
         holder.teleport(target.getPosition());
-        holder.sendMessage(Component.text("Teleported to ", NamedTextColor.LIGHT_PURPLE)
-                .append(Component.text(target.getUsername(), NamedTextColor.GOLD))
-                .append(Component.text("!", NamedTextColor.LIGHT_PURPLE)));
+        holder.sendMessage("<d>Teleported to <6>{}<d>!", target.getUsername());
 
         return true;
     }

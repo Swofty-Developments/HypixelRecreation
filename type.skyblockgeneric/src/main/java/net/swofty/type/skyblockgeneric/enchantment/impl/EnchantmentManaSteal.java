@@ -21,7 +21,7 @@ public class EnchantmentManaSteal implements Ench, EnchFromTable, DamageEventEnc
     @Override
     public String getDescription(int level) {
         double manaPercent = MANA_REGAIN_PERCENTAGES[level - 1] * 100;
-        return "Regain §a" + manaPercent + "%§7 of your mana on hit.";
+        return "Regain <a>" + manaPercent + "%<7> of your mana on hit.";
     }
 
     @Override

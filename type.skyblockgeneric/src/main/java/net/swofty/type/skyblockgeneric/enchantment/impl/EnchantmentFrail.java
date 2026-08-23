@@ -13,7 +13,7 @@ import java.util.Map;
 public class EnchantmentFrail implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Reduces the defense of §3Sea Creatures §7you hit by §a" + (level * 10) + "%§7.";
+        return "Reduces the defense of <3>Sea Creatures <7>you hit by <a>" + (level * 10) + "%<7>.";
     }
 
     @Override

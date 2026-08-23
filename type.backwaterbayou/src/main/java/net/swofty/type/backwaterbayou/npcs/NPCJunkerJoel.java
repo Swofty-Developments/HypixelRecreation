@@ -15,7 +15,10 @@ public class NPCJunkerJoel extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§2Junker Joel", "§e§lCLICK"};
+                return new String[]{
+                    "<2>Junker Joel",
+                    "<e><l>CLICK"
+                };
             }
 
             @Override
@@ -54,11 +57,11 @@ public class NPCJunkerJoel extends HypixelNPC {
     protected DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
             DialogueSet.builder()
-                .key("intro").lines(new String[]{
+                .key("intro").lines(
                     "People dump all sorts of junk in these waters, and I make sure none of it goes to waste.",
                     "Bring me your scraps and I'll trade you something useful.",
-                    "If you're planning to fish up a mountain of junk, you'll want a §9Junk Sinker§f."
-                }).build()
+                    "If you're planning to fish up a mountain of junk, you'll want a <9>Junk Sinker<f>."
+                ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

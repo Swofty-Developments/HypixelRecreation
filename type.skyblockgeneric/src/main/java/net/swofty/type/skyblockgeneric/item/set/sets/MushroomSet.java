@@ -18,10 +18,10 @@ public class MushroomSet implements ArmorSet, SetEvents {
     @Override
     public ArrayList<String> getDescription() {
         return new ArrayList<>(List.of(
-                "§7Grants the wearer permanent §aNight",
-                "§aVision §7while worn. During the night,",
+                "<7>Grants the wearer permanent <a>Night",
+                "<a>Vision <7>while worn. During the night,",
                 "the stats of the armor pieces are",
-                "§atripled§7."
+                "<a>tripled<7>."
         ));
     }
 

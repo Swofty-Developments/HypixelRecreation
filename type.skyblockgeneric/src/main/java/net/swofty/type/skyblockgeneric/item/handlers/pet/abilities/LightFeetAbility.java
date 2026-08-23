@@ -18,7 +18,7 @@ public final class LightFeetAbility implements PetAbility {
     public List<String> getDescription(SkyBlockItem instance) {
         double reduction = instance.getAttributeHandler().getPetData()
                 .getAsLevel(instance.getAttributeHandler().getRarity());
-        return List.of("§7Reduces fall damage by §a" + commaify(reduction) + "%§7.");
+        return List.of("<7>Reduces fall damage by <a>" + commaify(reduction) + "%<7>.");
     }
 
     @Override

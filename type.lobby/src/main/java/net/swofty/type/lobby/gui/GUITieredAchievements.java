@@ -4,6 +4,7 @@ import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.achievement.AchievementCategory;
 import net.swofty.type.generic.achievement.AchievementDefinition;
 import net.swofty.type.generic.achievement.AchievementRegistry;
@@ -12,7 +13,7 @@ import net.swofty.type.generic.achievement.AchievementTier;
 import net.swofty.type.generic.achievement.AchievementType;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -52,7 +53,7 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
     }
 
     public GUITieredAchievements(AchievementCategory category) {
-        super(category.getDisplayName() + " Tiered Achievements", InventoryType.CHEST_6_ROW);
+        super(Text.literal(category.getDisplayName() + " Tiered Achievements"), InventoryType.CHEST_6_ROW);
         this.category = category;
     }
 
@@ -88,7 +89,9 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1, "§7To " + category.getDisplayName() + " Achievements");
+                return ItemStacks.item(Material.ARROW, """
+                        <a>Go Back
+                        <7>To {} Achievements""", category.getDisplayName());
             }
 
             @Override
@@ -100,27 +103,24 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getUsingGUIMaterial(
-                        "§aTiered Achievements",
-                        category.getMaterial(),
-                        1,
-                        "§8" + category.getDisplayName(),
-                        "§7Unlocked: §b" + unlockedTiers + "§7/§b" + totalTiers + " §8(" + (int) unlockedPercent + "%)",
-                        "§7Points: §e" + totalPoints + "§7/§e" + maxPoints + " §8(" + (int) pointsPercent + "%)"
-                );
+                return ItemStacks.of(category.getMaterial(), 1, """
+                        <a>Tiered Achievements
+                        <8>{}
+                        <7>Unlocked: <b>{}<7>/<b>{} <8>({}%)
+                        <7>Points: <e>{}<7>/<e>{} <8>({}%)""",
+                        category.getDisplayName(),
+                        unlockedTiers, totalTiers, (int) unlockedPercent,
+                        totalPoints, maxPoints, (int) pointsPercent);
             }
         });
 
         set(new GUIClickableItem(50) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStackCreator.getStack(
-                        "§aGo to Challenge Achievements",
-                        Material.DIAMOND,
-                        1,
-                        "§7Click to view " + category.getDisplayName() + " Challenge",
-                        "§7Achievements."
-                );
+                return ItemStacks.item(Material.DIAMOND, """
+                        <a>Go to Challenge Achievements
+                        <7>Click to view {} Challenge
+                        <7>Achievements.""", category.getDisplayName());
             }
 
             @Override
@@ -133,15 +133,12 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 String nextSort = sortMode == SortMode.A_TO_Z ? "Z to A" : "A to Z";
-                return ItemStackCreator.getStack(
-                        "§6Sorted by: §a" + sortMode.display,
-                        Material.HOPPER,
-                        1,
-                        "§7Sorts by name from " + sortMode.display + ".",
-                        "",
-                        "§7Next sort: §a" + nextSort,
-                        "§eLeft click to use!"
-                );
+                return ItemStacks.item(Material.HOPPER, """
+                        <6>Sorted by: <a>{0}
+                        <7>Sorts by name from {0}.
+
+                        <7>Next sort: <a>{1}
+                        <e>Left click to use!""", sortMode.display, nextSort);
             }
 
             @Override
@@ -158,7 +155,7 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
                 set(new GUIClickableItem(45) {
                     @Override
                     public ItemStack.Builder getItem(HypixelPlayer player) {
-                        return ItemStackCreator.getStack("§aPrevious Page", Material.ARROW, 1);
+                        return ItemStacks.item(Material.ARROW, "<a>Previous Page");
                     }
 
                     @Override
@@ -172,7 +169,7 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
                 set(new GUIClickableItem(53) {
                     @Override
                     public ItemStack.Builder getItem(HypixelPlayer player) {
-                        return ItemStackCreator.getStack("§aNext Page", Material.ARROW, 1);
+                        return ItemStacks.item(Material.ARROW, "<a>Next Page");
                     }
 
                     @Override
@@ -230,41 +227,41 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
         return new GUIClickableItem(slot) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                String tierName = achievement.getName() + " " + toRoman(tierNum);
-                String color = unlocked ? "§a" : "§c";
+                Text tierName = Text.of((unlocked ? "<a>" : "<c>") + "{} {}",
+                        achievement.getName(), AchievementTier.toRomanNumeral(tierNum));
 
-                List<String> lore = new ArrayList<>();
-                lore.add("§f" + achievement.getDescription());
-                lore.add("");
-
-                if (unlocked) {
-                    lore.add("§7Progress: §aDONE! §7(§a" + String.format("%,d", currentProgress) + "§7)");
-                } else {
-                    lore.add("§7Progress: §a" + String.format("%,d", currentProgress) + "§7/§a" + String.format("%,d", tier.goal()));
-                }
-
-                lore.add("§7Reward:");
-                lore.add("§8+§e" + tier.points() + " §7Achievement Points");
-                lore.add("");
+                List<Text> lore = new ArrayList<>();
+                lore.add(Text.of("<f>{}", achievement.getDescription()));
+                lore.add(Text.empty());
 
                 if (unlocked) {
-                    lore.add("§aTier unlocked!");
+                    lore.add(Text.of("<7>Progress: <a>DONE! <7>(<a>{:,}<7>)", currentProgress));
                 } else {
-                    lore.add("§cTier locked!");
+                    lore.add(Text.of("<7>Progress: <a>{:,}<7>/<a>{:,}", currentProgress, tier.goal()));
                 }
 
-                lore.add("");
+                lore.add(Text.of("<7>Reward:"));
+                lore.add(Text.of("<8>+<e>{} <7>Achievement Points", tier.points()));
+                lore.add(Text.empty());
+
+                if (unlocked) {
+                    lore.add(Text.of("<a>Tier unlocked!"));
+                } else {
+                    lore.add(Text.of("<c>Tier locked!"));
+                }
+
+                lore.add(Text.empty());
                 String unlockPct = AchievementStatisticsService.getFormattedPercentage(achievement.getId(), tierNum);
-                lore.add("§7Unlocked by §f" + unlockPct + "§7% of players!");
+                lore.add(Text.of("<7>Unlocked by <f>{}<7>% of players!", unlockPct));
 
                 if (!isFullyCompleted) {
-                    lore.add("");
+                    lore.add(Text.empty());
                     if (isTracked) {
-                        lore.add("§6Currently tracking this achievement!");
-                        lore.add("§eClick to stop tracking.");
+                        lore.add(Text.of("<6>Currently tracking this achievement!"));
+                        lore.add(Text.of("<e>Click to stop tracking."));
                     } else {
-                        lore.add("§7Track this achievement to gain progress.");
-                        lore.add("§eClick to track!");
+                        lore.add(Text.of("<7>Track this achievement to gain progress."));
+                        lore.add(Text.of("<e>Click to track!"));
                     }
                 }
 
@@ -272,12 +269,7 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
 
                 if (isTopRow) {
                     String texture = unlocked ? UNLOCKED_HEAD : LOCKED_HEAD;
-                    builder = ItemStackCreator.getStackHead(
-                            color + tierName,
-                            texture,
-                            1,
-                            lore.toArray(new String[0])
-                    );
+                    builder = ItemStacks.head(texture, tierName, lore);
                 } else {
                     Material mat;
                     if (unlocked) {
@@ -288,16 +280,11 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
                         mat = Material.GRAY_STAINED_GLASS_PANE;
                     }
 
-                    builder = ItemStackCreator.getStack(
-                            color + tierName,
-                            mat,
-                            1,
-                            lore.toArray(new String[0])
-                    );
+                    builder = ItemStacks.item(mat, 1, tierName, lore);
                 }
 
                 if (isTracked) {
-                    builder = ItemStackCreator.enchant(builder);
+                    builder = ItemStacks.enchanted(builder);
                 }
 
                 return builder;
@@ -306,7 +293,7 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
             @Override
             public void run(InventoryPreClickEvent e, HypixelPlayer player) {
                 if (isFullyCompleted) {
-                    player.sendMessage("§cThis achievement is already fully completed!");
+                    player.sendMessage("<c>This achievement is already fully completed!");
                     return;
                 }
 
@@ -314,10 +301,6 @@ public class GUITieredAchievements extends HypixelInventoryGUI {
                 open(player);
             }
         };
-    }
-
-    private String toRoman(int num) {
-        return AchievementTier.toRomanNumeral(num);
     }
 
     private int getMaxPages(int totalAchievements) {

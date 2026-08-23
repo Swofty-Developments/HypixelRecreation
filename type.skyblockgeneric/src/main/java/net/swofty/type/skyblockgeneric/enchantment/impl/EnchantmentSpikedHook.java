@@ -13,7 +13,7 @@ import java.util.Map;
 public class EnchantmentSpikedHook implements Ench, EnchFromTable {
     @Override
     public String getDescription(int level) {
-        return "Deals §a" + (level * 5) + "%§7 more damage to §3Sea Creatures§7.";
+        return "Deals <a>" + level * 5 + "%<7> more damage to <3>Sea Creatures<7>.";
     }
 
     @Override

@@ -41,7 +41,7 @@ public final class HuntrapService {
             Pos position = event.getBlockPosition().asPos();
             List<AttributeDefinition> pool = eligible(player, position);
             if (pool.isEmpty()) {
-                player.sendMessage("§cNo huntable creatures can be caught by a Huntrap here!");
+                player.sendMessage("<c>No huntable creatures can be caught by a Huntrap here!");
                 return;
             }
             String world = HypixelConst.getTypeLoader().getType().name();
@@ -56,7 +56,7 @@ public final class HuntrapService {
             item.setAmount(item.getAmount() - 1);
             player.setItemInMainHand(item.getAmount() <= 0 ? ItemStack.AIR : item.getItemStack());
             spawn(player, trap);
-            player.sendMessage("§aPlaced your §e" + tier.displayName() + "§a!");
+            player.sendMessage("<a>Placed your <e>{}<a>!", tier.displayName());
         });
         MinecraftServer.getSchedulerManager().submitTask(() -> {
             tick();
@@ -123,8 +123,8 @@ public final class HuntrapService {
         AttributeDefinition caught = AttributeRegistry.get(current.caughtShard());
         if (caught == null) {
             long seconds = Math.max(0, (current.catchAt() - System.currentTimeMillis()) / 1000);
-            player.sendMessage("§cThis Huntrap is empty! §7Time remaining: §a%d h %02d m %02d s"
-                    .formatted(seconds / 3600, seconds / 60 % 60, seconds % 60));
+            player.sendMessage("<c>This Huntrap is empty! <7>Time remaining: <a>{}",
+                    "%d h %02d m %02d s".formatted(seconds / 3600, seconds / 60 % 60, seconds % 60));
             return;
         }
         int amount = AttributeEffectService.fortunateAmount(player, caught);
@@ -134,7 +134,7 @@ public final class HuntrapService {
         player.getHuntingData().getTraps().remove(current);
         HuntrapDisplay display = DISPLAYS.remove(TrapKey.of(player.getUuid(), current));
         if (display != null) display.remove();
-        player.sendMessage("§aYour Huntrap caught §e" + amount + "x §a" + caught.shardName() + "§a!");
+        player.sendMessage("<a>Your Huntrap caught <e>{}x <a>{}<a>!", amount, caught.shardName());
     }
 
     public static void pickup(SkyBlockPlayer player, DatapointHunting.PlacedHuntrap trap) {
@@ -149,7 +149,7 @@ public final class HuntrapService {
         player.getHuntingData().getTraps().remove(current);
         HuntrapDisplay display = DISPLAYS.remove(TrapKey.of(player.getUuid(), current));
         if (display != null) display.remove();
-        player.sendMessage("§aPicked up your §e" + tier.displayName() + "§a!");
+        player.sendMessage("<a>Picked up your <e>{}<a>!", tier.displayName());
     }
 
     static List<AttributeDefinition> eligible(SkyBlockPlayer player, Pos position) {

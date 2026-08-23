@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.user;
 
-import net.swofty.type.skyblockgeneric.data.monogdb.FairySoulDatabase;
 import net.swofty.type.skyblockgeneric.user.fairysouls.FairySoul;
 import net.swofty.type.skyblockgeneric.user.fairysouls.FairySoulZone;
 
@@ -9,7 +8,8 @@ public record FairySoulHandler(SkyBlockPlayer player) {
     public int getFound(FairySoulZone zone) {
         int amount = 0;
         for (Integer id : player.getFairySouls().getAllFairySouls()) {
-            if (FairySoulDatabase.getAllSouls().get(id).getZone() == zone) {
+            FairySoul soul = FairySoul.getFairySoul(id);
+            if (soul != null && soul.getZone() == zone) {
                 amount++;
             }
         }
@@ -18,7 +18,7 @@ public record FairySoulHandler(SkyBlockPlayer player) {
 
     public int getMax(FairySoulZone zone) {
         int amount = 0;
-        for (FairySoul soul : FairySoulDatabase.getAllSouls()) {
+        for (FairySoul soul : FairySoul.getFairySouls()) {
             if (soul.getZone() == zone) {
                 amount++;
             }

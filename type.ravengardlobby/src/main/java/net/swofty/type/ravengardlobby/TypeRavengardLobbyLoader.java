@@ -13,6 +13,7 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.Tuple;
 import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.RavengardTypeLoader;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
@@ -84,6 +85,8 @@ public class TypeRavengardLobbyLoader implements RavengardTypeLoader {
         }.spawn(HypixelConst.getInstanceContainer());
 
         RavengardAnimationRegistry.spawnAll(HypixelConst.getInstanceContainer());
+        net.swofty.type.ravengardgeneric.entity.NevermoreNoticeBoard.spawn(HypixelConst.getInstanceContainer());
+        net.swofty.type.ravengardgeneric.music.RavengardMusic.start();
     }
 
     @Override
@@ -156,10 +159,13 @@ public class TypeRavengardLobbyLoader implements RavengardTypeLoader {
     }
 
     @Override
-    public @NonNull Optional<Tuple<Component, Component>> headerFooter() {
+    public @NonNull Optional<Tuple<Text, Text>> headerFooter() {
         return Optional.of(
                 new Tuple<>(
-                        Component.text("§f\uE120\uE121\uE122\uE123\uE124\uE125\n\uE102\n"),
-                        Component.empty()));
+                        Text.of("{}", net.kyori.adventure.text.Component
+                                .text("\uE120\uE121\uE122\uE123\uE124\uE125\n\uE102\n")
+                                .font(net.swofty.type.ravengardgeneric.gui.RavengardFont.RAVENGARD)
+                                .color(net.kyori.adventure.text.format.NamedTextColor.WHITE)),
+                        Text.empty()));
     }
 }

@@ -3,8 +3,9 @@ package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.Material;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.HypixelSignGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointLoadouts;
@@ -16,28 +17,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GUITreeSlots extends StatelessView {
-    private static final List<String> HOTM_TREE_ONE = List.of(
-            "", "§f█§f█§f█§f█§f█§f█§f█", "§l §0 §f█§f§l §0 §f█§f§l §0 §f█§f§l §0 ",
-            "§f█§f█§f█§f█§f█§f█§f█", "§l §0 §f█§f§l §0 §f█§f§l §0 §f█§f§l §0 ",
-            "§f█§f█§f█§f█§f█§a█§f█", "§l §0 §f█§f§l §0 §a█§a§l §0 §b█§b§l §0 ",
-            "§f█§f█§f█§a█§f█§a█§f█", "§l §0 §f█§f§l §0 §a█§a§l §0 §a█§a§l §0 ",
-            "§l §0 §f█§b█§a█§a█§a█§a§l §0 ", "§l §0 §0§l §0 §0§l §0 §a█§a§l §0 §0§l §0 §0§l §0 ");
-    private static final List<String> HOTM_EMPTY = List.of(
-            "", "§f█§f█§f█§f█§f█§f█§f█", "§l §0 §f█§f§l §0 §f█§f§l §0 §f█§f§l §0 ",
-            "§f█§f█§f█§f█§f█§f█§f█", "§l §0 §f█§f§l §0 §f█§f§l §0 §f█§f§l §0 ",
-            "§f█§f█§f█§f█§f█§f█§f█", "§l §0 §f█§f§l §0 §a█§a§l §0 §f█§f§l §0 ",
-            "§f█§f█§f█§f█§f█§f█§f█", "§l §0 §f█§f§l §0 §f█§f§l §0 §f█§f§l §0 ",
-            "§l §0 §f█§f█§f█§f█§f█§f§l §0 ", "§l §0 §0§l §0 §0§l §0 §f█§f§l §0 §0§l §0 §0§l §0 ");
-    private static final List<String> HOTF_TREE_ONE = List.of(
-            "", "§l §0 §f█§f§l §0 §f█§f§l §0 §f█§f§l §0 ", "§6█§e█§e█§e█§f█§f█§f█",
-            "§l §0 §f█§f§l §0 §6█§6§l §0 §f█§f§l §0 ", "§f█§f█§f█§e█§f█§6█§f█",
-            "§l §0 §f█§f§l §0 §6█§6§l §0 §e█§e§l §0 ", "§l §0 §f█§f█§6█§e█§e█§e§l §0 ",
-            "§l §0 §0§l §0 §0§l §0 §6█§6§l §0 §0§l §0 §0§l §0 ");
-    private static final List<String> HOTF_EMPTY = List.of(
-            "", "§l §0 §f█§f§l §0 §f█§f§l §0 §f█§f§l §0 ", "§f█§f█§f█§f█§f█§f█§f█",
-            "§l §0 §f█§f§l §0 §6█§6§l §0 §f█§f§l §0 ", "§f█§f█§f█§f█§f█§f█§f█",
-            "§l §0 §f█§f§l §0 §f█§f§l §0 §f█§f§l §0 ", "§l §0 §f█§f█§f█§f█§f█§f§l §0 ",
-            "§l §0 §0§l §0 §0§l §0 §f█§f§l §0 §0§l §0 §0§l §0 ");
+    private static final List<Text> HOTM_TREE_ONE = List.of(
+            Text.empty(),
+            Text.of("<f>███████"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<f>███████"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<f>█████<r><a>█<r><f>█"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><a>█<r><a><l> <r><0> <r><b>█<r><b><l> <r><0> "),
+            Text.of("<f>███<r><a>█<r><f>█<r><a>█<r><f>█"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><a>█<r><a><l> <r><0> <r><a>█<r><a><l> <r><0> "),
+            Text.of("<l> <r><0> <r><f>█<r><b>█<r><a>███<r><a><l> <r><0> "),
+            Text.of("<l> <r><0> <r><0><l> <r><0> <r><0><l> <r><0> <r><a>█<r><a><l> <r><0> <r><0><l> <r><0> <r><0><l> <r><0> "));
+
+    private static final List<Text> HOTM_EMPTY = List.of(
+            Text.empty(),
+            Text.of("<f>███████"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<f>███████"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<f>███████"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><a>█<r><a><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<f>███████"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<l> <r><0> <r><f>█████<r><f><l> <r><0> "),
+            Text.of("<l> <r><0> <r><0><l> <r><0> <r><0><l> <r><0> <r><f>█<r><f><l> <r><0> <r><0><l> <r><0> <r><0><l> <r><0> "));
+
+    private static final List<Text> HOTF_TREE_ONE = List.of(
+            Text.empty(),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<6>█<r><e>███<r><f>███"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><6>█<r><6><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<f>███<r><e>█<r><f>█<r><6>█<r><f>█"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><6>█<r><6><l> <r><0> <r><e>█<r><e><l> <r><0> "),
+            Text.of("<l> <r><0> <r><f>██<r><6>█<r><e>██<r><e><l> <r><0> "),
+            Text.of("<l> <r><0> <r><0><l> <r><0> <r><0><l> <r><0> <r><6>█<r><6><l> <r><0> <r><0><l> <r><0> <r><0><l> <r><0> "));
+
+    private static final List<Text> HOTF_EMPTY = List.of(
+            Text.empty(),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<f>███████"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><6>█<r><6><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<f>███████"),
+            Text.of("<l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> <r><f>█<r><f><l> <r><0> "),
+            Text.of("<l> <r><0> <r><f>█████<r><f><l> <r><0> "),
+            Text.of("<l> <r><0> <r><0><l> <r><0> <r><0><l> <r><0> <r><f>█<r><f><l> <r><0> <r><0><l> <r><0> <r><0><l> <r><0> "));
 
     private final TreeType tree;
     private final Integer loadout;
@@ -53,7 +77,7 @@ public class GUITreeSlots extends StatelessView {
 
     @Override
     public ViewConfiguration<DefaultState> configuration() {
-        return new ViewConfiguration<>(title() + " Slot", InventoryType.CHEST_4_ROW);
+        return new ViewConfiguration<>(Text.of("{} Slot", title()), InventoryType.CHEST_4_ROW);
     }
 
     @Override
@@ -71,33 +95,39 @@ public class GUITreeSlots extends StatelessView {
             int treeSlot = slot;
             boolean unlocked = slot < 2;
             boolean active = slot == selected;
-            List<String> lore = new ArrayList<>(diagram(slot));
-            lore.add("");
+            List<Text> lore = new ArrayList<>(diagram(slot));
+            lore.add(Text.empty());
             if (!unlocked) {
-                lore.add("§cUnlock more " + tree.name() + " §cSlots from");
-                lore.add("§dElizabeth §cat the §bCommunity Center§c!");
-                lore.add("");
-                lore.add("§c§lLOCKED");
+                lore.add(Text.of("<c>Unlock more {} <c>Slots from", tree.name()));
+                lore.add(Text.of("<d>Elizabeth <c>at the <b>Community Center<c>!"));
+                lore.add(Text.empty());
+                lore.add(Text.of("<c><l>LOCKED"));
             } else if (loadout != null) {
-                lore.add("§eClick to select!");
+                lore.add(Text.of("<e>Click to select!"));
             } else if (active) {
-                lore.add("§a§lSELECTED");
-                lore.add("");
-                lore.add("§eRight-click to rename!");
+                lore.add(Text.of("<a><l>SELECTED"));
+                lore.add(Text.empty());
+                lore.add(Text.of("<e>Right-click to rename!"));
             } else {
-                lore.add("§eLeft-click to select!");
-                lore.add("§eRight-click to rename!");
+                lore.add(Text.of("<e>Left-click to select!"));
+                lore.add(Text.of("<e>Right-click to rename!"));
             }
             Material material = !unlocked ? Material.RED_DYE : active && loadout == null ? Material.LIME_DYE : Material.GRAY_DYE;
-            layout.slot(11 + slot, ItemStackCreator.getStack((active ? "§a" : "§c") + names[slot], material, 1, lore),
+            layout.slot(11 + slot, ItemStacks.item(material, 1,
+                            Text.of(active ? "<a>{}" : "<c>{}", names[slot]), lore),
                     (click, c) -> handleClick((SkyBlockPlayer) c.player(), treeSlot, unlocked, click.click(), c));
         }
 
-        layout.slot(30, ItemStackCreator.getStack("§aGo Back", Material.ARROW, 1,
-                "§7To " + (loadout == null ? "Loadouts" : LoadoutManager.data(player).getLoadouts()[loadout].getName())), (_, c) -> c.pop());
+        layout.slot(30, ItemStacks.item(Material.ARROW, 1, """
+                <a>Go Back
+                <7>To {}""", loadout == null ? "Loadouts" : LoadoutManager.data(player).getLoadouts()[loadout].getName()), (_, c) -> c.pop());
         if (loadout != null) {
-            layout.slot(32, ItemStackCreator.getStack("§cClear Selection", Material.LAVA_BUCKET, 1,
-                            "§7Clears your current selection for", "§7this component of your loadout.", "", "§eClick to clear!"),
+            layout.slot(32, ItemStacks.item(Material.LAVA_BUCKET, 1, """
+                            <c>Clear Selection
+                            <7>Clears your current selection for
+                            <7>this component of your loadout.
+
+                            <e>Click to clear!"""),
                     (_, c) -> clear((SkyBlockPlayer) c.player()));
         }
     }
@@ -145,7 +175,7 @@ public class GUITreeSlots extends StatelessView {
         return tree == TreeType.HOTM ? loadout.getHotmSlot() : loadout.getHotfSlot();
     }
 
-    private List<String> diagram(int slot) {
+    private List<Text> diagram(int slot) {
         if (tree == TreeType.HOTM) return slot == 0 ? HOTM_TREE_ONE : HOTM_EMPTY;
         return slot == 0 ? HOTF_TREE_ONE : HOTF_EMPTY;
     }

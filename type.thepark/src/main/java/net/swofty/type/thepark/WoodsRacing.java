@@ -2,6 +2,7 @@ package net.swofty.type.thepark;
 
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.mission.MissionData;
 import net.swofty.type.skyblockgeneric.mission.missions.thepark.spruce.race.MissionCompleteTheRaceFourth;
 import net.swofty.type.skyblockgeneric.mission.missions.thepark.spruce.race.MissionCompleteTheRaceOneMinute;
@@ -24,7 +25,7 @@ public class WoodsRacing implements Race {
 
 	@Override
 	public String getTitle() {
-		return "§a§lWOODS RACING";
+		return "<a><l>WOODS RACING";
 	}
 
 	@Override
@@ -44,7 +45,10 @@ public class WoodsRacing implements Race {
 
 	@Override
 	public void onFinish(SkyBlockPlayer player, long time, boolean isRecord) {
-		player.sendMessage(getTitle() + " §eRace finished in " + String.format("%02d:%05.2f", time / 60000, (time % 60000) / 1000.0) + "!" + (isRecord ? " §dNew record!" : ""));
+		Text message = Text.of("{} <e>Race finished in {}!", Text.parse(getTitle()),
+				String.format("%02d:%05.2f", time / 60000, (time % 60000) / 1000.0))
+				.appendIf(isRecord, " <d>New record!");
+		player.sendMessage(message);
 
 		// this behavior could be moved to the missions with the ActionPlayerFinishRace event
 		int sec = (int) (time / 1000);
@@ -73,7 +77,7 @@ public class WoodsRacing implements Race {
 
 	@Override
 	public void onCheckpoint(SkyBlockPlayer player, int checkpointIndex, long time) {
-		player.sendMessage(getTitle() + " §aYou reached the other end! Now go back to the start!");
+		player.sendMessage("{} <a>You reached the other end! Now go back to the start!", Text.parse(getTitle()));
 	}
 
 	@Override

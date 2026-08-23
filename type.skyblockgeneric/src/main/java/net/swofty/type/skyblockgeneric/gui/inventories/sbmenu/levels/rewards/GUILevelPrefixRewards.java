@@ -2,7 +2,8 @@ package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.levels.rewards;
 
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkyBlockExperience;
@@ -34,26 +35,26 @@ public class GUILevelPrefixRewards extends StatelessView {
         layout.slot(4, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             DatapointSkyBlockExperience.PlayerSkyBlockExperience experience = player.getSkyBlockExperience();
-            List<String> lore = new ArrayList<>();
-            lore.add("§7New colors for your level prefix");
-            lore.add("§7shown in TAB and in chat!");
-            lore.add(" ");
-            lore.add("§7Next Reward:");
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.of("<7>New colors for your level prefix"));
+            lore.add(Text.of("<7>shown in TAB and in chat!"));
+            lore.add(Text.literal(" "));
+            lore.add(Text.of("<7>Next Reward:"));
 
             Map.Entry<SkyBlockLevelRequirement, String> nextPrefix = experience.getLevel().getNextPrefixChange();
             if (nextPrefix == null) {
-                lore.add("§cNo more rewards!");
+                lore.add(Text.of("<c>No more rewards!"));
             } else {
-                lore.add(nextPrefix.getValue() + nextPrefix.getKey().getPrefixDisplay());
-                lore.add("§8at Level " + nextPrefix.getKey().asInt());
+                lore.add(Text.parse(nextPrefix.getValue() + nextPrefix.getKey().getPrefixDisplay()));
+                lore.add(Text.of("<8>at Level {}", nextPrefix.getKey().asInt()));
             }
-            lore.add(" ");
+            lore.add(Text.literal(" "));
             lore.addAll(GUILevelRewards.getAsDisplay(
                     player.getSkyBlockExperience().getLevel().getPreviousPrefixChanges().size(),
                     SkyBlockLevelRequirement.getAllPrefixChanges().size()
             ));
 
-            return ItemStackCreator.getStack("§aPrefix Color Rewards", Material.GRAY_DYE, 1, lore);
+            return ItemStacks.item(Material.GRAY_DYE, 1, Text.of("<a>Prefix Color Rewards"), lore);
         });
 
         // Prefix items
@@ -67,13 +68,20 @@ public class GUILevelPrefixRewards extends StatelessView {
                 SkyBlockPlayer player = (SkyBlockPlayer) c.player();
                 boolean unlocked = player.getSkyBlockExperience().getLevel().asInt() >= level.asInt();
 
-                return ItemStackCreator.getStack(level.getPrefix() + level.getPrefixDisplay(),
-                        level.getPrefixItem(), 1,
-                        "§8Level " + level.asInt(),
-                        " ",
-                        "§7Preview: " + player.getFullDisplayName(level.getPrefix()),
-                        " ",
-                        (unlocked ? "§aYou have unlocked this reward!" : "§7Levels left to unlock: §3" + (level.asInt() - player.getSkyBlockExperience().getLevel().asInt())));
+                Text name = Text.parse(level.getPrefix() + level.getPrefixDisplay());
+                Text unlockLine = unlocked
+                        ? Text.of("<a>You have unlocked this reward!")
+                        : Text.of("<7>Levels left to unlock: <3>{}", level.asInt() - player.getSkyBlockExperience().getLevel().asInt());
+
+                List<Text> lore = List.of(
+                        Text.of("<8>Level {}", level.asInt()),
+                        Text.literal(" "),
+                        Text.of("<7>Preview: ").append(player.getFullDisplayName(level.getPrefix())),
+                        Text.literal(" "),
+                        unlockLine
+                );
+
+                return ItemStacks.item(level.getPrefixItem(), 1, name, lore);
             });
 
             index++;

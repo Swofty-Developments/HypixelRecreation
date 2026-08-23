@@ -28,15 +28,15 @@ public class ActionBlockInteract implements HypixelEventClass {
             }
             region.setPos2(event.getBlockPosition());
             RegionSelectorComponent.getPlayerRegionSelection().put(player, region);
-            player.sendMessage("§aPosition 2 set to §e" + event.getBlockPosition() + "§a.");
+            player.sendMessage("<a>Position 2 set to <e>{}<a>.", event.getBlockPosition());
             event.setCancelled(true);
             return;
         }
 
         if (item.hasComponent(BlockDataToolComponent.class)) {
-            player.sendMessage("§aBlock data for §e" + event.getBlockPosition() + "§a:");
-            player.sendMessage("§e- Block ID: §f" + event.getBlock().registry().material());
-            player.sendMessage("§e- Block State: §f" + event.getBlock().state());
+            player.sendMessage("<a>Block data for <e>{}<a>:", event.getBlockPosition());
+            player.sendMessage("<e>- Block ID: <f>{}", event.getBlock().material());
+            player.sendMessage("<e>- Block State: <f>{}", event.getBlock().state());
             event.setCancelled(true);
             return;
         }

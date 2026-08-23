@@ -1,9 +1,7 @@
 package net.swofty.type.skyblockgeneric.commands;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.arguments.ArgumentString;
 import net.minestom.server.command.builder.arguments.ArgumentType;
-import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 import net.swofty.commons.ServerType;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.command.CommandParameters;
@@ -28,7 +26,7 @@ public class WarpCommand extends HypixelCommand {
         ArgumentString warpArgument = ArgumentType.String("warp");
         warpArgument.setSuggestionCallback(((sender, context, suggestion) -> {
             for (TravelScrollIslands island : TravelScrollIslands.values()) {
-                suggestion.addEntry(new SuggestionEntry(island.getInternalName(), Component.text(island.getDescriptiveName())));
+                suggest(suggestion, island.getInternalName(), island.getDescriptiveName());
             }
         }));
 
@@ -44,10 +42,10 @@ public class WarpCommand extends HypixelCommand {
                         .getValue();
                 if (unlockedIslands.contains(warp)) {
                     player.asProxyPlayer().transferToWithIndication(island.getServerType()).thenRun(() -> {
-                        player.asProxyPlayer().sendMessage("§7You have been warped to " + island.getDescriptiveName() + "§7!");
+                        player.asProxyPlayer().sendMessage("<7>You have been warped to {}<7>!", island.getDescriptiveName());
                     });
                 } else {
-                    player.sendMessage("§cYou have not unlocked this warp.");
+                    player.sendMessage("<c>You have not unlocked this warp.");
                 }
                 return;
             }
@@ -62,22 +60,22 @@ public class WarpCommand extends HypixelCommand {
                     ServerType serverType = islandFromScroll.getServerType();
 
                     if (HypixelConst.getTypeLoader().getType() == serverType) {
-                        player.asProxyPlayer().sendMessage("§7You have been warped to " + scroll.getDisplayName() + "§7!");
+                        player.asProxyPlayer().sendMessage("<7>You have been warped to {}<7>!", scroll.getDisplayName());
                         player.teleport(scroll.getLocation());
                         return;
                     }
 
                     player.asProxyPlayer().transferToWithIndication(serverType).thenRun(() -> {
-                        player.asProxyPlayer().sendMessage("§7You have been warped to " + scroll.getDisplayName() + "§7!");
+                        player.asProxyPlayer().sendMessage("<7>You have been warped to {}<7>!", scroll.getDisplayName());
                         player.asProxyPlayer().teleport(scroll.getLocation());
                     });
                 } else {
-                    player.sendMessage("§cYou have not unlocked this warp.");
+                    player.sendMessage("<c>You have not unlocked this warp.");
                 }
                 return;
             }
 
-            player.sendMessage("§cCould not find a warp with the name '" + warp + "'.");
+            player.sendMessage("<c>Could not find a warp with the name '{}'.", warp);
         }, warpArgument);
     }
 }

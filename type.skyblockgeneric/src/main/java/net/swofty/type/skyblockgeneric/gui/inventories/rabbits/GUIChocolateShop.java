@@ -3,7 +3,8 @@ package net.swofty.type.skyblockgeneric.gui.inventories.rabbits;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
@@ -13,7 +14,6 @@ import net.swofty.type.skyblockgeneric.data.datapoints.DatapointChocolateFactory
 import net.swofty.type.skyblockgeneric.rabbits.ChocolateFactoryHelper;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GUIChocolateShop implements StatefulView<GUIChocolateShop.State> {
@@ -52,450 +52,469 @@ public class GUIChocolateShop implements StatefulView<GUIChocolateShop.State> {
         Components.fill(layout);
 
         // Slot 10: Supreme Chocolate Bar
-        layout.slot(10, (s, c) -> {
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Bring §63,000 §7of these to §5Carrolyn §7in");
-            lore.add("§5Scarleton §7on the §cCrimson Isle §7to");
-            lore.add("§7permanently gain §c+5\u2764 Health §7and");
-            lore.add("§6+12\u2618 Cocoa Beans Fortune§7.");
-            lore.add("");
-            lore.add("§a§lUNCOMMON");
-            lore.add("");
-            addCostLore(lore, (SkyBlockPlayer) c.player(), 2_000_000L);
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§6500 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            lore.add("§eRight-click for more trading options!");
-            return ItemStackCreator.getStackHead("§aSupreme Chocolate Bar", SUPREME_CHOCOLATE_BAR_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_000_000L, "§aSupreme Chocolate Bar", 0, c));
+        layout.slot(10, (s, c) -> ItemStacks.head(SUPREME_CHOCOLATE_BAR_TEXTURE, """
+                <a>Supreme Chocolate Bar
+                <7>Bring <6>3,000 <7>of these to <5>Carrolyn <7>in
+                <5>Scarleton <7>on the <c>Crimson Isle <7>to
+                <7>permanently gain <c>+5❤ Health <7>and
+                <6>+12☘ Cocoa Beans Fortune<7>.
+
+                <a><l>UNCOMMON
+</l>
+                <7>Cost
+                <6>{} Chocolate
+
+                <7>Annual Stock <8>Year 471
+                <6>500 <7>remaining
+
+                <e>Click to trade!
+                <e>Right-click for more trading options!""",
+                ChocolateFactoryHelper.formatChocolate(2_000_000L)),
+                (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_000_000L, "<a>Supreme Chocolate Bar", 0, c));
 
         // Slot 11: Egglocator
-        layout.slot(11, (s, c) -> {
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Uses the magic of §aHoppity §7to");
-            lore.add("§7uncover hidden §aChocolate Rabbit");
-            lore.add("§aEggs§7.");
-            lore.add("");
-            lore.add("§6Ability: Egglocator  §e§lRIGHT CLICK");
-            lore.add("§7Points towards the nearest unclaimed");
-            lore.add("§aChocolate Rabbit Egg§7!");
-            lore.add("§8Cooldown: §a5s");
-            lore.add("");
-            lore.add("§7Only works during §dHoppity's Hunt§7.");
-            lore.add("");
-            lore.add("§f§lCOMMON");
-            lore.add("");
-            addCostLore(lore, (SkyBlockPlayer) c.player(), 7_500_000L);
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§fEgglocator", EGGLOCATOR_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 7_500_000L, "§fEgglocator", 0, c));
+        layout.slot(11, (s, c) -> ItemStacks.head(EGGLOCATOR_TEXTURE, """
+                <f>Egglocator
+                <7>Uses the magic of <a>Hoppity <7>to
+                <7>uncover hidden <a>Chocolate Rabbit
+                <a>Eggs<7>.
+
+                <6>Ability: Egglocator  <e><l>RIGHT CLICK</l>
+                <7>Points towards the nearest unclaimed
+                <a>Chocolate Rabbit Egg<7>!
+                <8>Cooldown: <a>5s
+
+                <7>Only works during <d>Hoppity's Hunt<7>.
+
+                <f><l>COMMON
+</l>
+                <7>Cost
+                <6>{} Chocolate
+
+                <7>Annual Stock <8>Year 471
+                <6>1 <7>remaining
+
+                <e>Click to trade!""",
+                ChocolateFactoryHelper.formatChocolate(7_500_000L)),
+                (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 7_500_000L, "<f>Egglocator", 0, c));
 
         // Slot 12: Nibble Chocolate Stick
         layout.slot(12, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 1) {
-                return createLockedItem("§cChocolate Factory II.");
+                return createLockedItem("<c>Chocolate Factory II.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Grants §a+2% §7chance to find a");
-            lore.add("§aChocolate Rabbit §7that you haven't");
-            lore.add("§7found yet and grants §6+10 Chocolate");
-            lore.add("§7per second.");
-            lore.add("");
-            lore.add("§8§oA delightful treat from the Factory.");
-            lore.add("§8§oIts crisp taste sparks joy with");
-            lore.add("§8§oevery bite.");
-            lore.add("");
-            lore.add("§f§lCOMMON ACCESSORY");
-            lore.add("");
-            addCostLore(lore, p, 250_000_000L);
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§fNibble Chocolate Stick", NIBBLE_CHOCOLATE_STICK_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 250_000_000L, "§fNibble Chocolate Stick", 1, c));
+            return ItemStacks.head(NIBBLE_CHOCOLATE_STICK_TEXTURE, """
+                    <f>Nibble Chocolate Stick
+                    <7>Grants <a>+2% <7>chance to find a
+                    <a>Chocolate Rabbit <7>that you haven't
+                    <7>found yet and grants <6>+10 Chocolate
+                    <7>per second.
+
+                    <8><o>A delightful treat from the Factory.</o>
+                    <8><o>Its crisp taste sparks joy with</o>
+                    <8><o>every bite.
+</o>
+                    <f><l>COMMON ACCESSORY
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+
+                    <7>Annual Stock <8>Year 471
+                    <6>1 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(250_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 250_000_000L, "<f>Nibble Chocolate Stick", 1, c));
 
         // Slot 13: Smooth Chocolate Bar
         layout.slot(13, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 1) {
-                return createLockedItem("§cChocolate Factory II.");
+                return createLockedItem("<c>Chocolate Factory II.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Grants §a+4% §7chance to find a");
-            lore.add("§aChocolate Rabbit §7that you haven't");
-            lore.add("§7found yet and grants §6+20 Chocolate");
-            lore.add("§7per second.");
-            lore.add("");
-            lore.add("§8§oCrafted in the Factory, its");
-            lore.add("§8§osmoothness melts hearts and tastes");
-            lore.add("§8§olike a sweet escape.");
-            lore.add("");
-            lore.add("§a§lUNCOMMON ACCESSORY");
-            lore.add("");
-            addCostLore(lore, p, 1_000_000_000L);
-            lore.add("§fNibble Chocolate Stick");
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§aSmooth Chocolate Bar", SMOOTH_CHOCOLATE_BAR_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 1_000_000_000L, "§aSmooth Chocolate Bar", 1, c));
+            return ItemStacks.head(SMOOTH_CHOCOLATE_BAR_TEXTURE, """
+                    <a>Smooth Chocolate Bar
+                    <7>Grants <a>+4% <7>chance to find a
+                    <a>Chocolate Rabbit <7>that you haven't
+                    <7>found yet and grants <6>+20 Chocolate
+                    <7>per second.
+
+                    <8><o>Crafted in the Factory, its</o>
+                    <8><o>smoothness melts hearts and tastes</o>
+                    <8><o>like a sweet escape.
+</o>
+                    <a><l>UNCOMMON ACCESSORY
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+                    <f>Nibble Chocolate Stick
+
+                    <7>Annual Stock <8>Year 471
+                    <6>1 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(1_000_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 1_000_000_000L, "<a>Smooth Chocolate Bar", 1, c));
 
         // Slot 14: Rich Chocolate Chunk
         layout.slot(14, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 2) {
-                return createLockedItem("§cChocolate Factory III.");
+                return createLockedItem("<c>Chocolate Factory III.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Grants §a+6% §7chance to find a");
-            lore.add("§aChocolate Rabbit §7that you haven't");
-            lore.add("§7found yet and grants §6+30 Chocolate");
-            lore.add("§7per second.");
-            lore.add("");
-            lore.add("§8§oFrom the Factory's secret");
-            lore.add("§8§oreserves, its rich flavor is a deep");
-            lore.add("§8§odive into indulgence.");
-            lore.add("");
-            lore.add("§9§lRARE ACCESSORY");
-            lore.add("");
-            addCostLore(lore, p, 2_000_000_000L);
-            lore.add("§aSmooth Chocolate Bar");
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§9Rich Chocolate Chunk", RICH_CHOCOLATE_CHUNK_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_000_000_000L, "§9Rich Chocolate Chunk", 2, c));
+            return ItemStacks.head(RICH_CHOCOLATE_CHUNK_TEXTURE, """
+                    <9>Rich Chocolate Chunk
+                    <7>Grants <a>+6% <7>chance to find a
+                    <a>Chocolate Rabbit <7>that you haven't
+                    <7>found yet and grants <6>+30 Chocolate
+                    <7>per second.
+
+                    <8><o>From the Factory's secret</o>
+                    <8><o>reserves, its rich flavor is a deep</o>
+                    <8><o>dive into indulgence.
+</o>
+                    <9><l>RARE ACCESSORY
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+                    <a>Smooth Chocolate Bar
+
+                    <7>Annual Stock <8>Year 471
+                    <6>1 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(2_000_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_000_000_000L, "<9>Rich Chocolate Chunk", 2, c));
 
         // Slot 15: Ganache Chocolate Slab
         layout.slot(15, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 2) {
-                return createLockedItem("§cChocolate Factory III.");
+                return createLockedItem("<c>Chocolate Factory III.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Grants §a+8% §7chance to find a");
-            lore.add("§aChocolate Rabbit §7that you haven't");
-            lore.add("§7found yet and grants §6+40 Chocolate");
-            lore.add("§7per second.");
-            lore.add("");
-            lore.add("§8§oA Factory masterpiece - its divine");
-            lore.add("§8§otaste transcends reality, offering a");
-            lore.add("§8§oheavenly escape.");
-            lore.add("");
-            lore.add("§5§lEPIC ACCESSORY");
-            lore.add("");
-            addCostLore(lore, p, 3_000_000_000L);
-            lore.add("§9Rich Chocolate Chunk");
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§5Ganache Chocolate Slab", GANACHE_CHOCOLATE_SLAB_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 3_000_000_000L, "§5Ganache Chocolate Slab", 2, c));
+            return ItemStacks.head(GANACHE_CHOCOLATE_SLAB_TEXTURE, """
+                    <5>Ganache Chocolate Slab
+                    <7>Grants <a>+8% <7>chance to find a
+                    <a>Chocolate Rabbit <7>that you haven't
+                    <7>found yet and grants <6>+40 Chocolate
+                    <7>per second.
+
+                    <8><o>A Factory masterpiece - its divine</o>
+                    <8><o>taste transcends reality, offering a</o>
+                    <8><o>heavenly escape.
+</o>
+                    <5><l>EPIC ACCESSORY
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+                    <9>Rich Chocolate Chunk
+
+                    <7>Annual Stock <8>Year 471
+                    <6>1 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(3_000_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 3_000_000_000L, "<5>Ganache Chocolate Slab", 2, c));
 
         // Slot 16: Prestige Chocolate Realm
         layout.slot(16, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 3) {
-                return createLockedItem("§cChocolate Factory IV.");
+                return createLockedItem("<c>Chocolate Factory IV.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Grants §a+10% §7chance to find a");
-            lore.add("§aChocolate Rabbit §7that you haven't");
-            lore.add("§7found yet and grants §6+50 Chocolate");
-            lore.add("§7per second.");
-            lore.add("");
-            lore.add("§8§oThe Factory's pinnacle creation - its");
-            lore.add("§8§oepic taste shatters expectations,");
-            lore.add("§8§ooffering a taste of utopia.");
-            lore.add("");
-            lore.add("§6§lLEGENDARY ACCESSORY");
-            lore.add("");
-            addCostLore(lore, p, 4_500_000_000L);
-            lore.add("§5Ganache Chocolate Slab");
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§6Prestige Chocolate Realm", PRESTIGE_CHOCOLATE_REALM_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 4_500_000_000L, "§6Prestige Chocolate Realm", 3, c));
+            return ItemStacks.head(PRESTIGE_CHOCOLATE_REALM_TEXTURE, """
+                    <6>Prestige Chocolate Realm
+                    <7>Grants <a>+10% <7>chance to find a
+                    <a>Chocolate Rabbit <7>that you haven't
+                    <7>found yet and grants <6>+50 Chocolate
+                    <7>per second.
+
+                    <8><o>The Factory's pinnacle creation - its</o>
+                    <8><o>epic taste shatters expectations,</o>
+                    <8><o>offering a taste of utopia.
+</o>
+                    <6><l>LEGENDARY ACCESSORY
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+                    <5>Ganache Chocolate Slab
+
+                    <7>Annual Stock <8>Year 471
+                    <6>1 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(4_500_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 4_500_000_000L, "<6>Prestige Chocolate Realm", 3, c));
 
         // Slot 19: Dark Cacao Truffle
         layout.slot(19, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 3) {
-                return createLockedItem("§cChocolate Factory IV.");
+                return createLockedItem("<c>Chocolate Factory IV.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Consume to boost your §6\u2618 Global");
-            lore.add("§6Fortune §7for §a60m§7.");
-            lore.add("");
-            lore.add("§7Keep this item in your inventory to");
-            lore.add("§7increase the bonus up to §6+30§6\u2618");
-            lore.add("§6Global Fortune§7, at which point the");
-            lore.add("§7item §c§oevolves§7!");
-            lore.add("");
-            lore.add("§7Current Bonus: §6+0§6\u2618 Global Fortune");
-            lore.add("");
-            lore.add("§9§lRARE");
-            lore.add("");
-            addCostLore(lore, p, 2_500_000_000L);
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§62 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§9Dark Cacao Truffle", DARK_CACAO_TRUFFLE_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_500_000_000L, "§9Dark Cacao Truffle", 3, c));
+            return ItemStacks.head(DARK_CACAO_TRUFFLE_TEXTURE, """
+                    <9>Dark Cacao Truffle
+                    <7>Consume to boost your <6>☘ Global
+                    <6>Fortune <7>for <a>60m<7>.
+
+                    <7>Keep this item in your inventory to
+                    <7>increase the bonus up to <6>+30<6>☘
+                    <6>Global Fortune<7>, at which point the
+                    <7>item <c><o>evolves<7>!
+</o>
+                    <7>Current Bonus: <6>+0<6>☘ Global Fortune
+
+                    <9><l>RARE
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+
+                    <7>Annual Stock <8>Year 471
+                    <6>2 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(2_500_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_500_000_000L, "<9>Dark Cacao Truffle", 3, c));
 
         // Slot 20: Chocolate Dye
         layout.slot(20, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 5) {
-                return createLockedItem("§cChocolate Factory VI.");
+                return createLockedItem("<c>Chocolate Factory VI.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§8Combinable in Anvil");
-            lore.add("");
-            lore.add("§7Changes the color of an armor piece");
-            lore.add("§7to §6#7B3F00§7!");
-            lore.add("");
-            lore.add("§5§lEPIC DYE");
-            lore.add("");
-            addCostLore(lore, p, 40_000_000_000L);
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§6Chocolate Dye", CHOCOLATE_DYE_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 40_000_000_000L, "§6Chocolate Dye", 5, c));
+            return ItemStacks.head(CHOCOLATE_DYE_TEXTURE, """
+                    <6>Chocolate Dye
+                    <8>Combinable in Anvil
+
+                    <7>Changes the color of an armor piece
+                    <7>to <6>#7B3F00<7>!
+
+                    <5><l>EPIC DYE
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+
+                    <7>Annual Stock <8>Year 471
+                    <6>1 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(40_000_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 40_000_000_000L, "<6>Chocolate Dye", 5, c));
 
         // Slot 21: Chocolate Factory Barn Skin
         layout.slot(21, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 4) {
-                return createLockedItem("§cChocolate Factory V.");
+                return createLockedItem("<c>Chocolate Factory V.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Consume this item to unlock the");
-            lore.add("§6Chocolate Factory Barn Skin §7on §aThe");
-            lore.add("§aGarden§7!");
-            lore.add("");
-            lore.add("§eClick to consume!");
-            lore.add("");
-            lore.add("§6§lLEGENDARY COSMETIC");
-            lore.add("");
-            addCostLore(lore, p, 7_000_000_000L);
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§6Chocolate Factory Barn Skin", BARN_SKIN_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 7_000_000_000L, "§6Chocolate Factory Barn Skin", 4, c));
+            return ItemStacks.head(BARN_SKIN_TEXTURE, """
+                    <6>Chocolate Factory Barn Skin
+                    <7>Consume this item to unlock the
+                    <6>Chocolate Factory Barn Skin <7>on <a>The
+                    <a>Garden<7>!
+
+                    <e>Click to consume!
+
+                    <6><l>LEGENDARY COSMETIC
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+
+                    <7>Annual Stock <8>Year 471
+                    <6>1 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(7_000_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 7_000_000_000L, "<6>Chocolate Factory Barn Skin", 4, c));
 
         // Slot 22: Chocolate Syringe
         layout.slot(22, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 4) {
-                return createLockedItem("§cChocolate Factory V.");
+                return createLockedItem("<c>Chocolate Factory V.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Use at §bKat §7to upgrade §eRabbit Pets §7to");
-            lore.add("§dMythic §7rarity.");
-            lore.add("");
-            lore.add("§d§lMYTHIC");
-            lore.add("");
-            addCostLore(lore, p, 10_000_000_000L);
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§dChocolate Syringe", CHOCOLATE_SYRINGE_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 10_000_000_000L, "§dChocolate Syringe", 4, c));
+            return ItemStacks.head(CHOCOLATE_SYRINGE_TEXTURE, """
+                    <d>Chocolate Syringe
+                    <7>Use at <b>Kat <7>to upgrade <e>Rabbit Pets <7>to
+                    <d>Mythic <7>rarity.
+
+                    <d><l>MYTHIC
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+
+                    <7>Annual Stock <8>Year 471
+                    <6>1 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(10_000_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 10_000_000_000L, "<d>Chocolate Syringe", 4, c));
 
         // Slot 23: Choco Rabbit Minion Skin
         layout.slot(23, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 4) {
-                return createLockedItem("§cChocolate Factory V.");
+                return createLockedItem("<c>Chocolate Factory V.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7This Minion skin changes your");
-            lore.add("§7minion's appearance to a §eChoco");
-            lore.add("§eRabbit§7.");
-            lore.add("");
-            lore.add("§7You can place this item in any minion");
-            lore.add("§7of your choice!");
-            lore.add("");
-            lore.add("§5§lEPIC COSMETIC");
-            lore.add("");
-            addCostLore(lore, p, 2_500_000_000L);
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§62 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§5Choco Rabbit Minion Skin", CHOCO_RABBIT_MINION_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_500_000_000L, "§5Choco Rabbit Minion Skin", 4, c));
+            return ItemStacks.head(CHOCO_RABBIT_MINION_TEXTURE, """
+                    <5>Choco Rabbit Minion Skin
+                    <7>This Minion skin changes your
+                    <7>minion's appearance to a <e>Choco
+                    <e>Rabbit<7>.
+
+                    <7>You can place this item in any minion
+                    <7>of your choice!
+
+                    <5><l>EPIC COSMETIC
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+
+                    <7>Annual Stock <8>Year 471
+                    <6>2 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(2_500_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_500_000_000L, "<5>Choco Rabbit Minion Skin", 4, c));
 
         // Slot 24: Zorro's Cape
-        layout.slot(24, (s, c) -> {
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Strength: §c+10");
-            lore.add("§7Ferocity: §c+2");
-            lore.add("§7Farming Fortune: §6+10");
-            lore.add("§7Farming Wisdom: §3+1");
-            lore.add("");
-            lore.add("§7The stats of this Cape §adouble ");
-            lore.add("§7during §eJacob's Farming Contest§7.");
-            lore.add("§7Additionally, you have a §a20% §7chance");
-            lore.add("§7to obtain an extra medal from");
-            lore.add("§7contests.");
-            lore.add("");
-            lore.add("§8§oNot all Rabbits wear capes.");
-            lore.add("");
-            lore.add("§8This item can be reforged!");
-            lore.add("§4\u2763 §cRequires §dZorro §cin Hoppity's Collection§c.");
-            lore.add("§6§lLEGENDARY CLOAK");
-            lore.add("");
-            addCostLore(lore, (SkyBlockPlayer) c.player(), 20_000_000_000L);
-            lore.add("");
-            lore.add("§cNot unlocked!");
-            return ItemStackCreator.getStackHead("§6Zorro's Cape", ZORROS_CAPE_TEXTURE, 1, lore);
-        });
+        layout.slot(24, (s, c) -> ItemStacks.head(ZORROS_CAPE_TEXTURE, """
+                <6>Zorro's Cape
+                <7>Strength: <c>+10
+                <7>Ferocity: <c>+2
+                <7>Farming Fortune: <6>+10
+                <7>Farming Wisdom: <3>+1
+
+                <7>The stats of this Cape <a>double\s
+                <7>during <e>Jacob's Farming Contest<7>.
+                <7>Additionally, you have a <a>20% <7>chance
+                <7>to obtain an extra medal from
+                <7>contests.
+
+                <8><o>Not all Rabbits wear capes.
+</o>
+                <8>This item can be reforged!
+                <4>❣ <c>Requires <d>Zorro <c>in Hoppity's Collection<c>.
+                <6><l>LEGENDARY CLOAK
+</l>
+                <7>Cost
+                <6>{} Chocolate
+
+                <c>Not unlocked!""",
+                ChocolateFactoryHelper.formatChocolate(20_000_000_000L)));
 
         // Slot 25: Fish Chocolat à la Vapeur
         layout.slot(25, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 5) {
-                return createLockedItem("§cChocolate Factory VI.");
+                return createLockedItem("<c>Chocolate Factory VI.");
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Give this dish to §aHoppity §7to obtain his");
-            lore.add("§aAbiphone Contact§7.");
-            lore.add("");
-            lore.add("§8§oSavory fish with a chocolate twist.");
-            lore.add("§8§oMwah! C'est magnifique, no?");
-            lore.add("");
-            lore.add("§5§lEPIC");
-            lore.add("");
-            addCostLore(lore, p, 50_000_000_000L);
-            lore.add("§cRabbit the Fish");
-            lore.add("");
-            lore.add("§7Annual Stock §8Year 471");
-            lore.add("§61 §7remaining");
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§5Fish Chocolat \u00e0 la Vapeur", FISH_CHOCOLAT_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 50_000_000_000L, "§5Fish Chocolat \u00e0 la Vapeur", 5, c));
+            return ItemStacks.head(FISH_CHOCOLAT_TEXTURE, """
+                    <5>Fish Chocolat à la Vapeur
+                    <7>Give this dish to <a>Hoppity <7>to obtain his
+                    <a>Abiphone Contact<7>.
+
+                    <8><o>Savory fish with a chocolate twist.</o>
+                    <8><o>Mwah! C'est magnifique, no?
+</o>
+                    <5><l>EPIC
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+                    <c>Rabbit the Fish
+
+                    <7>Annual Stock <8>Year 471
+                    <6>1 <7>remaining
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(50_000_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 50_000_000_000L, "<5>Fish Chocolat à la Vapeur", 5, c));
 
         // Slot 28: Hot Chocolate Mixin
         layout.slot(28, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
             if (prestige < 5) {
-                List<String> lore = new ArrayList<>();
-                lore.add("§8Brewing Ingredient");
-                lore.add("");
-                lore.add("§7Mixins provide a buff that can be");
-                lore.add("§7added to §cGod Potions §7in a brewing");
-                lore.add("§7stand and lasts for the full duration.");
-                lore.add("");
-                lore.add("§7Gain §d+15\u2663 Pet Luck §7and §6+0.05x");
-                lore.add("§6Chocolate §7per second.");
-                lore.add("");
-                lore.add("§7Duration: §a36h 0m");
-                lore.add("");
-                lore.add("§7The duration of Mixins can be stacked!");
-                lore.add("");
-                lore.add("§eRight-click to consume!§8");
-                lore.add("§8(Requires active Booster Cookie)");
-                lore.add("");
-                lore.add("§4\u2763 §cRequires §cChocolate Factory VI§c.");
-                lore.add("§9§lRARE");
-                lore.add("");
-                addCostLore(lore, p, 1_500_000_000L);
-                lore.add("");
-                lore.add("§cNot unlocked!");
-                return ItemStackCreator.getStackHead("§9Hot Chocolate Mixin", HOT_CHOCOLATE_MIXIN_TEXTURE, 1, lore);
+                return ItemStacks.head(HOT_CHOCOLATE_MIXIN_TEXTURE, """
+                        <9>Hot Chocolate Mixin
+                        <8>Brewing Ingredient
+
+                        <7>Mixins provide a buff that can be
+                        <7>added to <c>God Potions <7>in a brewing
+                        <7>stand and lasts for the full duration.
+
+                        <7>Gain <d>+15♣ Pet Luck <7>and <6>+0.05x
+                        <6>Chocolate <7>per second.
+
+                        <7>Duration: <a>36h 0m
+
+                        <7>The duration of Mixins can be stacked!
+
+                        <e>Right-click to consume!
+                        <8>(Requires active Booster Cookie)
+
+                        <4>❣ <c>Requires <c>Chocolate Factory VI<c>.
+                        <9><l>RARE
+</l>
+                        <7>Cost
+                        <6>{} Chocolate
+
+                        <c>Not unlocked!""",
+                        ChocolateFactoryHelper.formatChocolate(1_500_000_000L));
             }
-            List<String> lore = new ArrayList<>();
-            lore.add("§8Brewing Ingredient");
-            lore.add("");
-            lore.add("§7Mixins provide a buff that can be");
-            lore.add("§7added to §cGod Potions §7in a brewing");
-            lore.add("§7stand and lasts for the full duration.");
-            lore.add("");
-            lore.add("§7Gain §d+15\u2663 Pet Luck §7and §6+0.05x");
-            lore.add("§6Chocolate §7per second.");
-            lore.add("");
-            lore.add("§7Duration: §a36h 0m");
-            lore.add("");
-            lore.add("§7The duration of Mixins can be stacked!");
-            lore.add("");
-            lore.add("§eRight-click to consume!§8");
-            lore.add("§8(Requires active Booster Cookie)");
-            lore.add("");
-            lore.add("§9§lRARE");
-            lore.add("");
-            addCostLore(lore, p, 1_500_000_000L);
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStackHead("§9Hot Chocolate Mixin", HOT_CHOCOLATE_MIXIN_TEXTURE, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 1_500_000_000L, "§9Hot Chocolate Mixin", 5, c));
+            return ItemStacks.head(HOT_CHOCOLATE_MIXIN_TEXTURE, """
+                    <9>Hot Chocolate Mixin
+                    <8>Brewing Ingredient
+
+                    <7>Mixins provide a buff that can be
+                    <7>added to <c>God Potions <7>in a brewing
+                    <7>stand and lasts for the full duration.
+
+                    <7>Gain <d>+15♣ Pet Luck <7>and <6>+0.05x
+                    <6>Chocolate <7>per second.
+
+                    <7>Duration: <a>36h 0m
+
+                    <7>The duration of Mixins can be stacked!
+
+                    <e>Right-click to consume!
+                    <8>(Requires active Booster Cookie)
+
+                    <9><l>RARE
+</l>
+                    <7>Cost
+                    <6>{} Chocolate
+
+                    <e>Click to trade!""",
+                    ChocolateFactoryHelper.formatChocolate(1_500_000_000L));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 1_500_000_000L, "<9>Hot Chocolate Mixin", 5, c));
 
         // Slot 29: Chocolate Fortune
         layout.slot(29, (s, c) -> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             int prestige = ChocolateFactoryHelper.getData(p).getPrestigeLevel();
-            if (prestige < 5) {
-                List<String> lore = new ArrayList<>();
-                lore.add("§7Permanently gain §6+1\u2618 Cocoa Beans");
-                lore.add("§6Fortune §7per tier.");
-                lore.add("");
-                addCostLore(lore, p, 2_000_000_000L);
-                lore.add("");
-                lore.add("§cChocolate Factory VI.");
-                return ItemStackCreator.getStack("§eChocolate Fortune", Material.COCOA_BEANS, 1, lore);
-            }
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Permanently gain §6+1\u2618 Cocoa Beans");
-            lore.add("§6Fortune §7per tier.");
-            lore.add("");
-            addCostLore(lore, p, 2_000_000_000L);
-            lore.add("");
-            lore.add("§eClick to trade!");
-            return ItemStackCreator.getStack("§eChocolate Fortune", Material.COCOA_BEANS, 1, lore);
-        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_000_000_000L, "§eChocolate Fortune", 5, c));
+            String footer = prestige < 5 ? "<c>Chocolate Factory VI." : "<e>Click to trade!";
+            return ItemStacks.item(Material.COCOA_BEANS, 1, Text.of("<e>Chocolate Fortune"), List.of(
+                    Text.of("<7>Permanently gain <6>+1☘ Cocoa Beans"),
+                    Text.of("<6>Fortune <7>per tier."),
+                    Text.empty(),
+                    Text.of("<7>Cost"),
+                    Text.of("<6>{} Chocolate", ChocolateFactoryHelper.formatChocolate(2_000_000_000L)),
+                    Text.empty(),
+                    Text.of(footer)));
+        }, (click, c) -> handlePurchase((SkyBlockPlayer) c.player(), 2_000_000_000L, "<e>Chocolate Fortune", 5, c));
 
         // Slot 48: Go Back
         Components.back(layout, 48, ctx);
@@ -508,36 +527,31 @@ public class GUIChocolateShop implements StatefulView<GUIChocolateShop.State> {
             SkyBlockPlayer p = (SkyBlockPlayer) c.player();
             DatapointChocolateFactory.ChocolateFactoryData data = ChocolateFactoryHelper.getData(p);
 
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Unlock special §aChocolate Rabbits §7by");
-            lore.add("§7spending §6Chocolate §7in the §6Chocolate");
-            lore.add("§6Shop§7.");
-            lore.add("");
-            lore.add("§7Chocolate Spent: §6" + ChocolateFactoryHelper.formatChocolate(data.getTotalChocolateSpent()));
-            lore.add("");
-            lore.add("§eClick to view!");
-            return ItemStackCreator.getStack("§6Chocolate Shop Milestones", Material.LADDER, 1, lore);
+            return ItemStacks.item(Material.LADDER, """
+                    <6>Chocolate Shop Milestones
+                    <7>Unlock special <a>Chocolate Rabbits <7>by
+                    <7>spending <6>Chocolate <7>in the <6>Chocolate
+                    <6>Shop<7>.
+
+                    <7>Chocolate Spent: <6>{}
+
+                    <e>Click to view!""",
+                    ChocolateFactoryHelper.formatChocolate(data.getTotalChocolateSpent()));
         }, (click, c) -> ((SkyBlockPlayer) c.player()).openView(new GUIChocolateShopMilestones()));
     }
 
-    private void addCostLore(List<String> lore, SkyBlockPlayer player, long cost) {
-        lore.add("§7Cost");
-        lore.add("§6" + ChocolateFactoryHelper.formatChocolate(cost) + " Chocolate");
-    }
-
     private ItemStack.Builder createLockedItem(String requirement) {
-        List<String> lore = new ArrayList<>();
-        lore.add("§7???");
-        lore.add("");
-        lore.add(requirement);
-        return ItemStackCreator.getStack("§c???", Material.GRAY_DYE, 1, lore);
+        return ItemStacks.item(Material.GRAY_DYE, 1, Text.of("<c>???"), List.of(
+                Text.of("<7>???"),
+                Text.empty(),
+                Text.of(requirement)));
     }
 
     private void handlePurchase(SkyBlockPlayer player, long cost, String itemName, int requiredPrestige, ViewContext c) {
         DatapointChocolateFactory.ChocolateFactoryData data = ChocolateFactoryHelper.getData(player);
 
         if (data.getPrestigeLevel() < requiredPrestige) {
-            player.sendMessage("§cYou don't meet the requirements for this item!");
+            player.sendMessage("<c>You don't meet the requirements for this item!");
             return;
         }
 
@@ -545,10 +559,11 @@ public class GUIChocolateShop implements StatefulView<GUIChocolateShop.State> {
             data.removeChocolate(cost);
             data.addChocolateSpent(cost);
             ChocolateFactoryHelper.saveData(player, data);
-            player.sendMessage("§aPurchased " + itemName + " §afor §6" + ChocolateFactoryHelper.formatChocolate(cost) + " Chocolate§a!");
+            player.sendMessage("<a>Purchased {} <a>for <6>{} Chocolate<a>!", Text.of(itemName),
+                    ChocolateFactoryHelper.formatChocolate(cost));
             c.session(State.class).refresh();
         } else {
-            player.sendMessage("§cYou don't have enough Chocolate!");
+            player.sendMessage("<c>You don't have enough Chocolate!");
         }
     }
 

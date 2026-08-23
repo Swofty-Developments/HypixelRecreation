@@ -20,7 +20,7 @@ public class EnchantmentVenomous implements Ench, EnchFromTable, DamageEventEnch
     public String getDescription(int level) {
         double speedReduction = VenomousDebuff.SPEED_REDUCTION_PERCENTAGES[level - 1] * 100;
         double damagePercent = level * 0.3;
-        return "Reduces the target's walk speed by §a" + speedReduction + "%§7 and deals §a+" + damagePercent + "%§7 of your damage per second per hit, stacking globally up to 40 hits. Lasts 5s.";
+        return "Reduces the target's walk speed by <a>" + speedReduction + "%<7> and deals <a>+" + damagePercent + "%<7> of your damage per second per hit, stacking globally up to 40 hits. Lasts 5s.";
     }
 
     @Override

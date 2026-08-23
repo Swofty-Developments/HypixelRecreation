@@ -27,16 +27,16 @@ public class MinionMineAction extends MinionAction {
                 minion.getPosition().sub(0, 1, 0), 2 + minion.getBonusRange()
         );
 
-        boolean hasAir = minePositions.stream().anyMatch(pos -> island.getBlock(pos).isAir());
+        boolean hasAir = minePositions.stream().anyMatch(pos -> island.getBlock(pos).air());
 
         List<Pos> possiblePositions = MathUtility.getRangeExcludingSelf(
                 minion.getPosition().sub(0, 1, 0), 2 + minion.getBonusRange()
-        ).stream().filter(pos -> !hasAir || island.getBlock(pos).isAir()).toList();
+        ).stream().filter(pos -> !hasAir || island.getBlock(pos).air()).toList();
 
         event.setToLook(MathUtility.getRandomElement(possiblePositions));
 
         event.setAction(() -> {
-            if (island.getBlock(event.getToLook()) == toMine || island.getBlock(event.getToLook()).isAir()) {
+            if (island.getBlock(event.getToLook()) == toMine || island.getBlock(event.getToLook()).air()) {
                 if (hasAir) {
                     minion.getMinionEntity().placeAnimation();
                     island.setBlock(event.getToLook(), toMine);

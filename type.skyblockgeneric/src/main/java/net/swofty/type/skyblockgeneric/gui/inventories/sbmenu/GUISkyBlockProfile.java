@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
@@ -8,15 +7,14 @@ import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.UnderstandableSkyBlockItem;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
-import net.swofty.type.generic.gui.inventory.TranslatableItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.DefaultState;
 import net.swofty.type.generic.gui.v2.StatelessView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
-import net.swofty.type.generic.i18n.I18n;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointInventory;
 import net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.stats.GUIGatheringCategoryStats;
@@ -62,9 +60,9 @@ public class GUISkyBlockProfile extends StatelessView {
         layout.slot(11, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             if (!player.getHelmet().isAir()) {
-                return ItemStackCreator.getFromStack(player.getHelmet());
+                return ItemStacks.copy(player.getHelmet());
             } else {
-                return TranslatableItemStackCreator.getStack("gui_sbmenu.profile.empty_helmet", Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
+                return ItemStacks.item(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, Text.key("gui_sbmenu.profile.empty_helmet"), List.of());
             }
         }, (click, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
@@ -86,9 +84,9 @@ public class GUISkyBlockProfile extends StatelessView {
         layout.slot(20, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             if (!player.getChestplate().isAir()) {
-                return ItemStackCreator.getFromStack(player.getChestplate());
+                return ItemStacks.copy(player.getChestplate());
             } else {
-                return TranslatableItemStackCreator.getStack("gui_sbmenu.profile.empty_chestplate", Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
+                return ItemStacks.item(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, Text.key("gui_sbmenu.profile.empty_chestplate"), List.of());
             }
         }, (click, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
@@ -110,9 +108,9 @@ public class GUISkyBlockProfile extends StatelessView {
         layout.slot(29, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             if (!player.getLeggings().isAir()) {
-                return ItemStackCreator.getFromStack(player.getLeggings());
+                return ItemStacks.copy(player.getLeggings());
             } else {
-                return TranslatableItemStackCreator.getStack("gui_sbmenu.profile.empty_leggings", Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
+                return ItemStacks.item(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, Text.key("gui_sbmenu.profile.empty_leggings"), List.of());
             }
         }, (click, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
@@ -134,9 +132,9 @@ public class GUISkyBlockProfile extends StatelessView {
         layout.slot(38, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             if (!player.getBoots().isAir()) {
-                return ItemStackCreator.getFromStack(player.getBoots());
+                return ItemStacks.copy(player.getBoots());
             } else {
-                return TranslatableItemStackCreator.getStack("gui_sbmenu.profile.empty_boots", Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
+                return ItemStacks.item(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, Text.key("gui_sbmenu.profile.empty_boots"), List.of());
             }
         }, (click, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
@@ -161,7 +159,7 @@ public class GUISkyBlockProfile extends StatelessView {
                 SkyBlockItem pet = player.getPetData().getEnabledPet();
                 return new NonPlayerItemUpdater(pet).getUpdatedItem();
             } else {
-                return TranslatableItemStackCreator.getStack("gui_sbmenu.profile.empty_pet", Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
+                return ItemStacks.item(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1, Text.key("gui_sbmenu.profile.empty_pet"), List.of());
             }
         }, (click, c) -> {
             //c.player().openView(new GUIPets())
@@ -171,10 +169,10 @@ public class GUISkyBlockProfile extends StatelessView {
         layout.slot(14, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             PlayerStatistics statistics = player.getStatistics();
-            List<Component> lore = new ArrayList<>();
-            lore.add(I18n.t("gui_sbmenu.profile.combat_stats.lore.1"));
-            lore.add(I18n.t("gui_sbmenu.profile.combat_stats.lore.2"));
-            lore.add(Component.space());
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.key("gui_sbmenu.profile.combat_stats.lore.1"));
+            lore.add(Text.key("gui_sbmenu.profile.combat_stats.lore.2"));
+            lore.add(Text.literal(" "));
 
             List<ItemStatistic> stats = List.of(ItemStatistic.HEALTH, ItemStatistic.DEFENSE, ItemStatistic.STRENGTH, ItemStatistic.INTELLIGENCE,
                 ItemStatistic.CRITICAL_CHANCE, ItemStatistic.CRITICAL_DAMAGE, ItemStatistic.BONUS_ATTACK_SPEED, ItemStatistic.ABILITY_DAMAGE, ItemStatistic.TRUE_DEFENSE,
@@ -182,15 +180,15 @@ public class GUISkyBlockProfile extends StatelessView {
 
             for (ItemStatistic statistic : stats) {
                 double value = statistics.allStatistics().getOverall(statistic);
-                lore.add(Component.text(" " + statistic.getFullDisplayName() + " §f"
-                    + StringUtility.decimalify(value, 2) + statistic.getSuffix()));
+                lore.add(Text.of(" <stat:{}> <f>{}{}", statistic.name(),
+                    StringUtility.decimalify(value, 2), statistic.getSuffix()));
             }
 
-            lore.add(Component.space());
-            lore.add(I18n.t("gui_common.details"));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_common.details"));
 
-            return TranslatableItemStackCreator.getStack("gui_sbmenu.profile.combat_stats", Material.STONE_SWORD, 1,
-                lore);
+            return ItemStacks.item(Material.STONE_SWORD, 1,
+                Text.key("gui_sbmenu.profile.combat_stats"), lore);
         }, (click, c) -> {
             c.player().openView(new GUIGatheringCategoryStats(GUIGatheringCategoryStats.Category.COMBAT));
         });
@@ -205,10 +203,10 @@ public class GUISkyBlockProfile extends StatelessView {
         layout.slot(34, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             PlayerStatistics statistics = player.getStatistics();
-            List<Component> lore = new ArrayList<>();
-            lore.add(I18n.t("gui_sbmenu.profile.wisdom_stats.lore.1"));
-            lore.add(I18n.t("gui_sbmenu.profile.wisdom_stats.lore.2"));
-            lore.add(Component.space());
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.key("gui_sbmenu.profile.wisdom_stats.lore.1"));
+            lore.add(Text.key("gui_sbmenu.profile.wisdom_stats.lore.2"));
+            lore.add(Text.literal(" "));
 
             List<ItemStatistic> stats = List.of(ItemStatistic.COMBAT_WISDOM, ItemStatistic.FARMING_WISDOM, ItemStatistic.FISHING_WISDOM,
                 ItemStatistic.MINING_WISDOM, ItemStatistic.FORAGING_WISDOM, ItemStatistic.ENCHANTING_WISDOM,
@@ -217,15 +215,15 @@ public class GUISkyBlockProfile extends StatelessView {
 
             for (ItemStatistic statistic : stats) {
                 double value = statistics.allStatistics().getOverall(statistic);
-                lore.add(Component.text(" " + statistic.getFullDisplayName() + " §f"
-                    + StringUtility.decimalify(value, 2) + statistic.getSuffix()));
+                lore.add(Text.of(" <stat:{}> <f>{}{}", statistic.name(),
+                    StringUtility.decimalify(value, 2), statistic.getSuffix()));
             }
 
-            lore.add(Component.space());
-            lore.add(I18n.t("gui_common.details"));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_common.details"));
 
-            return TranslatableItemStackCreator.getStack("gui_sbmenu.profile.wisdom_stats", Material.BOOK, 1,
-                lore);
+            return ItemStacks.item(Material.BOOK, 1,
+                Text.key("gui_sbmenu.profile.wisdom_stats"), lore);
         }, (_, c) -> {
             c.player().openView(new GUIGatheringCategoryStats(GUIGatheringCategoryStats.Category.WISDOM));
         });
@@ -234,10 +232,10 @@ public class GUISkyBlockProfile extends StatelessView {
         layout.slot(25, (s, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             PlayerStatistics statistics = player.getStatistics();
-            List<Component> lore = new ArrayList<>();
-            lore.add(I18n.t("gui_sbmenu.profile.misc_stats.lore.1"));
-            lore.add(I18n.t("gui_sbmenu.profile.misc_stats.lore.2"));
-            lore.add(Component.space());
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.key("gui_sbmenu.profile.misc_stats.lore.1"));
+            lore.add(Text.key("gui_sbmenu.profile.misc_stats.lore.2"));
+            lore.add(Text.literal(" "));
 
             List<ItemStatistic> stats = List.of(ItemStatistic.SPEED, ItemStatistic.MAGIC_FIND, ItemStatistic.PET_LUCK,
                 ItemStatistic.HEAT_RESISTANCE, ItemStatistic.COLD_RESISTANCE, ItemStatistic.RESPIRATION,
@@ -245,14 +243,14 @@ public class GUISkyBlockProfile extends StatelessView {
 
             for (ItemStatistic statistic : stats) {
                 double value = statistics.allStatistics().getOverall(statistic);
-                lore.add(Component.text(" " + statistic.getFullDisplayName() + " §f"
-                    + StringUtility.decimalify(value, 2) + statistic.getSuffix()));
+                lore.add(Text.of(" <stat:{}> <f>{}{}", statistic.name(),
+                    StringUtility.decimalify(value, 2), statistic.getSuffix()));
             }
 
-            lore.add(Component.space());
-            lore.add(I18n.t("gui_common.details"));
+            lore.add(Text.literal(" "));
+            lore.add(Text.key("gui_common.details"));
 
-            return TranslatableItemStackCreator.getStack("gui_sbmenu.profile.misc_stats", Material.CLOCK, 1, lore);
+            return ItemStacks.item(Material.CLOCK, 1, Text.key("gui_sbmenu.profile.misc_stats"), lore);
         }, (_, c) -> {
             c.player().openView(new GUIGatheringCategoryStats(GUIGatheringCategoryStats.Category.MISC));
         });
@@ -271,20 +269,19 @@ public class GUISkyBlockProfile extends StatelessView {
             SkyBlockItem item = new SkyBlockItem(getter.apply(inventory));
             if (!item.isAir()) return new NonPlayerItemUpdater(item).getUpdatedItem();
 
-            List<String> lore = new ArrayList<>();
-            lore.add("§8 > " + displayName.getFirst());
+            List<Text> lore = new ArrayList<>();
+            lore.add(Text.of("<8> > {}", displayName.getFirst()));
             if (displayName.size() > 1) {
                 for (int i = 1; i < displayName.size(); i++) {
-                    lore.add("§8 > " + displayName.get(i));
+                    lore.add(Text.of("<8> > {}", displayName.get(i)));
                 }
             }
 
-            return ItemStackCreator.getStack(
-                "§7Empty Equipment Slot",
+            return ItemStacks.item(
                 Material.LIGHT_GRAY_STAINED_GLASS_PANE,
                 1,
+                Text.of("<7>Empty Equipment Slot"),
                 lore
-
             );
         }, (_, c) -> {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();

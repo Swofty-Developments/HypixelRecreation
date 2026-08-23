@@ -14,7 +14,7 @@ public class NPCSwofty extends HypixelNPC {
         super(new HumanConfiguration() {
             @Override
             public String[] holograms(HypixelPlayer player) {
-                return new String[]{"§cSwofty", "§e§lCLICK"};
+                return new String[]{"<c>Swofty", "<e><l>CLICK"};
             }
 
             @Override
@@ -49,10 +49,10 @@ public class NPCSwofty extends HypixelNPC {
     public DialogueSet[] dialogues(HypixelPlayer player) {
         return Stream.of(
                 DialogueSet.builder()
-                        .key("hello").lines(new String[]{
+                        .key("hello").lines(
                                 "Make sure to check out our discord server at https://discord.swofty.net/!",
                                 "Feel free to create a pull request to help us :)"
-                        }).build()
+                        ).build()
         ).toArray(DialogueSet[]::new);
     }
 }

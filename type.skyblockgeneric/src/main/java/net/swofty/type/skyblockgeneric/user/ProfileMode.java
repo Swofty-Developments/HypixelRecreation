@@ -1,8 +1,10 @@
 package net.swofty.type.skyblockgeneric.user;
 
+import net.swofty.commons.text.Text;
+
 public enum ProfileMode {
-    CLASSIC("§aClassic"),
-    IRONMAN("§7♲ §7Ironman");
+    CLASSIC("<a>Classic"),
+    IRONMAN("<7>♲ <7>Ironman");
 
     private final String displayName;
 
@@ -10,8 +12,8 @@ public enum ProfileMode {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public Text getDisplayName() {
+        return Text.of(displayName);
     }
 
     public static ProfileMode fromStored(String value) {

@@ -9,8 +9,9 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -21,6 +22,7 @@ import net.swofty.type.skyblockgeneric.item.updater.PlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GUIKat extends HypixelInventoryGUI {
 
@@ -32,7 +34,7 @@ public class GUIKat extends HypixelInventoryGUI {
 
     @Override
     public void onOpen(InventoryGUIOpenEvent e) {
-        fill(ItemStackCreator.createNamedItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE));
         set(GUIClickableItem.getCloseItem(40));
 
         updateFromItem(null);
@@ -70,20 +72,19 @@ public class GUIKat extends HypixelInventoryGUI {
                 @Override
                 public void run(InventoryPreClickEvent e, HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    player.sendMessage("§cPlace a pet in the empty slot for Kat to take care of!");
+                    player.sendMessage("<c>Place a pet in the empty slot for Kat to take care of!");
                 }
 
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    return ItemStackCreator.getStack(
-                            "§ePet Sitter", Material.RED_TERRACOTTA, 1,
-                            "§7Place a pet above for Kat to take",
-                            "§7care of!",
-                            "",
-                            "§7After some time, your pet §9Rarity §7will",
-                            "§7be upgraded!"
-                    );
+                    return ItemStacks.item(Material.RED_TERRACOTTA, """
+                            <e>Pet Sitter
+                            <7>Place a pet above for Kat to take
+                            <7>care of!
+
+                            <7>After some time, your pet <9>Rarity <7>will
+                            <7>be upgraded!""");
                 }
             });
             updateItemStacks(getInventory(), getPlayer());
@@ -114,10 +115,7 @@ public class GUIKat extends HypixelInventoryGUI {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
-                    return ItemStackCreator.getStack(
-                            "§cError!", Material.BARRIER, 1,
-                            "§cKat only takes care of pets!"
-                    );
+                    return ItemStacks.item(Material.BARRIER, "<c>Error!\n<c>Kat only takes care of pets!");
                 }
             });
             updateItemStacks(getInventory(), getPlayer());
@@ -145,40 +143,40 @@ public class GUIKat extends HypixelInventoryGUI {
             public ItemStack.Builder getItem(HypixelPlayer p) {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 if (item.getComponent(PetComponent.class).getKatUpgrades().getForRarity(item.getAttributeHandler().getRarity().upgrade()) == null) {
-                    return ItemStackCreator.getStack("§aSomething went wrong!", Material.RED_TERRACOTTA, 1);
+                    return ItemStacks.item(Material.RED_TERRACOTTA, "<a>Something went wrong!");
                 }
                 KatUpgrade katUpgrade = item.getComponent(PetComponent.class).getKatUpgrades().getForRarity(item.getAttributeHandler().getRarity().upgrade());
                 int coins = katUpgrade.getCoins();
                 long time = katUpgrade.getTime();
                 ItemType upgradeItem = katUpgrade.getItem();
                 Integer itemAmount = katUpgrade.getAmount();
-                ArrayList<String> lore = new ArrayList<>();
+                List<Text> lore = new ArrayList<>();
                 Material material = Material.RED_TERRACOTTA;
                 if (player.getCoins() >= coins && player.getAmountInInventory(upgradeItem) >= itemAmount) {
                     material = Material.GREEN_TERRACOTTA;
                 }
-                lore.add("§7Kat will take care of your §5" + item.getDisplayName());
-                lore.add("§7for §9" + StringUtility.formatTimeLeftWrittenOut(time) + "§7 then its §9rarity§7 will be");
-                lore.add("§7upgraded!");
-                lore.add("");
-                lore.add("§7Cost");
+                lore.add(Text.of("<7>Kat will take care of your <5>{}", item.getDisplayName()));
+                lore.add(Text.of("<7>for <9>{} <7>then its <9>rarity<7> will be", StringUtility.formatTimeLeftWrittenOut(time)));
+                lore.add(Text.of("<7>upgraded!"));
+                lore.add(Text.empty());
+                lore.add(Text.of("<7>Cost"));
                 if (upgradeItem != null) {
-                    lore.add("§9" + StringUtility.toNormalCase(upgradeItem.name()) + " §8x" + itemAmount);
+                    lore.add(Text.of("<9>{} <8>x{}", StringUtility.toNormalCase(upgradeItem.name()), itemAmount));
                 }
                 if (coins != 0) {
-                    lore.add("§6" + StringUtility.commaify(coins) + " Coins");
+                    lore.add(Text.of("<6>{:,} Coins", coins));
                 }
                 if (player.getCoins() >= coins && player.getAmountInInventory(upgradeItem) >= itemAmount) {
-                    lore.add("");
-                    lore.add("§eClick to hire Kat!");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<e>Click to hire Kat!"));
                 } else if (player.getCoins() < coins) {
-                    lore.add("");
-                    lore.add("§cYou don't have enough Coins!");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<c>You don't have enough Coins!"));
                 } else {
-                    lore.add("");
-                    lore.add("§cYou don't have the required items!");
+                    lore.add(Text.empty());
+                    lore.add(Text.of("<c>You don't have the required items!"));
                 }
-                return ItemStackCreator.getStack("§aHire Kat", material, 1, lore);
+                return ItemStacks.item(material, 1, Text.of("<a>Hire Kat"), lore);
             }
         });
         updateItemStacks(getInventory(), getPlayer());

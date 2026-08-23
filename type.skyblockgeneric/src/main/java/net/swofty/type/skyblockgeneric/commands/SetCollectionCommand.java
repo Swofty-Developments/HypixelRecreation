@@ -28,9 +28,8 @@ public class SetCollectionCommand extends HypixelCommand {
             int amount = context.get(amountArgument);
 
             player.getCollection().set(type, amount);
-            player.sendMessage("§aUpdated your §e" + CollectionCategories.getCategory(type).getName()
-                    + " §acategory for the §c" + type.getDisplayName()
-                    + " §acollection to §e" + amount + "§a.");
+            player.sendMessage("<a>Updated your <e>{} <a>category for the <c>{} <a>collection to <e>{}<a>.",
+                    CollectionCategories.getCategory(type).getName(), type.getDisplayName(), amount);
         }, itemType, amountArgument);
     }
 }

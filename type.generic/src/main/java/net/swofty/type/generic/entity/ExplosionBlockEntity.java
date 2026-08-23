@@ -76,7 +76,7 @@ public class ExplosionBlockEntity extends Entity {
         int blockZ = pos.blockZ();
 
         Block existing = instance.getBlock(blockX, blockY, blockZ);
-        if (!existing.isSolid()) {
+        if (!existing.solid()) {
             instance.setBlock(blockX, blockY, blockZ, blockType);
         }
 

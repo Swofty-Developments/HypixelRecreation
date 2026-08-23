@@ -1,7 +1,6 @@
 package net.swofty.type.skywarsgame.luckyblock;
 
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -17,7 +16,8 @@ import net.minestom.server.entity.metadata.display.ItemDisplayMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
-import net.swofty.type.generic.gui.inventory.ItemStackCreator;
+import net.swofty.commons.text.Text;
+import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.luckyblock.oprule.OPRuleManager;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -65,7 +65,7 @@ public class LuckyBlock {
 
         instance.setBlock(blockPos, type.getGlassBlock());
 
-        ItemStack headItem = ItemStackCreator.getStackHead(type.getSkullTexture()).build();
+        ItemStack headItem = ItemStacks.head(type.getSkullTexture(), Text.empty(), List.of()).build();
         LivingEntity displayEntity = new LivingEntity(EntityType.ITEM_DISPLAY);
         displayEntity.editEntityMeta(ItemDisplayMeta.class, meta -> {
             meta.setItemStack(headItem);
@@ -112,10 +112,8 @@ public class LuckyBlock {
             displayEntity.remove();
         }
 
-        player.sendMessage(Component.text("You broke a ", NamedTextColor.GRAY)
-                .append(Component.text(type.getDisplayName(), NamedTextColor.nearestTo(
-                        net.kyori.adventure.text.format.TextColor.color(type.getColor()))))
-                .append(Component.text(" Lucky Block!", NamedTextColor.GRAY)));
+        player.sendMessage("<7>You broke a <color:{}>{}<7> Lucky Block!",
+                NamedTextColor.nearestTo(type.getColor()), type.getDisplayName());
 
         LuckyBlockLootTable.LuckyBlockReward reward = LuckyBlockLootTable.generateReward(type);
         applyReward(player, normalizedPos, reward);
@@ -169,13 +167,13 @@ public class LuckyBlock {
 
     private void activateOPRule(SkywarsPlayer player) {
         if (game == null) {
-            player.sendMessage(Component.text("OP Rule could not be activated!", NamedTextColor.RED));
+            player.sendMessage("<c>OP Rule could not be activated!");
             return;
         }
 
         OPRuleManager opRuleManager = game.getOpRuleManager();
         if (opRuleManager == null) {
-            player.sendMessage(Component.text("OP Rule could not be activated!", NamedTextColor.RED));
+            player.sendMessage("<c>OP Rule could not be activated!");
             return;
         }
 
@@ -245,7 +243,7 @@ public class LuckyBlock {
                         Pos destroyPos = blockPos.add(dx, dy, dz);
                         Block block = instance.getBlock(destroyPos);
                         boolean isChest = game != null && game.getChestManager().isChestPosition(destroyPos);
-                        if (!block.isAir() && block.isSolid() && !block.compare(Block.BEDROCK) && !isChest) {
+                        if (!block.air() && block.solid() && !block.compare(Block.BEDROCK) && !isChest) {
                             instance.setBlock(destroyPos, Block.AIR);
                         }
                     }
@@ -253,7 +251,7 @@ public class LuckyBlock {
             }
         }
 
-        player.sendMessage(Component.text("The Lucky Block exploded!", NamedTextColor.RED));
+        player.sendMessage("<c>The Lucky Block exploded!");
     }
 
     public int getRemainingCount() {

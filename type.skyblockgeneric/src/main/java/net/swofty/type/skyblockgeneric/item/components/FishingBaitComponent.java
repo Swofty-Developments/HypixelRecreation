@@ -1,5 +1,6 @@
 package net.swofty.type.skyblockgeneric.item.components;
 
+import net.swofty.commons.text.Text;
 import lombok.Getter;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.skyblockgeneric.fishing.FishingMedium;
@@ -44,7 +45,7 @@ public class FishingBaitComponent extends SkyBlockItemComponent {
         this.mediums = List.copyOf(mediums);
         this.texture = texture;
 
-        addInheritedComponent(new CustomDisplayNameComponent(ignored -> this.displayName));
+        addInheritedComponent(new CustomDisplayNameComponent(ignored -> Text.parseLenient(this.displayName)));
         if (texture != null && !texture.isBlank()) {
             addInheritedComponent(new SkullHeadComponent(ignored -> texture));
         }
