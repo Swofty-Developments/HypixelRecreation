@@ -1,6 +1,5 @@
 package net.swofty.type.bedwarsgame.commands;
 
-import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.text.Text;
@@ -49,7 +48,7 @@ public class ShoutCommand extends HypixelCommand {
 			}
 
 			if (game.getReplayManager().isRecording()) {
-                game.getReplayManager().recordPlayerChat(player, Component.text(message), true);
+                game.getReplayManager().recordPlayerChat(player, Text.literal(message), true);
 			}
 		}, messageArg);
 
