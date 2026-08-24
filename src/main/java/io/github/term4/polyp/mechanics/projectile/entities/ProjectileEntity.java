@@ -10,7 +10,6 @@ import io.github.term4.polyp.util.tick.TickScaler;
 import io.github.term4.polyp.tracking.motion.FluidFlow;
 import net.minestom.server.ServerFlag;
 import net.minestom.server.collision.Aerodynamics;
-import net.minestom.server.collision.CollisionUtils;
 import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.collision.EntityCollisionResult;
 import net.minestom.server.collision.PhysicsResult;
@@ -29,6 +28,7 @@ import net.minestom.server.event.EventDispatcher;
 import net.minestom.server.event.entity.projectile.ProjectileCollideWithBlockEvent;
 import net.minestom.server.event.entity.projectile.ProjectileCollideWithEntityEvent;
 import net.minestom.server.event.entity.projectile.ProjectileUncollideEvent;
+import net.minestom.server.instance.WorldBorder;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockFace;
 import net.minestom.server.item.ItemStack;
@@ -408,7 +408,7 @@ public abstract class ProjectileEntity extends Entity implements ExternallyTicka
         // box is a point, which would invert the 1.8 Y-inset and never detect
         if (waterDrag < 1.0 || waterPush > 0) {
             if (waterModel == ProjectileTypeConfig.WaterModel.MODERN) {
-                var sample = FluidFlow.itemModernSample(world, position, getEntityType().registry().boundingBox(), Block.WATER);
+                var sample = FluidFlow.itemModernSample(world, position, getEntityType().boundingBox(), Block.WATER);
                 inWater = sample.height() > 0;
                 if (inWater && waterPush > 0) {
                     Vec cur = sample.current(nativeStep ? waterPush : TickScaler.gravityPerTick(scopeSubject(), waterPush), velocityBt.x(), velocityBt.z());
@@ -418,7 +418,7 @@ public abstract class ProjectileEntity extends Entity implements ExternallyTicka
                     }
                 }
             } else {
-                Vec flow = FluidFlow.waterContact(world, position, getEntityType().registry().boundingBox());
+                Vec flow = FluidFlow.waterContact(world, position, getEntityType().boundingBox());
                 inWater = flow != null;
                 if (inWater && waterPush > 0 && !flow.isZero()) {
                     velocityBt = velocityBt.add(flow.mul(nativeStep ? waterPush : TickScaler.gravityPerTick(scopeSubject(), waterPush)));
@@ -449,7 +449,7 @@ public abstract class ProjectileEntity extends Entity implements ExternallyTicka
         // Minestom caps even a non-colliding swept move at (1 - EPSILON)*v; a 1e-6-high detonation center shifts
         // the explosion KB by a wire unit, so restore the full move when nothing was hit
         Pos resolved = physics.hasCollision() ? physics.newPosition() : position.add(velocityBt);
-        Pos newPosition = CollisionUtils.applyWorldBorder(world.worldBorder(), position, resolved);
+        Pos newPosition = applyWorldBorder(world.worldBorder(), position, resolved);
         // shooter immunity: 26.1 = until the projectile leaves the shooter's box, 1.8 = fixed ticks
         if (entityHits) {
             if (leftOwnerImmunity && !leftOwner && shooter != null && !withinShooterBox(position)) leftOwner = true;
@@ -536,6 +536,16 @@ public abstract class ProjectileEntity extends Entity implements ExternallyTicka
         if (gravityTickCount == 1 && velocitySyncInterval > 0 && !isStuck()) {
             broadcastWireVelocity();
         }
+    }
+
+    /** The pre-2026.08 Minestom clamp ({@code CollisionUtils.applyWorldBorder}, since removed): a crossing axis
+     *  keeps its previous coordinate. */
+    private static Pos applyWorldBorder(WorldBorder border, Pos current, Pos next) {
+        final double radius = border.diameter() / 2;
+        final boolean x = next.x() > border.centerX() + radius || next.x() < border.centerX() - radius;
+        final boolean z = next.z() > border.centerZ() + radius || next.z() < border.centerZ() - radius;
+        if (!x && !z) return next;
+        return next.withCoord(x ? current.x() : next.x(), next.y(), z ? current.z() : next.z());
     }
 
     /** One tick of air resistance + gravity on {@link #velocityBt}, before or after the move per {@link #physicsOrder}. */
@@ -653,7 +663,7 @@ public abstract class ProjectileEntity extends Entity implements ExternallyTicka
         MechanicsWorld world = MechanicsWorld.of(this);
         // don't unstick while the chunk is unloaded (a relog briefly empties it -> reads AIR -> drops the arrow)
         if (!world.isChunkLoaded(intoBlock)) return false;
-        return world.getBlock(intoBlock.asBlockVec(), Block.Getter.Condition.TYPE).isAir();
+        return world.getBlock(intoBlock.asBlockVec(), Block.Getter.Condition.TYPE).air();
     }
 
     private void unstick() {

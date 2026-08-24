@@ -19,7 +19,8 @@ import org.jetbrains.annotations.Nullable;
  * @param flowLava        whether MODERN flow also pushes in lava (26 yes, Hypixel no); no effect on LEGACY.
  * @param modernBlockPhysics 26-only block velocity (sweet-berry/powder-snow stuck + bed bounce).
  * @param motYOnMovePacket advance the motY sim only on ticks with a client move packet, so a lag-frozen victim's
- *                         motY holds until its next move (MineMen); off = every tick (vanilla/Hypixel).
+ *                         motY holds until its next move - the 1.8 server law ({@code PlayerConnection} drives the
+ *                         player's living tick per flying packet); off = every server tick (1.9+/Hypixel).
  */
 public record VelocityConfig(
         double seed,
@@ -77,7 +78,7 @@ public record VelocityConfig(
         private boolean flowLava = true;    // MODERN only; Hypixel sets false
         private ClimbModel climbModel = ClimbModel.LEGACY; // Vanilla(26) sets MODERN
         private boolean modernBlockPhysics = false; // Vanilla(26) sets true
-        private boolean motYOnMovePacket = false;   // mmc18 sets true
+        private boolean motYOnMovePacket = false;   // 1.8-faithful presets set true; off = the 1.9+ server-tick law
 
         Builder() {}
 

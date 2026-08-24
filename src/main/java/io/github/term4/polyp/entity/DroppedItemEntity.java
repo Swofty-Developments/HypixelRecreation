@@ -251,7 +251,7 @@ public class DroppedItemEntity extends ItemEntity implements ExternallyTickable 
 
     private boolean buried(MechanicsWorld world, Pos pos) {
         return world.getBlock((int) Math.floor(pos.x()), (int) Math.floor(centerY(pos)), (int) Math.floor(pos.z()),
-                Block.Getter.Condition.TYPE).isSolid();
+                Block.Getter.Condition.TYPE).solid();
     }
 
     private double centerY(Pos pos) {
@@ -291,6 +291,6 @@ public class DroppedItemEntity extends ItemEntity implements ExternallyTickable 
     }
 
     private static boolean free(MechanicsWorld world, int x, int y, int z) {
-        return !world.getBlock(x, y, z, Block.Getter.Condition.TYPE).isSolid();
+        return !world.getBlock(x, y, z, Block.Getter.Condition.TYPE).solid();
     }
 }

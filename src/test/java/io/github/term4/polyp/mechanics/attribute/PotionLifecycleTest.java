@@ -1,14 +1,24 @@
 package io.github.term4.polyp.mechanics.attribute;
 
+import io.github.term4.polyp.mechanics.attribute.catalog.effect.Absorption;
 import io.github.term4.polyp.mechanics.attribute.catalog.effect.Invisibility;
 import io.github.term4.polyp.mechanics.attribute.catalog.effect.Speed;
+import io.github.term4.polyp.mechanics.attribute.source.Behavior;
+import io.github.term4.polyp.mechanics.attribute.source.EntitySource;
+import io.github.term4.polyp.testsupport.FakePlayer;
 import io.github.term4.polyp.testsupport.HeadlessServerTest;
+import net.kyori.adventure.key.Key;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.LivingEntity;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -108,6 +118,59 @@ class PotionLifecycleTest extends HeadlessServerTest {
         }
         assertEquals(base, e.getAttributeValue(Attribute.MOVEMENT_SPEED), 1e-9,
                 "and the refreshed effect still cleans up on removal");
+    }
+
+    /** Re-eating a gapple refills absorption, never stacks it: vanilla's combine runs the behavior remove-then-add,
+     *  and the remove clamps at 0 (1.8 {@code MobEffectAbsorption} + {@code setAbsorptionHearts}). */
+    @Test
+    void absorptionRefreshRefillsInsteadOfStacking() {
+        FakePlayer p = FakePlayer.connect(instance, new Pos(0, 64, 68.5), "Gapple");
+        PotionEffect absorption = PotionEffect.fromKey(Absorption.KEY);
+        assertNotNull(absorption, "absorption effect");
+        try {
+            p.player.addEffect(new Potion(absorption, 0, 2400));
+            assertEquals(4f, p.player.getAdditionalHearts(), 1e-6, "one gapple = 4 absorption");
+
+            p.player.addEffect(new Potion(absorption, 0, 2400));
+            assertEquals(4f, p.player.getAdditionalHearts(), 1e-6, "a second gapple refreshes, not stacks");
+
+            p.player.setAdditionalHearts(1f); // absorbed some hits
+            p.player.addEffect(new Potion(absorption, 0, 2400));
+            assertEquals(4f, p.player.getAdditionalHearts(), 1e-6, "and refills damaged absorption");
+
+            p.player.removeEffect(absorption);
+            assertEquals(0f, p.player.getAdditionalHearts(), 1e-6, "expiry takes the hearts (1.8)");
+        } finally {
+            p.player.remove();
+        }
+    }
+
+    /** Custom sources own their lifecycle: {@code sources(...)} registers (same key overrides the catalog), and
+     *  {@code onRefresh} replaces the default remove-then-apply pair on a re-application. */
+    @Test
+    void customSourceOverridesRefreshSemantics() {
+        List<String> calls = new ArrayList<>();
+        EntitySource luck = new EntitySource(Key.key("minecraft:luck")) {
+            @Override public Behavior behavior() {
+                return new Behavior() {
+                    @Override public void onApply(Entity entity, int level) { calls.add("apply:" + level); }
+                    @Override public void onRemove(Entity entity, int level) { calls.add("remove:" + level); }
+                    @Override public void onRefresh(Entity entity, int oldLevel, int newLevel) { calls.add("refresh:" + oldLevel + ">" + newLevel); }
+                };
+            }
+        };
+        var system = new AttributeSystem(polyp, AttributeConfig.builder().sources(luck).build());
+        MinecraftServer.getGlobalEventHandler().addChild(system.node());
+        LivingEntity e = zombie(new Pos(0, 64, 69));
+        try {
+            e.addEffect(new Potion(PotionEffect.LUCK, 0, 600));
+            e.addEffect(new Potion(PotionEffect.LUCK, 1, 600));
+            e.removeEffect(PotionEffect.LUCK);
+            assertEquals(List.of("apply:1", "refresh:1>2", "remove:2"), calls);
+        } finally {
+            MinecraftServer.getGlobalEventHandler().removeChild(system.node());
+            e.remove();
+        }
     }
 
     @Test

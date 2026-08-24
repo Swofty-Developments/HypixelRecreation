@@ -34,6 +34,9 @@ public final class ExplosionConfigResolver {
     /** Plain values coalesced to the modern-vanilla baseline; the 1.8 deltas (damageConstant 8.0, floored) come from the config. */
     public static ResolvedExplosionConfig resolve(@Nullable ExplosionConfig config, ExplosionContext ctx) {
         ExplosionConfig cfg = config != null ? config.withOverlay(ctx) : null;
+        BlockBreaking breaking = FieldValue.resolve(cfg != null ? cfg.blockBreaking : null, ctx);
+        BlockBreaking.BreakRule appRule = FieldValue.resolve(cfg != null ? cfg.breakRule : null, ctx);
+        if (breaking != null && appRule != null) breaking = breaking.toBuilder().addBreakRule(appRule).build();
         return new ResolvedExplosionConfig(
                 FieldValue.resolve(cfg != null ? cfg.power : null, ctx),
                 FieldValue.resolve(cfg != null ? cfg.damageConstant : null, ctx, 7.0),
@@ -55,7 +58,7 @@ public final class ExplosionConfigResolver {
                 FieldValue.resolve(cfg != null ? cfg.affectsSource : null, ctx, false),
                 cfg != null ? cfg.knockbackTargets : null,
                 cfg != null ? cfg.pushEye : null,
-                FieldValue.resolve(cfg != null ? cfg.blockBreaking : null, ctx));
+                breaking);
     }
 
     /** Resolved explosion knobs. {@code power} is {@code null} when neither the call nor the config set one (the system defaults it). */

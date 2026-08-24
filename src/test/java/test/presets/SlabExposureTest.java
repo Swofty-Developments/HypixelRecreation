@@ -40,7 +40,7 @@ class SlabExposureTest extends HeadlessServerTest {
 
     @Test
     void minestomStoresSlabAsHalfBox() {
-        assertEquals(0.5, Block.SMOOTH_STONE_SLAB.withProperty("type", "bottom").registry().collisionShape().relativeEnd().y(), 1e-9,
+        assertEquals(0.5, Block.SMOOTH_STONE_SLAB.withProperty("type", "bottom").collisionShape().relativeEnd().y(), 1e-9,
                 "Minestom's collision uses the real half-slab shape - it does NOT treat a slab as a full block");
     }
 

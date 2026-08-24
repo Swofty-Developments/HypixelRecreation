@@ -3,12 +3,15 @@ package io.github.term4.polyp.platform.fixes.client;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.platform.PacketShapes;
 import io.github.term4.polyp.platform.player.OptimizedPlayer;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.component.DataComponents;
+import net.minestom.server.inventory.AbstractInventory;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.event.Event;
 import net.minestom.server.event.EventNode;
 import net.minestom.server.event.player.PlayerPacketEvent;
 import net.minestom.server.event.player.PlayerRespawnEvent;
+import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.inventory.PlayerInventory;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.component.Equippable;
@@ -29,9 +32,13 @@ import net.minestom.server.utils.inventory.PlayerInventoryUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Per-player inventory echo suppressor: the vanilla remote-slot synchronizer Minestom lacks. Minestom re-sends every
@@ -39,13 +46,11 @@ import java.util.Set;
  * prediction) - and a stray held-slot echo resets an in-progress eat. Vanilla instead mirrors what the client believes
  * each slot holds and sends only genuine corrections.
  *
- * <p>We rebuild that mirror by replaying the client's deterministic prediction per click mode. An outgoing slot echo
- * that matches the mirror is dropped; a mismatch (a rejected click, a server-side change) is sent and re-anchors the
- * mirror, so a wrong guess costs a redundant echo, never a stuck desync. The full {@link WindowItemsPacket}
- * re-baselines everything.
- *
- * <p><b>Experimental</b> ({@code FixesConfig#inventorySync}): a port of Minestom's click model, so a click-logic change
- * upstream can drift it.
+ * <p>Two sources rebuild that mirror. Modern clients report their predicted post-click state in the click packet
+ * (changed-slot hashes + carried item; Minestom ignores both) - those claims override the mirror, and
+ * {@link #reconcileClaims} settles unechoed ones against server truth at end of tick. Legacy clients send no real
+ * claims, so their clicks are replayed per click mode. Either way a wrong guess costs a redundant echo, never a
+ * stuck desync, and a full {@link WindowItemsPacket} re-baselines everything.
  */
 public final class InventorySync {
 
@@ -59,8 +64,15 @@ public final class InventorySync {
         node.addListener(PlayerPacketEvent.class, e -> {
             if (!enabled || !(e.getPlayer() instanceof OptimizedPlayer op)) return;
             switch (e.getPacket()) {
-                case ClientClickWindowPacket click ->
-                        op.inventorySync().onClick(click, Polyp.getInstance().clientInfo().isLegacy(op));
+                case ClientClickWindowPacket click -> {
+                    if (op.inventorySync().onClick(click, Polyp.getInstance().clientInfo().isLegacy(op), op.getOpenInventory())) {
+                        // end of tick: Minestom has processed the click and its echoes hit the filter
+                        MinecraftServer.getSchedulerManager().scheduleEndOfTick(() -> {
+                            if (op.isOnline())
+                                op.inventorySync().reconcileClaims(op.getInventory(), op.getOpenInventory(), op::sendPacket);
+                        });
+                    }
+                }
                 case ClientPlayerBlockPlacementPacket p -> op.inventorySync().onPredictedUse(held(op, p.hand()));
                 case ClientUseItemPacket p -> op.inventorySync().onPredictedUse(held(op, p.hand()));
                 default -> {}
@@ -69,6 +81,19 @@ public final class InventorySync {
         // Minestom resends the inventory after every client-rebuild flow EXCEPT the death respawn - fill that gap
         // (the preceding RespawnPacket already forgot the mirror, so this update passes)
         node.addListener(PlayerRespawnEvent.class, e -> e.getPlayer().getInventory().update(e.getPlayer()));
+        // instance hops: a 1.8 client wipes on respawn, and Via can synthesize one the server never sent
+        // (same-dimension-id hops need its fake-switch trick) - the mirror can't certify anything across
+        // the hop, so forget and force a fresh full resend once the spawn settles
+        node.addListener(PlayerSpawnEvent.class, e -> {
+            if (e.isFirstSpawn() || !(e.getPlayer() instanceof OptimizedPlayer op)) return;
+            op.inventorySync().reset();
+            e.getPlayer().getInventory().update(e.getPlayer());
+        });
+    }
+
+    /** Forgets everything the mirror believed; the next full resend re-anchors it. */
+    void reset() {
+        synchronized (lock) { forget(); }
     }
 
     /** The client's believed slot contents, Minestom slot indexing (0-8 hotbar, 9-35 main, 36-40 craft, 41-44 armor, 45 offhand). */
@@ -76,10 +101,23 @@ public final class InventorySync {
 
     /** Slot the client predicted outside the click model ({@link #onPredictedUse}), or -1. */
     private int unverifiedSlot = -1;
+    /** Legacy container click landed: the player half may hold predictions the mirror can't model. */
+    private boolean containerTouched;
     private ItemStack believedCursor = ItemStack.AIR;
     /** Slots accumulated across a drag's start/add/end packets, mirroring Minestom's {@code ClickPreprocessor}. */
     private final Set<Integer> leftDrag = new LinkedHashSet<>();
     private final Set<Integer> rightDrag = new LinkedHashSet<>();
+    /** Client-reported post-click slot states pending settlement (minestom slot -> hash). */
+    private final Map<Integer, ItemStack.Hash> slotClaims = new HashMap<>();
+    /** Claims in the open container's half ({@link #claimWindowId} wire slot -> hash). */
+    private final Map<Integer, ItemStack.Hash> containerClaims = new HashMap<>();
+    /** Container wire slots echoed since the claim - already corrected, skipped at settlement. */
+    private final Set<Integer> containerEchoed = new HashSet<>();
+    private int claimWindowId = -1;
+    private ItemStack.@Nullable Hash cursorClaim;
+    /** Client rebuild passed, no full baseline yet: the mirror vouches for nothing. */
+    private boolean rebuilt = true;
+    private boolean sweepPending;
     private final Object lock = new Object();
 
     public InventorySync() { Arrays.fill(believed, ItemStack.AIR); }
@@ -89,8 +127,15 @@ public final class InventorySync {
         Arrays.fill(believed, ItemStack.AIR);
         believedCursor = ItemStack.AIR;
         unverifiedSlot = -1;
+        containerTouched = false;
         leftDrag.clear();
         rightDrag.clear();
+        slotClaims.clear();
+        containerClaims.clear();
+        containerEchoed.clear();
+        claimWindowId = -1;
+        cursorClaim = null;
+        rebuilt = true;
     }
 
     /**
@@ -99,15 +144,57 @@ public final class InventorySync {
      * carries the original stack, which the stale mirror matches and eats.
      */
     void onPredictedUse(int slot) {
-        synchronized (lock) { unverifiedSlot = slot; }
+        synchronized (lock) {
+            unverifiedSlot = slot;
+            slotClaims.remove(slot); // the use post-dates the click, so the claim no longer describes the client
+        }
     }
 
     // ------------------------------------------------------------------ incoming: replay the client's prediction
 
-    /** Advances the mirror by the client's predicted result of {@code click} (player inventory only, supported modes). */
-    void onClick(ClientClickWindowPacket click, boolean legacyClient) {
-        if (click.windowId() != 0) return; // container-window clicks use a different slot space; left to fall through
-        synchronized (lock) { predict(click, legacyClient); }
+    /**
+     * Advances the mirror by {@code click}: claims (modern) plus the replayed prediction for the player window.
+     * Returns whether to schedule a {@link #reconcileClaims} for the end of this tick (one per burst).
+     */
+    boolean onClick(ClientClickWindowPacket click, boolean legacyClient, @Nullable AbstractInventory open) {
+        synchronized (lock) {
+            if (legacyClient) {
+                // no claims on the 1.8 wire: a container click spills into the player half unmodellably,
+                // so drop nothing until re-baselined, or a refused chest shift-click leaves a stuck ghost
+                if (click.windowId() != 0) containerTouched = true;
+                else predict(click, true);
+                return false;
+            }
+            claim(click, open);
+            if (click.windowId() == 0) predict(click, false);
+            boolean first = !sweepPending;
+            sweepPending = true;
+            return first;
+        }
+    }
+
+    /** Records the client's reported post-click state; container-window spill converts into mirror slots. */
+    private void claim(ClientClickWindowPacket click, @Nullable AbstractInventory open) {
+        cursorClaim = click.clickedItem(); // misnamed field: on the modern wire it is the predicted cursor
+        if (click.windowId() == 0) {
+            for (var e : click.changedSlots().entrySet()) {
+                int slot = slot(e.getKey());
+                if (slot >= 0) slotClaims.put(slot, e.getValue());
+            }
+            return;
+        }
+        if (open == null || (int) open.getWindowId() != click.windowId()) {
+            containerTouched = true; // claims are in an unknown window's slot space
+            return;
+        }
+        int size = open.getSize();
+        claimWindowId = click.windowId();
+        for (var e : click.changedSlots().entrySet()) {
+            int wire = e.getKey();
+            if (wire >= 0 && wire < size) containerClaims.put(wire, e.getValue());
+            else if (wire >= size && wire < size + PlayerInventory.INNER_INVENTORY_SIZE)
+                slotClaims.put(PlayerInventoryUtils.convertWindowSlotToMinestomSlot(wire, size), e.getValue());
+        }
     }
 
     private void predict(ClientClickWindowPacket click, boolean legacyClient) {
@@ -310,14 +397,31 @@ public final class InventorySync {
             return switch (server) {
                 case SetPlayerInventorySlotPacket p -> reconcile(PlayerInventoryUtils.convertPlayerInventorySlotToMinestomSlot(p.slot()), p.itemStack()) ? packet : null;
                 case SetSlotPacket p when p.windowId() == 0 -> reconcile(PlayerInventoryUtils.convertWindow0SlotToMinestomSlot(p.slot()), p.itemStack()) ? packet : null;
+                case SetSlotPacket p -> {
+                    if (!containerClaims.isEmpty() && p.windowId() == claimWindowId) containerEchoed.add((int) p.slot());
+                    yield packet;
+                }
                 case SetCursorItemPacket p -> {
+                    ItemStack.Hash claim = cursorClaim;
+                    if (claim != null) {
+                        cursorClaim = null;
+                        believedCursor = p.itemStack();
+                        yield claim.equals(hash(p.itemStack())) ? null : packet;
+                    }
                     if (p.itemStack().equals(believedCursor)) yield null;
                     believedCursor = p.itemStack();
                     yield packet;
                 }
                 case WindowItemsPacket p when p.windowId() == 0 -> {
-                    if (redundant(p)) yield null; // a full resync the client already matches (e.g. a correctly-predicted drag)
+                    if (redundant(p)) { // a full resync the client already matches (e.g. a correctly-predicted drag)
+                        rebuilt = false; // the drop itself certifies mirror == client
+                        yield null;
+                    }
                     baseline(p);
+                    yield packet;
+                }
+                case WindowItemsPacket p -> {
+                    if (p.windowId() == claimWindowId) { containerClaims.clear(); containerEchoed.clear(); }
                     yield packet;
                 }
                 // the client forgets its inventory on these (respawn, dimension/skin change, (re)configuration) -
@@ -334,14 +438,22 @@ public final class InventorySync {
     private boolean reconcile(int slot, ItemStack item) {
         if (slot < 0 || slot >= believed.length) return true;
         if (slot == unverifiedSlot) unverifiedSlot = -1;
-        else if (item.equals(believed[slot])) return false;
+        else {
+            ItemStack.Hash claim = slotClaims.remove(slot);
+            if (claim != null) { // the claim outranks the mirror's guess
+                believed[slot] = item;
+                return !claim.equals(hash(item));
+            }
+            if (!containerTouched && item.equals(believed[slot])) return false;
+        }
         believed[slot] = item;
         return true;
     }
 
     /** Whether {@code packet} carries exactly what the mirror already holds - a redundant full resync safe to drop. */
     private boolean redundant(WindowItemsPacket packet) {
-        if (unverifiedSlot >= 0 || !packet.carriedItem().equals(believedCursor)) return false;
+        if (containerTouched || unverifiedSlot >= 0 || !slotClaims.isEmpty() || cursorClaim != null
+                || !packet.carriedItem().equals(believedCursor)) return false;
         final List<ItemStack> items = packet.items();
         for (int wire = 0; wire < items.size(); wire++) {
             final int slot = PlayerInventoryUtils.convertWindow0SlotToMinestomSlot(wire);
@@ -358,6 +470,68 @@ public final class InventorySync {
         }
         believedCursor = packet.carriedItem();
         unverifiedSlot = -1;
+        containerTouched = false;
+        slotClaims.clear();
+        cursorClaim = null;
+        rebuilt = false;
+    }
+
+    // ------------------------------------------------------------------ end-of-tick claim settlement
+
+    /**
+     * Settles claims Minestom never echoed: a match anchors the mirror silently, a mismatch means the client
+     * mispredicted and nobody corrected it - {@code send} carries the fix (vanilla's remote-slot diff, which
+     * Minestom skips). Then heals replay drift: server changes always echo, so a mirror slot still differing
+     * from truth is a bad replay guess - the client shows the truth, no packet needed.
+     */
+    public void reconcileClaims(PlayerInventory truth, @Nullable AbstractInventory open, Consumer<SendablePacket> send) {
+        synchronized (lock) {
+            sweepPending = false;
+            if (rebuilt) {
+                slotClaims.clear();
+                containerClaims.clear();
+                containerEchoed.clear();
+                claimWindowId = -1;
+                cursorClaim = null;
+                return;
+            }
+            for (var e : List.copyOf(slotClaims.entrySet())) {
+                int slot = e.getKey();
+                ItemStack real = truth.getItemStack(slot);
+                // sent while the claim pends, so a filtered send() consumes it as a mismatched echo
+                if (!e.getValue().equals(hash(real))) send.accept(refresh(slot, real));
+                slotClaims.remove(slot);
+                believed[slot] = real;
+            }
+            cursorClaim = null; // cursor mismatches were already corrected by Minestom's own carried check
+            if (!containerClaims.isEmpty() && open != null && (int) open.getWindowId() == claimWindowId) {
+                for (var e : containerClaims.entrySet()) {
+                    int wire = e.getKey();
+                    if (containerEchoed.contains(wire) || wire >= open.getSize()) continue;
+                    ItemStack real = open.getItemStack(wire);
+                    if (!e.getValue().equals(hash(real))) send.accept(new SetSlotPacket(claimWindowId, 0, (short) wire, real));
+                }
+            }
+            containerClaims.clear();
+            containerEchoed.clear();
+            claimWindowId = -1;
+            for (int slot = 0; slot < believed.length; slot++) {
+                ItemStack real = truth.getItemStack(slot);
+                if (!believed[slot].equals(real)) believed[slot] = real;
+            }
+            if (!believedCursor.equals(truth.getCursorItem())) believedCursor = truth.getCursorItem();
+        }
+    }
+
+    /** A player-slot correction, shaped like Minestom's {@code sendSlotRefresh}. */
+    private static SendablePacket refresh(int slot, ItemStack item) {
+        return PlayerInventoryUtils.isPlayerInventorySlot(slot)
+                ? new SetPlayerInventorySlotPacket(PlayerInventoryUtils.convertMinestomSlotToPlayerInventorySlot(slot), item)
+                : new SetSlotPacket(0, 0, (short) PlayerInventoryUtils.convertMinestomSlotToWindowSlot(slot), item);
+    }
+
+    private static ItemStack.Hash hash(ItemStack item) {
+        return ItemStack.Hash.of(item, MinecraftServer.process());
     }
 
     // ------------------------------------------------------------------ helpers

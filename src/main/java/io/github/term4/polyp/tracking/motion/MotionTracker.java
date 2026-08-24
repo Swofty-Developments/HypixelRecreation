@@ -297,7 +297,7 @@ public final class MotionTracker implements Tracker {
     private static double blockFriction(Player p) {
         var instance = p.getInstance();
         if (instance == null) return DEFAULT_BLOCK_FRICTION;
-        return blockBelow(p, p.getPosition()).registry().friction();
+        return blockBelow(p, p.getPosition()).friction();
     }
 
     /** The supporting block under {@code pos}. */

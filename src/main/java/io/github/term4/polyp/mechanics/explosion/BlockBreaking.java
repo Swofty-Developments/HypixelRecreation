@@ -12,13 +12,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.DoubleUnaryOperator;
 
 /**
- * What an explosion does to blocks. Absent from an {@link ExplosionConfig} = it breaks none.
+ * What an explosion does to blocks; absent from an {@link ExplosionConfig} = it breaks none. Reach is physics
+ * ({@link Model}, {@link Resistance}, the ray knobs), breaking is policy ({@link BreakRule}; the config's
+ * {@code breakRule} ANDs on top), {@link Interaction} is the consequence.
  *
- * <p>{@link Resistance} and {@link BreakRule} both receive the {@link ExplosionContext}, whose
- * {@code source()} is the exploding entity - so one config can break different blocks per source (a BedWars
- * fireball eating wood but not end stone, while TNT in the same world eats both).
+ * <p>{@link Resistance} and {@link BreakRule} see the exploding entity via {@link ExplosionContext#source()},
+ * so one config can break different blocks per source (a BedWars fireball eating wood but not end stone,
+ * while TNT in the same world eats both).
  */
 public final class BlockBreaking {
 
@@ -43,11 +47,8 @@ public final class BlockBreaking {
         THRESHOLD
     }
 
-    /**
-     * How a {@link Builder#neverBreaks blast-proof} block protects what is behind it - a second dimension over
-     * {@link Model}. Rays pass THROUGH such a block (it keeps its natural resistance); this only decides whether it
-     * also casts a shadow.
-     */
+    /** How a rule-vetoed block protects what is behind it. Rays pass THROUGH it (its natural resistance still
+     *  applies); this only decides whether it casts a shadow. */
     public enum Shielding {
         /** Vanilla: nothing casts a shadow. A ray reaches whatever it reaches - straight through a blast-proof block
          *  just the same - and every cell it selects breaks. */
@@ -81,17 +82,23 @@ public final class BlockBreaking {
     }
 
     /**
-     * Final say once the ray has already reached {@code pos} with power to spare. It does NOT affect propagation -
-     * a block spared here still shadows whatever is behind it. Use {@link Builder#onlyBreaks}/{@link Builder#neverBreaks}
-     * to change what a blast can punch THROUGH.
+     * Final say once the ray has already reached {@code pos} with power to spare. It does NOT affect propagation
+     * (resistance governs what a blast punches THROUGH), and under {@link Shielding#OCCLUSION} a vetoed block casts
+     * the hard shadow.
      */
     @FunctionalInterface
     public interface BreakRule {
         boolean canBreak(@NotNull Block block, @NotNull Point pos, @NotNull ExplosionContext ctx);
+
+        /** Vetoes {@code blocks}, matched by type id, any state (Hypixel's blast-proof glass shape). */
+        static BreakRule neverBreaks(@NotNull Set<Block> blocks) {
+            boolean[] mask = idMask(blocks);
+            return (block, pos, ctx) -> !masked(mask, block);
+        }
     }
 
     /** Registry blast resistance - the modern value, correct for every block that still exists. */
-    public static final Resistance VANILLA_RESISTANCE = (block, ctx) -> block.registry().explosionResistance();
+    public static final Resistance VANILLA_RESISTANCE = (block, ctx) -> block.explosionResistance();
 
     // the only blocks whose blast resistance actually changed since 1.8 (148 of 155 match - see
     // docs/HANDOFF-explosion-block-breaking.md). moving_piston is not a typo: 1.8's c(-1.0F) never raises
@@ -104,7 +111,7 @@ public final class BlockBreaking {
     public static final Resistance LEGACY_RESISTANCE = (block, ctx) -> {
         int id = block.id();
         double override = id < LEGACY_OVERRIDES.length ? LEGACY_OVERRIDES[id] : Double.NaN;
-        return Double.isNaN(override) ? block.registry().explosionResistance() : override;
+        return Double.isNaN(override) ? VANILLA_RESISTANCE.of(block, ctx) : override;
     };
 
     /** Block-id indexed, {@code NaN} = none. Every sampled cell probes this, so it must not hash a key string. */
@@ -135,9 +142,8 @@ public final class BlockBreaking {
     private final BreakRule breakRule;
     private final Charging charging;
     private final Shielding shielding;
-    private final boolean[] shadowCasters;
     private final int rayGrid;
-    private final java.util.function.DoubleUnaryOperator charge;
+    private final DoubleUnaryOperator charge;
     private final double rollMin, rollMax;
     private final boolean rollPerHeading;
     private final float[] intensityTable;
@@ -152,7 +158,6 @@ public final class BlockBreaking {
         this.breakRule = b.breakRule;
         this.charging = b.charging;
         this.shielding = b.shielding;
-        this.shadowCasters = b.shadowCasters;
         this.rayGrid = b.rayGrid;
         this.charge = b.charge;
         this.rollMin = b.rollMin;
@@ -178,8 +183,7 @@ public final class BlockBreaking {
     @NotNull Shielding shielding() { return shielding; }
     int rayGrid() { return rayGrid; }
     double charge(double resistance) { return charge.applyAsDouble(resistance); }
-    /** One ray's intensity: {@code power} x a uniform roll in {@code [rollMin, rollMax]}. */
-    double rollIntensity(float power, java.util.concurrent.ThreadLocalRandom rnd) {
+    double rollIntensity(float power, ThreadLocalRandom rnd) {
         return power * (rollMin == rollMax ? rollMin : rollMin + rnd.nextDouble() * (rollMax - rollMin));
     }
     boolean rollPerHeading() { return rollPerHeading; }
@@ -193,9 +197,6 @@ public final class BlockBreaking {
 
     double resistance(@NotNull Block block, @NotNull ExplosionContext ctx) { return resistance.of(block, ctx); }
 
-    /** A {@link Builder#neverBreaks blast-proof} block - one that casts the {@link Shielding#OCCLUSION} shadow. */
-    boolean castsShadow(@NotNull Block block) { return masked(shadowCasters, block); }
-
     boolean canBreak(@NotNull Block block, @NotNull Point pos, @NotNull ExplosionContext ctx) {
         return breakRule.canBreak(block, pos, ctx);
     }
@@ -208,7 +209,6 @@ public final class BlockBreaking {
 
     public static @NotNull Builder builder() { return new Builder(); }
 
-    /** Layers onto an existing policy - a preset extending another's (Hypixel's blast-proof glass over the 1.8 baseline). */
     public @NotNull Builder toBuilder() { return new Builder(this); }
 
     public static final class Builder {
@@ -218,9 +218,8 @@ public final class BlockBreaking {
         private BreakRule breakRule = ANY;
         private Charging charging = Charging.PER_STEP;
         private Shielding shielding = Shielding.NONE;
-        private boolean[] shadowCasters = new boolean[0];
         private int rayGrid = 16;
-        private java.util.function.DoubleUnaryOperator charge = r -> (r + 0.3) * 0.3;
+        private DoubleUnaryOperator charge = r -> (r + 0.3) * 0.3;
         private double rollMin = 0.7, rollMax = 1.3;
         private boolean rollPerHeading;
         private float[] intensityTable;
@@ -236,7 +235,6 @@ public final class BlockBreaking {
             breakRule = c.breakRule;
             charging = c.charging;
             shielding = c.shielding;
-            shadowCasters = c.shadowCasters;
             rayGrid = c.rayGrid;
             charge = c.charge;
             rollMin = c.rollMin;
@@ -259,7 +257,7 @@ public final class BlockBreaking {
 
         /** Intensity a ray pays for (or must beat, under {@link Charging#THRESHOLD}) a block, from its resistance;
          *  default vanilla {@code (r+0.3)*0.3} (MineMen TNT {@code r*0.0775}; its fireball the fitted gate law). */
-        public Builder charge(@NotNull java.util.function.DoubleUnaryOperator v) { this.charge = v; return this; }
+        public Builder charge(@NotNull DoubleUnaryOperator v) { this.charge = v; return this; }
 
         /** Per-ray intensity roll bounds (x power); vanilla {@code 0.7, 1.3} (default), equal bounds = deterministic. */
         public Builder intensityRoll(double min, double max) { this.rollMin = min; this.rollMax = max; return this; }
@@ -283,8 +281,15 @@ public final class BlockBreaking {
         /** How unbreakable blocks shield what is behind them; default {@link Shielding#NONE} (vanilla). */
         public Builder shielding(@NotNull Shielding v) { this.shielding = v; return this; }
 
-        /** Replaces the rule; compose with {@code &&} yourself when you want several. */
+        /** Whether a reached block breaks; presets encode their vetoes here ({@link BreakRule#neverBreaks}). */
         public Builder breakRule(@NotNull BreakRule v) { this.breakRule = v; return this; }
+
+        // ExplosionConfig.breakRule folds in here
+        Builder addBreakRule(@NotNull BreakRule v) {
+            BreakRule base = this.breakRule;
+            this.breakRule = (block, pos, ctx) -> base.canBreak(block, pos, ctx) && v.canBreak(block, pos, ctx);
+            return this;
+        }
 
         /**
          * Only these break, whatever their own resistance - the minigame shape (BedWars wool/wood). Matched by type,
@@ -294,19 +299,6 @@ public final class BlockBreaking {
         public Builder onlyBreaks(@NotNull Set<Block> blocks) {
             boolean[] mask = idMask(blocks);
             return resistance((block, ctx) -> masked(mask, block) ? 0.0 : Double.POSITIVE_INFINITY);
-        }
-
-        /**
-         * These never break, and under {@link Shielding#OCCLUSION} cast a HARD shadow over whatever is behind them
-         * (Hypixel's blast-proof glass). They keep their natural resistance, so a ray still passes THROUGH them - the
-         * shadow, not ray-blocking, is what shields. A block that should also STOP rays needs an ∞ {@link #resistance}.
-         */
-        public Builder neverBreaks(@NotNull Set<Block> blocks) {
-            boolean[] mask = idMask(blocks);
-            this.shadowCasters = mask;
-            BreakRule base = this.breakRule;
-            this.breakRule = (block, pos, ctx) -> !masked(mask, block) && base.canBreak(block, pos, ctx);
-            return this;
         }
 
         public @NotNull BlockBreaking build() { return new BlockBreaking(this); }

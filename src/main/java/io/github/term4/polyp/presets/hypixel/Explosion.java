@@ -35,6 +35,19 @@ public final class Explosion {
             .filter(b -> b.key().value().endsWith("glass"))
             .collect(Collectors.toUnmodifiableSet());
 
+    // capture-verified (docs/HANDOFF): rays are 100% vanilla - glass is passable (0.3), so a block BEHIND
+    // glass is still selected; it survives only if the straight line from the blast centre to it crosses
+    // glass. The rule vetoes glass, OCCLUSION makes vetoed blocks cast that hard shadow. Obsidian (1200)
+    // just stops rays as in vanilla and, being breakable, casts no shadow.
+    private static final BlockBreaking BLOCK_BREAKING =
+            io.github.term4.polyp.presets.vanilla18.Explosion.blockBreaking().toBuilder()
+                    .breakRule(BlockBreaking.BreakRule.neverBreaks(BLAST_PROOF_GLASS))
+                    .shielding(BlockBreaking.Shielding.OCCLUSION)
+                    .build();
+
+    /** Vanilla18 rays + blast-proof glass. */
+    public static BlockBreaking blockBreaking() { return BLOCK_BREAKING; }
+
     public static ExplosionConfig config() {
         return ExplosionConfig.builder(Vanilla18.explosion())
                 .baseKnockback(BASE).baseHeight(BASE_HEIGHT)
@@ -44,14 +57,7 @@ public final class Explosion {
                 .exposure(ExplosionExposure.Rays.LEGACY_1_8_FULL_CUBE) // Hypixel gates off-flat blasts (full-cube), unlike singleplayer 1.8
                 // Hypixel fireballs light fire ONLY where a block was broken - never on intact ground (observed in-game)
                 .fireScope(ExplosionConfig.FireScope.BROKEN)
-                // capture-verified (docs/HANDOFF): rays are 100% vanilla - glass is passable (0.3), so a block BEHIND
-                // glass is still selected; it survives only if the straight line from the blast centre to it crosses
-                // glass. neverBreaks makes glass unbreakable AND the shadow-caster; OCCLUSION draws the line. Obsidian
-                // (1200) just stops rays as in vanilla and casts no shadow.
-                .blockBreaking(io.github.term4.polyp.presets.vanilla18.Explosion.blockBreaking().toBuilder()
-                        .neverBreaks(BLAST_PROOF_GLASS)
-                        .shielding(BlockBreaking.Shielding.OCCLUSION)
-                        .build())
+                .blockBreaking(BLOCK_BREAKING)
                 .build();
     }
 }

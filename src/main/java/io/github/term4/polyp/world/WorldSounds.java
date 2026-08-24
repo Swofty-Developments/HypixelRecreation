@@ -1,7 +1,8 @@
 package io.github.term4.polyp.world;
 
 import io.github.term4.polyp.Polyp;
-import net.kyori.adventure.sound.Sound;
+import io.github.term4.polyp.fx.Fx;
+import io.github.term4.polyp.fx.FxContext;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
@@ -11,18 +12,14 @@ import net.minestom.server.event.player.PlayerBlockPlaceEvent;
 import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.event.trait.PlayerEvent;
 import net.minestom.server.instance.block.Block;
-import net.minestom.server.instance.block.BlockSoundType;
-import net.minestom.server.network.packet.server.play.SoundEffectPacket;
-import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 /**
- * Block place + footstep sounds Minestom doesn't emit. Audience is version-dependent: a modern doer predicts them
- * client-side (vanilla excludes it from the broadcast), but a 1.8 client cannot - its {@code RenderGlobal.playSound}
- * sinks are empty stubs and 1.8 servers included the doer - so legacy doers get the packet, modern doers don't.
+ * Place and footstep sounds Minestom doesn't emit, played through the {@link Fx} registry
+ * ({@link Fx#STEP} / {@link Fx#BLOCK_PLACE}, the block as the context detail). Owns only the cadence and
+ * block resolution; look and audience live in the registered handlers. Breaks are emitted by the world
+ * layer (the app's shard bridge routes them into {@link Fx#BLOCK_BREAK}).
  */
 public final class WorldSounds {
 
@@ -41,10 +38,9 @@ public final class WorldSounds {
 
     private static void onPlace(Polyp polyp, PlayerBlockPlaceEvent e) {
         if (e.isCancelled()) return; // a compat rule (reach / air) may cancel the placement
-        BlockSoundType st = e.getBlock().registry().getBlockSoundType();
-        if (st == null || st.placeSound() == null) return;
-        // vanilla BlockItem.place: volume (v+1)/2, pitch p*0.8, BLOCKS category
-        emit(polyp, e.getPlayer(), st.placeSound(), Sound.Source.BLOCK, e.getBlockPosition(), (st.volume() + 1.0f) / 2.0f, st.pitch() * 0.8f);
+        Fx.play(polyp.services(), Fx.BLOCK_PLACE,
+                FxContext.at(MechanicsWorld.of(e.getPlayer()), e.getBlockPosition(), e.getPlayer())
+                        .withDetail(e.getBlock()));
     }
 
     private static void onMove(Polyp polyp, PlayerMoveEvent e) {
@@ -68,22 +64,10 @@ public final class WorldSounds {
     }
 
     private static void step(Polyp polyp, Player p, Point at) {
-        if (p.getInstance() == null) return;
+        if (p.getInstance() == null || !p.getInstance().isChunkLoaded(at)) return; // mid-load moves: getBlock throws
         // viewed world: on a virtual world the feet rest on the OVERLAY block, not the base map's
         Block below = MechanicsWorld.viewed(p).getBlock(at.withY(at.y() - 0.2));
-        if (below.isAir()) return;
-        BlockSoundType st = below.registry().getBlockSoundType();
-        if (st == null || st.stepSound() == null) return;
-        // vanilla Entity.playStepSound: volume soundType.volume * 0.15, pitch soundType.pitch
-        emit(polyp, p, st.stepSound(), Sound.Source.PLAYER, at, st.volume() * 0.15f, st.pitch());
-    }
-
-    /** Viewers always; the doer too only on legacy clients (1.8 cannot self-play - modern predicts, would double). */
-    private static void emit(Polyp polyp, Player doer, SoundEvent sound, Sound.Source src, Point at, float vol, float pitch) {
-        SoundEffectPacket packet = new SoundEffectPacket(sound, src, at, vol, pitch, ThreadLocalRandom.current().nextLong());
-        doer.sendPacketToViewers(packet);
-        if (polyp.clientInfo() != null && polyp.clientInfo().isLegacy(doer)) {
-            doer.sendPacket(packet);
-        }
+        if (below.air()) return;
+        Fx.play(polyp.services(), Fx.STEP, FxContext.at(MechanicsWorld.of(p), at, p).withDetail(below));
     }
 }

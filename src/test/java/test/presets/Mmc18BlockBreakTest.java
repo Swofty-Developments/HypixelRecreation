@@ -69,7 +69,7 @@ class Mmc18BlockBreakTest extends HeadlessServerTest {
         int gone = 0;
         for (int dx = -6; dx <= 5; dx++)
             for (int dz = -6; dz <= 5; dz++)
-                if (inst.getBlock(PAD_X + dx, PAD_Y, PAD_Z + dz).isAir()) gone++;
+                if (inst.getBlock(PAD_X + dx, PAD_Y, PAD_Z + dz).air()) gone++;
         return gone;
     }
 
@@ -117,7 +117,7 @@ class Mmc18BlockBreakTest extends HeadlessServerTest {
         Set<String> broken = new HashSet<>();
         for (int dx = -6; dx <= 5; dx++)
             for (int dz = -6; dz <= 5; dz++)
-                if (inst.getBlock(x0 + dx, PAD_Y, z0 + dz).isAir()) broken.add(dx + "," + dz);
+                if (inst.getBlock(x0 + dx, PAD_Y, z0 + dz).air()) broken.add(dx + "," + dz);
         return broken;
     }
 
@@ -157,7 +157,7 @@ class Mmc18BlockBreakTest extends HeadlessServerTest {
         fb.setVelocityBt(new Vec(0, 0, 1.0));
         for (int i = 0; i < 10 && !fb.isRemoved(); i++) fb.tick(i);
         assertTrue(fb.isRemoved(), "fireball hit the wall");
-        assertTrue(inst.getBlock(wx, wy, wz - 1).isAir(), "protruding wood breaks off the near-miss");
+        assertTrue(inst.getBlock(wx, wy, wz - 1).air(), "protruding wood breaks off the near-miss");
         assertTrue(inst.getBlock(wx + 1, wy, wz).compare(Block.END_STONE), "the wall itself holds");
     }
 
@@ -173,6 +173,6 @@ class Mmc18BlockBreakTest extends HeadlessServerTest {
         sys.explode(inst, farSide, 2.0f, fireball());
         assertTrue(inst.getBlock(wx, wy, wz - 1).compare(Block.OAK_PLANKS), "wood behind the wall survives a fireball");
         sys.explode(inst, farSide, 4.0f, null);
-        assertTrue(inst.getBlock(wx, wy, wz - 1).isAir(), "TNT rays punch through");
+        assertTrue(inst.getBlock(wx, wy, wz - 1).air(), "TNT rays punch through");
     }
 }

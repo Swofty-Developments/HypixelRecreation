@@ -24,6 +24,7 @@ public final class Movement {
                 .flowModel(FluidFlow.Model.MODERN.withLegacyWaterGravity())
                 .flowLava(false) // water only, unlike vanilla 26
                 .climbModel(ClimbModel.MODERN) // 1.8 LEGACY never fires climb-up server-side
+                // motYOnMovePacket stays off: Hypixel's motY advances per server tick (the 1.9+ law), not 1.8's per-packet
                 .build();
     }
 }

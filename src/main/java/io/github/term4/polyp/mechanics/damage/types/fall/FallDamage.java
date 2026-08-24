@@ -1,5 +1,6 @@
 package io.github.term4.polyp.mechanics.damage.types.fall;
 
+import io.github.term4.polyp.api.event.damage.types.FallDistanceResetEvent;
 import io.github.term4.polyp.util.tick.TickContext;
 import io.github.term4.polyp.world.MechanicsWorld;
 import io.github.term4.polyp.Polyp;
@@ -20,10 +21,12 @@ import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.LivingEntity;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.Event;
+import net.minestom.server.event.EventDispatcher;
 import net.minestom.server.event.EventNode;
 import net.minestom.server.event.entity.EntityDeathEvent;
 import net.minestom.server.event.entity.EntityTeleportEvent;
 import net.minestom.server.event.entity.EntityTickEvent;
+import net.minestom.server.event.player.PlayerGameModeChangeEvent;
 import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.block.Block;
@@ -38,9 +41,10 @@ import java.util.Set;
  * lava halves it, and landing applies damage from {@link FallDamageConfig}.
  *
  * <p>Self-driven: players are tracked off their own move packets (with a per-tick poll for status-only onGround
- * packets); other living entities per tick. Creative/spectator/flying are exempt; (re)spawn resets. A plain teleport does
- * NOT reset (vanilla 1.8/26 leave fall distance on teleport - the pearl zeroes it explicitly) but does re-anchor the
- * y-baseline, so the jump itself never accrues; callers reset via {@link #resetFallDistance}.
+ * packets); other living entities per tick. Creative/spectator/flying are exempt; (re)spawn resets; a gamemode change
+ * resets unless {@link FallDistanceResetEvent} is cancelled. A plain teleport keeps the distance (vanilla 1.8/26 both;
+ * the pearl zeroes it explicitly) but re-anchors the y-baseline, so the jump itself never accrues; callers reset via
+ * {@link #resetFallDistance}.
  */
 public final class FallDamage extends DamageType {
 
@@ -73,13 +77,18 @@ public final class FallDamage extends DamageType {
         n.addListener(PlayerMoveEvent.class, this::onMove);
         n.addListener(EntityTickEvent.class, this::onTick);
         n.addListener(PlayerSpawnEvent.class, e -> resetFallDistance(e.getPlayer()));
-        // reset on death too: Minestom reuses the Player across respawn (vanilla makes a fresh entity), so a fall in progress
-        // at death would otherwise carry its distance to the respawn and land as phantom fall damage.
+        // vanilla 1.8 zeroes fallDistance on a gamemode change (26.1 dropped it) - cancel the event to keep it
+        n.addListener(PlayerGameModeChangeEvent.class, e -> {
+            if (e.isCancelled()) return; // listeners still run after a cancel
+            Player p = e.getPlayer();
+            EventDispatcher.callCancellable(
+                    new FallDistanceResetEvent(p, e.getNewGameMode(), fallDistance(p)),
+                    () -> resetFallDistance(p));
+        });
+        // Minestom reuses the Player across respawn (vanilla remakes it) - a death-fall would carry into the respawn
         n.addListener(EntityDeathEvent.class, e -> { if (e.getEntity() instanceof LivingEntity le) resetFallDistance(le); });
-        // teleport keeps the DISTANCE but never yields a fall delta: vanilla also accrues players from per-packet
-        // position deltas (1.8 PlayerConnection:459 player.a(locY - d10), 26.1 doCheckFallDamage(clientDeltaMovement))
-        // and excludes teleports by re-anchoring its reference position while moves await the client's confirm
-        // (1.8 checkMovement, 26.1 awaitingPositionFromClient/lastGood). Dropping the baseline IS that re-anchor.
+        // keeps the distance, kills the delta: vanilla re-anchors its move reference on teleport (1.8 checkMovement,
+        // 26.1 awaitingPositionFromClient) - dropping the baseline is that re-anchor
         n.addListener(EntityTeleportEvent.class, e -> e.getEntity().removeTag(PREV));
         system.node().addChild(n);
         node = n;
@@ -111,21 +120,14 @@ public final class FallDamage extends DamageType {
         Player p = e.getPlayer();
         Pos newPos = e.getNewPosition();
 
-        // clearing prev too is what stops quick-respawn phantom damage: a dead player's death-fall position would
-        // otherwise be the baseline for the first live move after respawn, giving a huge dy
+        // full reset, not just distance: a stale baseline would turn the first post-exempt move into a huge dy
         if (DamageProducers.exempt(p)) {
-            p.removeTag(FALL_DISTANCE);
-            p.removeTag(PREV);
+            resetFallDistance(p);
             return;
         }
-        PrevMove prev = p.getTag(PREV);
-        p.setTag(PREV, new PrevMove(newPos.y(), e.isOnGround()));
-        if (prev == null) return;
-        // land on the CLIENT's onGround flag (vanilla Entity.checkFallDamage), NOT MotionTracker.simCollided - the server
-        // sim trips a tick early during fast falls, firing fall damage above the real ground.
-        // newPos, not getPosition(): the position isn't committed until after this event, so at high fall speed the
-        // landing-block (slime) check would look many blocks up.
-        accumulate(p, newPos, newPos.y() - prev.y(), e.isOnGround());
+        // client onGround, not MotionTracker.simCollided: the server sim trips a tick early on fast falls.
+        // newPos, not getPosition(): not committed until after this event - the slime check would look blocks up.
+        step(p, newPos, newPos.y(), e.isOnGround());
     }
 
     /** Non-player living entities: server-side per-tick deltas. */
@@ -133,12 +135,13 @@ public final class FallDamage extends DamageType {
         if (e.getEntity() instanceof Player) return; // players ride their own move packets
         if (!(e.getEntity() instanceof LivingEntity living) || living.isDead()) return;
         if (living.getInstance() == null) return;
-        double y = living.getPosition().y();
-        boolean onGround = living.isOnGround();
+        step(living, living.getPosition(), living.getPosition().y(), living.isOnGround());
+    }
+
+    private void step(LivingEntity living, Point pos, double y, boolean onGround) {
         PrevMove prev = living.getTag(PREV);
         living.setTag(PREV, new PrevMove(y, onGround));
-        if (prev == null) return;
-        accumulate(living, living.getPosition(), y - prev.y(), onGround);
+        if (prev != null) accumulate(living, pos, y - prev.y(), onGround);
     }
 
     /** Fallback landing poll for players (status-only onGround packets fire no move event); one instance per tick. */
@@ -181,6 +184,11 @@ public final class FallDamage extends DamageType {
     }
 
 
+    private static boolean flyAbilityExempt(DamageContext ctx) {
+        Boolean knob = ctx.typeConfig() instanceof FallDamageConfig f ? f.flyAbilityExempt(ctx) : null;
+        return knob == null || knob;
+    }
+
     /** Slime bounce negates fall damage unless the entity is sneaking - the damage half of the 1.8 {@code BlockSlime} bounce
      *  ({@link io.github.term4.polyp.tracking.motion.MotionTracker} does the velocity half); the block is under the landing feet. */
     private static boolean bounceNegatesFall(LivingEntity living, Point pos) {
@@ -198,6 +206,9 @@ public final class FallDamage extends DamageType {
         if (bounceNegatesFall(living, pos)) return;
         DamageSnapshot snap = DamageSnapshot.of(living, this).withDetail(FallDetail.of(distance));
         DamageContext ctx = sys.contextFor(snap);
+        // the fly ABILITY blocks fall damage even when not flying (1.8 EntityHuman.e !canFly, 26.1 mayfly);
+        // gated at landing, so revoking it mid-fall still lands the accrued damage (vanilla)
+        if (flyAbilityExempt(ctx) && living instanceof Player p && p.isAllowFlying()) return;
         if (!ctx.typeConfig().enabled(ctx)) return;
         // skip below-threshold landings before any event fires
         if (ctx.baseAmount() <= 0) return;

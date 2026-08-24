@@ -93,6 +93,7 @@ public final class KnockbackConfigResolver {
                 FieldValue.resolve(cfg.velocity, ctx),
                 FieldValue.resolve(cfg.quantizeVelocity, ctx, Boolean.TRUE),
                 FieldValue.resolve(cfg.velocityCap, ctx, LegacyVelocity.DEFAULT_CAP), // vanilla 1.8 wire ±3.9
+                FieldValue.resolve(cfg.wireRule, ctx),
                 FieldValue.resolve(cfg.airborneVertical, ctx, Boolean.TRUE), // 1.8 always lifts
                 cfg.customComponents,
                 cfg.frictionRule,
@@ -128,6 +129,7 @@ public final class KnockbackConfigResolver {
             @Nullable VelocityRule velocity,
             boolean quantizeVelocity,
             double velocityCap,
+            @Nullable KnockbackConfig.WireRule wireRule,
             boolean airborneVertical,
             @Nullable List<KnockbackComponent> customComponents,
             @Nullable KnockbackConfig.FrictionRule frictionRule,

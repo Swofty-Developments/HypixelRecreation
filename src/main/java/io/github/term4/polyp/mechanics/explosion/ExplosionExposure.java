@@ -139,10 +139,10 @@ public final class ExplosionExposure {
     private static boolean blockHit(MechanicsWorld in, boolean shaped, int x, int y, int z,
                                     double ax, double ay, double az, double bx, double by, double bz) {
         Block block = in.getBlock(x, y, z);
-        if (!block.isSolid()) return false;
+        if (!block.solid()) return false;
         if (!shaped) return boxIntercept(x, y, z, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, ax, ay, az, bx, by, bz);
         // collisionShape is the overall bbox - exact for slabs/full blocks, over-approximates stairs to a cube
-        Shape shape = block.registry().collisionShape();
+        Shape shape = block.collisionShape();
         Point s = shape.relativeStart(), e = shape.relativeEnd();
         return boxIntercept(x, y, z, s.x(), s.y(), s.z(), e.x(), e.y(), e.z(), ax, ay, az, bx, by, bz);
     }

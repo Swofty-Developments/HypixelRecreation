@@ -127,11 +127,11 @@ public final class BlockContact {
             if (!world.isChunkLoaded(x >> 4, z >> 4)) continue;
 
             Block block = world.getBlock(x, y, z, Block.Getter.Condition.TYPE);
-            if (block == null || block.isAir()) continue;
+            if (block == null || block.air()) continue;
 
             Point blockOrigin = new Vec(x, y, z);
             Point relative = position.sub(blockOrigin);
-            Shape shape = block.registry().collisionShape();
+            Shape shape = block.collisionShape();
 
             // real collision shapes only: shapeless blocks (fire, fluids) never contact - cell semantics live in scan()
             if (shape == null || shape.relativeStart().samePoint(shape.relativeEnd())) continue;
@@ -228,7 +228,7 @@ public final class BlockContact {
 
     /** Collision shape covers all six faces (dirt/stone yes, stairs/slabs/fences no); false without a collision shape. */
     public static boolean isFullCube(Block block) {
-        Shape shape = block.registry().collisionShape();
+        Shape shape = block.collisionShape();
         if (shape == null) return false;
         for (BlockFace face : BlockFace.values()) {
             if (!shape.isFaceFull(face)) return false;

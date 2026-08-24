@@ -51,6 +51,9 @@ public final class Polyp {
     public boolean installSprintTracker = true;
     /** Tracks per-entity air-time, launch state, and position-delta motion (drives knockback velocity). */
     public boolean installMotionTracker = true;
+    /** Block-place + footstep sounds Minestom doesn't emit, played through the fx registry
+     *  ({@code Fx.STEP}/{@code Fx.BLOCK_PLACE}); false skips the emitter entirely. */
+    public boolean installWorldSounds = true;
     /** Removes the pose-change stutter (sneak/sprint/...) 1.9+ clients show under high ping. Requires {@link #installPlayerProvider}. */
     public boolean metaFix = true;
     /**
@@ -144,8 +147,7 @@ public final class Polyp {
         SharedTeam.install(this);
         // inert unless AttackConfig.fakeHits or CompatConfig.fistRayHits
         FakeHits.install(this);
-        // block-place + footstep sounds Minestom doesn't emit
-        WorldSounds.install(this);
+        if (installWorldSounds) WorldSounds.install(this);
         profiles.onChange(changed -> {
             if (changed != null) {
                 if (installPlayerProvider) PlayerConfigApplier.apply(this, changed);

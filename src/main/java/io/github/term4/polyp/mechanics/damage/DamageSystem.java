@@ -497,8 +497,11 @@ public final class DamageSystem implements MechanicsModule {
         return s != null && s.isActive(TickSystem.tick(le));
     }
 
-    /** Fundamental immunity - creative/spectator, which take no damage AND no knockback (vanilla {@code abilities.isInvulnerable}). Distinct from the i-frame window {@link #isInvulnerableToDamage}. */
+    /** Fundamental immunity - creative/spectator or the {@code setInvulnerable} flag: no damage AND no knockback
+     *  (vanilla {@code abilities.isInvulnerable}). Types that harm creative (void) carry {@code bypassImmune}.
+     *  Distinct from the i-frame window {@link #isInvulnerableToDamage}. */
     public static boolean isImmune(Entity e) {
+        if (e instanceof LivingEntity le && le.isInvulnerable()) return true;
         return e instanceof Player p && (p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.SPECTATOR);
     }
 

@@ -335,11 +335,11 @@ public final class FluidFlow {
         return idx >= 0 && idx < table.length ? table[idx] : 0;
     }
 
-    /** Approximates vanilla's {@code material.isSolid()} / face-occlusion test with the registry solid flag. */
+    /** Approximates vanilla's {@code material.solid()} / face-occlusion test with the registry solid flag. */
     private static boolean solid(MechanicsWorld inst, int x, int y, int z) {
         if (!inst.isChunkLoaded(x >> 4, z >> 4)) return false;
         Block block = inst.getBlock(x, y, z, Block.Getter.Condition.TYPE);
-        return block != null && block.isSolid();
+        return block != null && block.solid();
     }
 
     private static int floor(double v) {

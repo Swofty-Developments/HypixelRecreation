@@ -116,7 +116,8 @@ class BlockBreakingTest extends HeadlessServerTest {
         for (int[] d : new int[][]{{1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}}) {
             inst.setBlock(CENTER.blockX() + d[0], CENTER.blockY() + d[1], CENTER.blockZ() + d[2], shell);
         }
-        system(BlockBreaking.builder().model(BlockBreaking.Model.RAY_1_8).neverBreaks(Set.of(Block.GLASS))
+        system(BlockBreaking.builder().model(BlockBreaking.Model.RAY_1_8)
+                .breakRule(BlockBreaking.BreakRule.neverBreaks(Set.of(Block.GLASS)))
                 .shielding(mode).interaction(BlockBreaking.Interaction.DESTROY_NO_DROPS).build())
                 .explode(inst, new Pos(CENTER.blockX() + 1.5, CENTER.blockY() + 1.5, CENTER.blockZ() + 1.5), 4.0f);
         return inst.getBlock(CENTER).compare(Block.DIRT);
@@ -146,7 +147,8 @@ class BlockBreakingTest extends HeadlessServerTest {
         Instance inst = world();
         inst.setBlock(CENTER, Block.DIRT);
         inst.setBlock(CENTER.blockX(), CENTER.blockY(), CENTER.blockZ() + 1, Block.GLASS);
-        system(BlockBreaking.builder().model(BlockBreaking.Model.RAY_1_8).neverBreaks(Set.of(Block.GLASS))
+        system(BlockBreaking.builder().model(BlockBreaking.Model.RAY_1_8)
+                .breakRule(BlockBreaking.BreakRule.neverBreaks(Set.of(Block.GLASS)))
                 .shielding(mode).interaction(BlockBreaking.Interaction.DESTROY_NO_DROPS).build())
                 .explode(inst, new Pos(CENTER.blockX() + 0.5, CENTER.blockY() + 0.5, CENTER.blockZ() + 2.5), 4.0f);
         return inst.getBlock(CENTER).compare(Block.DIRT);
@@ -171,10 +173,11 @@ class BlockBreakingTest extends HeadlessServerTest {
         inst.setBlock(bx - 1, by, bz, Block.OBSIDIAN);
         inst.setBlock(bx, by, bz - 1, Block.GLASS);
         inst.setBlock(bx - 1, by, bz - 1, Block.DIRT);
-        system(BlockBreaking.builder().model(BlockBreaking.Model.RAY_1_8).neverBreaks(Set.of(Block.GLASS))
+        system(BlockBreaking.builder().model(BlockBreaking.Model.RAY_1_8)
+                .breakRule(BlockBreaking.BreakRule.neverBreaks(Set.of(Block.GLASS)))
                 .shielding(BlockBreaking.Shielding.OCCLUSION).interaction(BlockBreaking.Interaction.DESTROY_NO_DROPS).build())
                 .explode(inst, new Pos(bx + 0.5 + jx, by + 0.5, bz + 0.5 + jz), 4.0f);
-        return inst.getBlock(bx - 1, by, bz - 1).isAir();
+        return inst.getBlock(bx - 1, by, bz - 1).air();
     }
 
     /**
@@ -253,6 +256,49 @@ class BlockBreakingTest extends HeadlessServerTest {
             fireball.remove();
             tnt.remove();
         }
+    }
+
+    /** The break-only-player-placed shape: the rule reads a tag off the block, so it must be handed the block's
+     *  full data, not just the type. All 25 dirt would break without the rule (pinned above). */
+    @Test
+    void breakRulesSeeBlockTags() {
+        var placed = net.minestom.server.tag.Tag.Boolean("test:player-placed");
+        Instance inst = world();
+        for (int dx = -2; dx <= 2; dx++)
+            for (int dz = -2; dz <= 2; dz++)
+                inst.setBlock(CENTER.blockX() + dx, CENTER.blockY(), CENTER.blockZ() + dz,
+                        dx < 0 ? Block.DIRT.withTag(placed, true) : Block.DIRT);
+        Entity tnt = new Entity(EntityType.TNT);
+        tnt.setInstance(inst, new Pos(CENTER.blockX() + 0.5, CENTER.blockY() + 1.5, CENTER.blockZ() + 0.5)).join();
+        try {
+            system(BlockBreaking.builder().model(BlockBreaking.Model.RAY_1_8)
+                    .interaction(BlockBreaking.Interaction.DESTROY_NO_DROPS)
+                    .breakRule((block, pos, ctx) -> Boolean.TRUE.equals(block.getTag(placed)))
+                    .build())
+                    .explode(inst, tnt.getPosition(), 4.0f, tnt);
+            assertEquals(15, remaining(inst, Block.DIRT), "exactly the tagged columns broke");
+        } finally {
+            tnt.remove();
+        }
+    }
+
+    /** The app-level knob: {@code ExplosionConfig.breakRule} narrows the policy without touching the preset's
+     *  {@code BlockBreaking} - and its vetoes still hold (player-placed blast-proof glass survives). */
+    @Test
+    void configLevelBreakRuleNarrowsWithoutTouchingThePreset() {
+        var placed = net.minestom.server.tag.Tag.Boolean("test:player-placed");
+        ExplosionConfig cfg = io.github.term4.polyp.presets.hypixel.Explosion.config().toBuilder()
+                .breakRule((block, pos, ctx) -> Boolean.TRUE.equals(block.getTag(placed)))
+                .build();
+        Instance inst = world();
+        int bx = CENTER.blockX(), by = CENTER.blockY(), bz = CENTER.blockZ();
+        inst.setBlock(bx - 1, by, bz, Block.DIRT.withTag(placed, true));
+        inst.setBlock(bx + 1, by, bz, Block.DIRT);
+        inst.setBlock(bx, by, bz - 1, Block.GLASS.withTag(placed, true));
+        detonate(new ExplosionSystem(polyp, cfg), inst, 4.0f);
+        assertTrue(inst.getBlock(bx - 1, by, bz).air(), "player-placed dirt breaks");
+        assertTrue(inst.getBlock(bx + 1, by, bz).compare(Block.DIRT), "unplaced dirt survives the app rule");
+        assertTrue(inst.getBlock(bx, by, bz - 1).compare(Block.GLASS), "blast-proof glass survives even player-placed");
     }
 
     /** {@code onlyBreaks} is the minigame shape: a whitelist beats resistance in both directions. */

@@ -79,7 +79,7 @@ public final class BlockBreakProgress {
             if (!ctx.owns(miner)) continue;
             // the MINER's world: an overlay block over base air reads AIR instance-wide, killing the dig.
             // negative elapsed = a stamp from another clock (mid-dig shard transfer), and the client already resynced
-            if (MechanicsWorld.viewed(miner).getBlock(dig.pos()).isAir() || TickSystem.tick(miner) < dig.startTick()) {
+            if (MechanicsWorld.viewed(miner).getBlock(dig.pos()).air() || TickSystem.tick(miner) < dig.startTick()) {
                 digs.remove(entry.getKey());
                 broadcast(miner, dig, CLEAR_STAGE);
                 continue;

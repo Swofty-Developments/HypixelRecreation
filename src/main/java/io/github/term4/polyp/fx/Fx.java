@@ -7,6 +7,10 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.minestom.server.event.EventDispatcher;
 import net.minestom.server.event.ListenerHandle;
+import net.minestom.server.instance.block.Block;
+import net.minestom.server.instance.block.BlockSoundType;
+import net.minestom.server.network.packet.server.play.WorldEventPacket;
+import net.minestom.server.worldevent.WorldEvent;
 import net.minestom.server.network.packet.server.play.EntityAnimationPacket;
 import net.minestom.server.particle.Particle;
 import net.minestom.server.sound.SoundEvent;
@@ -65,6 +69,12 @@ public final class Fx {
     public static final Key FIRE_EXTINGUISH = Key.key("polyp:fire_extinguish");
     /** TNT ignited (primed TNT spawned). */
     public static final Key TNT_PRIME = Key.key("polyp:tnt_prime");
+    /** A footstep; the context detail is the stepped-on {@code Block}. */
+    public static final Key STEP = Key.key("polyp:step");
+    /** A block placement; the context detail is the placed {@code Block}. */
+    public static final Key BLOCK_PLACE = Key.key("polyp:block_place");
+    /** A block break; the context detail is the broken {@code Block}. */
+    public static final Key BLOCK_BREAK = Key.key("polyp:block_break");
     /** The big explosion flash; played for power &gt;= 2 (the 1.8 client's hugeexplosion-vs-explode gate). */
     public static final Key EXPLOSION_EMITTER = Key.key("polyp:explosion_emitter");
 
@@ -123,7 +133,29 @@ public final class Fx {
                 // 1.8 game.tnt.primed 1.0/1.0 on ignite
                 .register(TNT_PRIME, FxHandler.sound(SoundEvent.ENTITY_TNT_PRIMED, Sound.Source.BLOCK, 1.0f, 1.0f))
                 // the wire explosion packet carries no radius through Via, so the 1.8 client never picks its own hugeexplosion
-                .register(EXPLOSION_EMITTER, FxHandler.particle(Particle.EXPLOSION_EMITTER, 1, 0, 0f));
+                .register(EXPLOSION_EMITTER, FxHandler.particle(Particle.EXPLOSION_EMITTER, 1, 0, 0f))
+                // vanilla Entity.playStepSound: volume soundType.volume * 0.15, pitch soundType.pitch
+                .register(STEP, ctx -> {
+                    Block block = ctx.detail(Block.class);
+                    BlockSoundType st = block != null ? block.blockSoundType() : null;
+                    if (st == null || st.stepSound() == null) return;
+                    ctx.predictedSound(st.stepSound(), Sound.Source.PLAYER, st.volume() * 0.15f, st.pitch());
+                })
+                // vanilla BlockItem.place: volume (v+1)/2, pitch p*0.8, BLOCKS category
+                .register(BLOCK_PLACE, ctx -> {
+                    Block block = ctx.detail(Block.class);
+                    BlockSoundType st = block != null ? block.blockSoundType() : null;
+                    if (st == null || st.placeSound() == null) return;
+                    ctx.predictedSound(st.placeSound(), Sound.Source.BLOCK, (st.volume() + 1.0f) / 2.0f, st.pitch() * 0.8f);
+                })
+                // world event 2001: the client derives sound + particles from the block id; both
+                // generations predict their own break, so viewers only
+                .register(BLOCK_BREAK, ctx -> {
+                    Block block = ctx.detail(Block.class);
+                    if (block == null || ctx.source() == null) return;
+                    ctx.source().sendPacketToViewers(new WorldEventPacket(
+                            WorldEvent.PARTICLES_DESTROY_BLOCK.id(), ctx.position(), block.stateId(), false));
+                });
     }
 
     /** The modern (26.1) fx - the {@code Vanilla} preset sets this. {@link #vanilla18()} plus the 1.9+ melee attack sound. */
