@@ -1,6 +1,6 @@
 package net.swofty.type.replayviewer.playback.display;
 
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.swofty.type.generic.i18n.HypixelTranslator;
@@ -13,7 +13,7 @@ final class ReplayDisplayTranslations {
     private ReplayDisplayTranslations() {
     }
 
-    static String toLegacy(Component component) {
-        return LEGACY.serialize(GlobalTranslator.render(component, HypixelTranslator.defaultLocale));
+    static String toLegacy(ComponentLike component) {
+        return LEGACY.serialize(GlobalTranslator.render(component.asComponent(), HypixelTranslator.defaultLocale));
     }
 }
