@@ -4,6 +4,7 @@ import io.github.term4.polyp.world.MechanicsWorld;
 import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.collision.PhysicsResult;
 import net.minestom.server.collision.Shape;
+import net.minestom.server.coordinate.BlockVec;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -65,8 +66,8 @@ final class LegacyBlockRay {
                 for (int z = z0; z <= z1; z++) {
                     if (!world.isChunkLoaded(x >> 4, z >> 4)) continue;
                     Block block = world.getBlock(x, y, z, Block.Getter.Condition.TYPE);
-                    if (block == null || block.isAir()) continue;
-                    Shape shape = block.registry().collisionShape();
+                    if (block == null || block.air()) continue;
+                    Shape shape = block.collisionShape();
                     if (!tall(shape) && !pane(block)) continue;
                     Point s = shape.relativeStart(), e = shape.relativeEnd();
                     Hit hit = clip(start, vel, x + s.x(), y, z + s.z(), x + e.x(), y + 1.0, z + e.z(),
@@ -124,12 +125,12 @@ final class LegacyBlockRay {
     private static PhysicsResult synthetic(Pos from, Vec vel, BoundingBox box, Hit hit, PhysicsResult modern) {
         double stop = Math.max(0, hit.t - EPS);
         Pos newPosition = from.add(vel.mul(stop));
-        Point[] points = new Point[3];
+        Vec[] points = new Vec[3];
         Shape[] shapes = new Shape[3];
-        Point[] shapePositions = new Point[3];
-        points[hit.axis] = hit.point;
+        BlockVec[] shapePositions = new BlockVec[3];
+        points[hit.axis] = hit.point.asVec();
         shapes[hit.axis] = hit.shape;
-        shapePositions[hit.axis] = hit.cell;
+        shapePositions[hit.axis] = hit.cell.asBlockVec();
         Vec newVelocity = switch (hit.axis) {
             case 0 -> vel.withX(0);
             case 1 -> vel.withY(0);
@@ -137,12 +138,12 @@ final class LegacyBlockRay {
         };
         return new PhysicsResult(newPosition, newVelocity, hit.axis == 1 && vel.y() < 0,
                 hit.axis == 0, hit.axis == 1, hit.axis == 2,
-                vel, points, shapes, shapePositions, true, modern.res());
+                vel, points, shapes, shapePositions, true, modern.collisionFraction());
     }
 
     private static PhysicsResult passThrough(PhysicsResult modern) {
         return new PhysicsResult(modern.newPosition(), modern.newVelocity(), false,
                 false, false, false, modern.originalDelta(),
-                new Point[3], new Shape[3], new Point[3], false, modern.res());
+                new Vec[3], new Shape[3], new BlockVec[3], false, modern.collisionFraction());
     }
 }

@@ -29,6 +29,7 @@ public final class FallDamageConfig extends DamageTypeConfig {
     public final @Nullable FieldValue<DamageContext, Double> threshold;
     public final @Nullable FieldValue<DamageContext, Double> damageModifier;
     public final @Nullable FieldValue<DamageContext, Double> fallDamageMultiplier;
+    public final @Nullable FieldValue<DamageContext, Boolean> flyAbilityExempt;
 
     private FallDamageConfig(Builder b) {
         super(b.common);
@@ -36,6 +37,7 @@ public final class FallDamageConfig extends DamageTypeConfig {
         this.threshold = b.threshold;
         this.damageModifier = b.damageModifier;
         this.fallDamageMultiplier = b.fallDamageMultiplier;
+        this.flyAbilityExempt = b.flyAbilityExempt;
     }
 
     public @Nullable Formula formula(DamageContext ctx) { return resolve(formula, ctx); }
@@ -48,6 +50,9 @@ public final class FallDamageConfig extends DamageTypeConfig {
 
     /** Modern {@code FALL_DAMAGE_MULTIPLIER} attribute (ignored by {@link Formula#LEGACY_CEIL}). */
     public @Nullable Double fallDamageMultiplier(DamageContext ctx) { return resolve(fallDamageMultiplier, ctx); }
+
+    /** The fly ability (creative, {@code /fly}) blocks landing damage - vanilla 1.8 + 26.1; {@code false} = mayfly landings still hurt. */
+    public @Nullable Boolean flyAbilityExempt(DamageContext ctx) { return resolve(flyAbilityExempt, ctx); }
 
     /** Explicit {@code baseAmount} when set, else the configured {@link #formula} and knobs. */
     @Override

@@ -15,6 +15,12 @@ public interface Behavior {
 
     default void onRemove(Entity entity, int level) {}
 
+    /** Re-applied while already active. Default = vanilla's combine pair; override for custom stacking. */
+    default void onRefresh(Entity entity, int oldLevel, int newLevel) {
+        onRemove(entity, oldLevel);
+        onApply(entity, newLevel);
+    }
+
     /** Ticks between {@link #onTick} calls; {@code 0} = never. */
     default int tickInterval(int level) { return 0; }
 

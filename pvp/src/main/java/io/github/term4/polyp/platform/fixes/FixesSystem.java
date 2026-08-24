@@ -6,6 +6,7 @@ import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.platform.fixes.client.EquipmentSlotsFix;
 import io.github.term4.polyp.platform.fixes.client.InventorySync;
 import io.github.term4.polyp.platform.fixes.client.LegacyFireDouseFix;
+import io.github.term4.polyp.platform.fixes.client.LegacyPlacementGhostFix;
 import io.github.term4.polyp.platform.fixes.client.LegacySelfPlacementFix;
 import io.github.term4.polyp.platform.fixes.client.LegacyTabCompleteFix;
 import io.github.term4.polyp.platform.fixes.visuals.VisualsConfig;
@@ -74,6 +75,7 @@ public final class FixesSystem implements MechanicsModule {
         polyp.register(system);
         system.legacyArrowVisibility.install(system.node);
         LegacyFireDouseFix.install(system.node, system);
+        LegacyPlacementGhostFix.install(system.node);
         // Below ride server-wide listeners / send overrides, so they gate on the install config and cannot vary per scope.
         // Self-placement wraps the STOCK placement listener; an app that replaces that listener re-installs LAST with
         // its own as the delegate.

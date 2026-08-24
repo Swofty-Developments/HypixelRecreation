@@ -26,38 +26,54 @@ public final class FxContext {
     private final Point position;
     private final @Nullable Entity source;
     private final @Nullable Entity target;
+    private final @Nullable Object detail;
 
-    private FxContext(MechanicsWorld world, Point position, @Nullable Entity source, @Nullable Entity target) {
+    private FxContext(MechanicsWorld world, Point position, @Nullable Entity source, @Nullable Entity target,
+                      @Nullable Object detail) {
         this.world = world;
         this.position = position;
         this.source = source;
         this.target = target;
+        this.detail = detail;
     }
 
     /** At {@code source}'s position, with animations riding its viewers. */
     public static @NotNull FxContext of(@NotNull Entity source) {
-        return new FxContext(MechanicsWorld.of(source), source.getPosition(), source, null);
+        return new FxContext(MechanicsWorld.of(source), source.getPosition(), source, null, null);
     }
 
     /** From {@code source} onto {@code target} - hit feedback ({@code source} = attacker, {@code target} = victim). */
     public static @NotNull FxContext of(@NotNull Entity source, @NotNull Entity target) {
-        return new FxContext(MechanicsWorld.of(source), source.getPosition(), source, target);
+        return new FxContext(MechanicsWorld.of(source), source.getPosition(), source, target, null);
     }
 
     /** A positional fx at {@code position} in {@code world} (no source entity). */
     public static @NotNull FxContext at(@NotNull MechanicsWorld world, @NotNull Point position) {
-        return new FxContext(world, position, null, null);
+        return new FxContext(world, position, null, null, null);
     }
 
     /** A positional fx with a {@code source} for registry scope resolution (an explosion at its center, scoped by its igniter). */
     public static @NotNull FxContext at(@NotNull MechanicsWorld world, @NotNull Point position, @Nullable Entity source) {
-        return new FxContext(world, position, source, null);
+        return new FxContext(world, position, source, null, null);
+    }
+
+    /** This context with a type-specific payload attached (the stepped-on block). */
+    public @NotNull FxContext withDetail(@Nullable Object detail) {
+        return new FxContext(world, position, source, target, detail);
     }
 
     public @NotNull MechanicsWorld world() { return world; }
     public @NotNull Point position() { return position; }
     public @Nullable Entity source() { return source; }
     public @Nullable Entity target() { return target; }
+
+    /** Type-specific payload from the producer (the stepped-on block), or {@code null}. */
+    public @Nullable Object detail() { return detail; }
+
+    /** The {@link #detail()} payload when it is an instance of {@code type}, else {@code null}. */
+    public <T> @Nullable T detail(@NotNull Class<T> type) {
+        return type.isInstance(detail) ? type.cast(detail) : null;
+    }
 
     /** A positional sound at {@link #position()} to the shard audience. */
     public void sound(@NotNull SoundEvent sound, @NotNull Sound.Source src, float volume, float pitch) {
@@ -72,6 +88,19 @@ public final class FxContext {
     public void viewerSound(@NotNull SoundEvent sound, @NotNull Sound.Source src, float volume, float pitch) {
         if (source != null) source.sendPacketToViewers(
                 new SoundEffectPacket(sound, src, position, volume, pitch, ThreadLocalRandom.current().nextLong()));
+    }
+
+    /**
+     * {@link #viewerSound} plus the {@code source} when it is a LEGACY player: modern clients predict
+     * their own world sounds locally; 1.8's local sound sinks are empty stubs, so the doer needs the packet.
+     */
+    public void predictedSound(@NotNull SoundEvent sound, @NotNull Sound.Source src, float volume, float pitch) {
+        viewerSound(sound, src, volume, pitch);
+        var polyp = io.github.term4.polyp.Polyp.getInstance();
+        if (source instanceof Player p && polyp.clientInfo() != null && polyp.clientInfo().isLegacy(p)) {
+            p.sendPacket(new SoundEffectPacket(sound, src, position, volume, pitch,
+                    ThreadLocalRandom.current().nextLong()));
+        }
     }
 
     /**

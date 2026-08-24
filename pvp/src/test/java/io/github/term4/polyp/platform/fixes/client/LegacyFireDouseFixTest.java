@@ -44,7 +44,7 @@ class LegacyFireDouseFixTest extends HeadlessServerTest {
         instance.setBlock(base.add(0, 1, 0), Block.FIRE);
         long before = fizzes();
         EventDispatcher.call(new PlayerStartDiggingEvent(miner.player, instance, Block.STONE, base, BlockFace.TOP));
-        assertTrue(instance.getBlock(base.add(0, 1, 0)).isAir(), "the fire on the clicked face is doused");
+        assertTrue(instance.getBlock(base.add(0, 1, 0)).air(), "the fire on the clicked face is doused");
         assertEquals(Block.STONE, instance.getBlock(base), "the clicked block itself is untouched");
         assertEquals(before + 1, fizzes(), "one extinguish fizz");
     }
@@ -69,7 +69,7 @@ class LegacyFireDouseFixTest extends HeadlessServerTest {
             var breakEvent = new PlayerBlockBreakEvent(miner.player, instance, Block.STONE, Block.AIR, base, BlockFace.EAST);
             EventDispatcher.call(breakEvent);
             assertTrue(breakEvent.isCancelled(), "the douse consumes the creative click - the block survives");
-            assertTrue(instance.getBlock(base.add(1, 0, 0)).isAir(), "the fire is doused");
+            assertTrue(instance.getBlock(base.add(1, 0, 0)).air(), "the fire is doused");
         } finally {
             miner.player.setGameMode(GameMode.SURVIVAL);
         }
@@ -115,7 +115,7 @@ class LegacyFireDouseFixTest extends HeadlessServerTest {
         var breakEvent = new PlayerBlockBreakEvent(miner.player, instance, Block.STONE, Block.AIR, base, BlockFace.EAST);
         breakEvent.setCancelled(true);
         EventDispatcher.call(breakEvent);
-        assertFalse(instance.getBlock(base.add(1, 0, 0)).isAir(), "cancelled break never douses");
+        assertFalse(instance.getBlock(base.add(1, 0, 0)).air(), "cancelled break never douses");
         assertEquals(before, fizzes());
     }
 }

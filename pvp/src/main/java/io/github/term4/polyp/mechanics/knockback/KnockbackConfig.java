@@ -53,6 +53,13 @@ public final class KnockbackConfig extends Config<KnockbackContext, KnockbackCon
                   KnockbackConfigResolver.ResolvedKnockbackConfig cfg);
     }
 
+    /** Wire-side transform on the final velocity (b/t): runs after the pipeline, before the 1.8 quantize, and the
+     *  tracker folds its output. MineMen snaps small vertical velocities to {@code sign*0.05}. */
+    @FunctionalInterface
+    public interface WireRule {
+        Vec apply(Vec bt);
+    }
+
     /** Lower and upper bound for knockback components. Null means no bound. */
     public record Bounds(@Nullable Double lower, @Nullable Double upper) {
         public static Bounds of(@Nullable Double lower, @Nullable Double upper) {
@@ -117,6 +124,8 @@ public final class KnockbackConfig extends Config<KnockbackContext, KnockbackCon
      * (vanilla 1.8's {@code +-3.9}). The 1.8 wire saturates near {@code +-4.0} b/t.
      */
     public final FieldValue<KnockbackContext, Double> velocityCap;
+    /** Transform on the final wire velocity ({@link WireRule}); unset = none. */
+    public final FieldValue<KnockbackContext, WireRule> wireRule;
     /**
      * Whether an airborne victim gets vertical knockback. {@code true} (1.8): always lifts. {@code false} (26.1): an
      * off-ground victim keeps its {@code motY} (the anti-juggle rule), gated on the reconstructed onGround; horizontal is unaffected.
@@ -173,6 +182,7 @@ public final class KnockbackConfig extends Config<KnockbackContext, KnockbackCon
         velocity = b.velocity;
         quantizeVelocity = b.quantizeVelocity;
         velocityCap = b.velocityCap;
+        wireRule = b.wireRule;
         airborneVertical = b.airborneVertical;
         customComponents = b.customComponents;
         frictionRule = b.frictionRule;

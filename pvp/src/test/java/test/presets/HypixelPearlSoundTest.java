@@ -50,14 +50,14 @@ class HypixelPearlSoundTest extends HeadlessServerTest {
             assertNotNull(bedwars, "bedwars: a player on the far side still gets the packet");
             // anchored on the LISTENER, not the landing, so the client has no distance to attenuate over
             // (the packet puts position on its own wire grid, hence the block of slack)
-            assertTrue(Math.abs(bedwars.x() - far.player.getPosition().x()) <= 1.0,
-                    "bedwars: sound follows the listener, got x=" + bedwars.x());
+            assertTrue(Math.abs(bedwars.origin().blockX() - far.player.getPosition().x()) <= 1.0,
+                    "bedwars: sound follows the listener, got x=" + bedwars.origin().blockX());
             assertEquals(1.0f, bedwars.volume(), 1.0e-6, "and at full volume");
 
             SoundEffectPacket normal = farSound(Hypixel.profile(), landing, thrower, far);
             assertNotNull(normal, "other modes still send it - the client does the fading");
-            assertTrue(Math.abs(normal.x() - landing.x()) <= 1.0,
-                    "other modes: sound stays at the landing, got x=" + normal.x());
+            assertTrue(Math.abs(normal.origin().blockX() - landing.x()) <= 1.0,
+                    "other modes: sound stays at the landing, got x=" + normal.origin().blockX());
         } finally {
             if (previous != null) polyp.profiles().setGlobal(previous);
             far.player.remove();

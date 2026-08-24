@@ -43,7 +43,7 @@ public final class CompatPlacement {
     private static void onInteract(PlayerBlockInteractEvent event) {
         if (!(event.getPlayer() instanceof OptimizedPlayer op)) return;
         // the event's block is the base-map read; a virtual-world member's clicked block may exist only in their world
-        if (op.compat().oldPlacement() && MechanicsWorld.viewed(op).getBlock(event.getBlockPosition()).isAir()) {
+        if (op.compat().oldPlacement() && MechanicsWorld.viewed(op).getBlock(event.getBlockPosition()).air()) {
             event.setBlockingItemUse(true);
         }
     }

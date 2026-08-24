@@ -34,7 +34,8 @@ public final class Knockback {
                 .extraHorizontal(0.0)
                 .vertical(VERTICAL_BASE)
                 .extraVertical(0.0)
-                .verticalBounds(0.050, VERTICAL_CAP)
+                .verticalBounds(null, VERTICAL_CAP)
+                .wireRule(Knockback::wireVySnap)
                 .yawWeight(0.5)
                 .frictionH(0.0)
                 .frictionV(VERTICAL_FRIC)
@@ -79,6 +80,7 @@ public final class Knockback {
                 .horizontal(0.525)
                 .vertical(0.365)
                 .verticalBounds(null, 0.45)
+                .wireRule(Knockback::wireVySnap)
                 .addCustomComponent(Knockback::selfHitBlend)
                 .build();
     }
@@ -210,6 +212,15 @@ public final class Knockback {
     private static boolean clientRecentlySprinting(KnockbackContext ctx, Entity e) {
         return SprintTracker.wasClientRecentlySprinting(ctx.services().sprintTracker(),
                 e, TickScaler.duration(e, SPRINT_BUFFER, KnockbackSystem.KEY));
+    }
+
+    // wire law, not a pipeline floor: |vy| < 0.05 goes out as sign*0.05 (0 -> +0.05); measured to -0.05 with the
+    // client then free-falling from the seed - same law as the TNT tracker's resting +-0.05
+    private static final double WIRE_VY_SNAP = 0.05;
+
+    private static Vec wireVySnap(Vec bt) {
+        double vy = bt.y();
+        return Math.abs(vy) >= WIRE_VY_SNAP ? bt : bt.withY(vy < 0 ? -WIRE_VY_SNAP : WIRE_VY_SNAP);
     }
 
     private static final int VERTICAL_DECAY_N = 7;

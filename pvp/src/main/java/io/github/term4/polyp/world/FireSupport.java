@@ -49,7 +49,7 @@ public final class FireSupport {
             Block ground = read(world, below, broken);
             return ground.compare(Block.SOUL_SAND) || ground.compare(Block.SOUL_SOIL);
         }
-        if (read(world, below, broken).registry().collisionShape().isFaceFull(BlockFace.TOP)) return true;
+        if (read(world, below, broken).collisionShape().isFaceFull(BlockFace.TOP)) return true;
         for (Vec offset : NEIGHBORS) {
             Point cell = fire.add(offset);
             if (!world.isChunkLoaded(cell)) return true; // unknown neighbor: keep rather than guess-remove

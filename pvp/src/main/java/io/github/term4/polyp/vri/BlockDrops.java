@@ -78,8 +78,8 @@ public final class BlockDrops {
 
             ItemStack tool = e.getPlayer().getItemInMainHand();
             Tool component = tool.get(DataComponents.TOOL);
-            boolean correct = !e.getBlock().registry().requiresTool()
-                    || (component != null && component.isCorrectForDrops(e.getBlock()));
+            boolean correct = !e.getBlock().requiresTool()
+                    || (component != null && component.isCorrectForDrops(e.getBlock().registryKey()));
             DropContext ctx = new DropContext(e.getPlayer(), e.getBlock(), tool,
                     Enchants.level(tool, FORTUNE), Enchants.level(tool, SILK_TOUCH) > 0, correct);
 

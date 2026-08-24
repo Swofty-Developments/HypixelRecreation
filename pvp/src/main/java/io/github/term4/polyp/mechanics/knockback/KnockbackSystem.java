@@ -127,11 +127,15 @@ public final class KnockbackSystem implements MechanicsModule {
     }
 
     private void broadcast(Entity target, Vec velocity, KnockbackConfigResolver.ResolvedKnockbackConfig resolved, KnockbackSnapshot snap) {
+        double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+        KnockbackConfig.WireRule wire = resolved.wireRule();
+        // before the fold: the tracker must see what the client will receive
+        if (wire != null) velocity = wire.apply(velocity.div(tps)).mul(tps);
         boolean quantize = resolved.quantizeVelocity();
         double cap = resolved.velocityCap();
         Vec applied = quantize ? LegacyVelocity.snap(velocity, cap) : velocity;
         // non-melee stays in server mot and folds into later hits; melee restores (measured, see foldDelivered)
-        if (!snap.melee()) MotionTracker.foldDelivered(target, velocity.div(ServerFlag.SERVER_TICKS_PER_SECOND));
+        if (!snap.melee()) MotionTracker.foldDelivered(target, velocity.div(tps));
         // exact 1.8 wire for a knocked legacy client above the LP-exact band (via ViaBridge); else the normal LP broadcast
         if (!(quantize && LegacyVelocityBridge.applyExact(target, velocity, applied, cap))) target.setVelocity(applied);
         if (KNOCKBACK_APPLIED.hasListener()) EventDispatcher.call(new KnockbackAppliedEvent(snap, applied, services));

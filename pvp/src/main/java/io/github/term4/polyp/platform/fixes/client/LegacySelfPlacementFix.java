@@ -51,8 +51,8 @@ public final class LegacySelfPlacementFix {
         }
     }
 
-    /** The {@code isBlock()} guard is required: a non-block item right-clicking a block has a {@code null} {@link Material#block()}. */
+    /** The null guard is required: a non-block item right-clicking a block has a {@code null} {@link Material#block()}. */
     private static boolean excludesPlacer(Material m) {
-        return m.isBlock() && BlockContact.isPassable(m.block());
+        return m.block() != null && BlockContact.isPassable(m.block());
     }
 }

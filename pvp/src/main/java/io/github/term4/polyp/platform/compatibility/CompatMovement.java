@@ -155,7 +155,7 @@ public final class CompatMovement {
             // passable blocks are meant to be occupied (vanilla ladders carry a wall-side slab, which was setting climb
             // moves back); scaffolding's dynamic shape Minestom doesn't model
             if (block == null || BlockContact.isPassable(block) || block.id() == Block.SCAFFOLDING.id()) continue;
-            var shape = block.registry().collisionShape();
+            var shape = block.collisionShape();
             if (!shape.intersectBox(to.sub(bp.blockX(), bp.blockY(), bp.blockZ()), box)) continue;
             if (shape.intersectBox(from.sub(bp.blockX(), bp.blockY(), bp.blockZ()), box)) continue; // already inside -> allow sliding out
             return true;

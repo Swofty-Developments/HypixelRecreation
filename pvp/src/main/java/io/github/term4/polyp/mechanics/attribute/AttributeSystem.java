@@ -70,7 +70,8 @@ public final class AttributeSystem implements MechanicsModule {
     private final EventNode<@NotNull EntityEvent> node;
     /** Re-entry guard: the re-added potion fires the add event again. */
     private final ThreadLocal<Boolean> rescaling = ThreadLocal.withInitial(() -> Boolean.FALSE);
-    /** The potion a refresh is swapping IN, held across Minestom's internal remove; see {@link #onPotionAdd}. */
+    /** The refresh's incoming potion, held across the re-drive: mutes the behavior half of {@link #onPotion} and
+     *  marks the internal removal as the swap's own. */
     private final ThreadLocal<Potion> replacing = new ThreadLocal<>();
     /** Per-entity {@code armorEnchantKey -> worn level}, driving {@link ArmorSource} behavior transitions + ticking. */
     private static final Tag<Map<Key, Integer>> WORN_ARMOR = Tag.Transient("polyp:worn-armor-sources");
@@ -148,6 +149,9 @@ public final class AttributeSystem implements MechanicsModule {
         // so onPotionRemove can tell that removal from a real expiry.
         if (replacing.get() == null && e.getEntity().hasEffect(p.effect())) {
             e.setCancelled(true);
+            // behavior sees vanilla's combine via onRefresh (default remove-then-add): absorption's clamped
+            // remove makes a re-eaten gapple a refill, not a stack. The re-driven add is modifiers-only.
+            behaviorRefresh(e.getEntity(), p);
             replacing.set(p);
             try { e.getEntity().addEffect(p); }
             finally { replacing.remove(); }
@@ -156,11 +160,30 @@ public final class AttributeSystem implements MechanicsModule {
         onPotion(e.getEntity(), p, true);
     }
 
-    /** The swap's own removal carries the same effect AND level as the incoming potion; anything else is real. */
+    private void behaviorRefresh(Entity entity, Potion incoming) {
+        if (!(entity instanceof LivingEntity living)) return;
+        EntitySource source = registry.entitySource(incoming.effect().key());
+        if (source == null) return;
+        for (TimedPotion tp : living.getActiveEffects()) {
+            if (tp.potion().effect() == incoming.effect()) {
+                source.behavior().onRefresh(living, tp.potion().amplifier() + 1, incoming.amplifier() + 1);
+                return;
+            }
+        }
+    }
+
+    /** The swap's own removal (same effect while {@code replacing} is set): its behavior pair already ran, so only
+     *  strip a different OLD level's modifier push. Anything else is a real expiry. */
     private void onPotionRemove(EntityPotionRemoveEvent e) {
         Potion incoming = replacing.get();
         Potion gone = e.getPotion();
-        if (incoming != null && incoming.effect() == gone.effect() && incoming.amplifier() == gone.amplifier()) return;
+        if (incoming != null && incoming.effect() == gone.effect()) {
+            if (incoming.amplifier() != gone.amplifier() && e.getEntity() instanceof LivingEntity living) {
+                EntitySource source = registry.entitySource(gone.effect().key());
+                if (source != null) syncModifiers(living, source, gone.amplifier() + 1, false);
+            }
+            return;
+        }
         onPotion(e.getEntity(), gone, false);
     }
 
@@ -170,6 +193,7 @@ public final class AttributeSystem implements MechanicsModule {
         if (source == null) return;
         int level = potion.amplifier() + 1;
         syncModifiers(living, source, level, added);
+        if (replacing.get() != null) return; // a refresh's re-drive: the behavior already ran via onRefresh
         if (added) source.behavior().onApply(living, level);
         else source.behavior().onRemove(living, level);
     }

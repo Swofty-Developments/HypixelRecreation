@@ -50,7 +50,7 @@ class FireBreaksTest extends HeadlessServerTest {
         long before = fizzes();
         instance.setBlock(base, Block.AIR); // the break event's world state: support already gone
         EventDispatcher.call(new PlayerBlockBreakEvent(miner.player, instance, Block.STONE, Block.AIR, base, BlockFace.NORTH));
-        assertTrue(instance.getBlock(base.add(0, 1, 0)).isAir(), "the floating fire is removed");
+        assertTrue(instance.getBlock(base.add(0, 1, 0)).air(), "the floating fire is removed");
         assertEquals(before, fizzes(), "support-loss removal is silent");
     }
 
@@ -74,7 +74,7 @@ class FireBreaksTest extends HeadlessServerTest {
         instance.setBlock(fire, Block.FIRE);
         instance.setBlock(fire.add(0, -1, 0), Block.AIR); // nothing sturdy under the fire
         EventDispatcher.call(new PlayerBlockBreakEvent(miner.player, instance, Block.OAK_PLANKS, Block.AIR, wall, BlockFace.NORTH));
-        assertTrue(instance.getBlock(fire).isAir(), "the wall was the fire's only support");
+        assertTrue(instance.getBlock(fire).air(), "the wall was the fire's only support");
     }
 
     /** Soul fire only lives on soul sand/soil - a flammable neighbor does not save it. */
@@ -85,7 +85,7 @@ class FireBreaksTest extends HeadlessServerTest {
         instance.setBlock(base.add(0, 1, 0), Block.SOUL_FIRE);
         instance.setBlock(base.add(1, 1, 0), Block.OAK_PLANKS);
         EventDispatcher.call(new PlayerBlockBreakEvent(miner.player, instance, Block.SOUL_SAND, Block.AIR, base, BlockFace.NORTH));
-        assertTrue(instance.getBlock(base.add(0, 1, 0)).isAir(), "soul fire needs its soul base");
+        assertTrue(instance.getBlock(base.add(0, 1, 0)).air(), "soul fire needs its soul base");
     }
 
     /** A protection listener's cancel (lobby maps) keeps the fire and stays silent. */

@@ -97,7 +97,7 @@ public final class Projectiles {
         if (boxFits(world, from.x(), from.y() + 1, from.z())) return null;
         int cy = (int) Math.floor(from.y());
         if (world.getBlock((int) Math.floor(from.x()), cy, (int) Math.floor(from.z()),
-                Block.Getter.Condition.TYPE).isAir()) return null;
+                Block.Getter.Condition.TYPE).air()) return null;
         return new Pos(from.x(), cy + 1, from.z());
     }
 
@@ -166,8 +166,8 @@ public final class Projectiles {
                 if (!world.isChunkLoaded(cx >> 4, cz >> 4)) return false;
                 for (int cy = y0; cy <= y1; cy++) {
                     Block block = world.getBlock(cx, cy, cz, Block.Getter.Condition.TYPE);
-                    if (block.isAir()) continue;
-                    Shape s = block.registry().collisionShape();
+                    if (block.air()) continue;
+                    Shape s = block.collisionShape();
                     if (s != null && s.intersectBox(new Vec(x - cx, y - cy, z - cz), PLAYER_BOX)) return false;
                 }
             }

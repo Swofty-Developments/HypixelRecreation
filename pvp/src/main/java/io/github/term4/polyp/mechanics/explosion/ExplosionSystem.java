@@ -182,7 +182,7 @@ public final class ExplosionSystem implements MechanicsModule {
             // Non-living TNT = feet/0 (vanilla), not the 0.15 registry eye.
             double headHeight = !living ? 0.0
                     : resolved.pushEye() != null ? resolved.pushEye().apply(entity)
-                    : entity.getEntityType().registry().eyeHeight();
+                    : entity.getEntityType().eyeHeight();
             Point eyeOrigin = entity.getPosition().add(0, headHeight, 0);
             float exposure = switch (resolved.exposure()) {
                 case NONE -> 1.0f;
