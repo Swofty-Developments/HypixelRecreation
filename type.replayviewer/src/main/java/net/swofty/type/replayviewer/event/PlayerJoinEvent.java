@@ -1,17 +1,17 @@
 package net.swofty.type.replayviewer.event;
 
-import lombok.SneakyThrows;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
-import net.minestom.server.entity.Player;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.LightingChunk;
+import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.protocol.objects.replay.ReplayLoadProtocolObject;
 import net.swofty.commons.protocol.objects.replay.ReplayMapLoadProtocolObject;
 import net.swofty.commons.replay.protocol.ReplayDataReader;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.game.replay.ReplayVersion;
 import net.swofty.type.game.replay.api.ReplayGameMetadata;
@@ -25,7 +25,6 @@ import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
-import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.ScheduleUtility;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
@@ -41,7 +40,6 @@ import java.util.concurrent.CompletableFuture;
 
 public class PlayerJoinEvent implements HypixelEventClass {
 
-    @SneakyThrows
     @PhasedEvent(node = EventNodes.ALL, phase = EventPhase.CONNECT)
     public void run(AsyncPlayerConfigurationEvent event) {
         HypixelPlayer player = (HypixelPlayer) event.getPlayer();
@@ -87,13 +85,13 @@ public class PlayerJoinEvent implements HypixelEventClass {
         InstanceContainer instance = MinecraftServer.getInstanceManager().createInstanceContainer();
         instance.setChunkSupplier(LightingChunk::new);
 
-        event.setSpawningInstance(instance);
+        event.setSpawningInstance(HypixelConst.getEmptyInstance());
         event.getPlayer().setRespawnPoint(new Pos(0, 100, 0));
 
         CompletableFuture.runAsync(() -> loadReplay(player, replayId, instance));
     }
 
-    private void loadReplay(Player player, UUID replayId, InstanceContainer instance) {
+    private void loadReplay(HypixelPlayer player, UUID replayId, InstanceContainer instance) {
         try {
             // Get share code if present
             String shareCode = TypedViewReplayHandler.getAndRemoveShareCode(player.getUuid());
@@ -107,20 +105,20 @@ public class PlayerJoinEvent implements HypixelEventClass {
 
             if (!response.success()) {
                 Logger.error("Response failed: " + response.errorMessage());
-                player.sendMessage(Text.key("replays.replay_load_failed"));
+                failReplayLoad(player, instance, Text.key("replays.replay_load_failed"));
                 return;
             }
 
             if (response.metadata() == null) {
                 Logger.error("Response is missing metadata.");
-                player.sendMessage(Text.key("replays.replay_incomplete"));
+                failReplayLoad(player, instance, Text.key("replays.replay_incomplete"));
                 return;
             }
 
             var protocolMetadata = response.metadata();
             var protocolDescriptor = protocolMetadata.descriptor();
             if (protocolDescriptor.formatVersion() != ReplayVersion.CURRENT_VERSION) {
-                player.sendMessage(Text.key("replays.replay_unsupported_format"));
+                failReplayLoad(player, instance, Text.key("replays.replay_unsupported_format"));
                 Logger.warn("Rejected replay {} with format version {}", replayId, protocolDescriptor.formatVersion());
                 return;
             }
@@ -163,36 +161,99 @@ public class PlayerJoinEvent implements HypixelEventClass {
                 if (shareData != null) {
                     spawnPos = shareData.position();
                     startTick = Math.min(shareData.tick(), Math.max(0, descriptor.durationTicks() - 1));
-                    player.sendMessage(Text.key("replays.shared_position_restored"));
+                    sendPlayerMessage(player, Text.key("replays.shared_position_restored"));
                 } else {
                     spawnPos = new Pos(descriptor.mapCenterX(), 100, descriptor.mapCenterZ());
-                    player.sendMessage(Text.key("replays.invalid_share_code"));
+                    sendPlayerMessage(player, Text.key("replays.invalid_share_code"));
                 }
             } else {
                 spawnPos = new Pos(descriptor.mapCenterX(), 100, descriptor.mapCenterZ());
             }
 
-            player.teleport(spawnPos);
-
-            ReplaySession session = new ReplaySession(metadata, gameMetadata, adapter, instance, timeline);
-            session.addViewer(player);
-            TypeReplayViewerLoader.registerSession(player.getUuid(), session);
-
-            if (startTick > 0) {
-                session.seekTo(startTick);
-            }
-
-            session.play();
+            scheduleReplayInitialization(player, instance, metadata, gameMetadata, adapter, timeline, spawnPos, startTick);
         } catch (Exception e) {
             Logger.error(e, "Failed to load replay {}", replayId);
-            player.sendMessage(Text.key("replays.replay_corrupt"));
-            if (player instanceof HypixelPlayer hp) {
-                hp.sendTo(ServerType.PROTOTYPE_LOBBY);
-            }
+            failReplayLoad(player, instance, Text.key("replays.replay_corrupt"));
         }
     }
 
-    private CompletableFuture<Void> loadMapData(String mapHash, InstanceContainer instance, Player player) {
+    private void scheduleReplayInitialization(
+            HypixelPlayer player,
+            InstanceContainer instance,
+            ReplayMetadata metadata,
+            ReplayGameMetadata gameMetadata,
+            ReplayViewerAdapter<?, ?> adapter,
+            ReplayTimeline timeline,
+            Pos spawnPos,
+            int startTick
+    ) {
+        ScheduleUtility.nextTick(() -> initializeReplay(
+                player, instance, metadata, gameMetadata, adapter, timeline, spawnPos, startTick));
+    }
+
+    private void initializeReplay(
+            HypixelPlayer player,
+            InstanceContainer instance,
+            ReplayMetadata metadata,
+            ReplayGameMetadata gameMetadata,
+            ReplayViewerAdapter<?, ?> adapter,
+            ReplayTimeline timeline,
+            Pos spawnPos,
+            int startTick
+    ) {
+        if (!player.isOnline()) {
+            scheduleInstanceCleanup(instance);
+            return;
+        }
+
+        ReplaySession session;
+        try {
+            player.setRespawnPoint(spawnPos);
+            session = new ReplaySession(metadata, gameMetadata, adapter, instance, timeline);
+        } catch (Exception exception) {
+            Logger.error(exception, "Failed to initialize replay {}", metadata.descriptor().replayId());
+            failReplayLoadOnServer(player, instance, Text.key("replays.replay_corrupt"));
+            return;
+        }
+
+        try {
+            player.setInstance(instance, spawnPos).whenComplete((ignored, throwable) ->
+                    ScheduleUtility.nextTick(() -> {
+                        if (throwable != null) {
+                            Logger.error(throwable, "Failed to move player into replay {}", session.getReplayId());
+                            abortSession(player, session);
+                            failReplayLoadOnServer(player, instance, Text.key("replays.replay_corrupt"));
+                            return;
+                        }
+                        if (!player.isOnline()) {
+                            abortSession(player, session);
+                            scheduleInstanceCleanup(instance);
+                            return;
+                        }
+                        try {
+                            session.addViewer(player);
+                            TypeReplayViewerLoader.registerSession(player.getUuid(), session);
+                            if (startTick > 0) session.seekTo(startTick);
+                            session.play();
+                        } catch (Exception exception) {
+                            Logger.error(exception, "Failed to start replay {} for {}", session.getReplayId(), player.getUsername());
+                            abortSession(player, session);
+                            failReplayLoadOnServer(player, instance, Text.key("replays.replay_corrupt"));
+                        }
+                    }));
+        } catch (Exception exception) {
+            Logger.error(exception, "Failed to move player into replay {}", session.getReplayId());
+            abortSession(player, session);
+            failReplayLoadOnServer(player, instance, Text.key("replays.replay_corrupt"));
+        }
+    }
+
+    private void abortSession(HypixelPlayer player, ReplaySession session) {
+        TypeReplayViewerLoader.removeSession(player.getUuid());
+        session.stop();
+    }
+
+    private CompletableFuture<Void> loadMapData(String mapHash, InstanceContainer instance, HypixelPlayer player) {
         if (mapHash == null || mapHash.isEmpty()) {
             Logger.warn("No map hash provided, skipping map load");
             return CompletableFuture.completedFuture(null);
@@ -208,7 +269,7 @@ public class PlayerJoinEvent implements HypixelEventClass {
 
             if (!response.success() || !response.found()) {
                 Logger.warn("Map {} not found in replay service", mapHash);
-                player.sendMessage(Text.key("replays.map_unavailable"));
+                sendPlayerMessage(player, Text.key("replays.map_unavailable"));
                 return CompletableFuture.completedFuture(null);
             }
 
@@ -222,15 +283,48 @@ public class PlayerJoinEvent implements HypixelEventClass {
                     .whenComplete((ignored, throwable) -> {
                         if (throwable != null) {
                             Logger.error(throwable, "Failed to load map");
-                            return;
+                        } else {
+                            Logger.info("Loaded map {} ({} bytes)", mapHash, response.compressedData().length);
                         }
-
-                        Logger.info("Loaded map {} ({} bytes)", mapHash, response.compressedData().length);
                     });
         } catch (Exception e) {
             Logger.error(e, "Failed to load map {}", mapHash);
-            player.sendMessage(Text.key("replays.map_load_failed", String.valueOf(e.getMessage())));
+            sendPlayerMessage(player, Text.key("replays.map_load_failed", String.valueOf(e.getMessage())));
             return CompletableFuture.failedFuture(e);
         }
+    }
+
+    private void failReplayLoad(HypixelPlayer player, InstanceContainer instance, Text message) {
+        ScheduleUtility.nextTick(() -> failReplayLoadOnServer(player, instance, message));
+    }
+
+    private void failReplayLoadOnServer(HypixelPlayer player, InstanceContainer instance, Text message) {
+        if (player.isOnline()) {
+            player.sendMessage(message);
+            player.sendTo(ServerType.PROTOTYPE_LOBBY);
+        }
+        scheduleInstanceCleanup(instance);
+    }
+
+    private void sendPlayerMessage(HypixelPlayer player, Text message) {
+        ScheduleUtility.nextTick(() -> {
+            if (player.isOnline()) player.sendMessage(message);
+        });
+    }
+
+    private void scheduleInstanceCleanup(InstanceContainer instance) {
+        ScheduleUtility.delay(() -> cleanupInstance(instance, 0), TaskSchedule.seconds(1));
+    }
+
+    private void cleanupInstance(InstanceContainer instance, int attempt) {
+        if (instance.getPlayers().isEmpty()) {
+            MinecraftServer.getInstanceManager().unregisterInstance(instance);
+            return;
+        }
+        if (attempt >= 20) {
+            Logger.warn("Could not clean up replay instance after failure; players are still present");
+            return;
+        }
+        ScheduleUtility.delay(() -> cleanupInstance(instance, attempt + 1), TaskSchedule.seconds(1));
     }
 }

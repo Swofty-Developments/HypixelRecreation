@@ -35,7 +35,12 @@ import net.swofty.type.game.replay.delta.ReplayEntityRemoveDelta;
 import net.swofty.type.game.replay.dispatcher.BlockChangeDispatcher;
 import net.swofty.type.game.replay.dispatcher.DispatcherManager;
 import net.swofty.type.game.replay.dispatcher.EntityLocationDispatcher;
-import net.swofty.type.game.replay.event.*;
+import net.swofty.type.game.replay.event.ReplayBlockBreakEvent;
+import net.swofty.type.game.replay.event.ReplayBookmarkEvent;
+import net.swofty.type.game.replay.event.ReplayComponentEvent;
+import net.swofty.type.game.replay.event.ReplayEntityAnimationEvent;
+import net.swofty.type.game.replay.event.ReplayParticleEvent;
+import net.swofty.type.game.replay.event.ReplaySoundEvent;
 import net.swofty.type.game.replay.model.ReplayBlockPosition;
 import net.swofty.type.game.replay.model.ReplayDescriptor;
 import net.swofty.type.game.replay.model.ReplayParticipant;
@@ -50,6 +55,10 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class BedWarsReplayManager {
+    private static final int RETRY_LOG_ATTEMPT = 3;
+    private static final long INITIAL_RETRY_DELAY_MILLIS = 100L;
+    private static final long MAX_RETRY_DELAY_MILLIS = 5_000L;
+
     private final BedWarsGame game;
     private final ProxyService replayService;
     private CompletableFuture<Void> deliveryChain = CompletableFuture.completedFuture(null);
@@ -83,25 +92,40 @@ public class BedWarsReplayManager {
             return;
         }
 
-        deliveryChain = deliveryChain.thenCompose(ignored -> deliverWithRetry(data, 0));
+        deliveryChain = deliveryChain
+                .handle((ignored, error) -> {
+                    if (error != null) {
+                        Logger.error(error, "Replay delivery chain recovered before sending {}", data.getClass().getSimpleName());
+                    }
+                    return null;
+                })
+                .thenCompose(ignored -> deliverWithRetry(data, 0));
     }
 
     private CompletableFuture<Void> deliverWithRetry(Object data, int attempt) {
-        CompletableFuture<Void> delivery = replayService.handleRequest(data).thenApply(response -> {
-            if (!responseAcknowledged(response)) {
-                throw new IllegalStateException("Replay service rejected " + data.getClass().getSimpleName());
-            }
-            return (Void) null;
-        });
-        return delivery.exceptionallyCompose(error -> {
-            if (attempt >= 3) {
-                Logger.error(error, "Replay delivery failed after {} attempts: {}", attempt + 1, data.getClass().getSimpleName());
-                return CompletableFuture.failedFuture(error);
-            }
-            long delayMillis = 100L << attempt;
-            return CompletableFuture.<Void>supplyAsync(() -> null, CompletableFuture.delayedExecutor(delayMillis, java.util.concurrent.TimeUnit.MILLISECONDS))
-                    .thenCompose(ignored -> deliverWithRetry(data, attempt + 1));
-        });
+        try {
+            CompletableFuture<Void> delivery = replayService.handleRequest(data).thenApply(response -> {
+                if (!responseAcknowledged(response)) {
+                    throw new IllegalStateException("Replay service rejected " + data.getClass().getSimpleName());
+                }
+                return (Void) null;
+            });
+            return delivery.exceptionallyCompose(error -> retryDelivery(data, attempt, error));
+        } catch (Exception exception) {
+            return retryDelivery(data, attempt, exception);
+        }
+    }
+
+    private CompletableFuture<Void> retryDelivery(Object data, int attempt, Throwable error) {
+        if (attempt == RETRY_LOG_ATTEMPT || attempt > RETRY_LOG_ATTEMPT && attempt % 12 == 0) {
+            Logger.error(error, "Replay delivery still failing after {} attempts; retrying {}", attempt + 1,
+                    data.getClass().getSimpleName());
+        }
+        long delayMillis = Math.min(MAX_RETRY_DELAY_MILLIS,
+                INITIAL_RETRY_DELAY_MILLIS << Math.min(attempt, 6));
+        return CompletableFuture.<Void>supplyAsync(() -> null,
+                        CompletableFuture.delayedExecutor(delayMillis, java.util.concurrent.TimeUnit.MILLISECONDS))
+                .thenCompose(ignored -> deliverWithRetry(data, attempt + 1));
     }
 
     private boolean responseAcknowledged(Object response) {

@@ -34,7 +34,7 @@ public final class EntityLifecycleDispatcher implements ReplayDispatcher {
         for (Entity entity : instance.getEntities()) {
             if (!recorder.isEntityReplayVisible(entity)) continue;
             current.add(entity.getEntityId());
-            if (trackedEntities.add(entity.getEntityId())) recorder.recordEntityState(entity);
+            trackedEntities.add(entity.getEntityId());
         }
         Set<Integer> removed = new HashSet<>(trackedEntities);
         removed.removeAll(current);

@@ -26,7 +26,9 @@ public class ReplayStartEndpoint implements RedisMessageHandler<ReplayStartProto
             if (!metadata.descriptor().gameType().equals(metadata.gameMetadata().gameType())) {
                 throw new IllegalArgumentException("Replay game metadata type mismatch");
             }
-            ReplayService.getSessionManager().startSession(metadata);
+            if (!ReplayService.getSessionManager().isFinalized(metadata.descriptor().replayId())) {
+                ReplayService.getSessionManager().startSession(metadata);
+            }
             return new ReplayStartProtocolObject.StartResponse(true, null);
         } catch (Exception exception) {
             Logger.error(exception, "Failed to start replay session");

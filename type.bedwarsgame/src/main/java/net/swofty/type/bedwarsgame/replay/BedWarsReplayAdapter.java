@@ -5,7 +5,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minestom.server.coordinate.Pos;
-import net.minestom.server.entity.*;
+import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.EntityType;
+import net.minestom.server.entity.EquipmentSlot;
+import net.minestom.server.entity.GameMode;
+import net.minestom.server.entity.ItemEntity;
+import net.minestom.server.entity.LivingEntity;
+import net.minestom.server.entity.Player;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.potion.TimedPotion;
@@ -21,9 +27,15 @@ import net.swofty.type.game.replay.delta.ReplayGameStateDelta;
 import net.swofty.type.game.replay.model.ReplayEntityState;
 import net.swofty.type.game.replay.model.ReplayPotionEffectState;
 import net.swofty.type.game.replay.model.ReplaySnapshot;
+import net.swofty.type.generic.entity.npc.impl.NPCViewable;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public final class BedWarsReplayAdapter implements ReplayGameAdapter<BedWarsReplayMetadata, BedWarsReplayState> {
     public static final String GAME_TYPE = "BEDWARS";
@@ -414,7 +426,7 @@ public final class BedWarsReplayAdapter implements ReplayGameAdapter<BedWarsRepl
     }
 
     public boolean isReplayVisible(Entity entity) {
-        return entity instanceof Player || !entity.isInvisible();
+        return entity instanceof Player || (!(entity instanceof NPCViewable) && !entity.isInvisible());
     }
 
     private static void writePosition(ReplayDataWriter writer, BedWarsReplayMetadata.BlockPosition position) throws IOException {

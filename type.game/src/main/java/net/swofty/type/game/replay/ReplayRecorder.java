@@ -3,20 +3,37 @@ package net.swofty.type.game.replay;
 import lombok.Getter;
 import net.minestom.server.entity.Entity;
 import net.swofty.commons.ServerType;
-import net.swofty.commons.protocol.objects.replay.*;
+import net.swofty.commons.protocol.objects.replay.ReplayDataBatchProtocolObject;
+import net.swofty.commons.protocol.objects.replay.ReplayEndProtocolObject;
+import net.swofty.commons.protocol.objects.replay.ReplayMapUploadProtocolObject;
+import net.swofty.commons.protocol.objects.replay.ReplayProtocolDto;
+import net.swofty.commons.protocol.objects.replay.ReplayStartProtocolObject;
 import net.swofty.commons.replay.protocol.ReplayChunk;
 import net.swofty.commons.replay.protocol.ReplayDataWriter;
 import net.swofty.commons.replay.protocol.ReplayFormat;
 import net.swofty.commons.replay.protocol.ReplaySection;
-import net.swofty.type.game.replay.api.*;
+import net.swofty.type.game.replay.api.ReplayEntityVisibilityPolicy;
+import net.swofty.type.game.replay.api.ReplayEvent;
+import net.swofty.type.game.replay.api.ReplayGameAdapter;
+import net.swofty.type.game.replay.api.ReplayStateDelta;
+import net.swofty.type.game.replay.api.ReplayTypeRegistry;
 import net.swofty.type.game.replay.codec.ReplaySnapshotCodec;
 import net.swofty.type.game.replay.delta.ReplayBlockDelta;
 import net.swofty.type.game.replay.delta.ReplayEntityUpsertDelta;
-import net.swofty.type.game.replay.model.*;
+import net.swofty.type.game.replay.model.ReplayBlockPosition;
+import net.swofty.type.game.replay.model.ReplayDescriptor;
+import net.swofty.type.game.replay.model.ReplayEntityState;
+import net.swofty.type.game.replay.model.ReplayMetadata;
+import net.swofty.type.game.replay.model.ReplayParticipant;
+import net.swofty.type.game.replay.model.ReplaySnapshot;
 import org.tinylog.Logger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -122,10 +139,16 @@ public class ReplayRecorder {
     }
 
     public void recordEntityState(Entity entity) {
-        if (!isEntityReplayVisible(entity)) return;
+        ReplayEntityState state = captureEntityState(entity);
+        if (state == null) return;
+        recordDelta(new ReplayEntityUpsertDelta(state));
+    }
+
+    public ReplayEntityState captureEntityState(Entity entity) {
+        if (!isEntityReplayVisible(entity)) return null;
         Function<Entity, ReplayEntityState> capture = entityCapture;
         if (capture == null) throw new IllegalStateException("Replay entity capture is not configured");
-        recordDelta(new ReplayEntityUpsertDelta(capture.apply(entity)));
+        return capture.apply(entity);
     }
 
     public boolean isEntityReplayVisible(Entity entity) {

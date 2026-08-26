@@ -7,21 +7,32 @@ import net.swofty.commons.replay.protocol.ReplaySection;
 import net.swofty.service.replay.storage.ReplayDatabase;
 import net.swofty.type.game.replay.codec.ReplayHeaderCodec;
 import net.swofty.type.game.replay.codec.ReplaySnapshotCodec;
-import net.swofty.type.game.replay.model.*;
+import net.swofty.type.game.replay.model.ReplayDescriptor;
+import net.swofty.type.game.replay.model.ReplayGameMetadataEnvelope;
+import net.swofty.type.game.replay.model.ReplayHeader;
+import net.swofty.type.game.replay.model.ReplayMetadata;
+import net.swofty.type.game.replay.model.ReplayParticipant;
 import org.bson.Document;
 import org.bson.types.Binary;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ReplaySessionManager {
     private static final long SESSION_TIMEOUT_MS = 5 * 60 * 1000;
     private final ReplayDatabase database;
     private final Map<UUID, RecordingSession> activeSessions = new ConcurrentHashMap<>();
+    private final Map<UUID, CompletableFuture<EndResult>> finalizations = new ConcurrentHashMap<>();
     private final ScheduledExecutorService cleanupExecutor = Executors.newSingleThreadScheduledExecutor();
     private final ExecutorService finalizationExecutor = Executors.newFixedThreadPool(4);
 
@@ -32,15 +43,35 @@ public class ReplaySessionManager {
     public RecordingSession startSession(ReplayProtocolDto.Metadata metadata) {
         UUID replayId = metadata.descriptor().replayId();
         RecordingSession session = new RecordingSession(metadata);
-        if (activeSessions.putIfAbsent(replayId, session) != null) {
-            throw new IllegalStateException("Replay session already exists: " + replayId);
+        RecordingSession existing = activeSessions.putIfAbsent(replayId, session);
+        if (existing != null) {
+            if (!sameMetadata(existing.getMetadata(), metadata)) {
+                throw new IllegalStateException("Replay session already exists with different metadata: " + replayId);
+            }
+            return existing;
         }
         Logger.info("Started replay recording session {} for game {}", replayId, metadata.descriptor().gameId());
         return session;
     }
 
+    private boolean sameMetadata(ReplayProtocolDto.Metadata first, ReplayProtocolDto.Metadata second) {
+        if (!first.descriptor().equals(second.descriptor()) || !first.participants().equals(second.participants())) {
+            return false;
+        }
+        var firstGameMetadata = first.gameMetadata();
+        var secondGameMetadata = second.gameMetadata();
+        return firstGameMetadata.gameType().equals(secondGameMetadata.gameType())
+                && firstGameMetadata.schemaVersion() == secondGameMetadata.schemaVersion()
+                && Arrays.equals(firstGameMetadata.payload(), secondGameMetadata.payload());
+    }
+
     public RecordingSession getSession(UUID replayId) {
         return activeSessions.get(replayId);
+    }
+
+    public boolean isFinalized(UUID replayId) {
+        Document metadata = database.getReplayMetadata(replayId);
+        return metadata != null && metadata.getBoolean("complete", false);
     }
 
     public void receiveChunk(UUID replayId, ReplayChunk chunk) throws Exception {
@@ -51,10 +82,20 @@ public class ReplaySessionManager {
 
     public CompletableFuture<EndResult> endSession(UUID replayId, long endTime, int durationTicks) {
         RecordingSession session = activeSessions.get(replayId);
-        if (session == null) return CompletableFuture.completedFuture(new EndResult(false, 0, 0));
+        if (session == null) {
+            Document metadata = database.getReplayMetadata(replayId);
+            if (metadata != null && metadata.getBoolean("complete", false)) {
+                long dataSize = metadata.getLong("dataSize");
+                return CompletableFuture.completedFuture(new EndResult(true, dataSize, dataSize));
+            }
+            return CompletableFuture.completedFuture(new EndResult(false, 0, 0));
+        }
         session.setEndTime(endTime);
         session.setDurationTicks(durationTicks);
-        return CompletableFuture.supplyAsync(() -> finalizeSession(replayId, session), finalizationExecutor);
+        CompletableFuture<EndResult> finalization = finalizations.computeIfAbsent(replayId,
+                ignored -> CompletableFuture.supplyAsync(() -> finalizeSession(replayId, session), finalizationExecutor));
+        finalization.whenComplete((result, error) -> finalizations.remove(replayId, finalization));
+        return finalization;
     }
 
     private EndResult finalizeSession(UUID replayId, RecordingSession session) {

@@ -1,5 +1,6 @@
 package net.swofty.type.replayviewer.playback;
 
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.batch.AbsoluteBlockBatch;
 import net.minestom.server.instance.block.Block;
@@ -85,9 +86,15 @@ public final class MapDeserializer {
         }
 
         CompletableFuture<Void> result = new CompletableFuture<>();
-        batch.apply(instance, ignored -> {
-            Logger.info("Map loaded successfully");
-            result.complete(null);
+        MinecraftServer.getSchedulerManager().scheduleNextTick(() -> {
+            try {
+                batch.apply(instance, ignored -> {
+                    Logger.info("Map loaded successfully");
+                    result.complete(null);
+                });
+            } catch (Throwable throwable) {
+                result.completeExceptionally(throwable);
+            }
         });
 
         return result;
