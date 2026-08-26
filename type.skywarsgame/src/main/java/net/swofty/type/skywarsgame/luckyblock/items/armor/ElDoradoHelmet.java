@@ -4,7 +4,7 @@ import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.text.Text;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 
@@ -36,7 +36,7 @@ public class ElDoradoHelmet implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.GOLDEN_HELMET,
+        return ItemStackCreator.raw(Material.GOLDEN_HELMET,
                         Text.of("<6>El Dorado Helmet"),
                         List.of(
                                 Text.empty(),

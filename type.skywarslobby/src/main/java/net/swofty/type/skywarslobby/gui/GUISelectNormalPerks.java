@@ -10,7 +10,7 @@ import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -49,7 +49,7 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
         set(new GUIItem(9) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.GOLD_BLOCK, 1, """
+                return ItemStackCreator.item(Material.GOLD_BLOCK, 1, """
                         <a>Perk Slots
                         <7>Your selected perks will be active
                         <7>during your <a>Normal SkyWars</a> games.""");
@@ -68,7 +68,7 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
 
                     if (perkId == null || perkId.isEmpty()) {
                         // Empty slot
-                        return ItemStacks.item(Material.RED_STAINED_GLASS_PANE, 1, """
+                        return ItemStackCreator.item(Material.RED_STAINED_GLASS_PANE, 1, """
                                 <c>Empty
                                 <8>Perk Slot #{}
 
@@ -77,7 +77,7 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
 
                     SkywarsPerk perk = SkywarsPerkRegistry.getPerk(perkId);
                     if (perk == null) {
-                        return ItemStacks.item(Material.RED_STAINED_GLASS_PANE, 1, """
+                        return ItemStackCreator.item(Material.RED_STAINED_GLASS_PANE, 1, """
                                 <c>Empty
                                 <8>Perk Slot #{}
 
@@ -94,7 +94,7 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
                     lore.add(Text.of("<e>Left-click to replace!"));
                     lore.add(Text.of("<e>Right-click to clear!"));
 
-                    return ItemStacks.item(perk.getIconMaterial(), 1,
+                    return ItemStackCreator.item(perk.getIconMaterial(), 1,
                             Text.of("<6>{}", perk.getName()), lore);
                 }
 
@@ -120,7 +120,7 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
         set(new GUIItem(27) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.DIAMOND_BLOCK, 1, """
+                return ItemStackCreator.item(Material.DIAMOND_BLOCK, 1, """
                         <a>Global Perks
                         <7>All players will have these perks
                         <7>active during <a>Normal SkyWars</a> games.""");
@@ -144,7 +144,7 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
                     lore.add(Text.empty());
                     lore.add(Text.of("<7>Rarity: {}", perk.getRarity().getFormattedName()));
 
-                    return ItemStacks.item(perk.getIconMaterial(), 1,
+                    return ItemStackCreator.item(perk.getIconMaterial(), 1,
                             Text.of("<6>{}", perk.getName()), lore);
                 }
             });
@@ -157,7 +157,7 @@ public class GUISelectNormalPerks extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.EMERALD, 1, """
+                return ItemStackCreator.item(Material.EMERALD, 1, """
                         <7>Total Coins: <6>{:,}
                         <6>https://store.hypixel.net""", coins);
             }

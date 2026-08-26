@@ -11,7 +11,7 @@ import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -80,9 +80,9 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
 
                 Text name = Text.of((owned ? "<a>" : "<c>") + "{} Kit", kit.getName());
                 if (kit.hasCustomTexture()) {
-                    return ItemStacks.head(kit.getIconTexture(), name, lore);
+                    return ItemStackCreator.head(kit.getIconTexture(), name, lore);
                 } else {
-                    return ItemStacks.item(kit.getIconMaterial(), 1, name, lore);
+                    return ItemStackCreator.item(kit.getIconMaterial(), 1, name, lore);
                 }
             }
         });
@@ -166,7 +166,7 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
                         nameColor = NamedTextColor.RED;
                     }
 
-                    return ItemStacks.item(mat, level,
+                    return ItemStackCreator.item(mat, level,
                             Text.of("<color:{}>Prestige {}", nameColor, PRESTIGE_NAMES[level]), lore);
                 }
             });
@@ -176,7 +176,7 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
         set(new GUIClickableItem(30) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.FILLED_MAP, 1, """
+                return ItemStackCreator.item(Material.FILLED_MAP, 1, """
                         <a>Kit Stats
                         <7>Access your statistics and challenge
                         <7>completions for this Kit!
@@ -195,13 +195,13 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (owned) {
-                    return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                    return ItemStackCreator.item(Material.BLAZE_POWDER, 1, """
                             <c>Kit Customizer
                             <7>Customize the layout of this kit.
 
                             <c><l>COMING SOON!""");
                 } else {
-                    return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                    return ItemStackCreator.item(Material.BLAZE_POWDER, 1, """
                             <c>Kit Customizer
                             <7>Customize the layout of this kit.
 
@@ -215,7 +215,7 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 String modeName = mode.equals("NORMAL") ? "Normal" : "Insane";
-                return ItemStacks.item(Material.ARROW, 1, """
+                return ItemStackCreator.item(Material.ARROW, 1, """
                         <a>Go Back
                         <7>To {} Kits""", modeName);
             }
@@ -230,7 +230,7 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.EMERALD, 1, """
+                return ItemStackCreator.item(Material.EMERALD, 1, """
                         <7>Total Coins: <6>{:,}
                         <6>https://store.hypixel.net""", coins);
             }
@@ -241,7 +241,7 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (isFavorite) {
-                    return ItemStacks.item(Material.LIME_DYE, 1, """
+                    return ItemStackCreator.item(Material.LIME_DYE, 1, """
                             <a>Favorite Kit Toggle
                             <7>Kits that have been favorited show
                             <7>up at the top of the Kit Selection
@@ -251,7 +251,7 @@ public class GUIKitBreakdown extends HypixelInventoryGUI {
 </l>
                             <e>Click to unfavorite!""");
                 } else {
-                    return ItemStacks.item(Material.GRAY_DYE, 1, """
+                    return ItemStackCreator.item(Material.GRAY_DYE, 1, """
                             <c>Favorite Kit Toggle
                             <7>Kits that have been favorited show
                             <7>up at the top of the Kit Selection

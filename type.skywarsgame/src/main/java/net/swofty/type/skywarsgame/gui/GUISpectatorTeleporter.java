@@ -6,7 +6,7 @@ import net.minestom.server.item.ItemStack;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 
@@ -30,7 +30,7 @@ public class GUISpectatorTeleporter extends HypixelInventoryGUI {
             set(new GUIClickableItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.head(targetPlayer.getPlayerSkin(), """
+                    return ItemStackCreator.head(targetPlayer.getPlayerSkin(), """
                             <a>{}
                             <7>Status: <a>Alive
 
