@@ -3,12 +3,12 @@ package net.swofty.type.bedwarsgame.events;
 import lombok.SneakyThrows;
 import net.minestom.server.event.player.PlayerDisconnectEvent;
 import net.swofty.type.bedwarsgame.BedWarsGameScoreboard;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.generic.event.EventNodes;
-import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.event.HypixelEventClass;
+import net.swofty.type.generic.event.phase.PhasedEvent;
 
 public class ActionPlayerDisconnect implements HypixelEventClass {
 

@@ -11,9 +11,21 @@ import net.minestom.server.network.packet.server.play.BlockBreakAnimationPacket;
 import net.minestom.server.network.packet.server.play.EntityAnimationPacket;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.swofty.commons.replay.protocol.ReplayDataReader;
-import net.swofty.type.game.replay.api.*;
+import net.swofty.type.game.replay.api.ReplayEvent;
+import net.swofty.type.game.replay.api.ReplayGameMetadata;
+import net.swofty.type.game.replay.api.ReplayPlaybackContext;
+import net.swofty.type.game.replay.api.ReplayScoreboard;
+import net.swofty.type.game.replay.api.ReplayStateDelta;
+import net.swofty.type.game.replay.api.ReplayViewerAdapter;
+import net.swofty.type.game.replay.bedwars.BedWarsReplayMetadata;
+import net.swofty.type.game.replay.bedwars.BedWarsReplayState;
 import net.swofty.type.game.replay.delta.ReplayGameStateDelta;
-import net.swofty.type.game.replay.event.*;
+import net.swofty.type.game.replay.event.ReplayBlockBreakEvent;
+import net.swofty.type.game.replay.event.ReplayComponentEvent;
+import net.swofty.type.game.replay.event.ReplayEntityAnimationEvent;
+import net.swofty.type.game.replay.event.ReplayParticleEvent;
+import net.swofty.type.game.replay.event.ReplaySoundEvent;
+import net.swofty.type.game.replay.model.ReplayTeam;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.playback.ReplaySession;
 import net.swofty.type.replayviewer.util.ReplaySettingsUtil;
@@ -24,8 +36,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-public final class BedWarsViewerAdapter implements ReplayViewerAdapter<BedWarsViewerMetadata, BedWarsViewerState> {
+public final class BedWarsViewerAdapter implements ReplayViewerAdapter<BedWarsReplayMetadata, BedWarsReplayState> {
     public static final String GAME_TYPE = "BEDWARS";
     public static final int SCHEMA_VERSION = 2;
     private static final GsonComponentSerializer COMPONENTS = GsonComponentSerializer.gson();
@@ -42,35 +55,35 @@ public final class BedWarsViewerAdapter implements ReplayViewerAdapter<BedWarsVi
     }
 
     @Override
-    public BedWarsViewerMetadata readMetadata(ReplayDataReader reader) throws IOException {
+    public BedWarsReplayMetadata readMetadata(ReplayDataReader reader) throws IOException {
         String mode = reader.readString();
         int teamCount = checkedCount(reader.readVarInt(), 32, "teams");
-        List<BedWarsViewerMetadata.Team> teams = new ArrayList<>(teamCount);
+        List<BedWarsReplayMetadata.TeamDefinition> teams = new ArrayList<>(teamCount);
         for (int index = 0; index < teamCount; index++) {
             String id = reader.readString();
             String name = reader.readString();
             int color = reader.readInt();
             int memberCount = checkedCount(reader.readVarInt(), 1024, "team members");
-            List<java.util.UUID> members = new ArrayList<>(memberCount);
+            List<UUID> members = new ArrayList<>(memberCount);
             for (int member = 0; member < memberCount; member++) members.add(reader.readUUID());
-            teams.add(new BedWarsViewerMetadata.Team(id, name, color, members, readPosition(reader), readPosition(reader)));
+            teams.add(new BedWarsReplayMetadata.TeamDefinition(id, name, color, members, readPosition(reader), readPosition(reader)));
         }
         int generatorCount = checkedCount(reader.readVarInt(), 4096, "generators");
-        List<BedWarsViewerMetadata.Generator> generators = new ArrayList<>(generatorCount);
+        List<BedWarsReplayMetadata.GeneratorDefinition> generators = new ArrayList<>(generatorCount);
         for (int index = 0; index < generatorCount; index++) {
-            generators.add(new BedWarsViewerMetadata.Generator(reader.readString(), readPosition(reader)));
+            generators.add(new BedWarsReplayMetadata.GeneratorDefinition(reader.readString(), readPosition(reader)));
         }
-        return new BedWarsViewerMetadata(mode, teams, generators);
+        return new BedWarsReplayMetadata(mode, teams, generators);
     }
 
     @Override
-    public BedWarsViewerState readState(ReplayDataReader reader) throws IOException {
+    public BedWarsReplayState readState(ReplayDataReader reader) throws IOException {
         int teamCount = checkedCount(reader.readVarInt(), 32, "teams");
-        Map<String, List<java.util.UUID>> teams = new LinkedHashMap<>();
+        Map<String, List<UUID>> teams = new LinkedHashMap<>();
         for (int index = 0; index < teamCount; index++) {
             String team = reader.readString();
             int memberCount = checkedCount(reader.readVarInt(), 1024, "team members");
-            List<java.util.UUID> members = new ArrayList<>(memberCount);
+            List<UUID> members = new ArrayList<>(memberCount);
             for (int member = 0; member < memberCount; member++) members.add(reader.readUUID());
             teams.put(team, members);
         }
@@ -88,27 +101,26 @@ public final class BedWarsViewerAdapter implements ReplayViewerAdapter<BedWarsVi
         for (int index = 0; index < eliminatedCount; index++) eliminated.add(reader.readString());
         String winner = reader.readBoolean() ? reader.readString() : null;
         int displayCount = checkedCount(reader.readVarInt(), 4096, "displays");
-        List<BedWarsViewerState.DisplayState> displays = new ArrayList<>(displayCount);
+        List<BedWarsReplayState.DisplayState> displays = new ArrayList<>(displayCount);
         for (int index = 0; index < displayCount; index++) {
             int entityId = reader.readVarInt();
-            java.util.UUID uuid = reader.readUUID();
+            UUID uuid = reader.readUUID();
             double[] position = reader.readLocation();
-            displays.add(new BedWarsViewerState.DisplayState(entityId, uuid, position[0], position[1], position[2],
+            displays.add(new BedWarsReplayState.DisplayState(entityId, uuid, position[0], position[1], position[2],
                     readComponentLines(reader), reader.readString(), reader.readString()));
         }
         int npcCount = checkedCount(reader.readVarInt(), 4096, "NPCs");
-        List<BedWarsViewerState.NpcState> npcs = new ArrayList<>(npcCount);
+        List<BedWarsReplayState.NpcState> npcs = new ArrayList<>(npcCount);
         for (int index = 0; index < npcCount; index++) {
-            npcs.add(new BedWarsViewerState.NpcState(reader.readVarInt(), decodeComponent(reader.readString()),
+            npcs.add(new BedWarsReplayState.NpcState(reader.readVarInt(), decodeComponent(reader.readString()),
                     readComponentLines(reader)));
         }
-        return new BedWarsViewerState(teams, beds, generators, scoreboard, eliminated, winner, displays, npcs);
+        return new BedWarsReplayState(teams, beds, generators, scoreboard, eliminated, winner, displays, npcs);
     }
 
     @Override
-    public void restoreState(ReplayPlaybackContext context, BedWarsViewerState state) {
+    public void restoreState(ReplayPlaybackContext context, BedWarsReplayState state) {
         if (context instanceof ReplaySession session) {
-            session.restoreBedWarsState(state.teamMembers(), state.liveBeds(), state.generatorTiers(), state.eliminatedTeams());
             for (var display : state.displays()) {
                 session.getDynamicTextManager().createDisplay(display.entityId(), display.uuid(),
                         new Pos(display.x(), display.y(), display.z()), display.lines(), display.displayType(),
@@ -122,19 +134,32 @@ public final class BedWarsViewerAdapter implements ReplayViewerAdapter<BedWarsVi
     }
 
     @Override
+    public List<ReplayTeam> teams(ReplayGameMetadata metadata) {
+        if (!(metadata instanceof BedWarsReplayMetadata bedWarsMetadata)) return List.of();
+        return bedWarsMetadata.teams().stream()
+                .map(team -> new ReplayTeam(team.id(), team.name(), team.color(), team.initialMembers()))
+                .toList();
+    }
+
+    @Override
     public void applyDelta(ReplayPlaybackContext context, ReplayStateDelta delta) {
         if (!(context instanceof ReplaySession session) || !(delta instanceof ReplayGameStateDelta gameDelta)
                 || gameDelta.gameTypeId() != 1) return;
         try (ReplayDataReader reader = new ReplayDataReader(gameDelta.payload())) {
             switch (reader.readUnsignedByte()) {
-                case 1 -> session.applyBedState(reader.readString(), reader.readBoolean());
+                case 1 -> {
+                    reader.readString();
+                    reader.readBoolean();
+                }
                 case 2 -> session.applyPlayerTeam(reader.readUUID(), reader.readString());
-                case 3 -> session.eliminateTeam(reader.readString());
-                case 4 ->
-                        session.applyGeneratorTier(Byte.toString((byte) reader.readByte()), reader.readUnsignedByte());
+                case 3 -> reader.readString();
+                case 4 -> {
+                    reader.readByte();
+                    reader.readUnsignedByte();
+                }
                 case 10 -> {
                     int entityId = reader.readVarInt();
-                    java.util.UUID uuid = reader.readUUID();
+                    UUID uuid = reader.readUUID();
                     double[] position = reader.readLocation();
                     List<String> lines = readComponentLines(reader);
                     session.getDynamicTextManager().createDisplay(entityId, uuid,
@@ -226,10 +251,10 @@ public final class BedWarsViewerAdapter implements ReplayViewerAdapter<BedWarsVi
         return new BedWarsReplayScoreboard((ReplaySession) context);
     }
 
-    private BedWarsViewerMetadata.Position readPosition(ReplayDataReader reader) throws IOException {
+    private BedWarsReplayMetadata.BlockPosition readPosition(ReplayDataReader reader) throws IOException {
         if (!reader.readBoolean()) return null;
         int[] position = reader.readBlockCoords();
-        return new BedWarsViewerMetadata.Position(position[0], position[1], position[2]);
+        return new BedWarsReplayMetadata.BlockPosition(position[0], position[1], position[2]);
     }
 
     private int checkedCount(int value, int maximum, String name) throws IOException {

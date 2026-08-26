@@ -1,11 +1,9 @@
 package net.swofty.type.replayviewer.playback.scoreboard;
 
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.entity.Player;
 import net.minestom.server.scoreboard.Sidebar;
-import net.swofty.commons.bedwars.BedWarsGameType;
-import net.swofty.type.generic.HypixelConst;
 import net.swofty.commons.text.Text;
+import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.replayviewer.playback.ReplaySession;
 
 import java.text.SimpleDateFormat;
@@ -72,11 +70,11 @@ public class GenericReplayScoreboard implements ReplayScoreboard {
         lines.add(Text.of("<f>{}<a>{} {}", Text.key("replays.time"),
                 new SimpleDateFormat("HH:mm").format(new Date(session.getMetadata().descriptor().startTime())), Text.key("replays.est")));
 
-        lines.add(Text.empty());
-
-        lines.add(Text.of("<f>{}<a>{}", Text.key("replays.game"), Text.key("replays.bedwars")));
-        lines.add(Text.of("<f>{}<a>{}", Text.key("replays.mode"), formatMode(session.gameModeId())));
-
+        List<Text> gameLines = getGameLines(session);
+        if (!gameLines.isEmpty()) {
+            lines.add(Text.empty());
+            lines.addAll(gameLines);
+        }
         lines.add(Text.empty());
 
         lines.add(Text.of("<f>{}<a>{}", Text.key("replays.map"), session.getMetadata().descriptor().mapName()));
@@ -85,12 +83,8 @@ public class GenericReplayScoreboard implements ReplayScoreboard {
         return lines;
     }
 
-    private String formatMode(String mode) {
-        try {
-            return BedWarsGameType.valueOf(mode.toUpperCase()).getDisplayName();
-        } catch (IllegalArgumentException ignored) {
-            return mode.replace('_', ' ');
-        }
+    protected List<Text> getGameLines(ReplaySession session) {
+        return List.of();
     }
 
 }

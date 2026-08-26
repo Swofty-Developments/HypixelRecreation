@@ -43,11 +43,11 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
-import net.swofty.commons.text.Text;
 import net.swofty.commons.protocol.objects.orchestrator.GameHeartbeatProtocol;
 import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.item.SimpleInteractableItem;
 import net.swofty.type.bedwarsgame.item.SimpleInteractableItemHandler;
 import net.swofty.type.bedwarsgame.replay.BedWarsMechanicsWorld;
@@ -81,7 +81,11 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -396,7 +400,7 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
                 HypixelEventClass.class
             ),
             HypixelGenericLoader.loopThroughPackage(
-                "net.swofty.type.bedwarsgame.game.v2.listener",
+                    "net.swofty.type.bedwarsgame.game.listener",
                 HypixelEventClass.class
             )
         ).toList();

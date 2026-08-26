@@ -1,4 +1,4 @@
-package net.swofty.type.bedwarsgame.game.v2.listener;
+package net.swofty.type.bedwarsgame.game.listener;
 
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
@@ -6,7 +6,7 @@ import net.swofty.commons.mc.HypixelPosition;
 import net.swofty.commons.party.FullParty;
 import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.event.PlayerPostJoinGameEvent;
 import net.swofty.type.generic.event.EventNodes;

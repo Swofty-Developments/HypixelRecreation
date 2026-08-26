@@ -1,8 +1,8 @@
-package net.swofty.type.bedwarsgame.game.v2.listener;
+package net.swofty.type.bedwarsgame.game.listener;
 
 import net.swofty.commons.ServerType;
 import net.swofty.commons.text.Text;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.event.PlayerLeaveGameEvent;
 import net.swofty.type.generic.event.EventNodes;

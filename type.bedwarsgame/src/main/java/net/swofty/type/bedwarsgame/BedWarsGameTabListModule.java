@@ -2,9 +2,9 @@ package net.swofty.type.bedwarsgame;
 
 import net.minestom.server.entity.PlayerSkin;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
-import net.swofty.commons.text.Text;
 import net.swofty.commons.party.FullParty;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.commons.text.Text;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.generic.party.PartyManager;
 import net.swofty.type.generic.tab.CustomTablistSkin;
@@ -13,7 +13,11 @@ import net.swofty.type.generic.tab.TablistSkin;
 import net.swofty.type.generic.tab.TablistSkinRegistry;
 import net.swofty.type.generic.user.HypixelPlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class BedWarsGameTabListModule extends TablistModule {
 

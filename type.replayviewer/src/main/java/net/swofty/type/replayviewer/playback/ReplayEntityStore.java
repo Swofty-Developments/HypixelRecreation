@@ -4,7 +4,11 @@ import net.kyori.adventure.nbt.BinaryTagIO;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
-import net.minestom.server.entity.*;
+import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.EntityPose;
+import net.minestom.server.entity.EntityType;
+import net.minestom.server.entity.EquipmentSlot;
+import net.minestom.server.entity.LivingEntity;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.metadata.other.PrimedTntMeta;
 import net.minestom.server.item.ItemStack;
@@ -57,6 +61,18 @@ public final class ReplayEntityStore {
             return;
         }
         apply(entity, state, previous);
+    }
+
+    public ReplayEntityState updatePlayerTeam(UUID participantUuid, String teamId) {
+        for (Map.Entry<Integer, ReplayEntityState> entry : states.entrySet()) {
+            ReplayEntityState state = entry.getValue();
+            if (state.player() == null || !participantUuid.equals(state.player().participantUuid())) continue;
+
+            ReplayEntityState updated = state.withPlayerState(state.player().withTeamId(teamId));
+            entry.setValue(updated);
+            return updated;
+        }
+        return null;
     }
 
     public void remove(int replayEntityId) {

@@ -1,4 +1,4 @@
-package net.swofty.type.bedwarsgame.game.v2;
+package net.swofty.type.bedwarsgame.game;
 
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -29,7 +29,12 @@ import net.swofty.type.generic.entity.FloatingBlockEntity;
 import org.tinylog.Logger;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BedWarsGeneratorManager {
@@ -101,7 +106,7 @@ public class BedWarsGeneratorManager {
                     LuckyBlockItem luckyBlock = (LuckyBlockItem) TypeBedWarsGameLoader.getItemHandler().getItem("lucky_block");
                     spawnItem(luckyBlock.getItemStack(tier), 1, spawnPosition);
                 }
-                int currentAmount = countNearbyItems(spawnPosition, itemMaterial);
+                int currentAmount = countNearbyGeneratorItems(spawnPosition, itemMaterial);
                 int limit = itemMaterial == Material.IRON_INGOT ? IRON_LIMIT : GOLD_LIMIT;
                 if (currentAmount < limit) {
                     spawnItem(itemMaterial, Math.min(finalAmount, limit - currentAmount), spawnPosition);
@@ -249,13 +254,7 @@ public class BedWarsGeneratorManager {
                 display.countdown--;
                 if (display.countdown <= 0) {
                     Pos spawnPos = new Pos(location.x(), location.y() + 1, location.z());
-                    long currentItemCount = game.getInstance().getNearbyEntities(spawnPos, 1.5)
-                        .stream()
-                        .filter(ItemEntity.class::isInstance)
-                        .map(ItemEntity.class::cast)
-                        .filter(entity -> entity.getItemStack().material() == limits.material)
-                        .mapToLong(entity -> entity.getItemStack().amount())
-                        .sum();
+                    int currentItemCount = countNearbyGeneratorItems(spawnPos, limits.material);
 
                     if (game.getGameType().isLuckyBlock()) {
                         display.round++;
@@ -395,13 +394,19 @@ public class BedWarsGeneratorManager {
         entity.setVelocity(new Vec(0, 0.1, 0));
     }
 
-    private int countNearbyItems(Pos position, Material material) {
+    private int countNearbyGeneratorItems(Pos position, Material material) {
         return game.getInstance().getNearbyEntities(position, 1.5).stream()
                 .filter(ItemEntity.class::isInstance)
                 .map(ItemEntity.class::cast)
                 .filter(entity -> entity.getItemStack().material() == material)
+                .filter(this::isGeneratorItem)
                 .mapToInt(entity -> entity.getItemStack().amount())
                 .sum();
+    }
+
+    private boolean isGeneratorItem(ItemEntity entity) {
+        CustomData customData = entity.getItemStack().get(DataComponents.CUSTOM_DATA);
+        return customData != null && customData.nbt().getBoolean("generator");
     }
 
     private Material getMaterialFromType(BedWarsMapsConfig.GlobalGeneratorKey type) {

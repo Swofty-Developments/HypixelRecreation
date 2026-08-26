@@ -1,4 +1,4 @@
-package net.swofty.type.bedwarsgame.game.v2.listener;
+package net.swofty.type.bedwarsgame.game.listener;
 
 import net.kyori.adventure.sound.Sound;
 import net.minestom.server.MinecraftServer;
@@ -8,8 +8,8 @@ import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.bedwars.BedwarsLevelUtil;
 import net.swofty.commons.text.Text;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsTeam;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsTeam;
 import net.swofty.type.bedwarsgame.stats.BedWarsStatsRecorder;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.event.GameTeamWinConditionEvent;

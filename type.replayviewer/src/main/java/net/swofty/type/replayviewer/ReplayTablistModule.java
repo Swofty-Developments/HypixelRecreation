@@ -2,15 +2,16 @@ package net.swofty.type.replayviewer;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.swofty.type.game.replay.model.ReplayParticipant;
 import net.swofty.commons.text.Text;
+import net.swofty.type.game.replay.model.ReplayEntityState;
+import net.swofty.type.game.replay.model.ReplayParticipant;
+import net.swofty.type.game.replay.model.ReplayTeam;
 import net.swofty.type.generic.tab.CustomTablistSkin;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.generic.tab.TablistSkin;
 import net.swofty.type.generic.tab.TablistSkinRegistry;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.playback.ReplaySession;
-import net.swofty.type.replayviewer.playback.bedwars.BedWarsViewerMetadata;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,20 +38,28 @@ class ReplayTablistModule extends TablistModule {
     }
 
     private static void addReplayParticipants(List<TablistEntry> entries, ReplaySession session) {
-        if (!(session.getGameMetadata() instanceof BedWarsViewerMetadata bedWars)) {
-            return;
-        }
-
-        Map<UUID, BedWarsViewerMetadata.Team> teamsByMember = new HashMap<>();
-        for (BedWarsViewerMetadata.Team team : bedWars.teams()) {
-            List<UUID> members = session.getCurrentTeams().getOrDefault(team.id(), team.initialMembers());
-            for (UUID member : members) {
+        Map<String, ReplayTeam> teamsById = new HashMap<>();
+        Map<UUID, ReplayTeam> teamsByMember = new HashMap<>();
+        for (ReplayTeam team : session.getReplayTeams()) {
+            teamsById.put(team.id(), team);
+            for (UUID member : team.initialMembers()) {
                 teamsByMember.put(member, team);
             }
         }
 
+        for (ReplayEntityState state : session.getEntityStore().states().values()) {
+            if (state.player() == null) continue;
+            UUID participantUuid = state.player().participantUuid();
+            ReplayTeam team = teamsById.get(state.player().teamId());
+            if (team == null) {
+                teamsByMember.remove(participantUuid);
+            } else {
+                teamsByMember.put(participantUuid, team);
+            }
+        }
+
         for (ReplayParticipant participant : session.getMetadata().participants()) {
-            BedWarsViewerMetadata.Team team = teamsByMember.get(participant.uuid());
+            ReplayTeam team = teamsByMember.get(participant.uuid());
             TextColor color = team == null ? NamedTextColor.GRAY : TextColor.color(team.color());
             entries.add(new TablistEntry(
                     Text.of("<color:{}>{}", color, participant.username()),

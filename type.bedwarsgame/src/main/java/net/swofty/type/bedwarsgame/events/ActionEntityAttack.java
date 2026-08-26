@@ -3,7 +3,7 @@ package net.swofty.type.bedwarsgame.events;
 import io.github.term4.polyp.api.event.attack.PreAttackEvent;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.event.entity.EntityDamageEvent;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.item.impl.LuckyCombatEffects;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
@@ -54,7 +54,7 @@ public class ActionEntityAttack implements HypixelEventClass {
 			}
 
 			if (game.getState() == GameState.IN_PROGRESS) {
-				player.updateBelowTag();
+                game.updatePlayerHealthDisplay(player);
 			}
 		}
 	}

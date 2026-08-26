@@ -1,22 +1,24 @@
-package net.swofty.type.bedwarsgame.game.v2.listener;
+package net.swofty.type.bedwarsgame.game.listener;
 
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.commons.mc.Vec3i;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.commons.text.Text;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.game.game.event.GameStartEvent;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.PhasedEvent;
-import net.swofty.commons.text.Text;
 import org.tinylog.Logger;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
 public class GameStartListener implements HypixelEventClass {
 
@@ -70,7 +72,7 @@ public class GameStartListener implements HypixelEventClass {
                 return TaskSchedule.stop();
             }
             for (BedWarsPlayer player : game.getPlayers()) {
-                player.updateBelowTag();
+                game.updatePlayerHealthDisplay(player);
             }
             return TaskSchedule.seconds(10);
         }, TaskSchedule.seconds(1));
@@ -79,40 +81,44 @@ public class GameStartListener implements HypixelEventClass {
             if (game.getState() != GameState.IN_PROGRESS) {
                 return TaskSchedule.stop();
             }
-            game.getTrackers().forEach((uuid, teamKey) -> {
-                game.getPlayer(uuid).ifPresentOrElse(player -> {
-                    // get closest player from teamKey
-                    BedWarsPlayer target = game.getPlayersOnTeam(teamKey)
+            Iterator<Map.Entry<UUID, BedWarsMapsConfig.TeamKey>> trackerIterator = game.getTrackers().entrySet().iterator();
+            while (trackerIterator.hasNext()) {
+                Map.Entry<UUID, BedWarsMapsConfig.TeamKey> tracker = trackerIterator.next();
+                BedWarsPlayer player = game.getPlayer(tracker.getKey()).orElse(null);
+                if (player == null) {
+                    trackerIterator.remove();
+                    continue;
+                }
+
+                BedWarsPlayer target = game.getPlayersOnTeam(tracker.getValue())
                         .stream()
-                        .filter(t -> !t.getUuid().equals(uuid))
-                        .min(Comparator.comparingDouble(t ->
-                            player.getPosition().distanceSquared(t.getPosition())
+                        .filter(candidate -> !candidate.getUuid().equals(tracker.getKey()))
+                        .min(Comparator.comparingDouble(candidate ->
+                                player.getPosition().distanceSquared(candidate.getPosition())
                         ))
                         .orElse(null);
 
-                    // team could be completely eliminated
-                    if (target == null) {
-                        game.getTrackers().remove(uuid);
-                        return;
-                    }
+                if (target == null) {
+                    trackerIterator.remove();
+                    continue;
+                }
 
-                    int distance = (int) Math.sqrt(
+                int distance = (int) Math.sqrt(
                         player.getPosition().distanceSquared(target.getPosition())
-                    );
+                );
 
-                    Text playerColouredName = target.getDisplayName() == null
-                            ? Text.literal(target.getUsername())
-                            : Text.component(target.getDisplayName());
+                Text targetDisplayName = target.getDisplayName() == null
+                        ? Text.literal(target.getUsername())
+                        : Text.component(target.getDisplayName());
 
-                    player.sendActionBar(
+                player.sendActionBar(
                         Text.key(
-                            "bedwars.tracking_player",
-                            playerColouredName,
-                            String.valueOf(distance)
+                                "bedwars.tracking_player",
+                                targetDisplayName,
+                                String.valueOf(distance)
                         )
-                    );
-                }, () -> game.getTrackers().remove(uuid));
-            });
+                );
+            }
             return TaskSchedule.seconds(2);
         }, TaskSchedule.seconds(15));
 

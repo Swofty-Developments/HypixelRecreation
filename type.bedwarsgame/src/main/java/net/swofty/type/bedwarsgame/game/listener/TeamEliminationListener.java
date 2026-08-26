@@ -1,10 +1,10 @@
-package net.swofty.type.bedwarsgame.game.v2.listener;
+package net.swofty.type.bedwarsgame.game.listener;
 
 import net.swofty.commons.text.Text;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsTeam;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsTeam;
+import net.swofty.type.bedwarsgame.messages.BedWarsMessages;
 import net.swofty.type.bedwarsgame.replay.BedWarsReplayManager;
-import net.swofty.type.bedwarsgame.replay.BedWarsReplayMessages;
 import net.swofty.type.bedwarsgame.stats.BedWarsStatsRecorder;
 import net.swofty.type.game.game.event.TeamEliminatedEvent;
 import net.swofty.type.generic.event.EventNodes;
@@ -27,7 +27,7 @@ public class TeamEliminationListener implements HypixelEventClass {
                 BedWarsStatsRecorder.recordLoss(player, game.getGameType());
             });
 
-        game.broadcastMessage(Text.of("\n{}\n", BedWarsReplayMessages.teamEliminated(team.getTeamKey())));
+        game.broadcastMessage(Text.of("\n{}\n", BedWarsMessages.teamEliminated(team.getTeamKey())));
 
         BedWarsReplayManager replayManager = game.getReplayManager();
 

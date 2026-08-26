@@ -1,4 +1,4 @@
-package net.swofty.type.bedwarsgame.replay;
+package net.swofty.type.game.replay.bedwars;
 
 import net.swofty.type.game.replay.api.ReplayGameState;
 

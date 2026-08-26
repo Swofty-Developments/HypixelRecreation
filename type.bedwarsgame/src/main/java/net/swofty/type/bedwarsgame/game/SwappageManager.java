@@ -1,4 +1,4 @@
-package net.swofty.type.bedwarsgame.game.v2;
+package net.swofty.type.bedwarsgame.game;
 
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
@@ -11,7 +11,11 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RequiredArgsConstructor
@@ -75,7 +79,7 @@ public class SwappageManager {
         for (UUID uuid : playerIds) {
             game.getPlayer(uuid).ifPresent(player -> {
                 player.setDisplayName(player.getColouredName());
-                player.updateBelowTag();
+                game.updatePlayerHealthDisplay(player);
                 game.equipTeamArmor(player, team.getTeamKey());
                 game.getReplayManager().recordPlayerTeam(player);
 

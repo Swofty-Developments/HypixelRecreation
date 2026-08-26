@@ -48,6 +48,12 @@ public record ReplayEntityState(
         return typePayload.clone();
     }
 
+    public ReplayEntityState withPlayerState(PlayerState playerState) {
+        return new ReplayEntityState(replayEntityId, uuid, entityTypeId, x, y, z, yaw, pitch,
+                velocityX, velocityY, velocityZ, poseId, visible, glowing, flags, lifecycle,
+                equipment, health, maximumHealth, effects, playerState, typePayload);
+    }
+
     private static Map<Integer, byte[]> copyEquipment(Map<Integer, byte[]> source) {
         java.util.LinkedHashMap<Integer, byte[]> copy = new java.util.LinkedHashMap<>();
         source.forEach((slot, item) -> copy.put(slot, item.clone()));
@@ -81,6 +87,11 @@ public record ReplayEntityState(
         @Override
         public byte[] heldItem() {
             return heldItem.clone();
+        }
+
+        public PlayerState withTeamId(String teamId) {
+            return new PlayerState(participantUuid, textureValue, textureSignature, displayJson, teamId,
+                    gameMode, legitimateSpectator, heldItem);
         }
 
         @Override

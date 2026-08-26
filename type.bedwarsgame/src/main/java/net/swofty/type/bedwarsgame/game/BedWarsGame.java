@@ -1,4 +1,4 @@
-package net.swofty.type.bedwarsgame.game.v2;
+package net.swofty.type.bedwarsgame.game;
 
 import lombok.Getter;
 import net.kyori.adventure.audience.Audience;
@@ -23,6 +23,7 @@ import net.swofty.commons.bedwars.map.BedWarsMapsConfig.MapTeam;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
 import net.swofty.commons.mc.HypixelPosition;
 import net.swofty.commons.party.FullParty;
+import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.bedwarsgame.BedWarsGameScoreboard;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
@@ -43,13 +44,22 @@ import net.swofty.type.game.game.event.GameTeamWinConditionEvent;
 import net.swofty.type.game.game.event.PlayerAssignedTeamEvent;
 import net.swofty.type.generic.data.datapoints.DatapointBedWarsHotbar;
 import net.swofty.type.generic.event.HypixelEventHandler;
-import net.swofty.commons.text.Text;
 import net.swofty.type.generic.i18n.HypixelTranslator;
 import net.swofty.type.generic.party.PartyManager;
 import net.swofty.type.generic.utility.ScheduleUtility;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
@@ -162,6 +172,14 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
 
     public void equipTeamArmor(BedWarsPlayer player, TeamKey teamKey) {
         respawnHandler.equipTeamArmor(player, teamKey);
+    }
+
+    public void updatePlayerHealthDisplay(BedWarsPlayer player) {
+        if (player.getBelowNameTag() == null) {
+            player.setBelowNameTag("health", "<c>❤");
+        }
+        int health = (int) (player.getHealth() + player.getAdditionalHearts());
+        player.getBelowNameTag().updateScore(player, health);
     }
 
     public void addTeamTrap(TeamKey teamKey, TrapId trapId) {
@@ -393,7 +411,7 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
         player.setInvisible(true);
         player.setFlying(true);
         player.setAllowFlying(true);
-        player.updateBelowTag();
+        updatePlayerHealthDisplay(player);
 
         if (replayManager.isRecording()) {
             replayManager.recordPlayerInvisibility(player, true);

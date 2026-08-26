@@ -6,7 +6,7 @@ import net.minestom.server.coordinate.Point;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.network.packet.server.ServerPacket;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import org.jetbrains.annotations.NotNull;
 
 public final class BedWarsMechanicsWorld extends InstanceWorld {

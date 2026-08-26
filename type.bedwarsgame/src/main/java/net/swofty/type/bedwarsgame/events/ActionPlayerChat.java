@@ -5,7 +5,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.event.player.PlayerChatEvent;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.text.Text;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.generic.chat.StaffChat;
 import net.swofty.type.generic.collectibles.bedwars.prestige.BedWarsPrestigeRenderer;

@@ -7,7 +7,11 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.entity.*;
+import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.EquipmentSlot;
+import net.minestom.server.entity.GameMode;
+import net.minestom.server.entity.LivingEntity;
+import net.minestom.server.entity.Player;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.network.packet.server.play.EntityEquipmentPacket;
@@ -17,41 +21,46 @@ import net.minestom.server.scoreboard.BelowNameTag;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.TeamColorUtil;
+import net.swofty.commons.text.Text;
 import net.swofty.type.game.replay.api.ReplayGameMetadata;
 import net.swofty.type.game.replay.api.ReplayPlaybackContext;
 import net.swofty.type.game.replay.api.ReplayScoreboard;
 import net.swofty.type.game.replay.api.ReplayViewerAdapter;
+import net.swofty.type.game.replay.model.ReplayEntityState;
 import net.swofty.type.game.replay.model.ReplayMetadata;
 import net.swofty.type.game.replay.model.ReplayParticipant;
-import net.swofty.commons.text.Text;
+import net.swofty.type.game.replay.model.ReplayTeam;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.ScheduleUtility;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
 import net.swofty.type.replayviewer.entity.ReplayEntity;
 import net.swofty.type.replayviewer.entity.ReplayEntityManager;
 import net.swofty.type.replayviewer.entity.ReplayPlayerEntity;
-import net.swofty.type.replayviewer.playback.bedwars.BedWarsViewerMetadata;
 import net.swofty.type.replayviewer.playback.display.DynamicTextManager;
 import net.swofty.type.replayviewer.playback.npc.NpcReplayManager;
 import net.swofty.type.replayviewer.util.ReplaySettingsUtil;
 import org.tinylog.Logger;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Getter
 public class ReplaySession implements ReplayPlaybackContext {
     private static final GsonComponentSerializer COMPONENTS = GsonComponentSerializer.gson();
     private final UUID replayId;
     private final Set<Player> viewers = ConcurrentHashMap.newKeySet();
-    private final Map<String, List<UUID>> currentTeams = new HashMap<>();
-    private final Map<String, Boolean> liveBeds = new HashMap<>();
-    private final Map<String, Integer> generatorTiers = new HashMap<>();
-    private final Set<String> eliminatedTeams = new HashSet<>();
     private final ReplayMetadata metadata;
     private final ReplayGameMetadata gameMetadata;
-    private final ReplayViewerAdapter viewerAdapter;
+    private final ReplayViewerAdapter<?, ?> viewerAdapter;
+    private final List<ReplayTeam> replayTeams;
+    private final Map<String, ReplayTeam> replayTeamsById;
     private final InstanceContainer instance;
 
     private final ReplayEntityManager entityManager;
@@ -77,7 +86,7 @@ public class ReplaySession implements ReplayPlaybackContext {
     public ReplaySession(
             ReplayMetadata metadata,
             ReplayGameMetadata gameMetadata,
-            ReplayViewerAdapter viewerAdapter,
+            ReplayViewerAdapter<?, ?> viewerAdapter,
             InstanceContainer instance,
             ReplayTimeline replayData
     ) {
@@ -85,6 +94,8 @@ public class ReplaySession implements ReplayPlaybackContext {
         this.metadata = metadata;
         this.gameMetadata = gameMetadata;
         this.viewerAdapter = viewerAdapter;
+        this.replayTeams = List.copyOf(viewerAdapter.teams(gameMetadata));
+        this.replayTeamsById = replayTeams.stream().collect(Collectors.toUnmodifiableMap(ReplayTeam::id, team -> team));
         this.instance = instance;
         this.replayData = replayData;
         this.entityManager = new ReplayEntityManager(instance);
@@ -92,8 +103,6 @@ public class ReplaySession implements ReplayPlaybackContext {
         this.entityStore = new ReplayEntityStore(entityManager, this::getParticipant);
         this.viewerProjection = new ReplayViewerProjection(entityManager);
         this.stateRestorer = new ReplayStateRestorer(this, replayData, worldState, entityStore, viewerAdapter);
-        resetCurrentTeams();
-
         this.dynamicTextManager = new DynamicTextManager(this);
         this.npcManager = new NpcReplayManager(this);
         this.playback = new ReplayPlaybackSession(this::getTotalTicks,
@@ -157,15 +166,8 @@ public class ReplaySession implements ReplayPlaybackContext {
     }
 
     public void applyPlayerTeam(UUID playerUuid, String teamId) {
-        currentTeams.values().forEach(players -> players.remove(playerUuid));
-        currentTeams.computeIfAbsent(teamId, ignored -> new ArrayList<>()).add(playerUuid);
-    }
-
-    void resetCurrentTeams() {
-        currentTeams.clear();
-        if (gameMetadata instanceof BedWarsViewerMetadata bedWars) {
-            bedWars.teams().forEach(team -> currentTeams.put(team.id(), new ArrayList<>(team.initialMembers())));
-        }
+        ReplayEntityState updated = entityStore.updatePlayerTeam(playerUuid, teamId);
+        if (updated != null) updateEntityPresentation(updated);
     }
 
     public void autoFollowForViewer(Player viewer) {
@@ -494,24 +496,11 @@ public class ReplaySession implements ReplayPlaybackContext {
     }
 
     private void applyTeamGlow(Player viewer, Entity entity, int entityId) {
-        UUID entityUuid = null;
-        if (entity instanceof ReplayPlayerEntity playerEntity) {
-            entityUuid = playerEntity.getActualUuid();
-        }
+        if (!(entity instanceof ReplayPlayerEntity playerEntity)) return;
 
-        if (entityUuid == null) return;
-
-        String teamId = null;
-        for (Map.Entry<String, List<UUID>> entry : currentTeams.entrySet()) {
-            if (entry.getValue().contains(entityUuid)) {
-                teamId = entry.getKey();
-                break;
-            }
-        }
-
-        if (teamId == null) return;
-
-        BedWarsViewerMetadata.Team teamInfo = getBedWarsTeam(teamId);
+        ReplayEntityState state = entityStore.states().get(entityId);
+        if (state == null || state.player() == null) return;
+        ReplayTeam teamInfo = replayTeamsById.get(state.player().teamId());
         NamedTextColor teamColor = NamedTextColor.WHITE;
         if (teamInfo != null) {
             teamColor = NamedTextColor.nearestTo(TextColor.color(teamInfo.color()));
@@ -520,7 +509,6 @@ public class ReplaySession implements ReplayPlaybackContext {
         entity.setGlowing(true);
 
         String teamName = "REPLAY_GLOW_" + entityId;
-        ReplayPlayerEntity playerEntity = (ReplayPlayerEntity) entity;
         String entityName = playerEntity.getPlayerName();
 
         viewer.sendPacket(new TeamsPacket(
@@ -602,12 +590,12 @@ public class ReplaySession implements ReplayPlaybackContext {
         }
     }
 
-    private void updateEntityPresentation(net.swofty.type.game.replay.model.ReplayEntityState state) {
+    private void updateEntityPresentation(ReplayEntityState state) {
         if (state.player() == null) return;
         ReplayParticipant participant = getParticipant(state.player().participantUuid());
         if (participant == null) return;
         int color = -1;
-        BedWarsViewerMetadata.Team team = getBedWarsTeam(state.player().teamId());
+        ReplayTeam team = replayTeamsById.get(state.player().teamId());
         if (team != null) color = team.color();
         Text prefix = team == null || team.name().isEmpty() ? Text.component(COMPONENTS.deserialize(participant.prefixJson()))
                 : Text.of("<color:{}>{} ", TextColor.color(team.color()), team.name().substring(0, 1).toUpperCase());
@@ -670,50 +658,11 @@ public class ReplaySession implements ReplayPlaybackContext {
         return metadata.participants().stream().filter(participant -> participant.uuid().equals(uuid)).findFirst().orElse(null);
     }
 
-    public BedWarsViewerMetadata.Team getBedWarsTeam(String teamId) {
-        if (!(gameMetadata instanceof BedWarsViewerMetadata bedWars)) return null;
-        return bedWars.teams().stream().filter(team -> team.id().equals(teamId)).findFirst().orElse(null);
-    }
-
-    public String gameModeId() {
-        return gameMetadata instanceof BedWarsViewerMetadata bedWars ? bedWars.modeId() : metadata.descriptor().gameType();
-    }
-
-    public void replaceCurrentTeams(Map<String, List<UUID>> teams) {
-        currentTeams.clear();
-        teams.forEach((team, players) -> currentTeams.put(team, new ArrayList<>(players)));
-    }
-
-    public void restoreBedWarsState(Map<String, List<UUID>> teams, Map<String, Boolean> beds, Map<String, Integer> generators,
-                                    Collection<String> eliminated) {
-        replaceCurrentTeams(teams);
-        liveBeds.clear();
-        liveBeds.putAll(beds);
-        generatorTiers.clear();
-        generatorTiers.putAll(generators);
-        eliminatedTeams.clear();
-        eliminatedTeams.addAll(eliminated);
-    }
-
-    public void applyBedState(String teamId, boolean live) {
-        liveBeds.put(teamId, live);
-    }
-
-    public void eliminateTeam(String teamId) {
-        eliminatedTeams.add(teamId);
-        liveBeds.put(teamId, false);
-    }
-
-    public void applyGeneratorTier(String generatorId, int tier) {
-        generatorTiers.put(generatorId, tier);
-    }
-
     void clearReplayOwnedState() {
         clearProjectionTeams();
         entityManager.cleanup();
         dynamicTextManager.cleanup();
         npcManager.cleanup();
-        resetCurrentTeams();
     }
 
     void failPlayback(int tick, Exception exception) {

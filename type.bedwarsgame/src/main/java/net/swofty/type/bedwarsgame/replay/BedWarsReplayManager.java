@@ -25,8 +25,9 @@ import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.death.BedWarsDeathType;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsTeam;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsTeam;
+import net.swofty.type.bedwarsgame.messages.BedWarsMessages;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.replay.ReplayRecorder;
 import net.swofty.type.game.replay.ReplayVersion;
@@ -310,7 +311,7 @@ public class BedWarsReplayManager {
 
         var team = game.getMapEntry().getConfiguration().getTeams().get(teamKey);
         recorder.recordEvent(new ReplayComponentEvent(ReplayComponentEvent.Kind.ANNOUNCEMENT,
-                BedWarsReplayMessages.bedDestroyed(teamKey, destroyer).asComponent()));
+                BedWarsMessages.bedDestroyed(teamKey, destroyer).asComponent()));
         recorder.recordEvent(new ReplayBookmarkEvent(Text.of("{} Bed Destroyed", teamKey.getName()).asComponent(),
                 destroyer == null ? null : destroyer.getUuid()));
 
@@ -336,7 +337,7 @@ public class BedWarsReplayManager {
         if (!recording) return;
         recorder.recordDelta(adapter.teamEliminationDelta(teamKey.name()));
         recorder.recordEvent(new ReplayComponentEvent(ReplayComponentEvent.Kind.ANNOUNCEMENT,
-                BedWarsReplayMessages.teamEliminated(teamKey).asComponent()));
+                BedWarsMessages.teamEliminated(teamKey).asComponent()));
     }
 
     /**
@@ -368,7 +369,7 @@ public class BedWarsReplayManager {
     public void recordPlayerChat(BedWarsPlayer player, Text message, boolean isShout) {
         if (!recording) return;
         recorder.recordEvent(new ReplayComponentEvent(ReplayComponentEvent.Kind.CHAT,
-                BedWarsReplayMessages.chat(player, message, isShout).asComponent()));
+                BedWarsMessages.chat(player, message, isShout).asComponent()));
     }
 
     public void recordParticle(ParticlePacket particlePacket) {
@@ -425,11 +426,6 @@ public class BedWarsReplayManager {
     public void recordTextDisplayUpdate(int entityId, List<String> newTextLines, boolean replaceAll, int startIndex) {
         if (!recording) return;
         recorder.recordDelta(adapter.displayUpdateDelta(entityId, newTextLines, replaceAll, startIndex));
-    }
-
-    public void recordBelowNameTag(BedWarsPlayer player, int health) {
-        if (!recording) return;
-        recorder.recordEntityState(player);
     }
 
     public void recordShopNpc(

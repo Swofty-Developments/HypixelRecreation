@@ -177,7 +177,6 @@ public class SkyBlockVelocity {
         // Register packets
         server.getEventManager().register(this, PostLoginEvent.class,
             (AwaitingEventExecutor<PostLoginEvent>) postLoginEvent -> EventTask.withContinuation(continuation -> {
-                injectPlayer(postLoginEvent.getPlayer());
                 TestFlowManager.handlePlayerJoin(postLoginEvent.getPlayer().getUsername());
                 PresencePublisher.publish(postLoginEvent.getPlayer(), true, (String) null, null);
 
@@ -202,7 +201,6 @@ public class SkyBlockVelocity {
                     // Handle test flow player leave
                     TestFlowManager.handlePlayerLeave(disconnectEvent.getPlayer().getUsername());
                     PresencePublisher.publish(disconnectEvent.getPlayer(), false, (String) null, null);
-                    removePlayer(disconnectEvent.getPlayer());
                 })
         );
 
@@ -552,23 +550,4 @@ public class SkyBlockVelocity {
             .filter(Objects::nonNull);
     }
 
-    private void injectPlayer(final Player player) {
-        /*final ConnectedPlayer connectedPlayer = (ConnectedPlayer) player;
-        Channel channel = connectedPlayer.getConnection().getChannel();
-        ChannelPipeline pipeline = channel.pipeline();
-        if (pipeline.get("PACKET") == null) {
-            pipeline.addBefore(Connections.HANDLER, "PACKET", new PlayerChannelHandler(player));
-        }*/
-    }
-
-    private void removePlayer(final Player player) {
-        /*final ConnectedPlayer connectedPlayer = (ConnectedPlayer) player;
-        final Channel channel = connectedPlayer.getConnection().getChannel();
-
-        channel.eventLoop().submit(() -> {
-            if (channel.pipeline().get("PACKET") != null) {
-                channel.pipeline().remove("PACKET");
-            }
-        });*/
-    }
 }

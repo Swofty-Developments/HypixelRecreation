@@ -1,4 +1,4 @@
-package net.swofty.type.bedwarsgame.game.v2;
+package net.swofty.type.bedwarsgame.game;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

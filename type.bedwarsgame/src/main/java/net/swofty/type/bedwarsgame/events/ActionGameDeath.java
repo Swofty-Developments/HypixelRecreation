@@ -12,7 +12,7 @@ import net.swofty.type.bedwarsgame.death.BedWarsCombatTracker;
 import net.swofty.type.bedwarsgame.death.BedWarsDeathHandler;
 import net.swofty.type.bedwarsgame.death.BedWarsDeathResult;
 import net.swofty.type.bedwarsgame.death.BedWarsDeathType;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.shop.impl.AxeShopItem;
 import net.swofty.type.bedwarsgame.shop.impl.PickaxeShopItem;
 import net.swofty.type.bedwarsgame.stats.BedWarsStatsRecorder;

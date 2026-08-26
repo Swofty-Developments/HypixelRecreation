@@ -3,18 +3,25 @@ package net.swofty.type.bedwarsgame.user;
 import lombok.Getter;
 import lombok.Setter;
 import net.minestom.server.coordinate.Vec;
-import net.minestom.server.entity.*;
+import net.minestom.server.entity.EntityType;
+import net.minestom.server.entity.GameMode;
+import net.minestom.server.entity.MetadataDef;
+import net.minestom.server.entity.Player;
+import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.entity.attribute.Attribute;
-import net.minestom.server.network.packet.server.play.*;
+import net.minestom.server.network.packet.server.play.DestroyEntitiesPacket;
+import net.minestom.server.network.packet.server.play.EntityHeadLookPacket;
+import net.minestom.server.network.packet.server.play.PlayerInfoRemovePacket;
+import net.minestom.server.network.packet.server.play.PlayerInfoUpdatePacket;
+import net.minestom.server.network.packet.server.play.SpawnEntityPacket;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
-import net.minestom.server.scoreboard.BelowNameTag;
 import net.minestom.server.tag.Tag;
 import net.swofty.commons.bedwars.BedwarsLevelUtil;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.game.game.GameParticipant;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointHypixelExperience;
@@ -52,7 +59,6 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 
 	public BedWarsPlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
 		super(playerConnection, gameProfile);
-		//getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(1.0);
 		getAttribute(Attribute.ATTACK_SPEED).setBaseValue(1000); // basically removes the attack indicator
 		fakeUuid = UUID.randomUUID();
 	}
@@ -91,18 +97,6 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 		killsThisGame++;
 	}
 
-	public void updateBelowTag() {
-		if (belowNameTag == null)
-			setBelowNameTag(new BelowNameTag("health", Text.of("<c>❤").asComponent()));
-		int health = (int) (getHealth() + getAdditionalHearts());
-		belowNameTag.updateScore(this, health);
-
-		BedWarsGame game = getGame();
-		if (game != null && game.getReplayManager().isRecording()) {
-			game.getReplayManager().recordBelowNameTag(this, health);
-		}
-	}
-
 	@Override
 	public void updateNewViewer(@NonNull Player player) {
 		if (!canViewerSeeIdentity(player)) {
@@ -137,12 +131,6 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 
 	@Override
 	protected @NonNull PlayerInfoUpdatePacket getAddPlayerToList() {
-		/*if (!shouldShowTrueIdentity) {
-			return new PlayerInfoUpdatePacket(EnumSet.of(
-				PlayerInfoUpdatePacket.Action.ADD_PLAYER),
-				List.of(new PlayerInfoUpdatePacket.Entry(fakeUuid, "§k" + fakeUuid.toString().substring(0, 14), List.of(),
-					false, getLatency(), getGameMode(), Text.literal(fakeUuid.toString().substring(0, 12)).asComponent(), null, 0, false)));
-		}*/
 		final PlayerSkin skin = getSkin();
 		List<PlayerInfoUpdatePacket.Property> prop = skin != null ?
 			List.of(new PlayerInfoUpdatePacket.Property("textures", skin.textures(), skin.signature())) :
