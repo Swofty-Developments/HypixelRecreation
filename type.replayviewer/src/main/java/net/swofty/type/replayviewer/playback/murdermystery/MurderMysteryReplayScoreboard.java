@@ -13,9 +13,10 @@ public final class MurderMysteryReplayScoreboard extends GenericReplayScoreboard
 
     @Override
     protected List<Text> getGameLines(ReplaySession session) {
+        String mode = session.getMetadata().descriptor().gameType();
         return List.of(
                 Text.of("<f>{}<a>Murder Mystery", Text.key("replays.game")),
-                Text.of("<f>{}<a>{}", Text.key("replays.mode"), session.gameModeId().replace('_', ' '))
+                Text.of("<f>{}<a>{}", Text.key("replays.mode"), mode.replace('_', ' '))
         );
     }
 }
