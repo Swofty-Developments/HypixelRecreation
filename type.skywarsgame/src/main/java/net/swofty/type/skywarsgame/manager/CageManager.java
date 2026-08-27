@@ -31,7 +31,7 @@ public class CageManager {
             }
         }
 
-        throw new IllegalStateException("Nope");
+        throw new IllegalStateException("No SkyWars cage is available");
     }
 
     public void releaseCage(SkywarsPlayer player) {

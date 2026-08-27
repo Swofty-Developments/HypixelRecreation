@@ -20,6 +20,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":type.game"))
     implementation(project(":type.generic"))
     implementation(project(":type.skywarslobby"))
     implementation(project(":commons"))
@@ -35,4 +36,13 @@ dependencies {
     implementation(libs.tinylog.api)
     implementation(libs.tinylog.impl)
     implementation(libs.gson)
+
+    testImplementation(libs.minestom)
+    testImplementation(platform("org.junit:junit-bom:6.1.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

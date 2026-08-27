@@ -39,6 +39,8 @@ public class DragonManager {
     private final Pos centerPos;
     private DragonEntity dragon;
     private Task behaviorTask;
+    private Task warningTask;
+    private Task spawnTask;
     private boolean dragonSpawned = false;
 
     private enum DragonState { IDLE, DIVING, RETURNING }
@@ -59,24 +61,53 @@ public class DragonManager {
     }
 
     public void spawnDragonNow(Consumer<Text> broadcaster) {
-        spawnDragon(broadcaster);
+        spawnDragonNow(broadcaster, () -> {
+        });
+    }
+
+    public void spawnDragonNow(Consumer<Text> broadcaster, Runnable onSpawn) {
+        cancelScheduledSpawnTasks();
+        spawnDragon(broadcaster, onSpawn);
     }
 
     public void scheduleDragonSpawn(Consumer<Text> broadcaster) {
-        MinecraftServer.getSchedulerManager().buildTask(() -> {
+        scheduleDragonSpawn(broadcaster, () -> {
+        });
+    }
+
+    public void scheduleDragonSpawn(Consumer<Text> broadcaster, Runnable onSpawn) {
+        if (warningTask != null || spawnTask != null || dragonSpawned) return;
+
+        warningTask = MinecraftServer.getSchedulerManager().buildTask(() -> {
+            warningTask = null;
+            if (!game.isInProgress()) return;
             broadcaster.accept(Text.of("<c>The Ender Dragon will spawn in 1 minute!"));
         }).delay(TaskSchedule.seconds(SkywarsGame.DRAGON_SPAWN_SECONDS - 60)).schedule();
 
-        MinecraftServer.getSchedulerManager().buildTask(() -> {
-            spawnDragon(broadcaster);
+        spawnTask = MinecraftServer.getSchedulerManager().buildTask(() -> {
+            spawnTask = null;
+            if (!game.isInProgress()) return;
+            spawnDragon(broadcaster, onSpawn);
         }).delay(TaskSchedule.seconds(SkywarsGame.DRAGON_SPAWN_SECONDS)).schedule();
     }
 
-    private void spawnDragon(Consumer<Text> broadcaster) {
+    private void cancelScheduledSpawnTasks() {
+        if (warningTask != null) {
+            warningTask.cancel();
+            warningTask = null;
+        }
+        if (spawnTask != null) {
+            spawnTask.cancel();
+            spawnTask = null;
+        }
+    }
+
+    private void spawnDragon(Consumer<Text> broadcaster, Runnable onSpawn) {
         if (dragonSpawned) return;
         dragonSpawned = true;
         this.broadcaster = broadcaster;
 
+        onSpawn.run();
         broadcaster.accept(Text.of("<5>The Ender Dragon has spawned!"));
 
         dragon = new DragonEntity();
@@ -93,6 +124,10 @@ public class DragonManager {
         idleStartTime = System.currentTimeMillis();
 
         behaviorTask = MinecraftServer.getSchedulerManager().buildTask(() -> {
+            if (!game.isInProgress()) {
+                cleanup();
+                return;
+            }
             if (dragon == null || dragon.isDead() || !dragonSpawned) {
                 if (behaviorTask != null) {
                     behaviorTask.cancel();
@@ -203,7 +238,7 @@ public class DragonManager {
     }
 
     public void onDragonDamaged(UUID damagerUuid, float damage) {
-        if (dragon == null) return;
+        if (!game.isInProgress() || dragon == null || damage <= 0 || !Float.isFinite(damage)) return;
 
         float newHealth = dragon.getHealth() - damage;
         if (newHealth <= 0) {
@@ -227,14 +262,19 @@ public class DragonManager {
     }
 
     public void cleanup() {
+        cancelScheduledSpawnTasks();
         if (behaviorTask != null) {
             behaviorTask.cancel();
+            behaviorTask = null;
         }
         if (dragon != null && !dragon.isDead()) {
             dragon.remove();
         }
+        dragon = null;
         dragonSpawned = false;
         state = DragonState.IDLE;
         diveTarget = null;
+        diveThroughPoint = null;
+        broadcaster = null;
     }
 }

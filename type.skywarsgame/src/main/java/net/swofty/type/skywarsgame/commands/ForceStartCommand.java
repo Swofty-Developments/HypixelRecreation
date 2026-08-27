@@ -6,7 +6,6 @@ import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 @CommandParameters(
@@ -30,9 +29,12 @@ public class ForceStartCommand extends HypixelCommand {
                 return;
             }
 
-            if (game.getGameStatus() != SkywarsGameStatus.WAITING &&
-                    game.getGameStatus() != SkywarsGameStatus.STARTING) {
+            if (!game.getState().isWaiting()) {
                 player.sendMessage("<c>The game has already started!");
+                return;
+            }
+            if (!game.hasMinimumPlayers()) {
+                player.sendMessage("<c>Need at least {} players to start!", game.getMinPlayers());
                 return;
             }
 
@@ -51,9 +53,12 @@ public class ForceStartCommand extends HypixelCommand {
                 return;
             }
 
-            if (game.getGameStatus() != SkywarsGameStatus.WAITING &&
-                    game.getGameStatus() != SkywarsGameStatus.STARTING) {
+            if (!game.getState().isWaiting()) {
                 player.sendMessage("<c>The game has already started!");
+                return;
+            }
+            if (!game.hasMinimumPlayers()) {
+                player.sendMessage("<c>Need at least {} players to start!", game.getMinPlayers());
                 return;
             }
 

@@ -1,16 +1,18 @@
 package net.swofty.type.skywarsgame.game;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.ItemEntity;
+import net.minestom.server.event.Event;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.tag.Tag;
+import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.mc.HypixelPosition;
@@ -19,11 +21,18 @@ import net.swofty.commons.skywars.SkywarsLeaderboardMode;
 import net.swofty.commons.skywars.SkywarsModeStats;
 import net.swofty.commons.skywars.map.SkywarsMapsConfig;
 import net.swofty.commons.text.Text;
+import net.swofty.type.game.game.AbstractTeamGame;
+import net.swofty.type.game.game.CountdownConfig;
+import net.swofty.type.game.game.Game.JoinResult;
+import net.swofty.type.game.game.GameState;
+import net.swofty.type.game.game.event.PlayerAssignedTeamEvent;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsKitStats;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsModeStats;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
+import net.swofty.type.generic.experience.PlayerExperienceHandler;
+import net.swofty.type.generic.event.HypixelEventHandler;
 import net.swofty.type.generic.game.GameStatTracker;
 import net.swofty.type.generic.utility.Titles;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
@@ -41,27 +50,31 @@ import net.swofty.type.skywarslobby.kit.SkywarsKitRegistry;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
-public class SkywarsGame {
+public class SkywarsGame extends AbstractTeamGame<SkywarsPlayer, SkywarsTeam> {
     public static final Tag<Boolean> ELIMINATED_TAG = Tag.Boolean("eliminated");
 
     public static final int FIRST_REFILL_SECONDS = 180;
     public static final int SECOND_REFILL_SECONDS = 360;
     public static final int DRAGON_SPAWN_SECONDS = 600;
 
-
-    private final InstanceContainer instanceContainer;
     private final SkywarsGameType gameType;
-    private final String gameId = UUID.randomUUID().toString();
     private final SkywarsMapsConfig.MapEntry mapEntry;
 
-    private final List<SkywarsPlayer> players = new ArrayList<>();
-    private final List<UUID> disconnectedPlayerUuids = new ArrayList<>();
-    private final Map<Integer, List<SkywarsPlayer>> teams = new HashMap<>();
+    @Getter(AccessLevel.NONE)
+    private final Map<UUID, SkywarsPlayer> participants = new LinkedHashMap<>();
+    @Getter(AccessLevel.NONE)
+    private final Map<UUID, String> participantTeams = new HashMap<>();
+    @Getter(AccessLevel.NONE)
+    private final Map<String, Pos> teamCagePositions = new HashMap<>();
+    @Getter(AccessLevel.NONE)
     private final Map<UUID, Long> boundaryWarningStartTime = new HashMap<>();
 
     private static final int BOUNDARY_WARNING_SECONDS = 5;
@@ -71,35 +84,50 @@ public class SkywarsGame {
     private final DragonManager dragonManager;
     private final LuckyBlock luckyBlockManager;
     private final OPRuleManager opRuleManager;
-    private final SkywarsGameCountdown countdown;
     private final GameStatTracker<SkywarsGameStat> gameStats = new GameStatTracker<>(SkywarsGameStat.class);
 
-    @Setter
-    private SkywarsGameStatus gameStatus;
-    private long gameStartTime = 0;
+    private long gameStartTime;
     private GameEvent currentEvent = GameEvent.GAME_START;
+    private boolean forceCountdownAnnouncements;
+    @Getter(AccessLevel.NONE)
+    private boolean resultsRecorded;
+    @Getter(AccessLevel.NONE)
+    private Task boundaryTask;
+    @Getter(AccessLevel.NONE)
+    private Task endCleanupTask;
+    @Getter(AccessLevel.NONE)
+    private Task emptyCheckTask;
 
     public SkywarsGame(SkywarsMapsConfig.MapEntry mapEntry,
                        InstanceContainer instanceContainer,
                        SkywarsGameType gameType) {
-        this.mapEntry = mapEntry;
-        this.instanceContainer = instanceContainer;
-        this.gameType = gameType;
+        super(Objects.requireNonNull(instanceContainer, "instanceContainer"),
+                event -> HypixelEventHandler.callCustomEvent((Event) event));
 
-        SkywarsMapsConfig.MapEntry.MapConfiguration config = mapEntry.getConfiguration();
+        this.mapEntry = Objects.requireNonNull(mapEntry, "mapEntry");
+        this.gameType = Objects.requireNonNull(gameType, "gameType");
 
-        List<Pos> cagePositions = config.getIslands().stream()
+        SkywarsMapsConfig.MapEntry.MapConfiguration config = Objects.requireNonNull(
+                mapEntry.getConfiguration(),
+                "mapEntry.configuration"
+        );
+        var islands = Objects.requireNonNull(config.getIslands(), "mapEntry.configuration.islands");
+        if (islands.size() < gameType.getMaxTeams()) {
+            throw new IllegalArgumentException("Map does not provide enough islands for " + gameType);
+        }
+
+        List<Pos> cagePositions = islands.stream()
                 .map(island -> {
-                    HypixelPosition cage = island.getCageCenter();
+                    HypixelPosition cage = Objects.requireNonNull(island.getCageCenter(), "island.cageCenter");
                     return new Pos(cage.x(), cage.y(), cage.z(), cage.yaw(), cage.pitch());
                 })
                 .toList();
 
-        HypixelPosition center = config.getCenter();
+        HypixelPosition center = Objects.requireNonNull(config.getCenter(), "mapEntry.configuration.center");
         Pos centerPos = new Pos(center.x(), center.y(), center.z());
 
         ChestScanner.ChestScanResult scanResult = ChestScanner.scanForChests(
-                instanceContainer,
+                instance,
                 config.getBounds(),
                 cagePositions,
                 config.getVoidY()
@@ -107,12 +135,12 @@ public class SkywarsGame {
         List<Pos> islandChests = scanResult.islandChests();
         List<Pos> centerChests = scanResult.centerChests();
 
-        this.cageManager = new CageManager(instanceContainer, cagePositions);
-        this.chestManager = new ChestManager(instanceContainer, gameType, islandChests, centerChests);
-        this.dragonManager = new DragonManager(this, instanceContainer, centerPos);
+        this.cageManager = new CageManager(instance, cagePositions);
+        this.chestManager = new ChestManager(this, instance, gameType, islandChests, centerChests);
+        this.dragonManager = new DragonManager(this, instance, centerPos);
 
         if (gameType == SkywarsGameType.SOLO_LUCKY_BLOCK) {
-            this.luckyBlockManager = new LuckyBlock(instanceContainer);
+            this.luckyBlockManager = new LuckyBlock(instance);
             this.luckyBlockManager.setGame(this);
             this.opRuleManager = new OPRuleManager(this);
         } else {
@@ -120,98 +148,158 @@ public class SkywarsGame {
             this.opRuleManager = null;
         }
 
-        this.countdown = new SkywarsGameCountdown(this);
-
-        this.gameStatus = SkywarsGameStatus.WAITING;
+        for (int teamId = 0; teamId < gameType.getMaxTeams(); teamId++) {
+            registerTeam(new SkywarsTeam(teamId));
+        }
     }
 
-    public void join(SkywarsPlayer player) {
-        if (gameStatus != SkywarsGameStatus.WAITING) {
-            player.sendMessage("<c>Game already in progress!");
+    @Override
+    protected CountdownConfig getCountdownConfig() {
+        return CountdownConfig.DEFAULT;
+    }
+
+    @Override
+    protected void onCountdownCancelled() {
+        forceCountdownAnnouncements = false;
+        super.onCountdownCancelled();
+    }
+
+    @Override
+    public int getMaxPlayers() {
+        return gameType.getMaxPlayers();
+    }
+
+    @Override
+    public int getMinPlayers() {
+        return gameType.getMinPlayers();
+    }
+
+    @Override
+    protected int getTeamSize() {
+        return gameType.getTeamSize();
+    }
+
+    @Override
+    protected boolean isTeamViable(SkywarsTeam team) {
+        return team.getPlayerIds().stream().anyMatch(uuid -> {
+            SkywarsPlayer player = players.get(uuid);
+            return player != null && !player.isEliminated();
+        });
+    }
+
+    @Override
+    public void autoAssignTeams() {
+        super.autoAssignTeams();
+        getPlayers().forEach(player -> getPlayerTeam(player.getUuid())
+                .ifPresent(team -> participantTeams.put(player.getUuid(), team.getId())));
+    }
+
+    @Override
+    public JoinResult join(SkywarsPlayer player) {
+        Objects.requireNonNull(player, "player");
+        JoinResult result = super.join(player);
+        if (!(result instanceof JoinResult.Success)) {
+            String reason = result instanceof JoinResult.Denied denied
+                    ? denied.reason()
+                    : "Unable to join game";
+            player.sendMessage("<c>{}", reason);
             player.sendTo(ServerType.SKYWARS_LOBBY);
-            return;
+            return result;
         }
 
-        if (players.size() >= gameType.getMaxPlayers()) {
-            player.sendMessage("<c>Game is full!");
-            player.sendTo(ServerType.SKYWARS_LOBBY);
-            return;
-        }
-
-        setupPlayerForWaiting(player);
-        players.add(player);
+        participants.put(player.getUuid(), player);
         assignToTeam(player);
-        player.setTag(Tag.String("gameId"), gameId);
+        setupPlayerForWaiting(player);
 
-        broadcastMessage(Text.of("{}<e> has joined (<b>{}<e>/<b>{}<e>)!",
-                player.getFullDisplayName(), players.size(), gameType.getMaxPlayers()));
-
-        if (hasMinimumPlayers() && !countdown.isActive()) {
-            countdown.startCountdown();
-        }
+        broadcastMessage("{}<e> has joined (<b>{}<e>/<b>{}<e>)!",
+                player.getFullDisplayName(), getPlayers().size(), getMaxPlayers());
+        return result;
     }
 
+    @Override
     public void leave(SkywarsPlayer player) {
-        if (gameStatus == SkywarsGameStatus.IN_PROGRESS && !player.isEliminated()) {
-            dropPlayerItems(player);
+        if (getPlayer(player.getUuid()).isEmpty()) return;
 
-            player.setEliminated(true);
-            player.setTag(ELIMINATED_TAG, true);
-            broadcastMessage(EnvironmentalDeathType.QUIT.formatMessage(player));
-        } else if (gameStatus == SkywarsGameStatus.WAITING || gameStatus == SkywarsGameStatus.STARTING) {
-            broadcastMessage(Text.of("{}<e> has quit!", player.getFullDisplayName()));
-        }
-
-        players.remove(player);
-        removeFromTeam(player);
-        player.removeTag(Tag.String("gameId"));
-        cageManager.releaseCage(player);
+        GameState stateAtLeave = getState();
+        removePlayer(player, stateAtLeave);
         player.sendTo(ServerType.SKYWARS_LOBBY);
-
-        countdown.checkCountdownConditions();
-
-        if (gameStatus == SkywarsGameStatus.IN_PROGRESS) {
-            checkWinConditions();
-        }
     }
 
     public void disconnect(SkywarsPlayer player) {
-        if (gameStatus == SkywarsGameStatus.IN_PROGRESS && !player.isEliminated()) {
-            dropPlayerItems(player);
+        if (getPlayer(player.getUuid()).isEmpty()) return;
 
+        if (getState() != GameState.IN_PROGRESS) {
+            removePlayer(player, getState());
+            return;
+        }
+
+        String teamId = playerTeams.get(player.getUuid());
+        if (!player.isEliminated()) {
+            dropPlayerItems(player);
             player.setEliminated(true);
             player.setTag(ELIMINATED_TAG, true);
             broadcastMessage(EnvironmentalDeathType.QUIT.formatMessage(player));
         }
 
-        disconnectedPlayerUuids.add(player.getUuid());
-        players.remove(player);
         removeFromTeam(player);
-        cageManager.releaseCage(player);
+        handleDisconnect(player);
+        releaseCage(player, teamId);
+        player.setGameId(null);
+    }
 
-        if (gameStatus == SkywarsGameStatus.IN_PROGRESS) {
-            checkWinConditions();
+    private void removePlayer(SkywarsPlayer player, GameState stateAtLeave) {
+        String teamId = playerTeams.get(player.getUuid());
+        if (stateAtLeave == GameState.IN_PROGRESS && !player.isEliminated()) {
+            dropPlayerItems(player);
+            player.setEliminated(true);
+            player.setTag(ELIMINATED_TAG, true);
+            broadcastMessage(EnvironmentalDeathType.QUIT.formatMessage(player));
+        } else if (stateAtLeave.isWaiting()) {
+            broadcastMessage("{}<e> has quit!", player.getFullDisplayName());
         }
+
+        super.leave(player);
+        if (stateAtLeave.isWaiting()) {
+            participants.remove(player.getUuid());
+            participantTeams.remove(player.getUuid());
+        }
+
+        releaseCage(player, teamId);
+
+        if (stateAtLeave == GameState.COUNTDOWN && !hasMinimumPlayers()) {
+            cancelCountdown();
+        }
+    }
+
+    @Override
+    protected boolean canPlayerRejoin(SkywarsPlayer player) {
+        return false;
     }
 
     private void assignToTeam(SkywarsPlayer player) {
-        if (gameType.getTeamSize() == 1) {
-            teams.put(players.size() - 1, new ArrayList<>(List.of(player)));
-        } else {
-            for (int i = 0; i < gameType.getMaxTeams(); i++) {
-                List<SkywarsPlayer> team = teams.computeIfAbsent(i, k -> new ArrayList<>());
-                if (team.size() < gameType.getTeamSize()) {
-                    team.add(player);
-                    return;
-                }
-            }
-        }
+        if (getPlayerTeam(player.getUuid()).isPresent()) return;
+
+        SkywarsTeam team = getTeams().stream()
+                .filter(candidate -> candidate.getPlayerCount() < getTeamSize())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No SkyWars team has capacity"));
+
+        team.addPlayer(player.getUuid());
+        playerTeams.put(player.getUuid(), team.getId());
+        participantTeams.put(player.getUuid(), team.getId());
+        eventDispatcher.accept(new PlayerAssignedTeamEvent<>(
+                this,
+                player.getServerPlayer(),
+                team
+        ));
     }
 
-    private void removeFromTeam(SkywarsPlayer player) {
-        for (List<SkywarsPlayer> team : teams.values()) {
-            team.remove(player);
-        }
+    private void cancelCountdown() {
+        if (!getCountdown().isActive()) return;
+        forceCountdownAnnouncements = false;
+        getCountdown().terminate();
+        setState(GameState.WAITING);
+        broadcastMessage("<c>Not enough players to start the game.");
     }
 
     private void dropPlayerItems(SkywarsPlayer player) {
@@ -221,7 +309,7 @@ public class SkywarsGame {
             ItemStack item = player.getInventory().getItemStack(i);
             if (!item.isAir()) {
                 ItemEntity itemEntity = new ItemEntity(item);
-                itemEntity.setInstance(instanceContainer, dropPos.add(0, 1, 0));
+                itemEntity.setInstance(instance, dropPos.add(0, 1, 0));
                 itemEntity.setPickupDelay(Duration.ofMillis(500));
                 itemEntity.setVelocity(itemEntity.getVelocity().add(
                         (Math.random() - 0.5) * 5,
@@ -231,17 +319,17 @@ public class SkywarsGame {
             }
         }
 
-        net.minestom.server.entity.EquipmentSlot[] armorSlots = {
-                net.minestom.server.entity.EquipmentSlot.HELMET,
-                net.minestom.server.entity.EquipmentSlot.CHESTPLATE,
-                net.minestom.server.entity.EquipmentSlot.LEGGINGS,
-                net.minestom.server.entity.EquipmentSlot.BOOTS
+        EquipmentSlot[] armorSlots = {
+                EquipmentSlot.HELMET,
+                EquipmentSlot.CHESTPLATE,
+                EquipmentSlot.LEGGINGS,
+                EquipmentSlot.BOOTS
         };
-        for (net.minestom.server.entity.EquipmentSlot slot : armorSlots) {
+        for (EquipmentSlot slot : armorSlots) {
             ItemStack armor = player.getEquipment(slot);
             if (armor != null && !armor.isAir()) {
                 ItemEntity itemEntity = new ItemEntity(armor);
-                itemEntity.setInstance(instanceContainer, dropPos.add(0, 1, 0));
+                itemEntity.setInstance(instance, dropPos.add(0, 1, 0));
                 itemEntity.setPickupDelay(Duration.ofMillis(500));
                 itemEntity.setVelocity(itemEntity.getVelocity().add(
                         (Math.random() - 0.5) * 5,
@@ -252,22 +340,29 @@ public class SkywarsGame {
         }
 
         player.getInventory().clear();
+        for (EquipmentSlot slot : armorSlots) {
+            player.setEquipment(slot, ItemStack.AIR);
+        }
     }
 
     public int getPlayerTeam(SkywarsPlayer player) {
-        for (Map.Entry<Integer, List<SkywarsPlayer>> entry : teams.entrySet()) {
-            if (entry.getValue().contains(player)) {
-                return entry.getKey();
-            }
-        }
-        return -1;
+        return getPlayerTeam(player.getUuid())
+                .map(SkywarsTeam::getTeamId)
+                .orElse(-1);
     }
 
     private void setupPlayerForWaiting(SkywarsPlayer player) {
-        Pos cagePos = cageManager.assignCage(player);
+        String teamId = playerTeams.get(player.getUuid());
+        if (teamId == null) {
+            throw new IllegalStateException("Player has no team assignment");
+        }
 
-        if (player.getInstance() == null || !player.getInstance().getUuid().equals(instanceContainer.getUuid())) {
-            player.setInstance(instanceContainer, cagePos);
+        player.resetGameState();
+        Pos cagePos = teamCagePositions.computeIfAbsent(teamId, ignored -> cageManager.assignCage(player));
+        player.setCagePosition(cagePos);
+
+        if (player.getInstance() == null || !player.getInstance().getUuid().equals(instance.getUuid())) {
+            player.setInstance(instance, cagePos);
         } else {
             player.teleport(cagePos);
         }
@@ -279,9 +374,10 @@ public class SkywarsGame {
         }
         player.getInventory().setItemStack(8,
                 TypeSkywarsGameLoader.getItemHandler().getItem("leave_game").getItemStack());
+        player.setAllowFlying(false);
         player.setFlying(false);
         player.setGameMode(GameMode.ADVENTURE);
-        player.resetGameState();
+        player.setTag(ELIMINATED_TAG, false);
 
         if (gameType == SkywarsGameType.SOLO_LUCKY_BLOCK) {
             player.sendActionBar(Text.of("<c>Kits and perks are disabled in Lucky Block SkyWars"));
@@ -290,14 +386,24 @@ public class SkywarsGame {
 
     private static final Text THICK_BAR = Text.of("<a><l>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
 
-    public void startGame() {
-        gameStatus = SkywarsGameStatus.IN_PROGRESS;
+    @Override
+    public void start() {
+        if (!getState().isWaiting()) return;
+        super.start();
+        if (getState() != GameState.IN_PROGRESS) return;
+
+        forceCountdownAnnouncements = false;
+        autoAssignTeams();
         gameStartTime = System.currentTimeMillis();
+        currentEvent = GameEvent.GAME_START;
+        resultsRecorded = false;
 
         cageManager.openAllCages();
 
-        for (SkywarsPlayer player : players) {
+        for (SkywarsPlayer player : getPlayers()) {
             player.setGameMode(GameMode.SURVIVAL);
+            player.setAllowFlying(false);
+            player.setFlying(false);
             player.getInventory().clear();
             if (gameType != SkywarsGameType.SOLO_LUCKY_BLOCK) {
                 giveKitItems(player);
@@ -314,22 +420,35 @@ public class SkywarsGame {
                 Text.empty(),
                 Title.Times.times(Duration.ZERO, Duration.ofSeconds(2), Duration.ofMillis(500))
         );
-        players.forEach(p -> p.showTitle(title));
+        getPlayers().forEach(p -> p.showTitle(title));
 
         chestManager.scheduleRefills(
-                () -> broadcastMessage(Text.of("<6>Chests have been refilled!")),
-                () -> broadcastMessage(Text.of("<6>Chests have been refilled for the last time!"))
+                () -> {
+                    currentEvent = GameEvent.FIRST_REFILL;
+                    broadcastMessage(Text.of("<6>Chests have been refilled!"));
+                },
+                () -> {
+                    currentEvent = GameEvent.SECOND_REFILL;
+                    broadcastMessage(Text.of("<6>Chests have been refilled for the last time!"));
+                }
         );
 
-        dragonManager.scheduleDragonSpawn(this::broadcastMessage);
+        dragonManager.scheduleDragonSpawn(
+                this::broadcastMessage,
+                () -> currentEvent = GameEvent.DRAGON_SPAWN
+        );
 
-        MinecraftServer.getSchedulerManager().buildTask(this::checkPlayerBoundaries)
+        boundaryTask = MinecraftServer.getSchedulerManager().buildTask(this::checkPlayerBoundaries)
                 .repeat(TaskSchedule.tick(1))
                 .schedule();
     }
 
+    public void startGame() {
+        start();
+    }
+
     private void sendGameIntroMessage() {
-        for (SkywarsPlayer player : players) {
+        for (SkywarsPlayer player : getPlayers()) {
             player.sendMessage(THICK_BAR);
             player.sendMessage("                         <f><l>SkyWars");
             player.sendMessage("");
@@ -343,13 +462,13 @@ public class SkywarsGame {
     }
 
     private void checkPlayerBoundaries() {
-        if (gameStatus != SkywarsGameStatus.IN_PROGRESS) return;
+        if (getState() != GameState.IN_PROGRESS) return;
 
         SkywarsMapsConfig.MapEntry.MapConfiguration config = mapEntry.getConfiguration();
         int voidY = config.getVoidY();
         SkywarsMapsConfig.MapBounds bounds = config.getBounds();
 
-        for (SkywarsPlayer player : new ArrayList<>(players)) {
+        for (SkywarsPlayer player : List.copyOf(getPlayers())) {
             if (player.isEliminated()) continue;
 
             double playerX = player.getPosition().x();
@@ -408,7 +527,7 @@ public class SkywarsGame {
         }
 
         if (kit != null) {
-            for (net.minestom.server.item.ItemStack item : kit.getStartingItems(gameType.getModeString())) {
+            for (ItemStack item : kit.getStartingItems(gameType.getModeString())) {
                 player.getInventory().addItemStack(item);
             }
             player.setSelectedKit(kitId);
@@ -416,6 +535,18 @@ public class SkywarsGame {
     }
 
     public void onPlayerKill(SkywarsPlayer killer, SkywarsPlayer victim, KillType killType) {
+        if (getState() != GameState.IN_PROGRESS
+                || killer == null
+                || victim == null
+                || killType == null
+                || getPlayer(killer.getUuid()).isEmpty()
+                || getPlayer(victim.getUuid()).isEmpty()
+                || killer.isEliminated()
+                || killer.getUuid().equals(victim.getUuid())
+                || victim.isEliminated()) {
+            return;
+        }
+
         gameStats.increment(killer.getUuid(), SkywarsGameStat.KILLS);
         gameStats.increment(killer.getUuid(), SkywarsGameStat.SOULS);
 
@@ -447,6 +578,14 @@ public class SkywarsGame {
     }
 
     public void onEnvironmentalDeath(SkywarsPlayer victim, EnvironmentalDeathType deathType) {
+        if (getState() != GameState.IN_PROGRESS
+                || victim == null
+                || deathType == null
+                || getPlayer(victim.getUuid()).isEmpty()
+                || victim.isEliminated()) {
+            return;
+        }
+
         recordDeathStats(victim);
 
         victim.setEliminated(true);
@@ -539,60 +678,68 @@ public class SkywarsGame {
                 .addChestOpened();
     }
 
+    @Override
     public void checkWinConditions() {
-        if (gameStatus != SkywarsGameStatus.IN_PROGRESS) return;
-
-        if (gameType.getTeamSize() == 1) {
-            int alivePlayers = countAlivePlayers();
-            if (alivePlayers <= 1) {
-                endGame(SkywarsWinCondition.LAST_PLAYER_STANDING);
-            }
-        } else {
-            int aliveTeams = countAliveTeams();
-            if (aliveTeams <= 1) {
-                endGame(SkywarsWinCondition.LAST_TEAM_STANDING);
-            }
-        }
-    }
-
-    private int countAliveTeams() {
-        int aliveTeams = 0;
-        for (List<SkywarsPlayer> team : teams.values()) {
-            boolean teamAlive = team.stream().anyMatch(p -> !p.isEliminated());
-            if (teamAlive) aliveTeams++;
-        }
-        return aliveTeams;
+        if (getState() != GameState.IN_PROGRESS) return;
+        super.checkWinConditions();
     }
 
     public void onDragonKilled(UUID killerUuid) {
+        if (getState() != GameState.IN_PROGRESS) return;
+
         SkywarsPlayer killer = getPlayerByUuid(killerUuid);
+        if (killer != null && killer.isEliminated()) killer = null;
         if (killer != null) {
             broadcastMessage(Text.of("<d>{} has slain the Ender Dragon!", killer.getUsername()));
         }
-        endGame(SkywarsWinCondition.DRAGON_DEATH);
+        SkywarsTeam winningTeam = killer == null
+                ? getLastStandingTeam().orElse(null)
+                : getPlayerTeam(killerUuid).orElseGet(() -> getLastStandingTeam().orElse(null));
+        endGame(SkywarsWinCondition.DRAGON_DEATH, winningTeam, killer);
     }
 
-    private void endGame(SkywarsWinCondition condition) {
-        gameStatus = SkywarsGameStatus.ENDING;
+    public void endGame(SkywarsWinCondition condition, SkywarsTeam winningTeam) {
+        endGame(condition, winningTeam, null);
+    }
+
+    private void endGame(SkywarsWinCondition condition, SkywarsTeam winningTeam, SkywarsPlayer preferredWinner) {
+        Objects.requireNonNull(condition, "condition");
+        if (getState() != GameState.IN_PROGRESS || resultsRecorded) return;
+
+        if (condition != SkywarsWinCondition.DRAGON_DEATH && winningTeam == null) {
+            winningTeam = getLastStandingTeam().orElse(null);
+        }
+
+        resultsRecorded = true;
+        currentEvent = GameEvent.GAME_END;
+        end();
+        cancelTask(boundaryTask);
+        boundaryTask = null;
+        chestManager.stop();
         dragonManager.cleanup();
+        if (opRuleManager != null) opRuleManager.stopContinuousEffects();
 
-        SkywarsPlayer winner = getLastStandingPlayer();
+        SkywarsPlayer winner = preferredWinner != null ? preferredWinner : getLastStandingPlayer();
 
-        recordGameStats(winner);
-        sendGameResults(winner);
+        recordGameStats(winningTeam);
+        sendGameResults(winner, winningTeam);
 
-        MinecraftServer.getSchedulerManager().buildTask(() -> {
-            List<SkywarsPlayer> playersToRemove = new ArrayList<>(players);
+        endCleanupTask = MinecraftServer.getSchedulerManager().buildTask(() -> {
+            endCleanupTask = null;
+            List<SkywarsPlayer> playersToRemove = new ArrayList<>(getPlayers());
             for (SkywarsPlayer player : playersToRemove) {
                 leave(player);
             }
-            players.clear();
             waitForEmptyThenDestroy();
         }).delay(TaskSchedule.seconds(10)).schedule();
     }
 
-    private void sendGameResults(SkywarsPlayer winner) {
-        for (SkywarsPlayer player : players) {
+    public void endGame(SkywarsWinCondition condition) {
+        endGame(condition, getLastStandingTeam().orElse(null));
+    }
+
+    private void sendGameResults(SkywarsPlayer winner, SkywarsTeam winningTeam) {
+        for (SkywarsPlayer player : getPlayers()) {
             player.sendMessage(THICK_BAR);
             player.sendMessage("                         <f><l>SkyWars");
 
@@ -612,7 +759,7 @@ public class SkywarsGame {
 
             player.sendMessage(THICK_BAR);
 
-            int coinsEarned = calculateCoinsEarned(player, winner);
+            int coinsEarned = calculateCoinsEarned(player, winningTeam);
             long expEarned = 150 + (gameStats.get(player.getUuid(), SkywarsGameStat.KILLS) * 25);
 
             player.sendMessage("                 <f><l>Reward Summary");
@@ -623,27 +770,26 @@ public class SkywarsGame {
 
             player.sendMessage(THICK_BAR);
 
-            net.swofty.type.generic.experience.PlayerExperienceHandler expHandler =
-                    new net.swofty.type.generic.experience.PlayerExperienceHandler(player);
+            PlayerExperienceHandler expHandler = new PlayerExperienceHandler(player);
             expHandler.addExperience(expEarned);
         }
     }
 
-    private int calculateCoinsEarned(SkywarsPlayer player, SkywarsPlayer winner) {
+    private int calculateCoinsEarned(SkywarsPlayer player, SkywarsTeam winningTeam) {
         int coins = 10;
         coins += Math.toIntExact(gameStats.get(player.getUuid(), SkywarsGameStat.KILLS) * 5);
         coins += Math.toIntExact(gameStats.get(player.getUuid(), SkywarsGameStat.ASSISTS) * 2);
-        if (winner != null && winner.getUuid().equals(player.getUuid())) {
+        if (isWinner(player, winningTeam)) {
             coins += 25;
         }
         return coins;
     }
 
-    private void recordGameStats(SkywarsPlayer winner) {
+    private void recordGameStats(SkywarsTeam winningTeam) {
         SkywarsLeaderboardMode mode = SkywarsLeaderboardMode.fromGameType(gameType);
         long gameDurationSeconds = (System.currentTimeMillis() - gameStartTime) / 1000;
 
-        for (SkywarsPlayer player : players) {
+        for (SkywarsPlayer player : participants.values()) {
             SkywarsDataHandler handler = SkywarsDataHandler.getUser(player);
             if (handler == null) continue;
 
@@ -652,7 +798,7 @@ public class SkywarsGame {
                     DatapointSkywarsModeStats.class);
             SkywarsModeStats stats = statsDP.getValue();
 
-            boolean isWinner = winner != null && winner.getUuid().equals(player.getUuid());
+            boolean isWinner = isWinner(player, winningTeam);
             if (isWinner) {
                 stats.recordWin(mode);
             } else {
@@ -680,73 +826,141 @@ public class SkywarsGame {
             DatapointLong soulsDP = handler.get(SkywarsDataHandler.Data.SOULS, DatapointLong.class);
             soulsDP.setValue(soulsDP.getValue() + soulsEarned);
 
-            int coinsEarned = calculateCoinsEarned(player, winner);
+            int coinsEarned = calculateCoinsEarned(player, winningTeam);
             DatapointLong coinsDP = handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class);
             coinsDP.setValue(coinsDP.getValue() + coinsEarned);
         }
     }
 
-    public boolean hasMinimumPlayers() {
-        return players.size() >= gameType.getMinPlayers();
+    private boolean isWinner(SkywarsPlayer player, SkywarsTeam winningTeam) {
+        return winningTeam != null && winningTeam.getId().equals(participantTeams.get(player.getUuid()));
     }
 
-    private int countAlivePlayers() {
-        return (int) players.stream()
-                .filter(p -> !p.isEliminated())
-                .count();
+    @Override
+    public boolean hasMinimumPlayers() {
+        return getPlayers().size() >= getMinPlayers();
     }
 
     private SkywarsPlayer getLastStandingPlayer() {
-        return players.stream()
+        return getPlayers().stream()
                 .filter(p -> !p.isEliminated())
                 .findFirst()
                 .orElse(null);
     }
 
+    private Optional<SkywarsTeam> getLastStandingTeam() {
+        return getViableTeams().stream().findFirst();
+    }
+
     private SkywarsPlayer getPlayerByUuid(UUID uuid) {
-        return players.stream()
-                .filter(p -> p.getUuid().equals(uuid))
-                .findFirst()
-                .orElse(null);
+        return uuid == null ? null : getPlayer(uuid).orElse(null);
     }
 
     public void forceStart(int seconds) {
-        countdown.forceStart(seconds);
+        if (seconds <= 0) {
+            throw new IllegalArgumentException("seconds must be positive");
+        }
+        if (!getState().isWaiting() || !hasMinimumPlayers()) return;
+
+        forceCountdownAnnouncements = true;
+        if (!getCountdown().isActive()) {
+            setState(GameState.COUNTDOWN);
+            if (!getCountdown().start()) {
+                forceCountdownAnnouncements = false;
+                setState(GameState.WAITING);
+                return;
+            }
+        }
+        getCountdown().setRemainingSeconds(seconds);
     }
 
-    public void broadcastMessage(Text message) {
-        Audience.audience(players).sendMessage(message);
-    }
-
+    @Override
     public InstanceContainer getInstance() {
-        return instanceContainer;
+        return getInstanceContainer();
+    }
+
+    public InstanceContainer getInstanceContainer() {
+        return (InstanceContainer) super.getInstance();
+    }
+
+    @Override
+    public void dispose() {
+        if (getState() == GameState.TERMINATED) return;
+
+        cancelTask(boundaryTask);
+        boundaryTask = null;
+        cancelTask(endCleanupTask);
+        endCleanupTask = null;
+        cancelTask(emptyCheckTask);
+        emptyCheckTask = null;
+        dragonManager.cleanup();
+        chestManager.reset();
+        cageManager.reset();
+        if (luckyBlockManager != null) luckyBlockManager.reset();
+        if (opRuleManager != null) opRuleManager.reset();
+        boundaryWarningStartTime.clear();
+        participants.values().forEach(player -> {
+            player.setGameId(null);
+            player.setCagePosition(null);
+        });
+        participants.clear();
+        participantTeams.clear();
+        teamCagePositions.clear();
+        playerTeams.clear();
+        teams.values().forEach(team -> team.getPlayerIds().forEach(team::removePlayer));
+        super.dispose();
+    }
+
+    private void releaseCage(SkywarsPlayer player, String teamId) {
+        if (teamId == null) {
+            cageManager.releaseCage(player);
+            return;
+        }
+        if (getTeam(teamId).map(SkywarsTeam::hasPlayers).orElse(false)) {
+            player.setCagePosition(null);
+            return;
+        }
+
+        teamCagePositions.remove(teamId);
+        cageManager.releaseCage(player);
+    }
+
+    private static void cancelTask(Task task) {
+        if (task != null) task.cancel();
     }
 
     public boolean isInProgress() {
-        return gameStatus == SkywarsGameStatus.IN_PROGRESS;
+        return getState() == GameState.IN_PROGRESS;
     }
 
     public List<SkywarsPlayer> getAlivePlayers() {
-        return players.stream()
+        if (!isInProgress()) return List.of();
+
+        return getPlayers().stream()
                 .filter(p -> !p.isEliminated())
                 .toList();
     }
 
     private void waitForEmptyThenDestroy() {
-        if (instanceContainer.getPlayers().isEmpty()) {
+        if (getState() == GameState.TERMINATED) return;
+        if (getInstanceContainer().getPlayers().isEmpty()) {
+            emptyCheckTask = null;
             destroyAndRecreate();
             return;
         }
 
-        MinecraftServer.getSchedulerManager().buildTask(this::waitForEmptyThenDestroy)
+        emptyCheckTask = MinecraftServer.getSchedulerManager().buildTask(this::waitForEmptyThenDestroy)
                 .delay(TaskSchedule.millis(500))
                 .schedule();
     }
 
     private void destroyAndRecreate() {
-        TypeSkywarsGameLoader.getGames().remove(this);
-        MinecraftServer.getInstanceManager().unregisterInstance(instanceContainer);
-        TypeSkywarsGameLoader.createGame(mapEntry, gameType);
+        synchronized (TypeSkywarsGameLoader.class) {
+            dispose();
+            TypeSkywarsGameLoader.getGames().remove(this);
+            MinecraftServer.getInstanceManager().unregisterInstance(getInstanceContainer());
+            TypeSkywarsGameLoader.createGame(mapEntry, gameType);
+        }
     }
 
     public enum KillType {
@@ -819,7 +1033,7 @@ public class SkywarsGame {
     }
 
     public GameEvent skipToNextEvent() {
-        if (gameStatus != SkywarsGameStatus.IN_PROGRESS) return null;
+        if (getState() != GameState.IN_PROGRESS) return null;
 
         GameEvent nextEvent = currentEvent.getNext();
         if (nextEvent == GameEvent.GAME_END) return null;
@@ -834,7 +1048,10 @@ public class SkywarsGame {
                 broadcastMessage(Text.of("<6>Chests have been refilled for the last time!"));
             }
             case DRAGON_SPAWN -> {
-                dragonManager.spawnDragonNow(this::broadcastMessage);
+                dragonManager.spawnDragonNow(
+                        this::broadcastMessage,
+                        () -> currentEvent = GameEvent.DRAGON_SPAWN
+                );
             }
         }
 
@@ -842,15 +1059,11 @@ public class SkywarsGame {
         return nextEvent;
     }
 
-    public int getAvailableSlots() {
-        return Math.max(0, gameType.getMaxPlayers() - players.size());
-    }
-
     public String canAcceptPartyWarp() {
-        if (gameStatus == SkywarsGameStatus.IN_PROGRESS) {
+        if (getState() == GameState.IN_PROGRESS) {
             return "Cannot warp - game has already started";
         }
-        if (gameStatus == SkywarsGameStatus.ENDING) {
+        if (getState().isEnding()) {
             return "Cannot warp - game is ending";
         }
         return null;
