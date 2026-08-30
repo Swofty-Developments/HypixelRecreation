@@ -44,6 +44,7 @@ import net.swofty.type.game.game.event.GameTeamWinConditionEvent;
 import net.swofty.type.game.game.event.PlayerAssignedTeamEvent;
 import net.swofty.type.generic.data.datapoints.DatapointBedWarsHotbar;
 import net.swofty.type.generic.event.HypixelEventHandler;
+import net.swofty.type.generic.game.GameStatTracker;
 import net.swofty.type.generic.i18n.HypixelTranslator;
 import net.swofty.type.generic.party.PartyManager;
 import net.swofty.type.generic.utility.ScheduleUtility;
@@ -75,6 +76,7 @@ public class BedWarsGame extends AbstractTeamGame<BedWarsPlayer, BedWarsTeam> {
     private final BedWarsReplayManager replayManager;
     private final SwappageManager swappageManager;
     private final OneBlockManager oneBlockManager;
+    private final GameStatTracker<BedWarsGameStat> gameStats = new GameStatTracker<>(BedWarsGameStat.class);
 
     private final Map<TeamKey, Map<Integer, ItemStack>> teamChests = new EnumMap<>(TeamKey.class);
     private final Map<UUID, Map<Integer, ItemStack>> enderChests = new HashMap<>();

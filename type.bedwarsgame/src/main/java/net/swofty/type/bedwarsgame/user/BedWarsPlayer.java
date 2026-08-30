@@ -22,6 +22,7 @@ import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.game.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGameStat;
 import net.swofty.type.game.game.GameParticipant;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointHypixelExperience;
@@ -43,15 +44,6 @@ import java.util.UUID;
  */
 public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 
-	@Getter
-	private long xpThisGame = 0;
-	@Getter
-	private long tokensThisGame = 0;
-	@Getter
-	private long hypixelXpThisGame = 0;
-	@Getter
-	private int killsThisGame = 0;
-	@Getter
 	@Setter
 	private boolean shouldShowTrueIdentity = false;
 	@Getter
@@ -72,7 +64,6 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 	public void setGameId(final @NotNull String gameId) {
 		if (gameId == null) {
 			removeTag(Tag.String("gameId"));
-			resetTrackable();
 		} else {
 			setTag(Tag.String("gameId"), gameId);
 		}
@@ -91,10 +82,6 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 		}
 		viewer.sendPackets(new DestroyEntitiesPacket(getEntityId()), new PlayerInfoRemovePacket(fakeUuid));
 		updateNewViewer(viewer);
-	}
-
-	public void recordGameKill() {
-		killsThisGame++;
 	}
 
 	@Override
@@ -142,13 +129,6 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 				false, getLatency(), getGameMode(), getDisplayName(), null, 0, (getSettings().displayedSkinParts() & hatIndex) == hatIndex)));
 	}
 
-	public void resetTrackable() {
-		xpThisGame = 0;
-		tokensThisGame = 0;
-		hypixelXpThisGame = 0;
-		killsThisGame = 0;
-	}
-
 	public Player getServerPlayer() {
 		return this;
 	}
@@ -184,7 +164,7 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 	}
 
 	public void xp(ExperienceCause cause) {
-		xpThisGame += cause.getExperience();
+		getGame().getGameStats().add(getUuid(), BedWarsGameStat.BED_WARS_EXPERIENCE, cause.getExperience());
 
 		sendMessage("<b>+{} Bed Wars XP ({})", cause.getExperience(), cause.getFormattedName());
 		DatapointLeaderboardLong dp = getBedWarsDataHandler().get(BedWarsDataHandler.Data.EXPERIENCE, DatapointLeaderboardLong.class);
@@ -196,7 +176,7 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 
 	public void xp(ExperienceCause cause, long units) {
 		long amount = cause.calculateXp(units);
-		xpThisGame += amount;
+		getGame().getGameStats().add(getUuid(), BedWarsGameStat.BED_WARS_EXPERIENCE, amount);
 
 		sendMessage("<b>+{} Bed Wars XP ({})", amount, cause.getFormattedName());
 		DatapointLeaderboardLong dp = getBedWarsDataHandler().get(BedWarsDataHandler.Data.EXPERIENCE, DatapointLeaderboardLong.class);
@@ -207,14 +187,14 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 	}
 
 	public void hypixelXp(long amount) {
-		hypixelXpThisGame += amount;
+		getGame().getGameStats().add(getUuid(), BedWarsGameStat.HYPIXEL_EXPERIENCE, amount);
 		sendMessage("<b>+{} Hypixel Experience", amount);
 		DatapointHypixelExperience dp = getDataHandler().get(HypixelDataHandler.Data.HYPIXEL_EXPERIENCE, DatapointHypixelExperience.class);
 		dp.setValue(dp.getValue() + amount);
 	}
 
 	public void token(TokenCause cause) {
-		tokensThisGame += cause.getExperience();
+		getGame().getGameStats().add(getUuid(), BedWarsGameStat.TOKENS, cause.getExperience());
 		sendMessage("<2>+{} Tokens ({})", cause.getExperience(), cause.getFormattedName());
 		DatapointLeaderboardLong dp = getBedWarsDataHandler().get(BedWarsDataHandler.Data.TOKENS, DatapointLeaderboardLong.class);
 		dp.setValue(dp.getValue() + cause.getExperience());

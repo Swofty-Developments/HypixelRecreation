@@ -9,6 +9,7 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.bedwars.BedwarsLevelUtil;
 import net.swofty.commons.text.Text;
 import net.swofty.type.bedwarsgame.game.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGameStat;
 import net.swofty.type.bedwarsgame.game.BedWarsTeam;
 import net.swofty.type.bedwarsgame.stats.BedWarsStatsRecorder;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
@@ -81,7 +82,8 @@ public class GameEndListener implements HypixelEventClass {
             });
 
             List<BedWarsPlayer> killers = game.getPlayers().stream()
-                    .sorted(Comparator.comparingInt(BedWarsPlayer::getKillsThisGame).reversed()
+                    .sorted(Comparator.comparingLong((BedWarsPlayer killer) ->
+                                    game.getGameStats().get(killer.getUuid(), BedWarsGameStat.KILLS)).reversed()
                             .thenComparing(BedWarsPlayer::getUsername, String.CASE_INSENSITIVE_ORDER))
                     .limit(3)
                     .toList();
@@ -89,7 +91,8 @@ public class GameEndListener implements HypixelEventClass {
             for (int index = 0; index < killers.size(); index++) {
                 BedWarsPlayer killer = killers.get(index);
                 player.sendMessage("<center>{} <7>- {} <7>- {}</center>",
-                        Text.of(places[index]), killer.getColouredName(), killer.getKillsThisGame());
+                        Text.of(places[index]), killer.getColouredName(),
+                        game.getGameStats().get(killer.getUuid(), BedWarsGameStat.KILLS));
             }
             player.sendMessage(Text.empty());
             player.sendMessage(THICK_BAR);
@@ -101,8 +104,10 @@ public class GameEndListener implements HypixelEventClass {
                 player.sendMessage("<center><f><l>Reward Summary</center>");
                 player.sendMessage(Text.empty());
                 player.sendMessage("   <7>You earned:");
-                player.sendMessage("    <f>• <2>{} Bed Wars Tokens", player.getTokensThisGame());
-                player.sendMessage("    <f>• <3>{} Hypixel Experience", player.getHypixelXpThisGame());
+                player.sendMessage("    <f>• <2>{} Bed Wars Tokens",
+                        game.getGameStats().get(player.getUuid(), BedWarsGameStat.TOKENS));
+                player.sendMessage("    <f>• <3>{} Hypixel Experience",
+                        game.getGameStats().get(player.getUuid(), BedWarsGameStat.HYPIXEL_EXPERIENCE));
                 player.sendMessage("    <f>• <7>0 Guild Experience");
                 player.sendMessage(Text.empty());
                 player.sendMessage("<center><b>Bed Wars XP</center>");
@@ -135,7 +140,8 @@ public class GameEndListener implements HypixelEventClass {
                 player.sendMessage("<center><b>{} <7>/ <a>{} <7>({}%)</center>", prettyExperience, prettyMaxExperience, percentageString);
 
                 player.sendMessage(Text.empty());
-                player.sendMessage("<7>You earned <b>{} Bed Wars XP", player.getXpThisGame());
+                player.sendMessage("<7>You earned <b>{} Bed Wars XP",
+                        game.getGameStats().get(player.getUuid(), BedWarsGameStat.BED_WARS_EXPERIENCE));
                 player.sendMessage(Text.empty());
                 // xp multipliers shown here
                 player.sendMessage(THICK_BAR);

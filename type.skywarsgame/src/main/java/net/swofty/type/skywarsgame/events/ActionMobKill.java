@@ -31,7 +31,6 @@ public class ActionMobKill implements HypixelEventClass {
         if (game == null || game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) return;
         if (killer.isEliminated()) return;
 
-        killer.addMobKill();
         recordMobKill(killer);
     }
 

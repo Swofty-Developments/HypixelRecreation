@@ -13,6 +13,7 @@ import net.swofty.type.bedwarsgame.death.BedWarsDeathHandler;
 import net.swofty.type.bedwarsgame.death.BedWarsDeathResult;
 import net.swofty.type.bedwarsgame.death.BedWarsDeathType;
 import net.swofty.type.bedwarsgame.game.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGameStat;
 import net.swofty.type.bedwarsgame.shop.impl.AxeShopItem;
 import net.swofty.type.bedwarsgame.shop.impl.PickaxeShopItem;
 import net.swofty.type.bedwarsgame.stats.BedWarsStatsRecorder;
@@ -156,7 +157,7 @@ public class ActionGameDeath implements HypixelEventClass {
         BedWarsPlayer creditPlayer = result.getKillCreditPlayer();
 
         if (creditPlayer != null) {
-            creditPlayer.recordGameKill();
+            game.getGameStats().increment(creditPlayer.getUuid(), BedWarsGameStat.KILLS);
             BedWarsStatsRecorder.recordKill(creditPlayer, game.getGameType());
         }
 

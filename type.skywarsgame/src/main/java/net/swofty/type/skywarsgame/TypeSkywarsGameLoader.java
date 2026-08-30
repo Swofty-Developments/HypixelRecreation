@@ -59,6 +59,7 @@ import net.swofty.type.generic.tab.TablistManager;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
+import net.swofty.type.skywarsgame.game.SkywarsGameStat;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItem;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItemHandler;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -130,7 +131,7 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
         if (game != null) {
             SkywarsPlayer swPlayer = (SkywarsPlayer) player;
             start = start.append(MiniMessage.miniMessage().deserialize(
-                    "<yellow>Kills: <gold>" + swPlayer.getKillsThisGame()
+                    "<yellow>Kills: <gold>" + game.getGameStats().get(swPlayer.getUuid(), SkywarsGameStat.KILLS)
             )).appendNewline();
         }
         return start.append(Component.text("§aRanks, Boosters & MORE! §c§lSTORE.HYPIXEL.NET"));
