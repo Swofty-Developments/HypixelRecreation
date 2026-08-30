@@ -1,17 +1,23 @@
 package net.swofty.type.skywarsgame.luckyblock.items.weapons;
 
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.mechanics.projectile.ProjectileBehavior;
+import io.github.term4.polyp.mechanics.projectile.ProjectileSnapshot;
+import io.github.term4.polyp.mechanics.projectile.entities.ManagedProjectile;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.pvp.entity.projectile.Snowball;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Paintballs implements LuckyBlockWeapon {
@@ -54,16 +60,25 @@ public class Paintballs implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.SNOWBALL, 64, """
-                        <d>Paintballs
-
-                        <7>Throw to paint blocks
-                        <7>with random colors!
-
-                        <7>Uses: <a>64
-
-                        <6><l>LUCKY BLOCK ITEM
-                        """)
+        return ItemStack.builder(Material.SNOWBALL)
+                .amount(64)
+                .customName(Component.text("Paintballs", NamedTextColor.LIGHT_PURPLE)
+                        .decoration(TextDecoration.ITALIC, false))
+                .lore(List.of(
+                        Component.empty(),
+                        Component.text("Throw to paint blocks", NamedTextColor.GRAY)
+                                .decoration(TextDecoration.ITALIC, false),
+                        Component.text("with random colors!", NamedTextColor.GRAY)
+                                .decoration(TextDecoration.ITALIC, false),
+                        Component.empty(),
+                        Component.text("Uses: ", NamedTextColor.GRAY)
+                                .append(Component.text("64", NamedTextColor.GREEN))
+                                .decoration(TextDecoration.ITALIC, false),
+                        Component.empty(),
+                        Component.text("LUCKY BLOCK ITEM", NamedTextColor.GOLD)
+                                .decoration(TextDecoration.ITALIC, false)
+                                .decoration(TextDecoration.BOLD, true)
+                ))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, ID)
                 .build();
     }
@@ -72,9 +87,14 @@ public class Paintballs implements LuckyBlockWeapon {
     public boolean onUse(SkywarsPlayer holder) {
         if (holder.getInstance() == null) return false;
 
-        PaintballSnowball snowball = new PaintballSnowball(holder);
-        snowball.setInstance(holder.getInstance(), holder.getPosition().add(0, holder.getEyeHeight(), 0));
-        snowball.setVelocity(holder.getPosition().direction().mul(30));
+        Polyp.getInstance().services().projectiles().launch(
+                ProjectileSnapshot.of(holder, io.github.term4.polyp.mechanics.projectile.types.Snowball.INSTANCE)
+                        .withBehavior(new ProjectileBehavior() {
+                            @Override
+                            public void onImpact(ManagedProjectile projectile, @Nullable Entity hit) {
+                                paintNearbyBlocks(projectile);
+                            }
+                        }));
 
         return true;
     }
@@ -99,43 +119,22 @@ public class Paintballs implements LuckyBlockWeapon {
         return false;
     }
 
-    private static class PaintballSnowball extends Snowball {
-
-        public PaintballSnowball(@Nullable Entity shooter) {
-            super(shooter);
-        }
-
-        @Override
-        public boolean onStuck() {
-            triggerStatus((byte) 3);
-            paintNearbyBlocks();
-            return true;
-        }
-
-        @Override
-        public boolean onHit(Entity entity) {
-            triggerStatus((byte) 3);
-            paintNearbyBlocks();
-            return true;
-        }
-
-        private void paintNearbyBlocks() {
-            if (instance == null) return;
+    private static void paintNearbyBlocks(ManagedProjectile projectile) {
+        if (projectile.getInstance() == null) return;
 
             Block color = TERRACOTTA_COLORS[ThreadLocalRandom.current().nextInt(TERRACOTTA_COLORS.length)];
-            Point pos = position;
+        Point pos = projectile.getPosition();
 
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dy = -1; dy <= 1; dy++) {
                     for (int dz = -1; dz <= 1; dz++) {
                         Point blockPos = pos.add(dx, dy, dz);
-                        Block block = instance.getBlock(blockPos);
-                        if (!block.air() && !block.compare(Block.BEDROCK)) {
-                            instance.setBlock(blockPos, color);
+                        Block block = projectile.getInstance().getBlock(blockPos);
+                        if (!block.isAir() && !block.compare(Block.BEDROCK)) {
+                            projectile.getInstance().setBlock(blockPos, color);
                         }
                     }
                 }
             }
-        }
     }
 }

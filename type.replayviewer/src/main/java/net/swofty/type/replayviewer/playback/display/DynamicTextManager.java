@@ -2,6 +2,8 @@ package net.swofty.type.replayviewer.playback.display;
 
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.InstanceContainer;
+import net.minestom.server.instance.block.Block;
+import net.swofty.type.generic.entity.FloatingBlockEntity;
 import net.swofty.type.replayviewer.entity.ReplayTextDisplayEntity;
 import net.swofty.type.replayviewer.playback.ReplaySession;
 
@@ -17,6 +19,7 @@ public class DynamicTextManager {
     private final Map<Integer, ReplayTextDisplayEntity> displayEntities = new HashMap<>();
     private final Map<Integer, DynamicTextSource> textSources = new HashMap<>();
     private final Map<Integer, Integer> lastUpdateTicks = new HashMap<>();
+    private final Map<Integer, FloatingBlockEntity> blockDisplays = new HashMap<>();
 
     public DynamicTextManager(ReplaySession session) {
         this.session = session;
@@ -49,6 +52,11 @@ public class DynamicTextManager {
         );
         entity.setInstance(instance, position);
         displayEntities.put(entityId, entity);
+
+        if ("generator".equals(displayType)) {
+            Block block = identifier.toUpperCase().startsWith("DIAMOND") ? Block.DIAMOND_BLOCK : Block.EMERALD_BLOCK;
+            blockDisplays.put(entityId, new FloatingBlockEntity(block, 0.6f, instance, position.add(0, -0.95, 0)));
+        }
 
         // Create a recorded source so replay text matches recorded updates
         RecordedTextSource source = new RecordedTextSource(identifier, displayType, initialText, startTick);
@@ -121,6 +129,8 @@ public class DynamicTextManager {
         }
         textSources.remove(entityId);
         lastUpdateTicks.remove(entityId);
+        FloatingBlockEntity blockDisplay = blockDisplays.remove(entityId);
+        if (blockDisplay != null) blockDisplay.remove();
     }
 
     /**
@@ -175,26 +185,10 @@ public class DynamicTextManager {
             entity.remove();
         }
         displayEntities.clear();
+        for (FloatingBlockEntity entity : blockDisplays.values()) entity.remove();
+        blockDisplays.clear();
         textSources.clear();
         lastUpdateTicks.clear();
     }
 
-    /**
-     * Seeks to a specific tick, updating all displays.
-     *
-     * @param targetTick the tick to seek to
-     */
-    public void seekTo(int targetTick) {
-        for (Map.Entry<Integer, DynamicTextSource> entry : textSources.entrySet()) {
-            int entityId = entry.getKey();
-            DynamicTextSource source = entry.getValue();
-            ReplayTextDisplayEntity entity = displayEntities.get(entityId);
-
-            if (entity != null && source.isActiveAt(targetTick)) {
-                entity.updateTextLines(source.getTextAt(targetTick));
-            }
-        }
-        // Reset all update tick tracking
-        lastUpdateTicks.replaceAll((k, v) -> targetTick);
-    }
 }

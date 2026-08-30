@@ -1,7 +1,5 @@
 package net.swofty.type.replayviewer.playback.display;
 
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.swofty.commons.text.Text;
 
 import java.util.ArrayList;
@@ -78,11 +76,11 @@ public class GeneratorTextSource implements DynamicTextSource {
     private List<String> formatText(int tier) {
         List<String> result = new ArrayList<>();
 
-        TextColor color = generatorType.equalsIgnoreCase("diamond") ? NamedTextColor.AQUA : NamedTextColor.GREEN;
-        String name = generatorType.equalsIgnoreCase("diamond") ? "Diamond" : "Emerald";
-
-        result.add(Text.of("<color:{}><l>{}", color, name).serialize());
-        result.add(Text.of("<7>Tier {}", tier).serialize());
+        // Format based on generator type
+        result.add(ReplayDisplayTranslations.toLegacy(Text.key(
+                generatorType.equalsIgnoreCase("diamond") ? "replays.generator_diamond" : "replays.generator_emerald")));
+        result.add(ReplayDisplayTranslations.toLegacy(Text.key(
+                "replays.generator_tier", tier)));
 
         if (tier < 3) {
             String spawnRate = switch (tier) {
@@ -90,9 +88,10 @@ public class GeneratorTextSource implements DynamicTextSource {
                 case 2 -> generatorType.equalsIgnoreCase("diamond") ? "23s" : "45s";
                 default -> "???";
             };
-            result.add(Text.of("<7>Spawns every {}", spawnRate).serialize());
+            result.add(ReplayDisplayTranslations.toLegacy(Text.key(
+                    "replays.generator_spawn_rate", spawnRate)));
         } else {
-            result.add("<6>Max Tier!");
+            result.add(ReplayDisplayTranslations.toLegacy(Text.key("replays.generator_max_tier")));
         }
 
         return result;

@@ -5,13 +5,13 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.inventory.click.Click;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulView;
 import net.swofty.type.generic.gui.v2.ViewConfiguration;
 import net.swofty.type.generic.gui.v2.ViewLayout;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
 import net.swofty.type.replayviewer.entity.ReplayPlayerEntity;
@@ -44,17 +44,22 @@ public class GUIPlayers implements StatefulView<GUIPlayers.State> {
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return new ViewConfiguration<>("Players", InventoryType.CHEST_6_ROW);
+        return ViewConfiguration.translatable("replays.players", InventoryType.CHEST_6_ROW);
     }
 
     @Override
     public void layout(ViewLayout<State> layout, State state, ViewContext ctx) {
         var sessionOpt = TypeReplayViewerLoader.getSession(ctx.player());
         if (sessionOpt.isEmpty()) {
-            layout.slot(22, ItemStacks.item(Material.BARRIER, 1, """
-                    <c>No Replay Session
-                    <7>You are not currently watching
-                    <7>a replay."""));
+            layout.slot(22, ItemStacks.item(
+                Material.BARRIER,
+                1,
+                    Text.key("replays.no_replay_session_title"),
+                    List.of(
+                            Text.key("replays.no_replay_session_description"),
+                            Text.key("replays.no_replay_session_description_line")
+                    )
+            ));
             Components.back(layout, 49, ctx);
             return;
         }
@@ -78,17 +83,28 @@ public class GUIPlayers implements StatefulView<GUIPlayers.State> {
 
             PlayerEntry entry = players.get(index);
             ReplayPlayerEntity replayPlayer = entry.entity();
-            Text displayName = getDisplayName(replayPlayer);
-            List<Text> lore = List.of(
-                Text.of("<7>Health: <f>{}", Math.max(0, Math.round(replayPlayer.getHealth()))),
-                Text.empty(),
-                Text.of("<e>Left Click to teleport!"),
-                Text.of("<e>Right Click for first person!")
+            Text playerName = Text.key("replays.player_view_name",
+                    getDisplayName(replayPlayer));
+            int health = Math.max(0, Math.round(replayPlayer.getHealth()));
+            List<Text> playerLore = List.of(
+                    Text.key("replays.health", health),
+                    Text.empty(),
+                    Text.key("replays.click_to_teleport"),
+                    Text.key("replays.right_click_first_person")
             );
 
             ItemStack.Builder head = replayPlayer.getSkin() != null
-                ? ItemStacks.head(replayPlayer.getSkin(), 1, displayName, lore)
-                : ItemStacks.item(Material.PLAYER_HEAD, 1, displayName, lore);
+                ? ItemStacks.head(
+                replayPlayer.getSkin(),
+                    playerName,
+                    playerLore
+            )
+                : ItemStacks.item(
+                Material.PLAYER_HEAD,
+                1,
+                    playerName,
+                    playerLore
+            );
 
             layout.slot(slot, head, (click, c) -> {
                 if (click.click() instanceof Click.Right) {
@@ -102,22 +118,32 @@ public class GUIPlayers implements StatefulView<GUIPlayers.State> {
         }
 
         if (currentPage > 0) {
-            layout.slot(45, ItemStacks.item(Material.ARROW, 1, "<a>Previous Page\n<7>Page <e>{}", currentPage),
-                (_, c) -> c.session(State.class).setState(new State(currentPage - 1)));
+            layout.slot(45, ItemStacks.item(
+                Material.ARROW,
+                1,
+                    Text.key("replays.previous_page"),
+                    List.of(Text.key("replays.page", currentPage))
+            ), (_, c) -> c.session(State.class).setState(new State(currentPage - 1)));
         }
 
         if (currentPage < totalPages - 1) {
-            layout.slot(53, ItemStacks.item(Material.ARROW, 1, "<a>Next Page\n<7>Page <e>{}", currentPage + 2),
-                (_, c) -> c.session(State.class).setState(new State(currentPage + 1)));
+            layout.slot(53, ItemStacks.item(
+                Material.ARROW,
+                1,
+                    Text.key("replays.next_page"),
+                    List.of(Text.key("replays.page", currentPage + 2))
+            ), (_, c) -> c.session(State.class).setState(new State(currentPage + 1)));
         }
 
         Components.back(layout, 49, ctx);
 
         if (players.isEmpty()) {
-            layout.slot(22, ItemStacks.item(Material.BARRIER, 1, """
-                    <c>No Players Found
-                    <7>No replay players are currently
-                    <7>spawned for this timestamp."""));
+            layout.slot(22, ItemStacks.item(
+                Material.BARRIER,
+                1,
+                    Text.key("replays.no_players_title"),
+                    List.of(Text.key("replays.no_players_description"))
+            ));
         }
     }
 

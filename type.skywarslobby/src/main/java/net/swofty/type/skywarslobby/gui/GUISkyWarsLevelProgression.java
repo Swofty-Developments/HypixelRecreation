@@ -12,7 +12,7 @@ import net.swofty.type.generic.data.datapoints.DatapointBoolean;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -87,7 +87,7 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.ARROW, 1, """
+                return ItemStackCreator.item(Material.ARROW, 1, """
                         <a>Go Back
                         <7>To SkyWars Menu""");
             }
@@ -106,14 +106,14 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (hideLevel) {
-                    return ItemStacks.item(Material.GRAY_DYE, 1, """
+                    return ItemStackCreator.item(Material.GRAY_DYE, 1, """
                             <a>Show Level
                             <7>Toggles whether your SkyWars Level
                             <7>and Emblem show next to your name.
 
                             <e>Click to show!""");
                 } else {
-                    return ItemStacks.item(Material.LIME_DYE, 1, """
+                    return ItemStackCreator.item(Material.LIME_DYE, 1, """
                             <c>Hide Level
                             <7>Toggles whether your SkyWars Level
                             <7>and Emblem show next to your name.
@@ -136,7 +136,7 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
             set(new GUIClickableItem(45) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.ARROW, 1, """
+                    return ItemStackCreator.item(Material.ARROW, 1, """
                             <a>Previous Page
                             <e>Page {}
 
@@ -160,7 +160,7 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
             set(new GUIClickableItem(53) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.ARROW, 1, """
+                    return ItemStackCreator.item(Material.ARROW, 1, """
                             <a>Next Page
                             <e>Page {}
 
@@ -272,10 +272,10 @@ public class GUISkyWarsLevelProgression extends HypixelInventoryGUI {
                 Text displayName = Text.of("<color:{}>SkyWars Level {}", nameColor, level);
 
                 if (levelData.headTexture() != null && (isUnlocked || isCurrentLevel)) {
-                    return ItemStacks.head(levelData.headTexture(), displayName, lore);
+                    return ItemStackCreator.head(levelData.headTexture(), displayName, lore);
                 }
 
-                return ItemStacks.item(displayMaterial, 1, displayName, lore);
+                return ItemStackCreator.item(displayMaterial, 1, displayName, lore);
             }
         };
     }

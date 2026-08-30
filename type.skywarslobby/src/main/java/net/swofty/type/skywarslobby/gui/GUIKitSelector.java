@@ -12,7 +12,7 @@ import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -100,7 +100,7 @@ public class GUIKitSelector extends HypixelInventoryGUI {
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.ARROW, 1, """
+                return ItemStackCreator.item(Material.ARROW, 1, """
                         <a>Go Back
                         <7>To Kits & Perks""");
             }
@@ -115,7 +115,7 @@ public class GUIKitSelector extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.EMERALD, 1, """
+                return ItemStackCreator.item(Material.EMERALD, 1, """
                         <7>Total Coins: <6>{:,}
                         <6>https://store.hypixel.net""", coins);
             }
@@ -129,7 +129,7 @@ public class GUIKitSelector extends HypixelInventoryGUI {
                 String nextSort = lowestFirst ? "Highest rarity first" : "Lowest rarity first";
                 Text ownedFirstStatus = Text.of(ownedFirst ? "<a>Yes" : "<c>No");
 
-                return ItemStacks.item(Material.HOPPER, 1, """
+                return ItemStackCreator.item(Material.HOPPER, 1, """
                         <6>Sorted by: <a>{}
                         <7>Sorts by rarity: {}
 
@@ -160,7 +160,7 @@ public class GUIKitSelector extends HypixelInventoryGUI {
             set(new GUIClickableItem(45) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.ARROW, 1, """
+                    return ItemStackCreator.item(Material.ARROW, 1, """
                             <a>Previous Page
                             <e>Page {}""", prevPage);
                 }
@@ -179,7 +179,7 @@ public class GUIKitSelector extends HypixelInventoryGUI {
             set(new GUIClickableItem(53) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.ARROW, 1, """
+                    return ItemStackCreator.item(Material.ARROW, 1, """
                             <a>Next Page
                             <e>Page {}""", nextPage);
                 }
@@ -252,9 +252,9 @@ public class GUIKitSelector extends HypixelInventoryGUI {
                 Text name = Text.of("<color:{}>{}", nameColor, kit.getName());
 
                 if (kit.hasCustomTexture()) {
-                    return ItemStacks.head(kit.getIconTexture(), name, lore);
+                    return ItemStackCreator.head(kit.getIconTexture(), name, lore);
                 } else {
-                    return ItemStacks.item(kit.getIconMaterial(), 1, name, lore);
+                    return ItemStackCreator.item(kit.getIconMaterial(), 1, name, lore);
                 }
             }
 

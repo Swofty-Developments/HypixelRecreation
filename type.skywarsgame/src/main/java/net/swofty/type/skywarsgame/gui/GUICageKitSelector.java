@@ -10,7 +10,7 @@ import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
@@ -95,7 +95,7 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
                 }
                 lore.add(Text.of("<e>Click to browse!"));
 
-                return ItemStacks.item(Material.CAULDRON, 1,
+                return ItemStackCreator.item(Material.CAULDRON, 1,
                         Text.of("<a>Select {} Perks", modeName), lore);
             }
 
@@ -126,7 +126,7 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
                 String nextSort = lowestFirst ? "Highest rarity first" : "Lowest rarity first";
                 Text ownedFirstStatus = Text.of(ownedFirst ? "<a>Yes" : "<c>No");
 
-                return ItemStacks.item(Material.HOPPER, 1, """
+                return ItemStackCreator.item(Material.HOPPER, 1, """
                         <6>Sorted by: <a>{}
                         <7>Sorts by rarity: {0}
 
@@ -151,7 +151,7 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
         set(new GUIClickableItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                return ItemStackCreator.item(Material.BLAZE_POWDER, 1, """
                         <a>SkyWars Challenges <7>(Right Click)
                         <7>View your active SkyWars Challenges
                         <7>for this game. Win games with
@@ -171,7 +171,7 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
         set(new GUIClickableItem(50) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.head(RANDOM_KIT_TEXTURE, """
+                return ItemStackCreator.head(RANDOM_KIT_TEXTURE, """
                         <e>Random Kit
                         <7>Chooses a random kit that you own!
 
@@ -210,7 +210,7 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
             set(new GUIClickableItem(45) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.ARROW, 1, """
+                    return ItemStackCreator.item(Material.ARROW, 1, """
                             <a>Previous Page
                             <e>Page {}""", prevPage);
                 }
@@ -228,7 +228,7 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
             set(new GUIClickableItem(53) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.ARROW, 1, """
+                    return ItemStackCreator.item(Material.ARROW, 1, """
                             <a>Next Page
                             <e>Page {}""", nextPage);
                 }
@@ -263,11 +263,11 @@ public class GUICageKitSelector extends HypixelInventoryGUI {
                 Text name = Text.of(owned ? "<a>{}" : "<c>{}", kit.getName());
 
                 if (!owned) {
-                    return ItemStacks.item(Material.GUNPOWDER, 1, name, lore);
+                    return ItemStackCreator.item(Material.GUNPOWDER, 1, name, lore);
                 } else if (kit.hasCustomTexture()) {
-                    return ItemStacks.head(kit.getIconTexture(), 1, name, lore);
+                    return ItemStackCreator.head(kit.getIconTexture(), 1, name, lore);
                 } else {
-                    return ItemStacks.item(kit.getIconMaterial(), 1, name, lore);
+                    return ItemStackCreator.item(kit.getIconMaterial(), 1, name, lore);
                 }
             }
 

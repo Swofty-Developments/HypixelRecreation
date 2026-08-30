@@ -1,8 +1,8 @@
 package net.swofty.type.murdermysterygame.events;
 
+import io.github.term4.polyp.mechanics.projectile.entities.ProjectileEntity;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.event.entity.projectile.ProjectileCollideWithEntityEvent;
-import net.swofty.pvp.projectile.AbstractProjectile;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
@@ -21,7 +21,7 @@ public class ActionArrowHit implements HypixelEventClass {
         Entity projectile = event.getEntity();
         Entity target = event.getTarget();
 
-        if (!(projectile instanceof AbstractProjectile arrow)) return;
+        if (!(projectile instanceof ProjectileEntity arrow)) return;
         if (!(target instanceof MurderMysteryPlayer victim)) return;
 
         Entity shooter = arrow.getShooter();

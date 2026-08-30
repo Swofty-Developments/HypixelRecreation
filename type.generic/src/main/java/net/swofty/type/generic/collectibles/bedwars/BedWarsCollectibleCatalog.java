@@ -3,15 +3,7 @@ package net.swofty.type.generic.collectibles.bedwars;
 import lombok.Getter;
 import net.minestom.server.item.Material;
 import net.swofty.commons.YamlFileUtils;
-import net.swofty.type.generic.collectibles.CollectibleCatalog;
-import net.swofty.type.generic.collectibles.CollectibleCategory;
-import net.swofty.type.generic.collectibles.CollectibleCurrency;
-import net.swofty.type.generic.collectibles.CollectibleDefinition;
-import net.swofty.type.generic.collectibles.CollectibleEvent;
-import net.swofty.type.generic.collectibles.CollectibleGamemode;
-import net.swofty.type.generic.collectibles.CollectibleRarity;
-import net.swofty.type.generic.collectibles.CollectibleUnlockMethod;
-import net.swofty.type.generic.collectibles.CollectibleUnlockRequirement;
+import net.swofty.type.generic.collectibles.*;
 import net.swofty.type.generic.collectibles.bedwars.prestige.BedWarsPrestigeDefinitions;
 import net.swofty.type.generic.collectibles.bedwars.prestige.PrestigeCollectibleFactory;
 import net.swofty.type.generic.user.categories.Rank;
@@ -19,14 +11,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public final class BedWarsCollectibleCatalog extends CollectibleCatalog {
 
@@ -194,12 +179,16 @@ public final class BedWarsCollectibleCatalog extends CollectibleCatalog {
             name = id;
         }
 
-        Material iconMaterial = parseMaterial(stringValue(rawData.get("iconMaterial")));
-        String iconTexture = stringValue(rawData.get("iconTexture"));
+        Material iconMaterial = parseMaterial(stringValue(rawData.containsKey("iconMaterial")
+                ? rawData.get("iconMaterial") : rawData.get("material")));
+        String iconTexture = stringValue(rawData.containsKey("iconTexture")
+                ? rawData.get("iconTexture") : rawData.get("texture"));
 
         List<String> description = stringList(rawData.get("description"));
         String categoryDescriptionKey = categorySettings.getOrDefault(category, CategorySettings.DEFAULT).descriptionKey();
-        Map<String, String> customData = stringMap(rawData.get("custom"));
+        Map<String, String> customData = new HashMap<>(stringMap(rawData.get("custom")));
+        String mapData = stringValue(rawData.get("item"));
+        if (mapData != null && !mapData.isBlank()) customData.put("item", mapData);
         CollectibleRarity rarity = CollectibleRarity.fromString(stringValue(rawData.get("rarity")), CollectibleRarity.COMMON);
         int sortIndex = intValue(rawData.get("sortIndex"), autoSortIndex);
         String selectionValue = stringValue(rawData.get("selectionValue"));

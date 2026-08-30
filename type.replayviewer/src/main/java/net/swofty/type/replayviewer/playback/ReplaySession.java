@@ -4,9 +4,14 @@ import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.entity.*;
+import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.EquipmentSlot;
+import net.minestom.server.entity.GameMode;
+import net.minestom.server.entity.LivingEntity;
+import net.minestom.server.entity.Player;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.network.packet.server.play.EntityEquipmentPacket;
@@ -17,77 +22,94 @@ import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.TeamColorUtil;
 import net.swofty.commons.text.Text;
-import net.swofty.type.game.replay.ReplayMetadata;
-import net.swofty.type.game.replay.entity.EntityStateTracker;
-import net.swofty.type.game.replay.recordable.Recordable;
+import net.swofty.type.game.replay.api.ReplayGameMetadata;
+import net.swofty.type.game.replay.api.ReplayPlaybackContext;
+import net.swofty.type.game.replay.api.ReplayScoreboard;
+import net.swofty.type.game.replay.api.ReplayViewerAdapter;
+import net.swofty.type.game.replay.model.ReplayEntityState;
+import net.swofty.type.game.replay.model.ReplayMetadata;
+import net.swofty.type.game.replay.model.ReplayParticipant;
+import net.swofty.type.game.replay.model.ReplayTeam;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.ScheduleUtility;
-import net.swofty.type.generic.utility.Titles;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
 import net.swofty.type.replayviewer.entity.ReplayEntity;
 import net.swofty.type.replayviewer.entity.ReplayEntityManager;
 import net.swofty.type.replayviewer.entity.ReplayPlayerEntity;
 import net.swofty.type.replayviewer.playback.display.DynamicTextManager;
 import net.swofty.type.replayviewer.playback.npc.NpcReplayManager;
-import net.swofty.type.replayviewer.playback.scoreboard.GenericReplayScoreboard;
-import net.swofty.type.replayviewer.playback.scoreboard.ReplayScoreboard;
 import net.swofty.type.replayviewer.util.ReplaySettingsUtil;
 import org.tinylog.Logger;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Getter
-public class ReplaySession {
+public class ReplaySession implements ReplayPlaybackContext {
+    private static final GsonComponentSerializer COMPONENTS = GsonComponentSerializer.gson();
     private final UUID replayId;
     private final Set<Player> viewers = ConcurrentHashMap.newKeySet();
-    private final Map<UUID, ReplayScoreboard> viewerScoreboards = new ConcurrentHashMap<>();
-    private final Map<UUID, Integer> viewerSpectating = new ConcurrentHashMap<>();
     private final ReplayMetadata metadata;
+    private final ReplayGameMetadata gameMetadata;
+    private final ReplayViewerAdapter<?, ?> viewerAdapter;
+    private final List<ReplayTeam> replayTeams;
+    private final Map<String, ReplayTeam> replayTeamsById;
     private final InstanceContainer instance;
 
     private final ReplayEntityManager entityManager;
-    private final EntityStateTracker stateTracker;
-    private final ReplayData replayData;
+    private final ReplayTimeline replayData;
+    private final ReplayWorldState worldState;
+    private final ReplayEntityStore entityStore;
+    private final ReplayStateRestorer stateRestorer;
+    private final ReplayViewerProjection viewerProjection;
 
-    private final DroppedItemManager droppedItemManager;
     private final DynamicTextManager dynamicTextManager;
     private final NpcReplayManager npcManager;
-    private final BelowNameTag belowNameTag = HypixelPlayer.belowNameTag("health", "<c>❤");
+    private final BelowNameTag belowNameTag = new BelowNameTag("health", Text.of("<c>❤").asComponent());
     private final Map<Integer, PlayerNameTag> playerNameTags = new ConcurrentHashMap<>();
 
-    private volatile int currentTick = 0;
-    private volatile boolean playing = false;
     private volatile boolean rebuildingState = false;
-    private volatile float playbackSpeed = 1.0f;
     private volatile int skipSeconds = 30;
-
-    private Task playbackTask;
+    private final ReplayPlaybackSession playback;
+    private Task actionBarTask;
 
     public static final float[] SPEED_PRESETS = {0.25f, 0.5f, 1.0f, 2.0f, 4.0f};
     public static final short[] SKIP_PRESETS = {1, 5, 10, 30, 60};
 
     public ReplaySession(
-            Player initialViewer,
             ReplayMetadata metadata,
+            ReplayGameMetadata gameMetadata,
+            ReplayViewerAdapter<?, ?> viewerAdapter,
             InstanceContainer instance,
-            ReplayData replayData
+            ReplayTimeline replayData
     ) {
-        this.replayId = metadata.getReplayId();
+        this.replayId = metadata.descriptor().replayId();
         this.metadata = metadata;
+        this.gameMetadata = gameMetadata;
+        this.viewerAdapter = viewerAdapter;
+        this.replayTeams = List.copyOf(viewerAdapter.teams(gameMetadata));
+        this.replayTeamsById = replayTeams.stream().collect(Collectors.toUnmodifiableMap(ReplayTeam::id, team -> team));
         this.instance = instance;
         this.replayData = replayData;
         this.entityManager = new ReplayEntityManager(instance);
-        this.stateTracker = new EntityStateTracker();
-
-        this.droppedItemManager = new DroppedItemManager(this);
+        this.worldState = new ReplayWorldState(instance, replayData.overlayPositions());
+        this.entityStore = new ReplayEntityStore(entityManager, this::getParticipant);
+        this.viewerProjection = new ReplayViewerProjection(entityManager);
+        this.stateRestorer = new ReplayStateRestorer(this, replayData, worldState, entityStore, viewerAdapter);
         this.dynamicTextManager = new DynamicTextManager(this);
         this.npcManager = new NpcReplayManager(this);
+        this.playback = new ReplayPlaybackSession(this::getTotalTicks,
+                () -> !viewers.isEmpty() && viewers.stream().anyMatch(Player::isOnline), this::playTick, this::onReplayEnd);
 
-        ReplaySeeker.rebuildStateAtTick(this, 0);
+        stateRestorer.restore(0);
 
-        addViewer(initialViewer);
     }
 
     public void addViewer(Player viewer) {
@@ -98,18 +120,19 @@ public class ReplaySession {
         viewer.setAllowFlying(true);
         ReplaySettingsUtil.applyVisualSettings((HypixelPlayer) viewer);
 
-        ReplayScoreboard scoreboard = new GenericReplayScoreboard(this);
-        scoreboard.create(viewer);
-        viewerScoreboards.put(viewer.getUuid(), scoreboard);
+        ReplayScoreboard scoreboard = viewerAdapter.createScoreboard(this);
+        viewerProjection.addScoreboard(viewer, scoreboard);
 
         belowNameTag.addViewer(viewer);
         replayBelowNameScores();
         replayNameTags(viewer);
+        viewerProjection.applyEntityVisibility(List.of(viewer), entityStore.states());
 
         TypeReplayViewerLoader.populateInventory((HypixelPlayer) viewer);
         TypeReplayViewerLoader.registerSession(viewer.getUuid(), this);
         sendEquipmentSync(viewer);
         ScheduleUtility.delay(() -> sendEquipmentSync(viewer), 1);
+        startActionBarUpdates();
         updateActionBar();
 
         ScheduleUtility.delay(() -> autoFollowForViewer(viewer), 20);
@@ -120,14 +143,9 @@ public class ReplaySession {
 
     public void removeViewer(Player viewer) {
         viewers.remove(viewer);
-        viewerSpectating.remove(viewer.getUuid());
+        viewerProjection.removeViewer(viewer);
 
         belowNameTag.removeViewer(viewer);
-
-        ReplayScoreboard scoreboard = viewerScoreboards.remove(viewer.getUuid());
-        if (scoreboard != null) {
-            scoreboard.remove(viewer);
-        }
 
         TypeReplayViewerLoader.removeSession(viewer.getUuid());
 
@@ -147,21 +165,15 @@ public class ReplaySession {
         }
     }
 
-    public void applyPlayerDisplayName(int entityId, String displayName, String prefix, String suffix, int nameColor) {
-        Entity entity = entityManager.getEntity(entityId);
-        String entryName = displayName;
-        if (entity instanceof ReplayPlayerEntity playerEntity) {
-            entryName = playerEntity.getScoreboardEntryName();
-        }
-        PlayerNameTag tag = new PlayerNameTag(entryName, prefix, suffix, nameColor);
-        playerNameTags.put(entityId, tag);
-        sendNameTagTeam(entityId, tag, null);
+    public void applyPlayerTeam(UUID playerUuid, String teamId) {
+        ReplayEntityState updated = entityStore.updatePlayerTeam(playerUuid, teamId);
+        if (updated != null) updateEntityPresentation(updated);
     }
 
     public void autoFollowForViewer(Player viewer) {
         UUID viewerUuid = viewer.getUuid();
 
-        if (!metadata.getPlayers().containsKey(viewerUuid)) {
+        if (getParticipant(viewerUuid) == null) {
             return;
         }
 
@@ -170,7 +182,8 @@ public class ReplaySession {
             if (entity instanceof ReplayPlayerEntity playerEntity) {
                 if (viewerUuid.equals(playerEntity.getActualUuid())) {
                     viewer.teleport(playerEntity.getPosition());
-                    ((HypixelPlayer) viewer).sendMessage("<a>Teleporting you to {}", playerEntity.getActualUuid());
+                    viewer.sendMessage(Text.key("replays.teleported_to_player",
+                            playerEntity.getActualUuid().toString()));
                     applyTeamGlow(viewer, entity, entityId);
                     return;
                 }
@@ -179,44 +192,17 @@ public class ReplaySession {
     }
 
     public void play() {
-        if (playing) return;
-        playing = true;
-
-        int tickInterval = Math.max(1, (int) (1 / playbackSpeed));
-
-        playbackTask = MinecraftServer.getSchedulerManager().buildTask(() -> {
-            if (!playing || viewers.isEmpty() || viewers.stream().noneMatch(Player::isOnline)) {
-                pause();
-                return;
-            }
-
-            // Play ticks based on speed
-            int ticksToPlay = (int) Math.max(1, playbackSpeed);
-            for (int i = 0; i < ticksToPlay && currentTick <= getTotalTicks(); i++) {
-                playTick(currentTick);
-                currentTick++; // check if this is fine
-            }
-
-            // Check if finished
-            if (currentTick > getTotalTicks()) {
-                onReplayEnd();
-            }
-
-        }).repeat(TaskSchedule.tick(tickInterval)).schedule();
+        playback.play();
+        updateActionBar();
     }
 
     public void pause() {
-        if (!playing) return;
-        playing = false;
-
-        if (playbackTask != null) {
-            playbackTask.cancel();
-            playbackTask = null;
-        }
+        playback.pause();
+        updateActionBar();
     }
 
     public void togglePlayPause() {
-        if (playing) {
+        if (isPlaying()) {
             pause();
         } else {
             play();
@@ -225,18 +211,13 @@ public class ReplaySession {
 
     public void stop() {
         pause();
+        stopActionBarUpdates();
         entityManager.cleanup();
 
-        droppedItemManager.clear();
         dynamicTextManager.cleanup();
         npcManager.cleanup();
 
-        for (var entry : viewerScoreboards.entrySet()) {
-            viewers.stream()
-                    .filter(v -> v.getUuid().equals(entry.getKey()))
-                    .findFirst().ifPresent(viewer -> entry.getValue().remove(viewer));
-        }
-        viewerScoreboards.clear();
+        viewerProjection.clearScoreboards(viewers);
 
         MinecraftServer.getSchedulerManager().buildTask(() -> {
             if (instance.getPlayers().isEmpty()) {
@@ -248,34 +229,20 @@ public class ReplaySession {
     }
 
     public void seekTo(int targetTick) {
-        boolean wasPlaying = playing;
+        boolean wasPlaying = isPlaying();
         pause();
 
         targetTick = Math.clamp(targetTick, 0, getTotalTicks());
 
-        if (targetTick <= currentTick) {
-            playerNameTags.clear();
-        }
-
-        if (targetTick > currentTick) {
-            seekForward(targetTick);
-        } else if (targetTick < currentTick) {
-            seekBackward(targetTick);
-        } else {
-            ReplaySeeker.rebuildStateAtTick(this, targetTick);
-        }
-
-        currentTick = targetTick;
-
-        droppedItemManager.seekTo(targetTick);
-        dynamicTextManager.seekTo(targetTick);
+        playerNameTags.clear();
+        playback.seek(targetTick);
+        stateRestorer.restore(targetTick);
         replayBelowNameScores();
-        reapplyViewerSpectating();
+        viewerProjection.reattachCameras(viewers);
+        viewerProjection.applyEntityVisibility(viewers, entityStore.states());
 
         // Update all viewer scoreboards
-        for (var entry : viewerScoreboards.entrySet()) {
-            entry.getValue().update(this);
-        }
+        viewerProjection.updateScoreboards(this);
 
         if (wasPlaying) {
             play();
@@ -286,30 +253,31 @@ public class ReplaySession {
     }
 
     public void skipForward(int seconds) {
-        seekTo(currentTick + seconds * 20);
+        seekTo(getCurrentTick() + seconds * 20);
     }
 
     public void skipBackward(int seconds) {
-        seekTo(currentTick - seconds * 20);
+        seekTo(getCurrentTick() - seconds * 20);
     }
 
     public void setPlaybackSpeed(float speed) {
-        this.playbackSpeed = Math.clamp(speed, 0.25f, 4.0f);
-        if (playing) {
-            pause();
-            play();
-        }
+        playback.speed(speed);
         for (Player viewer : viewers) {
-            ((HypixelPlayer) viewer).sendMessage("<b>Speed: {}x", playbackSpeed);
+            viewer.sendMessage(Text.key("replays.playback_speed",
+                    String.valueOf(getPlaybackSpeed())));
         }
+    }
+
+    public void refreshViewerProjection(Player viewer) {
+        viewerProjection.applyEntityVisibility(List.of(viewer), entityStore.states());
     }
 
     public int getTotalTicks() {
-        return metadata.getDurationTicks();
+        return metadata.descriptor().durationTicks();
     }
 
     public String getFormattedTime() {
-        int seconds = currentTick / 20;
+        int seconds = getCurrentTick() / 20;
         int minutes = seconds / 60;
         int secs = seconds % 60;
         return String.format("%d:%02d", minutes, secs);
@@ -323,41 +291,66 @@ public class ReplaySession {
     }
 
     private void playTick(int tick) {
-        List<Recordable> tickData = replayData.getRecordablesAt(tick);
-        for (Recordable recordable : tickData) {
+        for (var delta : replayData.stateDeltasAt(tick)) {
             try {
-                RecordablePlayer.play(recordable, this);
-            } catch (Exception e) {
-                Logger.error(e, "Failed to play recordable at tick {}", tick);
+                if (delta instanceof net.swofty.type.game.replay.delta.ReplayBlockDelta block) {
+                    worldState.apply(block.position(), block.blockStateId());
+                } else if (delta instanceof net.swofty.type.game.replay.delta.ReplayEntityUpsertDelta upsert) {
+                    entityStore.upsert(upsert.entity());
+                    updateEntityPresentation(upsert.entity());
+                } else if (delta instanceof net.swofty.type.game.replay.delta.ReplayEntityRemoveDelta remove) {
+                    removeEntityPresentation(remove.replayEntityId());
+                    entityStore.remove(remove.replayEntityId());
+                } else {
+                    viewerAdapter.applyDelta(this, delta);
+                }
+            } catch (Exception exception) {
+                failPlayback(tick, exception);
+                return;
+            }
+        }
+        for (var event : replayData.transientEventsAt(tick)) {
+            try {
+                viewerAdapter.renderEvent(this, event);
+            } catch (Exception exception) {
+                failPlayback(tick, exception);
+                return;
             }
         }
 
-        droppedItemManager.tick(tick);
+        viewerProjection.applyEntityVisibility(viewers, entityStore.states());
+        viewerProjection.reattachCameras(viewers);
+
         dynamicTextManager.tick(tick);
         npcManager.tick();
 
-        // TODO: move this to update even when it's not playing, because now we can't ever see paused state
-        updateActionBar();
-    }
-
-    private void updateActionBar() {
-        Text actionBar = Text.of(
-                (playing ? "<a>Playing" : "<c>Paused") + "    <e>{} / {}    <6>{}",
-                getFormattedTime(), getFormattedTotalTime(), String.format("%.1fx", playbackSpeed)
-        );
-        for (Player viewer : viewers) {
-            viewer.sendActionBar(actionBar);
+        if (tick % 5 == 0) {
+            viewerProjection.updateScoreboards(this);
         }
     }
 
-    private void seekForward(int targetTick) {
-        // Collect entity states and block changes between current and target
-        ReplaySeeker.seekForward(this, currentTick, targetTick);
+    private void startActionBarUpdates() {
+        if (actionBarTask != null) return;
+        actionBarTask = MinecraftServer.getSchedulerManager().buildTask(this::updateActionBar)
+                .repeat(TaskSchedule.tick(5)).schedule();
     }
 
-    private void seekBackward(int targetTick) {
-        // Reset and replay from beginning or last checkpoint
-        ReplaySeeker.seekBackward(this, currentTick, targetTick);
+    private void stopActionBarUpdates() {
+        if (actionBarTask == null) return;
+        actionBarTask.cancel();
+        actionBarTask = null;
+    }
+
+    private void updateActionBar() {
+        Text status = Text.of("<color:{}>{}", isPlaying() ? NamedTextColor.GREEN : NamedTextColor.RED,
+                Text.key(isPlaying() ? "replays.playing" : "replays.paused"));
+        Text actionBar = Text.key("replays.playback_status",
+                status,
+                Text.of("<e>{} / {}", getFormattedTime(), getFormattedTotalTime()),
+                Text.of("<6>{}", String.format("%.1fx", getPlaybackSpeed())));
+        for (Player viewer : viewers) {
+            viewer.sendActionBar(actionBar.asComponent());
+        }
     }
 
     void beginStateRebuild() {
@@ -381,9 +374,9 @@ public class ReplaySession {
     }
 
     private void showSeekTitle(int tick) {
-        Title title = Titles.title(
-                Text.of("<a>{}", getFormattedTime()),
-                Text.of("<7>/{}", getFormattedTotalTime()),
+        Title title = Title.title(
+                Text.of("<a>{}", getFormattedTime()).asComponent(),
+                Text.of("<7>/{}", getFormattedTotalTime()).asComponent(),
                 Title.Times.times(Duration.ZERO, Duration.ofMillis(500), Duration.ofMillis(200))
         );
         for (Player viewer : viewers) {
@@ -432,9 +425,9 @@ public class ReplaySession {
                 teamName,
                 new TeamsPacket.CreateTeamAction(
                         new TeamsPacket.Settings(
-                                Component.empty(),
-                                legacyOrMarkup(tag.prefix()).asComponent(),
-                                legacyOrMarkup(tag.suffix()).asComponent(),
+                                Text.empty().asComponent(),
+                                tag.prefix(),
+                                tag.suffix(),
                                 TeamsPacket.NameTagVisibility.ALWAYS,
                                 TeamsPacket.CollisionRule.NEVER,
                                 TeamColorUtil.fromNamedColor(teamColor),
@@ -453,12 +446,11 @@ public class ReplaySession {
         }
     }
 
-    // TODO: parity
     private void onReplayEnd() {
         pause();
-        Title title = Titles.title(
-                "<6>Replay Ended",
-                "<7>Use /replay restart to watch again",
+        Title title = Title.title(
+                Text.key("replays.replay_ended").asComponent(),
+                Text.key("replays.replay_end_instruction").asComponent(),
                 Title.Times.times(Duration.ofMillis(200), Duration.ofSeconds(3), Duration.ofMillis(500))
         );
         for (Player viewer : viewers) {
@@ -467,43 +459,15 @@ public class ReplaySession {
     }
 
     public void followEntity(Player viewer, int entityId) {
-        viewerSpectating.put(viewer.getUuid(), entityId);
-        Entity entity = entityManager.getEntity(entityId);
-        if (entity != null) {
-            viewer.setGameMode(GameMode.SPECTATOR);
-            viewer.spectate(entity);
-        }
+        viewerProjection.follow(viewer, entityId);
     }
 
     public void stopFollowing(Player viewer) {
-        viewer.setGameMode(GameMode.ADVENTURE);
-        viewer.setFlying(true);
-        viewer.setAllowFlying(true);
-
-        viewerSpectating.remove(viewer.getUuid());
-        viewer.stopSpectating();
+        viewerProjection.stopFollowing(viewer);
     }
 
-    private void reapplyViewerSpectating() {
-        for (Player viewer : viewers) {
-            Integer targetEntityId = viewerSpectating.get(viewer.getUuid());
-            if (targetEntityId == null) {
-                continue;
-            }
-
-            Entity entity = entityManager.getEntity(targetEntityId);
-            if (entity == null) {
-                viewerSpectating.remove(viewer.getUuid());
-                viewer.stopSpectating();
-                viewer.setGameMode(GameMode.ADVENTURE);
-                viewer.setFlying(true);
-                viewer.setAllowFlying(true);
-                continue;
-            }
-
-            viewer.setGameMode(GameMode.SPECTATOR);
-            viewer.spectate(entity);
-        }
+    public Integer getFollowedEntityId(Player viewer) {
+        return viewerProjection.cameraTarget(viewer);
     }
 
     private void sendEquipmentSync(Player viewer) {
@@ -531,26 +495,12 @@ public class ReplaySession {
         }
     }
 
-    // todo: sloppy method
     private void applyTeamGlow(Player viewer, Entity entity, int entityId) {
-        UUID entityUuid = null;
-        if (entity instanceof ReplayPlayerEntity playerEntity) {
-            entityUuid = playerEntity.getActualUuid();
-        }
+        if (!(entity instanceof ReplayPlayerEntity playerEntity)) return;
 
-        if (entityUuid == null) return;
-
-        String teamId = null;
-        for (Map.Entry<String, List<UUID>> entry : metadata.getTeams().entrySet()) {
-            if (entry.getValue().contains(entityUuid)) {
-                teamId = entry.getKey();
-                break;
-            }
-        }
-
-        if (teamId == null) return;
-
-        ReplayMetadata.TeamInfo teamInfo = metadata.getTeamInfo().get(teamId);
+        ReplayEntityState state = entityStore.states().get(entityId);
+        if (state == null || state.player() == null) return;
+        ReplayTeam teamInfo = replayTeamsById.get(state.player().teamId());
         NamedTextColor teamColor = NamedTextColor.WHITE;
         if (teamInfo != null) {
             teamColor = NamedTextColor.nearestTo(TextColor.color(teamInfo.color()));
@@ -559,16 +509,15 @@ public class ReplaySession {
         entity.setGlowing(true);
 
         String teamName = "REPLAY_GLOW_" + entityId;
-        ReplayPlayerEntity playerEntity = (ReplayPlayerEntity) entity;
         String entityName = playerEntity.getPlayerName();
 
         viewer.sendPacket(new TeamsPacket(
                 teamName,
                 new TeamsPacket.CreateTeamAction(
                         new TeamsPacket.Settings(
-                                Component.empty(),
-                                Component.empty(),
-                                Component.empty(),
+                                Text.empty().asComponent(),
+                                Text.empty().asComponent(),
+                                Text.empty().asComponent(),
                                 TeamsPacket.NameTagVisibility.ALWAYS,
                                 TeamsPacket.CollisionRule.NEVER,
                                 TeamColorUtil.fromNamedColor(teamColor),
@@ -587,11 +536,10 @@ public class ReplaySession {
 
         if (entity instanceof ReplayEntity replayEntity) {
             UUID uuid = replayEntity.getRecordedUuid();
-            String name = metadata.getPlayers().get(uuid);
-            if (name != null) return name;
+            ReplayParticipant participant = getParticipant(uuid);
+            if (participant != null) return participant.username();
         }
 
-        // TODO: throw error
         return String.valueOf(entityId);
     }
 
@@ -606,7 +554,7 @@ public class ReplaySession {
 
     public void cycleSpeedUp() {
         for (float preset : SPEED_PRESETS) {
-            if (preset > playbackSpeed) {
+            if (preset > getPlaybackSpeed()) {
                 setPlaybackSpeed(preset);
                 return;
             }
@@ -617,7 +565,7 @@ public class ReplaySession {
 
     public void cycleSpeedDown() {
         for (int i = SPEED_PRESETS.length - 1; i >= 0; i--) {
-            if (SPEED_PRESETS[i] < playbackSpeed) {
+            if (SPEED_PRESETS[i] < getPlaybackSpeed()) {
                 setPlaybackSpeed(SPEED_PRESETS[i]);
                 return;
             }
@@ -627,7 +575,7 @@ public class ReplaySession {
 
     public float getProgress() {
         if (getTotalTicks() == 0) return 0;
-        return (float) currentTick / getTotalTicks() * 100;
+        return (float) getCurrentTick() / getTotalTicks() * 100;
     }
 
     public void seekToPercent(float percent) {
@@ -635,12 +583,93 @@ public class ReplaySession {
         seekTo(targetTick);
     }
 
-    private static Text legacyOrMarkup(String raw) {
-        if (raw == null || raw.isEmpty()) return Text.empty();
-        return Text.read(raw);
+    void rebuildEntityPresentation() {
+        playerNameTags.clear();
+        for (var state : entityStore.states().values()) {
+            updateEntityPresentation(state);
+        }
     }
 
-    private record PlayerNameTag(String entryName, String prefix, String suffix, int nameColor) {
+    private void updateEntityPresentation(ReplayEntityState state) {
+        if (state.player() == null) return;
+        ReplayParticipant participant = getParticipant(state.player().participantUuid());
+        if (participant == null) return;
+        int color = -1;
+        ReplayTeam team = replayTeamsById.get(state.player().teamId());
+        if (team != null) color = team.color();
+        Text prefix = team == null || team.name().isEmpty() ? Text.component(COMPONENTS.deserialize(participant.prefixJson()))
+                : Text.of("<color:{}>{} ", TextColor.color(team.color()), team.name().substring(0, 1).toUpperCase());
+        PlayerNameTag tag = new PlayerNameTag(participant.username(), prefix.asComponent(),
+                COMPONENTS.deserialize(participant.suffixJson()), color);
+        PlayerNameTag previous = playerNameTags.put(state.replayEntityId(), tag);
+        if (!tag.equals(previous)) {
+            if (previous != null) sendRemoveTeam("REPLAY_NAME_" + state.replayEntityId());
+            sendNameTagTeam(state.replayEntityId(), tag, null);
+        }
+        Entity entity = entityManager.getEntity(state.replayEntityId());
+        if (entity instanceof ReplayPlayerEntity player && player.getBelowScore() != (int) state.health()) {
+            player.setBelowScore((int) state.health());
+            sendBelowNameScore(player.getScoreboardEntryName(), (int) state.health());
+        }
+    }
+
+    private void clearProjectionTeams() {
+        playerNameTags.keySet().forEach(entityId -> sendRemoveTeam("REPLAY_NAME_" + entityId));
+        entityManager.getEntityIds().forEach(entityId -> sendRemoveTeam("REPLAY_GLOW_" + entityId));
+        playerNameTags.clear();
+    }
+
+    private void removeEntityPresentation(int entityId) {
+        if (playerNameTags.remove(entityId) != null) sendRemoveTeam("REPLAY_NAME_" + entityId);
+        sendRemoveTeam("REPLAY_GLOW_" + entityId);
+    }
+
+    private void sendRemoveTeam(String name) {
+        TeamsPacket packet = new TeamsPacket(name, new TeamsPacket.RemoveTeamAction());
+        viewers.forEach(viewer -> viewer.sendPacket(packet));
+    }
+
+    private record PlayerNameTag(String entryName, Component prefix, Component suffix, int nameColor) {
+    }
+
+    @Override
+    public int tick() {
+        return getCurrentTick();
+    }
+
+    public int getCurrentTick() {
+        return playback.currentTick();
+    }
+
+    public boolean isPlaying() {
+        return playback.playing();
+    }
+
+    public float getPlaybackSpeed() {
+        return playback.speed();
+    }
+
+    @Override
+    public InstanceContainer instance() {
+        return instance;
+    }
+
+    public ReplayParticipant getParticipant(UUID uuid) {
+        return metadata.participants().stream().filter(participant -> participant.uuid().equals(uuid)).findFirst().orElse(null);
+    }
+
+    void clearReplayOwnedState() {
+        clearProjectionTeams();
+        entityManager.cleanup();
+        dynamicTextManager.cleanup();
+        npcManager.cleanup();
+    }
+
+    void failPlayback(int tick, Exception exception) {
+        pause();
+        Logger.error(exception, "Replay playback stopped: replay={}, gameType={}, version={}, tick={}",
+                replayId, metadata.descriptor().gameType(), metadata.descriptor().formatVersion(), tick);
+        viewers.forEach(viewer -> viewer.sendMessage(Text.key("replays.playback_corrupt")));
     }
 
 }

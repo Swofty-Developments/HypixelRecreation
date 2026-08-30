@@ -12,6 +12,7 @@ public final class KeybindRegistry {
     public static KeyMapping copyLoreKey;
     public static KeyMapping copyChatKey;
     public static KeyMapping copyGuiKey;
+    public static KeyMapping copyCurrentGuiKey;
     public static KeyMapping entityPacketInspectorKey;
     private static boolean chatCopyPressed = false;
 
@@ -22,6 +23,12 @@ public final class KeybindRegistry {
         checkSkinKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.thehypixelrecreationmod.copyplayerheadskin",
                 GLFW.GLFW_KEY_K,
+                KeyMapping.Category.MISC
+        ));
+
+        copyCurrentGuiKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+                "key.thehypixelrecreationmod.copycurrentgui",
+                GLFW.GLFW_KEY_PAGE_DOWN,
                 KeyMapping.Category.MISC
         ));
 
@@ -60,6 +67,10 @@ public final class KeybindRegistry {
                 }
                 if (copyGuiKey.matches(key)) {
                     GuiCaptureRecorder.toggle(client);
+                    return false;
+                }
+                if (copyCurrentGuiKey.matches(key)) {
+                    CopyCurrentGui.copyCurrentGui(client);
                     return false;
                 }
                 return true;

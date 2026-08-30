@@ -8,7 +8,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.tag.Tag;
 import net.swofty.commons.text.Text;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
@@ -36,7 +36,7 @@ public class Jackhammer implements LuckyBlockItem {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.DIAMOND_PICKAXE, """
+        return ItemStackCreator.item(Material.DIAMOND_PICKAXE, """
                 <b><l>Jackhammer</l>
                 <7>Destroys a 3x3x3 cube
                 <7>of blocks on use!
@@ -96,7 +96,7 @@ public class Jackhammer implements LuckyBlockItem {
 
                         <e>Right-click a block to use!""", remainingUses).lines();
                 ItemStack updatedItem = currentItem.with(builder ->
-                        ItemStacks.lore(builder.set(USES_TAG, remainingUses), updatedLore));
+                        ItemStackCreator.lore(builder.set(USES_TAG, remainingUses), updatedLore));
                 holder.setItemInMainHand(updatedItem);
             }
             return true;

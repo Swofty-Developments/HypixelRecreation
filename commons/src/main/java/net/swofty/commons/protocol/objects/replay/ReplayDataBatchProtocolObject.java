@@ -3,6 +3,7 @@ package net.swofty.commons.protocol.objects.replay;
 import net.swofty.commons.protocol.JacksonSerializer;
 import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.Serializer;
+import net.swofty.commons.replay.protocol.ReplaySection;
 
 import java.util.UUID;
 
@@ -22,12 +23,24 @@ public class ReplayDataBatchProtocolObject extends RedisProtocol<
 
     public record BatchMessage(
             UUID replayId,
-            int batchIndex,
+            ReplaySection section,
+            int sequence,
             int startTick,
             int endTick,
-            int recordableCount,
-            byte[] compressedData
-    ) {}
+            int uncompressedLength,
+            int recordCount,
+            int checksum,
+            byte[] compressedPayload
+    ) {
+        public BatchMessage {
+            compressedPayload = compressedPayload.clone();
+        }
+
+        @Override
+        public byte[] compressedPayload() {
+            return compressedPayload.clone();
+        }
+    }
 
     public record BatchResponse(boolean success, long bytesReceived) {}
 }

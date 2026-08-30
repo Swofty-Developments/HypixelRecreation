@@ -1,17 +1,22 @@
 package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.mechanics.projectile.ProjectileBehavior;
+import io.github.term4.polyp.mechanics.projectile.ProjectileSnapshot;
+import io.github.term4.polyp.mechanics.projectile.entities.ManagedProjectile;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
-import net.minestom.server.entity.Entity;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.pvp.entity.projectile.ThrownEgg;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BridgeEggs implements LuckyBlockConsumable {
 
@@ -29,55 +34,44 @@ public class BridgeEggs implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.EGG, 4, """
-                <f><l>Bridge Eggs</l>
-                <7>Throw an egg that creates
-                <7>a bridge as it flies!
-
-                <e>Right-click to throw!""")
+        return ItemStack.builder(Material.EGG)
+                .amount(4)
+                .customName(Component.text(getDisplayName(), NamedTextColor.WHITE)
+                        .decoration(TextDecoration.ITALIC, false)
+                        .decoration(TextDecoration.BOLD, true))
+                .lore(List.of(
+                        Component.text("Throw an egg that creates", NamedTextColor.GRAY)
+                                .decoration(TextDecoration.ITALIC, false),
+                        Component.text("a bridge as it flies!", NamedTextColor.GRAY)
+                                .decoration(TextDecoration.ITALIC, false),
+                        Component.empty(),
+                        Component.text("Right-click to throw!", NamedTextColor.YELLOW)
+                                .decoration(TextDecoration.ITALIC, false)
+                ))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
 
     @Override
     public void onConsume(SkywarsPlayer player) {
-        SkywarsPlayerBridgeEgg egg = new SkywarsPlayerBridgeEgg(BRIDGE_BLOCK, player);
-        egg.setInstance(player.getInstance(), player.getPosition().add(0, player.getEyeHeight(), 0));
-        egg.setVelocity(player.getPosition().direction().mul(30));
-    }
-
-    private static class SkywarsPlayerBridgeEgg extends ThrownEgg {
-        private final Block block;
-
-        public SkywarsPlayerBridgeEgg(Block block, @Nullable Entity shooter) {
-            super(shooter);
-            this.block = block;
-        }
-
-        @Override
-        public void tick(long time) {
-            super.tick(time);
-
-            if (this.instance != null && this.position != null) {
-                Vec velocity = this.getVelocity();
-
-                double length = Math.sqrt(velocity.x() * velocity.x() + velocity.z() * velocity.z());
-                if (length > 0) {
-                    double offsetX = -velocity.x() / length;
-                    double offsetZ = -velocity.z() / length;
-
-                    Point center = this.position.sub(0, 1, 0).add(offsetX, 0, offsetZ);
-
-                    for (int x = -1; x <= 0; x++) {
-                        for (int z = -1; z <= 0; z++) {
-                            Point blockPos = center.add(x, 0, z);
-                            if (this.instance.getBlock(blockPos).air()) {
-                                this.instance.setBlock(blockPos, block);
+        Polyp.getInstance().services().projectiles().launch(
+                ProjectileSnapshot.of(player, io.github.term4.polyp.mechanics.projectile.types.Egg.INSTANCE)
+                        .withBehavior(new ProjectileBehavior() {
+                            @Override
+                            public void onTick(ManagedProjectile egg, long time) {
+                                if (egg.getInstance() == null) return;
+                                Vec velocity = egg.velocityBt();
+                                double length = Math.hypot(velocity.x(), velocity.z());
+                                if (length == 0) return;
+                                Point center = egg.getPosition().sub(0, 1, 0)
+                                        .add(-velocity.x() / length, 0, -velocity.z() / length);
+                                for (int x = -1; x <= 0; x++)
+                                    for (int z = -1; z <= 0; z++) {
+                                        Point at = center.add(x, 0, z);
+                                        if (egg.getInstance().getBlock(at).isAir())
+                                            egg.getInstance().setBlock(at, BRIDGE_BLOCK);
+                                    }
                             }
-                        }
-                    }
-                }
-            }
-        }
+                        }));
     }
 }

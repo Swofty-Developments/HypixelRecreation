@@ -10,7 +10,7 @@ import net.swofty.commons.skywars.SkywarsModeStats;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsModeStats;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -50,7 +50,7 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
                 long souls = stats.getTotalSoulsGathered(SkywarsLeaderboardPeriod.LIFETIME);
                 long heads = stats.getTotalHeads(SkywarsLeaderboardPeriod.LIFETIME);
 
-                return ItemStacks.item(Material.PAPER, 1, """
+                return ItemStackCreator.item(Material.PAPER, 1, """
                         <a>All Mode Statistics
                         <7>Wins: <a>{:,}
                         <7>Losses: <a>{:,}
@@ -78,7 +78,7 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
         set(new GUIItem(18) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.PAPER, 1, """
+                return ItemStackCreator.item(Material.PAPER, 1, """
                         <a>Mini Statistics
                         <7>Wins: <a>0
 
@@ -124,7 +124,7 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
                 long heads = stats.getHeads(SkywarsLeaderboardMode.SOLO_NORMAL, SkywarsLeaderboardPeriod.LIFETIME)
                         + stats.getHeads(SkywarsLeaderboardMode.SOLO_INSANE, SkywarsLeaderboardPeriod.LIFETIME);
 
-                return ItemStacks.item(Material.PAPER, 1, """
+                return ItemStackCreator.item(Material.PAPER, 1, """
                         <a>Solo Statistics
                         <7>Wins: <a>{:,}
                         <7>Losses: <a>{:,}
@@ -164,7 +164,7 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
                 long chests = stats.getChestsOpened(SkywarsLeaderboardMode.DOUBLES, SkywarsLeaderboardPeriod.LIFETIME);
                 long heads = stats.getHeads(SkywarsLeaderboardMode.DOUBLES, SkywarsLeaderboardPeriod.LIFETIME);
 
-                return ItemStacks.item(Material.PAPER, 1, """
+                return ItemStackCreator.item(Material.PAPER, 1, """
                         <a>Doubles Statistics
                         <7>Wins: <a>{:,}
                         <7>Losses: <a>{:,}
@@ -191,7 +191,7 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
         set(new GUIItem(24) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.PAPER, 1, """
+                return ItemStackCreator.item(Material.PAPER, 1, """
                         <a>Mega Statistics
                         <7>Wins: <a>0
                         <7>Losses: <a>0
@@ -214,7 +214,7 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
         set(new GUIItem(26) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.PAPER, 1, """
+                return ItemStackCreator.item(Material.PAPER, 1, """
                         <a>Ranked Statistics
                         <7>Wins: <a>0
                         <7>Losses: <a>0
@@ -237,7 +237,7 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
         set(new GUIItem(30) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                return ItemStackCreator.item(Material.BLAZE_POWDER, 1, """
                         <a>SkyWars Challenge Statistics
                         <7>Total Challenge Wins: <a>0
 
@@ -263,7 +263,7 @@ public class GUISkywarsStatistics extends HypixelInventoryGUI {
         set(new GUIItem(32) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.BREWING_STAND, 1, """
+                return ItemStackCreator.item(Material.BREWING_STAND, 1, """
                         <a>Lab Statistics
                         <7>Hunters vs Beasts Wins: <a>0
                         <7>Lucky Blocks Wins: <a>0

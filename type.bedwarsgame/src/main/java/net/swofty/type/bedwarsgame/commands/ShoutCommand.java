@@ -3,7 +3,7 @@ package net.swofty.type.bedwarsgame.commands;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.text.Text;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.generic.command.CommandParameters;
@@ -48,7 +48,7 @@ public class ShoutCommand extends HypixelCommand {
 			}
 
 			if (game.getReplayManager().isRecording()) {
-				game.getReplayManager().recordPlayerChat(player, message, true);
+                game.getReplayManager().recordPlayerChat(player, Text.literal(message), true);
 			}
 		}, messageArg);
 

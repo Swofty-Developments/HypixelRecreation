@@ -23,7 +23,7 @@ public class LeaderboardHologramManager {
     private static final Map<UUID, PlayerLeaderboardState> playerStates = new ConcurrentHashMap<>();
     private static final List<InteractionEntity> clickZones = new ArrayList<>();
     private static boolean initialized = false;
-    private static final Pos SETTINGS_HOLOGRAM_POS = new Pos(36.5, 65, -29);
+    private static final Pos SETTINGS_HOLOGRAM_POS = new Pos(36.5, 66, -29);
 
     public record PlayerLeaderboardState(
             SkywarsLeaderboardPeriod period,

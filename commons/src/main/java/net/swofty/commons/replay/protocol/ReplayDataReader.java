@@ -13,6 +13,8 @@ import java.util.UUID;
  * Counterpart to ReplayDataWriter.
  */
 public class ReplayDataReader implements AutoCloseable {
+    public static final int DEFAULT_MAX_STRING_BYTES = 1_048_576;
+    public static final int DEFAULT_MAX_BYTE_ARRAY_BYTES = 16 * 1024 * 1024;
     private final DataInputStream in;
 
     public ReplayDataReader(byte[] data) {
@@ -83,7 +85,14 @@ public class ReplayDataReader implements AutoCloseable {
      * Reads a string with length prefix.
      */
     public String readString() throws IOException {
-        int length = readVarInt();
+        return readString(DEFAULT_MAX_STRING_BYTES);
+    }
+
+    public String readString(int maxBytes) throws IOException {
+        int length = readLength(maxBytes, "string");
+        if (length > available()) {
+            throw new IOException("Invalid string length: " + length);
+        }
         byte[] bytes = new byte[length];
         in.readFully(bytes);
         return new String(bytes, StandardCharsets.UTF_8);
@@ -106,6 +115,9 @@ public class ReplayDataReader implements AutoCloseable {
         int shift = 0;
         int b;
         do {
+            if (shift >= 35) {
+                throw new IOException("VarInt is too large");
+            }
             b = in.readUnsignedByte();
             result |= (b & 0x7F) << shift;
             shift += 7;
@@ -130,6 +142,9 @@ public class ReplayDataReader implements AutoCloseable {
         int shift = 0;
         int b;
         do {
+            if (shift >= 70) {
+                throw new IOException("VarLong is too large");
+            }
             b = in.readUnsignedByte();
             result |= (long) (b & 0x7F) << shift;
             shift += 7;
@@ -192,6 +207,7 @@ public class ReplayDataReader implements AutoCloseable {
         // Convert back from radians * 160 to degrees
         float yaw = (float) (yawBits / 160.0 * 180.0 / Math.PI);
         float pitch = (float) (pitchBits / 160.0 * 180.0 / Math.PI);
+        if (pitch > 180.0f) pitch -= 360.0f;
 
         return new float[]{yaw, pitch};
     }
@@ -200,7 +216,14 @@ public class ReplayDataReader implements AutoCloseable {
      * Reads a byte array with length prefix.
      */
     public byte[] readBytes() throws IOException {
-        int length = readVarInt();
+        return readBytes(DEFAULT_MAX_BYTE_ARRAY_BYTES);
+    }
+
+    public byte[] readBytes(int maxBytes) throws IOException {
+        int length = readLength(maxBytes, "byte array");
+        if (length > available()) {
+            throw new IOException("Invalid byte array length: " + length);
+        }
         byte[] bytes = new byte[length];
         in.readFully(bytes);
         return bytes;
@@ -210,6 +233,9 @@ public class ReplayDataReader implements AutoCloseable {
      * Reads raw bytes.
      */
     public byte[] readRawBytes(int length) throws IOException {
+        if (length < 0 || length > available()) {
+            throw new IOException("Invalid raw byte length: " + length);
+        }
         byte[] bytes = new byte[length];
         in.readFully(bytes);
         return bytes;
@@ -236,7 +262,23 @@ public class ReplayDataReader implements AutoCloseable {
      * Skips bytes.
      */
     public void skip(int n) throws IOException {
-        in.skipBytes(n);
+        if (n < 0 || n > available()) {
+            throw new IOException("Invalid skip length: " + n);
+        }
+        if (in.skipBytes(n) != n) {
+            throw new IOException("Truncated replay payload");
+        }
+    }
+
+    private int readLength(int maxBytes, String kind) throws IOException {
+        if (maxBytes < 0) {
+            throw new IllegalArgumentException("maxBytes must not be negative");
+        }
+        int length = readVarInt();
+        if (length < 0 || length > maxBytes) {
+            throw new IOException("Invalid " + kind + " length: " + Integer.toUnsignedLong(length));
+        }
+        return length;
     }
 
     @Override

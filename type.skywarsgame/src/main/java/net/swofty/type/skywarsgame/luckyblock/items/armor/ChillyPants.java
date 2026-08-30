@@ -6,7 +6,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -41,7 +41,7 @@ public class ChillyPants implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.LEATHER_LEGGINGS, """
+        return ItemStackCreator.raw(Material.LEATHER_LEGGINGS, """
                         <b>Chilly Pants
 
                         <7>The ground beneath you 

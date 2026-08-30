@@ -8,7 +8,7 @@ import net.minestom.server.entity.metadata.other.PrimedTntMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -29,7 +29,7 @@ public class ThrowableTNT implements LuckyBlockItem {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.TNT, """
+        return ItemStackCreator.item(Material.TNT, """
                 <c><l>Throwable TNT</l>
                 <7>Throw explosive TNT at
                 <7>your enemies!

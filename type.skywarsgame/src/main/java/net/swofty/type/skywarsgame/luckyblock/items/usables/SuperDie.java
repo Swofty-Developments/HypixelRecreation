@@ -9,7 +9,7 @@ import net.minestom.server.item.component.EnchantmentList;
 import net.minestom.server.item.enchant.Enchantment;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -33,7 +33,7 @@ public class SuperDie implements LuckyBlockItem {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.MAGMA_CREAM, """
+        return ItemStackCreator.item(Material.MAGMA_CREAM, """
                 <c><l>Super Die</l>
                 <7>Roll the die and test
                 <7>your luck!

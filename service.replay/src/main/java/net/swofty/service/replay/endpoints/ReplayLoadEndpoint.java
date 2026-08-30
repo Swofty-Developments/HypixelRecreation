@@ -1,23 +1,24 @@
 package net.swofty.service.replay.endpoints;
 
-import net.swofty.commons.ServerType;
 import net.swofty.commons.protocol.objects.replay.ReplayLoadProtocolObject;
-import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.protocol.objects.replay.ReplayProtocolDto;
 import net.swofty.commons.redis.RedisMessageContext;
+import net.swofty.commons.redis.RedisMessageHandler;
+import net.swofty.commons.replay.protocol.ReplayChunk;
+import net.swofty.commons.replay.protocol.ReplayFormat;
+import net.swofty.commons.replay.protocol.ReplaySection;
 import net.swofty.service.replay.ReplayService;
+import net.swofty.type.game.replay.codec.ReplayHeaderCodec;
+import net.swofty.type.game.replay.codec.ReplaySnapshotCodec;
+import net.swofty.type.game.replay.model.ReplayHeader;
 import org.bson.Document;
+import org.bson.types.Binary;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
-public class ReplayLoadEndpoint implements RedisMessageHandler<
-    ReplayLoadProtocolObject.LoadRequest,
-    ReplayLoadProtocolObject.LoadResponse> {
-
+public class ReplayLoadEndpoint implements RedisMessageHandler<ReplayLoadProtocolObject.LoadRequest, ReplayLoadProtocolObject.LoadResponse> {
     @Override
     public ReplayLoadProtocolObject protocol() {
         return new ReplayLoadProtocolObject();
@@ -25,115 +26,77 @@ public class ReplayLoadEndpoint implements RedisMessageHandler<
 
     @Override
     public ReplayLoadProtocolObject.LoadResponse handle(ReplayLoadProtocolObject.LoadRequest msg, RedisMessageContext context) {
-
         try {
-            UUID replayId = msg.replayId();
-            Document metadataDoc = ReplayService.getDatabase().getReplayMetadata(replayId);
-            if (metadataDoc == null) {
-                Logger.warn("Replay not found: {}", replayId);
-                return new ReplayLoadProtocolObject.LoadResponse(
-                    false,
-                    "Replay not found",
-                    null,
-                    null
-                );
+            Document document = ReplayService.getDatabase().getReplayMetadata(msg.replayId());
+            if (document == null || !document.getBoolean("complete", false))
+                return failure("Replay is unavailable or unfinished");
+            ReplayHeader header = parseHeader(document);
+            ReplayProtocolDto.Metadata metadata = toDto(header);
+            if (metadata.descriptor().formatVersion() != ReplayFormat.MAJOR_VERSION) {
+                return failure("Unsupported replay format version: " + metadata.descriptor().formatVersion());
             }
-
-            // Parse metadata
-            ReplayLoadProtocolObject.ReplayMetadata metadata = parseMetadata(metadataDoc);
-
-            // Fetch data chunks
-            List<Document> chunkDocs = ReplayService.getDatabase().getReplayDataChunks(replayId);
-            List<ReplayLoadProtocolObject.DataChunk> dataChunks = new ArrayList<>();
-
-            for (Document chunkDoc : chunkDocs) {
-                byte[] data = chunkDoc.get("data", org.bson.types.Binary.class).getData();
-                dataChunks.add(new ReplayLoadProtocolObject.DataChunk(
-                    chunkDoc.getInteger("chunkIndex"),
-                    chunkDoc.getInteger("startTick"),
-                    chunkDoc.getInteger("endTick"),
-                    data
-                ));
+            List<ReplayChunk> chunks = new ArrayList<>();
+            for (Document chunk : ReplayService.getDatabase().getReplayDataChunks(msg.replayId())) {
+                chunks.add(new ReplayChunk(
+                        ReplaySection.valueOf(chunk.getString("section")), chunk.getInteger("sequence"),
+                        chunk.getInteger("startTick"), chunk.getInteger("endTick"), chunk.getInteger("uncompressedLength"),
+                        chunk.getInteger("recordCount"), chunk.getInteger("checksum"), chunk.get("data", Binary.class).getData()));
             }
-
-            Logger.debug("Loaded replay {} with {} chunks", replayId, dataChunks.size());
-
-            return new ReplayLoadProtocolObject.LoadResponse(
-                true,
-                null,
-                metadata,
-                dataChunks
-            );
-
-        } catch (Exception e) {
-            Logger.error(e, "Failed to load replay {}", msg.replayId());
-            return new ReplayLoadProtocolObject.LoadResponse(
-                false,
-                "Failed to load replay: " + e.getMessage(),
-                null,
-                null
-            );
+            ReplayFormat.validateOrdered(chunks, ReplaySection.SNAPSHOT);
+            ReplayFormat.validateOrdered(chunks, ReplaySection.DELTA);
+            ReplayFormat.validateOrdered(chunks, ReplaySection.EVENT);
+            List<ReplayChunk> snapshots = chunks.stream().filter(value -> value.section() == ReplaySection.SNAPSHOT).toList();
+            if (snapshots.isEmpty() || snapshots.getFirst().startTick() != 0
+                    || snapshots.getLast().endTick() != metadata.descriptor().durationTicks()) {
+                return failure("Replay snapshot index is incomplete");
+            }
+            int previousSnapshotTick = -1;
+            List<Integer> actualSnapshotIndex = new ArrayList<>();
+            for (ReplayChunk snapshotChunk : snapshots) {
+                for (byte[] entry : ReplayFormat.readChunk(snapshotChunk)) {
+                    int tick = ReplaySnapshotCodec.read(entry).tick();
+                    if (tick <= previousSnapshotTick || tick < snapshotChunk.startTick() || tick > snapshotChunk.endTick()) {
+                        return failure("Replay snapshot index is corrupt");
+                    }
+                    if (previousSnapshotTick >= 0 && tick - previousSnapshotTick > 200) {
+                        return failure("Replay snapshot interval is corrupt");
+                    }
+                    actualSnapshotIndex.add(tick);
+                    previousSnapshotTick = tick;
+                }
+            }
+            if (previousSnapshotTick != metadata.descriptor().durationTicks())
+                return failure("Replay final snapshot is missing");
+            if (!actualSnapshotIndex.equals(header.snapshotIndex()))
+                return failure("Replay snapshot index does not match stored data");
+            return new ReplayLoadProtocolObject.LoadResponse(true, null, metadata, List.copyOf(chunks));
+        } catch (Exception exception) {
+            Logger.error(exception, "Failed to load replay {}", msg.replayId());
+            return failure("Replay data is corrupt or incomplete");
         }
     }
 
-    private ReplayLoadProtocolObject.ReplayMetadata parseMetadata(Document doc) {
-        Map<UUID, String> players = new HashMap<>();
-        Document playerNames = doc.get("playerNames", Document.class);
-        if (playerNames != null) {
-            playerNames.forEach((key, value) -> players.put(UUID.fromString(key), (String) value));
-        }
+    private ReplayLoadProtocolObject.LoadResponse failure(String message) {
+        return new ReplayLoadProtocolObject.LoadResponse(false, message, null, null);
+    }
 
-        Map<String, List<UUID>> teams = new HashMap<>();
-        Document teamsDoc = doc.get("teams", Document.class);
-        if (teamsDoc != null) {
-            teamsDoc.forEach((teamId, value) -> {
-                @SuppressWarnings("unchecked")
-                List<String> playerList = (List<String>) value;
-                List<UUID> playerUUIDs = new ArrayList<>();
-                for (String uuidStr : playerList) {
-                    playerUUIDs.add(UUID.fromString(uuidStr));
-                }
-                teams.put(teamId, playerUUIDs);
-            });
-        }
+    private ReplayHeader parseHeader(Document document) throws Exception {
+        Binary headerData = document.get("header", Binary.class);
+        if (headerData == null) throw new IllegalArgumentException("Replay header is missing");
+        return ReplayHeaderCodec.read(headerData.getData());
+    }
 
-        Map<String, ReplayLoadProtocolObject.TeamInfo> teamInfo = new HashMap<>();
-        Document teamInfoDoc = doc.get("teamInfo", Document.class);
-        if (teamInfoDoc != null) {
-            teamInfoDoc.forEach((teamId, value) -> {
-                Document infoDoc = (Document) value;
-                teamInfo.put(teamId, new ReplayLoadProtocolObject.TeamInfo(
-                    infoDoc.getString("name"),
-                    infoDoc.getString("colorCode"),
-                    infoDoc.getInteger("color")
-                ));
-            });
-        }
-
-        String mapHash = doc.getString("mapHash");
-        String winnerId = doc.getString("winnerId");
-        String winnerType = doc.getString("winnerType");
-
-        return new ReplayLoadProtocolObject.ReplayMetadata(
-            UUID.fromString(doc.getString("replayId")),
-            doc.getString("gameId"),
-            ServerType.valueOf(doc.getString("serverType")),
-            doc.getString("serverId"),
-            doc.getString("gameTypeName"),
-            doc.getString("mapName"),
-            mapHash,
-            doc.getInteger("version", 1),
-            doc.getLong("startTime"),
-            doc.getLong("endTime"),
-            doc.getInteger("durationTicks"),
-            players,
-            teams,
-            teamInfo,
-            winnerId,
-            winnerType,
-            doc.getLong("dataSize"),
-            doc.getDouble("mapCenterX"),
-            doc.getDouble("mapCenterZ")
-        );
+    private ReplayProtocolDto.Metadata toDto(ReplayHeader header) {
+        var descriptor = header.metadata().descriptor();
+        ReplayProtocolDto.Descriptor descriptorDto = new ReplayProtocolDto.Descriptor(
+                descriptor.replayId(), descriptor.gameId(), descriptor.gameType(), descriptor.serverType(), descriptor.serverId(),
+                descriptor.mapName(), descriptor.mapHash(), descriptor.mapCenterX(), descriptor.mapCenterZ(), descriptor.formatVersion(),
+                descriptor.startTime(), descriptor.endTime(), descriptor.durationTicks(), descriptor.dataSize());
+        var participants = header.metadata().participants().stream().map(participant -> new ReplayProtocolDto.Participant(
+                participant.uuid(), participant.entityId(), participant.username(), participant.textureValue(), participant.textureSignature(),
+                participant.displayNameJson(), participant.prefixJson(), participant.suffixJson())).toList();
+        var envelope = header.metadata().gameMetadata();
+        return new ReplayProtocolDto.Metadata(descriptorDto, participants,
+                new ReplayProtocolDto.GameMetadataEnvelope(envelope.gameType(), envelope.schemaVersion(), envelope.payload()));
     }
 }

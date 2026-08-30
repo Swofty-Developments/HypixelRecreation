@@ -10,6 +10,7 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.generic.scoreboard.HypixelScoreboard;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
+import net.swofty.type.skywarsgame.game.SkywarsGameStat;
 import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
@@ -62,12 +63,15 @@ public class SkywarsGameScoreboard {
 					int alive = (int) game.getPlayers().stream().filter(p -> !p.isEliminated()).count();
 					lines.add(Text.key("scoreboard.skywars_game.players_left_line", alive));
 					lines.add(BLANK);
-					lines.add(Text.key("scoreboard.skywars_game.kills_line", swPlayer.getKillsThisGame()));
+					lines.add(Text.key("scoreboard.skywars_game.kills_line",
+						game.getGameStats().get(swPlayer.getUuid(), SkywarsGameStat.KILLS)));
 				} else if (game.getGameStatus() == SkywarsGameStatus.ENDING) {
 					lines.add(Text.key("scoreboard.skywars_game.top_killers_label"));
 
 					java.util.List<SkywarsPlayer> topKillers = game.getPlayers().stream()
-							.sorted((a, b) -> Integer.compare(b.getKillsThisGame(), a.getKillsThisGame()))
+							.sorted((a, b) -> Long.compare(
+								game.getGameStats().get(b.getUuid(), SkywarsGameStat.KILLS),
+								game.getGameStats().get(a.getUuid(), SkywarsGameStat.KILLS)))
 							.limit(3)
 							.toList();
 
@@ -81,11 +85,12 @@ public class SkywarsGameScoreboard {
 						lines.add(Text.key("scoreboard.skywars_game.top_killer_line",
 							places[i],
 							killer.getUsername(),
-							killer.getKillsThisGame()));
+							game.getGameStats().get(killer.getUuid(), SkywarsGameStat.KILLS)));
 					}
 
 					lines.add(BLANK);
-					lines.add(Text.key("scoreboard.skywars_game.your_kills_line", swPlayer.getKillsThisGame()));
+					lines.add(Text.key("scoreboard.skywars_game.your_kills_line",
+						game.getGameStats().get(swPlayer.getUuid(), SkywarsGameStat.KILLS)));
 				} else if (game.getGameStatus() == SkywarsGameStatus.WAITING) {
 					lines.add(Text.key("scoreboard.skywars_game.players_line",
 						game.getPlayers().size(),

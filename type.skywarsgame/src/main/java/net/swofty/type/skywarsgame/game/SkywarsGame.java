@@ -24,6 +24,7 @@ import net.swofty.type.generic.data.datapoints.DatapointSkywarsKitStats;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsModeStats;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
+import net.swofty.type.generic.game.GameStatTracker;
 import net.swofty.type.generic.utility.Titles;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.luckyblock.LuckyBlock;
@@ -71,6 +72,7 @@ public class SkywarsGame {
     private final LuckyBlock luckyBlockManager;
     private final OPRuleManager opRuleManager;
     private final SkywarsGameCountdown countdown;
+    private final GameStatTracker<SkywarsGameStat> gameStats = new GameStatTracker<>(SkywarsGameStat.class);
 
     @Setter
     private SkywarsGameStatus gameStatus;
@@ -414,8 +416,8 @@ public class SkywarsGame {
     }
 
     public void onPlayerKill(SkywarsPlayer killer, SkywarsPlayer victim, KillType killType) {
-        killer.addKill();
-        killer.addSouls(1);
+        gameStats.increment(killer.getUuid(), SkywarsGameStat.KILLS);
+        gameStats.increment(killer.getUuid(), SkywarsGameStat.SOULS);
 
         SkywarsPerkHandler.applyKillEffects(killer, victim, this);
         if (killType == KillType.VOID) {
@@ -426,7 +428,7 @@ public class SkywarsGame {
         if (assistDamager != null && !assistDamager.equals(killer.getUuid())) {
             SkywarsPlayer assistant = getPlayerByUuid(assistDamager);
             if (assistant != null && !assistant.isEliminated()) {
-                assistant.addAssist();
+                gameStats.increment(assistant.getUuid(), SkywarsGameStat.ASSISTS);
                 assistant.sendMessage("<e>+1 Assist!");
                 recordAssistStats(assistant);
             }
@@ -523,6 +525,20 @@ public class SkywarsGame {
         kitStats.getStatsForKit(assistant.getSelectedKit()).addAssist();
     }
 
+    public void recordChestOpened(SkywarsPlayer player) {
+        SkywarsDataHandler handler = SkywarsDataHandler.getUser(player);
+        if (handler == null) return;
+
+        SkywarsLeaderboardMode mode = SkywarsLeaderboardMode.fromGameType(gameType);
+        handler.get(SkywarsDataHandler.Data.MODE_STATS, DatapointSkywarsModeStats.class)
+                .getValue()
+                .recordChestOpened(mode);
+        handler.get(SkywarsDataHandler.Data.KIT_STATS, DatapointSkywarsKitStats.class)
+                .getValue()
+                .getStatsForKit(player.getSelectedKit())
+                .addChestOpened();
+    }
+
     public void checkWinConditions() {
         if (gameStatus != SkywarsGameStatus.IN_PROGRESS) return;
 
@@ -583,7 +599,7 @@ public class SkywarsGame {
             if (winner != null) {
                 player.sendMessage("");
                 player.sendMessage(" <7>Winner: {} <7>- <6>{} kills",
-                        winner.getFullDisplayName(), winner.getKillsThisGame());
+                        winner.getFullDisplayName(), gameStats.get(winner.getUuid(), SkywarsGameStat.KILLS));
             } else {
                 player.sendMessage("                  <f><l>Winner: </l><7>None");
                 player.sendMessage("");
@@ -591,18 +607,18 @@ public class SkywarsGame {
 
             player.sendMessage("");
             player.sendMessage(" <7>Your Stats:");
-            player.sendMessage("   <7>Kills: <a>{}", player.getKillsThisGame());
-            player.sendMessage("   <7>Assists: <e>{}", player.getAssistsThisGame());
+            player.sendMessage("   <7>Kills: <a>{}", gameStats.get(player.getUuid(), SkywarsGameStat.KILLS));
+            player.sendMessage("   <7>Assists: <e>{}", gameStats.get(player.getUuid(), SkywarsGameStat.ASSISTS));
 
             player.sendMessage(THICK_BAR);
 
             int coinsEarned = calculateCoinsEarned(player, winner);
-            int expEarned = 150 + (player.getKillsThisGame() * 25);
+            long expEarned = 150 + (gameStats.get(player.getUuid(), SkywarsGameStat.KILLS) * 25);
 
             player.sendMessage("                 <f><l>Reward Summary");
             player.sendMessage("   <7>You earned:");
             player.sendMessage("   <6>+{} coins", coinsEarned);
-            player.sendMessage("   <a>+{} souls", player.getSoulsEarnedThisGame());
+            player.sendMessage("   <a>+{} souls", gameStats.get(player.getUuid(), SkywarsGameStat.SOULS));
             player.sendMessage("   <b>+{} Hypixel Experience", expEarned);
 
             player.sendMessage(THICK_BAR);
@@ -615,8 +631,8 @@ public class SkywarsGame {
 
     private int calculateCoinsEarned(SkywarsPlayer player, SkywarsPlayer winner) {
         int coins = 10;
-        coins += player.getKillsThisGame() * 5;
-        coins += player.getAssistsThisGame() * 2;
+        coins += Math.toIntExact(gameStats.get(player.getUuid(), SkywarsGameStat.KILLS) * 5);
+        coins += Math.toIntExact(gameStats.get(player.getUuid(), SkywarsGameStat.ASSISTS) * 2);
         if (winner != null && winner.getUuid().equals(player.getUuid())) {
             coins += 25;
         }
@@ -643,10 +659,8 @@ public class SkywarsGame {
                 stats.recordLoss(mode);
             }
 
-            stats.recordSoulGathered(mode, player.getSoulsEarnedThisGame());
-            for (int i = 0; i < player.getChestsOpenedThisGame(); i++) {
-                stats.recordChestOpened(mode);
-            }
+            long soulsEarned = gameStats.get(player.getUuid(), SkywarsGameStat.SOULS);
+            stats.recordSoulGathered(mode, soulsEarned);
 
             DatapointSkywarsKitStats kitStatsDP = handler.get(
                     SkywarsDataHandler.Data.KIT_STATS,
@@ -655,11 +669,8 @@ public class SkywarsGame {
             DatapointSkywarsKitStats.KitStatistics currentKitStats = kitStats.getStatsForKit(player.getSelectedKit());
 
             currentKitStats.addTimePlayed(gameDurationSeconds);
-            currentKitStats.setMostKillsInGame(player.getKillsThisGame());
-
-            for (int i = 0; i < player.getChestsOpenedThisGame(); i++) {
-                currentKitStats.addChestOpened();
-            }
+            currentKitStats.setMostKillsInGame(Math.toIntExact(
+                    gameStats.get(player.getUuid(), SkywarsGameStat.KILLS)));
 
             if (isWinner) {
                 currentKitStats.addWin();
@@ -667,7 +678,7 @@ public class SkywarsGame {
             }
 
             DatapointLong soulsDP = handler.get(SkywarsDataHandler.Data.SOULS, DatapointLong.class);
-            soulsDP.setValue(soulsDP.getValue() + player.getSoulsEarnedThisGame());
+            soulsDP.setValue(soulsDP.getValue() + soulsEarned);
 
             int coinsEarned = calculateCoinsEarned(player, winner);
             DatapointLong coinsDP = handler.get(SkywarsDataHandler.Data.COINS, DatapointLong.class);

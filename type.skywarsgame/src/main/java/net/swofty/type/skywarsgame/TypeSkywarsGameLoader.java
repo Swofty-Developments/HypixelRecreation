@@ -2,9 +2,28 @@ package net.swofty.type.skywarsgame;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.term4.polyp.MechanicsKeys;
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.mechanics.attack.AttackSystem;
+import io.github.term4.polyp.mechanics.attribute.AttributeSystem;
+import io.github.term4.polyp.mechanics.blocking.BlockingSystem;
+import io.github.term4.polyp.mechanics.consumable.ConsumableSystem;
+import io.github.term4.polyp.mechanics.damage.DamageSystem;
+import io.github.term4.polyp.mechanics.explosion.ExplosionSystem;
+import io.github.term4.polyp.mechanics.hunger.HungerSystem;
+import io.github.term4.polyp.mechanics.knockback.KnockbackSystem;
+import io.github.term4.polyp.mechanics.projectile.ProjectileSystem;
+import io.github.term4.polyp.platform.compatibility.Compat18;
+import io.github.term4.polyp.platform.fixes.Fixes18;
+import io.github.term4.polyp.platform.fixes.FixesSystem;
+import io.github.term4.polyp.presets.Preset;
+import io.github.term4.polyp.vri.Vri;
+import io.github.term4.polyp.vri.VriConfig;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.hollowcube.polar.PolarLoader;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.color.Color;
 import net.minestom.server.coordinate.Pos;
@@ -21,12 +40,10 @@ import net.swofty.commons.CustomWorlds;
 import net.swofty.commons.ServerType;
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.protocol.objects.orchestrator.GameHeartbeatProtocol;
+import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.commons.skywars.SkywarsGameType;
 import net.swofty.commons.skywars.map.SkywarsMapsConfig;
 import net.swofty.proxyapi.ProxyService;
-import net.swofty.commons.redis.RedisMessageHandler;
-import net.swofty.commons.text.Text;
-import net.swofty.pvp.MinestomPvP;
 import net.swofty.type.game.game.GameObject;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
@@ -42,6 +59,7 @@ import net.swofty.type.generic.tab.TablistManager;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
+import net.swofty.type.skywarsgame.game.SkywarsGameStat;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItem;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItemHandler;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -73,6 +91,7 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
     @Getter
     private static SkywarsMapsConfig mapsConfig;
     private static InstanceManager instanceManager;
+    private static ExplosionSystem explosions;
     private static RegistryKey<@NotNull DimensionType> fullbrightDimension;
     private Gson gson;
 
@@ -96,23 +115,26 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
         }
         InstanceContainer mapInstance = instanceManager.createInstanceContainer(fullbrightDimension);
         mapInstance.setChunkLoader(new PolarLoader(new File("./configuration/skywars/" + entry.getId() + ".polar").toPath()));
+        mapInstance.setExplosionSupplier(explosions.supplier());
         SkywarsGame game = new SkywarsGame(entry, mapInstance, gameType);
         games.add(game);
         return game;
     }
 
-    private static Text header() {
-        return Text.of("<b>You are playing on <l><e>MC.HYPIXEL.NET</e></l>");
+    private static Component header() {
+        return MiniMessage.miniMessage().deserialize("<aqua>You are playing on <bold><yellow>MC.HYPIXEL.NET</yellow></bold>");
     }
 
-    private static Text footer(HypixelPlayer player) {
-        Text start = Text.empty();
+    private static Component footer(HypixelPlayer player) {
+        Component start = Component.empty();
         SkywarsGame game = getPlayerGame(player);
         if (game != null) {
             SkywarsPlayer swPlayer = (SkywarsPlayer) player;
-            start = start.append("<e>Kills: <6>{}\n", swPlayer.getKillsThisGame());
+            start = start.append(MiniMessage.miniMessage().deserialize(
+                    "<yellow>Kills: <gold>" + game.getGameStats().get(swPlayer.getUuid(), SkywarsGameStat.KILLS)
+            )).appendNewline();
         }
-        return start.append("<a>Ranks, Boosters & MORE! <c><l>STORE.HYPIXEL.NET");
+        return start.append(Component.text("§aRanks, Boosters & MORE! §c§lSTORE.HYPIXEL.NET"));
     }
 
     @Override
@@ -122,6 +144,7 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
 
     @Override
     public void onInitialize(MinecraftServer server) {
+        initializePolyp();
         gson = new GsonBuilder().create();
         instanceManager = MinecraftServer.getInstanceManager();
         fullbrightDimension = MinecraftServer.getDimensionTypeRegistry().register(
@@ -170,11 +193,9 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
             UUID uuid = gameProfile.uuid();
             String username = gameProfile.name();
 
-            ServerType originServer = RedisOriginServer.consume(uuid);
-
-            if (originServer != null) {
-
-                player.setOriginServer(originServer);
+            if (RedisOriginServer.origin.containsKey(uuid)) {
+                player.setOriginServer(RedisOriginServer.origin.get(uuid));
+                RedisOriginServer.origin.remove(uuid);
             }
 
             Logger.info("Received new player: " + username + " (" + uuid + ")");
@@ -195,8 +216,6 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
 
         HypixelGenericLoader.loopThroughPackage("net.swofty.type.skywarsgame.item.impl", SimpleInteractableItem.class).forEach(itemHandler::add);
 
-        MinestomPvP.init();
-        MinecraftServer.getGlobalEventHandler().addChild(MinestomPvP.events());
         SkywarsGameScoreboard.start();
 
         MinecraftServer.getSchedulerManager().buildTask(() -> {
@@ -241,6 +260,28 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
                 player.sendPlayerListHeaderAndFooter(header(), footer(player));
             }
         }).repeat(10, TimeUnit.SERVER_TICK).schedule();
+    }
+
+    private static void initializePolyp() {
+        Polyp polyp = Polyp.getInstance();
+        polyp.installPlayerProvider = false;
+        polyp.metaFix = false;
+        polyp.init();
+        polyp.profiles().setGlobal(Preset.HYPIXEL.profile().toBuilder()
+                .set(MechanicsKeys.COMPAT, Compat18.config())
+                .set(MechanicsKeys.FIXES, Fixes18.config())
+                .build());
+        AttackSystem.install(polyp);
+        DamageSystem.install(polyp);
+        KnockbackSystem.install(polyp);
+        ProjectileSystem.install(polyp);
+        AttributeSystem.install(polyp);
+        ConsumableSystem.install(polyp);
+        BlockingSystem.install(polyp);
+        HungerSystem.install(polyp);
+        FixesSystem.install(polyp);
+        Vri.install(polyp, VriConfig.all());
+        explosions = ExplosionSystem.install(polyp);
     }
 
     @Override
