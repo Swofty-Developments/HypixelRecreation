@@ -15,9 +15,9 @@ import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 public class ActionArrowStats implements HypixelEventClass {
@@ -27,7 +27,7 @@ public class ActionArrowStats implements HypixelEventClass {
         if (event.getItemStack().material() != Material.BOW) return;
 
         SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(player);
-        if (game == null || game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) return;
+        if (game == null || game.getState() != GameState.IN_PROGRESS) return;
         if (player.isEliminated()) return;
 
         recordArrowShot(player, game);
@@ -44,7 +44,7 @@ public class ActionArrowStats implements HypixelEventClass {
         if (!(attacker instanceof SkywarsPlayer shooter)) return;
 
         SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(shooter);
-        if (game == null || game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) return;
+        if (game == null || game.getState() != GameState.IN_PROGRESS) return;
         if (shooter.isEliminated()) return;
 
         recordArrowHit(shooter, game, event.getEntity());

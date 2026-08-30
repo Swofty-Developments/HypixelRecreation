@@ -4,12 +4,12 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.UnderstandableProxyServer;
 import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.orchestrator.RejoinGameProtocol;
+import net.swofty.commons.redis.RedisMessageContext;
 import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.service.orchestrator.OrchestratorCache;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
-import net.swofty.commons.redis.RedisMessageContext;
 
 public class RejoinGameEndpoint implements RedisMessageHandler<
         RejoinGameProtocol.RejoinGameRequest,
@@ -35,7 +35,6 @@ public class RejoinGameEndpoint implements RedisMessageHandler<
                 return new RejoinGameProtocol.RejoinGameResponse(false, null, null, null, null, false, true, null);
             }
 
-            // Skywars does not support rejoining
             if (hostingServer.type() == ServerType.SKYWARS_GAME) {
                 return new RejoinGameProtocol.RejoinGameResponse(false, null, null, null, null, false, true, null);
             }

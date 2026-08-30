@@ -13,13 +13,12 @@ import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 public class ActionPlayerDisconnect implements HypixelEventClass {
     @PhasedEvent(node = EventNodes.PLAYER, requireDataLoaded = false, phase = EventPhase.DISCONNECT)
     public void onDisconnect(PlayerDisconnectEvent event) {
-        SkywarsPlayer player = (SkywarsPlayer) event.getPlayer();
+        if (!(event.getPlayer() instanceof SkywarsPlayer player)) return;
         SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(player);
 
         if (game != null) {
             game.disconnect(player);
         }
-        // git is wierd with this file idk
         SkywarsGameScoreboard.removeCache(player);
     }
 }

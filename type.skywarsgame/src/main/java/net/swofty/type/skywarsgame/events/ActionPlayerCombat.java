@@ -6,9 +6,9 @@ import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 public class ActionPlayerCombat implements HypixelEventClass {
@@ -17,12 +17,18 @@ public class ActionPlayerCombat implements HypixelEventClass {
         if (!(event.getEntity() instanceof SkywarsPlayer victim)) return;
 
         SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(victim);
-        if (game == null || game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) {
+        if (game == null || game.getState() != GameState.IN_PROGRESS) {
             event.setCancelled(true);
             return;
         }
 
         if (victim.isEliminated()) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (event.getDamage().getAttacker() instanceof SkywarsPlayer attacker
+                && (attacker.isEliminated() || game.getPlayer(attacker.getUuid()).isEmpty())) {
             event.setCancelled(true);
             return;
         }

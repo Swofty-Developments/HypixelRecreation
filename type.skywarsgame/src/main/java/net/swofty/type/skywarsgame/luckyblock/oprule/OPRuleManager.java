@@ -111,6 +111,7 @@ public class OPRuleManager {
                 tnt.scheduler().buildTask(() -> {
                     Pos explosionPos = tnt.getPosition();
                     tnt.remove();
+                    if (!game.isInProgress()) return;
                     createExplosion(explosionPos);
                 }).delay(Duration.ofSeconds(4)).schedule();
             }
@@ -118,6 +119,8 @@ public class OPRuleManager {
     }
 
     private void createExplosion(Pos pos) {
+        if (!game.isInProgress()) return;
+
         Instance instance = game.getInstance();
         if (instance == null) return;
 

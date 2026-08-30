@@ -8,7 +8,7 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.scoreboard.HypixelScoreboard;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.role.GameRole;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 
@@ -46,7 +46,7 @@ public class MurderMysteryGameScoreboard {
 						HypixelConst.getServerName()));
 					lines.add(BLANK);
 
-					if (game.getGameStatus() == GameStatus.WAITING) {
+					if (game.getState() == GameState.WAITING || game.getState() == GameState.COUNTDOWN) {
 						lines.add(Text.key("scoreboard.murdermystery_game.map_line", game.getMapEntry().getName()));
 						lines.add(Text.key("scoreboard.murdermystery_game.players_line",
 							game.getPlayers().size(),
@@ -54,7 +54,7 @@ public class MurderMysteryGameScoreboard {
 						lines.add(BLANK);
 						if (game.getCountdown().isActive()) {
 							lines.add(Text.key("scoreboard.murdermystery_game.starting_in_line",
-								game.getCountdown().getSecondsRemaining()));
+								game.getCountdown().getRemainingSeconds()));
 						} else {
 							lines.add(Text.key("scoreboard.murdermystery_game.waiting_for_players"));
 						}
@@ -67,7 +67,7 @@ public class MurderMysteryGameScoreboard {
 						player.sendActionBar(Text.key("scoreboard.murdermystery_game.actionbar.murderer_chance", murdererChance)
 							.append("    ")
 							.append(Text.key("scoreboard.murdermystery_game.actionbar.detective_chance", detectiveChance)));
-					} else if (game.getGameStatus() == GameStatus.IN_PROGRESS) {
+					} else if (game.getState() == GameState.IN_PROGRESS) {
 						GameRole role = game.getRoleManager().getRole(player.getUuid());
 
 						if (player.isEliminated()) {
@@ -119,7 +119,7 @@ public class MurderMysteryGameScoreboard {
 
 							lines.add(Text.key("scoreboard.murdermystery_game.map_line", game.getMapEntry().getName()));
 						}
-					} else if (game.getGameStatus() == GameStatus.ENDING) {
+					} else if (game.getState() == GameState.ENDING) {
 						lines.add(Text.key("scoreboard.murdermystery_game.game_over"));
 						lines.add(BLANK);
 

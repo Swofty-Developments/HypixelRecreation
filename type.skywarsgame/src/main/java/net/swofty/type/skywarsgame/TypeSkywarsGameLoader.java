@@ -75,7 +75,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static net.swofty.type.generic.HypixelGenericLoader.getLoadedPlayers;
 
@@ -83,7 +85,7 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
     public static final int MAX_GAMES = 8;
 
     @Getter
-    public static final List<SkywarsGame> games = new ArrayList<>();
+    public static final List<SkywarsGame> games = new CopyOnWriteArrayList<>();
 
     @Getter
     public static final SimpleInteractableItemHandler itemHandler = new SimpleInteractableItemHandler();
@@ -95,7 +97,8 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
     private static RegistryKey<@NotNull DimensionType> fullbrightDimension;
     private Gson gson;
 
-    public static SkywarsGame getGameById(@NotNull String gameId) {
+    public static SkywarsGame getGameById(@Nullable String gameId) {
+        if (gameId == null) return null;
         return games.stream()
                 .filter(game -> game.getGameId().equals(gameId))
                 .findFirst()
@@ -109,16 +112,27 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
     }
 
     @SneakyThrows
-    public static SkywarsGame createGame(SkywarsMapsConfig.MapEntry entry, SkywarsGameType gameType) {
+    public static synchronized SkywarsGame createGame(@NotNull SkywarsMapsConfig.MapEntry entry,
+                                                      @NotNull SkywarsGameType gameType) {
+        Objects.requireNonNull(entry, "entry");
+        Objects.requireNonNull(gameType, "gameType");
+        if (!supportsGameType(entry, gameType)) {
+            throw new IllegalArgumentException("Map does not support game type " + gameType);
+        }
         if (games.size() >= MAX_GAMES) {
             return null;
         }
         InstanceContainer mapInstance = instanceManager.createInstanceContainer(fullbrightDimension);
-        mapInstance.setChunkLoader(new PolarLoader(new File("./configuration/skywars/" + entry.getId() + ".polar").toPath()));
-        mapInstance.setExplosionSupplier(explosions.supplier());
-        SkywarsGame game = new SkywarsGame(entry, mapInstance, gameType);
-        games.add(game);
-        return game;
+        try {
+            mapInstance.setChunkLoader(new PolarLoader(new File("./configuration/skywars/" + entry.getId() + ".polar").toPath()));
+            mapInstance.setExplosionSupplier(explosions.supplier());
+            SkywarsGame game = new SkywarsGame(entry, mapInstance, gameType);
+            games.add(game);
+            return game;
+        } catch (Exception | Error exception) {
+            instanceManager.unregisterInstance(mapInstance);
+            throw exception;
+        }
     }
 
     private static Component header() {
@@ -149,7 +163,7 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
         instanceManager = MinecraftServer.getInstanceManager();
         fullbrightDimension = MinecraftServer.getDimensionTypeRegistry().register(
                 "fullbright_skywars",
-            DimensionType.builder().ambientLight(1f).setAttribute(EnvironmentAttribute.AMBIENT_LIGHT_COLOR, Color.WHITE).build()
+                DimensionType.builder().ambientLight(1f).setAttribute(EnvironmentAttribute.AMBIENT_LIGHT_COLOR, Color.WHITE).build()
         );
 
         Path skywarsDir = Path.of("./configuration/skywars");
@@ -178,8 +192,12 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
                 mapsConfig.setMaps(mapEntries);
 
                 for (SkywarsMapsConfig.MapEntry e : mapEntries) {
-                    for (SkywarsGameType gameType : SkywarsGameType.values()) {
-                        createGame(e, gameType);
+                    for (SkywarsGameType gameType : getSupportedTypes(e)) {
+                        try {
+                            createGame(e, gameType);
+                        } catch (Exception exception) {
+                            Logger.error(exception, "Failed to create SkyWars game for map {} and mode {}", e.getName(), gameType);
+                        }
                     }
                 }
             }
@@ -193,9 +211,9 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
             UUID uuid = gameProfile.uuid();
             String username = gameProfile.name();
 
-            if (RedisOriginServer.origin.containsKey(uuid)) {
-                player.setOriginServer(RedisOriginServer.origin.get(uuid));
-                RedisOriginServer.origin.remove(uuid);
+            ServerType originServer = RedisOriginServer.consume(uuid);
+            if (originServer != null) {
+                player.setOriginServer(originServer);
             }
 
             Logger.info("Received new player: " + username + " (" + uuid + ")");
@@ -231,16 +249,37 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
                 commonsGame.setType(ServerType.SKYWARS_GAME);
                 commonsGame.setMap(internalGame.getMapEntry().getName());
                 commonsGame.setGameTypeName(internalGame.getGameType().name());
+                commonsGame.setAcceptingJoins(internalGame.getState().isWaiting());
 
                 List<UUID> playerUuids = new ArrayList<>();
                 for (SkywarsPlayer player : internalGame.getPlayers()) {
                     playerUuids.add(player.getUuid());
                 }
                 commonsGame.setInvolvedPlayers(playerUuids);
-                commonsGame.setDisconnectedPlayers(internalGame.getDisconnectedPlayerUuids());
+                commonsGame.setDisconnectedPlayers(List.of());
 
                 commonsGames.add(commonsGame);
             }
+
+            List<GameHeartbeatProtocol.MapAdvertisement> mapAdvertisements = new ArrayList<>();
+            if (mapsConfig != null && mapsConfig.getMaps() != null) {
+                for (SkywarsMapsConfig.MapEntry entry : mapsConfig.getMaps()) {
+                    if (entry == null) continue;
+                    String mapId = entry.getId();
+                    String mapName = entry.getName();
+                    if (mapId == null && mapName == null) continue;
+                    if (mapId == null) mapId = mapName;
+                    if (mapName == null) mapName = mapId;
+
+                    mapAdvertisements.add(new GameHeartbeatProtocol.MapAdvertisement(
+                            mapId,
+                            mapName,
+                            getSupportedTypes(entry).stream().map(SkywarsGameType::name).toList()
+                    ));
+                }
+            }
+
+            int remainingGameSlots = Math.max(0, MAX_GAMES - TypeSkywarsGameLoader.getGames().size());
 
             var heartbeat = new GameHeartbeatProtocol.HeartbeatMessage(
                     uuid,
@@ -248,7 +287,9 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
                     getType(),
                     maxPlayers,
                     onlinePlayers,
-                    commonsGames
+                    commonsGames,
+                    mapAdvertisements,
+                    remainingGameSlots
             );
             new ProxyService(ServiceType.ORCHESTRATOR).handleRequest(heartbeat);
         }).delay(TaskSchedule.seconds(5)).repeat(TaskSchedule.seconds(1)).schedule();
@@ -260,6 +301,21 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
                 player.sendPlayerListHeaderAndFooter(header(), footer(player));
             }
         }).repeat(10, TimeUnit.SERVER_TICK).schedule();
+    }
+
+    public static List<SkywarsGameType> getSupportedTypes(@NotNull SkywarsMapsConfig.MapEntry entry) {
+        Objects.requireNonNull(entry, "entry");
+        if (entry.getConfiguration() == null || entry.getConfiguration().getTypes() == null) return List.of();
+
+        return entry.getConfiguration().getTypes().stream()
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
+    }
+
+    public static boolean supportsGameType(@NotNull SkywarsMapsConfig.MapEntry entry,
+                                            @NotNull SkywarsGameType gameType) {
+        return getSupportedTypes(entry).contains(gameType);
     }
 
     private static void initializePolyp() {

@@ -37,7 +37,7 @@ public interface Game<P extends GameParticipant> {
      * @return Whether new players can join this game
      */
     default boolean canAcceptPlayers() {
-        return getState() == GameState.WAITING && getAvailableSlots() > 0;
+        return getState().isWaiting() && getAvailableSlots() > 0;
     }
 
     /**
