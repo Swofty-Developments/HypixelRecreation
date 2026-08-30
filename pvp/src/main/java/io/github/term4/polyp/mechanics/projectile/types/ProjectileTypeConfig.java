@@ -132,9 +132,6 @@ public final class ProjectileTypeConfig extends TypeConfig<ProjectileContext, Pr
     /** Constant added to EVERY launch-direction axis pre-scale - the vanilla spread term with the gaussian pinned
      *  to {@code +1} (MineMen arrows: {@code 0.0075}, deterministic). {@code 0} = off. */
     public final @Nullable FieldValue<ProjectileContext, Double> spreadBias;
-    /** Minimum |motY| of every BROADCAST velocity (spawn/corrections; the sim is untouched): a flatter wire vy is
-     *  clamped to this, sign-preserving, exactly {@code 0} clamps up. {@code 0} = off (vanilla). MineMen throwables: {@code 0.05}. */
-    public final @Nullable FieldValue<ProjectileContext, Double> wireMotYFloor;
     /** Fraction of the shooter's horizontal velocity (x/z) folded into the launch velocity. {@code 0} = none (1.8), {@code 1} = full (26.1). */
     public final @Nullable FieldValue<ProjectileContext, Double> momentumHorizontal;
     /** Fraction of the shooter's vertical velocity (y) folded in. {@code 0} = none (1.8); 26.1 folds it only when airborne (a lambda). */
@@ -235,7 +232,6 @@ public final class ProjectileTypeConfig extends TypeConfig<ProjectileContext, Pr
         launchPitchOffset = b.launchPitchOffset;
         spread = b.spread;
         spreadBias = b.spreadBias;
-        wireMotYFloor = b.wireMotYFloor;
         momentumHorizontal = b.momentumHorizontal;
         momentumVertical = b.momentumVertical;
         shooterImmunityTicks = b.shooterImmunityTicks;

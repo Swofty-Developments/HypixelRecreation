@@ -1,11 +1,11 @@
 package io.github.term4.polyp.mechanics.damage;
 
 import io.github.term4.polyp.MechanicsKeys;
-import io.github.term4.polyp.MechanicsModule;
+import io.github.term4.polyp.ScopedSystem;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.Services;
-import io.github.term4.polyp.mechanics.death.DeathConfig;
-import io.github.term4.polyp.mechanics.death.DeathConfig.DeathContext;
+import io.github.term4.polyp.mechanics.damage.DeathConfig;
+import io.github.term4.polyp.mechanics.damage.DeathConfig.DeathContext;
 import io.github.term4.polyp.presets.vanilla18.Knockback;
 import io.github.term4.polyp.mechanics.blocking.BlockingSystem;
 import io.github.term4.polyp.mechanics.attribute.AttributeSystem;
@@ -72,7 +72,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <p>Every fresh hit except drowning broadcasts the victim's server-tracked velocity. Non-melee hits route it through
  * the {@link KnockbackSystem} with {@link DamageConfig#hurtKnockback}; melee's broadcast is its own knockback.
  */
-public final class DamageSystem implements MechanicsModule {
+public final class DamageSystem extends ScopedSystem<DamageConfig> {
 
     /** This system's identity for per-module TPS scaling (its {@code referenceTps} feel-baseline). */
     public static final Key KEY = Key.key("polyp:damage");
@@ -95,19 +95,14 @@ public final class DamageSystem implements MechanicsModule {
     private static final ListenerHandle<DamageAppliedEvent> DAMAGE_APPLIED = EventDispatcher.getHandle(DamageAppliedEvent.class);
     private static final AtomicBoolean CLOCK_RESET = new AtomicBoolean();
 
-    private final Polyp polyp;
-    private final DamageConfig config;
     private final DamageCalculator calc;
     private final DamageTypeRegistry registry;
     private final Services services;
-
-    public Services services() { return services; }
     private final EventNode<@NotNull Event> node;
 
     public DamageSystem(Polyp polyp, DamageConfig config) {
-        this.polyp = polyp;
+        super(polyp, MechanicsKeys.DAMAGE, config);
         this.node = EventNode.all("polyp:damage");
-        this.config = config;
         this.services = polyp.services();
         this.calc = new DamageCalculator(this.services, Vanilla18.damage());
         this.registry = new DamageTypeRegistry(this, polyp).registerVanillaDefaults();
@@ -154,11 +149,6 @@ public final class DamageSystem implements MechanicsModule {
             DeathConfig death = effectiveDeath(polyp.profiles().resolve(e.getPlayer(), MechanicsKeys.DEATH), ctx);
             if (deathFlag(death != null ? death.hideCorpse(ctx) : null)) e.getPlayer().scheduleNextTick(p -> p.setAutoViewable(true));
         });
-    }
-
-    /** Effective config for a snapshot carrying none: the victim's scoped profile, else the install config. */
-    private DamageConfig configFor(@Nullable Entity target) {
-        return polyp.profiles().resolveOr(target, MechanicsKeys.DAMAGE, config);
     }
 
     /**
@@ -408,8 +398,6 @@ public final class DamageSystem implements MechanicsModule {
         living.damage(damage);
     }
 
-    public DamageConfig config() { return config; }
-
     /**
      * Effective invul ticks for a type: per-type override, else the global value, else {@link #DEFAULT_INVUL_TICKS}.
      * A {@code null} type resolves the global value only.
@@ -448,10 +436,9 @@ public final class DamageSystem implements MechanicsModule {
     /** Installs from an explicit config (the modular path): enables its {@code typeConfigs} producers. */
     public static DamageSystem install(Polyp polyp, DamageConfig cfg, DamageType... extraTypes) {
         var system = new DamageSystem(polyp, cfg);
-        polyp.register(system);
         EnvironmentalDamageTicker.instance().bind(system);
         HurtSuppression.install(system.node);
-        polyp.install(system.node);
+        polyp.installModule(system);
         for (DamageType type : extraTypes) {
             if (!system.registry.contains(type.key())) system.registry.register(type);
         }

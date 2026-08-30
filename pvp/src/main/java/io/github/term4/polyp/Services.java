@@ -5,7 +5,7 @@ import io.github.term4.polyp.mechanics.attribute.AttributeSystem;
 import io.github.term4.polyp.mechanics.blocking.BlockingSystem;
 import io.github.term4.polyp.mechanics.consumable.ConsumableSystem;
 import io.github.term4.polyp.mechanics.damage.DamageSystem;
-import io.github.term4.polyp.mechanics.item.ItemDamageSystem;
+import io.github.term4.polyp.mechanics.itemdamage.ItemDamageSystem;
 import io.github.term4.polyp.mechanics.durability.DurabilitySystem;
 import io.github.term4.polyp.mechanics.explosion.ExplosionSystem;
 import io.github.term4.polyp.mechanics.hunger.HungerSystem;

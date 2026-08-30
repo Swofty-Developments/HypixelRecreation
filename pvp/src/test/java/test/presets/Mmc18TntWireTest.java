@@ -86,7 +86,7 @@ class Mmc18TntWireTest extends HeadlessServerTest {
         ((OptimizedPlayer) legacy.player).compat().setLegacyClient(true);
 
         ExplosionSystem explosions = new ExplosionSystem(polyp, Explosion.config().toBuilder().blockBreaking((io.github.term4.polyp.mechanics.explosion.BlockBreaking) null).build());
-        var cfg = new PrimedTnt.Config(120, 4.0f, true, PrimedTnt.Wire.HYPIXEL, false, null); // 120 > 80: outlives the client count
+        var cfg = new PrimedTnt.Config(120, 4.0f, true, PrimedTnt.Wire.HYPIXEL, false, null, false); // 120 > 80: outlives the client count
         PrimedTnt tnt = PrimedTnt.spawn(explosions, instance, new BlockVec(8, 70, 8), cfg);
         awaitSpawn(tnt);
         assertTrue(tnt.getViewers().contains(legacy.player) && tnt.getViewers().contains(modern.player), "both view the TNT");
@@ -104,7 +104,7 @@ class Mmc18TntWireTest extends HeadlessServerTest {
         ((OptimizedPlayer) legacy.player).compat().setLegacyClient(true);
 
         ExplosionSystem explosions = new ExplosionSystem(polyp, Explosion.config().toBuilder().blockBreaking((io.github.term4.polyp.mechanics.explosion.BlockBreaking) null).build());
-        var cfg = new PrimedTnt.Config(50, 4.0f, true, PrimedTnt.Wire.HYPIXEL, false, null); // 50 < 80: the client's own count covers it
+        var cfg = new PrimedTnt.Config(50, 4.0f, true, PrimedTnt.Wire.HYPIXEL, false, null, false); // 50 < 80: the client's own count covers it
         PrimedTnt tnt = PrimedTnt.spawn(explosions, instance, new BlockVec(8, 70, 8), cfg);
         awaitSpawn(tnt);
         for (int t = 0; t < 49 && !tnt.isRemoved(); t++) tnt.tick(0); // stop before the 50t detonation's own REMOVE

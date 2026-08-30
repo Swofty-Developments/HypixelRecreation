@@ -54,7 +54,7 @@ public final class KnockbackConfig extends Config<KnockbackContext, KnockbackCon
     }
 
     /** Wire-side transform on the final velocity (b/t): runs after the pipeline, before the 1.8 quantize, and the
-     *  tracker folds its output. MineMen snaps small vertical velocities to {@code sign*0.05}. */
+     *  tracker folds its output. Unset falls back to the scope's {@code VelocityConfig} wire floor. */
     @FunctionalInterface
     public interface WireRule {
         Vec apply(Vec bt);

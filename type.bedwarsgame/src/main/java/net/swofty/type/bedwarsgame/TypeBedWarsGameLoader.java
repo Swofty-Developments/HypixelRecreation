@@ -19,7 +19,10 @@ import io.github.term4.polyp.platform.compatibility.Compat18;
 import io.github.term4.polyp.platform.fixes.Fixes18;
 import io.github.term4.polyp.platform.fixes.FixesSystem;
 import io.github.term4.polyp.presets.Preset;
+import io.github.term4.polyp.presets.hypixel.Tnt;
 import io.github.term4.polyp.presets.vanilla18.Explosion;
+import io.github.term4.polyp.vri.Vri;
+import io.github.term4.polyp.vri.VriConfig;
 import io.github.term4.polyp.world.MechanicsWorld;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -348,6 +351,7 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
         polyp.profiles().setGlobal(Preset.HYPIXEL_BEDWARS.profile().toBuilder()
                 .set(MechanicsKeys.COMPAT, Compat18.config())
                 .set(MechanicsKeys.FIXES, Fixes18.config())
+                .set(MechanicsKeys.TNT, Tnt.config().toBuilder().igniteOnPlace(false).build())
                 .build());
         AttackSystem.install(polyp);
         DamageSystem.install(polyp);
@@ -358,6 +362,7 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
         BlockingSystem.install(polyp);
         HungerSystem.install(polyp);
         FixesSystem.install(polyp);
+        Vri.install(polyp, VriConfig.builder().tntIgnite(true).build());
         var explosionConfig = polyp.profiles().resolve(null, MechanicsKeys.EXPLOSION).toBuilder()
                 .blockBreaking(Explosion.blockBreaking().toBuilder()
                         .breakRule((block, position, ignored) -> Boolean.TRUE.equals(block.getTag(PLAYER_PLACED_TAG)))

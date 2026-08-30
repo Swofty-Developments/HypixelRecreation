@@ -2,7 +2,7 @@ package io.github.term4.polyp.mechanics.attack;
 
 import io.github.term4.polyp.MechanicsProfiles;
 import io.github.term4.polyp.MechanicsKeys;
-import io.github.term4.polyp.MechanicsModule;
+import io.github.term4.polyp.ScopedSystem;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.api.event.attack.AttackEvent;
@@ -20,12 +20,11 @@ import org.jetbrains.annotations.NotNull;
  * API and runs the configured ruleset. No invul window or hit buffering of its own - every hit is processed and the
  * damage/knockback systems gate themselves. Preset behaviors (e.g. Mmc18's hit queue) live in custom rulesets/detections.
  */
-public final class AttackSystem implements MechanicsModule {
+public final class AttackSystem extends ScopedSystem<AttackConfig> {
 
     /** This system's identity for per-module TPS scaling (its {@code referenceTps} feel-baseline). */
     public static final Key KEY = Key.key("polyp:attack");
 
-    private final AttackConfig config;
     private final MechanicsProfiles profiles;
     private final Services services;
     private final EventNode<@NotNull Event> node;
@@ -39,7 +38,7 @@ public final class AttackSystem implements MechanicsModule {
      *                  gates per hit, so a disabled install config can be switched live by assigning an enabled profile.
      */
     public AttackSystem(Polyp polyp, AttackConfig config, HitDetection... detection) {
-        this.config = config;
+        super(polyp, MechanicsKeys.ATTACK, config);
         this.profiles = polyp.profiles();
         this.services = polyp.services();
         this.node = EventNode.all("polyp:attack");
@@ -88,13 +87,8 @@ public final class AttackSystem implements MechanicsModule {
 
     /** Installs the system. {@code detection} as in {@link #AttackSystem(Polyp, AttackConfig, HitDetection...)}. */
     public static AttackSystem install(Polyp polyp, AttackConfig config, HitDetection... detection) {
-        var system = new AttackSystem(polyp, config, detection);
-        polyp.register(system);
-        polyp.install(system.node);
-        return system;
+        return polyp.installModule(new AttackSystem(polyp, config, detection));
     }
-
-    public AttackConfig config() { return config; }
 
     /** This system's listener node ({@code polyp:attack}); detection listeners mount here. */
     public EventNode<@NotNull Event> node() { return node; }

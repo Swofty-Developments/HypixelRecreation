@@ -1,13 +1,14 @@
 package io.github.term4.polyp.mechanics.projectile.entities;
 
 import io.github.term4.polyp.Polyp;
-import io.github.term4.polyp.world.ExternallyTickable;
+import io.github.term4.polyp.entity.MechanicsEntity;
 import io.github.term4.polyp.world.MechanicsWorld;
 import io.github.term4.polyp.world.WorldPolicy;
 import io.github.term4.polyp.mechanics.projectile.types.ProjectileTypeConfig;
 import io.github.term4.polyp.util.Directions;
 import io.github.term4.polyp.util.tick.TickScaler;
 import io.github.term4.polyp.tracking.motion.FluidFlow;
+import io.github.term4.polyp.tracking.motion.VelocityRule;
 import net.minestom.server.ServerFlag;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.BoundingBox;
@@ -52,17 +53,7 @@ import java.util.Collection;
  * self-heals; modern clients hold via {@code inGround} metadata. Velocity is b/t internally ({@code super.velocity}
  * mirrors b/s); {@link Aerodynamics} constants are read live.
  */
-public abstract class ProjectileEntity extends Entity implements ExternallyTickable {
-
-    // @ApiStatus.Internal override: super is exactly this field write + dispatcher().updateElement (verified
-    // 26.2, re-verify on bumps) - an externally ticked entity in the global dispatcher double-ticks
-    @Override protected void refreshCurrentChunk(@NotNull net.minestom.server.instance.Chunk chunk) {
-        if (MechanicsWorld.externallyTicked(this)) {
-            currentChunk = chunk;
-            return;
-        }
-        super.refreshCurrentChunk(chunk);
-    }
+public abstract class ProjectileEntity extends MechanicsEntity {
 
     public static final int DEFAULT_SHOOTER_IMMUNITY_TICKS = 5;
 
@@ -95,8 +86,6 @@ public abstract class ProjectileEntity extends Entity implements ExternallyTicka
     private boolean leftOwner;
     /** Blocks along the flight dir the stuck projectile is pulled back so the tip pokes out of the block face (vanilla 0.05). */
     protected double stickPullback = 0.05;
-    /** Wire-only |motY| floor on every broadcast velocity ({@code 0} = off); the sim is untouched. MineMen throwables 0.05. */
-    private double wireMotYFloor;
     /** Blocks/tick ({@code super.velocity} mirrors b/s). */
     protected Vec velocityBt = Vec.ZERO;
     private double waterDrag = 1.0;
@@ -290,8 +279,6 @@ public abstract class ProjectileEntity extends Entity implements ExternallyTicka
     public void setLeftOwnerImmunity(boolean v) { this.leftOwnerImmunity = v; }
 
     public void setStickPullback(double v) { this.stickPullback = v; }
-
-    public void setWireMotYFloor(double v) { this.wireMotYFloor = v; }
 
     /** Per-tick acceleration (b/t) folded in before drag - the fireball's self-propulsion. */
     public void setAcceleration(@NotNull Vec a) { this.acceleration = a; }
@@ -681,24 +668,22 @@ public abstract class ProjectileEntity extends Entity implements ExternallyTicka
         return rate > 1.0 ? velocityBt.mul(rate) : velocityBt;
     }
 
-    // sign-preserving |motY| floor, clamping exactly-0 up; the sim flies the true arc regardless
-    private Vec floorMotY(Vec v) {
-        if (wireMotYFloor > 0 && Math.abs(v.y()) < wireMotYFloor && !v.isZero()) {
-            return v.withY(v.y() < 0 ? -wireMotYFloor : wireMotYFloor);
-        }
-        return v;
+    // the scope's broadcast floor; a fully-zero broadcast passes raw, and the sim flies the true arc regardless
+    private Vec wireFloor(Vec v) {
+        VelocityRule rule = VelocityRule.scoped(scopeSubject());
+        return v.isZero() || !VelocityRule.wireFloored(rule) ? v : VelocityRule.wireFloor(rule, v);
     }
 
     /** MODERN scope-rated wire velocity (ZERO while stuck); a 1.8 client needs {@link #legacyVelocityForPacket}. */
     @Override
     protected Vec getVelocityForPacket() {
-        return isStuck() ? Vec.ZERO : floorMotY(TickScaler.wireVelocity(scopeSubject(), displacementBt()));
+        return isStuck() ? Vec.ZERO : wireFloor(TickScaler.wireVelocity(scopeSubject(), displacementBt()));
     }
 
     /** 1.8 clients tick at the server rate regardless of dilation, so they take the raw step; the scope-rated
      *  {@link #getVelocityForPacket} would overshoot them by 20/clientTps in slow motion. Equal off dilation. */
     private Vec legacyVelocityForPacket() {
-        return isStuck() ? Vec.ZERO : floorMotY(displacementBt());
+        return isStuck() ? Vec.ZERO : wireFloor(displacementBt());
     }
 
     protected Vec wireVelocityFor(@NotNull Player viewer) {

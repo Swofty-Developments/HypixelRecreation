@@ -18,6 +18,8 @@ public final class VriConfig {
     public final boolean itemDrop;
     /** Fire parity on breaks: direct-break fizz + orphaned-fire removal. Default off. */
     public final boolean fireBreaks;
+    /** Hand ignition (flint and steel / fire charge); redstone, fire spread, dispensers and flaming projectiles are not. Default off. */
+    public final boolean tntIgnite;
 
     private VriConfig(Builder b) {
         blockBreakProgress = b.blockBreakProgress;
@@ -26,6 +28,7 @@ public final class VriConfig {
         itemPickup = b.itemPickup;
         itemDrop = b.itemDrop;
         fireBreaks = b.fireBreaks;
+        tntIgnite = b.tntIgnite;
     }
 
     public static Builder builder() { return new Builder(); }
@@ -33,7 +36,7 @@ public final class VriConfig {
     /** Everything on: {@link BlockDrops#VANILLA} drops, item physics from the profile. */
     public static VriConfig all() {
         return builder().blockBreakProgress(true)
-                .blockDrops(BlockDrops.VANILLA).itemPickup(true).itemDrop(true).fireBreaks(true).build();
+                .blockDrops(BlockDrops.VANILLA).itemPickup(true).itemDrop(true).fireBreaks(true).tntIgnite(true).build();
     }
 
     public static final class Builder {
@@ -43,6 +46,7 @@ public final class VriConfig {
         private boolean itemPickup;
         private boolean itemDrop;
         private boolean fireBreaks;
+        private boolean tntIgnite;
 
         Builder() {}
 
@@ -52,6 +56,7 @@ public final class VriConfig {
         public Builder itemPickup(boolean v) { itemPickup = v; return this; }
         public Builder itemDrop(boolean v) { itemDrop = v; return this; }
         public Builder fireBreaks(boolean v) { fireBreaks = v; return this; }
+        public Builder tntIgnite(boolean v) { tntIgnite = v; return this; }
 
         public VriConfig build() { return new VriConfig(this); }
     }

@@ -1,4 +1,5 @@
 package io.github.term4.polyp.mechanics.attribute;
+import io.github.term4.polyp.codegen.CheckResolveOrder;
 import io.github.term4.polyp.mechanics.attribute.source.Source;
 
 import io.github.term4.polyp.Services;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 /** Resolves AttributeConfig with context into plain values, and is the query a consumer reads. Mirrors DamageConfigResolver. */
+
+@CheckResolveOrder
 public final class AttributeConfigResolver {
 
     private AttributeConfigResolver() {}

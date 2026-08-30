@@ -15,8 +15,8 @@ import java.util.function.Function;
 
 /**
  * Immutable projectile config: a generic {@link #defaults} base plus per-type {@link ProjectileTypeConfig} overrides.
- * Presence in {@link #typeConfigs} enables a type at install. Resolution layers per-type override -&gt;
- * {@link #defaults} -&gt; the type's {@code defaultConfig()} -&gt; hard fallbacks.
+ * Presence in {@link #typeConfigs} arms a type's click trigger wherever this config resolves. Resolution layers
+ * per-type override -&gt; {@link #defaults} -&gt; the type's {@code defaultConfig()} -&gt; hard fallbacks.
  */
 public final class ProjectileConfig extends Config<ProjectileContext, ProjectileConfig> {
 

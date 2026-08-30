@@ -1,4 +1,4 @@
-package io.github.term4.polyp.mechanics.death;
+package io.github.term4.polyp.mechanics.damage;
 
 import io.github.term4.polyp.codegen.GenerateBuilder;
 import io.github.term4.polyp.config.Config;

@@ -1,6 +1,6 @@
 package io.github.term4.polyp.presets.vanilla;
 
-import io.github.term4.polyp.mechanics.death.DeathConfig;
+import io.github.term4.polyp.mechanics.damage.DeathConfig;
 
 /** Modern (26.1+) death/respawn cleanup defaults; death cleanup is version-neutral, so these match the 1.8 values. */
 public final class Death {

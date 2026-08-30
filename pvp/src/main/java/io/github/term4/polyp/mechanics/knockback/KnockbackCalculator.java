@@ -85,9 +85,7 @@ public final class KnockbackCalculator {
                 : null;
 
         // threaded onto the state ctx so every stage/component reads the same velocity
-        VelocityRule velRule = cfg.velocity();
-        if (velRule == null) velRule = services.profiles().resolve(t, MechanicsKeys.VELOCITY);
-        if (velRule == null) velRule = VelocityRule.DEFAULT;
+        VelocityRule velRule = KnockbackConfigResolver.effectiveVelocity(cfg.velocity(), t, services);
         Vec vel = velRule.estimate(VelocityContext.of(t, services.sprintTracker()));
 
         var state = new KnockbackPipeline.State(ctx.withVelocity(velRule), cfg, vel, kb, kbe, extraLevel);

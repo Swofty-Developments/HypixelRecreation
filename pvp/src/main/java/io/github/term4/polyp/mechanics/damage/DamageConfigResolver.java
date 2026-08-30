@@ -1,5 +1,6 @@
 package io.github.term4.polyp.mechanics.damage;
 
+import io.github.term4.polyp.codegen.CheckResolveOrder;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.config.FieldValue;
 import io.github.term4.polyp.mechanics.damage.types.DamageTypeConfig;
@@ -8,6 +9,8 @@ import net.minestom.server.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /** Resolves DamageConfig with context into plain values. Mirrors KnockbackConfigResolver. */
+
+@CheckResolveOrder
 public final class DamageConfigResolver {
 
     private DamageConfigResolver() {}

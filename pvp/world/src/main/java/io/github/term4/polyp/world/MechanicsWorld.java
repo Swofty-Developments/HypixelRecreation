@@ -193,6 +193,12 @@ public interface MechanicsWorld extends Block.Getter, ForwardingAudience, Taggab
 
     void setBlock(@NotNull Point pos, @NotNull Block block);
 
+    /**
+     * 1.8 neighbor physics for a gameplay change at {@code pos}. Instance worlds no-op - their {@code setBlock}
+     * already chains the base pipeline's rule updates; virtual worlds override.
+     */
+    default void applyPhysics(@NotNull Point pos) {}
+
     /** One batch; a virtual world groups the client updates per section. */
     default void setBlocks(@NotNull Map<Point, Block> blocks) {
         blocks.forEach(this::setBlock);
@@ -203,6 +209,16 @@ public interface MechanicsWorld extends Block.Getter, ForwardingAudience, Taggab
     boolean isChunkLoaded(int chunkX, int chunkZ);
 
     @NotNull DimensionType dimension();
+
+    /** Stored block light (0-15) - a virtual world reads its own computed light where it differs from base. */
+    default int getBlockLight(int x, int y, int z) {
+        return instance().getBlockLight(x, y, z);
+    }
+
+    /** Stored sky EXPOSURE (0-15, time-independent - vanilla subtracts a time-of-day darken at query time). */
+    default int getSkyLight(int x, int y, int z) {
+        return instance().getSkyLight(x, y, z);
+    }
 
     /** Swept box move against the world; unloaded chunks read SOLID (the safe default - exposure rays, movement). */
     PhysicsResult sweep(@NotNull BoundingBox box, @NotNull Pos position, @NotNull Vec velocity,

@@ -1,12 +1,14 @@
 package io.github.term4.polyp.platform.fixes;
 
 import io.github.term4.polyp.MechanicsKeys;
-import io.github.term4.polyp.MechanicsModule;
+import io.github.term4.polyp.ScopedSystem;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.platform.fixes.client.EquipmentSlotsFix;
 import io.github.term4.polyp.platform.fixes.client.InventorySync;
 import io.github.term4.polyp.platform.fixes.client.LegacyFireDouseFix;
 import io.github.term4.polyp.platform.fixes.client.LegacyPlacementGhostFix;
+import io.github.term4.polyp.platform.fixes.client.LegacyUseOnBlockFix;
+import io.github.term4.polyp.platform.fixes.client.UseItemInterruptFix;
 import io.github.term4.polyp.platform.fixes.client.LegacySelfPlacementFix;
 import io.github.term4.polyp.platform.fixes.client.LegacyTabCompleteFix;
 import io.github.term4.polyp.platform.fixes.visuals.VisualsConfig;
@@ -24,28 +26,19 @@ import org.jetbrains.annotations.Nullable;
  * <p>The self-meta smoothing fix is delivered by the custom player override, so it is armed by
  * {@code MetaFix.installListeners()} from {@code Polyp.init}, not here.
  */
-public final class FixesSystem implements MechanicsModule {
+public final class FixesSystem extends ScopedSystem<FixesConfig> {
 
-    private final Polyp polyp;
-    private final FixesConfig config;
     private final EventNode<@NotNull Event> node;
     private final LegacyArrowVisibility legacyArrowVisibility;
 
     public FixesSystem(Polyp polyp, FixesConfig config) {
-        this.polyp = polyp;
-        this.config = config;
+        super(polyp, MechanicsKeys.FIXES, config);
         this.node = EventNode.all("polyp:fixes");
         this.legacyArrowVisibility = new LegacyArrowVisibility(this);
     }
 
     public EventNode<@NotNull Event> node() { return node; }
-    public FixesConfig config() { return config; }
     public LegacyArrowVisibility legacyArrowVisibility() { return legacyArrowVisibility; }
-
-    /** Effective config for {@code subject}: the scoped profile, else the install config. */
-    public FixesConfig configFor(@Nullable Entity subject) {
-        return polyp.profiles().resolveOr(subject, MechanicsKeys.FIXES, config);
-    }
 
     public @Nullable LegacyArrowVisibilityConfig legacyArrowVisibilityConfig(@Nullable Entity subject) {
         VisualsConfig v = configFor(subject).visuals();
@@ -72,10 +65,12 @@ public final class FixesSystem implements MechanicsModule {
 
     public static FixesSystem install(Polyp polyp, FixesConfig cfg) {
         FixesSystem system = new FixesSystem(polyp, cfg);
-        polyp.register(system);
         system.legacyArrowVisibility.install(system.node);
         LegacyFireDouseFix.install(system.node, system);
         LegacyPlacementGhostFix.install(system.node);
+        LegacyUseOnBlockFix.install(system.node);
+        UseItemInterruptFix.install(system.node);
+        BlockUpdateOrderFix.install();
         // Below ride server-wide listeners / send overrides, so they gate on the install config and cannot vary per scope.
         // Self-placement wraps the STOCK placement listener; an app that replaces that listener re-installs LAST with
         // its own as the delegate.
@@ -83,8 +78,7 @@ public final class FixesSystem implements MechanicsModule {
         if (enabled(cfg.equipmentFix())) EquipmentSlotsFix.install();
         if (enabled(cfg.legacyTabCompleteFix())) LegacyTabCompleteFix.install();
         if (enabled(cfg.inventorySync())) InventorySync.install(system.node);
-        polyp.install(system.node);
-        return system;
+        return polyp.installModule(system);
     }
 
     private static boolean enabled(@Nullable FixToggleConfig cfg) {

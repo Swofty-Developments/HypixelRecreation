@@ -16,6 +16,8 @@ include(":loader")
 include(":pvp")
 include(":codegen")
 project(":codegen").projectDir = file("pvp/codegen")
+include(":world")
+project(":world").projectDir = file("pvp/world")
 
 include(":type.prototypelobby")
 include(":type.thefarmingislands")

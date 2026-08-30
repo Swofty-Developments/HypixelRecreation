@@ -17,6 +17,7 @@ import io.github.term4.polyp.platform.compatibility.Compat18;
 import io.github.term4.polyp.platform.fixes.Fixes18;
 import io.github.term4.polyp.platform.fixes.FixesSystem;
 import io.github.term4.polyp.presets.Preset;
+import io.github.term4.polyp.presets.hypixel.Tnt;
 import io.github.term4.polyp.vri.Vri;
 import io.github.term4.polyp.vri.VriConfig;
 import lombok.Getter;
@@ -252,6 +253,7 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
         polyp.profiles().setGlobal(Preset.HYPIXEL.profile().toBuilder()
                 .set(MechanicsKeys.COMPAT, Compat18.config())
                 .set(MechanicsKeys.FIXES, Fixes18.config())
+                .set(MechanicsKeys.TNT, Tnt.config().toBuilder().igniteOnPlace(false).build())
                 .build());
         AttackSystem.install(polyp);
         DamageSystem.install(polyp);

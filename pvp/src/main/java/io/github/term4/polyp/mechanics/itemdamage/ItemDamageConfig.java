@@ -1,4 +1,4 @@
-package io.github.term4.polyp.mechanics.item;
+package io.github.term4.polyp.mechanics.itemdamage;
 
 import net.kyori.adventure.key.Key;
 import net.minestom.server.item.Material;

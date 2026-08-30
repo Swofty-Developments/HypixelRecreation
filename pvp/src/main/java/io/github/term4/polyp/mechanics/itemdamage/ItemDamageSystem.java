@@ -1,4 +1,4 @@
-package io.github.term4.polyp.mechanics.item;
+package io.github.term4.polyp.mechanics.itemdamage;
 
 import io.github.term4.polyp.MechanicsKeys;
 import io.github.term4.polyp.MechanicsModule;
@@ -80,9 +80,7 @@ public final class ItemDamageSystem implements MechanicsModule {
     }
 
     public static ItemDamageSystem install(Polyp polyp) {
-        ItemDamageSystem system = new ItemDamageSystem(polyp);
-        polyp.register(system);
-        polyp.install(system.node);
+        ItemDamageSystem system = polyp.installModule(new ItemDamageSystem(polyp));
         // registered once for the JVM (TickSystem has no removal); dispatches through the live registry
         if (TICK_HOOK.compareAndSet(false, true)) {
             TickSystem.register(TickPhase.DEFAULT, ctx -> {

@@ -38,6 +38,7 @@ import net.minestom.server.tag.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.OptionalDouble;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
@@ -56,8 +57,10 @@ public final class MotionTracker implements Tracker {
     private static final Tag<Boolean> LAUNCHED = Tag.Transient("polyp:launched");
     private static final Tag<Vec> MOVE_VELOCITY = Tag.Transient("polyp:move-velocity");
     private static final Tag<MovePrev> MOVE_PREV = Tag.Transient("polyp:move-prev");
-    /** Instance tick of the last move packet; gates the motY sim under {@code motYOnMovePacket}. */
-    private static final Tag<Long> LAST_MOVE_TICK = Tag.Transient("polyp:last-move-tick");
+    /** Flying packets surfaced as move events last tick; the 1.8 law steps the physics once per packet. */
+    private static final Tag<Integer> MOVE_PACKETS = Tag.Transient("polyp:move-packets");
+    /** Physics steps taken - frozen with the client under the 1.8 law. Every residual bleeds by this clock. */
+    private static final Tag<Long> PHYS_TICKS = Tag.Transient("polyp:phys-ticks");
     private static final Tag<LaunchStamp> LAUNCH_STAMP = Tag.Transient("polyp:launch-stamp");
     /**
      * Server-side horizontal {@code motX/motZ} (b/t): the victim's own simulated motion (the {@code bF()} sprint-jump
@@ -128,12 +131,12 @@ public final class MotionTracker implements Tracker {
     private record MotState(Vec motH, long sinceTick, boolean airborne) {}
 
     /**
-     * Ticked {@code motY} state. {@code clamped} = vanilla (0.005 apex reseed); {@code raw} = no reseed ({@code clampY(0)}
+     * Ticked {@code motY} state. {@code zeroed} = vanilla (0.005 apex reseed); {@code raw} = no reseed ({@code zeroBelowY(0)}
      * presets). Index {@code [0]} = latest end-of-tick; older slots back the {@code launchOffset} lookback.
      */
     private static final class VertSim {
         static final int HISTORY = 4;
-        final double[] clamped = new double[HISTORY];
+        final double[] zeroed = new double[HISTORY];
         final double[] raw = new double[HISTORY];
         /** Last {@code move()} probe clamped a descent - vanilla's collision {@code onGround}. */
         boolean collided;
@@ -172,7 +175,25 @@ public final class MotionTracker implements Tracker {
         node.addListener(PlayerSpawnEvent.class, e -> clearTransient(e.getPlayer()));
         // same-instance teleport (pearl, /tp, shard hop): drop ONLY the position anchor, or the first post-teleport
         // move reconstructs the jump as one huge velocity. The client keeps its real motion, so the rest stays valid.
-        node.addListener(EntityTeleportEvent.class, e -> { if (e.getEntity() instanceof Player p) p.removeTag(MOVE_PREV); });
+        node.addListener(EntityTeleportEvent.class, e -> {
+            if (!(e.getEntity() instanceof Player p)) return;
+            p.removeTag(MOVE_PREV);
+            // 26 zeroes an absolute teleport's delta (teleportSetPosition); 1.8 freezes at the teleport
+            // (checkMovement=false gates l()) and carries mot into the confirming packet's step
+            if (!VelocityRule.motYOnMovePacketEnabled(profiles.resolve(p, MechanicsKeys.VELOCITY))) {
+                VertSim sim = p.getTag(VERT_SIM);
+                if (sim != null) {
+                    Arrays.fill(sim.zeroed, 0);
+                    Arrays.fill(sim.raw, 0);
+                    sim.collided = false;
+                }
+                p.removeTag(MOT_H);
+                p.removeTag(ENTITY_PUSH);
+                p.removeTag(FLOW_PUSH);
+            } else {
+                p.removeTag(MOVE_PACKETS); // the in-flight step belonged to the pre-teleport position
+            }
+        });
         return node;
     }
 
@@ -182,7 +203,8 @@ public final class MotionTracker implements Tracker {
         p.removeTag(LAUNCHED);
         p.removeTag(MOVE_VELOCITY);
         p.removeTag(MOVE_PREV);
-        p.removeTag(LAST_MOVE_TICK);
+        p.removeTag(MOVE_PACKETS);
+        p.removeTag(PHYS_TICKS);
         p.removeTag(LAUNCH_STAMP);
         p.removeTag(MOT_H);
         p.removeTag(ENTITY_PUSH);
@@ -195,7 +217,8 @@ public final class MotionTracker implements Tracker {
     private void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
         long now = TickSystem.tick(p);
-        p.setTag(LAST_MOVE_TICK, now);
+        Integer packets = p.getTag(MOVE_PACKETS);
+        p.setTag(MOVE_PACKETS, packets == null ? 1 : packets + 1);
         boolean nowOnGround = e.isOnGround();
         Pos newPos = e.getNewPosition();
         // compare vs the previous packet so transition detection is independent of event/move ordering
@@ -211,7 +234,7 @@ public final class MotionTracker implements Tracker {
 
         // primary landing anchor; tick() only trails this
         if (nowOnGround || p.isFlying()) {
-            if (nowOnGround) freezeOnLanding(p, now);
+            if (nowOnGround) freezeOnLanding(p, physTicks(p));
             p.removeTag(AIR_START_TICK);
             p.removeTag(LAUNCHED);
             return;
@@ -231,17 +254,18 @@ public final class MotionTracker implements Tracker {
 
     private static void latchLaunch(Player p, long now, double yaw) {
         boolean sprinting = p.isSprinting();
-        Vec residual = residualAt(p, p.getTag(MOT_H), now);
+        long phys = physTicks(p);
+        Vec residual = residualAt(p, p.getTag(MOT_H), phys);
         Vec boost = sprinting ? sprintJumpImpulse(yaw) : Vec.ZERO;
         Vec seedH = residual.add(boost);
-        p.setTag(MOT_H, new MotState(seedH, now, true));
+        p.setTag(MOT_H, new MotState(seedH, phys, true));
         p.setTag(LAUNCHED, true);
         p.setTag(LAUNCH_STAMP, new LaunchStamp(now, yaw, sprinting, residual, seedH));
         // a rising departure seeds motY (jumps + ground KB alike), like bF() firing after m()
         VertSim sim = p.getTag(VERT_SIM);
         if (sim != null) {
             double seedY = jumpSeed(VelocityConfig.JUMP_VELOCITY, p.getEffectLevel(PotionEffect.JUMP_BOOST));
-            sim.clamped[0] = seedY;
+            sim.zeroed[0] = seedY;
             sim.raw[0] = seedY;
             sim.collided = false;
         }
@@ -262,12 +286,12 @@ public final class MotionTracker implements Tracker {
         return Directions.fromYaw(yaw).mul(SPRINT_IMPULSE);
     }
 
-    /** The anchored residual bled to {@code now}, then the near-zero clamp so a stale residual snaps to 0. */
+    /** The anchored residual bled to physics step {@code now}, then the near-zero clamp so a stale residual snaps to 0. */
     private static Vec residualAt(Player p, MotState s, long now) {
         if (s == null) return Vec.ZERO;
         int ticks = (int) Math.max(0, now - s.sinceTick());
         Vec decayed = s.motH().mul(Math.pow(TickScaler.dragPerTick(p, frictionPerTick(p, s.airborne())), ticks));
-        return new Vec(clampNearZero(decayed.x()), 0, clampNearZero(decayed.z()));
+        return new Vec(zeroBelow(decayed.x()), 0, zeroBelow(decayed.z()));
     }
 
     /** Both the {@code MOT_H} and entity-push residuals bleed by this. */
@@ -312,66 +336,87 @@ public final class MotionTracker implements Tracker {
         p.setTag(MOT_H, new MotState(residualAt(p, s, now), now, false));
     }
 
+    /** Burst catch-up bound; vanilla runs one {@code l()} per queued packet. */
+    private static final int STEP_CAP = 8;
+
     private void tick(TickContext ctx) {
         for (Player p : ctx.world().players()) {
             if (!ctx.owns(p)) continue;
-            long now = TickSystem.tick(p);
             // fallback, a tick behind onMove: catches status-only onGround packets (no PlayerMoveEvent)
             if (p.isOnGround()) {
-                freezeOnLanding(p, now);
+                freezeOnLanding(p, physTicks(p));
                 p.removeTag(AIR_START_TICK);
                 p.removeTag(LAUNCHED);
             }
-            // detect the env before the sim so friction/gravity match
             VelocityRule rule = profiles.resolve(p, MechanicsKeys.VELOCITY);
             ClimbModel climbModel = VelocityRule.climbModel(rule);
             boolean modernBlocks = VelocityRule.modernBlockPhysicsEnabled(rule);
             FluidFlow.Model flowModel = VelocityRule.flowModel(rule);
             p.setTag(FLOW_MODEL, flowModel);
-            Env env = tickEnvironment(p, now, environmentOf(p,
+            Integer moved = p.getTag(MOVE_PACKETS);
+            if (moved != null) p.removeTag(MOVE_PACKETS);
+            // 1.8 runs the whole living update once per flying packet (PlayerConnection.a -> l() -> m());
+            // a flag-only C03 never surfaces as a move event, but a grounded flag is proof the stream flows
+            // - a frozen client's last packet rode mid-air. 26 steps once per server tick, packets or not.
+            int steps = !VelocityRule.motYOnMovePacketEnabled(rule) ? 1
+                    : moved != null ? Math.min(moved, STEP_CAP)
+                    : p.isOnGround() ? 1 : 0;
+            if (steps == 0) {
+                // its own update is frozen, but neighbors' collide() still shoves both parties - accrued unbled
+                if (VelocityRule.entityPushEnabled(rule)) accruePushFrozen(p);
+                continue;
+            }
+            // detect the env before the sim so friction/gravity match
+            Env env = tickEnvironment(p, physTicks(p), environmentOf(p,
                     VelocityRule.fluidPhysicsEnabled(rule),
                     VelocityRule.climbPhysicsEnabled(rule),
                     VelocityRule.webPhysicsEnabled(rule),
                     climbModel, modernBlocks));
             // vanilla order: clamp, move, gravity, then entity push
-            // a move processed during the previous dispatch stamps now-1 (this runs PRE_DISPATCH)
-            Long lastMove = p.getTag(LAST_MOVE_TICK);
-            boolean hold = VelocityRule.motYOnMovePacketEnabled(rule) && (lastMove == null || lastMove < now - 1);
-            tickVertSim(p, env, climbModel, modernBlocks, flowModel, hold);
-            // web zeroes everything, push included
-            if (env == Env.WEB || !VelocityRule.entityPushEnabled(rule)) p.removeTag(ENTITY_PUSH);
-            else tickEntityPush(p);
-            // ticked even out of water so the residual bleeds out
-            if (VelocityRule.flowPushEnabled(rule))
-                tickFlowPush(p, env, flowModel, VelocityRule.flowLavaEnabled(rule));
-            else p.removeTag(FLOW_PUSH);
+            for (int i = 0; i < steps; i++) {
+                tickVertSim(p, env, climbModel, modernBlocks, flowModel);
+                // web zeroes everything, push included
+                if (env == Env.WEB || !VelocityRule.entityPushEnabled(rule)) p.removeTag(ENTITY_PUSH);
+                else tickEntityPush(p);
+                // ticked even out of water so the residual bleeds out
+                if (VelocityRule.flowPushEnabled(rule))
+                    tickFlowPush(p, env, flowModel, VelocityRule.flowLavaEnabled(rule));
+                else p.removeTag(FLOW_PUSH);
+            }
+            p.setTag(PHYS_TICKS, physTicks(p) + steps);
         }
     }
 
+    private static long physTicks(Player p) {
+        Long t = p.getTag(PHYS_TICKS);
+        return t == null ? 0 : t;
+    }
+
     /** One vanilla {@code m()} travel step for the ticked motY: clamp, {@code move()} collide-zero, gravity - or the
-     *  fluid / web / ladder vertical law when {@code env} is not {@link Env#NORMAL}. {@code hold} freezes the step. */
-    private static void tickVertSim(Player p, Env env, ClimbModel climbModel, boolean modernBlocks, FluidFlow.Model flowModel, boolean hold) {
+     *  fluid / web / ladder vertical law when {@code env} is not {@link Env#NORMAL}. */
+    private static void tickVertSim(Player p, Env env, ClimbModel climbModel, boolean modernBlocks, FluidFlow.Model flowModel) {
         VertSim sim = p.getTag(VERT_SIM);
         if (sim == null) p.setTag(VERT_SIM, sim = new VertSim());
-        if (hold) return;
         if (p.isFlying() || p.getInstance() == null) {
-            shift(sim.clamped, 0);
+            shift(sim.zeroed, 0);
             shift(sim.raw, 0);
             sim.collided = p.isOnGround();
             return;
         }
         Aerodynamics aero = p.getAerodynamics();
         double g = aero.gravity(), s = aero.verticalAirResistance();
-        double c = sim.clamped[0], r = sim.raw[0];
+        double c = sim.zeroed[0], r = sim.raw[0];
 
-        if (env == Env.WEB) { shift(sim.clamped, 0); shift(sim.raw, 0); sim.collided = false; return; }
+        if (env == Env.WEB) { shift(sim.zeroed, 0); shift(sim.raw, 0); sim.collided = false; return; }
 
         // vanilla order: per-env start-of-tick adjust, then move() collides, then the per-env step
-        if (env == Env.NORMAL && Math.abs(c) < VelocityConfig.CLAMP) c = 0;
+        if (env == Env.NORMAL && Math.abs(c) < VelocityConfig.ZERO_BELOW) c = 0;
         if (env == Env.LADDER) {
             c = Math.max(-LADDER_CLAMP, c); r = Math.max(-LADDER_CLAMP, r);
             if (p.isSneaking()) { if (c < 0) c = 0; if (r < 0) r = 0; } // sneak-hold
         }
+        // vanilla positionChanged is the SERVER move clipping, not the client's WASD
+        boolean clipped = (env == Env.WATER || env == Env.LAVA || env == Env.LADDER) && motClipped(p);
         // the client's grounded flag lands a descent probe-free: the swept probe misses from flush-on-floor
         // positions, and without the flag a move-streaming grounded client sawtooths into false free-fall
         boolean grounded = p.isOnGround();
@@ -381,42 +426,62 @@ public final class MotionTracker implements Tracker {
         boolean collidedR = r < 0 && grounded || colR != null && colR.isOnGround();
         if (collidedC) c = landMotY(p, colC != null ? colC.newPosition() : p.getPosition(), c, modernBlocks);
         if (collidedR) r = landMotY(p, colR != null ? colR.newPosition() : p.getPosition(), r, modernBlocks);
-        // climb-up: positionDelta.y is the ascent signal only, the model sets the value
+        // vanilla move() zeroes motY on ANY vertical clip - ceilings too (Block.a default)
+        PhysicsResult upC = c > 0 ? CollisionUtils.handlePhysics(p, new Vec(0, c, 0)) : null;
+        PhysicsResult upR = r > 0 ? (r == c ? upC : CollisionUtils.handlePhysics(p, new Vec(0, r, 0))) : null;
+        if (upC != null && upC.collisionY()) c = 0;
+        if (upR != null && upR.collisionY()) r = 0;
         if (env == Env.LADDER) {
-            OptionalDouble climbUp = climbModel.climbUpMotY(positionDelta(p).y());
+            OptionalDouble climbUp = climbModel.climbUpMotY(positionDelta(p).y(), clipped);
             if (climbUp.isPresent()) { c = climbUp.getAsDouble(); r = climbUp.getAsDouble(); }
         }
         switch (env) {
-            case WATER -> { double wg = TickScaler.gravityPerTick(p, flowModel.waterGravity(p.isSprinting())); double k = fluidSwim(p); double bump = TickScaler.impulse(p, LIQUID_EDGE_BUMP); double dr = TickScaler.dragPerTick(p, WATER_VERTICAL); boolean eb = edgeBump(p); shift(sim.clamped, eb ? bump : c * dr - wg + k); shift(sim.raw, eb ? bump : r * dr - wg + k); }
-            case LAVA  -> { double k = fluidSwim(p); double bump = TickScaler.impulse(p, LIQUID_EDGE_BUMP); double dr = TickScaler.dragPerTick(p, LAVA_VERTICAL); double fg = TickScaler.gravityPerTick(p, FLUID_GRAVITY); boolean eb = edgeBump(p); shift(sim.clamped, eb ? bump : c * dr - fg + k); shift(sim.raw, eb ? bump : r * dr - fg + k); }
+            // swim is added BEFORE travel (bG() in m()), so it rides through the drag
+            case WATER -> { double wg = TickScaler.gravityPerTick(p, flowModel.waterGravity(p.isSprinting())); double k = fluidSwim(p, flowModel); double bump = TickScaler.impulse(p, LIQUID_EDGE_BUMP); double dr = TickScaler.dragPerTick(p, WATER_VERTICAL); boolean eb = edgeBump(p, clipped); shift(sim.zeroed, eb ? bump : (c + k) * dr - wg); shift(sim.raw, eb ? bump : (r + k) * dr - wg); }
+            case LAVA  -> { double k = fluidSwim(p, flowModel); double bump = TickScaler.impulse(p, LIQUID_EDGE_BUMP); double dr = TickScaler.dragPerTick(p, LAVA_VERTICAL); double fg = TickScaler.gravityPerTick(p, FLUID_GRAVITY); boolean eb = edgeBump(p, clipped); shift(sim.zeroed, eb ? bump : (c + k) * dr - fg); shift(sim.raw, eb ? bump : (r + k) * dr - fg); }
             // water drag, then the column drag toward its cap
-            case BUBBLE -> { double wg = TickScaler.gravityPerTick(p, flowModel.waterGravity(p.isSprinting())); double dr = TickScaler.dragPerTick(p, WATER_VERTICAL); boolean dn = bubbleDown(p); shift(sim.clamped, bubbleStep(p, c * dr - wg, dn)); shift(sim.raw, bubbleStep(p, r * dr - wg, dn)); }
+            case BUBBLE -> { double wg = TickScaler.gravityPerTick(p, flowModel.waterGravity(p.isSprinting())); double dr = TickScaler.dragPerTick(p, WATER_VERTICAL); boolean dn = bubbleDown(p); shift(sim.zeroed, bubbleStep(p, c * dr - wg, dn)); shift(sim.raw, bubbleStep(p, r * dr - wg, dn)); }
             // floor a descent at the slide speed
-            case HONEY -> { double slide = TickScaler.impulse(p, HONEY_SLIDE); shift(sim.clamped, Math.max(airStep(p, c, g, s), slide)); shift(sim.raw, Math.max(airStep(p, r, g, s), slide)); }
-            default    -> { shift(sim.clamped, airStep(p, c, g, s)); shift(sim.raw, airStep(p, r, g, s)); } // normal + ladder
+            case HONEY -> { double slide = TickScaler.impulse(p, HONEY_SLIDE); shift(sim.zeroed, Math.max(airStep(p, c, g, s), slide)); shift(sim.raw, Math.max(airStep(p, r, g, s), slide)); }
+            default    -> { shift(sim.zeroed, airStep(p, c, g, s)); shift(sim.raw, airStep(p, r, g, s)); } // normal + ladder
         }
         sim.collided = collidedC;
     }
 
-    /** Vanilla swim input in a fluid: jump rises only while airborne. */
-    private static double fluidSwim(Player p) {
+    /** The pre-travel swim input ({@code bG()}): jump {@code +0.04} even when grounded; sneak-down is 26-only. */
+    private static double fluidSwim(Player p, FluidFlow.Model model) {
         PlayerInputs in = p.inputs();
-        double up = !p.isOnGround() && in.jump() ? FLUID_SWIM_STEP : 0;
-        double down = in.shift() ? FLUID_SWIM_STEP : 0;
+        double up = in.jump() ? FLUID_SWIM_STEP : 0;
+        double down = model.sneakSwims() && in.shift() ? FLUID_SWIM_STEP : 0;
         return TickScaler.impulse(p, up - down);
     }
 
     /**
-     * Vanilla water/lava edge-bump (26 {@code jumpOutOfFluid}). A HEURISTIC reconstructing the
-     * {@code horizontalCollision} Minestom doesn't track: movement key held + ~0 horizontal displacement + headroom.
+     * Vanilla water/lava edge-bump (1.8 {@code positionChanged && c()}; 26 {@code jumpOutOfFluid}): the tracked
+     * mot clipped a wall and the hop target is collision- and liquid-free.
      */
-    private static boolean edgeBump(Player p) {
-        PlayerInputs in = p.inputs();
-        if (!(in.forward() || in.backward() || in.left() || in.right())) return false;
-        Vec d = positionDelta(p);
-        if (d.x() * d.x() + d.z() * d.z() > 0.0004) return false; // displaced horizontally -> not blocked
-        Instance inst = p.getInstance();
-        return inst != null && !CollisionUtils.handlePhysics(p, new Vec(0, 0.6, 0)).collisionY();
+    private static boolean edgeBump(Player p, boolean clipped) {
+        if (!clipped || p.getInstance() == null) return false;
+        if (CollisionUtils.handlePhysics(p, new Vec(0, 0.6, 0)).collisionY()) return false;
+        return !BlockContact.scanCells(MechanicsWorld.viewed(p), p.getPosition().add(0, 0.6, 0),
+                p.getBoundingBox(), 0, IS_WATER.or(IS_LAVA));
+    }
+
+    /** Vanilla {@code positionChanged}, reconstructed: this step's server-tracked horizontal mot, clipped by a wall. */
+    private static boolean motClipped(Player p) {
+        if (p.getInstance() == null) return false;
+        Vec h = trackedHorizontal(p);
+        if (h.isZero()) return false;
+        PhysicsResult r = CollisionUtils.handlePhysics(p, new Vec(h.x(), 0, h.z()));
+        return r.collisionX() || r.collisionZ();
+    }
+
+    /** The composed server motX/motZ (residual + entity push + flow) - what a fold reads. */
+    private static Vec trackedHorizontal(Player p) {
+        Vec h = residualAt(p, p.getTag(MOT_H), physTicks(p));
+        Vec push = entityPush(p);
+        Vec flow = flowPush(p);
+        return new Vec(h.x() + push.x() + flow.x(), 0, h.z() + push.z() + flow.z());
     }
 
     /** 26 {@code Entity.handleOnInsideBubbleColumn}: motY drags toward the column cap. */
@@ -517,9 +582,9 @@ public final class MotionTracker implements Tracker {
         return Math.max(-limit, Math.min(limit, v));
     }
 
-    /** Vanilla {@code m()} near-zero clamp: zeroes one component whose magnitude is below {@link VelocityConfig#CLAMP}. */
-    private static double clampNearZero(double v) {
-        return Math.abs(v) < VelocityConfig.CLAMP ? 0.0 : v;
+    /** Vanilla {@code m()}: zeroes a component whose magnitude is below {@link VelocityConfig#ZERO_BELOW}. */
+    private static double zeroBelow(double v) {
+        return Math.abs(v) < VelocityConfig.ZERO_BELOW ? 0.0 : v;
     }
 
     private static void shift(double[] h, double v) {
@@ -535,13 +600,12 @@ public final class MotionTracker implements Tracker {
      */
     public static void foldDelivered(Entity entity, Vec bt) {
         if (!(entity instanceof Player p)) return;
-        long now = TickSystem.tick(p);
-        p.setTag(MOT_H, new MotState(new Vec(bt.x(), 0, bt.z()), now, !p.isOnGround()));
+        p.setTag(MOT_H, new MotState(new Vec(bt.x(), 0, bt.z()), physTicks(p), !p.isOnGround()));
         p.removeTag(ENTITY_PUSH);
         p.removeTag(FLOW_PUSH);
         VertSim sim = p.getTag(VERT_SIM);
         if (sim == null) p.setTag(VERT_SIM, sim = new VertSim());
-        sim.clamped[0] = bt.y();
+        sim.zeroed[0] = bt.y();
         sim.raw[0] = bt.y();
         sim.collided = false;
         if (bt.y() > 0) p.setTag(LAUNCHED, true);
@@ -554,13 +618,13 @@ public final class MotionTracker implements Tracker {
         return sim != null && sim.collided;
     }
 
-    /** {@code lookback} reads that many end-of-tick values back; {@code clamped} picks the apex-reseed variant. */
-    public static @Nullable Double serverMotY(Entity entity, int lookback, boolean clamped) {
+    /** {@code lookback} reads that many end-of-tick values back; {@code zeroed} picks the apex-reseed variant. */
+    public static @Nullable Double serverMotY(Entity entity, int lookback, boolean zeroed) {
         if (!(entity instanceof Player p)) return null;
         VertSim sim = p.getTag(VERT_SIM);
         if (sim == null) return null;
         int i = Math.min(Math.max(lookback, 0), VertSim.HISTORY - 1);
-        return clamped ? sim.clamped[i] : sim.raw[i];
+        return zeroed ? sim.zeroed[i] : sim.raw[i];
     }
 
     // entity push residual
@@ -576,7 +640,15 @@ public final class MotionTracker implements Tracker {
 
     /** Vanilla per-tick order: travel bleeds the existing residual, then {@code bL()} adds this tick's pushes raw. */
     private static void tickEntityPush(Player p) {
-        Vec acc = bleed(p, entityPush(p)).add(pushesFor(p));
+        Vec acc = bleed(p, entityPush(p)).add(pushesFor(p, true));
+        if (acc.isZero()) p.removeTag(ENTITY_PUSH);
+        else p.setTag(ENTITY_PUSH, acc);
+    }
+
+    // collide() shoves both parties, so a frozen client keeps taking neighbors' pushes; its own travel
+    // never runs, so nothing bleeds
+    private static void accruePushFrozen(Player p) {
+        Vec acc = entityPush(p).add(pushesFor(p, false));
         if (acc.isZero()) p.removeTag(ENTITY_PUSH);
         else p.setTag(ENTITY_PUSH, acc);
     }
@@ -585,11 +657,11 @@ public final class MotionTracker implements Tracker {
     private static Vec bleed(Player p, Vec acc) {
         if (acc.isZero()) return acc;
         Vec decayed = acc.mul(frictionPerTick(p, !p.isOnGround()));
-        return new Vec(clampNearZero(decayed.x()), clampNearZero(decayed.y()), clampNearZero(decayed.z()));
+        return new Vec(zeroBelow(decayed.x()), zeroBelow(decayed.y()), zeroBelow(decayed.z()));
     }
 
     /** Vanilla {@code Entity.collide} from every overlapping living entity. */
-    private static Vec pushesFor(Player p) {
+    private static Vec pushesFor(Player p, boolean selfStepping) {
         var instance = p.getInstance();
         if (instance == null) return Vec.ZERO;
         var range = p.getBoundingBox().expand(PUSH_GROW, 0, PUSH_GROW);
@@ -609,8 +681,10 @@ public final class MotionTracker implements Tracker {
             double norm = Math.sqrt(absMax);
             double scale = Math.min(1.0, 1.0 / norm) / norm * PUSH_IMPULSE;
 
-            // a non-player living pushes only every other tick
-            int passes = other instanceof Player || other.getAliveTicks() % 2 != 0 ? 2 : 1;
+            // one pass per party whose update runs: ours (when stepping) plus theirs - CraftBukkit skips
+            // non-player collisions every other tick
+            int passes = (selfStepping ? 1 : 0)
+                    + (other instanceof Player || other.getAliveTicks() % 2 != 0 ? 1 : 0);
             px -= dx * scale * passes;
             pz -= dz * scale * passes;
         }
@@ -696,7 +770,7 @@ public final class MotionTracker implements Tracker {
      */
     public static Vec horizontalMot(Entity entity, int tickOffset) {
         if (!(entity instanceof Player p)) return Vec.ZERO;
-        return residualAt(p, p.getTag(MOT_H), TickSystem.tick(p) + tickOffset);
+        return residualAt(p, p.getTag(MOT_H), physTicks(p) + tickOffset);
     }
 
     /**
@@ -707,9 +781,9 @@ public final class MotionTracker implements Tracker {
         if (!(entity instanceof Player p)) return;
         MotState s = p.getTag(MOT_H);
         if (s == null) return;
-        long now = TickSystem.tick(p);
-        Vec bled = residualAt(p, s, now);
-        p.setTag(MOT_H, new MotState(bled.mul(factor), now, s.airborne()));
+        long phys = physTicks(p);
+        Vec bled = residualAt(p, s, phys);
+        p.setTag(MOT_H, new MotState(bled.mul(factor), phys, s.airborne()));
     }
 
     /** Move-delta velocity (b/t): players via the per-move snapshot, others via entity velocity. */
@@ -757,7 +831,7 @@ public final class MotionTracker implements Tracker {
     /** The ticked sim's latest value, else the analytic gravity arc. Unlike {@link #positionDelta} it keeps accelerating, so a high-ping fall is probed at the depth vanilla sees. */
     private static double serverSimMotY(Player p, double g, double s) {
         VertSim sim = p.getTag(VERT_SIM);
-        if (sim != null) return sim.clamped[0];
+        if (sim != null) return sim.zeroed[0];
         int air = ticksInAir(p);
         double vy = launched(p) ? VelocityConfig.JUMP_VELOCITY : 0.0;
         // air is in server ticks, so step with TPS-scaled gravity/drag to match the sim

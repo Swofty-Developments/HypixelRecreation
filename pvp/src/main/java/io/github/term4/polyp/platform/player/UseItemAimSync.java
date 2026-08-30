@@ -28,9 +28,16 @@ final class UseItemAimSync {
 
     private @Nullable ClientUseItemPacket held;
     private long heldAt;
+    // re-held re-feeds get a fresh instance per flying packet; an identity-tracking re-feeder (lag sim) then never passes the use
+    private final ClientPacket[] emitted = new ClientPacket[4];
+    private int emittedIndex;
 
     /** Routes one arriving packet to {@code out}, possibly holding/patching a use packet. {@code gate} = the knob + legacy check, read at use arrival. */
-    void intercept(ClientPacket packet, BooleanSupplier gate, Consumer<ClientPacket> out) {
+    synchronized void intercept(ClientPacket packet, BooleanSupplier gate, Consumer<ClientPacket> out) {
+        if (packet instanceof ClientUseItemPacket && wasEmitted(packet)) {
+            out.accept(packet);
+            return;
+        }
         if (held != null && System.nanoTime() - heldAt > HOLD_TIMEOUT_NANOS) releaseUnpatched(out);
         if (packet instanceof ClientUseItemPacket use) {
             if (held != null) releaseUnpatched(out); // a vanilla 1.8 client can't double-use in a tick; don't stack
@@ -57,13 +64,28 @@ final class UseItemAimSync {
     }
 
     private void release(float yaw, float pitch, ClientPacket flying, Consumer<ClientPacket> out) {
-        out.accept(new ClientUseItemPacket(held.hand(), held.sequence(), yaw, pitch));
+        ClientUseItemPacket patched = new ClientUseItemPacket(held.hand(), held.sequence(), yaw, pitch);
+        remember(patched);
+        out.accept(patched);
         held = null;
         out.accept(flying);
     }
 
     private void releaseUnpatched(Consumer<ClientPacket> out) {
+        remember(held);
         out.accept(held);
         held = null;
+    }
+
+    private void remember(ClientPacket packet) {
+        emitted[emittedIndex] = packet;
+        emittedIndex = (emittedIndex + 1) % emitted.length;
+    }
+
+    private boolean wasEmitted(ClientPacket packet) {
+        for (ClientPacket p : emitted) {
+            if (p == packet) return true;
+        }
+        return false;
     }
 }

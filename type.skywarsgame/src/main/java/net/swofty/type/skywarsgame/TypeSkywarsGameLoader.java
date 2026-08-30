@@ -8,6 +8,8 @@ import io.github.term4.polyp.mechanics.attack.AttackSystem;
 import io.github.term4.polyp.mechanics.attribute.AttributeSystem;
 import io.github.term4.polyp.mechanics.blocking.BlockingSystem;
 import io.github.term4.polyp.mechanics.consumable.ConsumableSystem;
+import io.github.term4.polyp.mechanics.consumable.ConsumableTypeConfig;
+import io.github.term4.polyp.mechanics.consumable.catalog.VanillaConsumables;
 import io.github.term4.polyp.mechanics.damage.DamageSystem;
 import io.github.term4.polyp.mechanics.explosion.ExplosionSystem;
 import io.github.term4.polyp.mechanics.hunger.HungerSystem;
@@ -17,6 +19,7 @@ import io.github.term4.polyp.platform.compatibility.Compat18;
 import io.github.term4.polyp.platform.fixes.Fixes18;
 import io.github.term4.polyp.platform.fixes.FixesSystem;
 import io.github.term4.polyp.presets.Preset;
+import io.github.term4.polyp.presets.hypixel.Tnt;
 import io.github.term4.polyp.vri.Vri;
 import io.github.term4.polyp.vri.VriConfig;
 import lombok.Getter;
@@ -62,6 +65,7 @@ import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.game.SkywarsGameStat;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItem;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItemHandler;
+import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -267,9 +271,16 @@ public class TypeSkywarsGameLoader implements HypixelTypeLoader {
         polyp.installPlayerProvider = false;
         polyp.metaFix = false;
         polyp.init();
+        var consumables = Preset.HYPIXEL.profile().get(MechanicsKeys.CONSUMABLES).toBuilder()
+                .typeConfigs(ConsumableTypeConfig.builder(VanillaConsumables.GOLDEN_APPLE.key())
+                        .enabled(ctx -> !ctx.item().hasTag(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG))
+                        .build())
+                .build();
         polyp.profiles().setGlobal(Preset.HYPIXEL.profile().toBuilder()
                 .set(MechanicsKeys.COMPAT, Compat18.config())
                 .set(MechanicsKeys.FIXES, Fixes18.config())
+                .set(MechanicsKeys.TNT, Tnt.config().toBuilder().igniteOnPlace(false).build())
+                .set(MechanicsKeys.CONSUMABLES, consumables)
                 .build());
         AttackSystem.install(polyp);
         DamageSystem.install(polyp);

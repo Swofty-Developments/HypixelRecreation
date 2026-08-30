@@ -2,9 +2,13 @@ package io.github.term4.polyp.platform.compatibility;
 
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.platform.player.OptimizedPlayer;
+import io.github.term4.polyp.util.BlockContact;
 import io.github.term4.polyp.world.MechanicsWorld;
 import io.github.term4.polyp.tracking.ClientInfoTracker;
+import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.coordinate.Point;
+import net.minestom.server.instance.block.Block;
+import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventFilter;
@@ -30,6 +34,31 @@ import org.jetbrains.annotations.NotNull;
 public final class CompatPlacement {
 
     private CompatPlacement() {}
+
+    /**
+     * The per-body placement entity check for mixed-version play (shaped for a shard router's body-check hook).
+     * A LEGACY placer gets the 1.8 reference-server semantics, source-verified against Paper 1.8.8 + the 1.8.9
+     * client: the placer's own body NEVER blocks their placement (Paper passes the placer into
+     * {@code checkNoEntityCollision}, which excludes it - and the 1.8 client sends every attempt before its own
+     * prediction runs, so the server's accept is what the player sees; stairs into your own face land), and
+     * no-collision-box blocks check nobody (1.8's null-AABB skip - the ladder clutch). Other bodies stay on the
+     * precise check; everyone else (Animatium included, for now) is precise throughout, matching their own
+     * client's prediction.
+     *
+     * <p>Server POLICY on top of the vanilla mechanic (a Hypixel-style anticheat refusing self-overlap) belongs
+     * to the app: cancel {@code PlayerBlockPlaceEvent} - both placement paths fire it with the resolved target
+     * and resync on cancel - with {@link BlockContact#overlapsBody} as the condition, composed with
+     * {@link BlockContact#isFullCube}/{@link BlockContact#isPassable} to scope the fill level. Wholesale
+     * replacements go through the body-check hook itself.
+     */
+    public static boolean placementBodyCheck(@NotNull Player placer, @NotNull Entity body, @NotNull Block placing,
+                                             @NotNull Point cellRelativeBody, @NotNull BoundingBox bodyBox) {
+        if (placer instanceof OptimizedPlayer op && op.compat().legacyClient()) {
+            if (body == placer) return false;
+            if (BlockContact.isPassable(placing)) return false;
+        }
+        return placing.collisionShape().intersectBox(cellRelativeBody, bodyBox);
+    }
 
     public static void install(Polyp polyp) {
         EventNode<@NotNull PlayerEvent> node = EventNode.type("polyp:compat-placement", EventFilter.PLAYER);

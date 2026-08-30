@@ -54,6 +54,7 @@ public final class FishingRod implements Shootable {
             Fx.play(system.services(), Fx.ROD_RETRIEVE, FxContext.of(p));
             damageRod(p, hand, active.retrieve());
         } else {
+            if (!system.armed(bobberType.key(), p)) return; // retract stays open for cleanup
             var proj = system.launch(ProjectileSnapshot.of(p, bobberType).withItem(item));
             if (proj instanceof FishingBobberEntity bobber) p.setTag(FishingBobberEntity.ACTIVE_BOBBER, bobber);
             Fx.play(system.services(), Fx.ROD_CAST, FxContext.of(p));

@@ -1,11 +1,11 @@
-plugins {
+﻿plugins {
     `java-library`
     id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
 description = "A library for Minestom 1.8 mechanics"
 group = "io.github.term4"
-version = "0.2.0"
+version = "0.3.0"
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 mavenPublishing {
@@ -19,7 +19,7 @@ mavenPublishing {
     pom {
         name = "polyp"
         description = project.description
-        url = "https://github.com/Term4/Polyp"
+        url = "https://github.com/TennacleCore/Polyp"
 
         licenses {
             license {
@@ -39,19 +39,23 @@ mavenPublishing {
         }
 
         scm {
-            url = "https://github.com/Term4/Polyp"
-            connection = "scm:git:git://github.com/Term4/Polyp.git"
-            developerConnection = "scm:git:ssh://git@github.com/Term4/Polyp.git"
+            url = "https://github.com/TennacleCore/Polyp"
+            connection = "scm:git:git://github.com/TennacleCore/Polyp.git"
+            developerConnection = "scm:git:ssh://git@github.com/TennacleCore/Polyp.git"
         }
     }
 }
 
 repositories {
     mavenCentral()
-    maven("https://jitpack.io")
 }
 
 dependencies {
+    // the :world seam is EMBEDDED in this jar (below), not a published dependency: polyp ships to Maven
+    // Central self-contained. World systems (Archipelago) compile against the thin io.github.term4:polyp-world
+    // and expect the runtime to provide the classes - the same provided contract as Minestom itself.
+    compileOnly(project(":world"))
+    testImplementation(project(":world"))
     compileOnly(project(":codegen"))
     annotationProcessor(project(":codegen"))
     val minestomVersion = "2026.08.16-26.2"
@@ -80,4 +84,11 @@ tasks.test {
     useJUnitPlatform()
     // synchronous player spawns + relaxed thread asserts (like Minestom's Env); must be set before ServerFlag loads
     systemProperty("minestom.inside-test", "true")
+}
+// polyp publishes self-contained: the :world module's classes + sources ride this artifact
+tasks.jar {
+    from(project(":world").sourceSets.main.map { it.output })
+}
+tasks.withType<Jar>().configureEach {
+    if (name == "sourcesJar") from(project(":world").sourceSets.main.map { it.allSource })
 }

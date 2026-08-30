@@ -1,7 +1,7 @@
 package io.github.term4.polyp.mechanics.hunger;
 
 import io.github.term4.polyp.MechanicsKeys;
-import io.github.term4.polyp.MechanicsModule;
+import io.github.term4.polyp.ScopedSystem;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.mechanics.damage.DamageSnapshot;
 import io.github.term4.polyp.mechanics.damage.DamageSystem;
@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * {@link ExhaustionSources}, the hunger effect the attribute catalog; docs/exhaustion-sources.md has the vanilla
  * catalog. Difficulty gates are dropped (Minestom has no server difficulty).
  */
-public final class HungerSystem implements MechanicsModule {
+public final class HungerSystem extends ScopedSystem<HungerConfig> {
 
     /** Per-module TPS scaling identity. */
     public static final Key KEY = Key.key("polyp:hunger");
@@ -68,14 +68,11 @@ public final class HungerSystem implements MechanicsModule {
     private static final int SATURATION_REGEN_INTERVAL = 10;
     private static final float SATURATION_REGEN_CAP = 6.0f;
 
-    private final Polyp polyp;
-    private final HungerConfig config;
     private final EventNode<@NotNull Event> node;
     private static final AtomicBoolean TICK_HOOK = new AtomicBoolean();
 
     public HungerSystem(Polyp polyp, HungerConfig config) {
-        this.polyp = polyp;
-        this.config = config;
+        super(polyp, MechanicsKeys.HUNGER, config);
         this.node = EventNode.all("polyp:hunger");
         // vanilla respawns with a fresh FoodMetaData; Minestom resets food/saturation, these tags are ours to clear
         node.addListener(PlayerRespawnEvent.class, e -> {
@@ -85,12 +82,6 @@ public final class HungerSystem implements MechanicsModule {
     }
 
     public EventNode<@NotNull Event> node() { return node; }
-    public HungerConfig config() { return config; }
-
-    /** Effective config for {@code subject}: the scoped profile, else the install config. */
-    public HungerConfig configFor(@Nullable Entity subject) {
-        return polyp.profiles().resolveOr(subject, MechanicsKeys.HUNGER, config);
-    }
 
     /** Active by default; only an explicit {@code enabled(false)} disables. */
     public boolean enabled(@Nullable Entity subject) {
@@ -219,9 +210,7 @@ public final class HungerSystem implements MechanicsModule {
     }
 
     public static HungerSystem install(Polyp polyp, HungerConfig cfg) {
-        HungerSystem system = new HungerSystem(polyp, cfg);
-        polyp.register(system);
-        polyp.install(system.node);
+        HungerSystem system = polyp.installModule(new HungerSystem(polyp, cfg));
         // Registered once for the JVM (TickSystem has no removal); dispatches through the live registry so a re-install is picked up.
         if (TICK_HOOK.compareAndSet(false, true)) {
             TickSystem.register(TickPhase.DEFAULT, ctx -> {

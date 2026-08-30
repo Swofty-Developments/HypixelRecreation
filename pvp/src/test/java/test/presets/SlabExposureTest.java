@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class SlabExposureTest extends HeadlessServerTest {
 
-    private static final PrimedTnt.Config CFG = new PrimedTnt.Config(400, 4.0f, true, PrimedTnt.Wire.MINEMEN, true, null);
+    private static final PrimedTnt.Config CFG = new PrimedTnt.Config(400, 4.0f, true, PrimedTnt.Wire.MINEMEN, true, null, false);
 
     /** Settles a source + victim TNT (on slabs if requested); returns {@code {seenPercent18 (vanilla-1.8), seenPercent18FullCube (server), seenPercent (modern)}}. */
     private float[] exposures(ExplosionSystem ex, boolean onSlabs) {

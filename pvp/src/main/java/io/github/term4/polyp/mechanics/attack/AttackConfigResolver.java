@@ -1,5 +1,6 @@
 package io.github.term4.polyp.mechanics.attack;
 
+import io.github.term4.polyp.codegen.CheckResolveOrder;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.presets.vanilla18.Attack;
 import io.github.term4.polyp.api.event.attack.AttackEvent;
@@ -7,6 +8,8 @@ import io.github.term4.polyp.config.FieldValue;
 import org.jetbrains.annotations.Nullable;
 
 /** Resolves AttackConfig with context into plain values. */
+
+@CheckResolveOrder
 public final class AttackConfigResolver {
 
     private AttackConfigResolver() {}

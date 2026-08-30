@@ -2,7 +2,7 @@ package io.github.term4.polyp.mechanics.projectile;
 
 import io.github.term4.polyp.world.MechanicsWorld;
 import io.github.term4.polyp.MechanicsKeys;
-import io.github.term4.polyp.MechanicsModule;
+import io.github.term4.polyp.ScopedSystem;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.api.event.projectile.ProjectileLaunchEvent;
@@ -13,6 +13,8 @@ import io.github.term4.polyp.mechanics.projectile.entities.FireballEntity;
 import io.github.term4.polyp.mechanics.projectile.entities.FishingBobberEntity;
 import io.github.term4.polyp.mechanics.projectile.entities.ManagedProjectile;
 import io.github.term4.polyp.mechanics.projectile.entities.ProjectileEntity;
+import io.github.term4.polyp.mechanics.projectile.shootables.Bow;
+import io.github.term4.polyp.mechanics.projectile.shootables.FishingRod;
 import io.github.term4.polyp.mechanics.projectile.shootables.Shootable;
 import io.github.term4.polyp.mechanics.projectile.types.Arrow;
 import io.github.term4.polyp.mechanics.projectile.types.Egg;
@@ -61,24 +63,22 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Projectile system: resolves a {@link ProjectileSnapshot} into a spawn + velocity, fires {@link ProjectileLaunchEvent},
- * and spawns the entity. Types with a {@code typeConfigs} entry enable at install (the per-type {@code enabled} knob
- * gates per launch); self-driven types wire their item triggers in {@link ProjectileType#enable}.
+ * and spawns the entity. Every registered type's item trigger mounts at install; a click launches only where
+ * {@link #armed}.
  */
-public final class ProjectileSystem implements MechanicsModule {
+public final class ProjectileSystem extends ScopedSystem<ProjectileConfig> {
 
     /** This system's identity for per-module TPS scaling (its {@code referenceTps} feel-baseline). */
     public static final Key KEY = Key.key("polyp:projectile");
 
-    private final ProjectileConfig config;
     private final Services services;
-    private final Polyp polyp;
     private final EventNode<@NotNull Event> node;
     private final Map<Key, ProjectileType> types = new ConcurrentHashMap<>();
+    private final Set<Key> mounted = ConcurrentHashMap.newKeySet();
     private final Set<Key> enabled = ConcurrentHashMap.newKeySet();
 
     public ProjectileSystem(Polyp polyp, ProjectileConfig config) {
-        this.polyp = polyp;
-        this.config = config;
+        super(polyp, MechanicsKeys.PROJECTILES, config);
         this.services = polyp.services();
         this.node = EventNode.all("polyp:projectile");
         node.addListener(EntityAttackEvent.class, e -> {
@@ -89,14 +89,7 @@ public final class ProjectileSystem implements MechanicsModule {
         });
     }
 
-    public ProjectileConfig config() { return config; }
     public EventNode<@NotNull Event> node() { return node; }
-    public Services services() { return services; }
-
-    /** Effective config for a snapshot carrying none: the shooter's scoped profile, else the install config. */
-    private ProjectileConfig configFor(@Nullable Entity shooter) {
-        return polyp.profiles().resolveOr(shooter, MechanicsKeys.PROJECTILES, config);
-    }
 
     /** Launches a projectile from a snapshot. {@code null} if the type is disabled, cancelled, or the shooter has no instance. */
     public @Nullable ProjectileEntity launch(ProjectileSnapshot snap) {
@@ -260,7 +253,6 @@ public final class ProjectileSystem implements MechanicsModule {
         entity.setPhysicsOrder(flight.physicsOrder());
         entity.setLeftOwnerImmunity(flight.leftOwnerImmunity());
         entity.setStickPullback(flight.stickPullback());
-        entity.setWireMotYFloor(flight.wireMotYFloor());
         if (entity instanceof ManagedProjectile mp) {
             mp.setBehavior(snap.behavior() != null ? snap.behavior() : flight.behavior());
         }
@@ -318,19 +310,31 @@ public final class ProjectileSystem implements MechanicsModule {
 
     public @Nullable ProjectileType get(Key key) { return types.get(key); }
     public boolean contains(Key key) { return types.containsKey(key); }
+    /** Whether {@link #enable} forced the type on (scope-independent). */
     public boolean isEnabled(Key key) { return enabled.contains(key); }
 
-    /** Enables a registered type (wires its launch trigger). Idempotent; throws for an unregistered key (catches preset typos). */
+    /** Click-trigger gate: force-{@link #enable}d, or the scope's config carries a {@code typeConfigs} entry. Never gates {@link #launch}. */
+    public boolean armed(Key key, @Nullable Entity shooter) {
+        return enabled.contains(key) || configFor(shooter).typeConfig(key) != null;
+    }
+
+    /** Force-enables a registered type in every scope and wires its trigger. Idempotent; throws for an unregistered key (catches preset typos). */
     public void enable(Key key) {
         ProjectileType type = types.get(key);
         if (type == null) throw new IllegalArgumentException("No projectile type registered for " + key.asString());
-        if (enabled.add(key)) type.enable(this, polyp);
+        mount(type);
+        enabled.add(key);
     }
 
-    /** Disables an enabled type (tears down its trigger). Idempotent. */
+    /** Clears the force-enable and tears down the type's trigger, every scope. Idempotent. */
     public void disable(Key key) {
         ProjectileType type = types.get(key);
-        if (type != null && enabled.remove(key)) type.disable();
+        enabled.remove(key);
+        if (type != null && mounted.remove(key)) type.disable();
+    }
+
+    private void mount(ProjectileType type) {
+        if (mounted.add(type.key())) type.enable(this, polyp);
     }
 
     /** Registers the built-in vanilla projectile types (data only; not enabled). */
@@ -345,23 +349,27 @@ public final class ProjectileSystem implements MechanicsModule {
         return this;
     }
 
-    /**
-     * Installs from the GLOBAL profile's {@link ProjectileConfig} - set the profile before installing. Only the
-     * one-time registrations ({@code typeConfigs}, {@code shootables}) are read here; physics still resolves per-scope.
-     */
+    /** Installs from the GLOBAL profile's {@link ProjectileConfig} if set; scoped profiles arm their own types either way. */
     public static ProjectileSystem install(Polyp polyp) {
         ProjectileConfig global = polyp.profiles().resolve(null, MechanicsKeys.PROJECTILES);
         return install(polyp, global != null ? global : ProjectileConfig.builder().build());
     }
 
-    /** Installs from an explicit config (the modular path): enables its {@code typeConfigs} and mounts its {@code shootables}. */
+    /** Mounts every registered type's trigger and the config's {@code shootables} ({@link Bow} + {@link FishingRod} when it declares none). Custom types register + {@link #enable} explicitly. */
     public static ProjectileSystem install(Polyp polyp, ProjectileConfig cfg) {
         ProjectileSystem system = new ProjectileSystem(polyp, cfg);
-        polyp.register(system);
         system.registerVanillaDefaults();
-        polyp.install(system.node);
-        for (Key key : cfg.typeConfigs.keySet()) system.enable(key);
-        for (Shootable shootable : cfg.shootables()) shootable.install(system.node, system);
+        polyp.installModule(system);
+        for (ProjectileType type : system.types.values()) system.mount(type);
+        for (Key key : cfg.typeConfigs.keySet()) {
+            if (!system.types.containsKey(key)) throw new IllegalArgumentException("No projectile type registered for " + key.asString());
+        }
+        if (cfg.shootables().isEmpty()) {
+            new Bow().install(system.node, system);
+            new FishingRod().install(system.node, system);
+        } else {
+            for (Shootable shootable : cfg.shootables()) shootable.install(system.node, system);
+        }
         return system;
     }
 }

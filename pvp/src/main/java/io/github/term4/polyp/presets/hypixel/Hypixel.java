@@ -23,6 +23,7 @@ public final class Hypixel {
                 .set(MechanicsKeys.KNOCKBACK, Knockback.melee())
                 .set(MechanicsKeys.VELOCITY, Movement.velocity())
                 .set(MechanicsKeys.EXPLOSION, Explosion.config())
+                .set(MechanicsKeys.TNT, Tnt.config())
                 .set(MechanicsKeys.PROJECTILES, Projectiles.config())
                 // arrow hit-marker ding to the shooter; vanilla presets don't. No fireball launch sound on Hypixel.
                 .set(MechanicsKeys.FX, fx())

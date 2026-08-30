@@ -1,6 +1,11 @@
 package io.github.term4.polyp.mechanics.explosion;
 
 import io.github.term4.polyp.mechanics.explosion.ExplosionConfigResolver.ExplosionContext;
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.MechanicsKeys;
+import io.github.term4.polyp.api.event.explosion.TntPrimeEvent;
+import io.github.term4.polyp.entity.PrimedTnt;
+import net.minestom.server.entity.Entity;
 import io.github.term4.polyp.entity.DroppedItemEntity;
 import io.github.term4.polyp.world.FireSupport;
 import io.github.term4.polyp.world.MechanicsWorld;
@@ -268,13 +273,19 @@ final class ExplosionBlocks {
     }
 
     /** Clears the non-air {@code blocks}, spawns their drops, and returns the cells actually broken. Runs AFTER entity damage; empty under {@code KEEP}. */
-    static List<Point> destroy(MechanicsWorld world, List<Point> blocks, float power, BlockBreaking cfg) {
+    static List<Point> destroy(MechanicsWorld world, List<Point> blocks, float power, BlockBreaking cfg,
+                               @Nullable Entity source) {
         if (!cfg.interaction().destroys()) return List.of();
         List<Point> broken = new ArrayList<>();
         var rnd = ThreadLocalRandom.current();
         for (Point pos : blocks) {
             Block block = world.getBlock(pos);
             if (block.air()) continue;
+            if (cfg.tntChain() && block.compare(Block.TNT)) {
+                chainPrime(world, pos, source);
+                broken.add(pos);
+                continue;
+            }
             if (cfg.interaction() != BlockBreaking.Interaction.DESTROY_NO_DROPS) {
                 for (ItemStack stack : BlockBreaking.dropsOf(block)) {
                     // vanilla decay is a per-ITEM roll at 1/power, not one roll for the stack
@@ -284,11 +295,27 @@ final class ExplosionBlocks {
                 }
             }
             world.setBlock(pos, Block.AIR);
+            world.applyPhysics(pos);
             broken.add(pos);
         }
         // fire the blast left unsupported: vanilla's neighbor updates; Minestom runs none
         for (Point pos : broken) FireSupport.sweep(world, pos);
         return broken;
+    }
+
+    /** 1.8 {@code BlockTNT.onBlockDestroyedByExplosion}: primed with a short random fuse, no drops. */
+    private static void chainPrime(MechanicsWorld world, Point pos, @Nullable Entity source) {
+        Polyp polyp = Polyp.getInstance();
+        ExplosionSystem explosions = polyp.isInitialized() ? polyp.module(ExplosionSystem.class) : null;
+        if (explosions == null) return;
+        Entity igniter = source instanceof PrimedTnt tnt && tnt.igniter() != null ? tnt.igniter() : source;
+        // world scope, not the igniter's: the chained block belongs to the blast's world
+        PrimedTnt.Config base = TntConfigResolver.resolve(polyp.profiles().resolveWorld(world, MechanicsKeys.TNT),
+                igniter, world, TntPrimeEvent.Cause.EXPLOSION, polyp.services());
+        int fuse = ThreadLocalRandom.current().nextInt(Math.max(1, base.fuseTicks() / 4)) + base.fuseTicks() / 8;
+        PrimedTnt.Config chained = new PrimedTnt.Config(fuse, base.power(), base.detonateAtFeet(),
+                base.wire(), base.bounce(), base.tntVictimScale(), base.igniteOnPlace());
+        PrimedTnt.ignite(explosions, world, pos, chained, igniter, TntPrimeEvent.Cause.EXPLOSION);
     }
 
     /**
@@ -305,6 +332,7 @@ final class ExplosionBlocks {
             if (!world.getBlock(pos).air()) continue;
             if (!world.getBlock(pos.sub(0, 1, 0)).solid()) continue;
             world.setBlock(pos, Block.FIRE);
+            world.applyPhysics(pos);
         }
     }
 

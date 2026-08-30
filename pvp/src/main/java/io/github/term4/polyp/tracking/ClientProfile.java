@@ -32,6 +32,9 @@ public final class ClientProfile {
     /** {@code 47} = 1.8, or {@link ClientVersion#UNKNOWN_PROTOCOL} until the proxy/Via handshake resolves it. */
     public int protocol() { return tracker.getProtocol(player); }
 
+    /** {@link ClientInfoTracker#setProtocol}: mark from the app's own source of truth; outranks Via detection. */
+    public void protocol(int protocolVersion) { tracker.setProtocol(player, protocolVersion); }
+
     public boolean isAnimatium() {
         return player instanceof OptimizedPlayer op && op.compat().isAnimatiumClient();
     }

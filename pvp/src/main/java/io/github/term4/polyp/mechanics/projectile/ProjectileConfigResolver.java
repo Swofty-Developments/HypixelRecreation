@@ -1,5 +1,6 @@
 package io.github.term4.polyp.mechanics.projectile;
 
+import io.github.term4.polyp.codegen.CheckResolveOrder;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.config.Config;
 import io.github.term4.polyp.config.FieldValue;
@@ -18,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
  * (spawn + physics) and {@link #resolveHit} at impact (hit knobs, against a context with the struck target + throw
  * origin). The merged {@link ProjectileTypeConfig} is computed once at launch and reused for impact.
  */
+
+@CheckResolveOrder
 public final class ProjectileConfigResolver {
 
     private ProjectileConfigResolver() {}
@@ -83,7 +86,6 @@ public final class ProjectileConfigResolver {
                 FieldValue.resolve(tc.launchPitchOffset, ctx, 0.0), // vanilla splash potion / XP bottle = -20
                 FieldValue.resolve(tc.spread, ctx, 0.0),
                 FieldValue.resolve(tc.spreadBias, ctx, 0.0), // MineMen arrows: the gaussian pinned to +1 (0.0075/axis)
-                FieldValue.resolve(tc.wireMotYFloor, ctx, 0.0), // MineMen throwables: every broadcast vy snaps to |vy| >= 0.05
                 FieldValue.resolve(tc.momentumHorizontal, ctx, 0.0), // vanilla 1.8 adds no shooter momentum (26.1 = 1.0)
                 FieldValue.resolve(tc.momentumVertical, ctx, 0.0),
                 FieldValue.resolve(tc.shooterImmunityTicks, ctx, 5),
@@ -141,7 +143,6 @@ public final class ProjectileConfigResolver {
             double launchPitchOffset,
             double spread,
             double spreadBias,
-            double wireMotYFloor,
             double momentumHorizontal,
             double momentumVertical,
             int shooterImmunityTicks,

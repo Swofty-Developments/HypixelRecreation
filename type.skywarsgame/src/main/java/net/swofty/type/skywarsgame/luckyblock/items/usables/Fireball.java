@@ -1,21 +1,16 @@
 package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
-import io.github.term4.polyp.Polyp;
-import io.github.term4.polyp.mechanics.projectile.ProjectileSnapshot;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
+import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
-import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 import java.util.List;
 
-public class Fireball implements LuckyBlockConsumable {
+public class Fireball implements LuckyBlockItem {
 
     @Override
     public String getId() {
@@ -45,10 +40,4 @@ public class Fireball implements LuckyBlockConsumable {
                 .build();
     }
 
-    @Override
-    public void onConsume(SkywarsPlayer player) {
-        Polyp.getInstance().services().projectiles().launch(ProjectileSnapshot.of(player,
-                io.github.term4.polyp.mechanics.projectile.types.Fireball.INSTANCE));
-        player.playSound(Sound.sound(Key.key("minecraft:entity.ghast.shoot"), Sound.Source.PLAYER, 1f, 1f), Sound.Emitter.self());
-    }
 }

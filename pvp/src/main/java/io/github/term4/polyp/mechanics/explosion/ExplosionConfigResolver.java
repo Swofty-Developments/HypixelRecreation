@@ -1,5 +1,6 @@
 package io.github.term4.polyp.mechanics.explosion;
 
+import io.github.term4.polyp.codegen.CheckResolveOrder;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.config.FieldValue;
 import io.github.term4.polyp.mechanics.attribute.defense.Bypass;
@@ -13,6 +14,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /** Resolves {@link ExplosionConfig} with context into plain values. */
+
+@CheckResolveOrder
 public final class ExplosionConfigResolver {
 
     private ExplosionConfigResolver() {}

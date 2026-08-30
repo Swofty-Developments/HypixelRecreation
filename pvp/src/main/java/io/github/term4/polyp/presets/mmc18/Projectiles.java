@@ -49,8 +49,6 @@ public final class Projectiles {
     private static final double POWER = 2.0;
     // vanilla EntityLargeFireball 6.0, unchanged in the FBF captures
     private static final double CONTACT_DAMAGE = 6.0;
-    // every minemen projectile floors |motY| to 0.05 on the wire (sim untouched); vertical-launch types (splash) just hid it
-    private static final double WIRE_MOTY_FLOOR = 0.05;
 
     private static final Logger LOG = LoggerFactory.getLogger(Projectiles.class);
     private static final BoundingBox PLAYER_BOX = new BoundingBox(0.6, 1.8, 0.6);
@@ -224,8 +222,7 @@ public final class Projectiles {
                 .spread(0.0).spreadBias(0.0075)
                 .knockback(Knockback.arrow()).build();
         return ProjectileConfig.builder(base)
-                // the 0.05 wire motY floor is universal on minemen projectiles, so make it the generic default every type inherits
-                .defaults(ProjectileTypeConfig.builder(base.defaults()).wireMotYFloor(WIRE_MOTY_FLOOR).build())
+                // no per-type floor: the minemen broadcast vy floor rides the profile's VELOCITY member
                 .typeConfigs(fireball, splash, bobber, snowball, egg, pearl, arrow)
                 .shootables(new PseudoHook.Installer())
                 .useItemAimSync(true) // MineMen launches on the CLICK-time aim (in-game: flick-throws never desync)

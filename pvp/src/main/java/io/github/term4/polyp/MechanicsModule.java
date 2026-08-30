@@ -11,6 +11,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface MechanicsModule {
 
-    /** The system's installed event node; {@code register} detaches the replaced module's, so a re-install never stacks listeners. */
+    /** The system's installed event node; {@code unregister} detaches it, so a re-install never stacks listeners. */
     default @Nullable EventNode<? extends Event> node() { return null; }
 }

@@ -1,5 +1,7 @@
 package io.github.term4.polyp.tracking.motion;
 
+import io.github.term4.polyp.MechanicsKeys;
+import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.util.tick.TickScaler;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.PhysicsUtils;
@@ -105,6 +107,30 @@ public interface VelocityRule {
         return c != null && c.motYOnMovePacket();
     }
 
+    /** Whether any {@link VelocityConfig#wireFloorY() broadcast floor} axis is set; off without a config. */
+    static boolean wireFloored(@Nullable VelocityRule rule) {
+        VelocityConfig c = configOf(rule);
+        return c != null && (c.wireFloorX() != null || c.wireFloorY() != null || c.wireFloorZ() != null);
+    }
+
+    /** The scope's velocity rule for {@code subject}, or {@code null}. */
+    static @Nullable VelocityRule scoped(Entity subject) {
+        Polyp polyp = Polyp.getInstance();
+        return polyp.isInitialized() ? polyp.profiles().resolve(subject, MechanicsKeys.VELOCITY) : null;
+    }
+
+    /** The broadcast magnitude floor: per set axis, {@code |v|} under the floor goes out as {@code sign*floor}, 0 up. */
+    static Vec wireFloor(@Nullable VelocityRule rule, Vec bt) {
+        VelocityConfig c = configOf(rule);
+        if (c == null) return bt;
+        return new Vec(floorAxis(bt.x(), c.wireFloorX()), floorAxis(bt.y(), c.wireFloorY()), floorAxis(bt.z(), c.wireFloorZ()));
+    }
+
+    private static double floorAxis(double v, @Nullable Double floor) {
+        if (floor == null || Math.abs(v) >= floor) return v;
+        return v < 0 ? -floor : floor;
+    }
+
     /** Per-context knobs (e.g. a ping-scaled {@code groundTicks}); use over a config lambda when only arc knobs vary. */
     static VelocityRule simulated(Function<VelocityContext, VelocityConfig> cfg) {
         return ctx -> arc(ctx, cfg.apply(ctx));
@@ -133,7 +159,7 @@ public interface VelocityRule {
     private static Vec arc(VelocityContext ctx, VelocityConfig cfg) {
         // non-players are server-simulated already
         if (!(ctx.entity() instanceof Player)) {
-            return clamp(ctx.positionDelta(), cfg.clampX(), cfg.clampY(), cfg.clampZ());
+            return zeroBelow(ctx.positionDelta(), cfg.zeroBelowX(), cfg.zeroBelowY(), cfg.zeroBelowZ());
         }
         Vec hMot = MotionTracker.horizontalMot(ctx.entity(), cfg.launchOffset());
         Vec out = new Vec(hMot.x(), verticalMot(ctx, cfg), hMot.z());
@@ -147,13 +173,13 @@ public interface VelocityRule {
         }
         // wall-pinned mot reads 0 on the blocked axis (vanilla move() zeroing, measured)
         out = MotionTracker.zeroBlockedAxes(ctx.entity(), out);
-        return clamp(out, cfg.clampX(), cfg.clampY(), cfg.clampZ());
+        return zeroBelow(out, cfg.zeroBelowX(), cfg.zeroBelowY(), cfg.zeroBelowZ());
     }
 
     /** The live ticked sim, falling back to the air clock before it has ticked. */
     private static double verticalMot(VelocityContext ctx, VelocityConfig cfg) {
         Double simY = MotionTracker.serverMotY(ctx.entity(),
-                VelocityConfig.DEFAULT_LAUNCH_OFFSET - cfg.launchOffset(), cfg.clampY() > 0);
+                VelocityConfig.DEFAULT_LAUNCH_OFFSET - cfg.launchOffset(), cfg.zeroBelowY() > 0);
         return simY != null ? simY : reconstructedVy(ctx, cfg);
     }
 
@@ -167,26 +193,26 @@ public interface VelocityRule {
         double seedY = launched ? cfg.seed() : 0;
         // the entity's OWN airborne motion, so it steps at the entity's dilated rate
         return steppedVy(ctx.entity(), TickScaler.aerodynamics(ctx.entity(), ctx.entity().getAerodynamics()),
-                cfg.clampY(), seedY, ticks);
+                cfg.zeroBelowY(), seedY, ticks);
     }
 
-    /** Apex-reseeds below {@code clampY} each step. */
-    private static double steppedVy(Entity entity, Aerodynamics aero, double clampY, double seedY, int ticks) {
+    /** Apex-reseeds below {@code zeroBelowY} each step. */
+    private static double steppedVy(Entity entity, Aerodynamics aero, double zeroBelowY, double seedY, int ticks) {
         if (ticks <= 0) return seedY;
         Vec vel = new Vec(0, seedY, 0);
         var pos = entity.getPosition();
         var blocks = entity.getInstance();
         for (int t = 0; t < ticks; t++) {
-            if (Math.abs(vel.y()) < clampY) vel = vel.withY(0);
+            if (Math.abs(vel.y()) < zeroBelowY) vel = vel.withY(0);
             vel = PhysicsUtils.updateVelocity(pos, vel, blocks, aero, true, false, false, false);
         }
         return vel.y();
     }
 
-    private static Vec clamp(Vec v, double cx, double cy, double cz) {
+    private static Vec zeroBelow(Vec v, double x, double y, double z) {
         return new Vec(
-                Math.abs(v.x()) < cx ? 0.0 : v.x(),
-                Math.abs(v.y()) < cy ? 0.0 : v.y(),
-                Math.abs(v.z()) < cz ? 0.0 : v.z());
+                Math.abs(v.x()) < x ? 0.0 : v.x(),
+                Math.abs(v.y()) < y ? 0.0 : v.y(),
+                Math.abs(v.z()) < z ? 0.0 : v.z());
     }
 }

@@ -94,6 +94,8 @@ public final class CompatAnimatium {
             }
             if (cfg.disabledPoses.contains(EntityPose.FALL_FLYING)) set.add(AnimatiumFeature.DISABLE_ELYTRA_POSE);
         }
+        // native disable beats the wire lever, and handlesNatively() then keeps CompatSwim off this client
+        if (cfg.suppressSwim != null) set.add(AnimatiumFeature.DISABLE_SWIM_POSE);
         if (Boolean.TRUE.equals(cfg.legacyFluids)) set.add(AnimatiumFeature.OLD_FLUID_PHYSICS);
         if (Boolean.TRUE.equals(cfg.disableElytraFlight)) set.add(AnimatiumFeature.DISABLE_ELYTRA_FLIGHT);
         if (Boolean.TRUE.equals(cfg.oldFlight)) set.add(AnimatiumFeature.OLD_FLIGHT);
