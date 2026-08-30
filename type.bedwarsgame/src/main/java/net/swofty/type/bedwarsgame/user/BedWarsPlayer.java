@@ -10,7 +10,6 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.network.packet.server.play.DestroyEntitiesPacket;
-import net.minestom.server.network.packet.server.play.EntityHeadLookPacket;
 import net.minestom.server.network.packet.server.play.PlayerInfoRemovePacket;
 import net.minestom.server.network.packet.server.play.PlayerInfoUpdatePacket;
 import net.minestom.server.network.packet.server.play.SpawnEntityPacket;
@@ -35,7 +34,6 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -47,12 +45,14 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 	@Setter
 	private boolean shouldShowTrueIdentity = false;
 	@Getter
-	private UUID fakeUuid;
+	private final UUID fakeUuid;
+	private final String hiddenUsername;
 
 	public BedWarsPlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
 		super(playerConnection, gameProfile);
 		getAttribute(Attribute.ATTACK_SPEED).setBaseValue(1000); // basically removes the attack indicator
 		fakeUuid = UUID.randomUUID();
+		hiddenUsername = "§k" + fakeUuid.toString().substring(0, 14);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 
 	private void refreshIdentityFor(Player viewer) {
 		if (viewer == this) {
-			viewer.sendPackets(new PlayerInfoRemovePacket(fakeUuid), getAddPlayerToList());
+			viewer.sendPackets(new PlayerInfoRemovePacket(fakeUuid), getPrivatePlayerInfo());
 			return;
 		}
 		viewer.sendPackets(new DestroyEntitiesPacket(getEntityId()), new PlayerInfoRemovePacket(fakeUuid));
@@ -86,38 +86,27 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 
 	@Override
 	public void updateNewViewer(@NonNull Player player) {
-		if (!canViewerSeeIdentity(player)) {
-			player.sendPackets(
-				new PlayerInfoUpdatePacket(PlayerInfoUpdatePacket.Action.ADD_PLAYER,
-					new PlayerInfoUpdatePacket.Entry(
-						fakeUuid,
-						"§k" + fakeUuid.toString().substring(0, new Random().nextInt(10) + 4),
-						List.of(),
-						false,
-						0,
-						GameMode.SURVIVAL,
-						Text.literal(fakeUuid.toString().substring(0, 12)).asComponent(),
-						null,
-						1, false)),
-				new SpawnEntityPacket(this.getEntityId(), fakeUuid, EntityType.PLAYER,
-					getPosition(),
-					(float) 0,
-					0,
-					Vec.ZERO),
-				new EntityHeadLookPacket(getEntityId(), getPosition().yaw())
-			);
-			return;
-		}
+		if (player != this) player.sendPacket(getAddPlayerToList());
 		super.updateNewViewer(player);
 	}
 
-	private boolean canViewerSeeIdentity(Player viewer) {
-		if (viewer == this) return true;
-		return shouldShowTrueIdentity;
+	@Override
+	protected SpawnEntityPacket getSpawnPacket() {
+		return new SpawnEntityPacket(getEntityId(), fakeUuid, EntityType.PLAYER,
+			getPosition(), 0, 0, Vec.ZERO);
 	}
 
 	@Override
 	protected @NonNull PlayerInfoUpdatePacket getAddPlayerToList() {
+		return new PlayerInfoUpdatePacket(PlayerInfoUpdatePacket.Action.ADD_PLAYER, getPublicPlayerInfo());
+	}
+
+	@Override
+	protected PlayerInfoRemovePacket getRemovePlayerToList() {
+		return new PlayerInfoRemovePacket(fakeUuid);
+	}
+
+	private PlayerInfoUpdatePacket getPrivatePlayerInfo() {
 		final PlayerSkin skin = getSkin();
 		List<PlayerInfoUpdatePacket.Property> prop = skin != null ?
 			List.of(new PlayerInfoUpdatePacket.Property("textures", skin.textures(), skin.signature())) :
@@ -127,6 +116,41 @@ public class BedWarsPlayer extends HypixelPlayer implements GameParticipant {
 		return new PlayerInfoUpdatePacket(EnumSet.of(PlayerInfoUpdatePacket.Action.ADD_PLAYER, PlayerInfoUpdatePacket.Action.UPDATE_LISTED),
 			List.of(new PlayerInfoUpdatePacket.Entry(getUuid(), getUsername(), prop,
 				false, getLatency(), getGameMode(), getDisplayName(), null, 0, (getSettings().displayedSkinParts() & hatIndex) == hatIndex)));
+	}
+
+	private PlayerInfoUpdatePacket.Entry getPublicPlayerInfo() {
+		if (shouldShowTrueIdentity) {
+			final PlayerSkin skin = getSkin();
+			List<PlayerInfoUpdatePacket.Property> properties = skin != null ?
+				List.of(new PlayerInfoUpdatePacket.Property("textures", skin.textures(), skin.signature())) :
+				List.of();
+			byte hatIndex = ((MetadataDef.Entry.BitMask) MetadataDef.Player.IS_HAT_ENABLED).bitMask();
+			return new PlayerInfoUpdatePacket.Entry(
+				fakeUuid,
+				getUsername(),
+				properties,
+				false,
+				getLatency(),
+				getGameMode(),
+				getDisplayName(),
+				null,
+				0,
+				(getSettings().displayedSkinParts() & hatIndex) == hatIndex
+			);
+		}
+
+		return new PlayerInfoUpdatePacket.Entry(
+			fakeUuid,
+			hiddenUsername,
+			List.of(),
+			false,
+			0,
+			GameMode.SURVIVAL,
+			Text.legacy(hiddenUsername).asComponent(),
+			null,
+			1,
+			false
+		);
 	}
 
 	public Player getServerPlayer() {
