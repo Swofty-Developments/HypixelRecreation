@@ -2,7 +2,7 @@ package io.github.term4.polyp.mechanics.consumable;
 
 import io.github.term4.polyp.util.tick.TickContext;
 import io.github.term4.polyp.MechanicsKeys;
-import io.github.term4.polyp.MechanicsModule;
+import io.github.term4.polyp.ScopedSystem;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.api.event.consume.ConsumeAppliedEvent;
@@ -50,13 +50,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * client never carries - so it comes back {@code 0} and the finish never fires. We set it from the resolved
  * {@link ResolvedConsumable#consumeTicks()} in the start handler, making completion server-authoritative and version-independent.
  */
-public final class ConsumableSystem implements MechanicsModule {
+public final class ConsumableSystem extends ScopedSystem<ConsumableConfig> {
 
     public static final Key KEY = Key.key("polyp:consumables");
 
-    private final Polyp polyp;
     private final Services services;
-    private final ConsumableConfig config;
     private final EventNode<@NotNull PlayerEvent> node;
     private final ConsumableRegistry registry = new ConsumableRegistry();
     private static final AtomicBoolean TICK_HOOK = new AtomicBoolean();
@@ -65,9 +63,8 @@ public final class ConsumableSystem implements MechanicsModule {
     private static final ListenerHandle<ConsumeAppliedEvent> CONSUME_APPLIED = EventDispatcher.getHandle(ConsumeAppliedEvent.class);
 
     public ConsumableSystem(Polyp polyp, ConsumableConfig config) {
-        this.polyp = polyp;
+        super(polyp, MechanicsKeys.CONSUMABLES, config);
         this.services = polyp.services();
-        this.config = config;
         this.node = EventNode.type("polyp:consumable", EventFilter.PLAYER);
         node.addListener(PlayerUseItemEvent.class, this::onUse);
         node.addListener(PlayerFinishItemUseEvent.class, this::onFinish);
@@ -75,20 +72,16 @@ public final class ConsumableSystem implements MechanicsModule {
     }
 
     public EventNode<@NotNull PlayerEvent> node() { return node; }
-    public ConsumableConfig config() { return config; }
     public ConsumableRegistry registry() { return registry; }
 
     public ConsumableSystem register(Consumable consumable) { registry.register(consumable); return this; }
 
-    /** Effective config for {@code subject}: the scoped profile, else the install config. */
-    public ConsumableConfig configFor(@Nullable Entity subject) {
-        return polyp.profiles().resolveOr(subject, MechanicsKeys.CONSUMABLES, config);
-    }
-
-    /** {@code null} if the item is neither a registered consumable nor a component food. */
+    /** {@code null} if the item is neither a scoped/registered consumable nor a component food. */
     private @Nullable Resolution resolve(Player player, PlayerHand hand, ItemStack item) {
         ConsumableConfig cfg = configFor(player);
-        Consumable c = registry.forMaterial(item.material());
+        // scoped types first: a profile needs no install registration
+        Consumable c = cfg.typeForMaterial(item.material());
+        if (c == null) c = registry.forMaterial(item.material());
         if (c == null) {
             if (Boolean.FALSE.equals(cfg.componentFoods()) || item.get(DataComponents.FOOD) == null) return null;
             c = ComponentFood.TYPE;
@@ -215,7 +208,7 @@ public final class ConsumableSystem implements MechanicsModule {
         Fx.play(services, sound, FxContext.of(r.ctx.user()));
     }
 
-    /** Installs reading the GLOBAL profile's {@link ConsumableConfig}: its {@code types} (the consumable identities) register up front. Set the profile before installing. */
+    /** Installs from the GLOBAL profile's {@link ConsumableConfig} if set; scoped profiles resolve their own {@code types} either way. */
     public static ConsumableSystem install(Polyp polyp) {
         ConsumableConfig global = polyp.profiles().resolve(null, MechanicsKeys.CONSUMABLES);
         return install(polyp, global != null ? global : ConsumableConfig.builder().build());
@@ -223,9 +216,8 @@ public final class ConsumableSystem implements MechanicsModule {
 
     public static ConsumableSystem install(Polyp polyp, ConsumableConfig cfg) {
         ConsumableSystem system = new ConsumableSystem(polyp, cfg);
-        polyp.register(system);
         for (Consumable c : cfg.types()) system.register(c);
-        polyp.install(system.node);
+        polyp.installModule(system);
         // Registered once for the JVM (TickSystem has no removal); dispatches through the live registry so a re-install is picked up.
         if (TICK_HOOK.compareAndSet(false, true)) {
             TickSystem.register(TickPhase.DEFAULT, ctx -> {

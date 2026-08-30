@@ -2,7 +2,7 @@ package io.github.term4.polyp.entity;
 
 import io.github.term4.polyp.util.tick.TickScaler;
 import io.github.term4.polyp.world.ExternallyTickable;
-import io.github.term4.polyp.vri.ItemSpawnEvent;
+import io.github.term4.polyp.api.event.item.ItemSpawnEvent;
 import io.github.term4.polyp.world.MechanicsWorld;
 import io.github.term4.polyp.MechanicsKeys;
 import io.github.term4.polyp.Polyp;

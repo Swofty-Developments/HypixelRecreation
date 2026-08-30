@@ -1,5 +1,6 @@
 package io.github.term4.polyp.mechanics.knockback;
 
+import io.github.term4.polyp.codegen.CheckResolveOrder;
 import io.github.term4.polyp.MechanicsKeys;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.config.FieldValue;
@@ -16,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /** Resolves KnockbackConfig with context into plain values. */
+
+@CheckResolveOrder
 public final class KnockbackConfigResolver {
 
     private KnockbackConfigResolver() {}
@@ -45,14 +48,13 @@ public final class KnockbackConfigResolver {
         }
         /**
          * The effective victim-velocity rule: the rule {@link #withVelocity threaded} by the calculator when present,
-         * else resolved standalone (config velocity -&gt; victim scope -&gt; {@link VelocityRule#DEFAULT}).
+         * else {@link #effectiveVelocity}.
          */
         public VelocityRule velocityRule() {
             if (resolvedVelocity != null) return resolvedVelocity;
             KnockbackConfig cfg = snap.config();
-            VelocityRule rule = cfg != null && cfg.velocity != null ? cfg.velocity.resolve(this) : null;
-            if (rule == null && services != null) rule = services.profiles().resolve(snap.target(), MechanicsKeys.VELOCITY);
-            return rule != null ? rule : VelocityRule.DEFAULT;
+            return effectiveVelocity(cfg != null && cfg.velocity != null ? cfg.velocity.resolve(this) : null,
+                    snap.target(), services);
         }
         /**
          * The victim velocity (b/t) the friction fold uses, estimated from {@link #velocityRule()} ({@link Vec#ZERO}
@@ -63,6 +65,14 @@ public final class KnockbackConfigResolver {
             if (t == null) return Vec.ZERO;
             return velocityRule().estimate(VelocityContext.of(t, services != null ? services.sprintTracker() : null));
         }
+    }
+
+    /** THE victim-velocity chain, written once: {@code configRule} -&gt; the victim's scope -&gt; {@link VelocityRule#DEFAULT}. */
+    public static VelocityRule effectiveVelocity(@Nullable VelocityRule configRule, @Nullable Entity victim,
+                                                 @Nullable Services services) {
+        if (configRule != null) return configRule;
+        VelocityRule scoped = services != null ? services.profiles().resolve(victim, MechanicsKeys.VELOCITY) : null;
+        return scoped != null ? scoped : VelocityRule.DEFAULT;
     }
 
     public static ResolvedKnockbackConfig resolve(KnockbackConfig config, KnockbackContext ctx) {

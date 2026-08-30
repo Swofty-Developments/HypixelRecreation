@@ -1,6 +1,7 @@
 package io.github.term4.polyp.mechanics.attribute;
 import io.github.term4.polyp.codegen.GenerateBuilder;
 import io.github.term4.polyp.mechanics.attribute.source.Source;
+import io.github.term4.polyp.mechanics.attribute.source.SourceRegistry;
 
 import io.github.term4.polyp.config.Config;
 import io.github.term4.polyp.config.FieldValue;
@@ -35,6 +36,7 @@ public final class AttributeConfig extends Config<AttributeContext, AttributeCon
     public final FieldValue<AttributeContext, Boolean> enabled;
     private final List<Source> sources;
     private final Map<Key, Tuning> tunings;
+    private volatile @Nullable SourceRegistry sourceIndex;
 
     /** {@code null} = no armor reduction. */
     @Nullable public final ArmorConfig armor;
@@ -69,8 +71,19 @@ public final class AttributeConfig extends Config<AttributeContext, AttributeCon
 
     public boolean attributeSwapping() { return attributeSwapping != null && attributeSwapping; }
 
-    /** Sources to register at install. */
+    /** The {@link Source} catalog; resolved per scope and registered at install. */
     public List<Source> sources() { return sources; }
+
+    /** {@link #sources} as a kind-split lookup (lazy; configs are immutable). */
+    public SourceRegistry sourceIndex() {
+        SourceRegistry index = this.sourceIndex;
+        if (index == null) {
+            SourceRegistry built = new SourceRegistry();
+            for (Source s : sources) built.register(s);
+            this.sourceIndex = index = built; // benign race: identical rebuild
+        }
+        return index;
+    }
 
     /** The tuning for {@code key}, or {@link #IDENTITY} when unset. */
     public Tuning tuningFor(Key key) { return tunings.getOrDefault(key, IDENTITY); }

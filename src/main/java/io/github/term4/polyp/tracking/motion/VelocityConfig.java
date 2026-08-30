@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param seed            fallback takeoff motY; the ticked sim always uses {@link #JUMP_VELOCITY}.
  * @param launchOffset    arc phase correction; debug knob.
- * @param clampY          near-zero clamp for motY; {@code 0} disables, selecting the sim's apex-reseed variant.
+ * @param zeroBelowY      vanilla's living-tick zeroing: {@code |motY|} under it becomes 0 (the apex reseed); {@code 0} = off.
  * @param groundTicks     fall-prediction depth for {@link MotionTracker#onGround} ({@code 0} = raw client flag).
  * @param maxAirTicks     fallback only: caps the air clock; {@code null} = unbounded.
  * @param entityPush      fold the {@code Entity.collide} push residual; disable where player collision is off.
@@ -21,13 +21,16 @@ import org.jetbrains.annotations.Nullable;
  * @param motYOnMovePacket advance the motY sim only on ticks with a client move packet, so a lag-frozen victim's
  *                         motY holds until its next move - the 1.8 server law ({@code PlayerConnection} drives the
  *                         player's living tick per flying packet); off = every server tick (1.9+/Hypixel).
+ * @param wireFloorY      broadcast-only magnitude floor: a wire vy under it goes out as {@code sign*floor} (0 up);
+ *                        {@code null} = off. Read from scope by knockback, projectile and TNT sends alike; the sim
+ *                        is untouched. X/Z: the same law per axis.
  */
 public record VelocityConfig(
         double seed,
         int launchOffset,
-        double clampX,
-        double clampY,
-        double clampZ,
+        double zeroBelowX,
+        double zeroBelowY,
+        double zeroBelowZ,
         int groundTicks,
         @Nullable Integer maxAirTicks,
         boolean entityPush,
@@ -39,7 +42,10 @@ public record VelocityConfig(
         boolean flowLava,
         ClimbModel climbModel,
         boolean modernBlockPhysics,
-        boolean motYOnMovePacket
+        boolean motYOnMovePacket,
+        @Nullable Double wireFloorX,
+        @Nullable Double wireFloorY,
+        @Nullable Double wireFloorZ
 ) {
 
     /** Vanilla {@code motY -= 0.08} (b/t^2). */
@@ -51,7 +57,7 @@ public record VelocityConfig(
     /** {@code bF()}'s {@code 0.42F} widened to double - float-exact for the hurt-broadcast wire short. */
     public static final double JUMP_VELOCITY = 0.41999998688697815;
     /** Vanilla {@code m()} zeroes {@code |mot| < 0.005} each tick. */
-    public static final double CLAMP = 0.005;
+    public static final double ZERO_BELOW = 0.005;
 
     /** The hit packet is processed one tick before the victim's move, so the fold reads {@code ticksInAir - 1}. */
     public static final int DEFAULT_LAUNCH_OFFSET = -1;
@@ -64,9 +70,9 @@ public record VelocityConfig(
     public static final class Builder {
         private double seed = JUMP_VELOCITY;
         private int launchOffset = DEFAULT_LAUNCH_OFFSET;
-        private double clampX = CLAMP;
-        private double clampY = CLAMP;
-        private double clampZ = CLAMP;
+        private double zeroBelowX = ZERO_BELOW;
+        private double zeroBelowY = ZERO_BELOW;
+        private double zeroBelowZ = ZERO_BELOW;
         private int groundTicks = 1;
         private @Nullable Integer maxAirTicks;
         private boolean entityPush = true;
@@ -79,15 +85,18 @@ public record VelocityConfig(
         private ClimbModel climbModel = ClimbModel.LEGACY; // Vanilla(26) sets MODERN
         private boolean modernBlockPhysics = false; // Vanilla(26) sets true
         private boolean motYOnMovePacket = false;   // 1.8-faithful presets set true; off = the 1.9+ server-tick law
+        private @Nullable Double wireFloorX;
+        private @Nullable Double wireFloorY;        // mmc18 sets 0.05
+        private @Nullable Double wireFloorZ;
 
         Builder() {}
 
         Builder(VelocityConfig c) {
             seed = c.seed;
             launchOffset = c.launchOffset;
-            clampX = c.clampX;
-            clampY = c.clampY;
-            clampZ = c.clampZ;
+            zeroBelowX = c.zeroBelowX;
+            zeroBelowY = c.zeroBelowY;
+            zeroBelowZ = c.zeroBelowZ;
             groundTicks = c.groundTicks;
             maxAirTicks = c.maxAirTicks;
             entityPush = c.entityPush;
@@ -100,14 +109,17 @@ public record VelocityConfig(
             climbModel = c.climbModel;
             modernBlockPhysics = c.modernBlockPhysics;
             motYOnMovePacket = c.motYOnMovePacket;
+            wireFloorX = c.wireFloorX;
+            wireFloorY = c.wireFloorY;
+            wireFloorZ = c.wireFloorZ;
         }
 
         public Builder seed(double v) { seed = v; return this; }
         public Builder launchOffset(int v) { launchOffset = v; return this; }
-        public Builder clamp(double all) { clampX = all; clampY = all; clampZ = all; return this; }
-        public Builder clampX(double v) { clampX = v; return this; }
-        public Builder clampY(double v) { clampY = v; return this; }
-        public Builder clampZ(double v) { clampZ = v; return this; }
+        public Builder zeroBelow(double all) { zeroBelowX = all; zeroBelowY = all; zeroBelowZ = all; return this; }
+        public Builder zeroBelowX(double v) { zeroBelowX = v; return this; }
+        public Builder zeroBelowY(double v) { zeroBelowY = v; return this; }
+        public Builder zeroBelowZ(double v) { zeroBelowZ = v; return this; }
         public Builder groundTicks(int v) { groundTicks = v; return this; }
         public Builder maxAirTicks(@Nullable Integer v) { maxAirTicks = v; return this; }
         public Builder entityPush(boolean v) { entityPush = v; return this; }
@@ -120,12 +132,15 @@ public record VelocityConfig(
         public Builder climbModel(ClimbModel v) { climbModel = v; return this; }
         public Builder modernBlockPhysics(boolean v) { modernBlockPhysics = v; return this; }
         public Builder motYOnMovePacket(boolean v) { motYOnMovePacket = v; return this; }
+        public Builder wireFloorX(@Nullable Double v) { wireFloorX = v; return this; }
+        public Builder wireFloorY(@Nullable Double v) { wireFloorY = v; return this; }
+        public Builder wireFloorZ(@Nullable Double v) { wireFloorZ = v; return this; }
 
         // the attacker self-slowdown lives on AttackConfig.fullHitScale (an attack-time mutation), not here
 
         public VelocityConfig build() {
             return new VelocityConfig(seed, launchOffset,
-                    clampX, clampY, clampZ, groundTicks, maxAirTicks, entityPush, fluidPhysics, climbPhysics, webPhysics, flowPush, flowModel, flowLava, climbModel, modernBlockPhysics, motYOnMovePacket);
+                    zeroBelowX, zeroBelowY, zeroBelowZ, groundTicks, maxAirTicks, entityPush, fluidPhysics, climbPhysics, webPhysics, flowPush, flowModel, flowLava, climbModel, modernBlockPhysics, motYOnMovePacket, wireFloorX, wireFloorY, wireFloorZ);
         }
     }
 }

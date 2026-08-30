@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 /** Emits {@code <Config>BuilderBase} for each {@link GenerateBuilder} config; see the annotation for the contract. */
-@SupportedAnnotationTypes("io.github.term4.polyp.codegen.GenerateBuilder")
+@SupportedAnnotationTypes({"io.github.term4.polyp.codegen.GenerateBuilder", "io.github.term4.polyp.codegen.CheckResolveOrder"})
 @SupportedSourceVersion(SourceVersion.RELEASE_25)
 public final class ConfigBuilderProcessor extends AbstractProcessor {
 
@@ -34,7 +34,8 @@ public final class ConfigBuilderProcessor extends AbstractProcessor {
     private static final class CopyCallScanner extends com.sun.source.util.TreeScanner<Boolean, Void> {
         @Override public Boolean visitMethodInvocation(com.sun.source.tree.MethodInvocationTree node, Void p) {
             String select = node.getMethodSelect().toString();
-            if (select.equals("super") || select.endsWith("copyKnobs") || select.endsWith("mergeKnobs")) return true;
+            if (select.equals("super") || select.endsWith("copyKnobs") || select.endsWith("mergeKnobs")
+                    || select.endsWith("fromBase")) return true;
             return super.visitMethodInvocation(node, p);
         }
         @Override public Boolean reduce(Boolean a, Boolean b) { return Boolean.TRUE.equals(a) || Boolean.TRUE.equals(b); }
@@ -58,9 +59,74 @@ public final class ConfigBuilderProcessor extends AbstractProcessor {
             if (e instanceof TypeElement config) {
                 generate(config);
                 checkCopyConstructors(config);
+                checkFromBase(config);
             }
         }
+        for (Element e : round.getElementsAnnotatedWith(CheckResolveOrder.class)) {
+            if (e instanceof TypeElement resolver) checkResolveOrder(resolver);
+        }
         return false;
+    }
+
+    /** A {@code fromBase} that forgets {@code mergeKnobs} silently drops every generated knob of the overlay. */
+    private void checkFromBase(TypeElement config) {
+        if (trees == null) return;
+        for (Element member : config.getEnclosedElements()) {
+            if (member.getKind() != ElementKind.METHOD || !member.getSimpleName().contentEquals("fromBase")) continue;
+            var tree = trees.getTree((ExecutableElement) member);
+            if (tree != null && tree.getBody() != null
+                    && !Boolean.TRUE.equals(new CopyCallScanner().scan(tree.getBody(), null))) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+                        "fromBase must merge the generated knobs (mergeKnobs, or super.fromBase)", member);
+            }
+        }
+    }
+
+    /** {@link CheckResolveOrder}: every {@code cfg.<knob>} argument must land on the same-named record component. */
+    private void checkResolveOrder(TypeElement resolver) {
+        if (trees == null) return;
+        var path = trees.getPath(resolver);
+        if (path == null) return;
+        new com.sun.source.util.TreePathScanner<Void, Void>() {
+            @Override public Void visitNewClass(com.sun.source.tree.NewClassTree node, Void p) {
+                Element ctor = trees.getElement(new com.sun.source.util.TreePath(getCurrentPath(), node));
+                if (ctor instanceof ExecutableElement ex
+                        && ex.getEnclosingElement() instanceof TypeElement type
+                        && type.getKind() == ElementKind.RECORD) {
+                    var components = type.getRecordComponents();
+                    var args = node.getArguments();
+                    if (components.size() == args.size()) {
+                        for (int i = 0; i < args.size(); i++) {
+                            String read = firstComponentRead(args.get(i), type);
+                            if (read != null && !components.get(i).getSimpleName().contentEquals(read)) {
+                                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+                                        "argument " + (i + 1) + " of new " + type.getSimpleName() + " reads ." + read
+                                                + " but the component there is " + components.get(i).getSimpleName(),
+                                        resolver);
+                            }
+                        }
+                    }
+                }
+                return super.visitNewClass(node, p);
+            }
+
+            /** The first {@code x.<name>} select in {@code arg} whose name matches a component of {@code type}. */
+            private String firstComponentRead(com.sun.source.tree.Tree arg, TypeElement type) {
+                var found = new String[1];
+                new com.sun.source.util.TreeScanner<Void, Void>() {
+                    @Override public Void visitMemberSelect(com.sun.source.tree.MemberSelectTree sel, Void p) {
+                        if (found[0] == null) {
+                            String name = sel.getIdentifier().toString();
+                            for (var c : type.getRecordComponents()) {
+                                if (c.getSimpleName().contentEquals(name)) { found[0] = name; break; }
+                            }
+                        }
+                        return super.visitMemberSelect(sel, p);
+                    }
+                }.scan(arg, null);
+                return found[0];
+            }
+        }.scan(path, null);
     }
 
     /**

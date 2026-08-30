@@ -1,7 +1,7 @@
 package io.github.term4.polyp.mechanics.durability;
 
 import io.github.term4.polyp.MechanicsKeys;
-import io.github.term4.polyp.MechanicsModule;
+import io.github.term4.polyp.ScopedSystem;
 import io.github.term4.polyp.Polyp;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EquipmentSlot;
@@ -16,25 +16,16 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p><b>Stub:</b> the API surface is in place, but no durability is consumed yet (TODO).
  */
-public final class DurabilitySystem implements MechanicsModule {
+public final class DurabilitySystem extends ScopedSystem<DurabilityConfig> {
 
-    private final Polyp polyp;
-    private final DurabilityConfig config;
     private final EventNode<@NotNull Event> node;
 
     public DurabilitySystem(Polyp polyp, DurabilityConfig config) {
-        this.polyp = polyp;
-        this.config = config;
+        super(polyp, MechanicsKeys.DURABILITY, config);
         this.node = EventNode.all("polyp:durability");
     }
 
     public EventNode<@NotNull Event> node() { return node; }
-    public DurabilityConfig config() { return config; }
-
-    /** Effective config for {@code subject}: the scoped profile (player -&gt; instance -&gt; global), else the install config. */
-    public DurabilityConfig configFor(@Nullable Entity subject) {
-        return polyp.profiles().resolveOr(subject, MechanicsKeys.DURABILITY, config);
-    }
 
     /** Active by default; only an explicit {@code enabled(false)} disables. */
     public boolean enabled(@Nullable Entity subject) {
@@ -55,9 +46,6 @@ public final class DurabilitySystem implements MechanicsModule {
     }
 
     public static DurabilitySystem install(Polyp polyp, DurabilityConfig cfg) {
-        DurabilitySystem system = new DurabilitySystem(polyp, cfg);
-        polyp.register(system);
-        polyp.install(system.node);
-        return system;
+        return polyp.installModule(new DurabilitySystem(polyp, cfg));
     }
 }

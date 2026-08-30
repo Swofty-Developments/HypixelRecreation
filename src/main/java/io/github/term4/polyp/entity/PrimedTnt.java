@@ -2,24 +2,23 @@ package io.github.term4.polyp.entity;
 
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.api.event.explosion.ExplosionEvent;
+import io.github.term4.polyp.api.event.explosion.TntPrimeEvent;
 import io.github.term4.polyp.fx.Fx;
 import io.github.term4.polyp.fx.FxContext;
 import io.github.term4.polyp.mechanics.explosion.ExplosionCalculator;
 import io.github.term4.polyp.mechanics.explosion.ExplosionSystem;
 import io.github.term4.polyp.mechanics.projectile.entities.ProjectileEntity;
 import io.github.term4.polyp.platform.player.OptimizedPlayer;
+import io.github.term4.polyp.tracking.motion.VelocityRule;
 import io.github.term4.polyp.util.tick.TickScaler;
-import io.github.term4.polyp.world.ExternallyTickable;
 import io.github.term4.polyp.world.MechanicsWorld;
-import net.minestom.server.instance.Chunk;
 import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.DoubleBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.event.EventDispatcher;
 import net.minestom.server.collision.Aerodynamics;
-import net.minestom.server.collision.PhysicsResult;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -28,9 +27,11 @@ import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.Player;
 import net.minestom.server.instance.Instance;
+import net.minestom.server.instance.block.Block;
 import net.minestom.server.network.packet.server.play.EntityPositionSyncPacket;
 import net.minestom.server.network.packet.server.play.SpawnEntityPacket;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -41,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * motY×-0.5 bounce). {@link Config} carries the preset knobs; the wire is hand-sent per {@link Wire}; a TNT source's
  * push on other TNT rescales per {@code tntVictimScale} ({@link #retuneTntVictims}).
  */
-public final class PrimedTnt extends Entity implements ExternallyTickable {
+public final class PrimedTnt extends MechanicsEntity {
 
     /**
      * {@code detonateAtFeet}: MineMen/Hypixel at the feet, vanilla at {@code +height/16}. {@code bounce}: the motY×-0.5
@@ -49,22 +50,33 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
      * the absolute push scale this TNT's blast applies to other primed TNT, overriding the profile's player/fireball KB
      * multiplier (MineMen's TNT-on-TNT ~1.1 is weaker than its KB_SCALE fireball push); null = none (the profile's scale).
      */
-    public record Config(int fuseTicks, float power, boolean detonateAtFeet, Wire wire, boolean bounce, Double tntVictimScale) {}
+    public record Config(int fuseTicks, float power, boolean detonateAtFeet, Wire wire, boolean bounce, Double tntVictimScale, boolean igniteOnPlace) {}
+
+    private @Nullable Entity igniter;
+
+    /** Who lit this TNT (kill attribution through the blast's source), or {@code null}. */
+    public @Nullable Entity igniter() { return igniter; }
+
+    /** Vanilla 1.8 defaults - the {@code TntConfigResolver} floor for unset knobs and missing profiles. */
+    public static final Config VANILLA = new Config(80, 4.0f, false, Wire.VANILLA, true, null, false);
 
     /**
-     * Measured tracker cadences. {@code MINEMEN}: etp+vel on 10t boundaries while moving, silent at rest, grounded
-     * tracker vy floored +0.05, blast impulse sent raw on delivery. {@code HYPIXEL}: velocity every 3t while
-     * falling, one position sync at tick 3, and (like vanilla) a blast impulse broadcast post-friction.
+     * Tracker-emulation knobs; the constants are the two measured cadences. {@code syncInterval}: moved-gated
+     * etp+velocity period ({@code 0} = none). {@code velocityInterval}: airborne velocity stream period.
+     * {@code positionSyncTick}: one-shot airborne sync at this flight tick ({@code -1} = none).
+     * {@code landingVelocity}: a final velocity packet on touchdown. {@code impulsePostFriction}: a blast
+     * impulse defers to the post-friction phase (vanilla's tracker order); {@code false} sends raw on delivery.
+     * The MineMen grounded vy floor is not here - it's the scope's {@code VelocityConfig.wireFloorY}.
      */
-    public enum Wire { MINEMEN, HYPIXEL }
-
-    private static final int MINEMEN_SYNC_TICKS = 10;
-    private static final double MINEMEN_VY_FLOOR = 0.05;
-    private static final int HYPIXEL_VELOCITY_INTERVAL = 3;
-    private static final int HYPIXEL_TELEPORT_TICK = 3;
+    public record Wire(int syncInterval, int velocityInterval, int positionSyncTick, boolean landingVelocity,
+                       boolean impulsePostFriction) {
+        /** The 1.8/26 tracker itself: TNT updateFrequency 10, no velocity stream, post-friction impulse. */
+        public static final Wire VANILLA = new Wire(10, 0, -1, false, true);
+        public static final Wire MINEMEN = new Wire(10, 0, -1, false, false);
+        public static final Wire HYPIXEL = new Wire(0, 3, 3, true, true);
+    }
     private static final int LEGACY_SELF_FUSE = 80; // a 1.8 client counts this many ticks itself and setDead()s at zero
     private static final int LEGACY_REARM_INTERVAL = 60; // re-send the spawn under that window to restart the count
-    private static final double TPS = ServerFlag.SERVER_TICKS_PER_SECOND;
     private static final AtomicBoolean RETUNE_INSTALLED = new AtomicBoolean();
 
     private final ExplosionSystem explosion;
@@ -78,7 +90,7 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
     private Point wireSyncedAt;
     private boolean rawBroadcast;
     private boolean flipPending;
-    private boolean pushed; // a blast impulse awaiting its post-friction broadcast (HYPIXEL wire)
+    private boolean pushed; // a blast impulse awaiting its post-friction broadcast
     private int flightTick;
     private boolean wasAirborne = true;
 
@@ -100,8 +112,13 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
                     .putInt("fuseTicks", config.fuseTicks())
                     .putFloat("power", config.power())
                     .putBoolean("feet", config.detonateAtFeet())
-                    .putString("wire", config.wire().name())
+                    .putInt("wireSync", config.wire().syncInterval())
+                    .putInt("wireVel", config.wire().velocityInterval())
+                    .putInt("wirePosTick", config.wire().positionSyncTick())
+                    .putBoolean("wireLanding", config.wire().landingVelocity())
+                    .putBoolean("wireImpulsePF", config.wire().impulsePostFriction())
                     .putBoolean("bounce", config.bounce())
+                    .putBoolean("igniteOnPlace", config.igniteOnPlace())
                     .put("vel", ListBinaryTag.builder(BinaryTagTypes.DOUBLE)
                             .add(DoubleBinaryTag.doubleBinaryTag(motion.x()))
                             .add(DoubleBinaryTag.doubleBinaryTag(motion.y()))
@@ -131,12 +148,20 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
         return new SpawnEntityPacket(getEntityId(), getUuid(), getEntityType(), position, position.yaw(), 1, getVelocityForPacket());
     }
 
+    // pre-knob descriptors stored the wire as a name; the old wireVyFloor key is ignored (the floor is scope-resolved)
+    private static Wire wireFromSave(CompoundBinaryTag data) {
+        if (data.get("wire") != null) return "MINEMEN".equals(data.getString("wire")) ? Wire.MINEMEN : Wire.HYPIXEL;
+        return new Wire(data.getInt("wireSync"), data.getInt("wireVel"), data.getInt("wirePosTick"),
+                data.getBoolean("wireLanding"), data.getBoolean("wireImpulsePF"));
+    }
+
     /** The load-side reviver for {@code "polyp:tnt"} descriptors: remaining fuse + motion + preset knobs.
      *  A revived twin runs the REAL physics and hand wire - the live bounce look on every client. */
     public static PrimedTnt fromSave(ExplosionSystem explosion, CompoundBinaryTag data) {
         Config config = new Config(data.getInt("fuseTicks"), data.getFloat("power"), data.getBoolean("feet"),
-                Wire.valueOf(data.getString("wire")), data.getBoolean("bounce"),
-                data.get("victimScale") != null ? data.getDouble("victimScale") : null);
+                wireFromSave(data), data.getBoolean("bounce"),
+                data.get("victimScale") != null ? data.getDouble("victimScale") : null,
+                data.getBoolean("igniteOnPlace"));
         PrimedTnt tnt = new PrimedTnt(explosion, config);
         tnt.fuse = data.getInt("fuse");
         ListBinaryTag vel = data.getList("vel", BinaryTagTypes.DOUBLE);
@@ -152,16 +177,52 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
     }
 
     /** Spawns at the block's {@code +0.5,+0.5,+0.5} (measured) with the vanilla kick. */
-    public static PrimedTnt spawn(ExplosionSystem explosion, Instance instance, Point tntBlock, Config config) {
+    public static @Nullable PrimedTnt spawn(ExplosionSystem explosion, Instance instance, Point tntBlock, Config config) {
         return spawn(explosion, MechanicsWorld.of(instance), tntBlock, config);
     }
 
     /** MechanicsWorld-bound spawn: the TNT belongs to {@code shard} (visibility + its blast targets/exposure/broadcast). */
-    public static PrimedTnt spawn(ExplosionSystem explosion, MechanicsWorld shard, Point tntBlock, Config config) {
+    public static @Nullable PrimedTnt spawn(ExplosionSystem explosion, MechanicsWorld shard, Point tntBlock, Config config) {
+        return prime(explosion, shard, tntBlock, config, null, TntPrimeEvent.Cause.API, null);
+    }
+
+    /** {@link #spawn} with attribution and a cause for the {@link TntPrimeEvent}. */
+    public static @Nullable PrimedTnt spawn(ExplosionSystem explosion, MechanicsWorld shard, Point tntBlock,
+                                            Config config, @Nullable Entity igniter, TntPrimeEvent.Cause cause) {
+        return prime(explosion, shard, tntBlock, config, igniter, cause, null);
+    }
+
+    /**
+     * Converts the TNT block at {@code pos} into a primed entity, both through {@code world} - over a shard the
+     * clear is an overlay write, so the base map and other shards keep their block. {@code null} when the block
+     * is not TNT or {@link TntPrimeEvent} cancelled.
+     */
+    public static @Nullable PrimedTnt ignite(ExplosionSystem explosion, MechanicsWorld world, Point pos,
+                                             Config config, @Nullable Entity igniter) {
+        return ignite(explosion, world, pos, config, igniter, TntPrimeEvent.Cause.API);
+    }
+
+    public static @Nullable PrimedTnt ignite(ExplosionSystem explosion, MechanicsWorld world, Point pos,
+                                             Config config, @Nullable Entity igniter, TntPrimeEvent.Cause cause) {
+        if (!world.getBlock(pos).compare(Block.TNT)) return null;
+        return prime(explosion, world, pos, config, igniter, cause, pos);
+    }
+
+    private static @Nullable PrimedTnt prime(ExplosionSystem explosion, MechanicsWorld world, Point tntBlock,
+                                             Config config, @Nullable Entity igniter, TntPrimeEvent.Cause cause,
+                                             @Nullable Point clearPos) {
         PrimedTnt tnt = new PrimedTnt(explosion, config);
+        tnt.igniter = igniter;
         double angle = ThreadLocalRandom.current().nextDouble() * Math.PI * 2.0;
         tnt.setVelocity(new Vec(-Math.sin(angle) * 0.02, 0.2, -Math.cos(angle) * 0.02).mul(TPS));
-        shard.spawn(tnt, new Pos(tntBlock.blockX() + 0.5, tntBlock.blockY() + 0.5, tntBlock.blockZ() + 0.5));
+        TntPrimeEvent event = new TntPrimeEvent(tnt, world, clearPos, igniter, cause);
+        EventDispatcher.call(event);
+        if (event.isCancelled()) return null;
+        if (clearPos != null) {
+            world.setBlock(clearPos, Block.AIR);
+            world.applyPhysics(clearPos);
+        }
+        world.spawn(tnt, new Pos(tntBlock.blockX() + 0.5, tntBlock.blockY() + 0.5, tntBlock.blockZ() + 0.5));
         tnt.wireSyncedAt = tnt.getPosition();
         var polyp = Polyp.getInstance();
         if (polyp.isInitialized()) Fx.play(polyp.services(), Fx.TNT_PRIME, FxContext.of(tnt));
@@ -179,37 +240,20 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
             spawnVelocityPendingScale = true;
             return;
         }
-        if (config.wire() == Wire.HYPIXEL) {
+        if (config.wire().impulsePostFriction()) {
             pushed = true;
         } else {
-            rawBroadcast = true; // MineMen: raw, unfloored on-blast send
+            rawBroadcast = true; // raw, unfloored on-blast send (MineMen)
             super.setVelocity(velocity);
             rawBroadcast = false;
         }
-        this.velocity = moveVector();
+        this.velocity = gravityLeadVector(motion);
     }
 
     /** Vanilla motY state (the wire-visible value), not the Minestom move vector. */
     @Override
     public @NotNull Vec getVelocity() {
         return motion.mul(TPS);
-    }
-
-    private PhysicsResult lastPhysics;
-
-    // an externally ticked TNT in the global dispatcher double-ticks: skip the field write's re-registration
-    @Override protected void refreshCurrentChunk(@NotNull Chunk chunk) {
-        if (MechanicsWorld.externallyTicked(this)) {
-            currentChunk = chunk;
-            return;
-        }
-        super.refreshCurrentChunk(chunk);
-    }
-
-    // bail on a foreign clock, or the fuse counts on both and detonates early (movementTick + update ride super.tick)
-    @Override public void tick(long time) {
-        if (!MechanicsWorld.ownsCurrentTick(this)) return;
-        super.tick(time);
     }
 
     @Override
@@ -219,18 +263,9 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
         if (spawnVelocityPendingScale) { // first tick with a resolvable scope, before the physics step
             spawnVelocityPendingScale = false;
             motion = TickScaler.fromClientVelocity(this, motion);
-            this.velocity = moveVector();
+            this.velocity = gravityLeadVector(motion);
         }
-        this.lastPhysics = MechanicsWorld.step(this, velocity.div(TPS), lastPhysics, result -> {
-            this.velocity = result.newVelocity().mul(TPS);
-            this.onGround = result.isOnGround();
-            refreshPosition(result.newPosition(), true, false); // TNT is a synchronize-only type: the wire is hand-sent
-        });
-    }
-
-    // vanilla applies gravity BEFORE the move; handing Minestom the raw motion over-shoots the hop apex (+0.577 vs +0.386)
-    private Vec moveVector() {
-        return motion.sub(0, TickScaler.aerodynamics(this, getAerodynamics()).gravity(), 0).mul(TPS);
+        stepAgainstWorld();
     }
 
     @Override
@@ -243,18 +278,14 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
         flipPending = false;
         double hDrag = aero.horizontalAirResistance() * friction;
         motion = new Vec(motion.x() * hDrag, vy, motion.z() * hDrag);
-        this.velocity = moveVector();
+        this.velocity = gravityLeadVector(motion);
 
         if (wireSyncedAt == null) wireSyncedAt = getPosition(); // a revived twin skips spawn()'s wire init
         if (pushed) { // vanilla broadcasts a blast impulse post-friction (its tracker phase), replacing this tick's cadence send
             pushed = false;
             sendPacketToViewersAndSelf(getVelocityPacket());
-        } else switch (config.wire()) {
-            case MINEMEN -> {
-                long t = getAliveTicks();
-                if (t >= MINEMEN_SYNC_TICKS && t % MINEMEN_SYNC_TICKS == 0) minemenSyncIfMoved();
-            }
-            case HYPIXEL -> hypixelWire();
+        } else {
+            emitWire(config.wire());
         }
         wasAirborne = !isOnGround();
 
@@ -297,25 +328,26 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
         return config.detonateAtFeet() ? getPosition() : getPosition().add(0, getBoundingBox().height() / 16.0, 0);
     }
 
+    private void emitWire(Wire wire) {
+        long t = getAliveTicks();
+        if (wire.syncInterval() > 0 && t >= wire.syncInterval() && t % wire.syncInterval() == 0) syncIfMoved();
+        boolean airborne = !isOnGround();
+        if (airborne) {
+            if (flightTick == wire.positionSyncTick()) sendSync(getPosition());
+            else if (wire.velocityInterval() > 0 && flightTick % wire.velocityInterval() == 0)
+                sendPacketToViewersAndSelf(getVelocityPacket());
+            flightTick++;
+        } else if (wasAirborne && wire.landingVelocity()) {
+            sendPacketToViewersAndSelf(getVelocityPacket());
+        }
+    }
+
     // 1.8 tracker gate: sync only when the fixed-point wire position moved
-    private void minemenSyncIfMoved() {
+    private void syncIfMoved() {
         Pos pos = getPosition();
         if (wireSyncedAt != null && Math.abs(pos.x() - wireSyncedAt.x()) < 1.0 / 32
                 && Math.abs(pos.y() - wireSyncedAt.y()) < 1.0 / 32 && Math.abs(pos.z() - wireSyncedAt.z()) < 1.0 / 32) return;
         sendSync(pos);
-    }
-
-    // one position sync a few ticks after spawn + velocity every few ticks while falling (the 1.8 client predicts
-    // the arc; Via drops relative moves), then a final velocity on landing
-    private void hypixelWire() {
-        boolean airborne = !isOnGround();
-        if (airborne) {
-            if (flightTick == HYPIXEL_TELEPORT_TICK) sendSync(getPosition());
-            else if (flightTick % HYPIXEL_VELOCITY_INTERVAL == 0) sendPacketToViewersAndSelf(getVelocityPacket());
-            flightTick++;
-        } else if (wasAirborne) {
-            sendPacketToViewersAndSelf(getVelocityPacket());
-        }
     }
 
     private void sendSync(Pos pos) {
@@ -325,12 +357,12 @@ public final class PrimedTnt extends Entity implements ExternallyTickable {
         sendPacketToViewers(getVelocityPacket());
     }
 
-    /** MineMen's grounded tracker velocity floors vy at +0.05; the sim is untouched. */
+    // the scope's broadcast floor applies to the measured grounded surface only; airborne syncs and blast sends go raw
     @Override
     protected Vec getVelocityForPacket() {
-        Vec v = motion;
-        return config.wire() == Wire.MINEMEN && !rawBroadcast && isOnGround() && v.y() < MINEMEN_VY_FLOOR
-                ? v.withY(MINEMEN_VY_FLOOR) : v;
+        if (rawBroadcast || !isOnGround()) return motion;
+        VelocityRule rule = VelocityRule.scoped(this);
+        return VelocityRule.wireFloored(rule) ? VelocityRule.wireFloor(rule, motion) : motion;
     }
 
     // A TNT source rescales its blast on OTHER primed TNT to config.tntVictimScale (absolute, feet-radial), overriding

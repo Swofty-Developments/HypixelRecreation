@@ -1,5 +1,6 @@
 package io.github.term4.polyp.vri;
 
+import io.github.term4.polyp.api.event.item.ItemSpawnEvent;
 import io.github.term4.polyp.entity.DroppedItemEntity;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Player;

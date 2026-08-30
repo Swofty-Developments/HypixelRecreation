@@ -1,4 +1,4 @@
-package io.github.term4.polyp.mechanics.item;
+package io.github.term4.polyp.mechanics.itemdamage;
 
 import io.github.term4.polyp.MechanicsKeys;
 import io.github.term4.polyp.MechanicsProfile;

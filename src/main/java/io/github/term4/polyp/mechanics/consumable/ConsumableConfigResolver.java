@@ -1,5 +1,6 @@
 package io.github.term4.polyp.mechanics.consumable;
 
+import io.github.term4.polyp.codegen.CheckResolveOrder;
 import io.github.term4.polyp.util.tick.TickScaler;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.config.Config;
@@ -15,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
  * per-type override -&gt; {@link ConsumableConfig#defaults()} -&gt; the type's {@code defaultConfig()} -&gt; hard
  * fallbacks, then resolve each knob.
  */
+
+@CheckResolveOrder
 public final class ConsumableConfigResolver {
 
     private ConsumableConfigResolver() {}

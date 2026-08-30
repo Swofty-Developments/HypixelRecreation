@@ -53,6 +53,7 @@ public final class Bow implements Shootable {
     private void onRelease(PlayerCancelItemUseEvent e, ProjectileSystem system) {
         if (e.getItemStack().material() != Material.BOW) return;
         Player p = e.getPlayer();
+        if (!system.armed(arrowType.key(), p)) return;
         float power = drawPower(e.getUseDuration());
         if (power < MIN_POWER) return;
         boolean creative = p.getGameMode() == GameMode.CREATIVE;

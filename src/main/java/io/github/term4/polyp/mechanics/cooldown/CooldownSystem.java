@@ -49,8 +49,7 @@ public final class CooldownSystem implements MechanicsModule {
             // no future-guard on the expiry: against a new clock a stale stamp never expires
             TickSystem.onClockChange(e -> { if (e instanceof Player p) p.removeTag(ACTIVE); });
         }
-        polyp.register(system);
-        return system;
+        return polyp.installModule(system);
     }
 
     private static final AtomicBoolean CLOCK_RESET = new AtomicBoolean();

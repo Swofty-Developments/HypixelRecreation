@@ -6,7 +6,7 @@ import io.github.term4.polyp.mechanics.blocking.BlockingConfig;
 import io.github.term4.polyp.mechanics.cooldown.CooldownConfig;
 import io.github.term4.polyp.mechanics.consumable.ConsumableConfig;
 import io.github.term4.polyp.mechanics.damage.DamageConfig;
-import io.github.term4.polyp.mechanics.death.DeathConfig;
+import io.github.term4.polyp.mechanics.damage.DeathConfig;
 import io.github.term4.polyp.mechanics.durability.DurabilityConfig;
 import io.github.term4.polyp.fx.FxRegistry;
 import io.github.term4.polyp.mechanics.explosion.ExplosionConfig;
@@ -19,7 +19,8 @@ import io.github.term4.polyp.platform.fixes.FixesConfig;
 import io.github.term4.polyp.platform.player.PlayerConfig;
 import io.github.term4.polyp.tracking.motion.VelocityRule;
 import io.github.term4.polyp.entity.DroppedItemEntity;
-import io.github.term4.polyp.mechanics.item.ItemDamageConfig;
+import io.github.term4.polyp.mechanics.explosion.TntConfig;
+import io.github.term4.polyp.mechanics.itemdamage.ItemDamageConfig;
 import io.github.term4.polyp.vri.VriConfig;
 import io.github.term4.polyp.util.tick.TickScalingConfig;
 
@@ -52,6 +53,8 @@ public final class MechanicsKeys {
     /** What destroys a dropped item: explosions, fire, lava, cactus, the void. */
     public static final ConfigKey<ItemDamageConfig> ITEM_DAMAGE = ConfigKey.of("polyp:item-damage", ItemDamageConfig.class);
     public static final ConfigKey<ExplosionConfig> EXPLOSION = ConfigKey.of("polyp:explosion", ExplosionConfig.class);
+    /** The primed-TNT knobs (fuse/wire/bounce/place-ignition); ignition sources resolve it per scope and prime. */
+    public static final ConfigKey<TntConfig> TNT = ConfigKey.of("polyp:tnt", TntConfig.class);
     public static final ConfigKey<CompatConfig> COMPAT = ConfigKey.of("polyp:compat", CompatConfig.class);
     public static final ConfigKey<ItemRegistry> ITEMS = ConfigKey.of("polyp:items", ItemRegistry.class);
 }

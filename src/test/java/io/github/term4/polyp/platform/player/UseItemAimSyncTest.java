@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * A 1.8 client sends use-then-look within one tick, so Via's aim fill is one look stale (the flick-throw desync).
@@ -83,5 +84,34 @@ class UseItemAimSyncTest {
         ClientAnimationPacket swing = new ClientAnimationPacket(PlayerHand.MAIN);
         feed(true, swing);
         assertEquals(List.of(USE, swing), out);
+    }
+
+    // re-holding a re-fed instance swaps it per flying packet; an identity-tracking re-feeder (lag sim) then never lands the press
+
+    @Test
+    void reFedPatchedUseIsNotHeldAgain() {
+        ClientPlayerPositionAndRotationPacket aim =
+                new ClientPlayerPositionAndRotationPacket(new Pos(1, 2, 3, 45.0f, 30.0f), (byte) 1);
+        feed(true, USE, aim);
+        ClientPacket released = out.get(0);
+        out.clear();
+
+        ClientPlayerPositionAndRotationPacket wobble =
+                new ClientPlayerPositionAndRotationPacket(new Pos(1, 2, 3, 50.0f, 25.0f), (byte) 1);
+        feed(true, released, wobble);
+        assertEquals(2, out.size());
+        assertSame(released, out.get(0));
+        assertSame(wobble, out.get(1));
+    }
+
+    @Test
+    void reFedUnpatchedUseIsNotHeldAgain() {
+        ClientPlayerPositionStatusPacket idle = new ClientPlayerPositionStatusPacket((byte) 1);
+        feed(true, USE, idle);
+        out.clear();
+
+        feed(true, USE);
+        assertEquals(1, out.size());
+        assertSame(USE, out.get(0));
     }
 }

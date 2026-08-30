@@ -1,6 +1,6 @@
 package io.github.term4.polyp.presets.mmc18;
 
-import io.github.term4.polyp.mechanics.item.ItemDamageConfig;
+import io.github.term4.polyp.mechanics.itemdamage.ItemDamageConfig;
 
 /** MineMen dropped-item rules. */
 public final class Items {

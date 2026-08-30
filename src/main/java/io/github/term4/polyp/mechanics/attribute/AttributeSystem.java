@@ -8,7 +8,7 @@ import io.github.term4.polyp.mechanics.attribute.source.HeldSource;
 import io.github.term4.polyp.mechanics.attribute.source.SourceRegistry;
 
 import io.github.term4.polyp.MechanicsKeys;
-import io.github.term4.polyp.MechanicsModule;
+import io.github.term4.polyp.ScopedSystem;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.mechanics.attribute.AttributeConfigResolver.AttributeContext;
 import io.github.term4.polyp.mechanics.attribute.AttributeConfigResolver.ResolvedAttributeConfig;
@@ -47,7 +47,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +57,7 @@ import java.util.Map;
  * Attribute/enchant/potion system: a {@link SourceRegistry} plus a scan of active effects and the in-context item's
  * enchants into active sources, read via {@link #context}.
  */
-public final class AttributeSystem implements MechanicsModule {
+public final class AttributeSystem extends ScopedSystem<AttributeConfig> {
 
     /** Identity for per-module TPS scaling. */
     public static final Key KEY = Key.key("polyp:attribute");
@@ -64,9 +66,7 @@ public final class AttributeSystem implements MechanicsModule {
     /** The armor stage's identity for targeted {@link Bypass#attribute} bypass. */
     static final Key ARMOR_ATTRIBUTE_KEY = Key.key("minecraft:armor");
 
-    private final Polyp polyp;
     private final SourceRegistry registry = new SourceRegistry();
-    private final AttributeConfig config;
     private final EventNode<@NotNull EntityEvent> node;
     /** Re-entry guard: the re-added potion fires the add event again. */
     private final ThreadLocal<Boolean> rescaling = ThreadLocal.withInitial(() -> Boolean.FALSE);
@@ -79,8 +79,7 @@ public final class AttributeSystem implements MechanicsModule {
     private static final Tag<ItemStack[]> EQUIP_SNAPSHOT = Tag.Transient("polyp:equip-snapshot");
 
     public AttributeSystem(Polyp polyp, @Nullable AttributeConfig config) {
-        this.polyp = polyp;
-        this.config = config != null ? config : AttributeConfig.builder().build();
+        super(polyp, MechanicsKeys.ATTRIBUTES, config != null ? config : AttributeConfig.builder().build());
         this.node = EventNode.type("polyp:attributes", EventFilter.ENTITY);
         for (Source source : this.config.sources()) registry.register(source);
         node.addListener(EntityPotionAddEvent.class, this::onPotionAdd);
@@ -116,7 +115,7 @@ public final class AttributeSystem implements MechanicsModule {
         if (active.isEmpty()) return;
         long now = entity.getAliveTicks();
         for (TimedPotion tp : active) {
-            EntitySource source = registry.entitySource(tp.potion().effect().key());
+            EntitySource source = entitySource(entity, tp.potion().effect().key());
             if (source == null) continue;
             int level = tp.potion().amplifier() + 1;
             int interval = source.behavior().tickInterval(level);
@@ -162,7 +161,7 @@ public final class AttributeSystem implements MechanicsModule {
 
     private void behaviorRefresh(Entity entity, Potion incoming) {
         if (!(entity instanceof LivingEntity living)) return;
-        EntitySource source = registry.entitySource(incoming.effect().key());
+        EntitySource source = entitySource(living, incoming.effect().key());
         if (source == null) return;
         for (TimedPotion tp : living.getActiveEffects()) {
             if (tp.potion().effect() == incoming.effect()) {
@@ -179,7 +178,7 @@ public final class AttributeSystem implements MechanicsModule {
         Potion gone = e.getPotion();
         if (incoming != null && incoming.effect() == gone.effect()) {
             if (incoming.amplifier() != gone.amplifier() && e.getEntity() instanceof LivingEntity living) {
-                EntitySource source = registry.entitySource(gone.effect().key());
+                EntitySource source = entitySource(living, gone.effect().key());
                 if (source != null) syncModifiers(living, source, gone.amplifier() + 1, false);
             }
             return;
@@ -189,7 +188,7 @@ public final class AttributeSystem implements MechanicsModule {
 
     private void onPotion(Entity entity, Potion potion, boolean added) {
         if (!(entity instanceof LivingEntity living)) return;
-        EntitySource source = registry.entitySource(potion.effect().key());
+        EntitySource source = entitySource(living, potion.effect().key());
         if (source == null) return;
         int level = potion.amplifier() + 1;
         syncModifiers(living, source, level, added);
@@ -231,7 +230,7 @@ public final class AttributeSystem implements MechanicsModule {
     private void syncArmor(LivingEntity entity, EquipmentSlot changedSlot, ItemStack changedItem) {
         Map<Key, Integer> worn = wornArmorMap(entity);
         AttributeContext ctx = context(entity, null);
-        for (ArmorSource source : registry.armorSources()) {
+        for (ArmorSource source : armorSources(ctx.config())) {
             int level = wornLevel(entity, source.key(), changedSlot, changedItem);
             applyEquipModifiers(ctx, entity, source, level, armorModifierId(source));
             int was = worn.getOrDefault(source.key(), 0);
@@ -249,7 +248,7 @@ public final class AttributeSystem implements MechanicsModule {
     /** Pushed, not pulled: mining is client-computed off the holder's attributes. */
     private void syncHeld(LivingEntity entity, ItemStack held) {
         AttributeContext ctx = context(entity, null);
-        for (HeldSource source : registry.heldSources()) {
+        for (HeldSource source : heldSources(ctx.config())) {
             applyEquipModifiers(ctx, entity, source, Enchants.level(held, source.key()), heldModifierId(source));
         }
     }
@@ -264,7 +263,7 @@ public final class AttributeSystem implements MechanicsModule {
         if (worn == null || worn.isEmpty()) return;
         long now = entity.getAliveTicks();
         for (Map.Entry<Key, Integer> e : worn.entrySet()) {
-            ArmorSource source = registry.armorSource(e.getKey());
+            ArmorSource source = armorSource(entity, e.getKey());
             if (source == null) continue;
             int interval = source.behavior().tickInterval(e.getValue());
             if (interval <= 0) continue;
@@ -329,7 +328,7 @@ public final class AttributeSystem implements MechanicsModule {
         if (enchants == null) return;
         for (Map.Entry<RegistryKey<Enchantment>, Integer> e : enchants.enchantments().entrySet()) {
             if (e.getValue() <= 0) continue;
-            ItemSource s = registry.itemSource(e.getKey().key());
+            ItemSource s = itemSource(attacker, e.getKey().key());
             if (s instanceof OnHit oh) {
                 oh.onHit(new HitContext(attacker, victim, e.getValue(), item, polyp.services()));
             }
@@ -341,9 +340,38 @@ public final class AttributeSystem implements MechanicsModule {
         return this;
     }
 
-    /** The scoped profile, else the install config. */
-    public AttributeConfig configFor(@Nullable Entity entity) {
-        return polyp.profiles().resolveOr(entity, MechanicsKeys.ATTRIBUTES, config);
+    // scoped sources first: a profile's catalog needs no install registration
+
+    private @Nullable EntitySource entitySource(LivingEntity subject, Key effectKey) {
+        EntitySource s = configFor(subject).sourceIndex().entitySource(effectKey);
+        return s != null ? s : registry.entitySource(effectKey);
+    }
+
+    private @Nullable ItemSource itemSource(LivingEntity subject, Key enchantKey) {
+        ItemSource s = configFor(subject).sourceIndex().itemSource(enchantKey);
+        return s != null ? s : registry.itemSource(enchantKey);
+    }
+
+    private @Nullable ArmorSource armorSource(LivingEntity subject, Key enchantKey) {
+        ArmorSource s = configFor(subject).sourceIndex().armorSource(enchantKey);
+        return s != null ? s : registry.armorSource(enchantKey);
+    }
+
+    private Collection<ArmorSource> armorSources(AttributeConfig cfg) {
+        return mergedByKey(registry.armorSources(), cfg.sourceIndex().armorSources());
+    }
+
+    private Collection<HeldSource> heldSources(AttributeConfig cfg) {
+        return mergedByKey(registry.heldSources(), cfg.sourceIndex().heldSources());
+    }
+
+    private static <S extends Source> Collection<S> mergedByKey(Collection<S> base, Collection<S> over) {
+        if (over.isEmpty()) return base;
+        if (base.isEmpty()) return over;
+        Map<Key, S> merged = new LinkedHashMap<>();
+        for (S s : base) merged.put(s.key(), s);
+        for (S s : over) merged.put(s.key(), s);
+        return merged.values();
     }
 
     public AttributeContext context(LivingEntity entity, @Nullable ItemStack item) {
@@ -385,14 +413,14 @@ public final class AttributeSystem implements MechanicsModule {
     public List<Active> activeSources(LivingEntity entity, @Nullable ItemStack item) {
         List<Active> out = new ArrayList<>();
         for (TimedPotion tp : entity.getActiveEffects()) {
-            EntitySource s = registry.entitySource(tp.potion().effect().key());
+            EntitySource s = entitySource(entity, tp.potion().effect().key());
             if (s != null) out.add(new Active(s, tp.potion().amplifier() + 1));
         }
         if (item != null && !item.isAir()) {
             EnchantmentList enchants = item.get(DataComponents.ENCHANTMENTS);
             if (enchants != null) {
                 for (Map.Entry<RegistryKey<Enchantment>, Integer> e : enchants.enchantments().entrySet()) {
-                    ItemSource s = registry.itemSource(e.getKey().key());
+                    ItemSource s = itemSource(entity, e.getKey().key());
                     if (s != null && e.getValue() > 0) out.add(new Active(s, e.getValue()));
                 }
             }
@@ -401,24 +429,17 @@ public final class AttributeSystem implements MechanicsModule {
     }
 
     public SourceRegistry registry() { return registry; }
-    public AttributeConfig config() { return config; }
     public EventNode<@NotNull EntityEvent> node() { return node; }
 
     /** {@code level} is 1-based. */
     public record Active(Source source, int level) {}
 
-    /**
-     * Installs from the GLOBAL profile's {@link AttributeConfig}, registering its {@code sources} up front - set the
-     * profile before installing, or the system is inert.
-     */
+    /** Installs from the GLOBAL profile's {@link AttributeConfig} if set; scoped profiles resolve their own {@code sources} either way. */
     public static AttributeSystem install(Polyp polyp) {
         return install(polyp, polyp.profiles().resolve(null, MechanicsKeys.ATTRIBUTES));
     }
 
     public static AttributeSystem install(Polyp polyp, @Nullable AttributeConfig config) {
-        AttributeSystem system = new AttributeSystem(polyp, config);
-        polyp.register(system);
-        polyp.install(system.node);
-        return system;
+        return polyp.installModule(new AttributeSystem(polyp, config));
     }
 }

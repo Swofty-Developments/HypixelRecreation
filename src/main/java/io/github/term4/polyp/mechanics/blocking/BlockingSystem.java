@@ -1,7 +1,7 @@
 package io.github.term4.polyp.mechanics.blocking;
 
 import io.github.term4.polyp.MechanicsKeys;
-import io.github.term4.polyp.MechanicsModule;
+import io.github.term4.polyp.ScopedSystem;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.api.event.blocking.BlockingDamageEvent;
@@ -39,20 +39,17 @@ import org.jetbrains.annotations.Nullable;
  * raise (the compat layer stamps it per-viewer, honouring the opt-out); 1.8 clients block natively. Movement slowdown
  * is client-predicted, nothing applied server-side.
  */
-public final class BlockingSystem implements MechanicsModule {
+public final class BlockingSystem extends ScopedSystem<BlockingConfig> {
 
     /** Per-item opt-out: absent = blockable, {@code false} = opted out (never enters the block state, never affects damage). */
     public static final Tag<Boolean> BLOCKABLE = Tag.Boolean("polyp:blockable");
 
-    private final Polyp polyp;
     private final Services services;
-    private final BlockingConfig config;
     private final EventNode<@NotNull PlayerEvent> node;
 
     public BlockingSystem(Polyp polyp, BlockingConfig config) {
-        this.polyp = polyp;
+        super(polyp, MechanicsKeys.BLOCKING, config);
         this.services = polyp.services();
-        this.config = config;
         this.node = EventNode.type("polyp:blocking", EventFilter.PLAYER);
         node.addListener(PlayerUseItemEvent.class, this::onUse);
         node.addListener(PlayerCancelItemUseEvent.class, e -> onStopUsing(e.getPlayer(), e.getHand(), e.getItemStack()));
@@ -92,12 +89,6 @@ public final class BlockingSystem implements MechanicsModule {
     }
 
     public EventNode<@NotNull PlayerEvent> node() { return node; }
-    public BlockingConfig config() { return config; }
-
-    /** Effective config for {@code subject} (the defender): the scoped profile, else the install config. */
-    public BlockingConfig configFor(@Nullable Entity subject) {
-        return polyp.profiles().resolveOr(subject, MechanicsKeys.BLOCKING, config);
-    }
 
     /** Whether {@code player} is currently raising a blockable item (use-state only; the per-hit gates live in {@link #reduce}). */
     public boolean isBlocking(Player player) {
@@ -137,9 +128,6 @@ public final class BlockingSystem implements MechanicsModule {
     }
 
     public static BlockingSystem install(Polyp polyp, BlockingConfig cfg) {
-        BlockingSystem system = new BlockingSystem(polyp, cfg);
-        polyp.register(system);
-        polyp.install(system.node);
-        return system;
+        return polyp.installModule(new BlockingSystem(polyp, cfg));
     }
 }

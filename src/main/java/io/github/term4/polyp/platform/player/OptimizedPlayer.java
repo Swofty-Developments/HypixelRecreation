@@ -4,6 +4,7 @@ import io.github.term4.polyp.MechanicsKeys;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.mechanics.knockback.KnockbackConfig;
 import io.github.term4.polyp.mechanics.projectile.ProjectileConfig;
+import io.github.term4.polyp.platform.compatibility.CompatConfig;
 import io.github.term4.polyp.platform.compatibility.CompatState;
 import io.github.term4.polyp.platform.fixes.RefreshPositionFix;
 import io.github.term4.polyp.platform.fixes.client.InventorySync;
@@ -23,6 +24,7 @@ import net.minestom.server.network.packet.server.SendablePacket;
 import net.minestom.server.network.packet.server.play.EntityEquipmentPacket;
 import net.minestom.server.network.packet.server.play.EntityAttributesPacket;
 import net.minestom.server.network.packet.server.play.EntityMetaDataPacket;
+import net.minestom.server.network.packet.server.play.UpdateHealthPacket;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
@@ -124,6 +126,11 @@ public class OptimizedPlayer extends Player implements ExternallyTickable {
 
     @Override
     public void sendPacket(@NotNull SendablePacket packet) {
+        // holds the client's food gate shut against ANY server re-send (eat, regen, exhaustion) while the fix is engaged
+        if (compat.activeSwimFix() == CompatConfig.SwimSuppression.FOOD
+                && packet instanceof UpdateHealthPacket uh && uh.food() > 6) {
+            packet = new UpdateHealthPacket(uh.health(), 6, uh.foodSaturation());
+        }
         SendablePacket p = EquipmentSlotsFix.rewrite(compat.rewriteItems(packet));
         if (InventorySync.enabled()) {
             p = inventorySync.filter(p);

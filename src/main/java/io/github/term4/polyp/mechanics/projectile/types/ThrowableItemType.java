@@ -1,5 +1,6 @@
 package io.github.term4.polyp.mechanics.projectile.types;
 
+import io.github.term4.polyp.util.HeldItems;
 import io.github.term4.polyp.world.MechanicsWorld;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.fx.FxContext;
@@ -9,7 +10,6 @@ import io.github.term4.polyp.mechanics.projectile.ProjectileSnapshot;
 import io.github.term4.polyp.mechanics.projectile.ProjectileSystem;
 import net.kyori.adventure.key.Key;
 import net.minestom.server.entity.EntityType;
-import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.PlayerHand;
 import net.minestom.server.event.EventFilter;
@@ -71,6 +71,7 @@ public abstract class ThrowableItemType extends ProjectileType {
 
     private void throwItem(Player p, PlayerHand hand, ItemStack item) {
         if (item.material() != material || system == null) return;
+        if (!system.armed(key(), p)) return;
         Instance instance = p.getInstance();
         long age = instance != null ? MechanicsWorld.of(p).worldAge() : 0;
         Long last = p.getTag(LAST_THROW_AGE);
@@ -82,9 +83,7 @@ public abstract class ThrowableItemType extends ProjectileType {
         Key sound = throwSound();
         if (sound != null && polyp != null) Fx.play(polyp.services(), sound, FxContext.of(p));
         var proj = system.launch(ProjectileSnapshot.of(p, this).withItem(item));
-        if (p.getGameMode() != GameMode.CREATIVE) {
-            p.setItemInHand(hand, item.withAmount(item.amount() - 1));
-        }
+        HeldItems.consumeOne(p, hand);
         system.firstStep(proj);
     }
 

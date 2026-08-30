@@ -1,4 +1,4 @@
-package io.github.term4.polyp.vri;
+package io.github.term4.polyp.api.event.item;
 
 import io.github.term4.polyp.entity.DroppedItemEntity;
 import io.github.term4.polyp.world.MechanicsWorld;

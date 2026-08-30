@@ -1,5 +1,6 @@
 package io.github.term4.polyp.mechanics.blocking;
 
+import io.github.term4.polyp.codegen.CheckResolveOrder;
 import io.github.term4.polyp.Services;
 import io.github.term4.polyp.config.Config;
 import io.github.term4.polyp.config.FieldValue;
@@ -20,6 +21,8 @@ import java.util.Set;
  * Resolves a {@link BlockingConfig} into plain values against a {@link BlockingContext}: the per-material entry over
  * {@link BlockingConfig#defaults()}, then each knob.
  */
+
+@CheckResolveOrder
 public final class BlockingConfigResolver {
 
     private BlockingConfigResolver() {}

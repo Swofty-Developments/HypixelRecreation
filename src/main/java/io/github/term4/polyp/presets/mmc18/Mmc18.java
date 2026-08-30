@@ -3,7 +3,6 @@ package io.github.term4.polyp.presets.mmc18;
 import io.github.term4.polyp.MechanicsKeys;
 import io.github.term4.polyp.MechanicsProfile;
 import io.github.term4.polyp.fx.Fx;
-import io.github.term4.polyp.presets.vanilla18.Movement;
 import io.github.term4.polyp.presets.vanilla18.Vanilla18;
 
 /**
@@ -23,9 +22,9 @@ public final class Mmc18 {
                 .set(MechanicsKeys.DAMAGE, Damage.config())
                 .set(MechanicsKeys.KNOCKBACK, Knockback.melee())
                 .set(MechanicsKeys.PLAYER, Player.config())
-                // measured on MineMen, later source-proven plain 1.8: motY holds until the victim's next move packet
                 .set(MechanicsKeys.VELOCITY, Movement.velocity())
                 .set(MechanicsKeys.EXPLOSION, Explosion.fireballFight())
+                .set(MechanicsKeys.TNT, Tnt.config())
                 .set(MechanicsKeys.ITEM_DAMAGE, Items.damage())
                 .set(MechanicsKeys.PROJECTILES, Projectiles.config())
                 // arrow hit-marker ding to the shooter; vanilla presets don't

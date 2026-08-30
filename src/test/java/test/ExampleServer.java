@@ -21,7 +21,6 @@ import io.github.term4.polyp.mechanics.hunger.HungerSystem;
 import io.github.term4.polyp.mechanics.blocking.BlockingSystem;
 import io.github.term4.polyp.mechanics.blocking.catalog.VanillaBlocking;
 
-import net.minestom.server.entity.GameMode;
 import io.github.term4.polyp.tracking.ClientVersion;
 import net.minestom.server.Auth;
 import net.minestom.server.MinecraftServer;
@@ -29,12 +28,12 @@ import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.arguments.Argument;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
-import net.minestom.server.event.player.PlayerBlockPlaceEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.event.trait.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
@@ -55,18 +54,12 @@ import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
 import net.minestom.server.potion.PotionType;
 import net.minestom.server.timer.TaskSchedule;
-import io.github.term4.polyp.world.MechanicsWorld;
 import io.github.term4.polyp.presets.Preset;
-import io.github.term4.polyp.entity.PrimedTnt;
 
 public class ExampleServer {
 
-    /** The active preset - swap this ONE line to change the whole setup (mechanics profile + the primed-TNT entity, together). */
+    /** The active preset - swap this ONE line to change the whole setup. */
     private static final Preset PRESET = Preset.MMC18;
-
-    private static Preset presetFor(Player p) {
-        return PRESET;
-    }
 
     static void main() {
         // Enable faster socket writes
@@ -142,19 +135,8 @@ public class ExampleServer {
 
         GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
 
-        // TNT test item: placing TNT spawns a primed-TNT entity instead of a block, from the active PRESET - so its
-        // wire/bounce/fuse always match the profile above (a mismatch made a Hypixel-profile run behave like MineMen).
-        globalEventHandler.addListener(PlayerBlockPlaceEvent.class, event -> {
-            if (!event.getBlock().compare(Block.TNT)) return;
-            event.setCancelled(true);
-            Player p = event.getPlayer();
-            if (p.getInstance() == null || explosions == null) return;
-            PrimedTnt.spawn(explosions, MechanicsWorld.of(p), event.getBlockPosition(), presetFor(p).tnt);
-            if (p.getGameMode() != GameMode.CREATIVE) { // cancelling the place keeps the item, so consume one like vanilla TNT
-                ItemStack held = p.getItemInHand(event.getHand());
-                p.setItemInHand(event.getHand(), held.withAmount(held.amount() - 1));
-            }
-        });
+        // TNT placement: the profile's TNT config drives it (igniteOnPlace primes via ExplosionSystem's listener;
+        // hand ignition is VRI tntIgnite)
 
         globalEventHandler.addListener(AsyncPlayerConfigurationEvent.class, event -> {
             final Player player = event.getPlayer();

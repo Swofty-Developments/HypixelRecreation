@@ -150,6 +150,7 @@ public final class BlockBreaking {
     private final float tableMax;
     private final double originLift;
     private final double intensityNoise;
+    private final boolean tntChain;
 
     private BlockBreaking(Builder b) {
         this.model = b.model;
@@ -166,6 +167,7 @@ public final class BlockBreaking {
         this.intensityTable = b.intensityTable;
         this.originLift = b.originLift;
         this.intensityNoise = b.intensityNoise;
+        this.tntChain = b.tntChain;
         float max = 0;
         if (intensityTable != null) {
             int shell = rayGrid * rayGrid * rayGrid - (rayGrid - 2) * (rayGrid - 2) * (rayGrid - 2);
@@ -190,6 +192,7 @@ public final class BlockBreaking {
     float @Nullable [] intensityTable() { return intensityTable; }
     double originLift() { return originLift; }
     double intensityNoise() { return intensityNoise; }
+    boolean tntChain() { return tntChain; }
     /** Hottest possible launch intensity - bounds any reach-derived scan (seals). */
     double maxIntensity(float power) {
         return (intensityTable != null ? tableMax : power * rollMax) + intensityNoise;
@@ -225,6 +228,7 @@ public final class BlockBreaking {
         private float[] intensityTable;
         private double originLift;
         private double intensityNoise;
+        private boolean tntChain;
 
         private Builder() {}
 
@@ -243,6 +247,7 @@ public final class BlockBreaking {
             intensityTable = c.intensityTable;
             originLift = c.originLift;
             intensityNoise = c.intensityNoise;
+            tntChain = c.tntChain;
         }
 
         public Builder model(@NotNull Model v) { this.model = v; return this; }
@@ -273,6 +278,9 @@ public final class BlockBreaking {
         /** Raises the ray origin above the blast centre for BLOCK selection only (KB/damage/packet unaffected);
          *  MineMen fireball 0.25 - their footprints shrink faster with standoff than the flat-origin geometry. */
         public Builder originLift(double v) { this.originLift = v; return this; }
+
+        /** Explosion-destroyed TNT primes with the 1.8 short random fuse instead of dropping. Default off. */
+        public Builder tntChain(boolean v) { this.tntChain = v; return this; }
 
         /** Per-shot, per-ray uniform {@code [-v, v]} added to the launch intensity - with an {@link #intensityTable},
          *  near-threshold rim cells flicker shot to shot while the core repeats (MineMen fireball). */

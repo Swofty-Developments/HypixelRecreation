@@ -18,7 +18,7 @@ public final class Movement {
     private static VelocityConfig arcConfig() {
         return VelocityConfig.builder()
                 // no vanilla motY < 0.005 apex reseed: with it the descending arc folds ~0.003 b/t low (~11 shorts by hit 3)
-                .clampY(0)
+                .zeroBelowY(0)
                 .entityPush(false) // player collision off: no server-side push residual to fold
                 // modern horizontal current, 1.8 vertical water gravity (0.02): in-water KB is 0.39, not 0.3975
                 .flowModel(FluidFlow.Model.MODERN.withLegacyWaterGravity())

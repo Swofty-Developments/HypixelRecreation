@@ -3,22 +3,21 @@ package io.github.term4.polyp.mechanics.consumable;
 import io.github.term4.polyp.config.Config;
 import io.github.term4.polyp.mechanics.consumable.ConsumableConfigResolver.ConsumableContext;
 import net.kyori.adventure.key.Key;
+import net.minestom.server.item.Material;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Immutable consumable config: a generic {@link #defaults} base plus per-consumable {@link ConsumableTypeConfig}
- * overrides keyed by type key. Assigned per scope via the
+ * Immutable consumable config: the {@link #types} identities, a generic {@link #defaults} base, and per-consumable
+ * {@link ConsumableTypeConfig} overrides keyed by type key. Assigned per scope via the
  * {@link io.github.term4.polyp.MechanicsProfile} {@code consumables} member. Resolution layers per-type
  * override -&gt; {@link #defaults} -&gt; the registered type's {@code defaultConfig()} -&gt; hard fallbacks.
- *
- * <p>The consumable <em>definitions</em> (the {@link Consumable} types + their materials) live in the
- * {@link ConsumableRegistry}; this config only tunes them.
  */
 public final class ConsumableConfig extends Config<ConsumableContext, ConsumableConfig> {
 
@@ -26,8 +25,9 @@ public final class ConsumableConfig extends Config<ConsumableContext, Consumable
     public final @Nullable ConsumableTypeConfig defaults;
     /** Per-consumable config overrides, keyed by {@link ConsumableTypeConfig#key()}. */
     public final Map<Key, ConsumableTypeConfig> typeConfigs;
-    /** Consumable type identities (key + material) this config registers. Read once at install, from the global profile. */
+    /** Consumable type identities (key + material); resolved per scope at use. */
     public final List<Consumable> types;
+    private volatile @Nullable Map<Material, Consumable> materialIndex;
     /** The {@link ComponentFood} floor: unregistered items with a {@code food} component consume with their registry values (unset = on). */
     public final @Nullable Boolean componentFoods;
 
@@ -46,6 +46,20 @@ public final class ConsumableConfig extends Config<ConsumableContext, Consumable
     public @Nullable ConsumableTypeConfig typeConfig(Key key) { return typeConfigs.get(key); }
 
     public List<Consumable> types() { return types; }
+
+    /** {@link #types} by material, or {@code null}; last wins per material. */
+    public @Nullable Consumable typeForMaterial(@Nullable Material material) {
+        if (material == null || types.isEmpty()) return null;
+        Map<Material, Consumable> index = this.materialIndex;
+        if (index == null) {
+            Map<Material, Consumable> built = new HashMap<>();
+            for (Consumable c : types) {
+                for (Material m : c.materials()) built.put(m, c);
+            }
+            this.materialIndex = index = built; // benign race: identical rebuild
+        }
+        return index.get(material);
+    }
 
     /** Merges this config over {@code base}; per-type entries and types layer over base's. */
     public ConsumableConfig fromBase(ConsumableConfig base) {
