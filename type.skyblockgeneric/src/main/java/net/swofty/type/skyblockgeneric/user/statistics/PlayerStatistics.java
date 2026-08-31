@@ -841,8 +841,15 @@ public class PlayerStatistics {
                     player.setMana(player.getMaxMana());
                 if (player.getMana() <= player.getMaxMana()) {
                     float manaPool = player.getMaxMana();
+                    double regenerationBonus = player.getStatistics().getManaRegenerationPercentBonus();
+                    SkyBlockItem pet = player.getPetData().getEnabledPet();
+                    if (pet != null) {
+                        for (PetAbility ability : player.getPetData().getCachedAbilities(pet)) {
+                            regenerationBonus += ability.getManaRegenerationPercent(player, pet);
+                        }
+                    }
                     player.setMana(Math.min(manaPool, Math.min(manaPool, player.getMana() + (manaPool / 50) +
-                            (int) ((manaPool / 50) * player.getStatistics().getManaRegenerationPercentBonus()))));
+                            (float) ((manaPool / 50) * regenerationBonus))));
                 }
             });
             return TaskSchedule.seconds(1);

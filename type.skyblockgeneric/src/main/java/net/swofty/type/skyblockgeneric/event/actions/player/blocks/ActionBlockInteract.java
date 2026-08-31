@@ -2,6 +2,8 @@ package net.swofty.type.skyblockgeneric.event.actions.player.blocks;
 
 import net.minestom.server.event.player.PlayerBlockInteractEvent;
 import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
+import net.swofty.type.skyblockgeneric.block.BlockType;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
@@ -41,9 +43,14 @@ public class ActionBlockInteract implements HypixelEventClass {
             return;
         }
 
-        if (!SkyBlockBlock.isSkyBlockBlock(event.getBlock())) return;
-
-        SkyBlockBlock block = new SkyBlockBlock(event.getBlock());
+        SkyBlockBlock block;
+        if (SkyBlockBlock.isSkyBlockBlock(event.getBlock())) {
+            block = new SkyBlockBlock(event.getBlock());
+        } else if (Material.fromKey(event.getBlock().key()) == Material.ENCHANTING_TABLE) {
+            block = new SkyBlockBlock(BlockType.ENCHANTMENT_TABLE);
+        } else {
+            return;
+        }
 
         if (block.getGenericInstance() instanceof BlockInteractable interactable) {
             interactable.onInteract(event, block);

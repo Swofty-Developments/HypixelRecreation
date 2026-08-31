@@ -319,6 +319,7 @@ public class ShapedRecipe extends SkyBlockRecipe<ShapedRecipe> {
             if (req != null) cloned.addExtraRequirement((char) i, req);
         }
         cloned.amount = this.amount;
+        cloned.setCraftingRequirements(getCraftingRequirements());
         return cloned;
     }
 

@@ -1,7 +1,12 @@
 package net.swofty.type.skyblockgeneric.item.components;
 
 import lombok.Getter;
+import net.kyori.adventure.key.Key;
 import net.swofty.commons.ServerType;
+import net.swofty.commons.loot.LootEntry;
+import net.swofty.commons.loot.LootPool;
+import net.swofty.commons.loot.LootRoll;
+import net.swofty.commons.loot.LootTable;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.skyblockgeneric.enchantment.EnchantmentType;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -13,12 +18,11 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 public class CustomDropComponent extends SkyBlockItemComponent {
     private final List<DropRule> rules;
-    private static final Random RANDOM = new Random();
 
     public CustomDropComponent(List<DropRule> rules) {
         this.rules = rules;
@@ -56,13 +60,21 @@ public class CustomDropComponent extends SkyBlockItemComponent {
                     return drops;
                 }
 
-                for (Drop drop : rule.drops()) {
-                    if (RANDOM.nextDouble() <= drop.chance()) {
-                        int amount = calculateAmount(drop.amount());
-                        if (amount > 0) {
-                            SkyBlockItem dropItem = new SkyBlockItem(drop.item(), amount);
-                            drops.add(dropItem);
-                        }
+                List<LootEntry<Void, Drop>> entries = new ArrayList<>();
+                for (int index = 0; index < rule.drops().size(); index++) {
+                    Drop drop = rule.drops().get(index);
+                    entries.add(new LootEntry<>(Key.key("skyblock", "blocks/" + drop.item().name().toLowerCase()
+                            + "/" + index), drop, drop.chance()));
+                }
+                List<Drop> selected = new LootTable<Void, Drop>(Key.key("skyblock", "blocks/"
+                        + brokenItem.getMaterial().key().value()), List.of(
+                        new LootPool<>(Key.key("skyblock", "drops"), LootPool.Mode.INDEPENDENT, entries)
+                )).roll(null).stream().map(LootRoll::value).toList();
+                for (Drop drop : selected) {
+                    int amount = calculateAmount(drop.amount());
+                    if (amount > 0) {
+                        SkyBlockItem dropItem = new SkyBlockItem(drop.item(), amount);
+                        drops.add(dropItem);
                     }
                 }
                 return drops; // Only process the first matching rule
@@ -83,7 +95,7 @@ public class CustomDropComponent extends SkyBlockItemComponent {
             String[] parts = amountStr.split("-");
             int min = Integer.parseInt(parts[0].trim());
             int max = Integer.parseInt(parts[1].trim());
-            return RANDOM.nextInt(max - min + 1) + min;
+            return ThreadLocalRandom.current().nextInt(min, max + 1);
         } else {
             return Integer.parseInt(amountStr.trim());
         }

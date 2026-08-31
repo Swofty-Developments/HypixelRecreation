@@ -1,15 +1,17 @@
 package net.swofty.type.skyblockgeneric.entity.mob.mobs.minionMobs;
 
 import lombok.NonNull;
+import net.kyori.adventure.key.Key;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
-import net.swofty.type.skyblockgeneric.entity.mob.ai.VanillaRandomStrollGoal;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
 import net.swofty.type.skyblockgeneric.entity.mob.MobType;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
+import net.swofty.type.skyblockgeneric.entity.mob.ai.VanillaRandomStrollGoal;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
@@ -56,11 +58,11 @@ public class MobMinionSheep extends SkyBlockMob {
 
     @Override
     public @Nullable SkyBlockLootTable getLootTable() {
-        return new SkyBlockLootTable() {
+        return new SkyBlockLootTable(Key.key("skyblock", "mob/minion_sheep")) {
             @Override
             public @NonNull List<LootRecord> getLootTable() {
                 return List.of(
-                        new LootRecord(ItemType.MUTTON, makeAmountBetween(1, 3), 80)
+                        new LootRecord(ItemType.MUTTON, makeAmountBetween(1, 3), 80, BestiaryDropRarity.COMMON)
                 );
             }
 

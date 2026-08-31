@@ -5,6 +5,7 @@ import net.minestom.server.color.Color;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItemComponent;
@@ -13,8 +14,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MinionSkinComponent extends SkyBlockItemComponent {
+    private static final Set<ItemType> LEATHER_ARMOR_TYPES = Set.of(
+            ItemType.LEATHER_HELMET,
+            ItemType.LEATHER_CHESTPLATE,
+            ItemType.LEATHER_LEGGINGS,
+            ItemType.LEATHER_BOOTS
+    );
+
     @Getter
     private final MinionArmorPiece helmet;
     @Getter
@@ -73,7 +82,7 @@ public class MinionSkinComponent extends SkyBlockItemComponent {
                 return ItemStacks.head(skullTexture, Text.empty(), List.of()).build();
             }
 
-            if (leatherColor != null && material.name().startsWith("LEATHER_")) {
+            if (leatherColor != null && LEATHER_ARMOR_TYPES.contains(ItemType.fromMaterial(material))) {
                 builder.set(DataComponents.DYED_COLOR, leatherColor);
                 builder = ItemStacks.clearAttributes(builder);
             }

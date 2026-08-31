@@ -1,8 +1,10 @@
 package net.swofty.type.skyblockgeneric.item.handlers.pet.abilities;
 
+import net.kyori.adventure.key.Key;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.loot.LootTable;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.type.generic.entity.drop.ItemDrops;
@@ -17,7 +19,6 @@ import net.swofty.type.skyblockgeneric.utility.RarityValue;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static net.swofty.commons.StringUtility.decimalify;
@@ -66,16 +67,16 @@ public final class EggstraLootAbility implements PetAbility {
         Rarity rarity = context.pet().getAttributeHandler().getRarity();
         int level = context.pet().getAttributeHandler().getPetData().getAsLevel(rarity);
         double chance = CHANCE_PER_LEVEL.getForRarity(rarity) * level;
-        if (Math.random() * 100 >= chance) return;
+        if (LootTable.rollSingle(Key.key("skyblock", "pet/eggstra_loot"), Boolean.TRUE,
+                chance / 100D).isEmpty()) return;
 
         SkyBlockLootTable lootTable = context.mob().getLootTable();
         if (lootTable == null) return;
 
-        Map<ItemType, SkyBlockLootTable.LootRecord> extraDrops = lootTable.runChances(context.player());
-        for (Map.Entry<ItemType, SkyBlockLootTable.LootRecord> entry : extraDrops.entrySet()) {
-            SkyBlockLootTable.LootRecord record = entry.getValue();
+        List<SkyBlockLootTable.LootRecord> extraDrops = lootTable.roll(context.player(), context.mob());
+        for (SkyBlockLootTable.LootRecord record : extraDrops) {
             if (SkyBlockLootTable.LootRecord.isNone(record)) continue;
-            SkyBlockItem item = new SkyBlockItem(entry.getKey(), record.getAmount());
+            SkyBlockItem item = new SkyBlockItem(record.getItemType(), record.getAmount());
             dropItemForPlayer(context.player(), item, record.getAmount(), context.mob());
         }
     }

@@ -129,7 +129,7 @@ public class ItemAttributeHandler {
         // Check for dynamically applied dye color first
         String dyeColor = getDyeColor();
         if (dyeColor != null) {
-            return parseHexColor(dyeColor);
+            return parseDyeColor(dyeColor);
         }
         // Fall back to component-defined color
         if (item.hasComponent(LeatherColorComponent.class)) {
@@ -152,6 +152,20 @@ public class ItemAttributeHandler {
         int g = Integer.parseInt(hex.substring(2, 4), 16);
         int b = Integer.parseInt(hex.substring(4, 6), 16);
         return new Color(r, g, b);
+    }
+
+    private Color parseDyeColor(String value) {
+        if (!value.startsWith("animated:")) return parseHexColor(value);
+        String[] parts = value.split(":");
+        Color from = parseHexColor(parts[1]);
+        Color to = parseHexColor(parts[2]);
+        long period = Long.parseLong(parts[3]);
+        double phase = (System.currentTimeMillis() % period) / (double) period;
+        double progress = phase < .5 ? phase * 2 : (1 - phase) * 2;
+        return new Color(
+                (int) Math.round(from.red() + (to.red() - from.red()) * progress),
+                (int) Math.round(from.green() + (to.green() - from.green()) * progress),
+                (int) Math.round(from.blue() + (to.blue() - from.blue()) * progress));
     }
 
     public void setSoulBound(boolean coopAllowed) {

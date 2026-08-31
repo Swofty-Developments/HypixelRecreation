@@ -15,6 +15,14 @@ public interface PetAbility {
         return ItemStatistics.empty();
     }
 
+    default double getManaRegenerationPercent(SkyBlockPlayer player, SkyBlockItem pet) {
+        return 0;
+    }
+
+    default double getSuperpairsUltraRareBookMultiplier(SkyBlockPlayer player, SkyBlockItem pet) {
+        return 1;
+    }
+
     default void onEvent(PetEvent event) {
     }
 }

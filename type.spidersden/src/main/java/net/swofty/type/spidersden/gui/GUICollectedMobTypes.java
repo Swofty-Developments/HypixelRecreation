@@ -95,7 +95,7 @@ public class GUICollectedMobTypes extends HypixelInventoryGUI {
                     }
 
                     if (hasUnlocked) {
-                        return ItemStacks.of(mobType.guiMaterial, 1, Text.parse(mobType.mobType.getFullDisplayName()), lore);
+                        return ItemStacks.of(mobType.guiMaterial, 1, mobType.mobType.getFullDisplayName(), lore);
                     } else {
                         return ItemStacks.item(Material.GRAY_DYE, 1, Text.of("<7>{} {}", mobType.mobType.getSymbol(), mobType.mobType.getDisplayName()), lore);
                     }

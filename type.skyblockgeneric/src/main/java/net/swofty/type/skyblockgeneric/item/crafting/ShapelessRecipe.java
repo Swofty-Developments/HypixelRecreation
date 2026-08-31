@@ -132,6 +132,7 @@ public class ShapelessRecipe extends SkyBlockRecipe<ShapelessRecipe> {
                 .map(item -> item != null ? item.clone() : null)
                 .toArray(SkyBlockItem[]::new);
         }
+        recipe.setCraftingRequirements(getCraftingRequirements());
         return recipe;
     }
 

@@ -35,6 +35,11 @@ public class GUIConfirmKat extends HypixelInventoryGUI {
                 KatUpgrade katUpgrade = pet.getComponent(PetComponent.class).getKatUpgrades().getForRarity(pet.getAttributeHandler().getRarity().upgrade());
                 int coins = katUpgrade.getCoins();
                 long time = katUpgrade.getTime();
+                if (player.getCoins() < coins) return;
+                if (katUpgrade.getItem() != null && (katUpgrade.getAmount() == null
+                        || player.getAmountInInventory(katUpgrade.getItem()) < katUpgrade.getAmount())) return;
+                if (katUpgrade.getItem() != null
+                        && player.takeItem(katUpgrade.getItem(), katUpgrade.getAmount()) == null) return;
 
                 Long timeWhenFinished = time + System.currentTimeMillis();
                 player.getKatData().setKatMap(timeWhenFinished, pet);

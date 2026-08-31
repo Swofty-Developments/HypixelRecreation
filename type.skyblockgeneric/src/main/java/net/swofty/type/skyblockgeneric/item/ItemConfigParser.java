@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.item;
 
-import net.swofty.commons.text.Text;
 import io.sentry.Sentry;
 import net.minestom.server.color.Color;
 import net.minestom.server.item.ItemAnimation;
@@ -12,12 +11,90 @@ import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.item.reforge.ReforgeType;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
+import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.fishing.FishingMedium;
 import net.swofty.type.skyblockgeneric.fishing.rod.FishingPartCategory;
 import net.swofty.type.skyblockgeneric.fishing.rod.FishingShipPartSlot;
 import net.swofty.type.skyblockgeneric.gems.GemRarity;
 import net.swofty.type.skyblockgeneric.gems.Gemstone;
-import net.swofty.type.skyblockgeneric.item.components.*;
+import net.swofty.type.skyblockgeneric.item.components.AbilityComponent;
+import net.swofty.type.skyblockgeneric.item.components.AbiphoneComponent;
+import net.swofty.type.skyblockgeneric.item.components.AccessoryComponent;
+import net.swofty.type.skyblockgeneric.item.components.AnvilCombinableComponent;
+import net.swofty.type.skyblockgeneric.item.components.ArmorComponent;
+import net.swofty.type.skyblockgeneric.item.components.ArmorDyeComponent;
+import net.swofty.type.skyblockgeneric.item.components.ArrowComponent;
+import net.swofty.type.skyblockgeneric.item.components.AttributeShardComponent;
+import net.swofty.type.skyblockgeneric.item.components.AuctionCategoryComponent;
+import net.swofty.type.skyblockgeneric.item.components.AxeComponent;
+import net.swofty.type.skyblockgeneric.item.components.BackpackComponent;
+import net.swofty.type.skyblockgeneric.item.components.BlockDataToolComponent;
+import net.swofty.type.skyblockgeneric.item.components.BowComponent;
+import net.swofty.type.skyblockgeneric.item.components.BrewingIngredientComponent;
+import net.swofty.type.skyblockgeneric.item.components.ConstantStatisticsComponent;
+import net.swofty.type.skyblockgeneric.item.components.CraftableComponent;
+import net.swofty.type.skyblockgeneric.item.components.CustomDisplayNameComponent;
+import net.swofty.type.skyblockgeneric.item.components.CustomDropComponent;
+import net.swofty.type.skyblockgeneric.item.components.CustomStatisticsComponent;
+import net.swofty.type.skyblockgeneric.item.components.DecorationHeadComponent;
+import net.swofty.type.skyblockgeneric.item.components.DefaultSoulboundComponent;
+import net.swofty.type.skyblockgeneric.item.components.DisableAnimationComponent;
+import net.swofty.type.skyblockgeneric.item.components.DrillComponent;
+import net.swofty.type.skyblockgeneric.item.components.EnchantableComponent;
+import net.swofty.type.skyblockgeneric.item.components.EnchantedComponent;
+import net.swofty.type.skyblockgeneric.item.components.ExperienceBottleComponent;
+import net.swofty.type.skyblockgeneric.item.components.ExtraRarityComponent;
+import net.swofty.type.skyblockgeneric.item.components.ExtraUnderNameComponent;
+import net.swofty.type.skyblockgeneric.item.components.FishingBaitComponent;
+import net.swofty.type.skyblockgeneric.item.components.FishingRodComponent;
+import net.swofty.type.skyblockgeneric.item.components.FishingRodMetadataComponent;
+import net.swofty.type.skyblockgeneric.item.components.FishingRodPartComponent;
+import net.swofty.type.skyblockgeneric.item.components.FishingShipPartComponent;
+import net.swofty.type.skyblockgeneric.item.components.GemstoneComponent;
+import net.swofty.type.skyblockgeneric.item.components.GemstoneImplComponent;
+import net.swofty.type.skyblockgeneric.item.components.HoeComponent;
+import net.swofty.type.skyblockgeneric.item.components.HotPotatoableComponent;
+import net.swofty.type.skyblockgeneric.item.components.InteractableComponent;
+import net.swofty.type.skyblockgeneric.item.components.ItemModelComponent;
+import net.swofty.type.skyblockgeneric.item.components.ItemRequirementsComponent;
+import net.swofty.type.skyblockgeneric.item.components.KatComponent;
+import net.swofty.type.skyblockgeneric.item.components.LeatherColorComponent;
+import net.swofty.type.skyblockgeneric.item.components.LoreUpdateComponent;
+import net.swofty.type.skyblockgeneric.item.components.MinionComponent;
+import net.swofty.type.skyblockgeneric.item.components.MinionFuelComponent;
+import net.swofty.type.skyblockgeneric.item.components.MinionShippingComponent;
+import net.swofty.type.skyblockgeneric.item.components.MinionSkinComponent;
+import net.swofty.type.skyblockgeneric.item.components.MinionUpgradeComponent;
+import net.swofty.type.skyblockgeneric.item.components.MuseumComponent;
+import net.swofty.type.skyblockgeneric.item.components.MetaphysicalSerumComponent;
+import net.swofty.type.skyblockgeneric.item.components.NewYearCakeComponent;
+import net.swofty.type.skyblockgeneric.item.components.NotFinishedYetComponent;
+import net.swofty.type.skyblockgeneric.item.components.PetComponent;
+import net.swofty.type.skyblockgeneric.item.components.PetItemComponent;
+import net.swofty.type.skyblockgeneric.item.components.PickaxeComponent;
+import net.swofty.type.skyblockgeneric.item.components.PlaceEventComponent;
+import net.swofty.type.skyblockgeneric.item.components.PlaceableComponent;
+import net.swofty.type.skyblockgeneric.item.components.PotionDataComponent;
+import net.swofty.type.skyblockgeneric.item.components.PowerStoneComponent;
+import net.swofty.type.skyblockgeneric.item.components.QuiverDisplayComponent;
+import net.swofty.type.skyblockgeneric.item.components.ReforgableComponent;
+import net.swofty.type.skyblockgeneric.item.components.ReforgeStoneComponent;
+import net.swofty.type.skyblockgeneric.item.components.RegionSelectorComponent;
+import net.swofty.type.skyblockgeneric.item.components.RightClickRecipeComponent;
+import net.swofty.type.skyblockgeneric.item.components.RuneComponent;
+import net.swofty.type.skyblockgeneric.item.components.RuneableComponent;
+import net.swofty.type.skyblockgeneric.item.components.SackComponent;
+import net.swofty.type.skyblockgeneric.item.components.SellableComponent;
+import net.swofty.type.skyblockgeneric.item.components.ServerOrbComponent;
+import net.swofty.type.skyblockgeneric.item.components.ShortBowComponent;
+import net.swofty.type.skyblockgeneric.item.components.ShovelComponent;
+import net.swofty.type.skyblockgeneric.item.components.SkillableMineComponent;
+import net.swofty.type.skyblockgeneric.item.components.SkullHeadComponent;
+import net.swofty.type.skyblockgeneric.item.components.SoulflowComponent;
+import net.swofty.type.skyblockgeneric.item.components.StandardItemComponent;
+import net.swofty.type.skyblockgeneric.item.components.TrackedUniqueComponent;
+import net.swofty.type.skyblockgeneric.item.components.TravelScrollComponent;
+import net.swofty.type.skyblockgeneric.item.components.UpgradesComponent;
 import net.swofty.type.skyblockgeneric.item.crafting.SkyBlockRecipe;
 import net.swofty.type.skyblockgeneric.item.handlers.interactable.InteractableRegistry;
 import net.swofty.type.skyblockgeneric.item.handlers.pet.KatUpgrade;
@@ -92,6 +169,12 @@ public class ItemConfigParser {
 
 		try {
 			return switch (id.toUpperCase()) {
+				case "EXPERIENCE_BOTTLE" -> new ExperienceBottleComponent(safeConfig.getInt("base_experience", 8));
+				case "METAPHYSICAL_SERUM" -> new MetaphysicalSerumComponent();
+				case "ARMOR_DYE" -> new ArmorDyeComponent(itemId, safeConfig.getString("from_color"),
+						safeConfig.getString("to_color", null), safeConfig.getInt("animation_period_ms", 4000),
+						safeConfig.getString("display_color", "<7>"),
+						safeConfig.getBoolean("special_particle_effect", false));
 				case "ATTRIBUTE_SHARD" -> new AttributeShardComponent(safeConfig.getString("shard_id", null));
 				case "ABILITY" -> {
 					List<String> abilities = safeConfig.getList("abilities", String.class);
@@ -153,12 +236,10 @@ public class ItemConfigParser {
 					yield new BowComponent(handlerId, shouldBeArrow);
 				}
 				case "CONSTANT_STATISTICS" -> new ConstantStatisticsComponent();
-				case "DEFAULT_CRAFTABLE" -> {
+				case "CRAFTABLE", "DEFAULT_CRAFTABLE" -> {
 					List<Map<String, Object>> recipes = safeConfig.getMapList("recipes");
 					boolean defaultCraftable = safeConfig.getBoolean("default-craftable", true);
-					CraftableComponent component = new CraftableComponent(recipes);
-					component.setDefaultCraftable(defaultCraftable);
-					yield component;
+					yield CraftableComponent.fromConfig(recipes, defaultCraftable);
 				}
 				case "CUSTOM_DISPLAY_NAME" ->
 						new CustomDisplayNameComponent((_) -> Text.parseLenient(safeConfig.getString("display_name", "")));

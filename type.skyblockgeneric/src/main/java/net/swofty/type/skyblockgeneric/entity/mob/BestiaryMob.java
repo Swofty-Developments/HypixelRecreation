@@ -8,6 +8,10 @@ public abstract class BestiaryMob extends SkyBlockMob {
         super(entityType);
     }
 
+    protected BestiaryMob(EntityType entityType, boolean initialize) {
+        super(entityType, initialize);
+    }
+
     public abstract int getMaxBestiaryTier();
     public abstract int getBestiaryBracket();
     public abstract String getMobID();

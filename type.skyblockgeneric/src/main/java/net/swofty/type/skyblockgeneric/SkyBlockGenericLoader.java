@@ -65,6 +65,7 @@ import net.swofty.type.skyblockgeneric.entity.mob.MobRegistry;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
 import net.swofty.type.skyblockgeneric.event.value.SkyBlockValueEvent;
 import net.swofty.type.skyblockgeneric.fishing.registry.FishingRegistry;
+import net.swofty.type.skyblockgeneric.furniture.Furniture;
 import net.swofty.type.skyblockgeneric.hunting.HuntrapService;
 import net.swofty.type.skyblockgeneric.item.ItemConfigParser;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -97,6 +98,7 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockScoreboard;
 import net.swofty.type.skyblockgeneric.user.StashReminder;
 import net.swofty.type.skyblockgeneric.user.fairysouls.FairySoul;
 import net.swofty.type.skyblockgeneric.user.island.SkyBlockIsland;
+import net.swofty.type.skyblockgeneric.user.island.IslandWorldStorage;
 import net.swofty.type.skyblockgeneric.user.statistics.PlayerStatistics;
 import net.swofty.type.skyblockgeneric.user.statistics.TemporaryStatistic;
 import net.swofty.type.skyblockgeneric.utility.LaunchPads;
@@ -128,6 +130,8 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         SkyBlockGenericLoader.server = server;
         SkyBlockTextScopes.init();
         CustomWorlds mainInstance = typeLoader.getMainInstance();
+        IslandWorldStorage.validateTemplate();
+        Furniture.preload();
 
         /**
          * Setup launchpads

@@ -1,0 +1,17 @@
+items:
+  - id: GUARDIAN_LUCKY_BLOCK
+    material: PLAYER_HEAD
+    name: Guardian Lucky Block
+    rarity: MYTHIC
+    lore:
+      - <7>Use at <b>Kat <7>to upgrade <e>Guardian Pets
+      - <7>to <d>Mythic <7>rarity.
+      - ''
+      - <5><k>X</k><5> Rift-Exportable <k>X</k>
+      - <8>Loses motes value when crossing
+      - <8>dimensions.
+    components:
+      - id: SKULL_HEAD
+        texture: 46ef21c8575a306999142b0814f163cb403ec0fa51beca81dd074b02dfe266af
+      - id: SELLABLE
+        value: 30000

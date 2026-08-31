@@ -11,6 +11,7 @@ import net.swofty.type.skyblockgeneric.entity.ArrowEntityImpl;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
 import net.swofty.type.skyblockgeneric.hunting.AttributeEffectService;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
+import net.swofty.type.skyblockgeneric.item.handlers.pet.abstr.PetEvent;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.skyblockgeneric.user.statistics.PlayerStatistics;
 import net.swofty.type.skyblockgeneric.utility.AttackService;
@@ -49,6 +50,9 @@ public class PlayerActionArrowDamageMob implements HypixelEventClass {
 
         float damageAmount = (float) damage;
         if (!AttackService.applyHit(shooter, collidedWith, damageAmount, critical)) return;
+
+        shooter.getPetData().dispatch(new PetEvent.DamageMob(
+                shooter, shooter.getPetData().getEnabledPet(), collidedWith));
 
         double ferocity = playerStats.getOverall(ItemStatistic.FEROCITY);
         AttackService.scheduleExtraHits(shooter, collidedWith, damageAmount, critical, ferocity);
