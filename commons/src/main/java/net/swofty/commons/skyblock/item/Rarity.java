@@ -45,6 +45,10 @@ public enum Rarity {
         return ordinal() >= rarity.ordinal();
     }
 
+    public boolean isAtMost(Rarity rarity) {
+        return ordinal() <= rarity.ordinal();
+    }
+
     public Component getDisplay() {
         return Component.text(name().replace("_", " "), color, TextDecoration.BOLD);
     }

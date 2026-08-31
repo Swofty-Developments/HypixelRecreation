@@ -38,7 +38,7 @@ public class PlayerKilledSkyBlockMobEvent implements PlayerInstanceEvent {
 
         // Handle kill event pets
         SkyBlockItem pet = player.getPetData().getEnabledPet();
-        player.getPetData().dispatch(new PetEvent.Kill(player, pet, killedMob));
+        player.getPetData().dispatch(new PetEvent.KilledMob(player, pet, killedMob));
     }
 
     @Override

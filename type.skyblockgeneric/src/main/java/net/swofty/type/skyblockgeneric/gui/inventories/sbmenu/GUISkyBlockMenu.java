@@ -104,7 +104,7 @@ public class GUISkyBlockMenu extends StatelessView {
             SkyBlockPlayer player = (SkyBlockPlayer) c.player();
             Text selectedPet = player.getPetData().getEnabledPet() == null
                 ? Text.of("<c>None")
-                : Text.literal(player.getPetData().getEnabledPet().getDisplayName());
+                : player.getPetData().getEnabledPet().getDisplayNameText();
             return ItemStacks.item(Material.BONE, 1,
                 Text.key("gui_sbmenu.main.pets"),
                 Text.keyLines("gui_sbmenu.main.pets.lore", selectedPet)

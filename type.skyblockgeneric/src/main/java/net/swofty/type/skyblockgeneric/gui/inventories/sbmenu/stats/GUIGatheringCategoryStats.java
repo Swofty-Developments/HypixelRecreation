@@ -461,39 +461,14 @@ public class GUIGatheringCategoryStats extends StatelessView {
 
     @Getter
     public enum Category {
-        COMBAT("<c>Combat Stats", Material.STONE_SWORD, List.of("<7>Stats that influence damage dealt", "<7>and damage taken in combat."), List.of(
-            ItemStatistic.HEALTH, ItemStatistic.DEFENSE, ItemStatistic.TRUE_DEFENSE, ItemStatistic.STRENGTH,
-            ItemStatistic.CRITICAL_CHANCE, ItemStatistic.CRITICAL_DAMAGE, ItemStatistic.BONUS_ATTACK_SPEED,
-            ItemStatistic.FEROCITY, ItemStatistic.SWING_RANGE, ItemStatistic.INTELLIGENCE,
-            ItemStatistic.ABILITY_DAMAGE, ItemStatistic.HEALTH_REGENERATION, ItemStatistic.VITALITY, ItemStatistic.MENDING)),
-        MINING("<6>Mining Stats", Material.STONE_PICKAXE, List.of("<7>Stats that influence mining speed,", "<7>power, spread, and drops."), List.of(
-            ItemStatistic.BREAKING_POWER, ItemStatistic.MINING_SPEED, ItemStatistic.MINING_SPREAD,
-            ItemStatistic.GEMSTONE_SPREAD, ItemStatistic.PRISTINE, ItemStatistic.MINING_FORTUNE,
-            ItemStatistic.ORE_FORTUNE, ItemStatistic.BLOCK_FORTUNE, ItemStatistic.DWARVEN_METAL_FORTUNE,
-            ItemStatistic.GEMSTONE_FORTUNE)),
-        FARMING("<a>Farming Stats", Material.GOLDEN_HOE, List.of("<7>Stats that influence crop drops", "<7>and pest spawns."), List.of(
-            ItemStatistic.BONUS_PEST_CHANCE, ItemStatistic.OVERBLOOM, ItemStatistic.FARMING_FORTUNE,
-            ItemStatistic.WHEAT_FORTUNE, ItemStatistic.CARROT_FORTUNE, ItemStatistic.POTATO_FORTUNE,
-            ItemStatistic.PUMPKIN_FORTUNE, ItemStatistic.SUGAR_CANE_FORTUNE, ItemStatistic.MELON_FORTUNE,
-            ItemStatistic.CACTUS_FORTUNE, ItemStatistic.COCOA_BEANS_FORTUNE, ItemStatistic.MUSHROOM_FORTUNE,
-            ItemStatistic.NETHER_WART_FORTUNE, ItemStatistic.SUNFLOWER_FORTUNE,
-            ItemStatistic.MOONFLOWER_FORTUNE, ItemStatistic.WILD_ROSE_FORTUNE)),
-        FORAGING("<2>Foraging Stats", Material.JUNGLE_SAPLING, List.of("<7>Stats that influence drops", "<7>received while foraging."), List.of(
-            ItemStatistic.SWEEP, ItemStatistic.FORAGING_FORTUNE, ItemStatistic.FIG_FORTUNE, ItemStatistic.MANGROVE_FORTUNE)),
-        FISHING("<b>Fishing Stats", Material.FISHING_ROD, List.of("<7>Stats that influence what and", "<7>how quickly you catch fish."), List.of(
-            ItemStatistic.FISHING_SPEED, ItemStatistic.SEA_CREATURE_CHANCE, ItemStatistic.DOUBLE_HOOK_CHANCE,
-            ItemStatistic.TROPHY_FISH_CHANCE, ItemStatistic.TREASURE_CHANCE)),
-        HUNTING("<e>Hunting Stats", Material.LEAD, List.of("<7>Stats that influence hunting speed", "<7>and shard drops."), List.of(
-            ItemStatistic.PULL, ItemStatistic.HUNTER_FORTUNE)),
-        WISDOM("<3>Wisdom Stats", Material.BOOK, List.of("<7>Increases the <3>XP</3> you gain", "<7>for your skills."), List.of(
-            ItemStatistic.COMBAT_WISDOM, ItemStatistic.FARMING_WISDOM, ItemStatistic.FISHING_WISDOM,
-            ItemStatistic.MINING_WISDOM, ItemStatistic.FORAGING_WISDOM, ItemStatistic.ENCHANTING_WISDOM,
-            ItemStatistic.ALCHEMY_WISDOM, ItemStatistic.CARPENTRY_WISDOM, ItemStatistic.RUNE_CRAFTING_WISDOM,
-            ItemStatistic.TAMING_WISDOM, ItemStatistic.SOCIAL_WISDOM, ItemStatistic.HUNTING_WISDOM)),
-        MISC("<d>Misc Stats", Material.CLOCK, List.of("<7>Augments various aspects", "<7>of your gameplay."), List.of(
-            ItemStatistic.SPEED, ItemStatistic.MAGIC_FIND, ItemStatistic.PET_LUCK, ItemStatistic.HEAT_RESISTANCE,
-            ItemStatistic.COLD_RESISTANCE, ItemStatistic.RESPIRATION, ItemStatistic.PRESSURE_RESISTANCE,
-            ItemStatistic.FEAR, ItemStatistic.TRACKING));
+        COMBAT("<c>Combat Stats", Material.STONE_SWORD, List.of("<7>Stats that influence damage dealt", "<7>and damage taken in combat."), ItemStatistic.COMBAT_STATS),
+        MINING("<6>Mining Stats", Material.STONE_PICKAXE, List.of("<7>Stats that influence mining speed,", "<7>power, spread, and drops."), ItemStatistic.MINING_STATS),
+        FARMING("<a>Farming Stats", Material.GOLDEN_HOE, List.of("<7>Stats that influence crop drops", "<7>and pest spawns."), ItemStatistic.FARMING_STATS),
+        FORAGING("<2>Foraging Stats", Material.JUNGLE_SAPLING, List.of("<7>Stats that influence drops", "<7>received while foraging."), ItemStatistic.FORAGING_STATS),
+        FISHING("<b>Fishing Stats", Material.FISHING_ROD, List.of("<7>Stats that influence what and", "<7>how quickly you catch fish."), ItemStatistic.FISHING_STATS),
+        HUNTING("<e>Hunting Stats", Material.LEAD, List.of("<7>Stats that influence hunting speed", "<7>and shard drops."), ItemStatistic.HUNTING_STATS),
+        WISDOM("<3>Wisdom Stats", Material.BOOK, List.of("<7>Increases the <3>XP</3> you gain", "<7>for your skills."), ItemStatistic.WISDOM_STATS),
+        MISC("<d>Misc Stats", Material.CLOCK, List.of("<7>Augments various aspects", "<7>of your gameplay."), ItemStatistic.MISC_STATS);
 
         private final String title;
         private final Material material;
