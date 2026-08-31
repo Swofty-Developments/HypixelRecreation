@@ -1,7 +1,9 @@
 package net.swofty.type.skywarsgame.luckyblock.spawns;
 
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.mechanics.projectile.ProjectileSnapshot;
+import io.github.term4.polyp.mechanics.projectile.types.Fireball;
 import net.minestom.server.coordinate.Vec;
-import net.minestom.server.entity.EntityProjectile;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.instance.Instance;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -52,15 +54,12 @@ public class RidingBlaze extends RideableMob {
 
         fireballCooldown = FIREBALL_COOLDOWN_TICKS;
 
-        // Create fireball projectile
-        EntityProjectile fireball = new EntityProjectile(rider, EntityType.SMALL_FIREBALL);
-        fireball.setInstance(instance, mount.getPosition().add(0, 1.5, 0));
-
-        // Calculate velocity from player look direction
         Vec direction = rider.getPosition().direction().mul(1.5);
-        fireball.setVelocity(direction);
-
-        // Fireball will explode on impact via Minestom's default behavior
+        var projectiles = Polyp.getInstance().services().projectiles();
+        if (projectiles == null) return;
+        projectiles.launch(ProjectileSnapshot.of(rider, Fireball.INSTANCE)
+                .withSpawnPos(mount.getPosition().add(0, 1.5, 0))
+                .withVelocity(direction));
     }
 
     @Override

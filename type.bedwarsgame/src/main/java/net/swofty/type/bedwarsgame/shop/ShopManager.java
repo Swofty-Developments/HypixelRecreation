@@ -15,11 +15,7 @@ import net.swofty.type.generic.data.datapoints.DatapointBedWarsHotbar;
 import net.swofty.type.generic.data.datapoints.DatapointBedWarsQuickBuy;
 import net.swofty.type.generic.data.handlers.BedWarsDataHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ShopManager {
@@ -43,7 +39,9 @@ public class ShopManager {
         DatapointBedWarsHotbar.HotbarItemType.MELEE);
     private final ShopItem DIAMOND_SWORD = new ReplaceAdderItem("diamond_sword", "Diamond Sword", "", (t) -> t.isDoublesSolo() ? 3 : 4, Currency.EMERALD, Material.DIAMOND_SWORD,
         DatapointBedWarsHotbar.HotbarItemType.MELEE);
-    private final ShopItem ENDER_PEARL = new ReplaceAdderItem("ender_pearl", "Ender Pearl", "The quickest way to invade enemy\nbases.", 2, Currency.EMERALD, Material.ENDER_PEARL,
+    private final ShopItem ENDER_PEARL = new ReplaceAdderItem("ender_pearl", "Ender Pearl", "The quickest way to invade enemy\nbases.",
+            type -> type == net.swofty.commons.bedwars.BedWarsGameType.RUSH_DOUBLES || type == net.swofty.commons.bedwars.BedWarsGameType.RUSH_FOURS ? 2 : 4,
+            Currency.EMERALD, Material.ENDER_PEARL,
         DatapointBedWarsHotbar.HotbarItemType.UTILITY);
     private final ShopItem TNT = new BasicItem("tnt", "TNT", "Instantly ignites, appropriate to\nexpode things!", 4, 1, Currency.GOLD, Material.TNT,
         DatapointBedWarsHotbar.HotbarItemType.UTILITY);

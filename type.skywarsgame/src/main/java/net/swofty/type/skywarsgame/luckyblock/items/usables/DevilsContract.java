@@ -7,7 +7,7 @@ import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.component.EnchantmentList;
 import net.minestom.server.item.enchant.Enchantment;
 import net.minestom.server.timer.TaskSchedule;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -28,7 +28,7 @@ public class DevilsContract implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.PAPER, """
+        return ItemStackCreator.item(Material.PAPER, """
                 <4><l>Devil's Contract</l>
                 <7>Sign a contract with the devil...
                 <7>Receive powerful items, but you
@@ -41,7 +41,7 @@ public class DevilsContract implements LuckyBlockConsumable {
 
     @Override
     public void onConsume(SkywarsPlayer player) {
-        ItemStack sword = ItemStacks.named(Material.DIAMOND_SWORD, "<4>Devil's Blade")
+        ItemStack sword = ItemStackCreator.named(Material.DIAMOND_SWORD, "<4>Devil's Blade")
                 .set(DataComponents.ENCHANTMENTS, new EnchantmentList(Map.of(Enchantment.SHARPNESS, 1)))
                 .build();
 

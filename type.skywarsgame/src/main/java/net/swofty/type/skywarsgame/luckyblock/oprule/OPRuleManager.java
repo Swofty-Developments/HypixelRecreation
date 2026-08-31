@@ -6,14 +6,13 @@ import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.goal.MeleeAttackGoal;
 import net.minestom.server.entity.ai.target.ClosestEntityTarget;
-import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.instance.Instance;
-import net.minestom.server.instance.block.Block;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.text.Text;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
+import net.swofty.type.skywarsgame.util.PolypTnt;
 import org.jetbrains.annotations.Nullable;
 import org.tinylog.Logger;
 
@@ -105,43 +104,7 @@ public class OPRuleManager {
                         playerPos.z() + RANDOM.nextDouble() * 10 - 5
                 );
 
-                var tnt = new net.minestom.server.entity.Entity(EntityType.TNT);
-                tnt.setInstance(instance, tntPos);
-
-                tnt.scheduler().buildTask(() -> {
-                    Pos explosionPos = tnt.getPosition();
-                    tnt.remove();
-                    createExplosion(explosionPos);
-                }).delay(Duration.ofSeconds(4)).schedule();
-            }
-        }
-    }
-
-    private void createExplosion(Pos pos) {
-        Instance instance = game.getInstance();
-        if (instance == null) return;
-
-        for (SkywarsPlayer player : game.getAlivePlayers()) {
-            double distance = player.getPosition().distance(pos);
-            if (distance < 5) {
-                float damage = (float) (10 * (1 - distance / 5));
-                player.damage(Damage.fromEntity(null, damage));
-            }
-        }
-
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dy = -2; dy <= 2; dy++) {
-                for (int dz = -2; dz <= 2; dz++) {
-                    if (RANDOM.nextDouble() < 0.4) {
-                        Pos blockPos = pos.add(dx, dy, dz);
-                        var block = instance.getBlock(blockPos);
-                        if (!block.air()
-                                && !block.compare(Block.BEDROCK)
-                                && !game.getChestManager().isChestPosition(blockPos)) {
-                            instance.setBlock(blockPos, Block.AIR);
-                        }
-                    }
-                }
+                PolypTnt.spawn(player, tntPos, 80);
             }
         }
     }

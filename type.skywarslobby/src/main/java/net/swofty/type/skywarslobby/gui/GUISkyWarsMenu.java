@@ -8,7 +8,7 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -38,7 +38,7 @@ public class GUISkyWarsMenu extends HypixelInventoryGUI {
         set(new GUIClickableItem(10) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.ENDER_EYE, 1, """
+                return ItemStackCreator.item(Material.ENDER_EYE, 1, """
                         <a>Kits & Perks
                         <7>Change the way you play by picking
                         <7>kits and perks!
@@ -59,7 +59,7 @@ public class GUISkyWarsMenu extends HypixelInventoryGUI {
         set(new GUIClickableItem(11) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.ARMOR_STAND, 1, """
+                return ItemStackCreator.item(Material.ARMOR_STAND, 1, """
                         <a>My Cosmetics
                         <7>Browse and equip all the available
                         <7>in-game SkyWars cosmetics.
@@ -96,7 +96,7 @@ public class GUISkyWarsMenu extends HypixelInventoryGUI {
                 Text progressBar = Text.of("<8>[<b>{}<7>{}<8>]",
                         "■".repeat(filled), "■".repeat(10 - filled));
 
-                return ItemStacks.item(Material.NETHER_STAR, 1,
+                return ItemStackCreator.item(Material.NETHER_STAR, 1,
                         Text.of("<d>SkyWars Level Progression"), List.of(
                                 Text.of("<7>View information about your SkyWars"),
                                 Text.of("<7>Level progression, select your"),
@@ -121,7 +121,7 @@ public class GUISkyWarsMenu extends HypixelInventoryGUI {
         set(new GUIClickableItem(14) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.END_PORTAL_FRAME, 1, """
+                return ItemStackCreator.item(Material.END_PORTAL_FRAME, 1, """
                         <b>Soul Well
                         <7>Test your luck by spending <b>Souls</b> to
                         <7>earn random Kits and Perks!
@@ -145,7 +145,7 @@ public class GUISkyWarsMenu extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (playerLevel >= 15) {
-                    return ItemStacks.item(Material.FEATHER, 1, """
+                    return ItemStackCreator.item(Material.FEATHER, 1, """
                             <b>Angel's Descent
                             <7>Spend <9>Opals</9> to unlock exclusive
                             <7>perks, upgrades, kits, and cosmetics!
@@ -155,7 +155,7 @@ public class GUISkyWarsMenu extends HypixelInventoryGUI {
 
                             <e>Click to enter!""");
                 } else {
-                    return ItemStacks.item(Material.RED_STAINED_GLASS_PANE, 1, """
+                    return ItemStackCreator.item(Material.RED_STAINED_GLASS_PANE, 1, """
                             <b>Angel's Descent
                             <7>Spend <9>Opals</9> to unlock exclusive
                             <7>perks, upgrades, kits, and cosmetics!
@@ -173,7 +173,7 @@ public class GUISkyWarsMenu extends HypixelInventoryGUI {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 if (playerLevel >= 25) {
-                    return ItemStacks.item(Material.BREWING_STAND, 1, """
+                    return ItemStackCreator.item(Material.BREWING_STAND, 1, """
                             <c>Angel's Brewery
                             <7>Brew Potions using <6>Coins</6> and <9>Opals
                             <7>which grant buffs for the next <a>50
@@ -181,7 +181,7 @@ public class GUISkyWarsMenu extends HypixelInventoryGUI {
 
                             <e>Click to brew!""");
                 } else {
-                    return ItemStacks.item(Material.RED_STAINED_GLASS_PANE, 1, """
+                    return ItemStackCreator.item(Material.RED_STAINED_GLASS_PANE, 1, """
                             <c>Angel's Brewery
                             <7>Brew Potions using <6>Coins</6> and <9>Opals
                             <7>which grant buffs for the next <a>50

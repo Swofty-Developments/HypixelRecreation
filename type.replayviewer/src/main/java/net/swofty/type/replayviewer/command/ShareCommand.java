@@ -2,6 +2,7 @@ package net.swofty.type.replayviewer.command;
 
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
@@ -24,7 +25,7 @@ public class ShareCommand extends HypixelCommand {
 
 			var sessionOpt = TypeReplayViewerLoader.getSession(player.getUuid());
 			if (sessionOpt.isEmpty()) {
-				player.sendMessage("<c>You are not watching a replay!");
+                player.sendMessage(Text.key("replays.not_watching_replay"));
 				return;
 			}
 
@@ -33,4 +34,3 @@ public class ShareCommand extends HypixelCommand {
 		});
 	}
 }
-

@@ -18,49 +18,14 @@ import java.util.UUID;
 @Setter
 public class SkywarsPlayer extends HypixelPlayer {
     private boolean eliminated = false;
-    private int killsThisGame = 0;
-    private int assistsThisGame = 0;
-    private int chestsOpenedThisGame = 0;
-    private int soulsEarnedThisGame = 0;
     private Pos cagePosition = null;
     private String selectedKit = "default";
     private Set<String> activePerks = new HashSet<>();
     private UUID lastDamager = null;
     private long lastDamageTime = 0;
-    private int arrowsShotThisGame = 0;
-    private int arrowsHitThisGame = 0;
-    private int mobsKilledThisGame = 0;
 
     public SkywarsPlayer(PlayerConnection playerConnection, GameProfile gameProfile) {
         super(playerConnection, gameProfile);
-    }
-
-    public void addKill() {
-        killsThisGame++;
-    }
-
-    public void addAssist() {
-        assistsThisGame++;
-    }
-
-    public void addChestOpened() {
-        chestsOpenedThisGame++;
-    }
-
-    public void addSouls(int amount) {
-        soulsEarnedThisGame += amount;
-    }
-
-    public void addArrowShot() {
-        arrowsShotThisGame++;
-    }
-
-    public void addArrowHit() {
-        arrowsHitThisGame++;
-    }
-
-    public void addMobKill() {
-        mobsKilledThisGame++;
     }
 
     public void setLastDamager(UUID damager) {
@@ -101,13 +66,6 @@ public class SkywarsPlayer extends HypixelPlayer {
 
     public void resetGameState() {
         eliminated = false;
-        killsThisGame = 0;
-        assistsThisGame = 0;
-        chestsOpenedThisGame = 0;
-        soulsEarnedThisGame = 0;
-        arrowsShotThisGame = 0;
-        arrowsHitThisGame = 0;
-        mobsKilledThisGame = 0;
         cagePosition = null;
         activePerks = new HashSet<>();
         lastDamager = null;

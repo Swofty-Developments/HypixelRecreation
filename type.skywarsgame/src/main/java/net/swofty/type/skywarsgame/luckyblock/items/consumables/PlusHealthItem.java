@@ -4,7 +4,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -23,7 +23,7 @@ public class PlusHealthItem implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.RED_DYE, """
+        return ItemStackCreator.item(Material.RED_DYE, """
                 <c><l>+4 Hearts</l>
                 <7>Gives you 4 extra hearts
                 <7>for the rest of the game!

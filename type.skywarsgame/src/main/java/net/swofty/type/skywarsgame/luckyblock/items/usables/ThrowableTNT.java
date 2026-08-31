@@ -2,16 +2,13 @@ package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
-import net.minestom.server.entity.Entity;
-import net.minestom.server.entity.EntityType;
-import net.minestom.server.entity.metadata.other.PrimedTntMeta;
-import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
+import net.swofty.type.skywarsgame.util.PolypTnt;
 
 public class ThrowableTNT implements LuckyBlockItem {
 
@@ -29,7 +26,7 @@ public class ThrowableTNT implements LuckyBlockItem {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.TNT, """
+        return ItemStackCreator.item(Material.TNT, """
                 <c><l>Throwable TNT</l>
                 <7>Throw explosive TNT at
                 <7>your enemies!
@@ -43,18 +40,11 @@ public class ThrowableTNT implements LuckyBlockItem {
 
     @Override
     public boolean onUse(SkywarsPlayer holder) {
-        Instance instance = holder.getInstance();
-        if (instance == null) return false;
-
         Vec direction = holder.getPosition().direction();
         Pos spawnPos = holder.getPosition().add(direction.mul(2)).add(0, 1.5, 0);
 
-        Entity tnt = new Entity(EntityType.TNT);
-        tnt.setInstance(instance, spawnPos);
-
-        if (tnt.getEntityMeta() instanceof PrimedTntMeta tntMeta) {
-            tntMeta.setFuseTime(FUSE_TICKS);
-        }
+        var tnt = PolypTnt.spawn(holder, spawnPos, FUSE_TICKS);
+        if (tnt == null) return false;
 
         Vec velocity = direction.mul(20).add(0, 10, 0);
         tnt.setVelocity(velocity);

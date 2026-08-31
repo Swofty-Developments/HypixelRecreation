@@ -11,7 +11,7 @@ import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelPaginatedGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.PaginationList;
@@ -66,7 +66,7 @@ public class GUIToggleInsanePerks extends HypixelPaginatedGUI<SkywarsPerk> {
             set(new GUIClickableItem(53) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.ARROW, 1, """
+                    return ItemStackCreator.item(Material.ARROW, 1, """
                             <e>Left-click for next page!
                             <b>Right-click for last page!""");
                 }
@@ -151,12 +151,12 @@ public class GUIToggleInsanePerks extends HypixelPaginatedGUI<SkywarsPerk> {
                 }
 
                 TextColor nameColor = owned || specialStatus == null ? NamedTextColor.GREEN : NamedTextColor.RED;
-                ItemStack.Builder builder = ItemStacks.item(perk.getIconMaterial(), 1,
+                ItemStack.Builder builder = ItemStackCreator.item(perk.getIconMaterial(), 1,
                         Text.of("<color:{}>{}", nameColor, perk.getName()), lore);
 
                 // Add enchant glow if enabled
                 if (owned && enabled) {
-                    return ItemStacks.enchanted(builder);
+                    return ItemStackCreator.enchanted(builder);
                 }
                 return builder;
             }

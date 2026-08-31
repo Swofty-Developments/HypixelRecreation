@@ -8,7 +8,7 @@ import net.swofty.commons.ServerType;
 import net.swofty.commons.skywars.SkywarsGameType;
 import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.utility.GameCountCache;
@@ -72,7 +72,7 @@ public class GUIPlaySkywars extends HypixelInventoryGUI {
                 loreDescription.add(Text.empty());
                 loreDescription.add(Text.of("<e>Click to play!"));
 
-                return ItemStacks.item(getMaterialForType(type), 1,
+                return ItemStackCreator.item(getMaterialForType(type), 1,
                         Text.of("<a>{}", type.getDisplayName()), loreDescription);
             }
 
@@ -98,7 +98,7 @@ public class GUIPlaySkywars extends HypixelInventoryGUI {
         return new GUIClickableItem(slot) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.OAK_SIGN, 1, """
+                return ItemStackCreator.item(Material.OAK_SIGN, 1, """
                         <a>Map Selector
                         <7>Pick which map you want to play from
                         <7>a list of available maps for {}.

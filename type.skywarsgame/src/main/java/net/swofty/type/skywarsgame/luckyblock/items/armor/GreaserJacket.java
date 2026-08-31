@@ -4,17 +4,15 @@ import net.minestom.server.color.Color;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
-import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.EquipmentSlot;
-import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
+import net.swofty.type.skywarsgame.util.PolypTnt;
 
-import java.time.Duration;
 import java.util.Random;
 
 public class GreaserJacket implements LuckyBlockArmor {
@@ -45,7 +43,7 @@ public class GreaserJacket implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.LEATHER_CHESTPLATE, """
+        return ItemStackCreator.raw(Material.LEATHER_CHESTPLATE, """
                         <8>Greaser Jacket
 
                         <7>Protection I
@@ -71,37 +69,12 @@ public class GreaserJacket implements LuckyBlockArmor {
             return;
         }
 
-        Instance instance = player.getInstance();
-        if (instance == null) {
-            return;
-        }
-
         Pos tntPos = player.getPosition().add(
                 RANDOM.nextDouble() * 2 - 1,
                 0.5,
                 RANDOM.nextDouble() * 2 - 1
         );
-
-        Entity tnt = new Entity(EntityType.TNT);
-        tnt.setInstance(instance, tntPos);
-
-        tnt.scheduler().buildTask(() -> {
-            Pos explosionPos = tnt.getPosition();
-            tnt.remove();
-            createExplosion(instance, explosionPos, player);
-        }).delay(Duration.ofSeconds(3)).schedule();
-    }
-
-    private void createExplosion(Instance instance, Pos pos, SkywarsPlayer owner) {
-        for (Entity entity : instance.getNearbyEntities(pos, 4)) {
-            if (entity instanceof SkywarsPlayer target && target != owner) {
-                double distance = target.getPosition().distance(pos);
-                if (distance < 4) {
-                    float damage = (float) (6 * (1 - distance / 4));
-                    target.damage(net.minestom.server.entity.damage.Damage.fromEntity(owner, damage));
-                }
-            }
-        }
+        PolypTnt.spawn(player, tntPos, 60);
     }
 
     @Override

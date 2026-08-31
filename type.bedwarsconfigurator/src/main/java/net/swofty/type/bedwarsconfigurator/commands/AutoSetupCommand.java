@@ -29,7 +29,6 @@ import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.raycast.Ray;
 import net.swofty.type.generic.raycast.RayBlockFinder;
 import net.swofty.type.generic.raycast.RayIntersection;
-import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 import org.tinylog.Logger;
 
@@ -40,6 +39,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -62,6 +62,7 @@ public class AutoSetupCommand extends HypixelCommand {
         registerLocationCommand(command);
         registerShowCommand(command);
         registerHideCommand(command);
+        registerSnapCommand(command);
         registerStatusCommand(command);
         registerSaveCommand(command);
         registerGeneratorSettingsCommand(command);
@@ -69,57 +70,59 @@ public class AutoSetupCommand extends HypixelCommand {
     }
 
     private void sendHelp(CommandSender sender) {
-        sender.sendMessage("<6><l>=== BedWars Auto Setup ===");
-        sender.sendMessage("<e>/autosetup scan <7>- Scan world for beds, generators, etc.");
-        sender.sendMessage("<e>/autosetup bounds \\<min|max> [x y z] <7>- Set map bounds");
-        sender.sendMessage("<e>/autosetup type \\<add|remove> \\<type> <7>- Configure game types");
-        sender.sendMessage("<e>/autosetup team \\<team> \\<spawn|bed|generator|itemshop|teamshop> [x y z] <7>- Set team positions");
-        sender.sendMessage("<e>/autosetup global \\<diamond|emerald> \\<add|remove> [x y z] <7>- Manage global generators");
-        sender.sendMessage("<e>/autosetup waiting [x y z] <7>- Set waiting spawn");
-        sender.sendMessage("<e>/autosetup spectator [x y z] <7>- Set spectator spawn");
-        sender.sendMessage("<e>/autosetup show <7>- Show debug markers");
-        sender.sendMessage("<e>/autosetup hide <7>- Hide debug markers");
-        sender.sendMessage("<e>/autosetup status <7>- Show current configuration status");
-        sender.sendMessage("<e>/autosetup name \\<name> <7>- Set map display name");
-        sender.sendMessage("<e>/autosetup generator \\<slow|medium|fast|very_fast> <7>- Configure generator speed");
-        sender.sendMessage("<e>/autosetup save <7>- Save configuration to maps.json");
+        sender.sendMessage(Text.of("<6><l>=== BedWars Auto Setup ==="));
+        sender.sendMessage(Text.of("<e>/autosetup scan <7>- Scan world for beds, generators, etc."));
+        sender.sendMessage(Text.of("<e>/autosetup bounds \\<min|max> [x y z] <7>- Set map bounds"));
+        sender.sendMessage(Text.of("<e>/autosetup type \\<add|remove> \\<type> <7>- Configure game types"));
+        sender.sendMessage(Text.of("<e>/autosetup team \\<team> \\<spawn|bed|generator|itemshop|teamshop> [x y z] <7>- Set team positions"));
+        sender.sendMessage(Text.of("<e>/autosetup global \\<diamond|emerald> \\<add|remove> [x y z] <7>- Manage global generators"));
+        sender.sendMessage(Text.of("<e>/autosetup waiting [x y z] <7>- Set waiting spawn"));
+        sender.sendMessage(Text.of("<e>/autosetup waitinglobby \\<min|max> [x y z] <7>- Select the removable waiting lobby"));
+        sender.sendMessage(Text.of("<e>/autosetup spectator [x y z] <7>- Set spectator spawn"));
+        sender.sendMessage(Text.of("<e>/autosetup show <7>- Show debug markers"));
+        sender.sendMessage(Text.of("<e>/autosetup hide <7>- Hide debug markers"));
+        sender.sendMessage(Text.of("<e>/autosetup snap <7>- Snap team spawns and shops to the nearest compass direction"));
+        sender.sendMessage(Text.of("<e>/autosetup status <7>- Show current configuration status"));
+        sender.sendMessage(Text.of("<e>/autosetup name \\<name> <7>- Set map display name"));
+        sender.sendMessage(Text.of("<e>/autosetup generator \\<slow|medium|fast|very_fast> <7>- Configure generator speed"));
+        sender.sendMessage(Text.of("<e>/autosetup save <7>- Save configuration to maps.json"));
     }
 
     private void registerScanCommand(MinestomCommand command) {
         command.addSyntax((sender, _) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             Instance instance = player.getInstance();
             if (instance == null) {
-                player.sendMessage("<c>You must be in a map instance to scan.");
+                player.sendMessage(Text.of("<c>You must be in a map instance to scan."));
                 return;
             }
 
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), instance);
 
             if (!session.hasBounds()) {
-                player.sendMessage("<c>Please set bounds first using /autosetup bounds min and /autosetup bounds max");
+                player.sendMessage(Text.of("<c>Please set bounds first using /autosetup bounds min and /autosetup bounds max"));
                 return;
             }
 
-            player.sendMessage("<e>Scanning world... This may take a moment.");
+            player.sendMessage(Text.of("<e>Scanning world... This may take a moment."));
 
             WorldScanner scanner = new WorldScanner(instance, session);
             WorldScanner.ScanResult result = scanner.fullScan();
 
             for (String msg : result.getMessages()) {
-                player.sendMessage("<a>✔ {}", msg);
+                player.sendMessage(Text.of("<a>✔ {}", msg));
             }
             for (String warning : result.getWarnings()) {
-                player.sendMessage("<6>⚠ {}", warning);
+                player.sendMessage(Text.of("<6>⚠ {}", warning));
             }
             for (String error : result.getErrors()) {
-                player.sendMessage("<c>✖ {}", error);
+                player.sendMessage(Text.of("<c>✖ {}", error));
             }
 
             if (!result.hasErrors()) {
-                player.sendMessage("<a>Scan complete! Use /autosetup show to visualize, /autosetup status to review.");
+                player.sendMessage(Text.of("<a>Scan complete! Use /autosetup show to visualize, /autosetup status to review."));
             }
 
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, instance);
@@ -134,8 +137,9 @@ public class AutoSetupCommand extends HypixelCommand {
             suggestion.addEntry(new SuggestionEntry("max"));
         });
 
+        // /autosetup bounds <corner> - use player position
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             String corner = context.get(cornerArg);
@@ -145,24 +149,25 @@ public class AutoSetupCommand extends HypixelCommand {
 
             if (corner.equalsIgnoreCase("min")) {
                 session.setBoundsMin(pos.x(), pos.y(), pos.z());
-                player.sendMessage("<a>Set bounds minimum to {}", formatPos(pos));
+                player.sendMessage(Text.of("<a>Set bounds minimum to {}", formatPos(pos)));
             } else if (corner.equalsIgnoreCase("max")) {
                 session.setBoundsMax(pos.x(), pos.y(), pos.z());
-                player.sendMessage("<a>Set bounds maximum to {}", formatPos(pos));
+                player.sendMessage(Text.of("<a>Set bounds maximum to {}", formatPos(pos)));
             } else {
-                player.sendMessage("<c>Invalid corner. Use 'min' or 'max'.");
+                player.sendMessage(Text.of("<c>Invalid corner. Use 'min' or 'max'."));
             }
 
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("bounds"), cornerArg);
 
+        // /autosetup bounds <corner> <x> <y> <z>
         ArgumentDouble xArg = ArgumentType.Double("x");
         ArgumentDouble yArg = ArgumentType.Double("y");
         ArgumentDouble zArg = ArgumentType.Double("z");
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             String corner = context.get(cornerArg);
@@ -174,10 +179,10 @@ public class AutoSetupCommand extends HypixelCommand {
 
             if (corner.equalsIgnoreCase("min")) {
                 session.setBoundsMin(x, y, z);
-                player.sendMessage("<a>Set bounds minimum to {}, {}, {}", x, y, z);
+                player.sendMessage(Text.of("<a>Set bounds minimum to {}, {}, {}", x, y, z));
             } else if (corner.equalsIgnoreCase("max")) {
                 session.setBoundsMax(x, y, z);
-                player.sendMessage("<a>Set bounds maximum to {}, {}, {}", x, y, z);
+                player.sendMessage(Text.of("<a>Set bounds maximum to {}, {}, {}", x, y, z));
             }
 
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
@@ -199,7 +204,7 @@ public class AutoSetupCommand extends HypixelCommand {
         });
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             String action = context.get(actionArg);
@@ -207,7 +212,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             BedWarsGameType gameType = BedWarsGameType.from(typeName);
             if (gameType == null) {
-                player.sendMessage("<c>Invalid game type: {}", typeName);
+                player.sendMessage(Text.of("<c>Invalid game type: {}", typeName));
                 return;
             }
 
@@ -216,15 +221,15 @@ public class AutoSetupCommand extends HypixelCommand {
             if (action.equalsIgnoreCase("add")) {
                 if (!session.getGameTypes().contains(gameType)) {
                     session.getGameTypes().add(gameType);
-                    player.sendMessage("<a>Added game type: {}", gameType.getDisplayName());
+                    player.sendMessage(Text.of("<a>Added game type: {}", gameType.getDisplayName()));
                 } else {
-                    player.sendMessage("<e>Game type already added: {}", gameType.getDisplayName());
+                    player.sendMessage(Text.of("<e>Game type already added: {}", gameType.getDisplayName()));
                 }
             } else if (action.equalsIgnoreCase("remove")) {
                 if (session.getGameTypes().remove(gameType)) {
-                    player.sendMessage("<c>Removed game type: {}", gameType.getDisplayName());
+                    player.sendMessage(Text.of("<c>Removed game type: {}", gameType.getDisplayName()));
                 } else {
-                    player.sendMessage("<e>Game type not in list: {}", gameType.getDisplayName());
+                    player.sendMessage(Text.of("<e>Game type not in list: {}", gameType.getDisplayName()));
                 }
             }
         }, ArgumentType.Literal("type"), actionArg, typeArg);
@@ -239,14 +244,14 @@ public class AutoSetupCommand extends HypixelCommand {
             }
 
             String input = ctx.getInput();
-            String currentInput = input.substring(input.lastIndexOf(" ") + 1).trim().toLowerCase();
+            String currentInput = input.substring(input.lastIndexOf(" ") + 1).trim().toLowerCase(Locale.ROOT);
 
             if (currentInput.isEmpty()) {
                 entries.forEach(suggestion::addEntry);
                 return;
             }
 
-            entries.stream().filter(entry -> entry.getEntry().toLowerCase().startsWith(currentInput)).forEach(suggestion::addEntry);
+            entries.stream().filter(entry -> entry.getEntry().toLowerCase(Locale.ROOT).startsWith(currentInput)).forEach(suggestion::addEntry);
         });
 
         var propertyArg = ArgumentType.String("property");
@@ -260,18 +265,19 @@ public class AutoSetupCommand extends HypixelCommand {
             entries.add(new SuggestionEntry("remove"));
 
             String input = ctx.getInput();
-            String currentInput = input.substring(input.lastIndexOf(" ") + 1).trim().toLowerCase();
+            String currentInput = input.substring(input.lastIndexOf(" ") + 1).trim().toLowerCase(Locale.ROOT);
 
             if (currentInput.isEmpty()) {
                 entries.forEach(suggestion::addEntry);
                 return;
             }
 
-            entries.stream().filter(entry -> entry.getEntry().toLowerCase().startsWith(currentInput)).forEach(suggestion::addEntry);
+            entries.stream().filter(entry -> entry.getEntry().toLowerCase(Locale.ROOT).startsWith(currentInput)).forEach(suggestion::addEntry);
         });
 
+        // /autosetup team <team> <property> - use player position
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             String teamName = context.get(teamArg);
@@ -279,9 +285,9 @@ public class AutoSetupCommand extends HypixelCommand {
 
             TeamKey teamKey;
             try {
-                teamKey = TeamKey.valueOf(teamName.toUpperCase());
+                teamKey = TeamKey.valueOf(teamName.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
-                player.sendMessage("<c>Invalid team: {}", teamName);
+                player.sendMessage(Text.of("<c>Invalid team: {}", teamName));
                 return;
             }
 
@@ -293,12 +299,13 @@ public class AutoSetupCommand extends HypixelCommand {
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
         }, ArgumentType.Literal("team"), teamArg, propertyArg);
 
+        // /autosetup team <team> <property> <x> <y> <z>
         ArgumentDouble xArg = ArgumentType.Double("x");
         ArgumentDouble yArg = ArgumentType.Double("y");
         ArgumentDouble zArg = ArgumentType.Double("z");
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             String teamName = context.get(teamArg);
@@ -309,9 +316,9 @@ public class AutoSetupCommand extends HypixelCommand {
 
             TeamKey teamKey;
             try {
-                teamKey = TeamKey.valueOf(teamName.toUpperCase());
+                teamKey = TeamKey.valueOf(teamName.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
-                player.sendMessage("<c>Invalid team: {}", teamName);
+                player.sendMessage(Text.of("<c>Invalid team: {}", teamName));
                 return;
             }
 
@@ -325,12 +332,12 @@ public class AutoSetupCommand extends HypixelCommand {
         }, ArgumentType.Literal("team"), teamArg, propertyArg, xArg, yArg, zArg);
     }
 
-    private void setTeamProperty(HypixelPlayer player, TeamKey key, AutoSetupSession.TeamConfig teamConfig, String property, Pos pos) {
-        final HypixelPosition currentPosition = new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.pitch(), pos.yaw());
-        switch (property.toLowerCase()) {
+    private void setTeamProperty(Player player, TeamKey key, AutoSetupSession.TeamConfig teamConfig, String property, Pos pos) {
+        final HypixelPosition currentPosition = new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch());
+        switch (property.toLowerCase(Locale.ROOT)) {
             case "spawn" -> {
                 teamConfig.setSpawn(currentPosition);
-                player.sendMessage("<a>Set team spawn to {}", formatPos(pos));
+                player.sendMessage(Text.of("<a>Set team spawn to {}", formatPos(pos)));
             }
             case "bed" -> {
                 Optional<Tuple<Vec3i, Vec3i>> positions = calculateBedHead(player);
@@ -340,26 +347,26 @@ public class AutoSetupCommand extends HypixelCommand {
 
                     teamConfig.setBedFeet(feet);
                     teamConfig.setBedHead(head);
-                    player.sendMessage("<a>Set team bed (feet: {}, head: {})", formatPosition(feet), formatPosition(head));
-                }, () -> player.sendMessage("<c>You must be looking at a bed block to set the bed position."));
+                    player.sendMessage(Text.of("<a>Set team bed (feet: {}, head: {})", formatPosition(feet), formatPosition(head)));
+                }, () -> player.sendMessage(Text.of("<c>You must be looking at a bed block to set the bed position.")));
             }
             case "generator" -> {
                 teamConfig.setGenerator(new HypixelPosition(pos.x(), pos.y(), pos.z()));
-                player.sendMessage("<a>Set team generator to {}", formatPos(pos));
+                player.sendMessage(Text.of("<a>Set team generator to {}", formatPos(pos)));
             }
             case "itemshop" -> {
                 teamConfig.setItemShop(currentPosition);
-                player.sendMessage("<a>Set item shop to {}", formatPos(pos));
+                player.sendMessage(Text.of("<a>Set item shop to {}", formatPos(pos)));
             }
             case "teamshop" -> {
                 teamConfig.setTeamShop(currentPosition);
-                player.sendMessage("<a>Set team shop to {}", formatPos(pos));
+                player.sendMessage(Text.of("<a>Set team shop to {}", formatPos(pos)));
             }
             case "remove" -> {
                 AutoSetupSession.get(player.getUuid()).removeTeam(key);
-                player.sendMessage("<c>Removed all properties for team");
+                player.sendMessage(Text.of("<c>Removed all properties for team"));
             }
-            default -> player.sendMessage("<c>Unknown property: {}", property);
+            default -> player.sendMessage(Text.of("<c>Unknown property: {}", property));
         }
     }
 
@@ -433,8 +440,9 @@ public class AutoSetupCommand extends HypixelCommand {
             suggestion.addEntry(new SuggestionEntry("clear"));
         });
 
+        // /autosetup global <type> <action> - use player position
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             String genType = context.get(genTypeArg);
@@ -449,12 +457,13 @@ public class AutoSetupCommand extends HypixelCommand {
 
         }, ArgumentType.Literal("global"), genTypeArg, actionArg);
 
+        // /autosetup global <type> <action> <x> <y> <z>
         ArgumentDouble xArg = ArgumentType.Double("x");
         ArgumentDouble yArg = ArgumentType.Double("y");
         ArgumentDouble zArg = ArgumentType.Double("z");
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             String genType = context.get(genTypeArg);
@@ -472,14 +481,15 @@ public class AutoSetupCommand extends HypixelCommand {
         }, ArgumentType.Literal("global"), genTypeArg, actionArg, xArg, yArg, zArg);
     }
 
-    private void handleGlobalGeneratorAction(HypixelPlayer player, List<HypixelPosition> generators, String action, Pos pos, String genType) {
-        switch (action.toLowerCase()) {
+    private void handleGlobalGeneratorAction(Player player, List<HypixelPosition> generators, String action, Pos pos, String genType) {
+        switch (action.toLowerCase(Locale.ROOT)) {
             case "add" -> {
                 HypixelPosition newPos = new HypixelPosition(pos.x(), pos.y(), pos.z());
                 generators.add(newPos);
-                player.sendMessage("<a>Added {} generator at {} (Total: {})", genType, formatPos(pos), generators.size());
+                player.sendMessage(Text.of("<a>Added {} generator at {} (Total: {})", genType, formatPos(pos), generators.size()));
             }
             case "remove" -> {
+                // Remove nearest generator within 2 blocks
                 HypixelPosition toRemove = null;
                 double minDist = Double.MAX_VALUE;
 
@@ -493,51 +503,69 @@ public class AutoSetupCommand extends HypixelCommand {
 
                 if (toRemove != null) {
                     generators.remove(toRemove);
-                    player.sendMessage("<c>Removed nearest {} generator (Total: {})", genType, generators.size());
+                    player.sendMessage(Text.of("<c>Removed nearest {} generator (Total: {})", genType, generators.size()));
                 } else {
-                    player.sendMessage("<c>No {} generator found within 2 blocks", genType);
+                    player.sendMessage(Text.of("<c>No {} generator found within 2 blocks", genType));
                 }
             }
             case "clear" -> {
                 int count = generators.size();
                 generators.clear();
-                player.sendMessage("<c>Cleared all {} {} generators", count, genType);
+                player.sendMessage(Text.of("<c>Cleared all {} {} generators", count, genType));
             }
-            default -> player.sendMessage("<c>Unknown action: {}", action);
+            default -> player.sendMessage(Text.of("<c>Unknown action: {}", action));
         }
     }
 
     private void registerLocationCommand(MinestomCommand command) {
+        var waitingCornerArg = ArgumentType.String("waitingCorner");
+        waitingCornerArg.setSuggestionCallback((_, _, suggestion) -> {
+            suggestion.addEntry(new SuggestionEntry("min"));
+            suggestion.addEntry(new SuggestionEntry("max"));
+        });
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player) || !permissionCheck(sender)) return;
+            setWaitingLobbyCorner(player, context.get(waitingCornerArg), player.getPosition());
+        }, ArgumentType.Literal("waitinglobby"), waitingCornerArg);
+
+        // /autosetup waiting [x y z]
+        command.addSyntax((sender, context) -> {
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             Pos pos = player.getPosition();
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
-            session.setWaitingLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.pitch(), pos.yaw()));
-            player.sendMessage("<a>Set waiting spawn to {}", formatPos(pos));
+            session.setWaitingLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch()));
+            player.sendMessage(Text.of("<a>Set waiting spawn to {}", formatPos(pos)));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("waiting"));
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             Pos pos = player.getPosition();
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
-            session.setSpectatorLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.pitch(), pos.yaw()));
-            player.sendMessage("<a>Set spectator spawn to {}", formatPos(pos));
+            session.setSpectatorLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch()));
+            player.sendMessage(Text.of("<a>Set spectator spawn to {}", formatPos(pos)));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("spectator"));
 
+        // With coordinates
         ArgumentDouble xArg = ArgumentType.Double("x");
         ArgumentDouble yArg = ArgumentType.Double("y");
         ArgumentDouble zArg = ArgumentType.Double("z");
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player) || !permissionCheck(sender)) return;
+            setWaitingLobbyCorner(player, context.get(waitingCornerArg),
+                    new Pos(context.get(xArg), context.get(yArg), context.get(zArg)));
+        }, ArgumentType.Literal("waitinglobby"), waitingCornerArg, xArg, yArg, zArg);
+
+        command.addSyntax((sender, context) -> {
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             double x = context.get(xArg);
@@ -546,13 +574,13 @@ public class AutoSetupCommand extends HypixelCommand {
 
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
             session.setWaitingLocation(new HypixelPosition(x, y, z, 0, 0));
-            player.sendMessage("<a>Set waiting spawn to {}, {}, {}", x, y, z);
+            player.sendMessage(Text.of("<a>Set waiting spawn to {}, {}, {}", x, y, z));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("waiting"), xArg, yArg, zArg);
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             double x = context.get(xArg);
@@ -561,123 +589,161 @@ public class AutoSetupCommand extends HypixelCommand {
 
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
             session.setSpectatorLocation(new HypixelPosition(x, y, z, 0, 0));
-            player.sendMessage("<a>Set spectator spawn to {}, {}, {}", x, y, z);
+            player.sendMessage(Text.of("<a>Set spectator spawn to {}, {}, {}", x, y, z));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("spectator"), xArg, yArg, zArg);
     }
 
+    private void setWaitingLobbyCorner(Player player, String corner, Pos pos) {
+        AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
+        Vec3i block = new Vec3i(pos.blockX(), pos.blockY(), pos.blockZ());
+        if (corner.equalsIgnoreCase("min")) session.setWaitingLobbyMin(block);
+        else if (corner.equalsIgnoreCase("max")) session.setWaitingLobbyMax(block);
+        else {
+            player.sendMessage(Text.of("<c>Use min or max."));
+            return;
+        }
+        player.sendMessage(Text.of("<a>Set waiting lobby {} to {}", corner.toLowerCase(Locale.ROOT), formatPosition(block)));
+        DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
+    }
+
     private void registerShowCommand(MinestomCommand command) {
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             AutoSetupSession session = AutoSetupSession.get(player.getUuid());
             if (session == null) {
-                player.sendMessage("<c>No configuration session active. Use /autosetup scan or set bounds first.");
+                player.sendMessage(Text.of("<c>No configuration session active. Use /autosetup scan or set bounds first."));
                 return;
             }
 
             DebugMarkerManager.showMarkers(player.getUuid(), session, player.getInstance());
-            player.sendMessage("<a>Showing debug markers");
+            player.sendMessage(Text.of("<a>Showing debug markers"));
 
         }, ArgumentType.Literal("show"));
     }
 
     private void registerHideCommand(MinestomCommand command) {
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             DebugMarkerManager.hideMarkers(player.getUuid());
-            player.sendMessage("<c>Hidden debug markers");
+            player.sendMessage(Text.of("<c>Hidden debug markers"));
 
         }, ArgumentType.Literal("hide"));
     }
 
     private void registerStatusCommand(MinestomCommand command) {
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             AutoSetupSession session = AutoSetupSession.get(player.getUuid());
             if (session == null) {
-                player.sendMessage("<c>No configuration session active.");
+                player.sendMessage(Text.of("<c>No configuration session active."));
                 return;
             }
 
-            player.sendMessage("<6><l>=== Configuration Status ===");
-            if (session.getMapId() != null) {
-                player.sendMessage("<e>Map ID: <f>{}", session.getMapId());
-            } else {
-                player.sendMessage("<e>Map ID: <c>(not set)");
-            }
-            if (session.getMapName() != null) {
-                player.sendMessage("<e>Map Name: <f>{}", session.getMapName());
-            } else {
-                player.sendMessage("<e>Map Name: <c>(not set)");
-            }
-            if (session.hasBounds()) {
-                player.sendMessage("<e>Bounds: <f>✔ Set");
-            } else {
-                player.sendMessage("<e>Bounds: <c>✖ Not set");
-            }
-            if (session.getGameTypes().isEmpty()) {
-                player.sendMessage("<e>Game Types: <c>(none)");
-            } else {
-                player.sendMessage("<e>Game Types: <f>{}", session.getGameTypes().toString());
-            }
-            player.sendMessage("<e>Teams Configured: <f>{}", session.getTeams().size());
+            player.sendMessage(Text.of("<6><l>=== Configuration Status ==="));
+            player.sendMessage(Text.of("<e>Map ID: <f>{}", statusValue(session.getMapId())));
+            player.sendMessage(Text.of("<e>Map Name: <f>{}", statusValue(session.getMapName())));
+            player.sendMessage(Text.of("<e>Bounds: <f>{}", session.hasBounds()
+                    ? Text.of("<a>✔ Set")
+                    : Text.of("<c>✖ Not set")));
+            player.sendMessage(Text.of("<e>Game Types: <f>{}", session.getGameTypes().isEmpty()
+                    ? Text.of("<c>(none)")
+                    : Text.literal(session.getGameTypes().toString())));
+            player.sendMessage(Text.of("<e>Teams Configured: <f>{}", session.getTeams().size()));
 
             for (var entry : session.getTeams().entrySet()) {
                 TeamKey team = entry.getKey();
                 AutoSetupSession.TeamConfig config = entry.getValue();
-                player.sendMessage(Text.of("  <color:{}>{}<7>: ", team.chatColor(), team.getName())
-                        .append(config.getSpawn() != null ? "<a>S " : "<c>S ")
-                        .append(config.getBedFeet() != null ? "<a>B " : "<c>B ")
-                        .append(config.getGenerator() != null ? "<a>G " : "<c>G ")
-                        .append(config.getItemShop() != null ? "<a>IS " : "<c>IS ")
-                        .append(config.getTeamShop() != null ? "<a>TS" : "<c>TS"));
+                Text status = Text.of("  <color:{}>{}<7>: ", team.chatColor(), team.getName())
+                    .append(config.getSpawn() != null ? "<a>S " : "<c>S ")
+                    .append(config.getBedFeet() != null ? "<a>B " : "<c>B ")
+                    .append(config.getGenerator() != null ? "<a>G " : "<c>G ")
+                    .append(config.getItemShop() != null ? "<a>IS " : "<c>IS ")
+                    .append(config.getTeamShop() != null ? "<a>TS" : "<c>TS");
+                player.sendMessage(status);
             }
 
-            player.sendMessage("<e>Diamond Generators: <f>{}", session.getDiamondGenerators().size());
-            player.sendMessage("<e>Emerald Generators: <f>{}", session.getEmeraldGenerators().size());
-            if (session.getWaitingLocation() != null) {
-                player.sendMessage("<e>Waiting Location: <f>✔");
-            } else {
-                player.sendMessage("<e>Waiting Location: <c>✖");
-            }
-            if (session.getSpectatorLocation() != null) {
-                player.sendMessage("<e>Spectator Location: <f>✔");
-            } else {
-                player.sendMessage("<e>Spectator Location: <c>✖");
-            }
+            player.sendMessage(Text.of("<e>Diamond Generators: <f>{}", session.getDiamondGenerators().size()));
+            player.sendMessage(Text.of("<e>Emerald Generators: <f>{}", session.getEmeraldGenerators().size()));
+            player.sendMessage(Text.of("<e>Waiting Location: <f>{}", session.getWaitingLocation() != null
+                    ? Text.of("<a>✔")
+                    : Text.of("<c>✖")));
+            player.sendMessage(Text.of("<e>Spectator Location: <f>{}", session.getSpectatorLocation() != null
+                    ? Text.of("<a>✔")
+                    : Text.of("<c>✖")));
 
         }, ArgumentType.Literal("status"));
+    }
+
+    private void registerSnapCommand(MinestomCommand command) {
+        command.addSyntax((sender, _) -> {
+            if (!(sender instanceof Player player)) return;
+            if (!permissionCheck(sender)) return;
+
+            AutoSetupSession session = AutoSetupSession.get(player.getUuid());
+            if (session == null) {
+                player.sendMessage(Text.of("<c>No configuration session active."));
+                return;
+            }
+
+            int snapped = 0;
+            for (AutoSetupSession.TeamConfig config : session.getTeams().values()) {
+                if (config.getSpawn() != null) {
+                    config.setSpawn(snapDirection(config.getSpawn()));
+                    snapped++;
+                }
+                if (config.getItemShop() != null) {
+                    config.setItemShop(snapDirection(config.getItemShop()));
+                    snapped++;
+                }
+                if (config.getTeamShop() != null) {
+                    config.setTeamShop(snapDirection(config.getTeamShop()));
+                    snapped++;
+                }
+            }
+
+            DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
+            player.sendMessage(Text.of("<a>Snapped {} spawn and shop positions to the nearest of 8 compass directions.", snapped));
+        }, ArgumentType.Literal("snap"));
+    }
+
+    private HypixelPosition snapDirection(HypixelPosition position) {
+        float yaw = Math.round(position.yaw() / 45.0f) * 45.0f;
+        if (yaw >= 180.0f) yaw -= 360.0f;
+        if (yaw < -180.0f) yaw += 360.0f;
+        return new HypixelPosition(position.x(), position.y(), position.z(), yaw, 0);
     }
 
     private void registerMapInfoCommand(MinestomCommand command) {
         ArgumentString nameArg = ArgumentType.String("name");
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             AutoSetupSession session = AutoSetupSession.get(player.getUuid());
             if (session == null || session.getMapId() == null) {
-                player.sendMessage("<c>No map selected. Use /choosemap \\<map> first.");
+                player.sendMessage(Text.of("<c>No map selected. Use /choosemap \\<map> first."));
                 return;
             }
 
             String name = context.get(nameArg);
             session.setMapName(name);
 
-            player.sendMessage("<a>Set map name to '{}' (ID: {})", name, session.getMapId());
+            player.sendMessage(Text.of("<a>Set map name to '{}' (ID: {})", name, session.getMapId()));
 
         }, ArgumentType.Literal("name"), nameArg);
     }
 
     private void registerGeneratorSettingsCommand(MinestomCommand command) {
+        // Speed setting command
         var speedArg = ArgumentType.String("speed");
         speedArg.setSuggestionCallback((sender, ctx, suggestion) -> {
             suggestion.addEntry(new SuggestionEntry("SLOW"));
@@ -687,18 +753,20 @@ public class AutoSetupCommand extends HypixelCommand {
         });
 
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             String speedStr = context.get(speedArg);
             AutoSetupSession session = AutoSetupSession.getOrCreate(player.getUuid(), player.getInstance());
 
             try {
-                GeneratorSpeed speed = GeneratorSpeed.valueOf(speedStr.toUpperCase());
+                GeneratorSpeed speed = GeneratorSpeed.valueOf(speedStr.toUpperCase(Locale.ROOT));
                 session.setGeneratorSpeed(speed);
-                player.sendMessage("<a>Set generator speed to {} ({} iron/{}s, {} gold/{}s)", speed.name(), speed.getIronAmount(), speed.getIronDelaySeconds(), speed.getGoldAmount(), speed.getGoldDelaySeconds());
+                player.sendMessage(Text.of("<a>Set generator speed to {} ({} iron/{}s, {} gold/{}s)",
+                        speed.name(), speed.getIronAmount(), speed.getIronDelaySeconds(),
+                        speed.getGoldAmount(), speed.getGoldDelaySeconds()));
             } catch (IllegalArgumentException e) {
-                player.sendMessage("<c>Invalid speed: {}", speedStr);
+                player.sendMessage(Text.of("<c>Invalid speed: {}", speedStr));
             }
 
         }, ArgumentType.Literal("generator"), ArgumentType.Literal("speed"), speedArg);
@@ -706,30 +774,31 @@ public class AutoSetupCommand extends HypixelCommand {
 
     private void registerSaveCommand(MinestomCommand command) {
         command.addSyntax((sender, context) -> {
-            if (!(sender instanceof HypixelPlayer player)) return;
+            if (!(sender instanceof Player player)) return;
             if (!permissionCheck(sender)) return;
 
             AutoSetupSession session = AutoSetupSession.get(player.getUuid());
             if (session == null) {
-                player.sendMessage("<c>No configuration session active.");
+                player.sendMessage(Text.of("<c>No configuration session active."));
                 return;
             }
 
+            // Validate required fields
             List<String> errors = validateSession(session);
             if (!errors.isEmpty()) {
-                player.sendMessage("<c>Cannot save - missing required configuration:");
+                player.sendMessage(Text.of("<c>Cannot save - missing required configuration:"));
                 for (String error : errors) {
-                    player.sendMessage("<c>  • {}", error);
+                    player.sendMessage(Text.of("<c>  • {}", error));
                 }
                 return;
             }
 
             try {
                 saveToConfig(session);
-                player.sendMessage("<a>✔ Configuration saved to maps.json!");
-                player.sendMessage("<7>Map ID: {}", session.getMapId());
+                player.sendMessage(Text.of("<a>✔ Configuration saved to maps.json!"));
+                player.sendMessage(Text.of("<7>Map ID: {}", session.getMapId()));
             } catch (Exception e) {
-                player.sendMessage("<c>Failed to save: {}", e.getMessage());
+                player.sendMessage(Text.of("<c>Failed to save: {}", e.getMessage()));
                 Logger.error("Failed to save map configuration", e);
             }
 
@@ -790,18 +859,26 @@ public class AutoSetupCommand extends HypixelCommand {
             config.setMaps(new ArrayList<>());
         }
 
+        // Remove existing entry with same ID
         config.getMaps().removeIf(entry -> entry.getId().equals(session.getMapId()));
 
+        // Add new entry
         config.getMaps().add(session.toMapEntry());
 
+        // Write back
         String output = GSON.toJson(config);
         Files.writeString(mapsPath, output, StandardCharsets.UTF_8);
 
+        // Reload config in memory
         TypeBedWarsConfiguratorLoader.reloadMapsConfig();
     }
 
     private String formatPos(Pos pos) {
         return String.format("%.2f, %.2f, %.2f", pos.x(), pos.y(), pos.z());
+    }
+
+    private Text statusValue(String value) {
+        return value == null ? Text.of("<c>(not set)") : Text.literal(value);
     }
 
     private String formatPosition(Vec3i pos) {

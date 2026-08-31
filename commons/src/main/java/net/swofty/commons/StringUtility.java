@@ -296,6 +296,29 @@ public final class StringUtility {
         return new ArrayList<>(Arrays.asList(string.split("\n", -1)));
 	}
 
+	public static List<String> splitByWordAndLength(String string, int splitLength) {
+		List<String> result = new ArrayList<>();
+		for (String line : string.split("\n", -1)) {
+			if (line.isEmpty()) {
+				result.add("");
+				continue;
+			}
+			StringBuilder current = new StringBuilder();
+			for (String word : line.split(" ")) {
+				if (word.isEmpty()) continue;
+				int extraSpace = current.isEmpty() ? 0 : 1;
+				if (current.length() + extraSpace + word.length() > splitLength && !current.isEmpty()) {
+					result.add(current.toString());
+					current = new StringBuilder();
+				}
+				if (!current.isEmpty()) current.append(' ');
+				current.append(word);
+			}
+			result.add(current.toString());
+		}
+		return result;
+	}
+
 	public static List<String> splitByNewLine(String string, String lineStarter) {
 		List<String> lines = new ArrayList<>(Arrays.asList(string.split("\n", -1)));
         lines.replaceAll(s -> lineStarter + s);

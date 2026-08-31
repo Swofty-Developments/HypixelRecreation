@@ -17,8 +17,8 @@ public class CountdownTextSource implements DynamicTextSource {
         this.identifier = config.identifier();
         this.startTick = config.getMeta("startTick", 0);
         this.endTick = config.getMeta("endTick", 0);
-        this.eventName = config.getMeta("eventName", "Event");
-        this.completedText = config.getMeta("completedText", List.of("<a>Completed!"));
+        this.eventName = config.getMeta("eventName", "");
+        this.completedText = config.getMeta("completedText", List.of());
     }
 
     @Override
@@ -34,15 +34,22 @@ public class CountdownTextSource implements DynamicTextSource {
     @Override
     public List<String> getTextAt(int currentTick) {
         if (currentTick >= endTick) {
-            return completedText;
+            return completedText.isEmpty()
+                    ? List.of(ReplayDisplayTranslations.toLegacy(Text.key("replays.countdown_completed")))
+                    : completedText;
         }
 
         int remainingTicks = endTick - currentTick;
         int remainingSeconds = remainingTicks / 20;
 
         List<String> result = new ArrayList<>();
-        result.add(Text.of("<e>{}", eventName).serialize());
-        result.add(Text.of("<7>in <f>{}", formatTime(remainingSeconds)).serialize());
+        Text event = eventName.isEmpty()
+                ? Text.key("replays.countdown_default_event")
+                : Text.legacy(eventName);
+        result.add(ReplayDisplayTranslations.toLegacy(Text.key(
+                "replays.countdown_event", event)));
+        result.add(ReplayDisplayTranslations.toLegacy(Text.key(
+                "replays.countdown_in", formatTime(remainingSeconds))));
 
         return result;
     }

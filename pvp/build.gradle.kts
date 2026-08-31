@@ -1,15 +1,48 @@
-plugins {
-    id("java")
+﻿plugins {
+    `java-library`
+    id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
-group = "net.swofty"
-version = "3.0"
+description = "A library for Minestom 1.8 mechanics"
+group = "io.github.term4"
+version = "0.3.0"
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(25))
+mavenPublishing {
+    coordinates(group.toString(), "polyp", version.toString())
+    publishToMavenCentral()
+    // sign only when keys are configured (release env); keyless dev machines can still publishToMavenLocal
+    if (providers.gradleProperty("signingInMemoryKey").isPresent || providers.gradleProperty("signing.keyId").isPresent) {
+        signAllPublications()
+    }
+
+    pom {
+        name = "polyp"
+        description = project.description
+        url = "https://github.com/TennacleCore/Polyp"
+
+        licenses {
+            license {
+                name = "MIT License"
+                url = "https://opensource.org/licenses/MIT"
+                distribution = "repo"
+            }
+        }
+
+        developers {
+            developer {
+                name = "Term4"
+                id = "Term4"
+                email = "gptkc2003@gmail.com"
+                url = "https://github.com/Term4"
+            }
+        }
+
+        scm {
+            url = "https://github.com/TennacleCore/Polyp"
+            connection = "scm:git:git://github.com/TennacleCore/Polyp.git"
+            developerConnection = "scm:git:ssh://git@github.com/TennacleCore/Polyp.git"
+        }
     }
 }
 
@@ -18,12 +51,44 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.minestom) {
-        exclude(group = "org.jboss.shrinkwrap.resolver", module = "shrinkwrap-resolver-depchain")
-    }
-    compileOnly(libs.fastutil)
+    // the :world seam is EMBEDDED in this jar (below), not a published dependency: polyp ships to Maven
+    // Central self-contained. World systems (Archipelago) compile against the thin io.github.term4:polyp-world
+    // and expect the runtime to provide the classes - the same provided contract as Minestom itself.
+    compileOnly(project(":world"))
+    testImplementation(project(":world"))
+    compileOnly(project(":codegen"))
+    annotationProcessor(project(":codegen"))
+    val minestomVersion = "2026.08.16-26.2"
+    val slf4jVersion = "2.0.18"
+    val junitVersion = "6.0.3"
+
+    compileOnly("net.minestom:minestom:$minestomVersion")
+    // SLF4J facade only; a Minestom runtime always provides the api + a binding, so compileOnly (like Minestom). Never ship a binding.
+    compileOnly("org.slf4j:slf4j-api:$slf4jVersion")
+
+    // Unit testing
+    testImplementation("net.minestom:minestom:$minestomVersion")
+    // headless server harness (Env/@EnvTest) for entity-backed golden tests; test-only, never shipped
+    testImplementation("net.minestom:testing:$minestomVersion")
+    testImplementation("org.tinylog:tinylog-api:2.8.0-M1")
+    testImplementation("org.tinylog:tinylog-impl:2.8.0-M1")
+    testImplementation("org.tinylog:slf4j-tinylog:2.8.0-M1")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVersion")
 }
 
 tasks.test {
     useJUnitPlatform()
+    // synchronous player spawns + relaxed thread asserts (like Minestom's Env); must be set before ServerFlag loads
+    systemProperty("minestom.inside-test", "true")
+}
+// polyp publishes self-contained: the :world module's classes + sources ride this artifact
+tasks.jar {
+    from(project(":world").sourceSets.main.map { it.output })
+}
+tasks.withType<Jar>().configureEach {
+    if (name == "sourcesJar") from(project(":world").sourceSets.main.map { it.allSource })
 }

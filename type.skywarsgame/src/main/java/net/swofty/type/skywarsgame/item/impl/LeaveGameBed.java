@@ -7,7 +7,7 @@ import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItem;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 
 public class LeaveGameBed extends SimpleInteractableItem {
 
@@ -17,7 +17,7 @@ public class LeaveGameBed extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStacks.item(Material.RED_BED, 1, """
+        return ItemStackCreator.item(Material.RED_BED, 1, """
                 <c><l>Return to Lobby </l><7>(Right Click)
                 <7>Right-click to leave to the lobby!""").build();
     }

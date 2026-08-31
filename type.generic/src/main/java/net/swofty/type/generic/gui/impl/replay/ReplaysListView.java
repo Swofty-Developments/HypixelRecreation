@@ -4,6 +4,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.StringUtility;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.Components;
 import net.swofty.type.generic.gui.v2.StatefulPaginatedView;
@@ -14,6 +15,7 @@ import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.generic.user.HypixelPlayer;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +33,7 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
 
     @Override
     public ViewConfiguration<State> configuration() {
-        return ViewConfiguration.translatable("general.recent_games", InventoryType.CHEST_6_ROW);
+        return ViewConfiguration.translatable("replays.replays", InventoryType.CHEST_6_ROW);
     }
 
     @Override
@@ -63,26 +65,27 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
     }
 
     @Override
+    protected boolean shouldRenderNavBackground() {
+        return false;
+    }
+
+    @Override
     protected void layoutBackground(ViewLayout<State> layout, State state, ViewContext ctx) {
         Components.close(layout, 48);
 
-        layout.slot(47, (_, _) -> ItemStacks.item(Material.BOOK, 1, """
-            <a>Hypixel Replays
-            <7>The Hypixel Replay System allows
-            <7>players to watch back their recently
-            <7>played games.
-
-            <7>Replays are currently supported in the following games:
-            <f> - Bed Wars"""));
+        layout.slot(47, (_, _) -> ItemStacks.item(Material.BOOK, Text.key("replays.replays_title"), List.of(
+                Text.key("replays.replays_description"),
+                Text.empty(),
+                Text.key("replays.replays_supported"),
+                Text.key("replays.bedwars_supported")
+        )));
 
         // TODO: behaviour
-        layout.slot(49, (_, _) -> ItemStacks.item(Material.GRAY_DYE, 1, """
-            <a>Show Replays Only
-            <7>Toggle whether all your recently
-            <7>played games should be displayed or
-            <7>only games with replays attached.
-
-            <e>Click to toggle!"""));
+        layout.slot(49, (_, _) -> ItemStacks.item(Material.GRAY_DYE, Text.key("replays.show_replays_only"), List.of(
+                Text.key("replays.show_replays_only_description"),
+                Text.empty(),
+                Text.key("replays.click_to_toggle")
+        )));
     }
 
     @Override
@@ -95,6 +98,17 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
         };
 
 
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.key("replays.replay_date", DATE_FORMAT.format(new Date(item.startTime()))));
+        lore.add(Text.key("replays.replay_duration", item.formattedDuration()));
+        lore.add(Text.empty());
+        lore.add(Text.key("replays.replay_mode", formatMode(item.gameTypeName())));
+        lore.add(Text.key("replays.replay_map", item.mapName()));
+        lore.add(Text.empty());
+        lore.add(Text.key("replays.server", item.serverId()));
+        lore.add(Text.key("replays.player_count", item.players().size()));
+        lore.add(Text.empty());
+
         // add this properly on Duels
         /*if (item.winnerId() != null) {
             boolean won = item.players().containsKey(player.getUuid()) &&
@@ -105,25 +119,14 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
                     Component.text("DEFEAT", NamedTextColor.RED));
         }*/
 
-        return ItemStacks.item(material, """
-            <a>{}
-            <7>{}
-            <7>Duration: {}
+        lore.add(Text.key("replays.click_to_view_replay"));
 
-            <7>Mode: <a>{}
-            <7>Map: <a>{}
-
-            <7>Server: <a>{}
-            <7>Players: <a>{}
-
-            <e>Click to view replay!""",
-                item.displayName(),
-                DATE_FORMAT.format(new Date(item.startTime())),
-                item.formattedDuration(),
-                StringUtility.capitalize(item.gameTypeName()),
-                item.mapName(),
-                item.serverId(),
-                item.players().size());
+        return ItemStacks.item(
+                material,
+                1,
+                Text.key("replays.replay_item_name", item.displayName()),
+                lore
+        );
     }
 
     @Override
@@ -135,6 +138,13 @@ public class ReplaysListView extends StatefulPaginatedView<ReplayEntry, ReplaysL
     @Override
     protected boolean shouldFilterFromSearch(State state, ReplayEntry item) {
         return false;
+    }
+
+    private static String formatMode(String gameTypeName) {
+        if ("ONE_EIGHT".equalsIgnoreCase(gameTypeName)) {
+            return "Solo";
+        }
+        return StringUtility.capitalize(gameTypeName.replace('_', ' '));
     }
 
     public record State(

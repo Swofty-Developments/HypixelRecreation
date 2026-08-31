@@ -4,7 +4,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -25,7 +25,7 @@ public class FrogsPotion implements LuckyBlockItem {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.POTION, """
+        return ItemStackCreator.item(Material.POTION, """
                 <a><l>Frog's Potion</l>
                 <7>Leap like a frog!
                 <7>Speed I and Jump Boost II

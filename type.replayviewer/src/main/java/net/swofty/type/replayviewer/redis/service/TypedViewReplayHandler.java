@@ -1,18 +1,18 @@
 package net.swofty.type.replayviewer.redis.service;
 
-import net.swofty.commons.protocol.objects.game.ViewReplayPushProtocol;
-import net.swofty.commons.redis.RedisMessageHandler;
-import net.swofty.commons.redis.RedisMessageContext;
 import net.swofty.commons.protocol.RedisProtocol;
+import net.swofty.commons.protocol.objects.game.ViewReplayPushProtocol;
+import net.swofty.commons.redis.RedisMessageContext;
+import net.swofty.commons.redis.RedisMessageHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TypedViewReplayHandler implements RedisMessageHandler<ViewReplayPushProtocol.Request, ViewReplayPushProtocol.Response> {
-    public static Map<UUID, String> replay = new HashMap<>();
-    public static Map<UUID, String> shareCode = new HashMap<>();
+    public static Map<UUID, String> replay = new ConcurrentHashMap<>();
+    public static Map<UUID, String> shareCode = new ConcurrentHashMap<>();
 
     private static final ViewReplayPushProtocol PROTOCOL = new ViewReplayPushProtocol();
 

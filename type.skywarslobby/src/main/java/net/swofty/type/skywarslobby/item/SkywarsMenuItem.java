@@ -5,7 +5,7 @@ import net.minestom.server.event.trait.CancellableEvent;
 import net.minestom.server.event.trait.PlayerInstanceEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.lobby.item.LobbyItem;
 import net.swofty.type.skywarslobby.gui.GUISkyWarsMenu;
@@ -31,7 +31,7 @@ public class SkywarsMenuItem extends LobbyItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStacks.item(Material.EMERALD, 1, """
+        return ItemStackCreator.item(Material.EMERALD, 1, """
                 <a>SkyWars Menu <7>(Right Click)
                 <7>Right Click to open the SkyWars Menu!""").build();
     }

@@ -2,7 +2,6 @@ package net.swofty.commons.redis;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import net.swofty.commons.ServiceType;
 import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.PingProtocol;
