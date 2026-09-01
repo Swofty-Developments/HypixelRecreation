@@ -572,6 +572,10 @@ public class SkyBlockDataHandler extends DataHandler {
         STASH("stash", false, false, false,
                 DatapointStash.class, new DatapointStash("stash")),
 
+        // TODO: proper typed record or something like that
+        TABLIST_WIDGET_SETTINGS("tablist_widget_settings", false, false, false,
+                DatapointString.class, new DatapointString("tablist_widget_settings", "{}")),
+
         COLLECTED_MOB_TYPE_REWARDS("collected_mob_type_rewards", false, false, false,
                 DatapointCollectedMobTypeRewards.class, new DatapointCollectedMobTypeRewards("collected_mob_type_rewards")),
         ;
