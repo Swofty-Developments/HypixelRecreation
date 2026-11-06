@@ -12,7 +12,6 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.event.server.ServerTickMonitorEvent;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.block.Block;
-import net.minestom.server.monitoring.TickMonitor;
 import net.minestom.server.timer.TaskSchedule;
 import net.minestom.server.utils.time.TimeUnit;
 import net.swofty.DataAPI;
@@ -63,14 +62,17 @@ import org.tinylog.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 public record HypixelGenericLoader(HypixelTypeLoader loader) {
-    public static final AtomicReference<TickMonitor> LAST_TICK = new AtomicReference<>();
+    private static final ServerTickRate TICK_RATE = new ServerTickRate();
 
     private static final int AUTOSAVE_INTERVAL_MINUTES = 5;
     private static final long AUTOSAVE_SPREAD_MILLIS = 30_000L;
+
+    public static double getTicksPerSecond() {
+        return TICK_RATE.getTicksPerSecond();
+    }
 
     @Getter
     private static MinecraftServer server;
@@ -79,6 +81,15 @@ public record HypixelGenericLoader(HypixelTypeLoader loader) {
     public void initialize(MinecraftServer server) {
         HypixelGenericLoader.server = server;
         HypixelConst.setTypeLoader(loader);
+        MinecraftServer.getGlobalEventHandler().addListener(ServerTickMonitorEvent.class, event -> {
+            TICK_RATE.recordTick();
+            if (TICK_RATE.shouldWarn()) {
+                double tps = getTicksPerSecond();
+                getLoadedPlayers().forEach(player ->
+                        player.getLogHandler().debug("<c>Server TPS is below 19! TPS: {}", tps));
+                Logger.warn("Server TPS is below 19! TPS: {}", tps);
+            }
+        });
         TextArgRenderers.register(HypixelPlayer.class, HypixelPlayer::getRankDisplayName);
         Text.registerTag(Rank.TAG, Rank::resolveTag);
         final boolean isSkyBlockType = loader.getType().isSkyBlock();
@@ -139,8 +150,6 @@ public record HypixelGenericLoader(HypixelTypeLoader loader) {
          * SkyBlock has its own format so let SkyBlockGenericLoader handle it
          */
         if (!isSkyBlockType && !(loader.getType() == ServerType.BEDWARS_GAME)) {
-            MinecraftServer.getGlobalEventHandler().addListener(ServerTickMonitorEvent.class, event ->
-                    LAST_TICK.set(event.getTickMonitor()));
             MinecraftServer.getSchedulerManager().buildTask(() -> {
                 Collection<HypixelPlayer> players = getLoadedPlayers();
                 if (players.isEmpty())
@@ -155,15 +164,7 @@ public record HypixelGenericLoader(HypixelTypeLoader loader) {
                     Audiences.players().sendPlayerListHeaderAndFooter(headerFooter.getKey(), headerFooter.getValue());
                 }, () -> {
                     final long ramUsage = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() / (long) 1e6; // bytes to MB
-                    final TickMonitor tickMonitor = LAST_TICK.get();
-                    final double TPS = 1000 / tickMonitor.getTickTime();
-
-                    if (TPS < 20) {
-                        HypixelGenericLoader.getLoadedPlayers().forEach(player -> {
-                            player.getLogHandler().debug("<c>Server TPS is below 20! TPS: {}", TPS);
-                        });
-                        Logger.error("Server TPS is below 20! TPS: " + TPS);
-                    }
+                    final double TPS = getTicksPerSecond();
 
                     final Text newline = Text.literal("\n");
                     final Text header = Text.of("<b>You are playing on <e><l>MC.HYPIXEL.NET")

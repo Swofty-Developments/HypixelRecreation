@@ -10,9 +10,7 @@ import net.kyori.adventure.key.Key;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.CoordConversion;
 import net.minestom.server.coordinate.Pos;
-import net.minestom.server.event.server.ServerTickMonitorEvent;
 import net.minestom.server.instance.Chunk;
-import net.minestom.server.monitoring.TickMonitor;
 import net.minestom.server.registry.RegistryKey;
 import net.minestom.server.timer.TaskSchedule;
 import net.minestom.server.utils.time.TimeUnit;
@@ -209,8 +207,6 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         /**
          * Start generic SkyBlock tablist
          */
-        MinecraftServer.getGlobalEventHandler().addListener(ServerTickMonitorEvent.class, event ->
-            HypixelGenericLoader.LAST_TICK.set(event.getTickMonitor()));
         MinecraftServer.getSchedulerManager().buildTask(() -> {
             Collection<SkyBlockPlayer> players = getLoadedPlayers();
             if (players.isEmpty())
@@ -218,15 +214,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
 
             long ramUsage = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
             ramUsage /= (long) 1e6; // bytes to MB
-            TickMonitor tickMonitor = HypixelGenericLoader.LAST_TICK.get();
-            double TPS = 1000 / tickMonitor.getTickTime();
-
-            if (TPS < 20) {
-                HypixelGenericLoader.getLoadedPlayers().forEach(player -> {
-                    player.getLogHandler().debug(Text.of("<c>Server TPS is below 20! TPS: {}", TPS));
-                });
-                Logger.error("Server TPS is below 20! TPS: " + TPS);
-            }
+            double TPS = HypixelGenericLoader.getTicksPerSecond();
 
             final Text header = Text.of("""
                 <b>You are playing on <e><l>MC.HYPIXEL.NET</l>
