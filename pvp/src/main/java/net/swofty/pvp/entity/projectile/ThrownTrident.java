@@ -1,7 +1,7 @@
 package net.swofty.pvp.entity.projectile;
 
 import net.kyori.adventure.sound.Sound;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -67,7 +67,7 @@ public class ThrownTrident extends AbstractArrow {
 				Vec vector = shooter.getPosition().add(0, shooter.getEyeHeight(), 0).asVec().sub(position);
 				refreshPosition(position.add(0, vector.y() * 0.015 * loyalty, 0));
 				setVelocity(velocity.mul(0.95).add(vector.normalize().mul(0.05 * loyalty)
-						.mul(ServerFlag.SERVER_TICKS_PER_SECOND)));
+						.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get())));
 
 				if (!hasStartedReturning) {
 					soundProvider.playSound(

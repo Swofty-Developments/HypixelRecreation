@@ -1,6 +1,6 @@
 package net.swofty.pvp.player;
 
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Player;
@@ -40,7 +40,7 @@ public interface CombatPlayer {
     }
     
     default void jump() {
-        int tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+        int tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
         double yVel = getJumpVelocity() + getJumpBoostVelocityModifier();
         setVelocityNoUpdate(velocity -> velocity.withY(Math.max(velocity.y(), yVel * tps)));
         if (isSprinting()) {

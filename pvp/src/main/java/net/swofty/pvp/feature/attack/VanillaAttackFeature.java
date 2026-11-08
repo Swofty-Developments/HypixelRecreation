@@ -2,7 +2,7 @@ package net.swofty.pvp.feature.attack;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.sound.Sound;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EquipmentSlot;
@@ -214,7 +214,7 @@ public class VanillaAttackFeature implements AttackFeature, RegistrableFeature {
 
             if (attack.fireAspect() > 0) {
                 for (LivingEntity entity : affectedEntities) {
-                    entity.setFireTicks(attack.fireAspect() * 4 * ServerFlag.SERVER_TICKS_PER_SECOND);
+                    entity.setFireTicks(attack.fireAspect() * 4 * ServerProperties.SERVER_TICKS_PER_SECOND.get());
                 }
             }
         }

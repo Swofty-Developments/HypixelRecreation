@@ -1,6 +1,6 @@
 package net.swofty.pvp.feature.knockback;
 
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 
 /**
  * Class which contains settings for knockback.
@@ -16,7 +16,7 @@ public record KnockbackSettings(double horizontal, double vertical,
 	
 	public KnockbackSettings(double horizontal, double vertical, double verticalLimit,
 	                         double extraHorizontal, double extraVertical) {
-		double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+		double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
 		this.horizontal = horizontal * tps;
 		this.vertical = vertical * tps;
 		this.verticalLimit = verticalLimit * tps;

@@ -76,7 +76,7 @@ public final class HypixelWorldLoader {
         source.setChunkLoader(new PolarLoader(path, polarWorld).setWorldAccess(new PolarWorldAccess() {
             @Override
             public int getBiomeId(@NotNull String name) {
-                int id = MinecraftServer.getBiomeRegistry().getId(RegistryKey.unsafeOf(name));
+                int id = MinecraftServer.getBiomeRegistry().getId(RegistryKey.of(name));
                 if (id != -1) {
                     return id;
                 }
@@ -120,7 +120,7 @@ public final class HypixelWorldLoader {
             }
             try {
                 Key key = Key.key(id);
-                if (MinecraftServer.getBiomeRegistry().getId(RegistryKey.unsafeOf(id)) != -1) {
+                if (MinecraftServer.getBiomeRegistry().getId(RegistryKey.of(id)) != -1) {
                     continue;
                 }
                 if (!(data.get("definition") instanceof CompoundBinaryTag definition)) {

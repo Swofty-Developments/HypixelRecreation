@@ -1,6 +1,6 @@
 package net.swofty.type.generic.entity;
 
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.EntityType;
@@ -154,7 +154,7 @@ public class DragonEntity extends LivingEntity {
             return;
         }
 
-        double velocityMagnitude = moveSpeed * ServerFlag.SERVER_TICKS_PER_SECOND;
+        double velocityMagnitude = moveSpeed * ServerProperties.SERVER_TICKS_PER_SECOND.get();
 
         double vx = (dx / dist) * velocityMagnitude;
         double vy = (dy / dist) * velocityMagnitude;

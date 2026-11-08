@@ -2,7 +2,7 @@ package net.swofty.pvp.projectile;
 
 import lombok.Getter;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.collision.CollisionUtils;
@@ -75,7 +75,7 @@ public abstract class AbstractProjectile extends Entity implements Projectile {
         this.previousPosition = position;
         final Block.Getter chunkCache = new ChunkCache(instance, currentChunk);
         PhysicsResult result = computePhysics(
-                position, velocity.div(ServerFlag.SERVER_TICKS_PER_SECOND),
+                position, velocity.div(ServerProperties.SERVER_TICKS_PER_SECOND.get()),
                 chunkCache, getAerodynamics());
 
         Chunk finalChunk = ChunkUtils.retrieve(instance, currentChunk, result.newPosition());
@@ -84,7 +84,7 @@ public abstract class AbstractProjectile extends Entity implements Projectile {
         onGround = result.isOnGround();
 
         if (!result.hasCollision()) {
-            velocity = previousPhysicsResult.newVelocity().mul(ServerFlag.SERVER_TICKS_PER_SECOND).mul(0.99);
+            velocity = previousPhysicsResult.newVelocity().mul(ServerProperties.SERVER_TICKS_PER_SECOND.get()).mul(0.99);
         }
 
         refreshPosition(result.newPosition(), true, false);

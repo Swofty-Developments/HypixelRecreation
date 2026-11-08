@@ -1,6 +1,6 @@
 package net.swofty.pvp.player;
 
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.PhysicsResult;
 import net.minestom.server.collision.PhysicsUtils;
@@ -58,7 +58,7 @@ public class CombatPlayerImpl extends Player implements CombatPlayer {
 	public boolean isOnGroundAfterTicks(int ticks) {
 		if (vehicle != null) return false;
 		
-		final double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+		final double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
 		Vec velocity = this.velocity.div(tps);
 		Pos position = this.position;
 		
@@ -96,7 +96,7 @@ public class CombatPlayerImpl extends Player implements CombatPlayer {
 		this.gravityTickCount = onGround ? 0 : gravityTickCount + 1;
 		if (vehicle != null) return;
 		
-		final double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+		final double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
 		
 		// Slow falling effect
 		Aerodynamics aerodynamics = getAerodynamics();

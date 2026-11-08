@@ -3,7 +3,7 @@ package net.swofty.type.bedwarsgame.user;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.PhysicsResult;
 import net.minestom.server.collision.PhysicsUtils;
@@ -264,7 +264,7 @@ public class BedWarsPlayer extends HypixelPlayer implements CombatPlayer, GamePa
 	public boolean isOnGroundAfterTicks(int ticks) {
 		if (vehicle != null) return false;
 
-		final double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+		final double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
 		Vec velocity = this.velocity.div(tps);
 		Pos position = this.position;
 
@@ -303,7 +303,7 @@ public class BedWarsPlayer extends HypixelPlayer implements CombatPlayer, GamePa
 		this.gravityTickCount = onGround ? 0 : gravityTickCount + 1;
 		if (vehicle != null) return;
 
-		final double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+		final double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
 
 		// Slow falling effect
 		Aerodynamics aerodynamics = getAerodynamics();

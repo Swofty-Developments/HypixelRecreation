@@ -6,6 +6,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.BinaryTagIO;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.sound.Sound;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
@@ -281,7 +282,7 @@ public class RecordablePlayer {
 
     private static void playParticle(RecordableParticle rec, ReplaySession session) {
         byte[] packetByteArray = rec.getData();
-        ParticlePacket packet = ParticlePacket.SERIALIZER.read(NetworkBuffer.wrap(packetByteArray, 0, packetByteArray.length));
+        ParticlePacket packet = ParticlePacket.SERIALIZER.read(NetworkBuffer.wrap(packetByteArray, 0, packetByteArray.length, MinecraftServer.process().registries()));
 
         for (var viewer : session.getViewers()) {
             if (viewer instanceof HypixelPlayer hypixelPlayer

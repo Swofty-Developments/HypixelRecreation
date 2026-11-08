@@ -22,6 +22,7 @@ public class BlockDigPacket extends SwoftyPacket {
 
     public enum Status {
         STARTED_DIGGING,
+        CHANGED_DIGGING_DIRECTION,
         CANCELLED_DIGGING,
         FINISHED_DIGGING,
         DROP_ITEM_STACK,
