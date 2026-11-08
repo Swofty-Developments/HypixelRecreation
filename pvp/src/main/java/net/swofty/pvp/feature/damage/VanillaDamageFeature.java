@@ -221,9 +221,9 @@ public class VanillaDamageFeature implements DamageFeature, RegistrableFeature {
 			} else if (finalDamageEvent.shouldAnimate()) {
 				entity.sendPacketToViewersAndSelf(new DamageEventPacket(
 						entity.getEntityId(),
-						MinecraftServer.getDamageTypeRegistry().getId(damage.getType()),
-						damage.getAttacker() == null ? 0 : damage.getAttacker().getEntityId() + 1,
-						damage.getSource() == null ? 0 : damage.getSource().getEntityId() + 1,
+						damage.getType(),
+						damage.getAttacker() == null ? null : damage.getAttacker().getEntityId(),
+						damage.getSource() == null ? null : damage.getSource().getEntityId(),
 						null
 				));
 			}

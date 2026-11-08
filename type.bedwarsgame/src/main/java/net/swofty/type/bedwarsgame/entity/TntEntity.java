@@ -1,7 +1,7 @@
 package net.swofty.type.bedwarsgame.entity;
 
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -23,7 +23,7 @@ public class TntEntity extends Entity {
 
 		double angle = ThreadLocalRandom.current().nextDouble() * Math.PI * 2;
 		setVelocity(new Vec(-Math.sin(angle) * 0.02, 0.2f, -Math.cos(angle) * 0.02)
-				.mul(ServerFlag.SERVER_TICKS_PER_SECOND));
+				.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get()));
 	}
 
 	public int getFuse() {

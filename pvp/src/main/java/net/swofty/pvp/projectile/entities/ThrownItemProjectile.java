@@ -1,7 +1,7 @@
 package net.swofty.pvp.projectile.entities;
 
 import net.swofty.pvp.projectile.AbstractProjectile;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
@@ -59,7 +59,7 @@ public class ThrownItemProjectile extends AbstractProjectile {
             return;
         }
 
-        final double mul = ServerFlag.SERVER_TICKS_PER_SECOND * power;
+        final double mul = ServerProperties.SERVER_TICKS_PER_SECOND.get() * power;
         Vec v = new Vec(dx * mul, dy * mul * 0.9, dz * mul);
 
         this.setInstance(instance, new Pos(from.x(), from.y() - this.boundingBox.height()/2, from.z(), yaw, originalPitch)).whenComplete((result, throwable) -> {

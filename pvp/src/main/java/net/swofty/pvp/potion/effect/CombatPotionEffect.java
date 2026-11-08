@@ -153,7 +153,7 @@ public class CombatPotionEffect {
 	}
 	
 	public boolean isInstant() {
-		return potionEffect.registry().isInstantaneous();
+		return potionEffect.instantaneous();
 	}
 	
 	public void onApplied(LivingEntity entity, int amplifier, CombatVersion version) {

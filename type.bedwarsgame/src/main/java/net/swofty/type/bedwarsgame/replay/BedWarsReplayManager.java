@@ -15,6 +15,9 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.network.packet.server.play.BlockBreakAnimationPacket;
 import net.minestom.server.network.packet.server.play.EntityAnimationPacket;
+import net.minestom.server.network.packet.server.play.SwingAnimationPacket;
+import net.minestom.server.network.packet.server.play.DamageEventPacket;
+import net.minestom.server.entity.PlayerHand;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.potion.PotionEffect;
 import net.minestom.server.timer.Task;
@@ -404,7 +407,7 @@ public class BedWarsReplayManager {
 
     public void recordParticle(ParticlePacket particlePacket) {
         if (!recording) return;
-        byte[] data = NetworkBuffer.makeArray(networkBuffer -> ParticlePacket.SERIALIZER.write(networkBuffer, particlePacket));
+        byte[] data = NetworkBuffer.makeArray(ParticlePacket.SERIALIZER, particlePacket, MinecraftServer.process().registries());
         recorder.record(new RecordableParticle(data));
     }
 
@@ -422,14 +425,23 @@ public class BedWarsReplayManager {
     public void recordEntityAnimation(EntityAnimationPacket packet) {
         if (!recording) return;
         RecordableEntityAnimation.AnimationType animationType = switch (packet.animation()) {
-            case SWING_MAIN_ARM -> RecordableEntityAnimation.AnimationType.SWING_MAIN_HAND;
-            case SWING_OFF_HAND -> RecordableEntityAnimation.AnimationType.SWING_OFFHAND;
-            case TAKE_DAMAGE -> RecordableEntityAnimation.AnimationType.TAKE_DAMAGE;
             case LEAVE_BED -> RecordableEntityAnimation.AnimationType.LEAVE_BED;
             case CRITICAL_EFFECT -> RecordableEntityAnimation.AnimationType.CRITICAL_EFFECT;
             case MAGICAL_CRITICAL_EFFECT -> RecordableEntityAnimation.AnimationType.MAGIC_CRITICAL_EFFECT;
         };
         recorder.record(new RecordableEntityAnimation(packet.entityId(), animationType));
+    }
+
+    public void recordSwingAnimation(SwingAnimationPacket packet) {
+        if (!recording) return;
+        recorder.record(new RecordableEntityAnimation(packet.entityId(), packet.hand() == PlayerHand.MAIN
+                ? RecordableEntityAnimation.AnimationType.SWING_MAIN_HAND
+                : RecordableEntityAnimation.AnimationType.SWING_OFFHAND));
+    }
+
+    public void recordDamageAnimation(DamageEventPacket packet) {
+        if (!recording) return;
+        recorder.record(new RecordableEntityAnimation(packet.targetEntityId(), RecordableEntityAnimation.AnimationType.TAKE_DAMAGE));
     }
 
     public void recordBlockBreakAnimation(BlockBreakAnimationPacket packet) {

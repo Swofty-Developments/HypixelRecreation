@@ -1,7 +1,7 @@
 package net.swofty.pvp.entity.projectile;
 
 import net.kyori.adventure.sound.Sound;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.collision.CollisionUtils;
@@ -136,11 +136,11 @@ public class FireworkRocketEntity extends CustomEntityProjectile {
         if (!shotAtAngle) {
             double horizontal = horizontalCollision() ? 1.0 : 1.15;
             this.setVelocity(this.getVelocity().mul(horizontal, 1.0, horizontal)
-                .add(0.0, 0.04 * ServerFlag.SERVER_TICKS_PER_SECOND, 0.0));
+                .add(0.0, 0.04 * ServerProperties.SERVER_TICKS_PER_SECOND.get(), 0.0));
         }
 
         if (!isStuck()) {
-            Vec diff = velocity.div(ServerFlag.SERVER_TICKS_PER_SECOND);
+            Vec diff = velocity.div(ServerProperties.SERVER_TICKS_PER_SECOND.get());
 
             if (instance.isInVoid(position)) {
                 scheduler().scheduleNextProcess(this::remove);
@@ -219,7 +219,7 @@ public class FireworkRocketEntity extends CustomEntityProjectile {
                 aerodynamics.horizontalAirResistance(),
                 aerodynamics.verticalAirResistance(),
                 aerodynamics.horizontalAirResistance()
-            ).sub(0, hasNoGravity() ? 0 : getAerodynamics().gravity() * ServerFlag.SERVER_TICKS_PER_SECOND, 0);
+            ).sub(0, hasNoGravity() ? 0 : getAerodynamics().gravity() * ServerProperties.SERVER_TICKS_PER_SECOND.get(), 0);
             onGround = physicsResult.isOnGround();
 
             float yaw = position.yaw();

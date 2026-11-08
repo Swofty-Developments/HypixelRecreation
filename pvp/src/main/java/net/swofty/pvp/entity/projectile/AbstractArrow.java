@@ -1,7 +1,7 @@
 package net.swofty.pvp.entity.projectile;
 
 import net.kyori.adventure.sound.Sound;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -150,7 +150,7 @@ public abstract class AbstractArrow extends CustomEntityProjectile {
 
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 
-		double movementSpeed = getVelocity().length() / ServerFlag.SERVER_TICKS_PER_SECOND;
+		double movementSpeed = getVelocity().length() / ServerProperties.SERVER_TICKS_PER_SECOND.get();
 		int damage = (int) Math.ceil(MathUtils.clamp(
 				movementSpeed * baseDamage, 0.0, 2.147483647E9D));
 
@@ -179,7 +179,7 @@ public abstract class AbstractArrow extends CustomEntityProjectile {
 			if (entity.getEntityType() == EntityType.ENDERMAN) return false;
 
 			if (isOnFire()) {
-				living.setFireTicks(5 * ServerFlag.SERVER_TICKS_PER_SECOND);
+				living.setFireTicks(5 * ServerProperties.SERVER_TICKS_PER_SECOND.get());
 			}
 
 			if (getPiercingLevel() <= 0) {
@@ -191,7 +191,7 @@ public abstract class AbstractArrow extends CustomEntityProjectile {
 						.mul(1, 0, 1)
 						.normalize().mul(knockback * 0.6);
 				knockbackVec = knockbackVec.add(0, 0.1, 0)
-						.mul(ServerFlag.SERVER_TICKS_PER_SECOND / 2.0);
+						.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get() / 2.0);
 
 				if (knockbackVec.lengthSquared() > 0) {
 					Vec newVel = living.getVelocity().add(knockbackVec);

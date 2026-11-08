@@ -1,6 +1,6 @@
 package net.swofty.pvp.feature.knockback;
 
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -133,6 +133,6 @@ public class FairKnockbackFeature extends VanillaKnockbackFeature {
 	}
 
 	private static int getLatencyTicks(int latencyMillis) {
-		return Math.ceilDiv(latencyMillis * ServerFlag.SERVER_TICKS_PER_SECOND, 1000) + 2;
+		return Math.ceilDiv(latencyMillis * ServerProperties.SERVER_TICKS_PER_SECOND.get(), 1000) + 2;
 	}
 }

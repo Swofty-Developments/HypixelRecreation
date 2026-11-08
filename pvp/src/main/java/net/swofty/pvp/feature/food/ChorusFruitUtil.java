@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ChorusFruitUtil {
 
-	private static boolean randomTeleport(Entity entity, Pos to) {
+	private static boolean randomTeleport(Entity entity, Pos to, boolean directionalParticles) {
 		Instance instance = entity.getInstance();
 		assert instance != null;
 		
@@ -45,12 +45,12 @@ public final class ChorusFruitUtil {
 		if (!success) return false;
 		
 		entity.teleport(to.withY(lowestY));
-		entity.triggerStatus((byte) 46);
+		if (directionalParticles) entity.triggerStatus((byte) 46);
 		
 		return true;
 	}
 	
-	public static void tryChorusTeleport(Entity entity, float diameter) {
+	public static void tryChorusTeleport(Entity entity, float diameter, boolean directionalParticles) {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		Instance instance = entity.getInstance();
 		assert instance != null;
@@ -79,7 +79,7 @@ public final class ChorusFruitUtil {
 				entity.getVehicle().removePassenger(entity);
 			}
 			
-			if (randomTeleport(entity, new Pos(x, y, z, yaw, pitch))) {
+			if (randomTeleport(entity, new Pos(x, y, z, yaw, pitch), directionalParticles)) {
 				ViewUtil.packetGroup(entity).playSound(Sound.sound(
 						SoundEvent.ITEM_CHORUS_FRUIT_TELEPORT, Sound.Source.PLAYER,
 						1.0f, 1.0f

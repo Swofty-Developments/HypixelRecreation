@@ -1,7 +1,7 @@
 package net.swofty.pvp.entity.projectile;
 
 import net.swofty.pvp.feature.projectile.VanillaFishingRodFeature;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.*;
@@ -36,7 +36,7 @@ public class FishingBobber extends CustomEntityProjectile {
 	@Override
 	public void tick(long time) {
 		prevPos = getPosition();
-		velocity = velocity.add(0, -customGravity * ServerFlag.SERVER_TICKS_PER_SECOND, 0);
+		velocity = velocity.add(0, -customGravity * ServerProperties.SERVER_TICKS_PER_SECOND.get(), 0);
 		super.tick(time);
 	}
 	
@@ -149,12 +149,12 @@ public class FishingBobber extends CustomEntityProjectile {
 		Pos pos = getPosition();
 		Vec velocity = new Vec(shooterPos.x() - pos.x(), shooterPos.y() - pos.y(),
 				shooterPos.z() - pos.z()).mul(0.1);
-		velocity = velocity.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+		velocity = velocity.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
 		entity.setVelocity(entity.getVelocity().add(velocity));
 	}
 	
 	private Vec calculateLegacyKnockback(Vec currentVelocity, Pos entityPos) {
-		currentVelocity = currentVelocity.div(ServerFlag.SERVER_TICKS_PER_SECOND);
+		currentVelocity = currentVelocity.div(ServerProperties.SERVER_TICKS_PER_SECOND.get());
 		
 		Pos position = getPosition();
 		double dx = position.x() - entityPos.x();
@@ -179,7 +179,7 @@ public class FishingBobber extends CustomEntityProjectile {
 		if (y > 0.4)
 			y = 0.4;
 		
-		return new Vec(x, y, z).mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+		return new Vec(x, y, z).mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
 	}
 	
 	@Override

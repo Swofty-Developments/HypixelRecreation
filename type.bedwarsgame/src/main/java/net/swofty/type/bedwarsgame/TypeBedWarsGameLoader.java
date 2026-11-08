@@ -15,6 +15,8 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.network.packet.server.play.EntityAnimationPacket;
+import net.minestom.server.network.packet.server.play.SwingAnimationPacket;
+import net.minestom.server.network.packet.server.play.DamageEventPacket;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.registry.RegistryKey;
 import net.minestom.server.tag.Tag;
@@ -149,6 +151,10 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
             game.getReplayManager().recordParticle(particlePacket);
         } else if (packet instanceof EntityAnimationPacket animationPacket) {
             game.getReplayManager().recordEntityAnimation(animationPacket);
+        } else if (packet instanceof SwingAnimationPacket swingPacket) {
+            game.getReplayManager().recordSwingAnimation(swingPacket);
+        } else if (packet instanceof DamageEventPacket damagePacket) {
+            game.getReplayManager().recordDamageAnimation(damagePacket);
         }
     }).build();
 

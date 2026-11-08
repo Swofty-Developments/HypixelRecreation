@@ -3,7 +3,6 @@ package net.swofty.type.replayviewer.entity;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
-import net.minestom.server.MinecraftServer;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -120,9 +119,9 @@ public class ReplayPlayerEntity extends LivingEntity {
 
     public void takeVisualDamage() {
         sendPacketToViewersAndSelf(new DamageEventPacket(
-            getEntityId(), MinecraftServer.getDamageTypeRegistry().getId(DamageType.PLAYER_ATTACK.asKey()),
-            0,
-            0,
+            getEntityId(), DamageType.PLAYER_ATTACK,
+            null,
+            null,
             getPosition()
         ));
     }

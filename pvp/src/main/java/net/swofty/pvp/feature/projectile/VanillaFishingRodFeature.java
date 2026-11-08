@@ -1,7 +1,7 @@
 package net.swofty.pvp.feature.projectile;
 
 import net.kyori.adventure.sound.Sound;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.EquipmentSlot;
@@ -146,7 +146,7 @@ public class VanillaFishingRodFeature implements FishingRodFeature, RegistrableF
 				}
 
 				//TODO fix velocity code
-				bobber.setVelocity(velocity.mul(ServerFlag.SERVER_TICKS_PER_SECOND * 0.75));
+				bobber.setVelocity(velocity.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get() * 0.75));
 			}
 		});
 	}
