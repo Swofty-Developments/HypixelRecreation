@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y jq netcat-traditional curl && apt-get clean
 
 # Download Velocity proxy JAR
-RUN curl -fSL -o velocity.jar "https://fill-data.papermc.io/v1/objects/0ec616020166465dacca3b790d3db2b246f8f7c13b3aaacaae60c825744a66e0/velocity-3.5.0-SNAPSHOT-605.jar"
+RUN curl -fSL -o velocity.jar "https://fill-data.papermc.io/v1/objects/0844bcabdcdb4f5b875906fd4c3365bc1bb76918e42bc595ed88ad195258dd75/velocity-4.3.1-45.jar"
 
 # Locally built JARs, empty for a regular install
 COPY ./DockerFiles/jars /app/prebuilt_jars
