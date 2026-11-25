@@ -100,7 +100,6 @@ public class GUIBoosterCookie extends StatelessView {
 
                 <7>Next rank: <b>Settler
                 <6><l><m>           <f><l><m>         <r> <e>10,850<6>/<e>20k
-</m>
                 <8>You earn 1 fame per bit and
                 <8>200 per gem spent in the
                 <8>community shop."""));
