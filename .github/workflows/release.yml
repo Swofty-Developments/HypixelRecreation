@@ -83,4 +83,5 @@ jobs:
             service.guild/build/libs/*.jar
             service.punishment/build/libs/*.jar
             service.replay/build/libs/*.jar
+            service.jacobscontest/build/libs/*.jar
             setup/dist/*.tar.gz

@@ -17,6 +17,7 @@ var SkyBlockServers = []string{
 	"SKYBLOCK_CRIMSON_ISLE",
 	"SKYBLOCK_DUNGEON_HUB",
 	"SKYBLOCK_THE_FARMING_ISLANDS",
+	"SKYBLOCK_GARDEN",
 	"SKYBLOCK_GOLD_MINE",
 	"SKYBLOCK_DEEP_CAVERNS",
 	"SKYBLOCK_DWARVEN_MINES",
@@ -58,6 +59,7 @@ var AllServices = []string{
 	"ServiceGuild",
 	"ServicePunishment",
 	"ServiceReplay",
+	"ServiceJacobsContest",
 }
 
 var RequiredServices = []string{"ServiceParty"}
