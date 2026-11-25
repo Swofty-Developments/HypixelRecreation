@@ -6,6 +6,7 @@ import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
 import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.timer.Task;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
 import net.swofty.type.skyblockgeneric.entity.mob.MobType;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
@@ -58,6 +59,7 @@ public final class SlayerBossMob extends SkyBlockMob {
 
     @Override public String getDisplayName() { return live().displayName(); }
     @Override public Integer getLevel() { return live().tier().bossLevel(); }
+    @Override public RateCategory getDropRateCategory() { return RateCategory.SLAYER; }
     @Override public List<MobType> getMobTypes() { return live().mobTypes(); }
     @Override public ItemStatistics getBaseStatistics() { return live().asBaseStatistics(); }
     @Override public OtherLoot getOtherLoot() { return live().asOtherLoot(); }

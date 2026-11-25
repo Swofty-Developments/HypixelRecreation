@@ -24,3 +24,9 @@ limbo:
     port: 65535
 # Resource pack settings keyed by pack name (e.g. testingpack, bedwarspack)
 resource-packs: { }
+# Startup defaults for drops.all and xp.all (1.0 = default). Change live in-game with /rates; those values are stored in Mongo and override these
+rates:
+    # Multiplier applied to the chance of every loot-table drop (mobs, minions, pets). Guaranteed drops are unaffected
+    drop-chance-multiplier: 1.0
+    # Multiplier applied to all skill experience gains (stacks with Wisdom)
+    skill-xp-multiplier: 1.0

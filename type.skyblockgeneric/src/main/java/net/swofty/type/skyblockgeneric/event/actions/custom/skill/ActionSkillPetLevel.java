@@ -1,5 +1,7 @@
 package net.swofty.type.skyblockgeneric.event.actions.custom.skill;
 
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.item.attribute.attributes.ItemAttributePetData;
 import net.swofty.commons.text.Text;
 import net.swofty.type.generic.event.EventNodes;
@@ -16,7 +18,7 @@ public class ActionSkillPetLevel implements HypixelEventClass {
     @PhasedEvent(node = EventNodes.CUSTOM, requireDataLoaded = false, phase = EventPhase.GAMEPLAY)
     public void run(SkillUpdateEvent event) {
         if (event.getNewValueRaw() <= event.getOldValueRaw()) return;
-        double xp = event.getNewValueRaw() - event.getOldValueRaw();
+        double xp = (event.getNewValueRaw() - event.getOldValueRaw()) * GameRates.get(RateCategory.PET_XP);
         if (xp <= 0) return;
 
         SkyBlockPlayer player = event.getPlayer();

@@ -3,6 +3,8 @@ package net.swofty.type.skyblockgeneric.data.datapoints;
 import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.protocol.Serializer;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
 import net.swofty.commons.text.Text;
@@ -163,7 +165,7 @@ public class DatapointSkills extends SkyBlockDatapoint<DatapointSkills.PlayerSki
          */
         public void increase(SkyBlockPlayer player, SkillCategories category, Double value) {
             double wisdom = player.getStatistics().allStatistics().getOverall(category.getWisdomStatistic());
-            double modifiedValue = value * (1D + wisdom / 100D);
+            double modifiedValue = value * GameRates.multiplier(RateCategory.SKILL) * (1D + wisdom / 100D);
             setRaw(player, category, getRaw(category) + modifiedValue);
         }
 

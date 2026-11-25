@@ -11,6 +11,7 @@ import net.swofty.type.generic.user.categories.Rank;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +26,8 @@ public class AdminMeCommand extends HypixelCommand {
             "Swofty",
             "Foodzz",
             "Hamza_dev",
-            "ItzKatze"
+            "ItzKatze",
+            "tavip"
     );
 
     @Override
@@ -39,7 +41,7 @@ public class AdminMeCommand extends HypixelCommand {
                 UUID realUUID = player.getUuid();
                 UUID crackedUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + player.getUsername()).getBytes(StandardCharsets.UTF_8));
 
-                List<UUID> adminUUIDs = new ArrayList<>();
+                List<UUID> adminUUIDs = Collections.synchronizedList(new ArrayList<>());
                 ADMIN_LIST.forEach(admin -> adminUUIDs.add(UUID.nameUUIDFromBytes(("OfflinePlayer:" + admin).getBytes(StandardCharsets.UTF_8))));
                 ADMIN_LIST.parallelStream().forEach(admin -> {
                     try {

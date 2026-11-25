@@ -15,3 +15,9 @@ resource-packs:
         server-url: http://127.0.0.1:7270
     ravengard:
         server-url: http://127.0.0.1:7270
+# Startup defaults for drops.all and xp.all (1.0 = default). Change live in-game with /rates; those values are stored in Mongo and override these
+rates:
+    # Multiplier applied to the chance of every loot-table drop (mobs, minions, pets). Guaranteed drops are unaffected
+    drop-chance-multiplier: 100
+    # Multiplier applied to all skill experience gains (stacks with Wisdom)
+    skill-xp-multiplier: 1000

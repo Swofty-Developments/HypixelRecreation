@@ -1,6 +1,7 @@
 package net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.bestiary;
 
 import net.minestom.server.inventory.InventoryType;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.text.Text;
 import net.swofty.type.generic.gui.inventory.ItemStacks;
@@ -103,7 +104,7 @@ public class GUIBestiaryMob extends StatelessView {
                 List<SkyBlockLootTable.LootRecord> lootRecords = mob.getLootTable().getLootTable();
 
                 for (SkyBlockLootTable.LootRecord lootRecord : lootRecords) {
-                    double chance = lootRecord.getChancePercent();
+                    double chance = lootRecord.getChancePercent(RateCategory.MOB);
                     if (chance <= 0.01) rngesusLoot.add(lootRecord);
                     else if (chance <= 0.1) legendaryLoot.add(lootRecord);
                     else if (chance <= 1) rareLoot.add(lootRecord);
@@ -150,7 +151,7 @@ public class GUIBestiaryMob extends StatelessView {
                     lore.add(Text.of("<a>Uncommon Loot"));
                     for (SkyBlockLootTable.LootRecord lootRecord : uncommonLoot) {
                         lore.add(Text.of(" <8>■ <f>{} <8>(<a>{}%<8>)",
-                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent()));
+                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent(RateCategory.MOB)));
                     }
                     lore.add(Text.empty());
                 }
@@ -158,7 +159,7 @@ public class GUIBestiaryMob extends StatelessView {
                     lore.add(Text.of("<9>Rare Loot"));
                     for (SkyBlockLootTable.LootRecord lootRecord : rareLoot) {
                         lore.add(Text.of(" <8>■ <f>{} <8>(<a>{}%<8>)",
-                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent()));
+                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent(RateCategory.MOB)));
                     }
                     lore.add(Text.empty());
                 }
@@ -166,7 +167,7 @@ public class GUIBestiaryMob extends StatelessView {
                     lore.add(Text.of("<6>Legendary Loot"));
                     for (SkyBlockLootTable.LootRecord lootRecord : legendaryLoot) {
                         lore.add(Text.of(" <8>■ <f>{} <8>(<a>{}%<8>)",
-                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent()));
+                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent(RateCategory.MOB)));
                     }
                     lore.add(Text.empty());
                 }
@@ -174,7 +175,7 @@ public class GUIBestiaryMob extends StatelessView {
                     lore.add(Text.of("<d>RNGesus Loot"));
                     for (SkyBlockLootTable.LootRecord lootRecord : rngesusLoot) {
                         lore.add(Text.of(" <8>■ <f>{} <8>(<a>{}%<8>)",
-                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent()));
+                                lootRecord.getItemType().getDisplayName(), lootRecord.getChancePercent(RateCategory.MOB)));
                     }
                     lore.add(Text.empty());
                 }

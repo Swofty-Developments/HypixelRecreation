@@ -6,6 +6,7 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.entity.damage.DamageType;
 import net.minestom.server.instance.Instance;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
 import net.swofty.type.skyblockgeneric.item.ItemQuantifiable;
@@ -71,7 +72,7 @@ public class MinionKillMobAction extends MinionAction {
 
                 if (mob.getLootTable() == null) return new ArrayList<>();
 
-                Map<ItemType, SkyBlockLootTable.LootRecord> loot = mob.getLootTable().runChancesNoPlayer();
+                Map<ItemType, SkyBlockLootTable.LootRecord> loot = mob.getLootTable().runChancesNoPlayer(RateCategory.MINION);
                 List<SkyBlockItem> items = new ArrayList<>();
                 for (ItemType itemType : loot.keySet()) {
                     SkyBlockLootTable.LootRecord record = loot.get(itemType);

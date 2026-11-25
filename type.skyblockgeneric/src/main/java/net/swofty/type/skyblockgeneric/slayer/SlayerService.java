@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.Instance;
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSlayer;
@@ -156,10 +158,9 @@ public final class SlayerService {
     }
 
     private static int slayerXpReward(SlayerTierDefinition tierDefinition) {
-        if (ElectionManager.isPerkActive(SkyBlockMayor.Perk.SLAYER_XP_BUFF)) {
-            return (int) Math.round(tierDefinition.slayerXp() * 1.25D);
-        }
-        return tierDefinition.slayerXp();
+        double perk = ElectionManager.isPerkActive(SkyBlockMayor.Perk.SLAYER_XP_BUFF) ? 1.25D : 1D;
+        return (int) Math.min(Integer.MAX_VALUE,
+                Math.round(tierDefinition.slayerXp() * perk * GameRates.multiplier(RateCategory.SLAYER_XP)));
     }
 
     private static @Nullable SlayerBossMob spawnBoss(SkyBlockPlayer player, SlayerDefinition definition, SlayerTierDefinition tierDefinition, Pos position) {

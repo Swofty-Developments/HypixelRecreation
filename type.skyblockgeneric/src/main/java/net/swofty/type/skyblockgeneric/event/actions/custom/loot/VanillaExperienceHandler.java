@@ -1,5 +1,7 @@
 package net.swofty.type.skyblockgeneric.event.actions.custom.loot;
 
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.type.skyblockgeneric.bestiary.BestiaryData;
 import net.swofty.type.skyblockgeneric.entity.mob.BestiaryMob;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
@@ -48,7 +50,7 @@ public class VanillaExperienceHandler implements HypixelEventClass {
             }
         }
 
-        xpOrbsDropped = Math.round((baseXpOrbs) * bestiaryBoost * experienceEnchBoost);
+        xpOrbsDropped = Math.round(baseXpOrbs * bestiaryBoost * experienceEnchBoost * GameRates.multiplier(RateCategory.VANILLA));
 
         player.addExperience(xpOrbsDropped);
     }

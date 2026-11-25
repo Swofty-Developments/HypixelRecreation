@@ -40,6 +40,20 @@ public class Settings {
         "skyblockpack", new ResourcePackSettings()
     );
 
+    @Comment("Startup defaults for drops.all and xp.all (1.0 = default). Change live in-game with /rates; those values are stored in Mongo and override these")
+    private RateSettings rates = new RateSettings();
+
+    @Getter
+    @Configuration
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class RateSettings {
+        @Comment("Multiplier applied to the chance of every loot-table drop (mobs, minions, pets). Guaranteed drops are unaffected")
+        private double dropChanceMultiplier = 1.0;
+
+        @Comment("Multiplier applied to all skill experience gains (stacks with Wisdom)")
+        private double skillXpMultiplier = 1.0;
+    }
+
     @Getter
     @Configuration
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

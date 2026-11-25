@@ -41,6 +41,7 @@ import net.swofty.type.generic.data.domain.PlayerDataService;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.handlers.*;
 import net.swofty.type.generic.data.mongodb.AttributeDatabase;
+import net.swofty.type.generic.rates.RatesSync;
 import net.swofty.type.generic.data.mongodb.BedWarsStatsDatabase;
 import net.swofty.type.generic.data.mongodb.MongoConnection;
 import net.swofty.type.generic.data.mongodb.ProfilesDatabase;
@@ -201,6 +202,7 @@ public record HypixelGenericLoader(HypixelTypeLoader loader) {
         AttributeDatabase.connect(mongoClient);
         UserDatabase.connect(mongoClient);
         BedWarsStatsDatabase.connect(mongoClient);
+        RatesSync.start();
 
         ProxyPlayer.setTransferPreparation((playerUuid, targetServer) -> CompletableFuture.supplyAsync(() -> {
             HypixelPlayer player = MinecraftServer.getConnectionManager().getOnlinePlayerByUuid(playerUuid) instanceof HypixelPlayer hypixelPlayer

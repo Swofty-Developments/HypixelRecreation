@@ -2,6 +2,8 @@ package net.swofty.type.skyblockgeneric.foraging;
 
 import net.minestom.server.entity.Player;
 import net.minestom.server.instance.Instance;
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
@@ -84,7 +86,7 @@ public final class TreeGiftService {
         for (Bonus bonus : bonuses) {
             double chance = bonus.chance * scaled;
             if (bonus.shard != null) chance *= 1 + treeLurker;
-            if (ThreadLocalRandom.current().nextDouble() >= Math.min(1, chance)) continue;
+            if (ThreadLocalRandom.current().nextDouble() >= GameRates.fraction(RateCategory.FORAGING, Math.min(1, chance))) continue;
             if (bonus.shard != null) {
                 AttributeDefinition definition = AttributeRegistry.findByShard(bonus.shard).orElse(null);
                 if (definition == null) continue;
@@ -100,7 +102,7 @@ public final class TreeGiftService {
             }
         }
         double signalChance = AttributeEffectService.value(player.getHuntingData(), AttributeId.parse("R7")) / 100D;
-        if (signalChance > 0 && ThreadLocalRandom.current().nextDouble() < signalChance) {
+        if (signalChance > 0 && ThreadLocalRandom.current().nextDouble() < GameRates.fraction(RateCategory.FORAGING, signalChance)) {
             player.addAndUpdateItem(ItemType.SIGNAL_ENHANCER);
             rewards.add(Text.of("<6>Signal Enhancer"));
             bonusMessages.add(Text.of("<6>Signal Enhancer <7>(<a>{}<7>)", chance(signalChance)));

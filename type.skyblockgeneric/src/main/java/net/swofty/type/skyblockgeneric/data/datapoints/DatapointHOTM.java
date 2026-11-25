@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.swofty.commons.protocol.Serializer;
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDatapoint;
 import org.json.JSONObject;
 
@@ -117,7 +119,7 @@ public class DatapointHOTM extends SkyBlockDatapoint<DatapointHOTM.PlayerHOTMDat
 
 		public int addExperience(long amount) {
 			int previousTier = getTier();
-			experience += amount;
+			experience += Math.round(amount * GameRates.multiplier(RateCategory.HOTM));
 			int newTier = getTier();
 
 			int levelUps = newTier - previousTier;
@@ -139,11 +141,11 @@ public class DatapointHOTM extends SkyBlockDatapoint<DatapointHOTM.PlayerHOTMDat
 		}
 
 		public void addMithrilPowder(long amount) {
-			mithrilPowder += amount;
+			mithrilPowder += Math.round(amount * GameRates.multiplier(RateCategory.POWDER));
 		}
 
 		public void addGemstonePowder(long amount) {
-			gemstonePowder += amount;
+			gemstonePowder += Math.round(amount * GameRates.multiplier(RateCategory.POWDER));
 		}
 
 		public int getAvailableTokens() {

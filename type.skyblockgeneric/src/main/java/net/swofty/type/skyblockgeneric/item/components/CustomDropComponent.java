@@ -2,6 +2,8 @@ package net.swofty.type.skyblockgeneric.item.components;
 
 import lombok.Getter;
 import net.swofty.commons.ServerType;
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.skyblockgeneric.enchantment.EnchantmentType;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -57,7 +59,7 @@ public class CustomDropComponent extends SkyBlockItemComponent {
                 }
 
                 for (Drop drop : rule.drops()) {
-                    if (RANDOM.nextDouble() <= drop.chance()) {
+                    if (RANDOM.nextDouble() <= GameRates.fraction(RateCategory.BLOCK, drop.chance())) {
                         int amount = calculateAmount(drop.amount());
                         if (amount > 0) {
                             SkyBlockItem dropItem = new SkyBlockItem(drop.item(), amount);

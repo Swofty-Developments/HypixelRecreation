@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
@@ -30,7 +32,7 @@ public abstract class SkyBlockLootTable {
      * Runs the chances without a player
      * @return A map of the loot that the player will receive
      */
-    public @NonNull Map<ItemType, LootRecord> runChancesNoPlayer() {
+    public @NonNull Map<ItemType, LootRecord> runChancesNoPlayer(RateCategory category) {
         Map<ItemType, LootRecord> loot = new HashMap<>();
         CalculationMode mode = getCalculationMode();
 
@@ -38,14 +40,14 @@ public abstract class SkyBlockLootTable {
             double cumulativeChance = 0;
 
             for (LootRecord record : getLootTable()) {
-                cumulativeChance += record.chancePercent;
+                cumulativeChance += record.getChancePercent(category);
             }
 
             int random = (int) (Math.random() * cumulativeChance);
             double current = 0;
 
             for (LootRecord record : getLootTable()) {
-                current += record.chancePercent;
+                current += record.getChancePercent(category);
                 if (random < current) {
                     loot.put(record.itemType, record);
                     break;
@@ -53,7 +55,7 @@ public abstract class SkyBlockLootTable {
             }
         } else if (mode == CalculationMode.CALCULATE_INDIVIDUAL) {
             for (LootRecord record : getLootTable()) {
-                double adjustedChancePercent = record.chancePercent;
+                double adjustedChancePercent = record.getChancePercent(category);
 
                 if (Math.random() * 100 < adjustedChancePercent) {
                     loot.put(record.itemType, record);
@@ -69,7 +71,7 @@ public abstract class SkyBlockLootTable {
      * @param player The player to run the chances for
      * @return A map of the loot that the player will receive
      */
-    public @NonNull Map<ItemType, LootRecord> runChances(SkyBlockPlayer player, LootAffector... affectors) {
+    public @NonNull Map<ItemType, LootRecord> runChances(RateCategory category, SkyBlockPlayer player, LootAffector... affectors) {
         Map<ItemType, LootRecord> loot = new HashMap<>();
         CalculationMode mode = getCalculationMode();
 
@@ -78,7 +80,7 @@ public abstract class SkyBlockLootTable {
 
             for (LootRecord record : getLootTable()) {
                 if (record.shouldCalculate.apply(player)) {
-                    cumulativeChance += record.chancePercent;
+                    cumulativeChance += record.getChancePercent(category);
                 }
             }
 
@@ -90,7 +92,7 @@ public abstract class SkyBlockLootTable {
 
             for (LootRecord record : records) {
                 if (record.shouldCalculate.apply(player)) {
-                    current += record.chancePercent;
+                    current += record.getChancePercent(category);
                     if (random < current) {
                         loot.put(record.itemType, record);
                         break;
@@ -100,7 +102,7 @@ public abstract class SkyBlockLootTable {
         } else if (mode == CalculationMode.CALCULATE_INDIVIDUAL) {
             for (LootRecord record : getLootTable()) {
                 if (record.shouldCalculate.apply(player)) {
-                    double adjustedChancePercent = record.chancePercent;
+                    double adjustedChancePercent = record.getChancePercent(category);
 
                     // Apply LootAffectors to the chance percentage
                     for (LootAffector affector : affectors) {
@@ -136,6 +138,11 @@ public abstract class SkyBlockLootTable {
 
         public static boolean isNone(LootRecord lootRecord) {
             return lootRecord.itemType == ItemType.AIR && lootRecord.amount == 0;
+        }
+
+        public double getChancePercent(RateCategory category) {
+            if (isNone(this) || chancePercent >= 100) return chancePercent;
+            return chancePercent * GameRates.multiplier(category);
         }
     }
 

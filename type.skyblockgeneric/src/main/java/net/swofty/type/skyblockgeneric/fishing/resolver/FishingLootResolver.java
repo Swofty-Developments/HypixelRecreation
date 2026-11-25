@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
@@ -69,7 +71,7 @@ public final class FishingLootResolver {
 
         eligible.sort(Comparator.comparingDouble(TrophyFishDefinition::catchChance).thenComparing(TrophyFishDefinition::id));
         for (TrophyFishDefinition definition : eligible) {
-            if (Math.random() * 100 <= effectiveTrophyChance(context, definition, bonus)) {
+            if (Math.random() * 100 <= GameRates.chance(RateCategory.FISHING, effectiveTrophyChance(context, definition, bonus))) {
                 TrophyTier tier = rollTrophyTier(context, definition);
                 String itemId = switch (tier) {
                     case DIAMOND -> definition.diamondItemId();
@@ -173,9 +175,9 @@ public final class FishingLootResolver {
             charmBonus = charm.level() * 2.0D;
         }
 
-        if (Math.random() <= (0.002D * (1 + charmBonus / 100D))) return TrophyTier.DIAMOND;
-        if (Math.random() <= (0.02D * (1 + charmBonus / 100D))) return TrophyTier.GOLD;
-        if (Math.random() <= (0.25D * (1 + charmBonus / 100D))) return TrophyTier.SILVER;
+        if (Math.random() <= GameRates.fraction(RateCategory.FISHING, 0.002D * (1 + charmBonus / 100D))) return TrophyTier.DIAMOND;
+        if (Math.random() <= GameRates.fraction(RateCategory.FISHING, 0.02D * (1 + charmBonus / 100D))) return TrophyTier.GOLD;
+        if (Math.random() <= GameRates.fraction(RateCategory.FISHING, 0.25D * (1 + charmBonus / 100D))) return TrophyTier.SILVER;
         return TrophyTier.BRONZE;
     }
 
@@ -198,7 +200,7 @@ public final class FishingLootResolver {
                 continue;
             }
             double tagBonus = definition == null ? 0.0D : getTagBonus(context, definition.tags());
-            if (Math.random() * 100 <= roll.chance() + seaCreatureChance + tagBonus) {
+            if (Math.random() * 100 <= GameRates.chance(RateCategory.SEA_CREATURE, roll.chance() + seaCreatureChance + tagBonus)) {
                 double skillXp = definition == null ? 0.0D : definition.skillXp();
                 CatchPayload.SeaCreature payload = new CatchPayload.SeaCreature(roll.seaCreatureId(), skillXp);
                 if (rollDoubleHook(context)) {
@@ -224,7 +226,7 @@ public final class FishingLootResolver {
             treasureChance += 10.0D;
         }
 
-        if (!table.treasures().isEmpty() && Math.random() * 100 <= treasureChance) {
+        if (!table.treasures().isEmpty() && Math.random() * 100 <= GameRates.chance(RateCategory.FISHING_TREASURE, treasureChance)) {
             pool = context.sinker() != null && context.sinker().isBayouTreasureToJunk() ? table.junk() : table.treasures();
             return pick(pool, true).orElse(DEFAULT_CATCH);
         }

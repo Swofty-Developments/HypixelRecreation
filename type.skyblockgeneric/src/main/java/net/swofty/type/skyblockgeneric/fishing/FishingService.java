@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.skyblockgeneric.entity.FishingHook;
 import net.swofty.type.skyblockgeneric.fishing.bait.FishingBaitService;
@@ -153,7 +155,7 @@ public final class FishingService {
         if (sinker == null || sinker.getMaterializedItemId() == null) {
             return;
         }
-        if (Math.random() <= sinker.getMaterializedChance()) {
+        if (Math.random() <= GameRates.fraction(RateCategory.FISHING, sinker.getMaterializedChance())) {
             player.addAndUpdateItem(net.swofty.commons.skyblock.item.ItemType.valueOf(sinker.getMaterializedItemId()));
         }
     }

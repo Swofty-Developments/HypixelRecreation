@@ -306,6 +306,23 @@ services:
     networks:
       - hypixel_network
 
+  service_election:
+    image: game_server_prepared
+    container_name: service_election
+    restart: "unless-stopped"
+    environment:
+      <<: *forwarding_env
+      SERVICE_CMD: java -jar ServiceElection.jar
+    depends_on:
+      proxy:
+        condition: service_healthy
+      game_server_builder:
+        condition: service_started
+    volumes:
+      - ./configuration:/app/configuration_files
+    networks:
+      - hypixel_network
+
 volumes:
   mongodb-data:
     driver: local

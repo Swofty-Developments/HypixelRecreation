@@ -27,6 +27,7 @@ import net.minestom.server.network.packet.server.play.PlayerInfoUpdatePacket;
 import net.minestom.server.network.packet.server.play.SpawnEntityPacket;
 import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.text.Text;
@@ -247,7 +248,7 @@ public abstract class SkyBlockMob extends EntityCreature {
                 affectors.add(LootAffector.ENCHANTMENT_LOOTING);
             }
 
-            double adjustedChance = record.getChancePercent();
+            double adjustedChance = record.getChancePercent(getDropRateCategory());
 
             for (LootAffector affector : affectors) {
                 adjustedChance = affector.getAffector().apply(player, adjustedChance, this);
@@ -275,6 +276,10 @@ public abstract class SkyBlockMob extends EntityCreature {
                         getInstance(), getPosition().add(0, 0.5, 0));
             }
         }
+    }
+
+    public RateCategory getDropRateCategory() {
+        return RateCategory.MOB;
     }
 
     public void updateCustomName(Text newName) {

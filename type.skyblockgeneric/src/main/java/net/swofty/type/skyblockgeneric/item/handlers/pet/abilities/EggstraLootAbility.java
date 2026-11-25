@@ -3,6 +3,8 @@ package net.swofty.type.skyblockgeneric.item.handlers.pet.abilities;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.swofty.commons.rates.GameRates;
+import net.swofty.commons.rates.RateCategory;
 import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.type.generic.entity.drop.ItemDrops;
@@ -66,12 +68,12 @@ public final class EggstraLootAbility implements PetAbility {
         Rarity rarity = context.pet().getAttributeHandler().getRarity();
         int level = context.pet().getAttributeHandler().getPetData().getAsLevel(rarity);
         double chance = CHANCE_PER_LEVEL.getForRarity(rarity) * level;
-        if (Math.random() * 100 >= chance) return;
+        if (Math.random() * 100 >= GameRates.chance(RateCategory.PET, chance)) return;
 
         SkyBlockLootTable lootTable = context.mob().getLootTable();
         if (lootTable == null) return;
 
-        Map<ItemType, SkyBlockLootTable.LootRecord> extraDrops = lootTable.runChances(context.player());
+        Map<ItemType, SkyBlockLootTable.LootRecord> extraDrops = lootTable.runChances(RateCategory.MOB, context.player());
         for (Map.Entry<ItemType, SkyBlockLootTable.LootRecord> entry : extraDrops.entrySet()) {
             SkyBlockLootTable.LootRecord record = entry.getValue();
             if (SkyBlockLootTable.LootRecord.isNone(record)) continue;
