@@ -2,7 +2,7 @@ FROM eclipse-temurin:25-jdk
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y jq curl && apt-get clean
+RUN apt-get update && apt-get install -y jq curl unzip && apt-get clean
 
 ARG JAR_BASE_URL=https://github.com/Swofty-Developments/HypixelRecreation/releases/download/latest
 
@@ -43,6 +43,25 @@ COPY ./configuration /app/configuration_files
 
 RUN mkdir -p configuration && \
     cp -a configuration_files/. ./configuration/
+
+ARG WORLD_ASSETS_URL=https://files.catbox.moe/flri48.zip
+
+# Worlds, limbo.schem and resource packs are not in git; fetch them unless configuration/ already has them
+RUN set -eu; \
+    if [ -f configuration/limbo.schem ] && [ -d configuration/world ]; then \
+        echo "World files found in configuration/, skipping download"; \
+    else \
+        echo "Downloading world files from ${WORLD_ASSETS_URL}"; \
+        if ! curl -fSL --retry 3 --connect-timeout 20 -o /tmp/world_assets.zip "${WORLD_ASSETS_URL}"; then \
+            echo "ERROR: could not download the world files from ${WORLD_ASSETS_URL}." >&2; \
+            echo "Download them manually, extract them into ./configuration (world/, resourcepacks/, limbo.schem) and run docker compose up --build again." >&2; \
+            exit 1; \
+        fi; \
+        unzip -q -o /tmp/world_assets.zip -d configuration; \
+        rm -f /tmp/world_assets.zip; \
+    fi
+
+ENV JAVA_TOOL_OPTIONS="--enable-native-access=ALL-UNNAMED -Dslf4j.internal.verbosity=ERROR"
 
 EXPOSE 25565 65535 8080 20000
 
