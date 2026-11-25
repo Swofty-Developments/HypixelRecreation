@@ -8,7 +8,7 @@ import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarslobby.kit.SkywarsKit;
@@ -36,7 +36,7 @@ public class GUIKitPurchaseConfirm extends HypixelInventoryGUI {
         set(new GUIClickableItem(11) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.GREEN_TERRACOTTA, 1, """
+                return ItemStackCreator.item(Material.GREEN_TERRACOTTA, 1, """
                         <a>Confirm
                         <7>Purchase {} for {:,} coins.""", kit.getName(), kit.getCost());
             }
@@ -75,7 +75,7 @@ public class GUIKitPurchaseConfirm extends HypixelInventoryGUI {
         set(new GUIClickableItem(15) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.RED_TERRACOTTA, 1, """
+                return ItemStackCreator.item(Material.RED_TERRACOTTA, 1, """
                         <c>Cancel
                         <7>Return to previous menu.""");
             }

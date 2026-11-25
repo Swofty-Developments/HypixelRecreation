@@ -7,9 +7,9 @@ import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.VersionConst;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
 import net.swofty.commons.text.Text;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGameEventManager;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsTeam;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGameEventManager;
+import net.swofty.type.bedwarsgame.game.BedWarsTeam;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.data.HypixelDataHandler;
@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class BedWarsGameScoreboard {
@@ -98,10 +99,12 @@ public class BedWarsGameScoreboard {
                         timeLeft));
                     lines.add(BLANK);
 
-                    for (BedWarsTeam team : game.getTeams()) {
+                    for (BedWarsTeam team : game.getTeams().stream()
+                            .sorted(Comparator.comparingInt(value -> value.getTeamKey().ordinal()))
+                            .toList()) {
                         TeamKey teamKey = team.getTeamKey();
                         String teamName = teamKey.getName();
-                        String teamInitial = teamName.substring(0, 1).toUpperCase();
+                        String teamInitial = team.firstLetter().toUpperCase();
 
                         Text bedStatus;
                         if (!team.hasPlayers()) {

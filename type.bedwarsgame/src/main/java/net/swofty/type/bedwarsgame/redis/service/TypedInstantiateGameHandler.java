@@ -6,10 +6,10 @@ import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.game.InstantiateGamePushProtocol;
 import net.swofty.commons.protocol.objects.game.InstantiateGamePushProtocol.Request;
 import net.swofty.commons.protocol.objects.game.InstantiateGamePushProtocol.Response;
-import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.commons.redis.RedisMessageContext;
+import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

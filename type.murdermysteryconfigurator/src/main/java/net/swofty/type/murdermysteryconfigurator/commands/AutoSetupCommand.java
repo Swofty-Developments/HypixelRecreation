@@ -2,6 +2,7 @@ package net.swofty.type.murdermysteryconfigurator.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.kyori.adventure.text.Component;
 import net.minestom.server.command.builder.arguments.ArgumentString;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.arguments.number.ArgumentDouble;
@@ -13,7 +14,6 @@ import net.swofty.commons.murdermystery.MurderMysteryGameType;
 import net.swofty.commons.murdermystery.map.MurderMysteryMapsConfig;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
-import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.murdermysteryconfigurator.TypeMurderMysteryConfiguratorLoader;
 import net.swofty.type.murdermysteryconfigurator.autosetup.DebugMarkerManager;
@@ -57,17 +57,17 @@ public class AutoSetupCommand extends HypixelCommand {
     }
 
     private void sendHelp(net.minestom.server.command.CommandSender sender) {
-        sender.sendMessage("<6><l>=== Murder Mystery Map Setup ===");
-        sender.sendMessage("<e>/mmsetup type \\<add|remove> \\<type> <7>- Configure game types");
-        sender.sendMessage("<e>/mmsetup waiting [x y z] <7>- Set waiting spawn");
-        sender.sendMessage("<e>/mmsetup gold \\<add|remove|clear> [x y z] <7>- Manage gold spawns");
-        sender.sendMessage("<e>/mmsetup spawn \\<add|remove|clear> [x y z] <7>- Manage player spawns");
-        sender.sendMessage("<e>/mmsetup killzone \\<add|setmin|setmax|remove|list|clear> <7>- Manage kill zones");
-        sender.sendMessage("<e>/mmsetup show <7>- Show debug markers");
-        sender.sendMessage("<e>/mmsetup hide <7>- Hide debug markers");
-        sender.sendMessage("<e>/mmsetup status <7>- Show current configuration status");
-        sender.sendMessage("<e>/mmsetup name \\<name> <7>- Set map display name");
-        sender.sendMessage("<e>/mmsetup save <7>- Save configuration to maps.json");
+        sender.sendMessage(Component.text("§6§l=== Murder Mystery Map Setup ==="));
+        sender.sendMessage(Component.text("§e/mmsetup type <add|remove> <type> §7- Configure game types"));
+        sender.sendMessage(Component.text("§e/mmsetup waiting [x y z] §7- Set waiting spawn"));
+        sender.sendMessage(Component.text("§e/mmsetup gold <add|remove|clear> [x y z] §7- Manage gold spawns"));
+        sender.sendMessage(Component.text("§e/mmsetup spawn <add|remove|clear> [x y z] §7- Manage player spawns"));
+        sender.sendMessage(Component.text("§e/mmsetup killzone <add|setmin|setmax|remove|list|clear> §7- Manage kill zones"));
+        sender.sendMessage(Component.text("§e/mmsetup show §7- Show debug markers"));
+        sender.sendMessage(Component.text("§e/mmsetup hide §7- Hide debug markers"));
+        sender.sendMessage(Component.text("§e/mmsetup status §7- Show current configuration status"));
+        sender.sendMessage(Component.text("§e/mmsetup name <name> §7- Set map display name"));
+        sender.sendMessage(Component.text("§e/mmsetup save §7- Save configuration to maps.json"));
     }
 
     private void registerTypeCommand(MinestomCommand command) {
@@ -93,7 +93,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             MurderMysteryGameType gameType = MurderMysteryGameType.from(typeName);
             if (gameType == null) {
-                ((HypixelPlayer) player).sendMessage("<c>Invalid game type: {}", typeName);
+                player.sendMessage(Component.text("§cInvalid game type: " + typeName));
                 return;
             }
 
@@ -102,15 +102,15 @@ public class AutoSetupCommand extends HypixelCommand {
             if (action.equalsIgnoreCase("add")) {
                 if (!session.getGameTypes().contains(gameType)) {
                     session.getGameTypes().add(gameType);
-                    ((HypixelPlayer) player).sendMessage("<a>Added game type: {}", gameType.getDisplayName());
+                    player.sendMessage(Component.text("§aAdded game type: " + gameType.getDisplayName()));
                 } else {
-                    ((HypixelPlayer) player).sendMessage("<e>Game type already added: {}", gameType.getDisplayName());
+                    player.sendMessage(Component.text("§eGame type already added: " + gameType.getDisplayName()));
                 }
             } else if (action.equalsIgnoreCase("remove")) {
                 if (session.getGameTypes().remove(gameType)) {
-                    ((HypixelPlayer) player).sendMessage("<c>Removed game type: {}", gameType.getDisplayName());
+                    player.sendMessage(Component.text("§cRemoved game type: " + gameType.getDisplayName()));
                 } else {
-                    ((HypixelPlayer) player).sendMessage("<e>Game type not in list: {}", gameType.getDisplayName());
+                    player.sendMessage(Component.text("§eGame type not in list: " + gameType.getDisplayName()));
                 }
             }
 
@@ -125,8 +125,8 @@ public class AutoSetupCommand extends HypixelCommand {
 
             Pos pos = player.getPosition();
             MurderMysterySetupSession session = MurderMysterySetupSession.getOrCreate(player.getUuid(), player.getInstance());
-            session.setWaitingLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.pitch(), pos.yaw()));
-            ((HypixelPlayer) player).sendMessage("<a>Set waiting spawn to {}", formatPos(pos));
+            session.setWaitingLocation(new HypixelPosition(pos.x(), pos.y(), pos.z(), pos.yaw(), pos.pitch()));
+            player.sendMessage(Component.text("§aSet waiting spawn to " + formatPos(pos)));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("waiting"));
@@ -146,7 +146,7 @@ public class AutoSetupCommand extends HypixelCommand {
 
             MurderMysterySetupSession session = MurderMysterySetupSession.getOrCreate(player.getUuid(), player.getInstance());
             session.setWaitingLocation(new HypixelPosition(x, y, z, 0, 0));
-            ((HypixelPlayer) player).sendMessage("<a>Set waiting spawn to {}, {}, {}", x, y, z);
+            player.sendMessage(Component.text("§aSet waiting spawn to " + x + ", " + y + ", " + z));
             DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
 
         }, ArgumentType.Literal("waiting"), xArg, yArg, zArg);
@@ -243,7 +243,7 @@ public class AutoSetupCommand extends HypixelCommand {
             case "add" -> {
                 HypixelPosition newPos = new HypixelPosition(pos.x(), pos.y(), pos.z());
                 spawns.add(newPos);
-                ((HypixelPlayer) player).sendMessage("<a>Added {} at {} (Total: {})", spawnType, formatPos(pos), spawns.size());
+                player.sendMessage(Component.text("§aAdded " + spawnType + " at " + formatPos(pos) + " (Total: " + spawns.size() + ")"));
             }
             case "remove" -> {
                 // Remove nearest spawn within 2 blocks
@@ -260,17 +260,17 @@ public class AutoSetupCommand extends HypixelCommand {
 
                 if (toRemove != null) {
                     spawns.remove(toRemove);
-                    ((HypixelPlayer) player).sendMessage("<c>Removed nearest {} (Total: {})", spawnType, spawns.size());
+                    player.sendMessage(Component.text("§cRemoved nearest " + spawnType + " (Total: " + spawns.size() + ")"));
                 } else {
-                    ((HypixelPlayer) player).sendMessage("<c>No {} found within 2 blocks", spawnType);
+                    player.sendMessage(Component.text("§cNo " + spawnType + " found within 2 blocks"));
                 }
             }
             case "clear" -> {
                 int count = spawns.size();
                 spawns.clear();
-                ((HypixelPlayer) player).sendMessage("<c>Cleared all {} {}(s)", count, spawnType);
+                player.sendMessage(Component.text("§cCleared all " + count + " " + spawnType + "(s)"));
             }
-            default -> ((HypixelPlayer) player).sendMessage("<c>Unknown action: {}", action);
+            default -> player.sendMessage(Component.text("§cUnknown action: " + action));
         }
     }
 
@@ -308,29 +308,26 @@ public class AutoSetupCommand extends HypixelCommand {
             switch (action.toLowerCase()) {
                 case "list" -> {
                     if (session.getKillRegions().isEmpty()) {
-                        ((HypixelPlayer) player).sendMessage("<e>No kill zones defined.");
+                        player.sendMessage(Component.text("§eNo kill zones defined."));
                     } else {
-                        ((HypixelPlayer) player).sendMessage("<6><l>=== Kill Zones ===");
+                        player.sendMessage(Component.text("§6§l=== Kill Zones ==="));
                         for (var entry : session.getKillRegions().entrySet()) {
                             var region = entry.getValue();
+                            String status = region.isComplete() ? "§a✔ Complete" : "§c✖ Incomplete";
                             String minStr = region.getMinPos() != null ? formatPosition(region.getMinPos()) : "not set";
                             String maxStr = region.getMaxPos() != null ? formatPosition(region.getMaxPos()) : "not set";
-                            if (region.isComplete()) {
-                                ((HypixelPlayer) player).sendMessage("<e>{} <7>- <a>✔ Complete", entry.getKey());
-                            } else {
-                                ((HypixelPlayer) player).sendMessage("<e>{} <7>- <c>✖ Incomplete", entry.getKey());
-                            }
-                            ((HypixelPlayer) player).sendMessage("  <7>Min: {} | Max: {}", minStr, maxStr);
+                            player.sendMessage(Component.text("§e" + entry.getKey() + " §7- " + status));
+                            player.sendMessage(Component.text("  §7Min: " + minStr + " | Max: " + maxStr));
                         }
                     }
                 }
                 case "clear" -> {
                     int count = session.getKillRegions().size();
                     session.getKillRegions().clear();
-                    ((HypixelPlayer) player).sendMessage("<c>Cleared all {} kill zone(s)", count);
+                    player.sendMessage(Component.text("§cCleared all " + count + " kill zone(s)"));
                     DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
                 }
-                default -> ((HypixelPlayer) player).sendMessage("<c>Usage: /mmsetup killzone \\<add|setmin|setmax|remove|list|clear> [name]");
+                default -> player.sendMessage(Component.text("§cUsage: /mmsetup killzone <add|setmin|setmax|remove|list|clear> [name]"));
             }
 
         }, ArgumentType.Literal("killzone"), actionArg);
@@ -349,41 +346,41 @@ public class AutoSetupCommand extends HypixelCommand {
             switch (action.toLowerCase()) {
                 case "add" -> {
                     if (session.getKillRegions().containsKey(name)) {
-                        ((HypixelPlayer) player).sendMessage("<c>Kill zone '{}' already exists.", name);
+                        player.sendMessage(Component.text("§cKill zone '" + name + "' already exists."));
                     } else {
                         session.getKillRegions().put(name, new MurderMysterySetupSession.EditableKillRegion(name));
-                        ((HypixelPlayer) player).sendMessage("<a>Created kill zone '{}'. Now use /mmsetup killzone setmin {} and setmax {}", name, name, name);
+                        player.sendMessage(Component.text("§aCreated kill zone '" + name + "'. Now use /mmsetup killzone setmin " + name + " and setmax " + name));
                     }
                 }
                 case "setmin" -> {
                     var region = session.getKillRegions().get(name);
                     if (region == null) {
-                        ((HypixelPlayer) player).sendMessage("<c>Kill zone '{}' not found. Create it first with /mmsetup killzone add {}", name, name);
+                        player.sendMessage(Component.text("§cKill zone '" + name + "' not found. Create it first with /mmsetup killzone add " + name));
                     } else {
                         region.setMinPos(new HypixelPosition(pos.x(), pos.y(), pos.z()));
-                        ((HypixelPlayer) player).sendMessage("<a>Set min corner of '{}' to {}", name, formatPos(pos));
+                        player.sendMessage(Component.text("§aSet min corner of '" + name + "' to " + formatPos(pos)));
                         DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
                     }
                 }
                 case "setmax" -> {
                     var region = session.getKillRegions().get(name);
                     if (region == null) {
-                        ((HypixelPlayer) player).sendMessage("<c>Kill zone '{}' not found. Create it first with /mmsetup killzone add {}", name, name);
+                        player.sendMessage(Component.text("§cKill zone '" + name + "' not found. Create it first with /mmsetup killzone add " + name));
                     } else {
                         region.setMaxPos(new HypixelPosition(pos.x(), pos.y(), pos.z()));
-                        ((HypixelPlayer) player).sendMessage("<a>Set max corner of '{}' to {}", name, formatPos(pos));
+                        player.sendMessage(Component.text("§aSet max corner of '" + name + "' to " + formatPos(pos)));
                         DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
                     }
                 }
                 case "remove" -> {
                     if (session.getKillRegions().remove(name) != null) {
-                        ((HypixelPlayer) player).sendMessage("<c>Removed kill zone '{}'", name);
+                        player.sendMessage(Component.text("§cRemoved kill zone '" + name + "'"));
                         DebugMarkerManager.refreshMarkers(player.getUuid(), session, player.getInstance());
                     } else {
-                        ((HypixelPlayer) player).sendMessage("<c>Kill zone '{}' not found.", name);
+                        player.sendMessage(Component.text("§cKill zone '" + name + "' not found."));
                     }
                 }
-                default -> ((HypixelPlayer) player).sendMessage("<c>Usage: /mmsetup killzone \\<add|setmin|setmax|remove|list|clear> [name]");
+                default -> player.sendMessage(Component.text("§cUsage: /mmsetup killzone <add|setmin|setmax|remove|list|clear> [name]"));
             }
 
         }, ArgumentType.Literal("killzone"), actionArg, nameArg);
@@ -400,12 +397,12 @@ public class AutoSetupCommand extends HypixelCommand {
 
             MurderMysterySetupSession session = MurderMysterySetupSession.get(player.getUuid());
             if (session == null) {
-                ((HypixelPlayer) player).sendMessage("<c>No configuration session active. Use /choosemap first.");
+                player.sendMessage(Component.text("§cNo configuration session active. Use /choosemap first."));
                 return;
             }
 
             DebugMarkerManager.showMarkers(player.getUuid(), session, player.getInstance());
-            ((HypixelPlayer) player).sendMessage("<a>Showing debug markers");
+            player.sendMessage(Component.text("§aShowing debug markers"));
 
         }, ArgumentType.Literal("show"));
     }
@@ -416,7 +413,7 @@ public class AutoSetupCommand extends HypixelCommand {
             if (!permissionCheck(sender)) return;
 
             DebugMarkerManager.hideMarkers(player.getUuid());
-            ((HypixelPlayer) player).sendMessage("<c>Hidden debug markers");
+            player.sendMessage(Component.text("§cHidden debug markers"));
 
         }, ArgumentType.Literal("hide"));
     }
@@ -428,38 +425,22 @@ public class AutoSetupCommand extends HypixelCommand {
 
             MurderMysterySetupSession session = MurderMysterySetupSession.get(player.getUuid());
             if (session == null) {
-                ((HypixelPlayer) player).sendMessage("<c>No configuration session active.");
+                player.sendMessage(Component.text("§cNo configuration session active."));
                 return;
             }
 
-            ((HypixelPlayer) player).sendMessage("<6><l>=== Configuration Status ===");
-            if (session.getMapId() != null) {
-                ((HypixelPlayer) player).sendMessage("<e>Map ID: <f>{}", session.getMapId());
-            } else {
-                ((HypixelPlayer) player).sendMessage("<e>Map ID: <f><c>(not set)");
-            }
-            if (session.getMapName() != null) {
-                ((HypixelPlayer) player).sendMessage("<e>Map Name: <f>{}", session.getMapName());
-            } else {
-                ((HypixelPlayer) player).sendMessage("<e>Map Name: <f><c>(not set)");
-            }
-            if (session.getGameTypes().isEmpty()) {
-                ((HypixelPlayer) player).sendMessage("<e>Game Types: <f><c>(none)");
-            } else {
-                ((HypixelPlayer) player).sendMessage("<e>Game Types: <f>{}", session.getGameTypes().toString());
-            }
-            ((HypixelPlayer) player).sendMessage("<e>Gold Spawns: <f>{}", session.getGoldSpawns().size());
-            ((HypixelPlayer) player).sendMessage("<e>Player Spawns: <f>{}", session.getPlayerSpawns().size());
-            if (session.getWaitingLocation() != null) {
-                ((HypixelPlayer) player).sendMessage("<e>Waiting Location: <f><a>✔");
-            } else {
-                ((HypixelPlayer) player).sendMessage("<e>Waiting Location: <f><c>✖");
-            }
+            player.sendMessage(Component.text("§6§l=== Configuration Status ==="));
+            player.sendMessage(Component.text("§eMap ID: §f" + (session.getMapId() != null ? session.getMapId() : "§c(not set)")));
+            player.sendMessage(Component.text("§eMap Name: §f" + (session.getMapName() != null ? session.getMapName() : "§c(not set)")));
+            player.sendMessage(Component.text("§eGame Types: §f" + (session.getGameTypes().isEmpty() ? "§c(none)" : session.getGameTypes().toString())));
+            player.sendMessage(Component.text("§eGold Spawns: §f" + session.getGoldSpawns().size()));
+            player.sendMessage(Component.text("§ePlayer Spawns: §f" + session.getPlayerSpawns().size()));
+            player.sendMessage(Component.text("§eWaiting Location: §f" + (session.getWaitingLocation() != null ? "§a✔" : "§c✖")));
 
             // Kill zones summary
             long completeZones = session.getKillRegions().values().stream().filter(MurderMysterySetupSession.EditableKillRegion::isComplete).count();
             int totalZones = session.getKillRegions().size();
-            ((HypixelPlayer) player).sendMessage("<e>Kill Zones: <f>{}/{} complete <7>(optional)", completeZones, totalZones);
+            player.sendMessage(Component.text("§eKill Zones: §f" + completeZones + "/" + totalZones + " complete §7(optional)"));
 
         }, ArgumentType.Literal("status"));
     }
@@ -473,14 +454,14 @@ public class AutoSetupCommand extends HypixelCommand {
 
             MurderMysterySetupSession session = MurderMysterySetupSession.get(player.getUuid());
             if (session == null || session.getMapId() == null) {
-                ((HypixelPlayer) player).sendMessage("<c>No map selected. Use /choosemap \\<map> first.");
+                player.sendMessage(Component.text("§cNo map selected. Use /choosemap <map> first."));
                 return;
             }
 
             String name = context.get(nameArg);
             session.setMapName(name);
 
-            ((HypixelPlayer) player).sendMessage("<a>Set map name to '{}' (ID: {})", name, session.getMapId());
+            player.sendMessage(Component.text("§aSet map name to '" + name + "' (ID: " + session.getMapId() + ")"));
 
         }, ArgumentType.Literal("name"), nameArg);
     }
@@ -492,26 +473,26 @@ public class AutoSetupCommand extends HypixelCommand {
 
             MurderMysterySetupSession session = MurderMysterySetupSession.get(player.getUuid());
             if (session == null) {
-                ((HypixelPlayer) player).sendMessage("<c>No configuration session active.");
+                player.sendMessage(Component.text("§cNo configuration session active."));
                 return;
             }
 
             // Validate required fields
             List<String> errors = validateSession(session);
             if (!errors.isEmpty()) {
-                ((HypixelPlayer) player).sendMessage("<c>Cannot save - missing required configuration:");
+                player.sendMessage(Component.text("§cCannot save - missing required configuration:"));
                 for (String error : errors) {
-                    ((HypixelPlayer) player).sendMessage("<c>  • {}", error);
+                    player.sendMessage(Component.text("§c  • " + error));
                 }
                 return;
             }
 
             try {
                 saveToConfig(session);
-                ((HypixelPlayer) player).sendMessage("<a>✔ Configuration saved to maps.json!");
-                ((HypixelPlayer) player).sendMessage("<7>Map ID: {}", session.getMapId());
+                player.sendMessage(Component.text("§a✔ Configuration saved to maps.json!"));
+                player.sendMessage(Component.text("§7Map ID: " + session.getMapId()));
             } catch (Exception e) {
-                ((HypixelPlayer) player).sendMessage("<c>Failed to save: {}", e.getMessage());
+                player.sendMessage(Component.text("§cFailed to save: " + e.getMessage()));
                 Logger.error("Failed to save map configuration", e);
             }
 

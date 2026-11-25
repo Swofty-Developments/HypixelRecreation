@@ -31,15 +31,11 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import com.velocitypowered.api.proxy.server.ServerPing;
-import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
-import com.velocitypowered.proxy.network.Connections;
 import com.viaversion.viabackwards.ViaBackwardsPlatformImpl;
 import com.viaversion.viarewind.ViaRewindPlatformImpl;
 import com.viaversion.viaversion.ViaManagerImpl;
 import com.viaversion.viaversion.commands.ViaCommandHandler;
 import io.github.retrooper.packetevents.velocity.factory.VelocityPacketEventsBuilder;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelPipeline;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.swofty.commons.LobbyDestination;
@@ -49,7 +45,13 @@ import net.swofty.commons.config.ConfigProvider;
 import net.swofty.commons.config.Settings;
 import net.swofty.commons.data.SwoftyData;
 import net.swofty.commons.protocol.RedisProtocol;
-import net.swofty.commons.protocol.objects.proxy.from.*;
+import net.swofty.commons.protocol.objects.proxy.from.BroadcastStaffChatProtocol;
+import net.swofty.commons.protocol.objects.proxy.from.DoesServerHaveIslandProtocol;
+import net.swofty.commons.protocol.objects.proxy.from.GivePlayersOriginTypeProtocol;
+import net.swofty.commons.protocol.objects.proxy.from.PingServerProtocol;
+import net.swofty.commons.protocol.objects.proxy.from.PlayerSwitchedProtocol;
+import net.swofty.commons.protocol.objects.proxy.from.RunEventProtocol;
+import net.swofty.commons.protocol.objects.proxy.from.TeleportProtocol;
 import net.swofty.commons.protocol.objects.punishment.GetActivePunishmentProtocol;
 import net.swofty.commons.punishment.ActivePunishment;
 import net.swofty.commons.punishment.PunishmentMessages;
@@ -63,7 +65,12 @@ import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.redisapi.api.RedisAPI;
-import net.swofty.velocity.command.*;
+import net.swofty.velocity.command.LimboCommand;
+import net.swofty.velocity.command.LobbyCommand;
+import net.swofty.velocity.command.LoginCommand;
+import net.swofty.velocity.command.ProtocolVersionCommand;
+import net.swofty.velocity.command.RegisterCommand;
+import net.swofty.velocity.command.ServerStatusCommand;
 import net.swofty.velocity.data.AuthenticationDatabase;
 import net.swofty.velocity.data.CoopDatabase;
 import net.swofty.velocity.data.ProfilesDatabase;
@@ -73,7 +80,6 @@ import net.swofty.velocity.gamemanager.BalanceConfiguration;
 import net.swofty.velocity.gamemanager.BalanceConfigurations;
 import net.swofty.velocity.gamemanager.GameManager;
 import net.swofty.velocity.gamemanager.TransferHandler;
-import net.swofty.velocity.packet.PlayerChannelHandler;
 import net.swofty.velocity.packet.listener.PlayerMovementListener;
 import net.swofty.velocity.presence.PresencePublisher;
 import net.swofty.velocity.redis.RedisHandlerRegistry;
@@ -171,7 +177,6 @@ public class SkyBlockVelocity {
         // Register packets
         server.getEventManager().register(this, PostLoginEvent.class,
             (AwaitingEventExecutor<PostLoginEvent>) postLoginEvent -> EventTask.withContinuation(continuation -> {
-                injectPlayer(postLoginEvent.getPlayer());
                 TestFlowManager.handlePlayerJoin(postLoginEvent.getPlayer().getUsername());
                 PresencePublisher.publish(postLoginEvent.getPlayer(), true, (String) null, null);
 
@@ -196,7 +201,6 @@ public class SkyBlockVelocity {
                     // Handle test flow player leave
                     TestFlowManager.handlePlayerLeave(disconnectEvent.getPlayer().getUsername());
                     PresencePublisher.publish(disconnectEvent.getPlayer(), false, (String) null, null);
-                    removePlayer(disconnectEvent.getPlayer());
                 })
         );
 
@@ -546,19 +550,4 @@ public class SkyBlockVelocity {
             .filter(Objects::nonNull);
     }
 
-    private void injectPlayer(final Player player) {
-        final ConnectedPlayer connectedPlayer = (ConnectedPlayer) player;
-        Channel channel = connectedPlayer.getConnection().getChannel();
-        ChannelPipeline pipeline = channel.pipeline();
-        pipeline.addBefore(Connections.HANDLER, "PACKET", new PlayerChannelHandler(player));
-    }
-
-    private void removePlayer(final Player player) {
-        final ConnectedPlayer connectedPlayer = (ConnectedPlayer) player;
-        final Channel channel = connectedPlayer.getConnection().getChannel();
-
-        channel.eventLoop().submit(() -> {
-            channel.pipeline().remove("PACKET");
-        });
-    }
 }

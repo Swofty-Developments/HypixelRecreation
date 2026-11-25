@@ -3,7 +3,7 @@ package net.swofty.type.skywarsgame.luckyblock.items.usables;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
@@ -27,7 +27,7 @@ public class JediForce implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.BLAZE_ROD, """
+        return ItemStackCreator.item(Material.BLAZE_ROD, """
                 <b><l>Jedi Force</l>
                 <7>Use the Force to push
                 <7>your enemies away!

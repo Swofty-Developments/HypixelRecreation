@@ -3,6 +3,7 @@ package net.swofty.type.replayviewer.item;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.minestom.server.component.DataComponents;
+import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.event.item.ItemDropEvent;
 import net.minestom.server.event.item.PlayerFinishItemUseEvent;
 import net.minestom.server.event.player.PlayerHandAnimationEvent;
@@ -56,6 +57,10 @@ public abstract class ReplayItem {
 
     public void onHandAnimation(PlayerHandAnimationEvent event) {
         // stub
+    }
+
+    public void onInventoryClick(InventoryPreClickEvent event) {
+        onItemInteract(event);
     }
 
 }

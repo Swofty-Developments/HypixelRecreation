@@ -30,7 +30,6 @@ public class ActionArrowStats implements HypixelEventClass {
         if (game == null || game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) return;
         if (player.isEliminated()) return;
 
-        player.addArrowShot();
         recordArrowShot(player, game);
     }
 
@@ -48,7 +47,6 @@ public class ActionArrowStats implements HypixelEventClass {
         if (game == null || game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) return;
         if (shooter.isEliminated()) return;
 
-        shooter.addArrowHit();
         recordArrowHit(shooter, game, event.getEntity());
     }
 

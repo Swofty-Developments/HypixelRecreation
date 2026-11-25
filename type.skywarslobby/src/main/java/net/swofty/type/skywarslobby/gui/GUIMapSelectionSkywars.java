@@ -11,7 +11,7 @@ import net.swofty.commons.skywars.SkywarsGameType;
 import net.swofty.commons.text.Text;
 import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.lobby.GameQueueValidator;
@@ -38,7 +38,7 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
             set(new GUIClickableItem(13) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.CLOCK, 1, """
+                    return ItemStackCreator.item(Material.CLOCK, 1, """
                             <e>Loading maps...
                             <7>Please wait while we fetch
                             <7>available maps for {}""", gameType.getDisplayName());
@@ -85,7 +85,7 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
             set(new GUIClickableItem(13) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.BARRIER, 1, """
+                    return ItemStackCreator.item(Material.BARRIER, 1, """
                             <c>No maps available
                             <7>No maps are currently available
                             <7>for {}
@@ -105,7 +105,7 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
         set(new GUIClickableItem(31) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.ARROW, 1, """
+                return ItemStackCreator.item(Material.ARROW, 1, """
                         <c>Back
                         <7>Go back to game selection""");
             }
@@ -126,7 +126,7 @@ public class GUIMapSelectionSkywars extends HypixelInventoryGUI {
             set(new GUIClickableItem(slot) {
                 @Override
                 public ItemStack.Builder getItem(HypixelPlayer player) {
-                    return ItemStacks.item(Material.FIREWORK_STAR, 1, """
+                    return ItemStackCreator.item(Material.FIREWORK_STAR, 1, """
                             <a>{}
                             <7>{}
 

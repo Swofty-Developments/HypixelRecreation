@@ -3,7 +3,7 @@ package net.swofty.type.skywarsgame.luckyblock.items.usables;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.tag.Tag;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -24,7 +24,7 @@ public class VoidCharm implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.GHAST_TEAR, """
+        return ItemStackCreator.item(Material.GHAST_TEAR, """
                 <d><l>Void Charm</l>
                 <7>Activates protection from
                 <7>falling into the void!

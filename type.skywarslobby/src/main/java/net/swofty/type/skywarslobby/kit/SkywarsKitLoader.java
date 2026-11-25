@@ -8,7 +8,7 @@ import net.minestom.server.item.enchant.Enchantment;
 import net.minestom.server.registry.RegistryKey;
 import net.swofty.commons.YamlFileUtils;
 import net.swofty.commons.text.Text;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import org.tinylog.Logger;
 import org.yaml.snakeyaml.Yaml;
 
@@ -185,7 +185,7 @@ public class SkywarsKitLoader {
 
         // Add custom name if specified
         if (entry.customName != null && !entry.customName.isEmpty()) {
-            ItemStacks.customName(builder, Text.read(entry.customName));
+            ItemStackCreator.customName(builder, Text.read(entry.customName));
         }
 
         // Add enchantments if specified

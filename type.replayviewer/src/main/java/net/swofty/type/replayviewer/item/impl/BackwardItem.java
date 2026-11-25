@@ -7,10 +7,13 @@ import net.minestom.server.item.ItemStack;
 import net.swofty.type.generic.data.datapoints.DatapointReplaySettings;
 import net.swofty.type.generic.data.handlers.ReplayDataHandler;
 import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
 import net.swofty.type.replayviewer.item.ReplayItem;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 public class BackwardItem extends ReplayItem {
 
@@ -36,9 +39,11 @@ public class BackwardItem extends ReplayItem {
                 .getValue();
             duration = settings.getSkipIntervals();
         }
-        return appendData(ItemStacks.head("a6e1cd0067855b67e0fd5b7eb7457281c41d13bd5bc9158c4a82f518198a1d22", """
-                <a>{}s Backwards
-                <7>Left click to change the duration.""", duration)).build();
+        return appendData(ItemStacks.head(
+                "a6e1cd0067855b67e0fd5b7eb7457281c41d13bd5bc9158c4a82f518198a1d22",
+                Text.key("replays.skip_backward", String.valueOf(duration)),
+                List.of(Text.key("replays.click_to_change_duration"))
+        )).build();
     }
 
     @Override
@@ -57,7 +62,7 @@ public class BackwardItem extends ReplayItem {
         }
         TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
             (session) -> session.skipBackward(duration),
-            () -> player.sendMessage("<c>Error: no active replay session.")
+                () -> player.sendMessage(Text.key("replays.no_active_session"))
         );
         Logger.info("Player {} set skip backward duration to {} seconds", player.getUsername(), duration);
     }
@@ -79,7 +84,7 @@ public class BackwardItem extends ReplayItem {
                 handler.get(ReplayDataHandler.Data.REPLAY_SETTINGS, DatapointReplaySettings.class).setValue(settings);
                 TypeReplayViewerLoader.populateInventory(player);
             },
-            () -> player.sendMessage("<c>Error: no active replay session.")
+                () -> player.sendMessage(Text.key("replays.no_active_session"))
         );
     }
 }

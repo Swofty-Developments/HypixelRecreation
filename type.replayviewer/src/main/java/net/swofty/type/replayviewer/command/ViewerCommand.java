@@ -3,6 +3,7 @@ package net.swofty.type.replayviewer.command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.replayviewer.TypeReplayViewerLoader;
@@ -26,7 +27,7 @@ public class ViewerCommand extends HypixelCommand {
             HypixelPlayer player = (HypixelPlayer) sender;
             TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
                     ReplaySession::play,
-                    () -> player.sendMessage("<c>No active replay session.")
+                    () -> player.sendMessage(Text.key("replays.no_active_session"))
             );
         }, ArgumentType.Literal("play"));
 
@@ -35,7 +36,7 @@ public class ViewerCommand extends HypixelCommand {
             HypixelPlayer player = (HypixelPlayer) sender;
             TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
                     ReplaySession::pause,
-                    () -> player.sendMessage("<c>No active replay session.")
+                    () -> player.sendMessage(Text.key("replays.no_active_session"))
             );
         }, ArgumentType.Literal("pause"));
 
@@ -47,10 +48,10 @@ public class ViewerCommand extends HypixelCommand {
                 float speed = Float.parseFloat(value);
                 TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
                         session -> session.setPlaybackSpeed(speed),
-                        () -> player.sendMessage("<c>No active replay session.")
+                        () -> player.sendMessage(Text.key("replays.no_active_session"))
                 );
             } catch (NumberFormatException e) {
-                player.sendMessage("<c>Invalid speed. Use a number like 0.5, 1, 2, etc.");
+                player.sendMessage(Text.key("replays.invalid_speed"));
             }
         }, ArgumentType.Literal("speed"), valueArg);
 
@@ -68,10 +69,10 @@ public class ViewerCommand extends HypixelCommand {
                                 session.skipBackward(-seconds);
                             }
                         },
-                        () -> player.sendMessage("<c>No active replay session.")
+                        () -> player.sendMessage(Text.key("replays.no_active_session"))
                 );
             } catch (NumberFormatException e) {
-                player.sendMessage("<c>Invalid seconds. Use a number like 10, -10, etc.");
+                player.sendMessage(Text.key("replays.invalid_seconds"));
             }
         }, ArgumentType.Literal("skip"), valueArg);
 
@@ -85,10 +86,10 @@ public class ViewerCommand extends HypixelCommand {
                         if (tick >= 0) {
                             session.seekTo(tick);
                         } else {
-                            player.sendMessage("<c>Invalid time. Use format like 1:30 or tick number.");
+                            player.sendMessage(Text.key("replays.invalid_time"));
                         }
                     },
-                    () -> player.sendMessage("<c>No active replay session.")
+                    () -> player.sendMessage(Text.key("replays.no_active_session"))
             );
         }, ArgumentType.Literal("goto"), valueArg);
 
@@ -97,7 +98,7 @@ public class ViewerCommand extends HypixelCommand {
             HypixelPlayer player = (HypixelPlayer) sender;
             TypeReplayViewerLoader.getSession(player).ifPresentOrElse(
                     session -> session.seekTo(0),
-                    () -> player.sendMessage("<c>No active replay session.")
+                    () -> player.sendMessage(Text.key("replays.no_active_session"))
             );
         }, ArgumentType.Literal("restart"));
 
@@ -105,7 +106,7 @@ public class ViewerCommand extends HypixelCommand {
         command.addSyntax((sender, context) -> {
             HypixelPlayer player = (HypixelPlayer) sender;
             TypeReplayViewerLoader.removeSession(player.getUuid());
-            player.sendMessage("<a>Leaving replay...");
+            player.sendMessage(Text.key("replays.leaving_replay"));
             // Would send player back to lobby
         }, ArgumentType.Literal("leave"));
     }

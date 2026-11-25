@@ -29,7 +29,7 @@ public class ActionChestOpen implements HypixelEventClass {
 
             Pos chestPos = new Pos(event.getBlockPosition());
             if (game.getChestManager().isChestPosition(chestPos)) {
-                player.addChestOpened();
+                game.recordChestOpened(player);
                 player.openInventory(game.getChestManager().getChestInventory(chestPos));
                 event.setCancelled(true);
             }

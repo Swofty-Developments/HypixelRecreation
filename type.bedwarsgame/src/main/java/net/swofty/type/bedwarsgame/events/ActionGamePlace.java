@@ -1,24 +1,23 @@
 package net.swofty.type.bedwarsgame.events;
 
-import net.kyori.adventure.sound.Sound;
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.api.event.explosion.TntPrimeEvent;
+import io.github.term4.polyp.mechanics.explosion.ExplosionSystem;
+import io.github.term4.polyp.util.HeldItems;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.player.PlayerBlockPlaceEvent;
 import net.minestom.server.instance.block.Block;
-import net.minestom.server.item.Material;
-import net.minestom.server.sound.SoundEvent;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.MapTeam;
 import net.swofty.commons.mc.HypixelPosition;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
-import net.swofty.type.bedwarsgame.entity.TntEntity;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.game.replay.dispatcher.BlockChangeDispatcher;
 import net.swofty.type.generic.event.EventNodes;
-import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.event.HypixelEventClass;
-import net.swofty.type.generic.utility.ScheduleUtility;
+import net.swofty.type.generic.event.phase.PhasedEvent;
 import org.tinylog.Logger;
 
 public class ActionGamePlace implements HypixelEventClass {
@@ -26,6 +25,7 @@ public class ActionGamePlace implements HypixelEventClass {
 	@PhasedEvent(node = EventNodes.PLAYER, requireDataLoaded = false)
 	public void run(PlayerBlockPlaceEvent event) {
 		BedWarsPlayer player = (BedWarsPlayer) event.getPlayer();
+		if (event.isCancelled()) return;
 		BedWarsGame game = player.getGame();
 		if (game == null) {
 			Logger.info("Player {} tried to place a block but is not in a game!", player.getUsername());
@@ -62,17 +62,16 @@ public class ActionGamePlace implements HypixelEventClass {
 			}
 		}
 
-		if (event.getBlock().material() == Material.TNT) {
-			TntEntity entity = new TntEntity(event.getPlayer());
-			entity.setFuse(50);
-			entity.setInstance(event.getInstance(), blockPosition.add(0.5, 0, 0.5));
-			entity.getViewersAsAudience().playSound(Sound.sound(
-					SoundEvent.ENTITY_TNT_PRIMED, Sound.Source.BLOCK,
-					1.0f, 1.0f
-			), entity);
-			ScheduleUtility.nextTick(
-					() -> player.getInstance().setBlock(blockPosition, Block.AIR)
-			);
+		if (event.getBlock().compare(Block.TNT)) {
+			ExplosionSystem explosions = Polyp.getInstance().services().explosion();
+			if (explosions == null) {
+				event.setCancelled(true);
+				return;
+			}
+			event.setCancelled(true);
+			if (explosions.primeTnt(event.getInstance(), blockPosition, player, TntPrimeEvent.Cause.PLACEMENT) != null) {
+				HeldItems.consumeOne(player, event.getHand());
+			}
 			return;
 		}
 

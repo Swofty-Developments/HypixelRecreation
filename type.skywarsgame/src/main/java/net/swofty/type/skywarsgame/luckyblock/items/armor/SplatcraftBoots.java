@@ -10,7 +10,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -61,7 +61,7 @@ public class SplatcraftBoots implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.LEATHER_BOOTS, """
+        return ItemStackCreator.raw(Material.LEATHER_BOOTS, """
                         <e>Splatcraft Boots
 
                         <7>Protection I

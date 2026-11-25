@@ -303,7 +303,12 @@ public class GUIMyProfile extends HypixelInventoryGUI {
                         <e>Click to view!""");
             }
         });
-        set(new GUIItem(41) {
+        set(new GUIClickableItem(41) {
+            @Override
+            public void run(InventoryPreClickEvent e, HypixelPlayer player) {
+                player.openView(new GUISelectLanguage(), new GUISelectLanguage.State());
+            }
+
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
                 return ItemStacks.head("98daa1e3ed94ff3e33e1d4c6e43f024c47d78a57ba4d38e75e7c9264106", """
@@ -312,6 +317,7 @@ public class GUIMyProfile extends HypixelInventoryGUI {
 
                         <7>Currently available:
                         <7>   ∙ <f>English
+                        <7>   ∙ <f>Finnish
 
                         <7>More languages coming soon!
 

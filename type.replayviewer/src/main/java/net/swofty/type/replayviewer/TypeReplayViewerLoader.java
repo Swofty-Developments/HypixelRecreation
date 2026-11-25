@@ -20,6 +20,9 @@ import net.swofty.type.generic.tab.TablistManager;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.item.ReplayItemHandler;
 import net.swofty.type.replayviewer.playback.ReplaySession;
+import net.swofty.type.game.replay.api.ReplayAdapterRegistry;
+import net.swofty.type.game.replay.api.ReplayViewerAdapter;
+import net.swofty.type.replayviewer.playback.bedwars.BedWarsViewerAdapter;
 import org.jetbrains.annotations.Nullable;
 import org.tinylog.Logger;
 
@@ -40,6 +43,8 @@ public class TypeReplayViewerLoader implements HypixelTypeLoader {
 
     @Getter
     private static final Map<UUID, ReplaySession> activeSessions = new ConcurrentHashMap<>();
+    @Getter
+    private static final ReplayAdapterRegistry<ReplayViewerAdapter<?, ?>> replayAdapters = new ReplayAdapterRegistry<>();
 
     @Override
     public ServerType getType() {
@@ -49,6 +54,7 @@ public class TypeReplayViewerLoader implements HypixelTypeLoader {
     @Override
     public void onInitialize(MinecraftServer server) {
         instanceManager = MinecraftServer.getInstanceManager();
+        replayAdapters.register(BedWarsViewerAdapter.GAME_TYPE, new BedWarsViewerAdapter());
         Logger.info("Replay Viewer initialized");
     }
 

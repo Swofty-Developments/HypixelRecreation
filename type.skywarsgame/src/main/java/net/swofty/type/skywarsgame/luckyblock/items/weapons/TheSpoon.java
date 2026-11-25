@@ -3,7 +3,7 @@ package net.swofty.type.skywarsgame.luckyblock.items.weapons;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.text.Text;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 
@@ -30,7 +30,7 @@ public class TheSpoon implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.WOODEN_SHOVEL,
+        return ItemStackCreator.raw(Material.WOODEN_SHOVEL,
                         Text.of("<e>The Spoon"),
                         List.of(
                                 Text.empty(),

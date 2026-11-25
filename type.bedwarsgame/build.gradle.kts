@@ -24,6 +24,7 @@ dependencies {
     implementation(project(":commons"))
     implementation(project(":proxy.api"))
     implementation(project(":pvp"))
+    implementation(project(":world"))
     implementation(project(":type.game"))
     implementation(libs.mongodb.bson)
     implementation(libs.adventure.text.minimessage)

@@ -18,11 +18,12 @@ public class ReplayChooseEndpoint implements RedisMessageHandler
 
 	@Override
 	public ChooseReplayProtocolObject.ChooseReplayResponse handle(ChooseReplayProtocolObject.ChooseReplayMessage body, RedisMessageContext context) {
-		RedisClient.requestAllServersFromService(
+		var responses = RedisClient.requestAllServersFromService(
 			new ViewReplayPushProtocol(),
 			new ViewReplayPushProtocol.Request(body.player(), body.replayId(), body.shareCode()),
-			300);
-		return new ChooseReplayProtocolObject.ChooseReplayResponse(false);
+				300).join();
+		boolean accepted = responses.values().stream().anyMatch(ViewReplayPushProtocol.Response::success);
+		return new ChooseReplayProtocolObject.ChooseReplayResponse(!accepted);
 	}
 
 }

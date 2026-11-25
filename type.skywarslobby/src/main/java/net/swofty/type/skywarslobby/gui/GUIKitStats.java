@@ -9,7 +9,7 @@ import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsKitStats;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.gui.inventory.item.GUIItem;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -55,9 +55,9 @@ public class GUIKitStats extends HypixelInventoryGUI {
 
                 Text name = Text.of("<a>{}", kit.getName());
                 if (kit.hasCustomTexture()) {
-                    return ItemStacks.head(kit.getIconTexture(), name, lore);
+                    return ItemStackCreator.head(kit.getIconTexture(), name, lore);
                 } else {
-                    return ItemStacks.item(kit.getIconMaterial(), 1, name, lore);
+                    return ItemStackCreator.item(kit.getIconMaterial(), 1, name, lore);
                 }
             }
         });
@@ -69,7 +69,7 @@ public class GUIKitStats extends HypixelInventoryGUI {
                 String timePlayed = stats.getFormattedTimePlayed();
                 String fastestWin = stats.getFormattedFastestWin();
 
-                return ItemStacks.item(Material.ITEM_FRAME, 1, """
+                return ItemStackCreator.item(Material.ITEM_FRAME, 1, """
                         <a>General Stats with {}
                         <7>Time Played: <a>{}
 
@@ -91,7 +91,7 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIItem(30) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.REDSTONE, 1, """
+                return ItemStackCreator.item(Material.REDSTONE, 1, """
                         <a>Kills with {}
                         <7>Kills: <a>{}
                         <7>Assists: <a>{}
@@ -109,7 +109,7 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIItem(32) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.BOW, 1, """
+                return ItemStackCreator.item(Material.BOW, 1, """
                         <a>Archery with {}
                         <7>Accuracy: <a>{}%
                         <7>Bow Kills: <a>{}
@@ -125,7 +125,7 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIItem(34) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.BLAZE_POWDER, 1, """
+                return ItemStackCreator.item(Material.BLAZE_POWDER, 1, """
                         <a>SkyWars Challenges with {}
                         <7>Archer Wins: <a>{}
                         <7>Half Health Wins: <a>{}
@@ -145,7 +145,7 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIClickableItem(48) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.ARROW, 1, """
+                return ItemStackCreator.item(Material.ARROW, 1, """
                         <a>Go Back
                         <7>To {} Kit""", kit.getName());
             }
@@ -160,7 +160,7 @@ public class GUIKitStats extends HypixelInventoryGUI {
         set(new GUIItem(49) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.EMERALD, 1, """
+                return ItemStackCreator.item(Material.EMERALD, 1, """
                         <7>Total Coins: <6>{:,}
                         <6>https://store.hypixel.net""", coins);
             }

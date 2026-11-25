@@ -1,11 +1,10 @@
 package net.swofty.type.bedwarsgame;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.PlayerSkin;
+import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.commons.party.FullParty;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.commons.text.Text;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.generic.party.PartyManager;
 import net.swofty.type.generic.tab.CustomTablistSkin;
@@ -14,11 +13,11 @@ import net.swofty.type.generic.tab.TablistSkin;
 import net.swofty.type.generic.tab.TablistSkinRegistry;
 import net.swofty.type.generic.user.HypixelPlayer;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import net.swofty.commons.text.Text;
 
 public class BedWarsGameTabListModule extends TablistModule {
 
@@ -30,15 +29,21 @@ public class BedWarsGameTabListModule extends TablistModule {
             return List.of();
         }
 
-        Collection<BedWarsPlayer> players = game.getPlayers();
+        List<BedWarsPlayer> players = new ArrayList<>(game.getPlayers());
+        Comparator<BedWarsPlayer> playerOrder = Comparator
+                .comparing(BedWarsPlayer::getTeamKey, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(BedWarsPlayer::getUsername, String.CASE_INSENSITIVE_ORDER);
         if (game.getState().isWaiting()) {
-            TablistEntry[] entries = new TablistEntry[players.size()];
-            int index = 0;
-            for (BedWarsPlayer bedWarsPlayer : players) {
-                boolean shouldObfuscate = bedWarsPlayer.getUuid().compareTo(player.getUuid()) != 0;
+            List<TablistEntry> entries = new ArrayList<>(players.size());
+            for (BedWarsPlayer bedWarsPlayer : players.stream()
+                    .sorted(playerOrder)
+                    .toList()) {
+                BedWarsMapsConfig.TeamKey teamKey = bedWarsPlayer.getTeamKey();
+                boolean shouldObfuscate = bedWarsPlayer != player
+                        && (teamKey == null || teamKey != player.getTeamKey());
                 FullParty party = PartyManager.getPartyFromPlayer(player);
-                if (party != null && !shouldObfuscate) {
-                    shouldObfuscate = !party.getParticipants().contains(p.getUuid());
+                if (shouldObfuscate && party != null) {
+                    shouldObfuscate = !party.getParticipants().contains(bedWarsPlayer.getUuid());
                 }
 
                 TablistSkin skin;
@@ -52,20 +57,20 @@ public class BedWarsGameTabListModule extends TablistModule {
                     skin = new CustomTablistSkin(playerSkin);
                 }
 
-                Component displayName = shouldObfuscate
-                        ? Component.text(UUID.randomUUID().toString().replaceAll("-", "").substring(0, new Random().nextInt(10) + 4), Style.style(TextDecoration.OBFUSCATED))
-                        : bedWarsPlayer.getColouredName();
-                entries[index++] = new TablistEntry(Text.of("{}", displayName), skin);
+                Text displayName = shouldObfuscate
+                        ? Text.of("<k>{}", UUID.randomUUID().toString().replace("-", "").substring(0, new Random().nextInt(10) + 4))
+                        : Text.component(bedWarsPlayer.getColouredName());
+                entries.add(new TablistEntry(displayName, skin));
             }
-            return List.of(entries);
+            return entries;
         } else if (game.getState().isInProgress()) {
-            TablistEntry[] entries = new TablistEntry[players.size()];
-            int index = 0;
-            for (BedWarsPlayer bedWarsPlayer : players) {
-                Component displayName = bedWarsPlayer.getDisplayName();
-                if (displayName == null) {
-                    displayName = Component.text(bedWarsPlayer.getUsername());
-                }
+            List<TablistEntry> entries = new ArrayList<>(players.size());
+            for (BedWarsPlayer bedWarsPlayer : players.stream()
+                    .sorted(playerOrder)
+                    .toList()) {
+                Text displayName = bedWarsPlayer.getDisplayName() == null
+                        ? Text.literal(bedWarsPlayer.getUsername())
+                        : Text.component(bedWarsPlayer.getDisplayName());
                 TablistSkin skin;
                 PlayerSkin playerSkin = bedWarsPlayer.getSkin();
                 if (playerSkin == null) {
@@ -73,9 +78,9 @@ public class BedWarsGameTabListModule extends TablistModule {
                 } else {
                     skin = new CustomTablistSkin(playerSkin);
                 }
-                entries[index++] = new TablistEntry(Text.of("{}", displayName), skin);
+                entries.add(new TablistEntry(displayName, skin));
             }
-            return List.of(entries);
+            return entries;
         }
 
         return List.of();

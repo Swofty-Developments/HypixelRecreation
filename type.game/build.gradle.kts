@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation(project(":commons"))
+    implementation(libs.adventure.text.serializer.gson)
 
     compileOnly(libs.minestom) {
         exclude(group = "org.jboss.shrinkwrap.resolver", module = "shrinkwrap-resolver-depchain")

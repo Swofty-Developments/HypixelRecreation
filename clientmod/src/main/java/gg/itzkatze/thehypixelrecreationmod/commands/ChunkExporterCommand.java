@@ -19,6 +19,8 @@ public final class ChunkExporterCommand {
                                 .executes(context -> start(context, ChunkExportRecorder.CaptureMode.CHUNKS))
                                 .then(ClientCommands.literal("block_displays")
                                         .executes(context -> start(context, ChunkExportRecorder.CaptureMode.BLOCK_DISPLAYS)))
+                                .then(ClientCommands.literal("bedwars")
+                                        .executes(context -> start(context, ChunkExportRecorder.CaptureMode.BEDWARS)))
                                 .then(ClientCommands.literal("ravengard")
                                         .then(ClientCommands.argument("name", StringArgumentType.string())
                                                 .executes(context -> startStitchedRavengard(context,

@@ -27,6 +27,7 @@ dependencies {
 
     implementation(libs.mongodb.bson)
     implementation(libs.adventure.text.minimessage)
+    implementation(libs.adventure.text.serializer.gson)
     compileOnly(libs.minestom) {
         exclude(group = "org.jboss.shrinkwrap.resolver", module = "shrinkwrap-resolver-depchain")
     }

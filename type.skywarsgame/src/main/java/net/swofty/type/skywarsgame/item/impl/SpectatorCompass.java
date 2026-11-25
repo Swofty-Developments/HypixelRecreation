@@ -8,7 +8,7 @@ import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.gui.GUISpectatorTeleporter;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItem;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 
 public class SpectatorCompass extends SimpleInteractableItem {
 
@@ -18,7 +18,7 @@ public class SpectatorCompass extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStacks.item(Material.COMPASS, 1, """
+        return ItemStackCreator.item(Material.COMPASS, 1, """
                 <a>Teleporter <7>(Right Click)
                 <7>Right-click to teleport to players!""").build();
     }

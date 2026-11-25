@@ -3,18 +3,17 @@ package net.swofty.type.skywarsgame.luckyblock.items.usables;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
-import net.minestom.server.entity.EntityType;
-import net.minestom.server.entity.metadata.other.PrimedTntMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
 import net.minestom.server.tag.Tag;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
+import net.swofty.type.skywarsgame.util.PolypTnt;
 
 public class TNTLaunchPad implements LuckyBlockConsumable {
 
@@ -35,7 +34,7 @@ public class TNTLaunchPad implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, """
+        return ItemStackCreator.item(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, """
                 <c><l>TNT Launch Pad</l>
                 <7>Spawns 4 TNT that launch
                 <7>you into the sky!
@@ -66,13 +65,9 @@ public class TNTLaunchPad implements LuckyBlockConsumable {
         for (double[] offset : offsets) {
             Pos tntPos = playerPos.add(offset[0], 0, offset[1]);
 
-            Entity tnt = new Entity(EntityType.TNT);
+            Entity tnt = PolypTnt.spawn(player, tntPos, FUSE_TICKS);
+            if (tnt == null) continue;
             tnt.setTag(LAUNCH_PAD_OWNER, ownerUuid);
-            tnt.setInstance(instance, tntPos);
-
-            if (tnt.getEntityMeta() instanceof PrimedTntMeta tntMeta) {
-                tntMeta.setFuseTime(FUSE_TICKS);
-            }
 
             Vec toCenter = playerPos.sub(tntPos).asVec().normalize();
             tnt.setVelocity(toCenter.mul(5).add(0, 5, 0));

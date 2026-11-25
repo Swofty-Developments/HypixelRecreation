@@ -7,7 +7,6 @@ import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityProjectile;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.damage.Damage;
-import net.minestom.server.entity.metadata.other.PrimedTntMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.potion.Potion;
@@ -16,6 +15,7 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
+import net.swofty.type.skywarsgame.util.PolypTnt;
 
 import java.time.Duration;
 import java.util.List;
@@ -153,12 +153,7 @@ public enum LuckyBlockEnvironmentEffect {
                     double offsetZ = Math.sin(angle) * 3;
                     Pos tntPos = pos.add(offsetX, 0, offsetZ);
 
-                    Entity tnt = new Entity(EntityType.TNT);
-                    tnt.setInstance(instance, tntPos);
-
-                    if (tnt.getEntityMeta() instanceof PrimedTntMeta tntMeta) {
-                        tntMeta.setFuseTime(60 + random.nextInt(20));
-                    }
+                    PolypTnt.spawn(player, tntPos, 60 + random.nextInt(20));
                 }
             }
     ),

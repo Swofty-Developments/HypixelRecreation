@@ -5,7 +5,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.event.player.PlayerChatEvent;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.text.Text;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.generic.chat.StaffChat;
 import net.swofty.type.generic.collectibles.bedwars.prestige.BedWarsPrestigeRenderer;
@@ -70,15 +70,13 @@ public class ActionPlayerChat implements HypixelEventClass {
 
 		if (game.getState().isWaiting()) {
 			TextColor messageColor = rank.equals(Rank.DEFAULT) ? NamedTextColor.GRAY : NamedTextColor.WHITE;
-
 			game.getPlayers().forEach(onlinePlayer -> onlinePlayer.sendMessage(
-					"{}<color:{}>: {}",
-					player.getFullDisplayName(), messageColor, finalMessage));
+					"{}<color:{}>: {}", player.getFullDisplayName(), messageColor, finalMessage));
 			return;
 		}
 
 		if (game.getReplayManager().isRecording()) {
-			game.getReplayManager().recordPlayerChat(player, finalMessage, false);
+			game.getReplayManager().recordPlayerChat(player, Text.literal(finalMessage), false);
 		}
 
 		List<BedWarsPlayer> receivers;
@@ -90,9 +88,7 @@ public class ActionPlayerChat implements HypixelEventClass {
 
 		Text levelPrefix = BedWarsPrestigeRenderer.renderBrackets(player).append(" ");
 		TextColor messageColor = rank.equals(Rank.DEFAULT) ? NamedTextColor.GRAY : NamedTextColor.WHITE;
-
 		receivers.forEach(onlinePlayer -> onlinePlayer.sendMessage(
-				"{}{}<color:{}>: {}",
-				levelPrefix, player.getFullDisplayName(), messageColor, finalMessage));
+				"{}{}<color:{}>: {}", levelPrefix, player.getFullDisplayName(), messageColor, finalMessage));
 	}
 }
