@@ -70,6 +70,7 @@ import net.swofty.type.skyblockgeneric.item.components.MetaphysicalSerumComponen
 import net.swofty.type.skyblockgeneric.item.components.NewYearCakeComponent;
 import net.swofty.type.skyblockgeneric.item.components.NotFinishedYetComponent;
 import net.swofty.type.skyblockgeneric.item.components.PetComponent;
+import net.swofty.type.skyblockgeneric.item.components.PetSkinComponent;
 import net.swofty.type.skyblockgeneric.item.components.PetItemComponent;
 import net.swofty.type.skyblockgeneric.item.components.PickaxeComponent;
 import net.swofty.type.skyblockgeneric.item.components.PlaceEventComponent;

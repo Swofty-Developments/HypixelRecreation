@@ -609,8 +609,10 @@ public final class ExperimentationManager {
         SkyBlockItem pet = player.getPetData().getEnabledPet();
         if (pet == null) return 1;
         double multiplier = 1;
-        for (PetAbility ability : player.getPetData().getCachedAbilities(pet)) {
-            multiplier *= Math.max(1, ability.getSuperpairsUltraRareBookMultiplier(player, pet));
+        Rarity rarity = pet.getAttributeHandler().getRarity();
+        int level = pet.getAttributeHandler().getPetData().getAsLevel(rarity);
+        for (PetAbility ability : player.getPetData().getAbilities(pet)) {
+            multiplier *= Math.max(1, ability.getSuperpairsUltraRareBookMultiplier(player, rarity, level));
         }
         return multiplier;
     }

@@ -131,7 +131,7 @@ public class AccountInformationModule extends TablistModule {
     }
 
     private TablistEntry entry(String text) {
-        return new TablistEntry(Component.text(text), TablistSkinRegistry.GRAY);
+        return new TablistEntry(Text.legacy(text), TablistSkinRegistry.GRAY);
     }
 
     @Override

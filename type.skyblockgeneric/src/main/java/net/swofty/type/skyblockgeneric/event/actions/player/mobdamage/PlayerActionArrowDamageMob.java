@@ -52,9 +52,6 @@ public class PlayerActionArrowDamageMob implements HypixelEventClass {
         float damageAmount = (float) damage;
         if (!AttackService.applyHit(shooter, collidedWith, damageAmount, critical)) return;
 
-        shooter.getPetData().dispatch(new PetEvent.DamageMob(
-                shooter, shooter.getPetData().getEnabledPet(), collidedWith));
-
         double ferocity = playerStats.getOverall(ItemStatistic.FEROCITY);
         AttackService.scheduleExtraHits(shooter, collidedWith, damageAmount, critical, ferocity);
 

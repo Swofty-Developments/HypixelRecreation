@@ -41,4 +41,8 @@ public interface PetAbility {
     default ItemStatistics getStatistics(SkyBlockPlayer player, Rarity rarity, int level) {
         return ItemStatistics.empty();
     }
+
+    default double getSuperpairsUltraRareBookMultiplier(SkyBlockPlayer player, Rarity rarity, int level) {
+        return 1;
+    }
 }

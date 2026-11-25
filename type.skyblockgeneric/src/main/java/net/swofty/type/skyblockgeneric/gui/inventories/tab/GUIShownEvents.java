@@ -44,7 +44,7 @@ public final class GUIShownEvents implements StatefulView<GUIShownEvents.State> 
         var settings = TablistSettingsStore.get(p);
         for (int i = 0; i < SLOTS.length && from + i < events.size(); i++) {
             CalendarEvent event = events.get(from + i);
-            String name = event.getDisplayName(0).replaceAll("§.", "").replaceFirst("^\\d+(st|nd|rd|th) ", "");
+            String name = event.getDisplayName(0).plain().replaceFirst("^\\d+(st|nd|rd|th) ", "");
             boolean on = settings.eventShown(s.location(), event.id(), defaults);
             l.slot(SLOTS[i], ItemStackCreator.getStack((on ? "§a✔ " : "§c✖ ") + name, event.representation().material(), 1, "§7Shows " + name + " events when in", "§7" + s.location().display() + ".", "", on ? "§eClick to disable!" : "§eClick to enable!"), (_, c) -> {
                 var d = TablistSettingsStore.get(p);
