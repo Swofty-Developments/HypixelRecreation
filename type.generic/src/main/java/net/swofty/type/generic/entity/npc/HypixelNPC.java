@@ -154,7 +154,13 @@ public abstract class HypixelNPC {
                     return;
                 }
 
-                Pos npcPosition = entity.getPosition();
+                if (entity.getInstance() != config.instance(player)) {
+                    entity.remove();
+                    cache.remove(npc);
+                    return;
+                }
+
+                Pos npcPosition = config.position(player);
                 if (!(entity instanceof NPCViewable npcViewable)) {
                     Logger.error("Entity for NPC {} does not implement NPCViewable, skipping update", npc.getName(player));
                     return;

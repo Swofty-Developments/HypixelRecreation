@@ -11,14 +11,14 @@ import org.jetbrains.annotations.Nullable;
 import org.tinylog.Logger;
 import tools.jackson.core.JacksonException;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class PrototypeLobbyDataHandler extends DataHandler implements GameDataHandler {
-    public static final Map<UUID, PrototypeLobbyDataHandler> prototypeLobbyCache = new HashMap<>();
+    public static final Map<UUID, PrototypeLobbyDataHandler> prototypeLobbyCache = new ConcurrentHashMap<>();
 
     public PrototypeLobbyDataHandler() { super(); }
     public PrototypeLobbyDataHandler(UUID uuid) { super(uuid); }

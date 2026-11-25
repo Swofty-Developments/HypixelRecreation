@@ -6,6 +6,7 @@ import net.hollowcube.polar.PolarLoader;
 import net.hollowcube.polar.PolarWorld;
 import net.kyori.adventure.key.Key;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.SharedInstance;
 import net.minestom.server.registry.RegistryKey;
@@ -21,6 +22,8 @@ import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
 import net.swofty.type.skyblockgeneric.data.monogdb.CoopDatabase;
 import net.swofty.type.skyblockgeneric.data.monogdb.IslandDatabase;
 import net.swofty.type.skyblockgeneric.furniture.IslandFurnitureManager;
+import net.swofty.type.skyblockgeneric.garden.SkyBlockEditableWorldHandle;
+import net.swofty.type.skyblockgeneric.garden.WorldBuildLimits;
 import net.swofty.type.skyblockgeneric.minion.IslandMinionData;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.skyblockgeneric.utility.JerryInformation;
@@ -35,7 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Getter
-public class SkyBlockIsland {
+public class SkyBlockIsland implements SkyBlockEditableWorldHandle {
+    private static final WorldBuildLimits BUILD_LIMITS = new WorldBuildLimits(-80, 80, -80, 80);
     private static final Map<UUID, SkyBlockIsland> loadedIslands = new ConcurrentHashMap<>();
     private static final AtomicBoolean shutdownHookRegistered = new AtomicBoolean();
 
@@ -51,11 +55,18 @@ public class SkyBlockIsland {
     @Setter
     private JerryInformation jerryInformation = null;
     @Setter
+    private Pos samPosition;
+    @Setter
     private IslandMinionData minionData = null;
     @Setter
     private long lastSaved = 0;
     @Setter
     private Integer islandVersion;
+
+    @Override
+    public WorldBuildLimits getBuildLimits() {
+        return BUILD_LIMITS;
+    }
 
     public SkyBlockIsland(UUID islandID, UUID profileID) {
         this.islandID = islandID;

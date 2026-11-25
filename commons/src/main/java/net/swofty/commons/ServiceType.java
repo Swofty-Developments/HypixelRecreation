@@ -7,6 +7,7 @@ public enum ServiceType {
     API,
     PARTY,
     DARK_AUCTION,
+    JACOBS_CONTEST,
     ORCHESTRATOR,
     FRIEND,
     REPLAY,

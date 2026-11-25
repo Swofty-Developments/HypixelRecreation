@@ -1,0 +1,38 @@
+locked_plot_schematic: locked.litematic
+skins:
+  - id: default
+    display_name: Default Barn
+    rarity: COMMON
+    schematic: default.litematic
+    unlock_source: Default
+    offsets: { x: 0, y: 0, z: 0 }
+  - id: spruce
+    display_name: Medieval Barn Skin
+    rarity: UNCOMMON
+    schematic: spruce.litematic
+    unlock_source: Garden Level III
+    offsets: { x: 0, y: 0, z: 0 }
+  - id: red
+    display_name: Red Barn Skin
+    rarity: UNCOMMON
+    schematic: red.litematic
+    unlock_source: Garden Level IX
+    offsets: { x: 0, y: 0, z: 0 }
+  - id: sunny
+    display_name: Sunny Barn Skin
+    rarity: UNCOMMON
+    schematic: sunny.litematic
+    unlock_source: Garden Level VI
+    offsets: { x: 0, y: 0, z: 0 }
+  - id: cabin
+    display_name: Cabin Barn Skin
+    rarity: RARE
+    schematic: cabin.litematic
+    unlock_source: Garden Level XI
+    offsets: { x: 0, y: 0, z: 0 }
+  - id: chocolate
+    display_name: Chocolate Barn Skin
+    rarity: RARE
+    schematic: chocolate.litematic
+    unlock_source: Barn Skin Cosmetic
+    offsets: { x: 0, y: 0, z: 0 }

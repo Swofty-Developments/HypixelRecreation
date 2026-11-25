@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":type.jerrysworkshop"))
     implementation(project(":type.dungeonhub"))
     implementation(project(":type.skyblockgeneric"))
+    implementation(project(":type.garden"))
 
     implementation(project(":type.prototypelobby"))
 

@@ -87,6 +87,10 @@ public class Furniture {
         return load(furnitureName, HypixelConst.getInstanceContainer(), offset);
     }
 
+    public static List<LivingEntity> load(Instance instance, String furnitureName, Pos offset) {
+        return load(furnitureName, instance, offset);
+    }
+
     public static List<LivingEntity> load(String furnitureName, Instance instance, Pos offset) {
         return load(furnitureName, instance, offset, 0f);
     }
@@ -104,7 +108,7 @@ public class Furniture {
 				if (templates.isEmpty()) {
 					throw new IllegalStateException("Furniture templates have not been preloaded");
 				}
-				throw new IllegalArgumentException("Furniture template not found: " + furnitureName);
+				throw new FurnitureNotPresent("Furniture template not found: " + furnitureName);
 			}
 
 			for (Map<String, Object> entry : entries) {
@@ -134,7 +138,7 @@ public class Furniture {
 			return spawned;
 		} catch (Exception exception) {
             remove(spawned);
-			throw new IllegalStateException("Failed to load furniture '" + furnitureName + "'", exception);
+			throw new FurnitureLoadException("Failed to load furniture '" + furnitureName + "'", exception);
 		}
 	}
 

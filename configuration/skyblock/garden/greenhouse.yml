@@ -1,0 +1,161 @@
+unlock_garden_level: 7
+unlock_visitor: CARPENTER
+unlock_item: GREENHOUSE_BLUEPRINT
+greenhouse_unlock_costs:
+  - { greenhouse: 1, ethereal_vines: 0 }
+  - { greenhouse: 2, ethereal_vines: 100 }
+  - { greenhouse: 3, ethereal_vines: 150 }
+ethereal_vine_chances:
+  COMMON: 0.15
+  UNCOMMON: 0.20
+  RARE: 0.25
+  EPIC: 0.30
+  LEGENDARY: 0.40
+harvest_bounty:
+  - BURROWING_SPORES
+  - ETHEREAL_VINE
+  - EVERGREEN_GARDEN_CHIP
+  - IRIDIUM
+  - OVERGROWN_GRASS
+  - SYNTHESIS_GARDEN_CHIP
+crops:
+  - id: WHEAT
+    base_yield:
+      WHEAT: 128
+      SEEDS: 1
+    growth_cycles: 8
+    buffs:
+      - HARVEST_BOOST_20
+  - id: CARROT
+    base_yield:
+      CARROT: 280
+    growth_cycles: 8
+    buffs:
+      - XP_BOOST_20
+  - id: POTATO
+    base_yield:
+      POTATO: 240
+    growth_cycles: 8
+    buffs:
+      - IMMUNITY
+  - id: PUMPKIN
+    base_yield:
+      PUMPKIN: 108
+    growth_cycles: 11
+    buffs:
+      - BONUS_DROPS
+  - id: SUGAR_CANE
+    base_yield:
+      SUGAR_CANE: 160
+    growth_cycles: 8
+    buffs:
+      - IMPROVED_XP_BOOST_30
+      - HARVEST_LOSS_20
+  - id: MELON_SLICE
+    base_yield:
+      MELON_SLICE: 512
+    growth_cycles: 11
+    buffs:
+      - IMPROVED_WATER_RETAIN_100
+  - id: CACTUS
+    base_yield:
+      CACTUS: 120
+    growth_cycles: 8
+    buffs:
+      - IMPROVED_WATER_RETAIN_100
+      - HARVEST_LOSS_20
+  - id: COCOA_BEANS
+    base_yield:
+      COCOA_BEANS: 160
+    growth_cycles: 6
+    buffs:
+      - IMMUNITY
+  - id: RED_MUSHROOM
+    base_yield:
+      RED_MUSHROOM: 121
+    growth_cycles: 6
+    buffs:
+      - IMPROVED_HARVEST_BOOST_30
+      - WATER_DRAIN_30
+  - id: BROWN_MUSHROOM
+    base_yield:
+      BROWN_MUSHROOM: 121
+    growth_cycles: 6
+    buffs:
+      - IMPROVED_HARVEST_BOOST_30
+      - WATER_DRAIN_30
+  - id: NETHER_WART
+    base_yield:
+      NETHER_WART: 240
+    growth_cycles: 8
+    buffs:
+      - IMPROVED_HARVEST_BOOST_30
+      - XP_LOSS_20
+  - id: SUNFLOWER
+    base_yield:
+      SUNFLOWER: 256
+    growth_cycles: 15
+    buffs:
+      - BONUS_DROPS
+  - id: MOONFLOWER
+    base_yield:
+      MOONFLOWER: 256
+    growth_cycles: 15
+    buffs:
+      - BONUS_DROPS
+  - id: WILD_ROSE
+    base_yield:
+      WILD_ROSE: 256
+    growth_cycles: 15
+    buffs:
+      - EFFECT_SPREAD
+dna_milestones:
+  - level: 1
+    analyses_required: 1
+    rewards:
+      - BIOANALYSIS_TALISMAN
+      - SMALL_MUTATIONS_SACK
+      - SMALL_MUTATIONS_SACK_RECIPE
+      - HYDROCAN_TURBO_2000_SKYMART_UNLOCK
+      - "+10 Crop Growth"
+      - "+5 Farming Fortune"
+      - "+15 SkyBlock XP"
+  - level: 2
+    analyses_required: 10
+    rewards:
+      - OVERGROWN_GRASS
+      - HYDROCAN_ULTRA_3000_SKYMART_UNLOCK
+      - "+10 Crop Growth"
+      - "+5 Farming Fortune"
+      - "+15 SkyBlock XP"
+  - level: 3
+    analyses_required: 15
+    rewards:
+      - MEDIUM_MUTATIONS_SACK_RECIPE
+      - AQUAMASTER_X_SKYMART_UNLOCK
+      - "+10 Crop Growth"
+      - "+5 Farming Fortune"
+      - "+15 SkyBlock XP"
+  - level: 4
+    analyses_required: 20
+    rewards:
+      - BIOANALYSIS_RING
+      - AQUAMASTER_HYDROMAX_SKYMART_UNLOCK
+      - "+10 Crop Growth"
+      - "+5 Farming Fortune"
+      - "+15 SkyBlock XP"
+  - level: 5
+    analyses_required: 30
+    rewards:
+      - LARGE_MUTATIONS_SACK_RECIPE
+      - ESTATE_GREENHOUSE_SKIN
+      - "+10 Crop Growth"
+      - "+5 Farming Fortune"
+      - "+15 SkyBlock XP"
+  - level: 6
+    analyses_required: 40
+    rewards:
+      - BIOANALYSIS_ARTIFACT
+      - "+10 Crop Growth"
+      - "+5 Farming Fortune"
+      - "+15 SkyBlock XP"

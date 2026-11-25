@@ -1,0 +1,185 @@
+crop_groups:
+  small_30:
+    thresholds: [ 30, 50, 80, 200, 350, 700, 1500, 2500, 3500, 5000, 6500, 8000, 10000, 20000, 35000, 50000, 75000, 100000, 175000, 250000, 325000, 400000, 500000, 650000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000 ]
+  large_60:
+    thresholds: [ 60, 100, 160, 400, 700, 1400, 3000, 5000, 7000, 10000, 13000, 16000, 20000, 40000, 70000, 100000, 150000, 200000, 350000, 500000, 650000, 800000, 1000000, 1300000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000, 1600000 ]
+  large_90:
+    thresholds: [ 90, 150, 250, 600, 1000, 2000, 4000, 6000, 9000, 12000, 15000, 18000, 22000, 44000, 77000, 110000, 165000, 220000, 385000, 550000, 715000, 880000, 1100000, 1430000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000, 2400000 ]
+  large_100:
+    thresholds: [ 100, 150, 250, 500, 1000, 2000, 4000, 6000, 9000, 12000, 15000, 18000, 22000, 44000, 77000, 110000, 165000, 220000, 385000, 550000, 715000, 880000, 1100000, 1430000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000, 1760000 ]
+  large_150:
+    thresholds: [ 150, 250, 400, 1000, 1750, 3500, 7500, 12500, 17500, 25000, 32500, 40000, 50000, 100000, 175000, 250000, 375000, 500000, 875000, 1250000, 1625000, 2000000, 2500000, 3250000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 4000000 ]
+
+crop_milestones:
+  - id: WHEAT
+    display_name: Wheat
+    icon: WHEAT
+    group: small_30
+  - id: CARROT
+    display_name: Carrot
+    icon: CARROT
+    group: large_100
+  - id: POTATO
+    display_name: Potato
+    icon: POTATO
+    group: large_100
+  - id: PUMPKIN
+    display_name: Pumpkin
+    icon: PUMPKIN
+    group: small_30
+  - id: SUGAR_CANE
+    display_name: Sugar Cane
+    icon: SUGAR_CANE
+    group: large_60
+  - id: MELON_SLICE
+    display_name: Melon Slice
+    icon: MELON_SLICE
+    group: large_150
+  - id: CACTUS
+    display_name: Cactus
+    icon: CACTUS
+    group: large_60
+  - id: COCOA_BEANS
+    display_name: Cocoa Beans
+    icon: COCOA_BEANS
+    group: large_90
+  - id: MUSHROOM
+    display_name: Mushroom
+    icon: RED_MUSHROOM
+    group: small_30
+  - id: NETHER_WART
+    display_name: Nether Wart
+    icon: NETHER_WART
+    group: large_90
+  - id: MOONFLOWER
+    display_name: Moonflower
+    icon: MOONFLOWER
+    group: small_30
+  - id: SUNFLOWER
+    display_name: Sunflower
+    icon: SUNFLOWER
+    group: small_30
+  - id: WILD_ROSE
+    display_name: Wild Rose
+    icon: WILD_ROSE
+    group: large_60
+
+crop_reward_tiers:
+  - { tier: 1, amount: 1, farming_xp: 100, garden_xp: 10, skyblock_xp: 1 }
+  - { tier: 2, amount: 1, farming_xp: 250, garden_xp: 20, skyblock_xp: 1 }
+  - { tier: 3, amount: 1, farming_xp: 500, garden_xp: 30, skyblock_xp: 1 }
+  - { tier: 4, amount: 1, farming_xp: 1000, garden_xp: 40, skyblock_xp: 1 }
+  - { tier: 5, amount: 1, farming_xp: 2500, garden_xp: 50, skyblock_xp: 1 }
+  - { tier: 6, amount: 1, farming_xp: 5000, garden_xp: 60, skyblock_xp: 1 }
+  - { tier: 7, amount: 1, farming_xp: 10000, garden_xp: 70, skyblock_xp: 1 }
+  - { tier: 8, amount: 1, farming_xp: 15000, garden_xp: 80, skyblock_xp: 1 }
+  - { tier: 9, amount: 1, farming_xp: 20000, garden_xp: 90, skyblock_xp: 1 }
+  - { tier: 10, amount: 1, farming_xp: 30000, garden_xp: 100, skyblock_xp: 1 }
+  - { tier: 11, amount: 1, farming_xp: 35000, garden_xp: 110, skyblock_xp: 1 }
+  - { tier: 12, amount: 1, farming_xp: 40000, garden_xp: 120, skyblock_xp: 1 }
+  - { tier: 13, amount: 1, farming_xp: 45000, garden_xp: 130, skyblock_xp: 1 }
+  - { tier: 14, amount: 1, farming_xp: 50000, garden_xp: 140, skyblock_xp: 1 }
+  - { tier: 15, amount: 1, farming_xp: 50000, garden_xp: 150, skyblock_xp: 1 }
+  - { tier: 16, amount: 1, farming_xp: 50000, garden_xp: 160, skyblock_xp: 1 }
+  - { tier: 17, amount: 1, farming_xp: 50000, garden_xp: 170, skyblock_xp: 1 }
+  - { tier: 18, amount: 1, farming_xp: 50000, garden_xp: 180, skyblock_xp: 1 }
+  - { tier: 19, amount: 1, farming_xp: 50000, garden_xp: 190, skyblock_xp: 1 }
+  - { tier: 20, amount: 1, farming_xp: 50000, garden_xp: 200, skyblock_xp: 1 }
+  - { tier: 21, amount: 1, farming_xp: 50000, garden_xp: 210, skyblock_xp: 1 }
+  - { tier: 22, amount: 1, farming_xp: 50000, garden_xp: 220, skyblock_xp: 1 }
+  - { tier: 23, amount: 1, farming_xp: 50000, garden_xp: 230, skyblock_xp: 1 }
+  - { tier: 24, amount: 1, farming_xp: 50000, garden_xp: 240, skyblock_xp: 1 }
+  - { tier: 25, amount: 1, farming_xp: 50000, garden_xp: 250, skyblock_xp: 1 }
+  - { tier: 26, amount: 1, farming_xp: 50000, garden_xp: 260, skyblock_xp: 1 }
+  - { tier: 27, amount: 1, farming_xp: 50000, garden_xp: 270, skyblock_xp: 1 }
+  - { tier: 28, amount: 1, farming_xp: 50000, garden_xp: 280, skyblock_xp: 1 }
+  - { tier: 29, amount: 1, farming_xp: 50000, garden_xp: 290, skyblock_xp: 1 }
+  - { tier: 30, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 31, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 32, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 33, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 34, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 35, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 36, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 37, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 38, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 39, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 40, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 41, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 42, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 43, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 44, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 45, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+  - { tier: 46, amount: 1, farming_xp: 50000, garden_xp: 300, skyblock_xp: 1 }
+
+visitor_tracks:
+  unique_served:
+    display_name: Unique Visitors Served
+    icon: BOOK
+    tiers:
+      - { tier: 1, amount: 1, farming_xp: 500, garden_xp: 30, skyblock_xp: 3 }
+      - { tier: 2, amount: 4, farming_xp: 1000, garden_xp: 60, skyblock_xp: 3 }
+      - { tier: 3, amount: 5, farming_xp: 2000, garden_xp: 90, skyblock_xp: 3 }
+      - { tier: 4, amount: 10, farming_xp: 3000, garden_xp: 120, skyblock_xp: 3 }
+      - { tier: 5, amount: 10, farming_xp: 4000, garden_xp: 150, skyblock_xp: 3 }
+      - { tier: 6, amount: 10, farming_xp: 5000, garden_xp: 180, skyblock_xp: 3 }
+      - { tier: 7, amount: 10, farming_xp: 6000, garden_xp: 210, skyblock_xp: 3 }
+      - { tier: 8, amount: 10, farming_xp: 7000, garden_xp: 240, skyblock_xp: 3 }
+      - { tier: 9, amount: 10, farming_xp: 8000, garden_xp: 270, skyblock_xp: 3 }
+      - { tier: 10, amount: 10, farming_xp: 9000, garden_xp: 300, skyblock_xp: 3 }
+      - { tier: 11, amount: 10, farming_xp: 10000, garden_xp: 330, skyblock_xp: 3 }
+      - { tier: 12, amount: 10, farming_xp: 10000, garden_xp: 360, skyblock_xp: 3 }
+      - { tier: 13, amount: 10, farming_xp: 12000, garden_xp: 390, skyblock_xp: 3 }
+      - { tier: 14, amount: 10, farming_xp: 14000, garden_xp: 420, skyblock_xp: 3 }
+      - { tier: 15, amount: 10, farming_xp: 16000, garden_xp: 450, skyblock_xp: 3 }
+      - { tier: 16, amount: 10, farming_xp: 18000, garden_xp: 480, skyblock_xp: 3 }
+      - { tier: 17, amount: 10, farming_xp: 20000, garden_xp: 510, skyblock_xp: 3 }
+      - { tier: 18, amount: 10, farming_xp: 22000, garden_xp: 540, skyblock_xp: 3 }
+      - { tier: 19, amount: 10, farming_xp: 24000, garden_xp: 570, skyblock_xp: 3 }
+      - { tier: 20, amount: 10, farming_xp: 26000, garden_xp: 600, skyblock_xp: 3 }
+      - { tier: 21, amount: 10, farming_xp: 28000, garden_xp: 630, skyblock_xp: 3 }
+      - { tier: 22, amount: 10, farming_xp: 30000, garden_xp: 660, skyblock_xp: 3 }
+      - { tier: 23, amount: 10, farming_xp: 32000, garden_xp: 690, skyblock_xp: 3 }
+      - { tier: 24, amount: 10, farming_xp: 34000, garden_xp: 720, skyblock_xp: 3 }
+      - { tier: 25, amount: 10, farming_xp: 36000, garden_xp: 750, skyblock_xp: 3 }
+      - { tier: 26, amount: 10, farming_xp: 38000, garden_xp: 780, skyblock_xp: 3 }
+      - { tier: 27, amount: 10, farming_xp: 40000, garden_xp: 810, skyblock_xp: 3 }
+      - { tier: 28, amount: 10, farming_xp: 42000, garden_xp: 840, skyblock_xp: 3 }
+      - { tier: 29, amount: 10, farming_xp: 44000, garden_xp: 870, skyblock_xp: 3 }
+      - { tier: 30, amount: 10, farming_xp: 46000, garden_xp: 900, skyblock_xp: 3 }
+      - { tier: 31, amount: 10, farming_xp: 48000, garden_xp: 930, skyblock_xp: 3 }
+      - { tier: 32, amount: 10, farming_xp: 50000, garden_xp: 960, skyblock_xp: 3 }
+  offers_accepted:
+    display_name: Offers Accepted
+    icon: WHEAT
+    tiers:
+      - { tier: 1, amount: 1, farming_xp: 500, garden_xp: 30, skyblock_xp: 3 }
+      - { tier: 2, amount: 4, farming_xp: 1000, garden_xp: 60, skyblock_xp: 3 }
+      - { tier: 3, amount: 5, farming_xp: 2000, garden_xp: 90, skyblock_xp: 3 }
+      - { tier: 4, amount: 10, farming_xp: 3000, garden_xp: 120, skyblock_xp: 3 }
+      - { tier: 5, amount: 10, farming_xp: 5000, garden_xp: 150, skyblock_xp: 3 }
+      - { tier: 6, amount: 20, farming_xp: 7500, garden_xp: 180, skyblock_xp: 3 }
+      - { tier: 7, amount: 25, farming_xp: 15000, garden_xp: 210, skyblock_xp: 3 }
+      - { tier: 8, amount: 75, farming_xp: 20000, garden_xp: 240, skyblock_xp: 3 }
+      - { tier: 9, amount: 100, farming_xp: 25000, garden_xp: 270, skyblock_xp: 3 }
+      - { tier: 10, amount: 150, farming_xp: 30000, garden_xp: 300, skyblock_xp: 3 }
+      - { tier: 11, amount: 250, farming_xp: 30000, garden_xp: 330, skyblock_xp: 3 }
+      - { tier: 12, amount: 350, farming_xp: 30000, garden_xp: 360, skyblock_xp: 3 }
+      - { tier: 13, amount: 500, farming_xp: 30000, garden_xp: 390, skyblock_xp: 3 }
+      - { tier: 14, amount: 500, farming_xp: 30000, garden_xp: 420, skyblock_xp: 3 }
+      - { tier: 15, amount: 500, farming_xp: 30000, garden_xp: 450, skyblock_xp: 3 }
+      - { tier: 16, amount: 500, farming_xp: 30000, garden_xp: 480, skyblock_xp: 3 }
+      - { tier: 17, amount: 500, farming_xp: 30000, garden_xp: 510, skyblock_xp: 3 }
+      - { tier: 18, amount: 500, farming_xp: 30000, garden_xp: 540, skyblock_xp: 3 }
+      - { tier: 19, amount: 500, farming_xp: 30000, garden_xp: 570, skyblock_xp: 3 }
+      - { tier: 20, amount: 500, farming_xp: 30000, garden_xp: 600, skyblock_xp: 3 }
+      - { tier: 21, amount: 500, farming_xp: 30000, garden_xp: 630, skyblock_xp: 3 }
+      - { tier: 22, amount: 500, farming_xp: 30000, garden_xp: 660, skyblock_xp: 3 }
+      - { tier: 23, amount: 500, farming_xp: 30000, garden_xp: 690, skyblock_xp: 3 }
+      - { tier: 24, amount: 500, farming_xp: 30000, garden_xp: 720, skyblock_xp: 3 }
+      - { tier: 25, amount: 500, farming_xp: 30000, garden_xp: 750, skyblock_xp: 3 }
+      - { tier: 26, amount: 500, farming_xp: 30000, garden_xp: 780, skyblock_xp: 3 }
+      - { tier: 27, amount: 500, farming_xp: 30000, garden_xp: 810, skyblock_xp: 3 }
+      - { tier: 28, amount: 500, farming_xp: 30000, garden_xp: 840, skyblock_xp: 3 }
+      - { tier: 29, amount: 500, farming_xp: 30000, garden_xp: 870, skyblock_xp: 3 }
+      - { tier: 30, amount: 500, farming_xp: 30000, garden_xp: 900, skyblock_xp: 3 }

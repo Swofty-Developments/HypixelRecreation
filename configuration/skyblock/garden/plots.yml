@@ -1,0 +1,253 @@
+world:
+  plot_size: 96
+  min_x: -240
+  max_x: 239
+  min_z: -240
+  max_z: 239
+  central_plot_id: central
+  default_plot:
+    min_x: -48
+    max_x: 47
+    min_z: -48
+    max_z: 47
+  barn_swap_region:
+    min_x: -33
+    max_x: 35
+    min_z: -47
+    max_z: -5
+plot_bonuses:
+  farming_fortune: 3
+  skyblock_xp: 5
+cleaning:
+  leaf_decay_threshold_percent: 70
+  counted_blocks:
+    - DIRT
+    - GRASS_BLOCK
+    - STONE
+    - SHORT_GRASS
+    - TALL_GRASS
+    - FERN
+    - LARGE_FERN
+    - OAK_LOG
+    - SPRUCE_LOG
+    - BIRCH_LOG
+    - JUNGLE_LOG
+    - ACACIA_LOG
+    - DARK_OAK_LOG
+    - MANGROVE_LOG
+    - CHERRY_LOG
+    - AZALEA_LEAVES
+    - FLOWERING_AZALEA_LEAVES
+    - OAK_LEAVES
+    - SPRUCE_LEAVES
+    - BIRCH_LEAVES
+    - JUNGLE_LEAVES
+    - ACACIA_LEAVES
+    - DARK_OAK_LEAVES
+    - MANGROVE_LEAVES
+unlock_requirements:
+  group_level_requirements:
+    A: 1
+    B: 3
+    C: 5
+    D: 7
+  cost_curve:
+    - unlock_index: 1
+      item: COMPOST
+      amount: 1
+    - unlock_index: 2
+      item: COMPOST
+      amount: 2
+    - unlock_index: 3
+      item: COMPOST
+      amount: 4
+    - unlock_index: 4
+      item: COMPOST
+      amount: 8
+    - unlock_index: 5
+      item: COMPOST
+      amount: 16
+    - unlock_index: 6
+      item: COMPOST
+      amount: 24
+    - unlock_index: 7
+      item: COMPOST
+      amount: 32
+    - unlock_index: 8
+      item: COMPOST
+      amount: 48
+    - unlock_index: 9
+      item: COMPOST
+      amount: 64
+    - unlock_index: 10
+      item: COMPOST
+      amount: 96
+    - unlock_index: 11
+      item: COMPOST
+      amount: 128
+    - unlock_index: 12
+      item: COMPOST_BUNDLE
+      amount: 1
+    - unlock_index: 13
+      item: COMPOST_BUNDLE
+      amount: 1
+    - unlock_index: 14
+      item: COMPOST_BUNDLE
+      amount: 2
+    - unlock_index: 15
+      item: COMPOST_BUNDLE
+      amount: 2
+    - unlock_index: 16
+      item: COMPOST_BUNDLE
+      amount: 3
+    - unlock_index: 17
+      item: COMPOST_BUNDLE
+      amount: 3
+    - unlock_index: 18
+      item: COMPOST_BUNDLE
+      amount: 4
+    - unlock_index: 19
+      item: COMPOST_BUNDLE
+      amount: 5
+    - unlock_index: 20
+      item: COMPOST_BUNDLE
+      amount: 7
+    - unlock_index: 21
+      item: COMPOST_BUNDLE
+      amount: 8
+    - unlock_index: 22
+      item: COMPOST_BUNDLE
+      amount: 10
+    - unlock_index: 23
+      item: COMPOST_BUNDLE
+      amount: 12
+    - unlock_index: 24
+      item: COMPOST_BUNDLE
+      amount: 15
+plots:
+  - id: central
+    display_name: Central Plot
+    group: A
+    garden_level: 0
+    default_unlocked: true
+    bounds: { min_x: -48, max_x: 47, min_z: -48, max_z: 47 }
+  - id: north
+    display_name: North Plot
+    group: A
+    garden_level: 1
+    bounds: { min_x: -48, max_x: 47, min_z: -144, max_z: -49 }
+  - id: south
+    display_name: South Plot
+    group: A
+    garden_level: 1
+    bounds: { min_x: -48, max_x: 47, min_z: 48, max_z: 143 }
+  - id: west
+    display_name: West Plot
+    group: A
+    garden_level: 1
+    bounds: { min_x: -144, max_x: -49, min_z: -48, max_z: 47 }
+  - id: east
+    display_name: East Plot
+    group: A
+    garden_level: 1
+    bounds: { min_x: 48, max_x: 143, min_z: -48, max_z: 47 }
+  - id: north_west
+    display_name: North West Plot
+    group: B
+    garden_level: 3
+    bounds: { min_x: -144, max_x: -49, min_z: -144, max_z: -49 }
+  - id: north_east
+    display_name: North East Plot
+    group: B
+    garden_level: 3
+    bounds: { min_x: 48, max_x: 143, min_z: -144, max_z: -49 }
+  - id: south_west
+    display_name: South West Plot
+    group: B
+    garden_level: 3
+    bounds: { min_x: -144, max_x: -49, min_z: 48, max_z: 143 }
+  - id: south_east
+    display_name: South East Plot
+    group: B
+    garden_level: 3
+    bounds: { min_x: 48, max_x: 143, min_z: 48, max_z: 143 }
+  - id: north_far
+    display_name: Far North Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: -48, max_x: 47, min_z: -240, max_z: -145 }
+  - id: south_far
+    display_name: Far South Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: -48, max_x: 47, min_z: 144, max_z: 239 }
+  - id: west_far
+    display_name: Far West Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: -240, max_x: -145, min_z: -48, max_z: 47 }
+  - id: east_far
+    display_name: Far East Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: 144, max_x: 239, min_z: -48, max_z: 47 }
+  - id: north_outer_west
+    display_name: North Outer West Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: -144, max_x: -49, min_z: -240, max_z: -145 }
+  - id: north_outer_east
+    display_name: North Outer East Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: 48, max_x: 143, min_z: -240, max_z: -145 }
+  - id: south_outer_west
+    display_name: South Outer West Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: -144, max_x: -49, min_z: 144, max_z: 239 }
+  - id: south_outer_east
+    display_name: South Outer East Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: 48, max_x: 143, min_z: 144, max_z: 239 }
+  - id: west_outer_north
+    display_name: West Outer North Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: -240, max_x: -145, min_z: -144, max_z: -49 }
+  - id: west_outer_south
+    display_name: West Outer South Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: -240, max_x: -145, min_z: 48, max_z: 143 }
+  - id: east_outer_north
+    display_name: East Outer North Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: 144, max_x: 239, min_z: -144, max_z: -49 }
+  - id: east_outer_south
+    display_name: East Outer South Plot
+    group: C
+    garden_level: 5
+    bounds: { min_x: 144, max_x: 239, min_z: 48, max_z: 143 }
+  - id: north_west_far
+    display_name: Far North West Plot
+    group: D
+    garden_level: 7
+    bounds: { min_x: -240, max_x: -145, min_z: -240, max_z: -145 }
+  - id: north_east_far
+    display_name: Far North East Plot
+    group: D
+    garden_level: 7
+    bounds: { min_x: 144, max_x: 239, min_z: -240, max_z: -145 }
+  - id: south_west_far
+    display_name: Far South West Plot
+    group: D
+    garden_level: 7
+    bounds: { min_x: -240, max_x: -145, min_z: 144, max_z: 239 }
+  - id: south_east_far
+    display_name: Far South East Plot
+    group: D
+    garden_level: 7
+    bounds: { min_x: 144, max_x: 239, min_z: 144, max_z: 239 }

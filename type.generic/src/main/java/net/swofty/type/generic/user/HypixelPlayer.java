@@ -47,6 +47,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -106,6 +107,14 @@ public class HypixelPlayer extends Player {
 
 	public HypixelDataHandler getDataHandler() {
 		return HypixelDataHandler.getUser(this.getUuid());
+	}
+
+	public Optional<HypixelDataHandler> getOptionalDataHandler() {
+		try {
+			return Optional.of(getDataHandler());
+		} catch (RuntimeException e) {
+			return Optional.empty();
+		}
 	}
 
 	public Rank getRank() {
