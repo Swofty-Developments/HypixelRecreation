@@ -18,8 +18,8 @@ import java.util.function.Function;
 @Getter
 public abstract class SkyBlockRecipe<T> {
     protected SkyBlockItem result;
-    @Setter
     protected Function<SkyBlockPlayer, CraftingResult> canCraft;
+    private CraftingRequirements craftingRequirements = CraftingRequirements.none();
     @Setter
     protected int amount = 1;
     @Getter
@@ -30,6 +30,31 @@ public abstract class SkyBlockRecipe<T> {
         this.recipeType = recipeType;
         this.canCraft = canCraft;
         this.amount = result.getAmount();
+    }
+
+    public Function<SkyBlockPlayer, CraftingResult> getCanCraft() {
+        return this::evaluateCanCraft;
+    }
+
+    public void setCanCraft(Function<SkyBlockPlayer, CraftingResult> canCraft) {
+        this.canCraft = canCraft;
+    }
+
+    public void setCraftingRequirements(CraftingRequirements craftingRequirements) {
+        this.craftingRequirements = craftingRequirements == null
+                ? CraftingRequirements.none()
+                : craftingRequirements;
+    }
+
+    private CraftingResult evaluateCanCraft(SkyBlockPlayer player) {
+        CraftingResult baseResult = canCraft == null
+                ? new CraftingResult(true, null)
+                : canCraft.apply(player);
+        if (baseResult == null || !baseResult.allowed()) {
+            return baseResult == null ? new CraftingResult(true, null) : baseResult;
+        }
+
+        return craftingRequirements.evaluate(player);
     }
 
     public abstract T setResult(SkyBlockItem result);

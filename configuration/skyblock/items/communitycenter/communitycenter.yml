@@ -109,15 +109,3 @@ items:
       - id: SKULL_HEAD
         texture: 2c915db3fc40a79b63c2c453f0c490981e5227c5027501283272138533dea519
       - id: NOT_FINISHED_YET
-  - id: PURE_BLACK_DYE
-    material: ink_sac
-    name: "Pure Black Dye"
-    rarity: COMMON
-    components:
-      - id: NOT_FINISHED_YET
-  - id: PURE_WHITE_DYE
-    material: bone_meal
-    name: "Pure White Dye"
-    rarity: COMMON
-    components:
-      - id: NOT_FINISHED_YET

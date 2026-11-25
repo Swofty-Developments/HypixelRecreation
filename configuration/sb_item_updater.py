@@ -22,6 +22,8 @@ GENERATED_FILE = GENERATED_DIR / "hypixel_api_items.yml"
 MATERIAL_ALIASES = {
     "SKULL_ITEM": "PLAYER_HEAD",
     "INK_SACK": "INK_SAC",
+    "EXP_BOTTLE": "EXPERIENCE_BOTTLE",
+    "RAW_FISH": "COD",
     "GOLD_AXE": "GOLDEN_AXE",
     "GOLD_BOOTS": "GOLDEN_BOOTS",
     "GOLD_CHESTPLATE": "GOLDEN_CHESTPLATE",
@@ -39,6 +41,13 @@ MATERIAL_ALIASES = {
     "WOOD_HOE": "WOODEN_HOE",
     "WOOD_PICKAXE": "WOODEN_PICKAXE",
     "WOOD_SWORD": "WOODEN_SWORD",
+}
+
+# The public item resource reports EXPERIMENT_THE_FISH as RAW_FISH, but the
+# SkyBlock item is rendered as a pufferfish. Keep the legacy RAW_FISH alias
+# useful for other API entries and override only this item.
+ITEM_MATERIAL_OVERRIDES = {
+    "EXPERIMENT_THE_FISH": "PUFFERFISH",
 }
 
 STAT_ALIASES = {
@@ -115,7 +124,14 @@ def main() -> int:
         update_attribute_shards(root, args.neu_items, args.apply, args.interactive, args.yes)
         return 0
 
-    known = load_known_item_locations(root / ITEMS_ROOT)
+    known = load_known_item_locations(root / ITEMS_ROOT, root)
+    if args.ids:
+        selected_ids = {item_id.upper() for item_id in args.ids}
+        known = {item_id: location for item_id, location in known.items() if item_id in selected_ids}
+        api_data = ApiData(
+            last_updated=api_data.last_updated,
+            items=[item for item in api_data.items if item.get("id", "").upper() in selected_ids],
+        )
     if args.command == "update-sell-prices":
         update_known_items(
             root=root,
@@ -179,6 +195,7 @@ def add_write_flags(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--apply", action="store_true", help="Write accepted changes. Without this, only diffs are shown.")
     parser.add_argument("--interactive", action="store_true", help="Prompt for each changed file.")
     parser.add_argument("--yes", action="store_true", help="Accept all changed files without prompting.")
+    parser.add_argument("--ids", nargs="+", help="Only update these known item ids.")
 
 
 def load_api_data(args: argparse.Namespace) -> ApiData:
@@ -266,7 +283,7 @@ def translate_api_item(api_item: dict[str, Any]) -> dict[str, Any] | None:
 
     translated: dict[str, Any] = {
         "id": item_id,
-        "material": normalize_material(api_item.get("material")),
+        "material": normalize_material_for_item(item_id, api_item.get("material")),
     }
     if isinstance(api_item.get("tier"), str):
         translated["rarity"] = api_item["tier"]
@@ -295,6 +312,10 @@ def normalize_material(material: Any) -> str:
         return "BARRIER"
     normalized = MATERIAL_ALIASES.get(material.upper(), material.upper())
     return normalized
+
+
+def normalize_material_for_item(item_id: str, material: Any) -> str:
+    return ITEM_MATERIAL_OVERRIDES.get(item_id.upper(), normalize_material(material))
 
 
 def translate_lore(description: Any) -> list[str]:
@@ -378,13 +399,14 @@ def extract_texture_hash(skin: Any) -> str | None:
     return url.rstrip("/").split("/")[-1]
 
 
-def load_known_item_locations(items_root: Path) -> dict[str, tuple[Path, int]]:
+def load_known_item_locations(items_root: Path, relative_to: Path | None = None) -> dict[str, tuple[Path, int]]:
     locations: dict[str, tuple[Path, int]] = {}
     for path in sorted(items_root.rglob("*.yml")) + sorted(items_root.rglob("*.yaml")):
         data = load_yaml_file(path)
         for index, item in enumerate(data.get("items") or []):
             if isinstance(item, dict) and isinstance(item.get("id"), str):
-                locations[item["id"]] = (path, index)
+                stored_path = path.relative_to(relative_to) if relative_to is not None else path
+                locations[item["id"]] = (stored_path, index)
     return locations
 
 
@@ -407,7 +429,7 @@ def update_known_items(
         if not isinstance(item_id, str) or item_id not in known_locations:
             continue
         path, index = known_locations[item_id]
-        data = files.setdefault(path, load_yaml_file(path))
+        data = files.setdefault(path, load_yaml_file(root / path))
         items = data.get("items") or []
         if index >= len(items) or not isinstance(items[index], dict):
             continue
@@ -438,7 +460,7 @@ def update_sellable_component(item: dict[str, Any], api_item: dict[str, Any]) ->
 
 def update_known_metadata(item: dict[str, Any], api_item: dict[str, Any]) -> bool:
     changed = False
-    material = normalize_material(api_item.get("material"))
+    material = normalize_material_for_item(str(api_item.get("id", "")), api_item.get("material"))
     if item.get("material") != material:
         item["material"] = material
         changed = True
@@ -468,14 +490,6 @@ def update_known_metadata(item: dict[str, Any], api_item: dict[str, Any]) -> boo
         elif model.get("item_model") != item_model:
             model["item_model"] = item_model
             changed = True
-    else:
-        components = item.get("components")
-        if isinstance(components, list):
-            without_models = [component for component in components
-                              if not isinstance(component, dict) or component.get("id") != "ITEM_MODEL"]
-            if len(without_models) != len(components):
-                item["components"] = without_models
-                changed = True
 
     return changed
 

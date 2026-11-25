@@ -21,4 +21,5 @@ public class IslandCommand extends HypixelCommand {
             player.sendTo(ServerType.SKYBLOCK_ISLAND);
         });
     }
+
 }

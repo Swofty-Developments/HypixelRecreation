@@ -1,6 +1,7 @@
 package net.swofty.type.skyblockgeneric.entity.mob.mobs.hub;
 
 import lombok.NonNull;
+import net.kyori.adventure.key.Key;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
@@ -16,6 +17,7 @@ import net.swofty.type.skyblockgeneric.entity.mob.ai.ClosestEntityRegionTarget;
 import net.swofty.type.skyblockgeneric.entity.mob.ai.MeleeAttackWithinRegionGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.ai.RandomRegionStrollGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.impl.RegionPopulator;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.region.RegionType;
@@ -75,11 +77,11 @@ public class MobRuinsOldWolf extends BestiaryMob implements RegionPopulator {
 
     @Override
     public @Nullable SkyBlockLootTable getLootTable() {
-        return new SkyBlockLootTable() {
+        return new SkyBlockLootTable(Key.key("skyblock", "mob/ruins_old_wolf")) {
             @Override
             public @NonNull List<LootRecord> getLootTable() {
                 return List.of(
-                        new LootRecord(ItemType.BONE, makeAmountBetween(1, 3), 20)
+                        new LootRecord(ItemType.BONE, makeAmountBetween(1, 3), 20, BestiaryDropRarity.UNCOMMON)
                 );
             }
 

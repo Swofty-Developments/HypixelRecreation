@@ -1,0 +1,353 @@
+items:
+  - id: BONE_DYE
+    material: WHITE_DYE
+    rarity: LEGENDARY
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<f>Bone Dye'
+      - id: ARMOR_DYE
+        from_color: '#E3DAC9'
+        display_color: '<f>'
+
+  - id: CYCLAMEN_DYE
+    material: PINK_DYE
+    rarity: LEGENDARY
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<c>Cyclamen Dye'
+      - id: ARMOR_DYE
+        from_color: '#F56FA1'
+        display_color: '<c>'
+
+  - id: DARK_PURPLE_DYE
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<5>Dark Purple Dye'
+      - id: SKULL_HEAD
+        texture: e6182adee5276372c2258256d50e69b7d857c675f54765acf73af61690a62c7e
+      - id: ARMOR_DYE
+        from_color: '#301934'
+        display_color: '<5>'
+
+  - id: NADESHIKO_DYE
+    material: PINK_DYE
+    rarity: LEGENDARY
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<d>Nadeshiko Dye'
+      - id: ARMOR_DYE
+        from_color: '#F6ADC6'
+        display_color: '<d>'
+
+  - id: PEARLESCENT_DYE
+    material: CYAN_DYE
+    rarity: LEGENDARY
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<2>Pearlescent Dye'
+      - id: ARMOR_DYE
+        from_color: '#115555'
+        display_color: '<2>'
+
+  - id: PURE_BLACK_DYE
+    material: INK_SAC
+    rarity: EPIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<8>Pure Black Dye'
+      - id: ARMOR_DYE
+        from_color: '#000000'
+        display_color: '<8>'
+
+  - id: PURE_WHITE_DYE
+    material: BONE_MEAL
+    rarity: EPIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<f>Pure White Dye'
+      - id: ARMOR_DYE
+        from_color: '#FFFFFF'
+        display_color: '<f>'
+
+  - id: AURORA_DYE
+    material: CYAN_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<3>Aurora Dye'
+      - id: ARMOR_DYE
+        from_color: '#048F95'
+        to_color: '#088D97'
+        display_color: '<3>'
+
+  - id: BEACH_DYE
+    material: CYAN_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<b>Beach Dye'
+      - id: ARMOR_DYE
+        from_color: '#43ECC6'
+        to_color: '#57ECC7'
+        display_color: '<b>'
+
+  - id: BLACK_ICE_DYE
+    material: BLACK_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<8>Black Ice Dye'
+      - id: ARMOR_DYE
+        from_color: '#0B2031'
+        to_color: '#091B2C'
+        display_color: '<8>'
+
+  - id: BLACK_OPAL_DYE
+    material: BLUE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<8>Black Opal Dye'
+      - id: ARMOR_DYE
+        from_color: '#0B1C5D'
+        to_color: '#0E1B5C'
+        display_color: '<8>'
+        special_particle_effect: true
+
+  - id: CHARCOAL_DYE
+    material: BLACK_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<8>Charcoal Dye'
+      - id: ARMOR_DYE
+        from_color: '#21262A'
+        to_color: '#202429'
+        display_color: '<8>'
+        special_particle_effect: true
+
+  - id: DUSK_DYE
+    material: PURPLE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<5>Dusk Dye'
+      - id: ARMOR_DYE
+        from_color: '#4F238A'
+        to_color: '#524594'
+        display_color: '<5>'
+
+  - id: FOREST_DYE
+    material: BLUE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<2>Forest Dye'
+      - id: ARMOR_DYE
+        from_color: '#1D3451'
+        to_color: '#1E3953'
+        display_color: '<2>'
+
+  - id: FROG_DYE
+    material: LIME_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<a>Frog Dye'
+      - id: ARMOR_DYE
+        from_color: '#64D400'
+        to_color: '#65D400'
+        display_color: '<a>'
+
+  - id: HELLEBORE_DYE
+    material: MAGENTA_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<c>Hellebore Dye'
+      - id: ARMOR_DYE
+        from_color: '#E20F99'
+        to_color: '#E3179D'
+        display_color: '<c>'
+
+  - id: JERRY_DYE
+    material: LIME_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<a>Jerry Dye'
+      - id: ARMOR_DYE
+        from_color: '#65F753'
+        to_color: '#715854'
+        display_color: '<a>'
+        special_particle_effect: true
+
+  - id: KINGFISHER_DYE
+    material: CYAN_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<c>Kingfisher Dye'
+      - id: ARMOR_DYE
+        from_color: '#004C57'
+        to_color: '#014F59'
+        display_color: '<c>'
+        special_particle_effect: true
+
+  - id: LAVA_DYE
+    material: ORANGE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<c>Lava Dye'
+      - id: ARMOR_DYE
+        from_color: '#CA3B00'
+        to_color: '#C63900'
+        display_color: '<c>'
+
+  - id: LUCKY_DYE
+    material: LIME_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<a>Lucky Dye'
+      - id: ARMOR_DYE
+        from_color: '#87FF37'
+        to_color: '#006944'
+        display_color: '<a>'
+
+  - id: MARINE_DYE
+    material: BLUE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<9>Marine Dye'
+      - id: ARMOR_DYE
+        from_color: '#162875'
+        to_color: '#162876'
+        display_color: '<9>'
+
+  - id: OASIS_DYE
+    material: LIME_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<b>Oasis Dye'
+      - id: ARMOR_DYE
+        from_color: '#BAFF81'
+        to_color: '#B7FF84'
+        display_color: '<b>'
+
+  - id: OCEAN_DYE
+    material: BLUE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<b>Ocean Dye'
+      - id: ARMOR_DYE
+        from_color: '#064DC3'
+        to_color: '#0554C9'
+        display_color: '<b>'
+
+  - id: PASTEL_SKY_DYE
+    material: MAGENTA_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<d>Pastel Sky Dye'
+      - id: ARMOR_DYE
+        from_color: '#FB87FF'
+        to_color: '#ED77FF'
+        display_color: '<d>'
+
+  - id: PORTAL_DYE
+    material: PURPLE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<5>Portal Dye'
+      - id: ARMOR_DYE
+        from_color: '#5909C1'
+        to_color: '#D412F0'
+        display_color: '<5>'
+        special_particle_effect: true
+
+  - id: RED_TULIP_DYE
+    material: RED_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<c>Red Tulip Dye'
+      - id: ARMOR_DYE
+        from_color: '#8C0014'
+        to_color: '#8B0015'
+        display_color: '<c>'
+
+  - id: ROSE_DYE
+    material: PINK_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<c>Rose Dye'
+      - id: ARMOR_DYE
+        from_color: '#F06766'
+        to_color: '#310417'
+        display_color: '<c>'
+
+  - id: SNOWFLAKE_DYE
+    material: LIGHT_BLUE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<f>Snowflake Dye'
+      - id: ARMOR_DYE
+        from_color: '#ACE5FF'
+        to_color: '#B2EAFE'
+        display_color: '<f>'
+
+  - id: SPOOKY_DYE
+    material: PURPLE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<8>Spooky Dye'
+      - id: ARMOR_DYE
+        from_color: '#5118A5'
+        to_color: '#5219A8'
+        display_color: '<8>'
+        special_particle_effect: true
+
+  - id: SUNFLOWER_DYE
+    material: YELLOW_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<c>Sunflower Dye'
+      - id: ARMOR_DYE
+        from_color: '#FFE507'
+        to_color: '#FFE107'
+        display_color: '<c>'
+
+  - id: SUNSET_DYE
+    material: ORANGE_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<d>Sunset Dye'
+      - id: ARMOR_DYE
+        from_color: '#FFCC00'
+        to_color: '#FFC910'
+        display_color: '<d>'
+
+  - id: WARDEN_DYE
+    material: CYAN_DYE
+    rarity: MYTHIC
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: '<9>Warden Dye'
+      - id: ARMOR_DYE
+        from_color: '#034150'
+        to_color: '#009295'
+        display_color: '<9>'

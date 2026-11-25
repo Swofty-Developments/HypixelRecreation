@@ -1,6 +1,7 @@
 package net.swofty.type.skyblockgeneric.entity.mob.mobs.hub;
 
 import lombok.NonNull;
+import net.kyori.adventure.key.Key;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
@@ -17,6 +18,7 @@ import net.swofty.type.skyblockgeneric.entity.mob.ai.ClosestEntityRegionTarget;
 import net.swofty.type.skyblockgeneric.entity.mob.ai.MeleeAttackWithinRegionGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.ai.RandomRegionStrollGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.impl.RegionPopulator;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.region.RegionType;
@@ -70,17 +72,21 @@ public class MobGraveyardZombie extends BestiaryMob implements RegionPopulator {
     public ItemStatistics getBaseStatistics() {
         return ItemStatistics.builder()
                 .withBase(ItemStatistic.HEALTH, 100D)
-                .withBase(ItemStatistic.DAMAGE, 5D)
+                .withBase(ItemStatistic.DAMAGE, 20D)
                 .withBase(ItemStatistic.SPEED, 100D)
                 .build();
     }
 
     @Override
     public @Nullable SkyBlockLootTable getLootTable() {
-        return new SkyBlockLootTable() {
+        return new SkyBlockLootTable(Key.key("skyblock", "mob/graveyard_zombie")) {
             @Override
             public @NonNull List<LootRecord> getLootTable() {
-                return List.of(new LootRecord(ItemType.ROTTEN_FLESH, makeAmountBetween(1, 3), 20));
+                return List.of(
+                        new LootRecord(ItemType.ROTTEN_FLESH, 1, 100, BestiaryDropRarity.COMMON),
+                        new LootRecord(ItemType.POISONOUS_POTATO, 1, 2, BestiaryDropRarity.UNCOMMON),
+                        new LootRecord(ItemType.CARROT, 1, 1, BestiaryDropRarity.UNCOMMON),
+                        new LootRecord(ItemType.POTATO, 1, 1, BestiaryDropRarity.UNCOMMON));
             }
 
             @Override

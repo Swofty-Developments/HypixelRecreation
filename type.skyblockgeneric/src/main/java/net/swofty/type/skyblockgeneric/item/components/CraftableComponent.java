@@ -6,7 +6,6 @@ import lombok.Setter;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItemComponent;
 import net.swofty.type.skyblockgeneric.item.crafting.SkyBlockRecipe;
 import net.swofty.type.skyblockgeneric.utility.RecipeParser;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +24,17 @@ public class CraftableComponent extends SkyBlockItemComponent {
             try {
                 parsedRecipes.add(RecipeParser.parseRecipe(config));
             } catch (Exception e) {
-                Logger.error("Failed to parse recipe " + config.get("result"));
+                throw new IllegalArgumentException("Failed to parse craftable recipe " + config.get("result"), e);
             }
         }
         this.recipes = parsedRecipes;
         this.defaultCraftable = true;
+    }
+
+    public static CraftableComponent fromConfig(List<Map<String, Object>> recipeConfigs, boolean defaultCraftable) {
+        CraftableComponent component = new CraftableComponent(recipeConfigs);
+        component.setDefaultCraftable(defaultCraftable);
+        return component;
     }
 
     public CraftableComponent(boolean defaultCraftable, SkyBlockRecipe<?>... recipes) {

@@ -31,42 +31,43 @@ public class PlayerActionDamagedAttacked implements HypixelEventClass {
         SkyBlockPlayer player = (SkyBlockPlayer) event.getTarget();
 
         if (event.getEntity() instanceof SkyBlockMob mob) {
-            if (mob.getLastAttack() + mob.damageCooldown() > System.currentTimeMillis()) return;
-            mob.setLastAttack(System.currentTimeMillis());
-
-            ItemStatistics mobStatistics = mob.getStatistics();
-            ItemStatistics playerStatistics = player.getStatistics().allStatistics();
-
-            Map.Entry<Double, Boolean> damageDealt =
-                    PlayerStatistics.runPrimaryDamageFormula(mobStatistics, playerStatistics);
-
-            double baseDefense = playerStatistics.getOverall(ItemStatistic.DEFENSE);
-            double resistance = AttributeEffectService.resistanceDefense(player.getHuntingData(), mob);
-            double resistanceMultiplier = (100D + Math.max(0, baseDefense))
-                    / (100D + Math.max(0, baseDefense + resistance));
-            PlayerDamagedByMobValueUpdateEvent valueEvent = new PlayerDamagedByMobValueUpdateEvent(
-                    player, (float) (damageDealt.getKey() * resistanceMultiplier), mob);
-            SkyBlockValueEvent.callValueUpdateEvent(valueEvent);
-
-            // Handle damage event pets — they may further modify the damage taken
-            float finalDamage = (float) valueEvent.getValue();
-            SkyBlockItem pet = player.getPetData().getEnabledPet();
-            PetEvent.DamagedByMob damageEvent = player.getPetData()
-                    .dispatch(new PetEvent.DamagedByMob(player, pet, mob, finalDamage));
-            finalDamage = (float) damageEvent.damage();
-
-            player.damage(new EntityDamage(mob, finalDamage));
-
-            if (mob instanceof SlayerBossMob slayerBoss) {
-                slayerBoss.getAbility().onMeleeHit(slayerBoss, player);
-            }
-
-            new DamageIndicator()
-                    .damage(finalDamage)
-                    .pos(player.getPosition())
-                    .critical(damageDealt.getValue())
-                    .display(player.getInstance());
+            damagePlayer(mob, player, true);
         }
     }
 
+    public static void damagePlayer(SkyBlockMob mob, SkyBlockPlayer player, boolean melee) {
+        if (mob.getLastAttack() + mob.damageCooldown() > System.currentTimeMillis()) return;
+        mob.setLastAttack(System.currentTimeMillis());
+
+        ItemStatistics mobStatistics = mob.getStatistics();
+        ItemStatistics playerStatistics = player.getStatistics().allStatistics();
+
+        Map.Entry<Double, Boolean> damageDealt =
+                PlayerStatistics.runPrimaryDamageFormula(mobStatistics, playerStatistics);
+
+        double baseDefense = playerStatistics.getOverall(ItemStatistic.DEFENSE);
+        double resistance = AttributeEffectService.resistanceDefense(player.getHuntingData(), mob);
+        double resistanceMultiplier = (100D + Math.max(0, baseDefense))
+                / (100D + Math.max(0, baseDefense + resistance));
+        PlayerDamagedByMobValueUpdateEvent valueEvent = new PlayerDamagedByMobValueUpdateEvent(
+                player, (float) (damageDealt.getKey() * resistanceMultiplier), mob);
+        SkyBlockValueEvent.callValueUpdateEvent(valueEvent);
+
+        SkyBlockItem pet = player.getPetData().getEnabledPet();
+        PetEvent.DamagedByMob damageEvent = player.getPetData()
+                .dispatch(new PetEvent.DamagedByMob(player, pet, mob, (float) valueEvent.getValue()));
+        float finalDamage = (float) damageEvent.damage();
+
+        player.damage(new EntityDamage(mob, finalDamage));
+
+        if (melee && mob instanceof SlayerBossMob slayerBoss) {
+            slayerBoss.getAbility().onMeleeHit(slayerBoss, player);
+        }
+
+        new DamageIndicator()
+                .damage(finalDamage)
+                .pos(player.getPosition())
+                .critical(damageDealt.getValue())
+                .display(player.getInstance());
+    }
 }

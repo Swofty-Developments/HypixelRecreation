@@ -1,0 +1,426 @@
+items:
+  - id: GRAND_EXP_BOTTLE
+    material: EXPERIENCE_BOTTLE
+    rarity: UNCOMMON
+    lore:
+      - Smash it open to receive experience!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Grand Experience Bottle
+      - id: EXPERIENCE_BOTTLE
+        base_experience: 1500
+      - id: ITEM_MODEL
+        item_model: hypixel_skyblock:item/consumables/grand_experience_bottle
+      - id: SELLABLE
+        value: 480
+      - id: CRAFTABLE
+        recipes:
+          - type: SHAPED
+            recipe-type: NONE
+            pattern:
+              - LLL
+              - ' B '
+              - LLL
+            ingredients:
+              L:
+                type: ENCHANTED_LAPIS_LAZULI
+                amount: 1
+              B:
+                type: GLASS_BOTTLE
+                amount: 1
+            result:
+              type: GRAND_EXP_BOTTLE
+              amount: 1
+            requirements:
+              lapis_collection:
+                left: '%player.collection:LAPIS_LAZULI%'
+                operation: '>='
+                right: '10000'
+  - id: TITANIC_EXP_BOTTLE
+    material: EXPERIENCE_BOTTLE
+    rarity: RARE
+    lore:
+      - Smash it open to receive experience!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Titanic Experience Bottle
+      - id: EXPERIENCE_BOTTLE
+        base_experience: 250000
+      - id: ITEM_MODEL
+        item_model: hypixel_skyblock:item/consumables/titanic_experience_bottle
+      - id: SELLABLE
+        value: 5000
+      - id: CRAFTABLE
+        recipes:
+          - type: SHAPED
+            recipe-type: NONE
+            pattern:
+              - LLL
+              - ' B '
+              - LLL
+            ingredients:
+              L:
+                type: ENCHANTED_LAPIS_LAZULI_BLOCK
+                amount: 1
+              B:
+                type: GLASS_BOTTLE
+                amount: 1
+            result:
+              type: TITANIC_EXP_BOTTLE
+              amount: 1
+            requirements:
+              lapis_collection:
+                left: '%player.collection:LAPIS_LAZULI%'
+                operation: '>='
+                right: '100000'
+  - id: COLOSSAL_EXP_BOTTLE
+    material: EXPERIENCE_BOTTLE
+    rarity: EPIC
+    lore:
+      - Smash it open to receive experience!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Colossal Experience Bottle
+      - id: EXPERIENCE_BOTTLE
+        base_experience: 500000
+      - id: SELLABLE
+        value: 5000.0
+  - id: EXPERIMENT_THE_FISH
+    material: PUFFERFISH
+    rarity: SPECIAL
+    lore:
+      - Fish me once, shame on you. Fish me
+      - twice, shame on me.
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Experiment the Fish
+  - id: METAPHYSICAL_SERUM
+    material: PLAYER_HEAD
+    rarity: EPIC
+    lore:
+      - Drinking this serum shortens
+      - the chain required for <d>Superpairs
+      - add-on experiments by <a>1<7>!
+      - ''
+      - You may drink up to <a>3 <7>doses
+      - of the serum before the taste
+      - becomes <o>too abstract<7>.
+      - ''
+      - <e>Right-click to consume!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Metaphysical Serum
+      - id: EXTRA_UNDER_NAME
+        display: Consumable
+      - id: SKULL_HEAD
+        texture: 1dbf5e10d0837f20dd7ae691aa6b5c508e4ce11eb1c5aa7b0acc71a554fcbd81
+      - id: METAPHYSICAL_SERUM
+  - id: GUARDIAN_PET
+    material: PLAYER_HEAD
+    rarity: COMMON
+    components:
+      - id: PET
+        pet_name: Guardian
+        george_price:
+          common: 100
+          uncommon: 500
+          rare: 1000
+          epic: 100000
+          legendary: 250000
+          mythic: 500000
+          rest: 0
+        kat_upgrades:
+          common: null
+          uncommon:
+            time: 3600000
+            coins: 20000
+          rare:
+            time: 21600000
+            coins: 100000
+          epic:
+            time: 172800000
+            coins: 500000
+          legendary:
+            time: 432000000
+            coins: 3000000
+            item: ENCHANTED_PRISMARINE_SHARD
+            amount: 64
+          mythic:
+            time: 3600000
+            coins: 750000
+            item: GUARDIAN_LUCKY_BLOCK
+            amount: 1
+          rest: null
+        base_statistics: {}
+        per_level_statistics:
+          common:
+            defense: 0.5
+            intelligence: 1
+          uncommon:
+            defense: 0.5
+            intelligence: 1
+          rare:
+            defense: 0.5
+            intelligence: 1
+          epic:
+            defense: 0.5
+            intelligence: 1
+          legendary:
+            defense: 0.5
+            intelligence: 1
+          mythic:
+            defense: 0.5
+            intelligence: 1
+          rest: {}
+        particle: 3
+        skill_category: ENCHANTING
+        skull_texture: 221025434045bda7025b3e514b316a4b770c6faa4ba9adb4be3809526db77f9d
+        handler_id: GUARDIAN
+  - id: A_BEGINNERS_GUIDE_TO_PESTHUNTING
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to armor, increases its
+      - <9>Pesterminator <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Pesterminator V!
+      - ''
+      - <8><o>An old, well-used handbook detailing
+      - <8><o>how to wrangle various pest types.
+      - <8><o>Many of these pests don't seem to
+      - <8><o>exist anymore - looks like someone
+      - <8><o>did a good job!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: A Beginner's Guide to Pesthunting
+      - id: SKULL_HEAD
+        texture: 38a7c9e0c1dab89e14b788d96157ab0152136f8fd7a23d6db3eebe555d448ec3
+      - id: ANVIL_COMBINABLE
+        handler_id: A_BEGINNERS_GUIDE_TO_PESTHUNTING
+      - id: SELLABLE
+        value: 1000000.0
+      - id: TRACKED_UNIQUE
+  - id: SEVERED_PINCER
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to a fishing rod,
+      - increases its <9>Frail <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Frail VI!
+      - ''
+      - <8><o>Hopefully he doesn't want this back.
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Severed Pincer
+      - id: SKULL_HEAD
+        texture: 7e1e0701f1f9e974765e4f2a7c33a9458c598334401538dc9f21f5ed7e35f79a
+      - id: ANVIL_COMBINABLE
+        handler_id: SEVERED_PINCER
+      - id: SELLABLE
+        value: 1000000.0
+      - id: TRACKED_UNIQUE
+  - id: ENSNARED_SNAIL
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to to a sword,
+      - increases its <9>Bane of Arthropods
+      - <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Bane of Arthropods VI!
+      - ''
+      - <8><o>The remains of a snail, tightly
+      - <8><o>wrapped in webbing by a fiend of
+      - <8><o>Eldritch proportions. Maybe it will
+      - <8><o>have its revenge - in the next life.
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Ensnared Snail
+      - id: SKULL_HEAD
+        texture: 64532b7e0fbd976d559fbb218d9f4e53c9354f68b1f363c0482127092724274d
+      - id: ANVIL_COMBINABLE
+        handler_id: ENSNARED_SNAIL
+      - id: SELLABLE
+        value: 1000000.0
+      - id: TRACKED_UNIQUE
+  - id: GOLDEN_BOUNTY
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to a weapon, increases
+      - its <9>Scavenger <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Scavenger V!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Golden Bounty
+      - id: SKULL_HEAD
+        texture: 8e6e10a9ef1b2cdd998557554b209f369ada7bc50b47c81ed14ab2632dab3834
+      - id: ANVIL_COMBINABLE
+        handler_id: GOLDEN_BOUNTY
+      - id: TRACKED_UNIQUE
+  - id: SEVERED_HAND
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to a weapon, increases
+      - its <9>Smite <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Smite VI!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Severed Hand
+      - id: SKULL_HEAD
+        texture: 111ee65b56d50cd1ef81a7d33ae2421927592ccd92ad7c2ec4fb1aac29ba422f
+      - id: ANVIL_COMBINABLE
+        handler_id: SEVERED_HAND
+      - id: TRACKED_UNIQUE
+  - id: VIBRANT_CORAL
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to armor, increases its
+      - <9>Scuba <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Scuba V!
+      - ''
+      - <8><o>Coral flourishes under the immense
+      - <8><o>pressure of the Murkwater Loch. It
+      - <8><o>is believed to be the favorite food
+      - <8><o>of Nessie.
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Vibrant Coral
+      - id: SKULL_HEAD
+        texture: 453dd6c6add09c11ff19f5fe75370b6cec17324945cac05c0e2c4631ff418672
+      - id: ITEM_MODEL
+        item_model: minecraft:tube_coral
+      - id: ANVIL_COMBINABLE
+        handler_id: VIBRANT_CORAL
+      - id: SELLABLE
+        value: 1000000.0
+      - id: TRACKED_UNIQUE
+  - id: GOLD_BOTTLE_CAP
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to a fishing rod,
+      - increases its <9>Luck of the Sea <7>level
+      - by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Luck of the Sea VI!
+      - ''
+      - <8><o>One man's trash is, indeed, another
+      - <8><o>man's treasure.
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Gold Bottle Cap
+      - id: SKULL_HEAD
+        texture: 269698fd92fb14827af97e54a3f28f5e2685d7e94bd128c0c27f259df996717c
+      - id: ANVIL_COMBINABLE
+        handler_id: GOLD_BOTTLE_CAP
+      - id: SELLABLE
+        value: 1000000.0
+      - id: TRACKED_UNIQUE
+  - id: CHAIN_OF_THE_END_TIMES
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to a fishing rod,
+      - increases its <9>Charm <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Charm V!
+      - ''
+      - <8><o>Chains capable of reshaping the
+      - <8><o>very fiber of reality, should they be
+      - <8><o>left unchallenged. And you wish to
+      - <8><o>use them to...get rarer Trophy Fish?
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Chain of the End Times
+      - id: SKULL_HEAD
+        texture: 93d9bc6294ecb85d9c4af66136027faf67413f1dbabbe1b6dfee289083fc2049
+      - id: ANVIL_COMBINABLE
+        handler_id: CHAIN_OF_THE_END_TIMES
+      - id: SELLABLE
+        value: 1000000.0
+      - id: TRACKED_UNIQUE
+  - id: FATEFUL_STINGER
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to a weapon, increases
+      - its <9>Venomous <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Venomous VI!
+      - ''
+      - <8><o>The sting of the Manticore is fatal to
+      - <8><o>all but the Elephant.
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Fateful Stinger
+      - id: SKULL_HEAD
+        texture: 4e2c26ad88fdd10381284650770d9b59d3688a52868b3bcc7762f88a34303de8
+      - id: ANVIL_COMBINABLE
+        handler_id: FATEFUL_STINGER
+      - id: TRACKED_UNIQUE
+  - id: OCTOPUS_TENDRIL
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to a fishing rod,
+      - increases its <9>Spiked Hook <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Spiked Hook VI!
+      - ''
+      - <8><o>Sticks to the skin and is hard to pry
+      - <8><o>off.
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Octopus Tendril
+      - id: SKULL_HEAD
+        texture: 4bf58283ffca8bdc59436e83d94e9f134426316b99bab5b9af90dffdb082a056
+      - id: ANVIL_COMBINABLE
+        handler_id: OCTOPUS_TENDRIL
+      - id: SELLABLE
+        value: 1000000.0
+      - id: TRACKED_UNIQUE
+  - id: END_STONE_IDOL
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to a weapon, increases
+      - its <9>Ender Slayer <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Ender Slayer VI!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: End Stone Idol
+      - id: SKULL_HEAD
+        texture: c24d46459b70b9ad641506f97b8d93349d8705d0935ebbf16012fad3aca32cb4
+      - id: ANVIL_COMBINABLE
+        handler_id: END_STONE_IDOL
+      - id: TRACKED_UNIQUE
+  - id: TROUBLED_BUBBLE
+    material: PLAYER_HEAD
+    rarity: LEGENDARY
+    lore:
+      - When applied to a fishing rod,
+      - increases its <9>Piscary <7>level by <a>1<7>!
+      - <8>Can be applied once.
+      - <8>Requires Piscary VI!
+      - ''
+      - <8><o>Something is troubling this bubble,
+      - <8><o>perhaps the lingering threat of the
+      - <8><o>Wiki-Tiki.
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Troubled Bubble
+      - id: SKULL_HEAD
+        texture: bdfcc530ad4f645a201abc05912f194862611c33739a0826a8bb9ad0d9b98375
+      - id: ANVIL_COMBINABLE
+        handler_id: TROUBLED_BUBBLE
+      - id: SELLABLE
+        value: 1000000.0
+      - id: TRACKED_UNIQUE

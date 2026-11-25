@@ -1,20 +1,4 @@
 items:
-  - id: DARK_PURPLE_DYE
-    material: player_head
-    name: "Dark Purple Dye"
-    rarity: LEGENDARY
-    lore:
-      - "\xA77Can be applied to any vanilla Armor"
-      - "\xA77piece by combining the two items"
-      - "\xA77in an Anvil to change the hex"
-      - "\xA77color of that piece to \xA75#301934\xA77."
-      - ''
-      - "\xA77Costs \xA7b100 Bits \xA77to combine."
-    components:
-      - id: SKULL_HEAD
-        texture: e6182adee5276372c2258256d50e69b7d857c675f54765acf73af61690a62c7e
-      - id: ANVIL_COMBINABLE
-        handler_id: DARK_PURPLE_DYE
   - id: MIDAS_SWORD
     material: GOLDEN_SWORD
     name: "Midas Sword"

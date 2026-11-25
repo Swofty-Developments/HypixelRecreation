@@ -229,6 +229,45 @@ items:
     material: enchanting_table
     components:
       - id: PLACEABLE
+        block_type: ENCHANTMENT_TABLE
+  - id: EXPERIMENTATION_TABLE
+    material: PLAYER_HEAD
+    rarity: RARE
+    lore:
+      - Place this item on your island!
+      - Conduct wild enchanting experiments to
+      - gain bonus <b>Enchanting Exp <7>and <e>items<7>!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Experimentation Table
+      - id: PLACEABLE
+        block_type: EXPERIMENTATION_TABLE
+      - id: CRAFTABLE
+        recipes:
+          - type: SHAPED
+            recipe-type: NONE
+            pattern:
+              - OOO
+              - OBO
+              - OOO
+            ingredients:
+              O:
+                type: OAK_LOG
+                amount: 1
+              B:
+                type: EXPERIENCE_BOTTLE
+                amount: 1
+            result:
+              type: EXPERIMENTATION_TABLE
+              amount: 1
+            requirements:
+              enchanting_level:
+                left: '%player.skill_level:ENCHANTING%'
+                operation: '>='
+                right: '10'
+                fail-message: '<c>Requires Enchanting Skill 10!'
+      - id: SKULL_HEAD
+        texture: 81b843451184a8ccd8e6e49d0edf3451d3dea50fde5b6a2f98ab7cf1138bcece
   - id: FURNACE
     material: FURNACE
     rarity: COMMON
