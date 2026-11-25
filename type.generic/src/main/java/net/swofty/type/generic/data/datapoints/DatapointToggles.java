@@ -122,6 +122,8 @@ public class DatapointToggles extends Datapoint<DatapointToggles.Toggles> {
             HAS_SPOKEN_TO_FISHERWOMAN_ENID(false),
             HAS_SPOKEN_TO_CAPTAIN_BAHA(false),
             HAS_SPOKEN_TO_RODDY(false),
+            HAS_SPOKEN_TO_SAM(false),
+            HAS_ACCEPTED_SAM_GARDEN(false),
             HAS_CAUGHT_FIRST_FISH(false),
             HAS_UNLOCKED_SHIP(false),
             HAS_VISITED_BACKWATER_BAYOU(false),

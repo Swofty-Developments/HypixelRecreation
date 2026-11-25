@@ -6,6 +6,12 @@ items:
     components:
       - id: INTERACTABLE
         handler_id: MOVE_JERRY_INTERACT
+  - id: MOVE_SAM
+    material: villager_spawn_egg
+    rarity: COMMON
+    components:
+      - id: INTERACTABLE
+        handler_id: MOVE_SAM_INTERACT
   - id: SKYBLOCK_MENU
     material: nether_star
     name: "Skyblock Menu"

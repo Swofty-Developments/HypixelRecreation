@@ -40,7 +40,7 @@ public class ItemStackCreator {
 	 */
 	public static ItemStack.Builder createNamedItemStack(Material material, String name) {
 		return clearAttributes(ItemStack.builder(material)
-				.set(DataComponents.CUSTOM_NAME, Component.text(name).decoration(TextDecoration.ITALIC, false))
+				.set(DataComponents.CUSTOM_NAME, LEGACY_SERIALIZER.deserialize(replaceColorCodes(name)).decoration(TextDecoration.ITALIC, false))
 				.set(DataComponents.TOOLTIP_DISPLAY, DEFAULT_TOOLTIP_DISPLAY));
 	}
 
@@ -245,7 +245,7 @@ public class ItemStackCreator {
 	 * @return an {@link ItemStack.Builder} with the specified properties
 	 */
 	public static ItemStack.Builder getStack(String name, Material material, int amount, List<?> lore) {
-		return getStack(Component.text(name), material, amount, literalLoreComponents(lore));
+		return getStack(LEGACY_SERIALIZER.deserialize(replaceColorCodes(name)), material, amount, literalLoreComponents(lore));
 	}
 
 	/**
@@ -360,7 +360,7 @@ public class ItemStackCreator {
 			.set(DataComponents.LORE, literalLoreComponents(lore).stream()
 				.map(line -> line.decoration(TextDecoration.ITALIC, false))
 						.collect(Collectors.toList()))
-				.set(DataComponents.CUSTOM_NAME, Component.text(name).decoration(TextDecoration.ITALIC, false))
+			.set(DataComponents.CUSTOM_NAME, LEGACY_SERIALIZER.deserialize(replaceColorCodes(name)).decoration(TextDecoration.ITALIC, false))
 				.set(DataComponents.TOOLTIP_DISPLAY, DEFAULT_TOOLTIP_DISPLAY)
 				.set(DataComponents.PROFILE, new ResolvableProfile(new PlayerSkin(texturesEncoded, null)))
 			.amount(amount);

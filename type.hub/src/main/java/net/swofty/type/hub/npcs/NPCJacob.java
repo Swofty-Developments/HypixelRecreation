@@ -41,5 +41,4 @@ public class NPCJacob extends HypixelNPC {
     public void onClick(NPCInteractEvent e) {
         e.player().notImplemented();
     }
-
 }

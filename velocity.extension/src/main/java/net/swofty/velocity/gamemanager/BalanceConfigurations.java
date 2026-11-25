@@ -26,6 +26,7 @@ public final class BalanceConfigurations {
 
     public static final Map<ServerType, List<BalanceConfiguration>> CONFIGURATIONS = Map.ofEntries(
             Map.entry(ServerType.SKYBLOCK_ISLAND, List.of(ISLAND_CHECK, LOWEST_PLAYER_COUNT)),
+            Map.entry(ServerType.SKYBLOCK_GARDEN, DEFAULT_CHAIN),
             Map.entry(ServerType.SKYBLOCK_HUB, DEFAULT_CHAIN),
             Map.entry(ServerType.SKYBLOCK_DUNGEON_HUB, DEFAULT_CHAIN),
             Map.entry(ServerType.SKYBLOCK_THE_FARMING_ISLANDS, DEFAULT_CHAIN),

@@ -147,6 +147,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         MongoClient mongoClient = MongoClients.create(settings);
 
         IslandDatabase.connect(mongoClient);
+        GardenDatabase.connect(mongoClient);
         CoopDatabase.connect(mongoClient);
 
         PlayerWipeService.onIslandDropped(SkyBlockIsland::discard);

@@ -2,11 +2,16 @@ package net.swofty.type.hub.npcs;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.item.Material;
+import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.type.generic.entity.npc.NPCOption;
 import net.swofty.type.generic.entity.npc.HypixelNPC;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
 import net.swofty.type.generic.event.custom.NPCInteractEvent;
 import net.swofty.type.generic.user.HypixelPlayer;
+import net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionReward;
+import net.swofty.type.skyblockgeneric.garden.progression.GardenProgressionSupport;
+import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 public class NPCVincent extends HypixelNPC {
@@ -44,6 +49,19 @@ public class NPCVincent extends HypixelNPC {
     public void onClick(NPCInteractEvent event) {
         SkyBlockPlayer player = (SkyBlockPlayer) event.player();
         if (isInDialogue(player)) return;
+        SkyBlockItem heldItem = new SkyBlockItem(player.getItemInMainHand());
+        ItemType heldType = heldItem.getAttributeHandler().getPotentialType();
+        boolean dyeItem = heldType != null
+                ? heldType.name().endsWith("_DYE")
+                : heldItem.getMaterial().name().endsWith("_DYE") || heldItem.getMaterial() == Material.INK_SAC;
+        if (dyeItem) {
+            if (heldType != null) {
+                player.takeItem(heldType, 1);
+            }
+            GardenProgressionSupport.apply(player, GardenProgressionReward.donatedItem("DYE"));
+            sendNPCMessage(player, "A lovely color choice. I'll remember your donation.");
+            return;
+        }
         if (player.getSkyBlockExperience().getLevel().asInt() < 10) {
             setDialogue(player, "low-level");
             return;

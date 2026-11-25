@@ -32,7 +32,6 @@ dependencies {
     implementation(libs.mongodb.bson)
     implementation(libs.mongodb.driver.sync)
 
-    //implementation(libs.atlas.redis)
     implementation(libs.jedis)
 }
 

@@ -1,0 +1,137 @@
+universal_drops:
+  regular:
+    - { item: COINS, amount: 1000, chance: 1.0 }
+    - { item: FARMING_XP, amount: 1500, chance: 1.0 }
+    - { item: EXPERIENCE, amount: 10, chance: 1.0 }
+    - { item: DUNG_DYE, amount: 1, chance: 0.000002 }
+    - { item: COMPOST, amount: 1, chance: 0.10, exclusive_group: REGULAR_BONUS }
+    - { item: HONEY_JAR, amount: 1, chance: 0.10, exclusive_group: REGULAR_BONUS }
+    - { item: DUNG, amount: 1, chance: 0.10, exclusive_group: REGULAR_BONUS }
+    - { item: PLANT_MATTER, amount: 1, chance: 0.10, exclusive_group: REGULAR_BONUS }
+    - { item: TASTY_CHEESE, amount: 1, chance: 0.10, exclusive_group: REGULAR_BONUS }
+    - { item: JELLY, amount: 1, chance: 0.10, exclusive_group: REGULAR_BONUS }
+  field_mouse:
+    - { item: COINS, amount: 10000, chance: 1.0 }
+    - { item: FARMING_XP, amount: 6000, chance: 1.0 }
+    - { item: EXPERIENCE, amount: 50, chance: 1.0 }
+    - { item: COMPOST, amount: 1, chance: 1.0 }
+    - { item: HONEY_JAR, amount: 1, chance: 1.0 }
+    - { item: DUNG, amount: 1, chance: 1.0 }
+    - { item: PLANT_MATTER, amount: 1, chance: 1.0 }
+    - { item: TASTY_CHEESE, amount: 1, chance: 1.0 }
+    - { item: JELLY, amount: 1, chance: 1.0 }
+    - { item: DUNG_DYE, amount: 1, chance: 0.000002 }
+drops:
+  - pest: FLY
+    guaranteed:
+      - { item: ENCHANTED_WHEAT, amount: 1, scaling_per_fortune: 35 }
+    rare:
+      - { item: BEADY_EYES, chance: 0.015 }
+      - { item: PRETTY_FLY_VINYL, chance: 0.02 }
+      - { item: ENCHANTED_HAY_BALE, amount: 3, chance: 0.005 }
+  - pest: CRICKET
+    guaranteed:
+      - { item: ENCHANTED_CARROT, amount: 3, scaling_per_fortune: 10.5 }
+    rare:
+      - { item: CRICKET_CHOIR_VINYL, chance: 0.02 }
+      - { item: ENCHANTED_GOLDEN_CARROT, amount: 10, chance: 0.005 }
+      - { item: CHIRPING_STEREO, chance: 0.005 }
+  - pest: LOCUST
+    guaranteed:
+      - { item: ENCHANTED_POTATO, amount: 3, scaling_per_fortune: 10.5 }
+    rare:
+      - { item: CICADA_SYMPHONY_VINYL, chance: 0.02 }
+      - { item: ENCHANTED_BAKED_POTATO, amount: 10, chance: 0.005 }
+      - { item: SUNDER_VI_BOOK, chance: 0.005 }
+  - pest: RAT
+    guaranteed:
+      - { item: ENCHANTED_PUMPKIN, amount: 1, scaling_per_fortune: 35 }
+    rare:
+      - { item: RODENT_REVOLUTION_VINYL, chance: 0.02 }
+      - { item: POLISHED_PUMPKIN, amount: 3, chance: 0.005 }
+      - { item: RAT_PET, chance: 0.002 }
+  - pest: MOSQUITO
+    guaranteed:
+      - { item: ENCHANTED_SUGAR, amount: 2, scaling_per_fortune: 17.5 }
+    rare:
+      - { item: BUZZIN_BEATS_VINYL, chance: 0.02 }
+      - { item: ENCHANTED_SUGAR_CANE, amount: 6, chance: 0.005 }
+      - { item: CLIPPED_WINGS, chance: 0.01 }
+  - pest: EARTHWORM
+    guaranteed:
+      - { item: ENCHANTED_MELON_SLICE, amount: 5, scaling_per_fortune: 7 }
+    rare:
+      - { item: BOOKWORMS_FAVORITE_BOOK, chance: 0.02 }
+      - { item: EARTHWORM_ENSEMBLE_VINYL, chance: 0.02 }
+      - { item: ENCHANTED_MELON, amount: 15, chance: 0.005 }
+  - pest: MITE
+    guaranteed:
+      - { item: ENCHANTED_CACTUS_GREEN, amount: 2, scaling_per_fortune: 17.5 }
+    rare:
+      - { item: DYNAMITES_VINYL, chance: 0.02 }
+      - { item: ENCHANTED_CACTUS, amount: 6, chance: 0.005 }
+      - { item: ATMOSPHERIC_FILTER, chance: 0.0025 }
+  - pest: MOTH
+    guaranteed:
+      - { item: ENCHANTED_COCOA_BEAN, amount: 3, scaling_per_fortune: 12 }
+    rare:
+      - { item: WINGS_OF_HARMONY_VINYL, chance: 0.02 }
+      - { item: ENCHANTED_COOKIE, amount: 9, chance: 0.005 }
+      - { item: WRIGGLING_LARVA, chance: 0.005 }
+  - pest: SLUG
+    guaranteed:
+      - { item: ENCHANTED_RED_MUSHROOM, amount: 1, chance: 0.5, scaling_per_fortune: 35, exclusive_group: SLUG_MUSHROOM }
+      - { item: ENCHANTED_BROWN_MUSHROOM, amount: 1, chance: 0.5, scaling_per_fortune: 35, exclusive_group: SLUG_MUSHROOM }
+    rare:
+      - { item: SLOW_AND_GROOVY_VINYL, chance: 0.02 }
+      - { item: ENCHANTED_RED_MUSHROOM_BLOCK, amount: 3, chance: 0.0025 }
+      - { item: ENCHANTED_BROWN_MUSHROOM_BLOCK, amount: 3, chance: 0.0025 }
+      - { item: SLUG_PET_EPIC, chance: 0.005, exclusive_group: SLUG_PET }
+      - { item: SLUG_PET_LEGENDARY, chance: 0.001, exclusive_group: SLUG_PET }
+  - pest: BEETLE
+    guaranteed:
+      - { item: ENCHANTED_NETHER_WART, amount: 3, scaling_per_fortune: 12 }
+    rare:
+      - { item: PESTERMINATOR_I_BOOK, chance: 0.035 }
+      - { item: NOT_JUST_A_PEST_VINYL, chance: 0.02 }
+      - { item: MUTANT_NETHER_WART, amount: 9, chance: 0.005 }
+  - pest: DRAGONFLY
+    guaranteed:
+      - { item: ENCHANTED_SUNFLOWER, amount: 2, scaling_per_fortune: 17.5 }
+    rare:
+      - { item: IMAGINE_DRAGONFLIES_VINYL, chance: 0.02 }
+      - { item: VERMIN_VAPORIZER_GARDEN_CHIP, chance: 0.01 }
+      - { item: COMPACTED_SUNFLOWER, amount: 6, chance: 0.005 }
+  - pest: FIREFLY
+    guaranteed:
+      - { item: ENCHANTED_MOONFLOWER, amount: 2, scaling_per_fortune: 17.5 }
+    rare:
+      - { item: FIREFLY_IN_THE_HOLE_VINYL, chance: 0.02 }
+      - { item: FIRE_IN_A_BOTTLE, chance: 0.01 }
+      - { item: COMPACTED_MOONFLOWER, amount: 6, chance: 0.005 }
+  - pest: PRAYING_MANTIS
+    guaranteed:
+      - { item: ENCHANTED_WILD_ROSE, amount: 2, scaling_per_fortune: 17.5 }
+    rare:
+      - { item: PRAY_FOR_ME_VINYL, chance: 0.02 }
+      - { item: MANTID_CLAW, chance: 0.01 }
+      - { item: COMPACTED_WILD_ROSE, amount: 6, chance: 0.005 }
+  - pest: FIELD_MOUSE
+    guaranteed:
+      - { item: ENCHANTED_WHEAT, amount: 1, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_CARROT, amount: 3, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_POTATO, amount: 3, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_PUMPKIN, amount: 1, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_SUGAR, amount: 2, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_MELON_SLICE, amount: 5, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_CACTUS_GREEN, amount: 2, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_COCOA_BEAN, amount: 3, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_RED_MUSHROOM, amount: 1, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_BROWN_MUSHROOM, amount: 1, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_NETHER_WART, amount: 3, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_MOONFLOWER, amount: 2, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_SUNFLOWER, amount: 2, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+      - { item: ENCHANTED_WILD_ROSE, amount: 2, chance: 1.0, exclusive_group: FIELD_MOUSE_CROP }
+    rare:
+      - { item: SQUEAKY_TOY, chance: 0.025 }
+      - { item: SQUEAKY_MOUSEMAT, chance: 0.005 }

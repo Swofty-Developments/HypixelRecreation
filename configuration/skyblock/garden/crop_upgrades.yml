@@ -1,0 +1,52 @@
+fortune_per_tier: 5
+crops:
+  - WHEAT
+  - CARROT
+  - POTATO
+  - PUMPKIN
+  - MELON_SLICE
+  - CACTUS
+  - SUGAR_CANE
+  - NETHER_WART
+  - COCOA_BEANS
+  - MUSHROOM
+  - SUNFLOWER
+  - MOONFLOWER
+  - WILD_ROSE
+tiers:
+  - tier: 1
+    garden_level: 2
+    copper: 5
+    cumulative_copper: 5
+  - tier: 2
+    garden_level: 4
+    copper: 10
+    cumulative_copper: 15
+  - tier: 3
+    garden_level: 6
+    copper: 20
+    cumulative_copper: 35
+  - tier: 4
+    garden_level: 8
+    copper: 50
+    cumulative_copper: 85
+  - tier: 5
+    garden_level: 10
+    copper: 100
+    cumulative_copper: 185
+  - tier: 6
+    garden_level: 12
+    copper: 500
+    cumulative_copper: 685
+  - tier: 7
+    garden_level: 13
+    copper: 1000
+    cumulative_copper: 1685
+  - tier: 8
+    garden_level: 14
+    copper: 2000
+    cumulative_copper: 3685
+  - tier: 9
+    garden_level: 15
+    copper: 4000
+    cumulative_copper: 7685

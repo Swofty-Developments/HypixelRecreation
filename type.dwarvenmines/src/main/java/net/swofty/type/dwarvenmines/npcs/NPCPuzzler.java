@@ -43,5 +43,4 @@ public class NPCPuzzler extends HypixelNPC {
 		SkyBlockPlayer player = (SkyBlockPlayer) event.player();
 		player.notImplemented();
 	}
-
 }
