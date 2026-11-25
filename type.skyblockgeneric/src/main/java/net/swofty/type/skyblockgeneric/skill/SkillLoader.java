@@ -88,13 +88,18 @@ public class SkillLoader {
                     return config.description;
                 }
 
+                private SkillReward[] cachedRewards = null;
+
                 @Override
                 public SkillReward[] getRewards() {
-                    List<SkillReward> rewards = new ArrayList<>();
-                    for (SkillRewardEntry entry : config.rewards) {
-                        rewards.add(parseReward(entry));
+                    if (cachedRewards == null) {
+                        List<SkillReward> rewards = new ArrayList<>();
+                        for (SkillRewardEntry entry : config.rewards) {
+                            rewards.add(parseReward(entry));
+                        }
+                        cachedRewards = rewards.toArray(new SkillReward[0]);
                     }
-                    return rewards.toArray(new SkillReward[0]);
+                    return cachedRewards;
                 }
             };
         } catch (Exception e) {
