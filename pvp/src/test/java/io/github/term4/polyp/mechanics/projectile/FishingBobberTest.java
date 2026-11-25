@@ -15,7 +15,7 @@ import io.github.term4.polyp.tracking.motion.MotionTracker;
 import io.github.term4.polyp.util.tick.TickScaler;
 import io.github.term4.polyp.util.tick.TickScalingConfig;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.LivingEntity;
@@ -220,7 +220,7 @@ class FishingBobberTest extends HeadlessServerTest {
         Pos bobberPos = bobber.getPosition();
         Vec toAngler = new Vec(anglerPos.x() - bobberPos.x(), anglerPos.y() - bobberPos.y(), anglerPos.z() - bobberPos.z());
         Vec expected = victim.getVelocity().add(toAngler.mul(0.1)
-                .add(0, Math.sqrt(toAngler.length()) * 0.08, 0).mul(ServerFlag.SERVER_TICKS_PER_SECOND));
+                .add(0, Math.sqrt(toAngler.length()) * 0.08, 0).mul(ServerProperties.SERVER_TICKS_PER_SECOND.get()));
         assertEquals(3, bobber.retrieve());
         assertTrue(bobber.isRemoved());
         assertEquals(expected.x(), victim.getVelocity().x(), 1e-9);

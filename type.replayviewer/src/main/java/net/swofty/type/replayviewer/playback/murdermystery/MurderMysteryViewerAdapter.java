@@ -1,5 +1,7 @@
 package net.swofty.type.replayviewer.playback.murdermystery;
 
+import net.minestom.server.MinecraftServer;
+import net.swofty.type.replayviewer.playback.ReplayAnimationPackets;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -7,7 +9,6 @@ import net.kyori.adventure.title.Title;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.network.packet.server.play.BlockBreakAnimationPacket;
-import net.minestom.server.network.packet.server.play.EntityAnimationPacket;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.swofty.commons.replay.protocol.ReplayDataReader;
 import net.swofty.type.game.replay.api.ReplayEvent;
@@ -112,7 +113,7 @@ public final class MurderMysteryViewerAdapter implements ReplayViewerAdapter<Mur
         if (!(context instanceof ReplaySession session)) return;
         if (event instanceof ReplayParticleEvent particleEvent) {
             byte[] bytes = particleEvent.packet();
-            ParticlePacket packet = ParticlePacket.SERIALIZER.read(NetworkBuffer.wrap(bytes, 0, bytes.length));
+            ParticlePacket packet = ParticlePacket.SERIALIZER.read(NetworkBuffer.wrap(bytes, 0, bytes.length, MinecraftServer.process().registries()));
             session.getViewers().stream()
                     .filter(viewer -> !(viewer instanceof HypixelPlayer player)
                             || ReplaySettingsUtil.getSettings(player).isShowParticles())
@@ -140,16 +141,8 @@ public final class MurderMysteryViewerAdapter implements ReplayViewerAdapter<Mur
         if (event instanceof ReplayEntityAnimationEvent animationEvent) {
             var entity = session.getEntityManager().getEntity(animationEvent.entityId());
             if (entity == null) return;
-            EntityAnimationPacket.Animation animation = switch (animationEvent.animation()) {
-                case SWING_MAIN_HAND -> EntityAnimationPacket.Animation.SWING_MAIN_ARM;
-                case SWING_OFF_HAND -> EntityAnimationPacket.Animation.SWING_OFF_HAND;
-                case TAKE_DAMAGE -> EntityAnimationPacket.Animation.TAKE_DAMAGE;
-                case LEAVE_BED -> EntityAnimationPacket.Animation.LEAVE_BED;
-                case CRITICAL_EFFECT -> EntityAnimationPacket.Animation.CRITICAL_EFFECT;
-                case MAGIC_CRITICAL_EFFECT -> EntityAnimationPacket.Animation.MAGICAL_CRITICAL_EFFECT;
-            };
-            session.getViewers().forEach(viewer -> viewer.sendPacket(
-                    new EntityAnimationPacket(entity.getEntityId(), animation)));
+            var animationPacket = ReplayAnimationPackets.of(entity, animationEvent.animation());
+            session.getViewers().forEach(viewer -> viewer.sendPacket(animationPacket));
             return;
         }
         if (!(event instanceof ReplayComponentEvent componentEvent)) return;

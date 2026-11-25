@@ -3,6 +3,7 @@ package net.swofty.type.bedwarsgame.events;
 import net.minestom.server.event.player.PlayerPacketOutEvent;
 import net.minestom.server.network.packet.server.ServerPacket;
 import net.minestom.server.network.packet.server.play.BlockBreakAnimationPacket;
+import net.minestom.server.network.packet.server.play.SwingAnimationPacket;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
 import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
@@ -23,6 +24,8 @@ public class ActionBlockBreakAnimation implements HypixelEventClass {
         ServerPacket packet = event.getPacket();
         if (packet instanceof BlockBreakAnimationPacket p) {
             game.getReplayManager().recordBlockBreakAnimation(p);
+        } else if (packet instanceof SwingAnimationPacket swing) {
+            game.getReplayManager().recordSwingAnimation(swing);
         }
     }
 

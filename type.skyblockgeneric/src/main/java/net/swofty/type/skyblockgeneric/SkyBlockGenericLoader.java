@@ -325,7 +325,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
             Key.key("skyblock:island"),
             DimensionType.builder()
                 .ambientLight(1)
-                .defaultClock(RegistryKey.unsafeOf("overworld"))
+                .defaultClock(RegistryKey.of("overworld"))
                 .build());
         SkyBlockIsland.runVacantLoop(MinecraftServer.getSchedulerManager());
 

@@ -13,7 +13,7 @@ import io.github.term4.polyp.mechanics.projectile.types.ProjectileTypeConfig.Rod
 import io.github.term4.polyp.mechanics.projectile.types.ProjectileTypeConfig.RodPull;
 import io.github.term4.polyp.tracking.motion.MotionTracker;
 import io.github.term4.polyp.util.tick.TickScaler;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.collision.PhysicsResult;
@@ -29,6 +29,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.Material;
 import net.minestom.server.network.packet.server.play.EntityPositionSyncPacket;
+import net.minestom.server.network.packet.server.play.data.PositionPath;
 import net.minestom.server.network.packet.server.play.EntityTeleportPacket;
 import net.minestom.server.network.packet.server.play.EntityVelocityPacket;
 import net.minestom.server.tag.Tag;
@@ -144,7 +145,7 @@ public class FishingBobberEntity extends ManagedProjectile {
                 velocityBt = new Vec(velocityBt.x() * r.nextFloat() * 0.2f,
                         velocityBt.y() * r.nextFloat() * 0.2f,
                         velocityBt.z() * r.nextFloat() * 0.2f);
-                this.velocity = velocityBt.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+                this.velocity = velocityBt.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
             }
             tickLegacyWater();
         }
@@ -186,7 +187,7 @@ public class FishingBobberEntity extends ManagedProjectile {
         boolean inWater = liquidHeight > 0;
         if (!bobbing && inWater) {
             velocityBt = velocityBt.mul(0.3, 0.2, 0.3);
-            this.velocity = velocityBt.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+            this.velocity = velocityBt.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
             bobbing = true;
             return true;
         }
@@ -201,7 +202,7 @@ public class FishingBobberEntity extends ManagedProjectile {
         // 26.1 gates gravity on the ground too - a rested hook stays put (contact zeroed it, see onBlockClip)
         if (!inWater && !isOnGround()) velocityBt = velocityBt.sub(0,
                 subStepping() ? gravityBt : TickScaler.gravityPerTick(scopeSubject(), gravityBt), 0);
-        this.velocity = velocityBt.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+        this.velocity = velocityBt.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
         return false;
     }
 
@@ -341,7 +342,7 @@ public class FishingBobberEntity extends ManagedProjectile {
             if (waterDense && (waterSyncedAt == null || pos.distanceSquared(waterSyncedAt) > 1.0e-8)) {
                 waterSyncedAt = pos;
                 var clientInfo = io.github.term4.polyp.Polyp.getInstance().clientInfo();
-                var sync = new EntityPositionSyncPacket(getEntityId(), pos, Vec.ZERO, pos.yaw(), pos.pitch(), isOnGround());
+                var sync = new EntityPositionSyncPacket(getEntityId(), new PositionPath.Linear(pos), pos.yaw(), pos.pitch(), isOnGround());
                 for (Player viewer : getViewers()) {
                     if (hookWater && clientInfo != null && clientInfo.isLegacy(viewer) == !modernOrder) {
                         continue; // their generation predicts this physics
@@ -398,13 +399,13 @@ public class FishingBobberEntity extends ManagedProjectile {
                 MotionTracker.foldDelivered(player, folded); // 1.8: server-tracked only, surfaces in the next hit's KB
                 return;
             }
-            Vec out = folded.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+            Vec out = folded.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
             Services s = services();
             KnockbackSystem kb = s != null ? s.knockback() : null;
             if (kb != null) kb.deliver(player, out); // the knockback wire owns quantize + the legacy-exact bridge (b/s)
             else player.setVelocity(out);
         } else {
-            hooked.setVelocity(hooked.getVelocity().add(delta.mul(ServerFlag.SERVER_TICKS_PER_SECOND)));
+            hooked.setVelocity(hooked.getVelocity().add(delta.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get())));
         }
     }
 

@@ -83,12 +83,12 @@ public class WaterBalloon implements LuckyBlockItem {
                 for (int dz = -1; dz <= 1; dz++) {
                     Point waterPos = pos.add(dx, 0, dz);
                     Block blockAt = projectile.getInstance().getBlock(waterPos);
-                    if (blockAt.isAir()) {
+                    if (blockAt.air()) {
                         projectile.getInstance().setBlock(waterPos, Block.WATER);
                     } else {
                         Point waterPosAbove = pos.add(dx, 1, dz);
                         Block blockAbove = projectile.getInstance().getBlock(waterPosAbove);
-                        if (blockAbove.isAir()) {
+                        if (blockAbove.air()) {
                             projectile.getInstance().setBlock(waterPosAbove, Block.WATER);
                         }
                     }

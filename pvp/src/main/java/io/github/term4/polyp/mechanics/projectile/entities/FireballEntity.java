@@ -5,7 +5,7 @@ import io.github.term4.polyp.mechanics.explosion.ExplosionSystem;
 import io.github.term4.polyp.world.MechanicsWorld;
 import io.github.term4.polyp.mechanics.projectile.ProjectileSnapshot;
 import io.github.term4.polyp.mechanics.projectile.types.ProjectileTypeConfig;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
@@ -93,7 +93,7 @@ public class FireballEntity extends ManagedProjectile {
      *  a teleport-tracked fireball (mmc18 - captured at 139 fireballs, 0 entity_velocity) shows redirects on
      *  its next tracker sync, exactly like 1.8, where the tracker only sends velocity on {@code velocityChanged}. */
     private void redirect(Vec bt) {
-        if (velocitySyncInterval > 0) setVelocity(bt.mul(ServerFlag.SERVER_TICKS_PER_SECOND));
+        if (velocitySyncInterval > 0) setVelocity(bt.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get()));
         else setVelocityBt(bt);
     }
 

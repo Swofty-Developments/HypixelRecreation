@@ -11,7 +11,7 @@ import io.github.term4.polyp.util.Directions;
 import io.github.term4.polyp.util.tick.TickSystem;
 import io.github.term4.polyp.util.tick.TickPhase;
 import io.github.term4.polyp.util.tick.TickScaler;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.collision.CollisionUtils;
@@ -793,7 +793,7 @@ public final class MotionTracker implements Tracker {
             return d == null ? Vec.ZERO : d;
         }
         // entity velocity is blocks/second
-        return entity.getVelocity().div(ServerFlag.SERVER_TICKS_PER_SECOND);
+        return entity.getVelocity().div(ServerProperties.SERVER_TICKS_PER_SECOND.get());
     }
 
     public static boolean onGround(@Nullable Entity entity) {

@@ -7,7 +7,7 @@ import io.github.term4.polyp.testsupport.CapturingConnection;
 import io.github.term4.polyp.testsupport.HeadlessServerTest;
 import io.github.term4.polyp.tracking.motion.LegacyVelocity;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.event.EventDispatcher;
 import net.minestom.server.event.player.PlayerPacketOutEvent;
@@ -85,7 +85,7 @@ class AnimatiumShortsVelocityTest extends HeadlessServerTest {
         buf.read(NetworkBuffer.VAR_INT); // packet id
         assertEquals(p.getEntityId(), buf.read(NetworkBuffer.VAR_INT));
         short[] sent = { buf.read(NetworkBuffer.SHORT), buf.read(NetworkBuffer.SHORT), buf.read(NetworkBuffer.SHORT) };
-        assertArrayEquals(LegacyVelocity.wireShorts(VELOCITY_BT.mul(ServerFlag.SERVER_TICKS_PER_SECOND)), sent);
+        assertArrayEquals(LegacyVelocity.wireShorts(VELOCITY_BT.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get())), sent);
     }
 
     @Test

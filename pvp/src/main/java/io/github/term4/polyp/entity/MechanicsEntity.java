@@ -3,7 +3,7 @@ package io.github.term4.polyp.entity;
 import io.github.term4.polyp.util.tick.TickScaler;
 import io.github.term4.polyp.world.ExternallyTickable;
 import io.github.term4.polyp.world.MechanicsWorld;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.PhysicsResult;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class MechanicsEntity extends Entity implements ExternallyTickable {
 
-    protected static final double TPS = ServerFlag.SERVER_TICKS_PER_SECOND;
+    protected static final double TPS = ServerProperties.SERVER_TICKS_PER_SECOND.get();
 
     protected PhysicsResult lastPhysics;
 

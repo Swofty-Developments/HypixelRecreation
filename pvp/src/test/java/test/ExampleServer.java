@@ -436,7 +436,7 @@ public class ExampleServer {
         ItemStack held = p.getItemInMainHand();
         if (held.isAir()) { p.sendMessage("hold an item first"); return; }
         Key key = Key.key(name.contains(":") ? name : "minecraft:" + name);
-        RegistryKey<Enchantment> ench = RegistryKey.unsafeOf(key);
+        RegistryKey<Enchantment> ench = RegistryKey.of(key);
         EnchantmentList existing = held.get(DataComponents.ENCHANTMENTS);
         EnchantmentList updated = (existing != null ? existing : EnchantmentList.EMPTY).with(ench, level);
         p.setItemInMainHand(held.with(DataComponents.ENCHANTMENTS, updated));

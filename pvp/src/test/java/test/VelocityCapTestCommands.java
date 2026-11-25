@@ -3,7 +3,7 @@ package test;
 import io.github.term4.polyp.platform.compatibility.ViaBridgeException;
 import io.github.term4.polyp.platform.compatibility.ViaBridgeRpc;
 import io.github.term4.polyp.tracking.motion.LegacyVelocity;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventNode;
@@ -66,12 +66,12 @@ final class VelocityCapTestCommands {
     }
 
     private static Vec capPerSecond() {
-        double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+        double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
         return new Vec(CAP_BPT * tps, 0, 0);
     }
 
     private static String formatBpt(double blocksPerSecond) {
-        double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+        double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
         return String.format("%.6f", blocksPerSecond / tps);
     }
 }

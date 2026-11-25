@@ -1,6 +1,6 @@
 package io.github.term4.polyp.tracking.motion;
 
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Vec;
 
 /**
@@ -27,7 +27,7 @@ public final class LegacyVelocity {
     }
 
     public static Vec snap(Vec perSecond, double capBt) {
-        double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+        double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
         return new Vec(snapAxis(perSecond.x(), tps, capBt), snapAxis(perSecond.y(), tps, capBt), snapAxis(perSecond.z(), tps, capBt));
     }
 
@@ -41,7 +41,7 @@ public final class LegacyVelocity {
     }
 
     public static short[] wireShorts(Vec perSecond, double capBt) {
-        double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+        double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
         return new short[]{wireShort(perSecond.x(), tps, capBt), wireShort(perSecond.y(), tps, capBt), wireShort(perSecond.z(), tps, capBt)};
     }
 
@@ -57,7 +57,7 @@ public final class LegacyVelocity {
 
     /** Above 2 b/t {@link #snap} drifts through Via; gates the exact ViaBridge path. */
     public static boolean exceedsLpExactBand(Vec perSecond) {
-        double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+        double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
         return Math.abs(perSecond.x() / tps) > LP_EXACT_BT
                 || Math.abs(perSecond.y() / tps) > LP_EXACT_BT
                 || Math.abs(perSecond.z() / tps) > LP_EXACT_BT;

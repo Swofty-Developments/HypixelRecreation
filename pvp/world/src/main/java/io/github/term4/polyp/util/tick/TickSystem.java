@@ -2,7 +2,7 @@ package io.github.term4.polyp.util.tick;
 
 import io.github.term4.polyp.world.MechanicsWorld;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.event.EventFilter;
 import net.minestom.server.event.EventNode;
@@ -133,12 +133,12 @@ public final class TickSystem {
 
     private static void dispatch(Instance instance) {
         dispatch(new TickContext(MechanicsWorld.of(instance), instanceTick(instance),
-                ServerFlag.SERVER_TICKS_PER_SECOND, false));
+                ServerProperties.SERVER_TICKS_PER_SECOND.get(), false));
     }
 
     /** One pass of the registered work scoped to {@code world}, on ITS clock - an external world ticker drives this from the world's own thread. */
     public static void tickWorld(MechanicsWorld world, long tick) {
-        dispatch(new TickContext(world, tick, ServerFlag.SERVER_TICKS_PER_SECOND, true));
+        dispatch(new TickContext(world, tick, ServerProperties.SERVER_TICKS_PER_SECOND.get(), true));
     }
 
     private static void dispatch(TickContext ctx) {

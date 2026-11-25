@@ -33,6 +33,11 @@ subprojects {
 
     repositories {
         mavenCentral()
+        maven("https://central.sonatype.com/repository/maven-snapshots/") {
+            content {
+                includeGroup("net.minestom")
+            }
+        }
         mavenLocal()
         maven("https://repo.viaversion.com")
         maven("https://jitpack.io")

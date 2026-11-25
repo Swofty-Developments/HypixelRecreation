@@ -84,7 +84,7 @@ public abstract class HeadlessServerTest {
     /** {@code stack} with {@code enchant} at {@code level} added. */
     protected static ItemStack enchant(ItemStack stack, Key enchant, int level) {
         return stack.with(DataComponents.ENCHANTMENTS,
-                new EnchantmentList(RegistryKey.<Enchantment>unsafeOf(enchant), level));
+                new EnchantmentList(RegistryKey.<Enchantment>of(enchant), level));
     }
 
     /** Plain item at {@code level <= 0}. */

@@ -11,7 +11,7 @@ import io.github.term4.polyp.mechanics.attribute.catalog.enchant.Infinity;
 import io.github.term4.polyp.mechanics.projectile.types.Arrow;
 import io.github.term4.polyp.mechanics.projectile.types.ProjectileType;
 import io.github.term4.polyp.item.Enchants;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.Event;
@@ -82,7 +82,7 @@ public final class Bow implements Shootable {
 
     /** Vanilla bow power curve over the draw in real SECONDS (ticks / server TPS, not a hardcoded 20), so charge is TPS-invariant. */
     private static float drawPower(long useDurationTicks) {
-        float f = useDurationTicks / (float) ServerFlag.SERVER_TICKS_PER_SECOND;
+        float f = useDurationTicks / (float) ServerProperties.SERVER_TICKS_PER_SECOND.get();
         float power = (f * f + 2 * f) / 3.0f;
         return power > 1f ? 1f : power;
     }

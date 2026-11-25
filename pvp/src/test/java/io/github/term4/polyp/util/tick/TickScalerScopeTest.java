@@ -3,7 +3,7 @@ package io.github.term4.polyp.util.tick;
 import io.github.term4.polyp.MechanicsKeys;
 import io.github.term4.polyp.MechanicsProfile;
 import io.github.term4.polyp.testsupport.HeadlessServerTest;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 class TickScalerScopeTest extends HeadlessServerTest {
 
-    private static final int SERVER_TPS = ServerFlag.SERVER_TICKS_PER_SECOND;
+    private static final int SERVER_TPS = ServerProperties.SERVER_TICKS_PER_SECOND.get();
 
     private static Entity spawned(InstanceContainer where) {
         Entity e = new Entity(EntityType.ARMOR_STAND);

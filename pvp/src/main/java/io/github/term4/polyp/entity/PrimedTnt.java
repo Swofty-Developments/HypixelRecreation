@@ -30,6 +30,7 @@ import net.minestom.server.instance.Chunk;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.network.packet.server.play.EntityPositionSyncPacket;
+import net.minestom.server.network.packet.server.play.data.PositionPath;
 import net.minestom.server.network.packet.server.play.SpawnEntityPacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -356,9 +357,8 @@ public final class PrimedTnt extends MechanicsEntity {
     }
 
     private void sendSync(Pos pos) {
-        Point delta = wireSyncedAt == null ? Vec.ZERO : pos.sub(wireSyncedAt);
         wireSyncedAt = pos;
-        sendPacketToViewers(new EntityPositionSyncPacket(getEntityId(), pos, delta, pos.yaw(), pos.pitch(), isOnGround()));
+        sendPacketToViewers(new EntityPositionSyncPacket(getEntityId(), new PositionPath.Linear(pos), pos.yaw(), pos.pitch(), isOnGround()));
         sendPacketToViewers(getVelocityPacket());
     }
 

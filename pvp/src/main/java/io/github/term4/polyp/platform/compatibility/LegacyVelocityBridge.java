@@ -3,7 +3,7 @@ package io.github.term4.polyp.platform.compatibility;
 import io.github.term4.polyp.Polyp;
 import io.github.term4.polyp.platform.player.OptimizedPlayer;
 import io.github.term4.polyp.tracking.motion.LegacyVelocity;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.Player;
@@ -60,7 +60,7 @@ public final class LegacyVelocityBridge {
                 && op.compat().supports(AnimatiumFeature.SHORTS_VELOCITY)) {
             e.setCancelled(true);
             // vel.velocity() is b/t (getVelocityForPacket divides by tps); wireShorts wants b/s. Clamp at the 1.8 cap, like Via.
-            short[] s = LegacyVelocity.wireShorts(vel.velocity().mul(ServerFlag.SERVER_TICKS_PER_SECOND), LegacyVelocity.DEFAULT_CAP);
+            short[] s = LegacyVelocity.wireShorts(vel.velocity().mul(ServerProperties.SERVER_TICKS_PER_SECOND.get()), LegacyVelocity.DEFAULT_CAP);
             LegacyShortVelocity.send(p, vel.entityId(), s[0], s[1], s[2]);
             return;
         }

@@ -32,7 +32,7 @@ class AttributeSliceTest extends HeadlessServerTest {
     private static ItemStack sword(int sharpnessLevel) {
         ItemStack s = ItemStack.of(Material.DIAMOND_SWORD);
         if (sharpnessLevel <= 0) return s;
-        RegistryKey<Enchantment> sharp = RegistryKey.unsafeOf(Sharpness.KEY);
+        RegistryKey<Enchantment> sharp = RegistryKey.of(Sharpness.KEY);
         return s.with(DataComponents.ENCHANTMENTS, new EnchantmentList(sharp, sharpnessLevel));
     }
 

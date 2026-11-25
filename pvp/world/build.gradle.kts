@@ -50,7 +50,7 @@ repositories {
 }
 
 dependencies {
-    val minestomVersion = "2026.08.16-26.2"
+    val minestomVersion = "26_3-SNAPSHOT"
     compileOnly("net.minestom:minestom:$minestomVersion")
     compileOnly("org.slf4j:slf4j-api:2.0.18")
 }
