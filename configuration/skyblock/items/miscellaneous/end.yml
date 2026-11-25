@@ -71,17 +71,6 @@ items:
     components:
       - id: SKULL_HEAD
         texture: eb07594e2df273921a77c101d0bfdfa1115abed5b9b2029eb496ceba9bdbb4b3
-  - id: MITE_GEL
-    material: INK_SAC
-    name: Mite Gel
-    rarity: EPIC
-    components:
-      - id: ITEM_MODEL
-        item_model: hypixel_skyblock:item/island_relevant/combat_3/mite_gel
-  - id: PEARLESCENT_DYE
-    material: PURPLE_DYE
-    name: Pearlescent Dye
-    rarity: LEGENDARY
   - id: YOUNG_DRAGON_FRAGMENT
     material: PLAYER_HEAD
     name: Young Dragon Fragment
