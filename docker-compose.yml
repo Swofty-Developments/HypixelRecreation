@@ -15,8 +15,7 @@ services:
     networks:
       - hypixel_network
     healthcheck:
-      test: |
-        mongosh --eval "db.adminCommand('ping').ok" --quiet > /dev/null 2>&1 || exit 1
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -93,6 +93,10 @@ Common issues and their solutions.
 
 ## World Issues
 
+### No Prototype Lobby Available
+
+If joining says there are no Prototype Lobby servers available, the `prototype_lobby` container is crash-looping because `configuration/world/hypixel_prototype_lobby.polar` is missing. Check `docker logs prototype_lobby`, download the [world files](/docs/setup/game-servers), extract them into `configuration/` and run `docker compose up --build -d` again.
+
 ### World Not Loading
 
 **Checklist**:

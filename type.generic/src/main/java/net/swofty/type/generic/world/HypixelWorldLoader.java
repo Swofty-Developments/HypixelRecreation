@@ -69,6 +69,11 @@ public final class HypixelWorldLoader {
      */
     public static SharedInstance loadFrom(Path path, InstanceContainer source,
                                           InstanceManager instanceManager) throws IOException {
+        if (!Files.isRegularFile(path)) {
+            throw new IllegalStateException("World file " + path.toAbsolutePath().normalize() + " is missing. "
+                    + "Download the world files (https://opensource.swofty.net/docs/setup/game-servers) "
+                    + "and extract them into the configuration folder, or run the installer, which does it for you.");
+        }
         PolarWorld polarWorld = PolarReader.read(Files.readAllBytes(path));
 
         CompoundBinaryTag userData = readUserData(polarWorld.userData());
