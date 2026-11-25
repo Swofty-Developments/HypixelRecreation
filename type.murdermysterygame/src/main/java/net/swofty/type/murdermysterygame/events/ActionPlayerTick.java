@@ -5,7 +5,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
@@ -21,7 +21,7 @@ public class ActionPlayerTick implements HypixelEventClass {
         Game game = TypeMurderMysteryGameLoader.getPlayerGame(player);
         if (game == null) return;
 
-        if (game.getGameStatus() == GameStatus.IN_PROGRESS || game.getGameStatus() == GameStatus.ENDING) {
+        if (game.getState() == GameState.IN_PROGRESS || game.getState() == GameState.ENDING) {
             if (player.getFood() < 20) {
                 player.setFood(20);
                 player.setFoodSaturation(20.0f);

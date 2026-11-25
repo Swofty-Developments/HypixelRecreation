@@ -4,15 +4,16 @@ import net.swofty.commons.protocol.RedisProtocol;
 import net.swofty.commons.protocol.objects.game.InstantiateGamePushProtocol;
 import net.swofty.commons.protocol.objects.game.InstantiateGamePushProtocol.Request;
 import net.swofty.commons.protocol.objects.game.InstantiateGamePushProtocol.Response;
+import net.swofty.commons.redis.RedisMessageContext;
+import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.commons.skywars.SkywarsGameType;
 import net.swofty.commons.skywars.map.SkywarsMapsConfig;
-import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
-import net.swofty.commons.redis.RedisMessageContext;
 
 public class InstantiateGameHandler implements RedisMessageHandler<Request, Response> {
 
@@ -26,27 +27,29 @@ public class InstantiateGameHandler implements RedisMessageHandler<Request, Resp
     @Override
     public Response handle(Request request, RedisMessageContext context) {
         try {
-            SkywarsGameType gameType = SkywarsGameType.from(request.gameType().toUpperCase());
+            SkywarsGameType gameType = SkywarsGameType.from(request.gameType());
             if (gameType == null) {
                 return Response.failure("Invalid game type: " + request.gameType());
             }
 
             SkywarsMapsConfig.MapEntry mapEntry = null;
+            boolean hasRequestedMap = request.map() != null && !request.map().isBlank();
             if (TypeSkywarsGameLoader.getMapsConfig() != null) {
                 List<SkywarsMapsConfig.MapEntry> availableMaps = TypeSkywarsGameLoader.getMapsConfig().getMaps();
+                if (availableMaps == null) availableMaps = List.of();
 
-                if (request.map() != null && !request.map().isEmpty()) {
+                if (hasRequestedMap) {
                     for (SkywarsMapsConfig.MapEntry entry : availableMaps) {
-                        if (entry.getId().equals(request.map()) || entry.getName().equals(request.map())) {
+                        if (entry != null && (Objects.equals(entry.getId(), request.map())
+                                || Objects.equals(entry.getName(), request.map()))) {
                             mapEntry = entry;
                             break;
                         }
                     }
                 } else {
                     List<SkywarsMapsConfig.MapEntry> compatibleMaps = availableMaps.stream()
-                            .filter(entry -> entry.getConfiguration() != null
-                                    && entry.getConfiguration().getTypes() != null
-                                    && entry.getConfiguration().getTypes().contains(gameType))
+                            .filter(Objects::nonNull)
+                            .filter(entry -> TypeSkywarsGameLoader.supportsGameType(entry, gameType))
                             .toList();
 
                     if (!compatibleMaps.isEmpty()) {
@@ -56,7 +59,12 @@ public class InstantiateGameHandler implements RedisMessageHandler<Request, Resp
             }
 
             if (mapEntry == null) {
-                return Response.failure(request.map() != null ? "Map not found: " + request.map() : "No compatible maps available for " + gameType);
+                return Response.failure(hasRequestedMap
+                        ? "Map not found: " + request.map()
+                        : "No compatible maps available for " + gameType);
+            }
+            if (!TypeSkywarsGameLoader.supportsGameType(mapEntry, gameType)) {
+                return Response.failure("Map does not support " + gameType);
             }
 
             SkywarsGame game = TypeSkywarsGameLoader.createGame(mapEntry, gameType);

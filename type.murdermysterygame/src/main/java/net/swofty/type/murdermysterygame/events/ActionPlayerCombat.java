@@ -10,7 +10,7 @@ import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.protection.WeaknessProtectionManager;
 import net.swofty.type.murdermysterygame.role.GameRole;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
@@ -29,7 +29,7 @@ public class ActionPlayerCombat implements HypixelEventClass {
         }
 
         // No combat in waiting lobby
-        if (game.getGameStatus() != GameStatus.IN_PROGRESS) {
+        if (game.getState() != GameState.IN_PROGRESS) {
             event.setCancelled(true);
             return;
         }

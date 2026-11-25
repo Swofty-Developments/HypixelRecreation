@@ -3,7 +3,7 @@ package net.swofty.type.murdermysterygame.commands;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
@@ -26,7 +26,7 @@ public class ForceStartCommand extends HypixelCommand {
                 player.sendMessage("<c>You are not in a game.");
                 return;
             }
-            if (game.getGameStatus() != GameStatus.WAITING) {
+            if (game.getState() != GameState.WAITING && game.getState() != GameState.COUNTDOWN) {
                 player.sendMessage("<c>You can only force start a game that is waiting.");
                 return;
             }
@@ -46,7 +46,7 @@ public class ForceStartCommand extends HypixelCommand {
                 player.sendMessage("<c>You are not in a game.");
                 return;
             }
-            if (game.getGameStatus() != GameStatus.WAITING) {
+            if (game.getState() != GameState.WAITING && game.getState() != GameState.COUNTDOWN) {
                 player.sendMessage("<c>You can only force start a game that is waiting.");
                 return;
             }

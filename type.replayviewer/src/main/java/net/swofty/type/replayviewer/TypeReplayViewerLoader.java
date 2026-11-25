@@ -23,6 +23,7 @@ import net.swofty.type.replayviewer.playback.ReplaySession;
 import net.swofty.type.game.replay.api.ReplayAdapterRegistry;
 import net.swofty.type.game.replay.api.ReplayViewerAdapter;
 import net.swofty.type.replayviewer.playback.bedwars.BedWarsViewerAdapter;
+import net.swofty.type.replayviewer.playback.murdermystery.MurderMysteryViewerAdapter;
 import org.jetbrains.annotations.Nullable;
 import org.tinylog.Logger;
 
@@ -55,6 +56,7 @@ public class TypeReplayViewerLoader implements HypixelTypeLoader {
     public void onInitialize(MinecraftServer server) {
         instanceManager = MinecraftServer.getInstanceManager();
         replayAdapters.register(BedWarsViewerAdapter.GAME_TYPE, new BedWarsViewerAdapter());
+        replayAdapters.register(MurderMysteryViewerAdapter.GAME_TYPE, new MurderMysteryViewerAdapter());
         Logger.info("Replay Viewer initialized");
     }
 

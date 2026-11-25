@@ -6,6 +6,8 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
+import net.minestom.server.tag.Tag;
+import net.swofty.type.game.game.GameParticipant;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
@@ -16,7 +18,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class SkywarsPlayer extends HypixelPlayer {
+public class SkywarsPlayer extends HypixelPlayer implements GameParticipant {
+    private static final Tag<String> GAME_ID_TAG = Tag.String("gameId");
+
     private boolean eliminated = false;
     private Pos cagePosition = null;
     private String selectedKit = "default";
@@ -26,6 +30,25 @@ public class SkywarsPlayer extends HypixelPlayer {
 
     public SkywarsPlayer(PlayerConnection playerConnection, GameProfile gameProfile) {
         super(playerConnection, gameProfile);
+    }
+
+    @Override
+    public String getGameId() {
+        return getTag(GAME_ID_TAG);
+    }
+
+    @Override
+    public void setGameId(String gameId) {
+        if (gameId == null) {
+            removeTag(GAME_ID_TAG);
+            return;
+        }
+        setTag(GAME_ID_TAG, gameId);
+    }
+
+    @Override
+    public SkywarsPlayer getServerPlayer() {
+        return this;
     }
 
     public void setLastDamager(UUID damager) {

@@ -8,7 +8,7 @@ import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.maphandler.MapHandlerRegistry;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 import org.tinylog.Logger;
@@ -34,8 +34,8 @@ public class ActionBlockInteraction implements HypixelEventClass {
             Logger.info("[MM-DEBUG] Player not in a game");
             return;
         }
-        if (game.getGameStatus() != GameStatus.IN_PROGRESS) {
-            Logger.info("[MM-DEBUG] Game not in progress, status: {}", game.getGameStatus());
+        if (game.getState() != GameState.IN_PROGRESS) {
+            Logger.info("[MM-DEBUG] Game not in progress, status: {}", game.getState());
             return;
         }
 

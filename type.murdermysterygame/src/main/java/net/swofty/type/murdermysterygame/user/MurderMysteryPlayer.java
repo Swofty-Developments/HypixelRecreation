@@ -4,6 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
+import net.minestom.server.entity.Player;
+import net.minestom.server.tag.Tag;
+import net.swofty.type.game.game.GameParticipant;
+import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
+import net.swofty.type.murdermysterygame.game.Game;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.murdermysterygame.role.GameRole;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +18,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MurderMysteryPlayer extends HypixelPlayer {
+public class MurderMysteryPlayer extends HypixelPlayer implements GameParticipant {
     private boolean eliminated = false;
     private int goldCollected = 0;
     private int tokensEarnedThisGame = 0;
@@ -34,6 +39,30 @@ public class MurderMysteryPlayer extends HypixelPlayer {
 
     public MurderMysteryPlayer(@NotNull PlayerConnection playerConnection, @NotNull GameProfile gameProfile) {
         super(playerConnection, gameProfile);
+    }
+
+    @Override
+    public String getGameId() {
+        return getTag(Tag.String("gameId"));
+    }
+
+    @Override
+    public void setGameId(String gameId) {
+        if (gameId == null) {
+            removeTag(Tag.String("gameId"));
+        } else {
+            setTag(Tag.String("gameId"), gameId);
+        }
+    }
+
+    @Override
+    public Player getServerPlayer() {
+        return this;
+    }
+
+    public Game getGame() {
+        String gameId = getGameId();
+        return gameId == null ? null : TypeMurderMysteryGameLoader.getGameById(gameId);
     }
 
     public void addGold(int amount) {

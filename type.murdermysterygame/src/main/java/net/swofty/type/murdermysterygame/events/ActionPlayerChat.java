@@ -11,7 +11,7 @@ import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.user.categories.Rank;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 
 public class ActionPlayerChat implements HypixelEventClass {
@@ -47,21 +47,22 @@ public class ActionPlayerChat implements HypixelEventClass {
         }
 
         // Dead players can only talk to other dead players
-        if (player.isEliminated() && game.getGameStatus() == GameStatus.IN_PROGRESS) {
+        if (player.isEliminated() && game.getState() == GameState.IN_PROGRESS) {
+            Text chatMessage = Text.of("<7>[DEAD] <f>{}: <7>{}", player.getUsername(), finalMessage);
             for (MurderMysteryPlayer gamePlayer : game.getPlayers()) {
                 if (gamePlayer.isEliminated()) {
-                    gamePlayer.sendMessage("<7>[DEAD] <f>{}: <7>{}", player.getUsername(), finalMessage);
+                    gamePlayer.sendMessage(chatMessage);
                 }
             }
+            if (game.getReplayManager() != null) game.getReplayManager().recordPlayerChat(player, chatMessage.asComponent());
             return;
         }
 
         // Normal chat
+        Text chatMessage = Text.of("{}<f>{}: {}", player.getRankPrefix(), player.getUsername(), finalMessage);
         for (MurderMysteryPlayer gamePlayer : game.getPlayers()) {
-            gamePlayer.sendMessage("{}<f>{}: {}",
-                    player.getRankPrefix(),
-                    player.getUsername(),
-                    finalMessage);
+            gamePlayer.sendMessage(chatMessage);
         }
+        if (game.getReplayManager() != null) game.getReplayManager().recordPlayerChat(player, chatMessage.asComponent());
     }
 }

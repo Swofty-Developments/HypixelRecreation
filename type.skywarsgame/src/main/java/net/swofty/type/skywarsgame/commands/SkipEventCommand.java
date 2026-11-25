@@ -3,9 +3,9 @@ package net.swofty.type.skywarsgame.commands;
 import net.swofty.type.generic.command.CommandParameters;
 import net.swofty.type.generic.command.HypixelCommand;
 import net.swofty.type.generic.user.categories.Rank;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 @CommandParameters(
@@ -29,7 +29,7 @@ public class SkipEventCommand extends HypixelCommand {
                 return;
             }
 
-            if (game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) {
+            if (game.getState() != GameState.IN_PROGRESS) {
                 player.sendMessage("<c>The game is not in progress!");
                 return;
             }
