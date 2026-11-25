@@ -1,0 +1,133 @@
+items:
+  - id: MASTIFF_HELMET
+    material: PLAYER_HEAD
+    name: Mastiff Crown
+    rarity: EPIC
+    default_statistics:
+      health: 300
+      intelligence: 125
+      critical_damage: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - ABA
+              - BCB
+              - ABA
+            ingredients:
+              A:
+                type: GOLDEN_TOOTH
+                amount: 1
+              B:
+                type: ENCHANTED_GOLD_INGOT
+                amount: 16
+              C:
+                type: GROWTH_HELMET
+                amount: 1
+            result:
+              type: MASTIFF_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: 3285950fd67858e76c439b0b5b87c69a6c52a4df936e224d843b14c22565949e
+  - id: MASTIFF_CHESTPLATE
+    material: GOLDEN_CHESTPLATE
+    name: Mastiff Chestplate
+    rarity: EPIC
+    default_statistics:
+      health: 500
+      critical_damage: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - ABA
+              - BCB
+              - ABA
+            ingredients:
+              A:
+                type: GOLDEN_TOOTH
+                amount: 1
+              B:
+                type: ENCHANTED_GOLD_INGOT
+                amount: 16
+              C:
+                type: GROWTH_CHESTPLATE
+                amount: 1
+            result:
+              type: MASTIFF_CHESTPLATE
+              amount: 1
+  - id: MASTIFF_LEGGINGS
+    material: DIAMOND_LEGGINGS
+    name: Mastiff Leggings
+    rarity: EPIC
+    default_statistics:
+      health: 400
+      critical_damage: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - ABA
+              - BCB
+              - ABA
+            ingredients:
+              A:
+                type: GOLDEN_TOOTH
+                amount: 1
+              B:
+                type: ENCHANTED_DIAMOND
+                amount: 16
+              C:
+                type: GROWTH_LEGGINGS
+                amount: 1
+            result:
+              type: MASTIFF_LEGGINGS
+              amount: 1
+  - id: MASTIFF_BOOTS
+    material: DIAMOND_BOOTS
+    name: Mastiff Boots
+    rarity: EPIC
+    default_statistics:
+      health: 200
+      intelligence: 25
+      critical_damage: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - ABA
+              - BCB
+              - ABA
+            ingredients:
+              A:
+                type: GOLDEN_TOOTH
+                amount: 1
+              B:
+                type: ENCHANTED_DIAMOND
+                amount: 16
+              C:
+                type: GROWTH_BOOTS
+                amount: 1
+            result:
+              type: MASTIFF_BOOTS
+              amount: 1

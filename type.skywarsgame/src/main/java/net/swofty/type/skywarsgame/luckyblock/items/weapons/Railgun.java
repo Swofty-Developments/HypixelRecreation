@@ -9,7 +9,7 @@ import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -38,7 +38,7 @@ public class Railgun implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.BLAZE_ROD, """
+        return ItemStackCreator.raw(Material.BLAZE_ROD, """
                         <6>Railgun
 
                         <7>Single-shot weapon.

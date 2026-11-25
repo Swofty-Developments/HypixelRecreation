@@ -19,10 +19,19 @@ public class BlockStateManager {
             return new StairsState(block);
         else if (block.name().contains("fence_gate"))
             return new FenceGateState(block);
-        else if (block.name().contains("wall"))
+        else if (isWallBlock(block))
             return new WallState(block);
         else if (block.properties().containsKey("axis"))
             return new AxisBlockBlockState(block);
         return new BlockState(block);
+    }
+
+    private static boolean isWallBlock(Block block) {
+        var properties = block.properties();
+        return properties.containsKey("north")
+            && properties.containsKey("east")
+            && properties.containsKey("south")
+            && properties.containsKey("west")
+            && properties.containsKey("up");
     }
 }

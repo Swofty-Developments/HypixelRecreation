@@ -1,0 +1,47 @@
+items:
+  - id: EMBER_HELMET
+    material: PLAYER_HEAD
+    name: Ember Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 35
+      health: 40
+      intelligence: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 38d199e23c17488a01a07005a41fe330b1d22b04e99943c9f8c897d156e9555a
+  - id: EMBER_CHESTPLATE
+    material: CHAINMAIL_CHESTPLATE
+    name: Ember Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 60
+      health: 65
+      intelligence: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: EMBER_LEGGINGS
+    material: CHAINMAIL_LEGGINGS
+    name: Ember Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 55
+      health: 60
+      intelligence: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: EMBER_BOOTS
+    material: CHAINMAIL_BOOTS
+    name: Ember Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 30
+      health: 35
+      intelligence: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

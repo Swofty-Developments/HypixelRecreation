@@ -9,9 +9,9 @@ import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.luckyblock.LuckyBlock;
 import net.swofty.type.skywarsgame.luckyblock.LuckyBlockType;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -37,7 +37,7 @@ public class ActionLuckyBlockPlace implements HypixelEventClass {
 
         if (game.getGameType() != SkywarsGameType.SOLO_LUCKY_BLOCK) return;
 
-        if (game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) return;
+        if (game.getState() != GameState.IN_PROGRESS) return;
 
         LuckyBlock luckyBlockManager = game.getLuckyBlockManager();
         if (luckyBlockManager == null) return;

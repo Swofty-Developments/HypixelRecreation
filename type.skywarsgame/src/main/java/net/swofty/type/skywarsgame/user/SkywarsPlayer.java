@@ -6,6 +6,8 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
+import net.minestom.server.tag.Tag;
+import net.swofty.type.game.game.GameParticipant;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
@@ -16,51 +18,37 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class SkywarsPlayer extends HypixelPlayer {
+public class SkywarsPlayer extends HypixelPlayer implements GameParticipant {
+    private static final Tag<String> GAME_ID_TAG = Tag.String("gameId");
+
     private boolean eliminated = false;
-    private int killsThisGame = 0;
-    private int assistsThisGame = 0;
-    private int chestsOpenedThisGame = 0;
-    private int soulsEarnedThisGame = 0;
     private Pos cagePosition = null;
     private String selectedKit = "default";
     private Set<String> activePerks = new HashSet<>();
     private UUID lastDamager = null;
     private long lastDamageTime = 0;
-    private int arrowsShotThisGame = 0;
-    private int arrowsHitThisGame = 0;
-    private int mobsKilledThisGame = 0;
 
     public SkywarsPlayer(PlayerConnection playerConnection, GameProfile gameProfile) {
         super(playerConnection, gameProfile);
     }
 
-    public void addKill() {
-        killsThisGame++;
+    @Override
+    public String getGameId() {
+        return getTag(GAME_ID_TAG);
     }
 
-    public void addAssist() {
-        assistsThisGame++;
+    @Override
+    public void setGameId(String gameId) {
+        if (gameId == null) {
+            removeTag(GAME_ID_TAG);
+            return;
+        }
+        setTag(GAME_ID_TAG, gameId);
     }
 
-    public void addChestOpened() {
-        chestsOpenedThisGame++;
-    }
-
-    public void addSouls(int amount) {
-        soulsEarnedThisGame += amount;
-    }
-
-    public void addArrowShot() {
-        arrowsShotThisGame++;
-    }
-
-    public void addArrowHit() {
-        arrowsHitThisGame++;
-    }
-
-    public void addMobKill() {
-        mobsKilledThisGame++;
+    @Override
+    public SkywarsPlayer getServerPlayer() {
+        return this;
     }
 
     public void setLastDamager(UUID damager) {
@@ -101,13 +89,6 @@ public class SkywarsPlayer extends HypixelPlayer {
 
     public void resetGameState() {
         eliminated = false;
-        killsThisGame = 0;
-        assistsThisGame = 0;
-        chestsOpenedThisGame = 0;
-        soulsEarnedThisGame = 0;
-        arrowsShotThisGame = 0;
-        arrowsHitThisGame = 0;
-        mobsKilledThisGame = 0;
         cagePosition = null;
         activePerks = new HashSet<>();
         lastDamager = null;

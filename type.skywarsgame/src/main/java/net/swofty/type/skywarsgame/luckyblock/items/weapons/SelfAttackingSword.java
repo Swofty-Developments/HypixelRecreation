@@ -4,7 +4,7 @@ import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -30,7 +30,7 @@ public class SelfAttackingSword implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.IRON_SWORD, """
+        return ItemStackCreator.raw(Material.IRON_SWORD, """
                         <c>Self-Attacking Sword
 
                         <7>This cursed blade attacks

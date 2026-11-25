@@ -128,13 +128,8 @@ public class GUIKat extends HypixelInventoryGUI {
                 SkyBlockPlayer player = (SkyBlockPlayer) p;
                 if (item.getComponent(PetComponent.class).getKatUpgrades().getForRarity(item.getAttributeHandler().getRarity().upgrade()) == null) return;
                 KatUpgrade katUpgrade = item.getComponent(PetComponent.class).getKatUpgrades().getForRarity(item.getAttributeHandler().getRarity().upgrade());
-                int coins = katUpgrade.getCoins();
-                long time = katUpgrade.getTime();
-                ItemType upgradeItem = katUpgrade.getItem();
-                Integer itemAmount = katUpgrade.getAmount();
 
-                if (player.getCoins() < coins) return;
-                if (player.getAmountInInventory(upgradeItem) < itemAmount) return;
+                if (player.getCoins() < katUpgrade.getCoins() || !hasRequiredItems(player, katUpgrade)) return;
 
                 new GUIConfirmKat(item).open(player);
             }
@@ -152,7 +147,7 @@ public class GUIKat extends HypixelInventoryGUI {
                 Integer itemAmount = katUpgrade.getAmount();
                 List<Text> lore = new ArrayList<>();
                 Material material = Material.RED_TERRACOTTA;
-                if (player.getCoins() >= coins && player.getAmountInInventory(upgradeItem) >= itemAmount) {
+                if (player.getCoins() >= coins && hasRequiredItems(player, katUpgrade)) {
                     material = Material.GREEN_TERRACOTTA;
                 }
                 lore.add(Text.of("<7>Kat will take care of your <5>{}", item.getDisplayName()));
@@ -166,7 +161,7 @@ public class GUIKat extends HypixelInventoryGUI {
                 if (coins != 0) {
                     lore.add(Text.of("<6>{:,} Coins", coins));
                 }
-                if (player.getCoins() >= coins && player.getAmountInInventory(upgradeItem) >= itemAmount) {
+                if (player.getCoins() >= coins && hasRequiredItems(player, katUpgrade)) {
                     lore.add(Text.empty());
                     lore.add(Text.of("<e>Click to hire Kat!"));
                 } else if (player.getCoins() < coins) {
@@ -196,6 +191,12 @@ public class GUIKat extends HypixelInventoryGUI {
     @Override
     public void suddenlyQuit(Inventory inventory, HypixelPlayer player) {
         ((SkyBlockPlayer) player).addAndUpdateItem(new SkyBlockItem(inventory.getItemStack(13)));
+    }
+
+    private static boolean hasRequiredItems(SkyBlockPlayer player, KatUpgrade upgrade) {
+        if (upgrade.getItem() == null) return true;
+        return upgrade.getAmount() != null
+                && player.getAmountInInventory(upgrade.getItem()) >= upgrade.getAmount();
     }
 
     @Override

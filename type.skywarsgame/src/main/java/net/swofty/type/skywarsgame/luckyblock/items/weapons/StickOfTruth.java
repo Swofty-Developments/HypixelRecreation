@@ -8,7 +8,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.item.component.EnchantmentList;
 import net.minestom.server.item.enchant.Enchantment;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -34,7 +34,7 @@ public class StickOfTruth implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.STICK, """
+        return ItemStackCreator.raw(Material.STICK, """
                         <b>Stick of Truth
 
                         <7>Reveals the <b>true identity

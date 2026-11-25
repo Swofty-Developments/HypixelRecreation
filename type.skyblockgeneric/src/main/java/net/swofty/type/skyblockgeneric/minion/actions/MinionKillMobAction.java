@@ -7,6 +7,7 @@ import net.minestom.server.entity.damage.Damage;
 import net.minestom.server.entity.damage.DamageType;
 import net.minestom.server.instance.Instance;
 import net.swofty.commons.skyblock.item.ItemType;
+import net.swofty.type.generic.utility.MathUtility;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
 import net.swofty.type.skyblockgeneric.item.ItemQuantifiable;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -14,13 +15,11 @@ import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.minion.IslandMinionData;
 import net.swofty.type.skyblockgeneric.minion.MinionAction;
 import net.swofty.type.skyblockgeneric.utility.DamageIndicator;
-import net.swofty.type.generic.utility.MathUtility;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 @AllArgsConstructor
@@ -71,11 +70,10 @@ public class MinionKillMobAction extends MinionAction {
 
                 if (mob.getLootTable() == null) return new ArrayList<>();
 
-                Map<ItemType, SkyBlockLootTable.LootRecord> loot = mob.getLootTable().runChancesNoPlayer();
+                List<SkyBlockLootTable.LootRecord> loot = mob.getLootTable().roll(null, mob);
                 List<SkyBlockItem> items = new ArrayList<>();
-                for (ItemType itemType : loot.keySet()) {
-                    SkyBlockLootTable.LootRecord record = loot.get(itemType);
-                    items.add(new SkyBlockItem(itemType, record.getAmount()));
+                for (SkyBlockLootTable.LootRecord record : loot) {
+                    items.add(new SkyBlockItem(record.getItemType(), record.getAmount()));
                 }
                 return items;
             }

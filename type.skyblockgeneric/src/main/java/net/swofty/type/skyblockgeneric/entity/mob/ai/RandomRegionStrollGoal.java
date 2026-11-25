@@ -5,10 +5,10 @@ import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.instance.block.Block;
+import net.swofty.type.generic.utility.BlockProps;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
 import net.swofty.type.skyblockgeneric.region.RegionType;
 import net.swofty.type.skyblockgeneric.region.SkyBlockRegion;
-import net.swofty.type.generic.utility.BlockProps;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

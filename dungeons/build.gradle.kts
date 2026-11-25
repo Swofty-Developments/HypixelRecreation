@@ -11,6 +11,7 @@ java {
 }
 
 dependencies {
+    implementation(project(":commons"))
     testImplementation(libs.junit)
     compileOnly(libs.lombok)
     implementation(libs.gson)

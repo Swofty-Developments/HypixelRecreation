@@ -3,7 +3,7 @@ package net.swofty.type.bedwarsgame.shop.impl;
 import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.shop.Currency;
 import net.swofty.type.bedwarsgame.shop.ShopItem;
 import net.swofty.type.bedwarsgame.shop.TeamUpgradeId;

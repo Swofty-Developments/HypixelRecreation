@@ -1,0 +1,47 @@
+items:
+  - id: CANOPY_HELMET
+    material: PLAYER_HEAD
+    name: Canopy Mask
+    rarity: UNCOMMON
+    default_statistics:
+      health: 60
+      defense: 25
+      sweep: 6
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 93da8ca9a62856d5c0ee7808f12fa850594294a9755ca527dbc6679bacc3f7bb
+  - id: CANOPY_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Canopy Shirt
+    rarity: UNCOMMON
+    default_statistics:
+      health: 120
+      defense: 40
+      sweep: 6
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: CANOPY_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Canopy Pants
+    rarity: UNCOMMON
+    default_statistics:
+      health: 110
+      defense: 30
+      sweep: 6
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: CANOPY_BOOTS
+    material: LEATHER_BOOTS
+    name: Canopy Sandals
+    rarity: UNCOMMON
+    default_statistics:
+      health: 50
+      defense: 20
+      sweep: 6
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

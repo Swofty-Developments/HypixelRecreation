@@ -8,6 +8,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.ReplaceOptions;
+import net.swofty.commons.replay.protocol.ReplayChunk;
 import org.bson.Document;
 import org.tinylog.Logger;
 
@@ -27,8 +28,8 @@ public class ReplayDatabase {
         client = MongoClients.create(mongoUri);
         database = client.getDatabase("Minestom");
 
-        replays = database.getCollection("replays");
-        replayData = database.getCollection("replay_data");
+        replays = database.getCollection("replays_v4");
+        replayData = database.getCollection("replay_chunks_v4");
         maps = database.getCollection("replay_maps");
 
         replays.createIndex(Indexes.ascending("replayId"), new IndexOptions().unique(true));
@@ -36,7 +37,7 @@ public class ReplayDatabase {
         replays.createIndex(Indexes.descending("startTime"));
         replays.createIndex(Indexes.ascending("players"));
 
-        replayData.createIndex(Indexes.ascending("replayId", "chunkIndex"), new IndexOptions().unique(true));
+        replayData.createIndex(Indexes.ascending("replayId", "section", "sequence"), new IndexOptions().unique(true));
 
         maps.createIndex(Indexes.ascending("hash"), new IndexOptions().unique(true));
 
@@ -68,19 +69,24 @@ public class ReplayDatabase {
     }
 
 
-    public void saveReplayDataChunk(UUID replayId, int chunkIndex, byte[] compressedData, int startTick, int endTick) {
+    public void saveReplayChunk(UUID replayId, ReplayChunk chunk) {
         Document doc = new Document()
             .append("replayId", replayId.toString())
-            .append("chunkIndex", chunkIndex)
-            .append("startTick", startTick)
-            .append("endTick", endTick)
-            .append("data", compressedData)
-            .append("size", compressedData.length);
+                .append("section", chunk.section().name())
+                .append("sequence", chunk.sequence())
+                .append("startTick", chunk.startTick())
+                .append("endTick", chunk.endTick())
+                .append("uncompressedLength", chunk.uncompressedLength())
+                .append("recordCount", chunk.recordCount())
+                .append("checksum", chunk.checksum())
+                .append("data", chunk.compressedPayload())
+                .append("size", chunk.compressedPayload().length);
 
         replayData.replaceOne(
             Filters.and(
                 Filters.eq("replayId", replayId.toString()),
-                Filters.eq("chunkIndex", chunkIndex)
+                    Filters.eq("section", chunk.section().name()),
+                    Filters.eq("sequence", chunk.sequence())
             ),
             doc,
             new ReplaceOptions().upsert(true)
@@ -89,15 +95,8 @@ public class ReplayDatabase {
 
     public List<Document> getReplayDataChunks(UUID replayId) {
         return replayData.find(Filters.eq("replayId", replayId.toString()))
-            .sort(new Document("chunkIndex", 1))
+                .sort(new Document("section", 1).append("sequence", 1))
             .into(new ArrayList<>());
-    }
-
-    public Document getReplayDataChunk(UUID replayId, int chunkIndex) {
-        return replayData.find(Filters.and(
-            Filters.eq("replayId", replayId.toString()),
-            Filters.eq("chunkIndex", chunkIndex)
-        )).first();
     }
 
     public boolean hasMap(String mapHash) {
@@ -139,7 +138,7 @@ public class ReplayDatabase {
 
     public long getTotalDataSize() {
         // Approximate total size from replay_data collection
-        Document result = database.runCommand(new Document("collStats", "replay_data"));
+        Document result = database.runCommand(new Document("collStats", "replay_chunks_v4"));
         return result.getInteger("size", 0);
     }
 }

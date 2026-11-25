@@ -1,46 +1,86 @@
 package net.swofty.type.skyblockgeneric.item.handlers.pet;
 
-import net.swofty.commons.skyblock.item.Rarity;
-import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
-import net.swofty.type.skyblockgeneric.item.handlers.pet.abilities.*;
-import net.swofty.type.skyblockgeneric.item.handlers.pet.abstr.PetAbility;
-
-import java.util.List;
-
 public enum PetHandler {
-    BEE(List.of(
-            at(new HiveAbility(), Rarity.COMMON),
-            at(new BusyBuzzBuzzAbility(), Rarity.RARE),
-            at(new HoneyHarvesterAbility(), Rarity.LEGENDARY),
-            at(new PoweredByPollenAbility(), Rarity.MYTHIC)
-    )),
-    GRANDMA_WOLF(List.of(
-            at(new KillComboAbility(), Rarity.COMMON)
-    )),
-    CHICKEN(List.of(
-            at(new FreeRangeAbility(), Rarity.COMMON),
-            at(new EggstraLootAbility(), Rarity.RARE),
-            at(new LightFeetAbility(), Rarity.LEGENDARY)
-    ));
-
-    private final List<AbilityEntry> abilities;
-
-    PetHandler(List<AbilityEntry> abilities) {
-        this.abilities = abilities;
-    }
-
-    public List<PetAbility> getAbilities(SkyBlockItem item) {
-        Rarity rarity = item.getAttributeHandler().getRarity();
-        return abilities.stream()
-                .filter(e -> rarity.isAtLeast(e.minimumRarity()))
-                .map(AbilityEntry::ability)
-                .toList();
-    }
-
-    public record AbilityEntry(PetAbility ability, Rarity minimumRarity) {
-    }
-
-    private static AbilityEntry at(PetAbility ability, Rarity rarity) {
-        return new AbilityEntry(ability, rarity);
-    }
+    AMMONITE,
+    ANKYLOSAURUS,
+    ARMADILLO,
+    BABY_YETI,
+    BAL,
+    BAT,
+    BEE,
+    BLACK_CAT,
+    BLAZE,
+    BLUE_WHALE,
+    CHICKEN,
+    CROW,
+    DOLPHIN,
+    EERIE,
+    ELEPHANT,
+    ENDER_DRAGON,
+    ENDERMAN,
+    ENDERMITE,
+    FLYING_FISH,
+    FROG,
+    GHOUL,
+    GIRAFFE,
+    GLACITE_GOLEM,
+    GOBLIN,
+    GOLDEN_DRAGON,
+    GOLEM,
+    GRANDMA_WOLF,
+    GRIFFIN,
+    GUARDIAN,
+    HEDGEHOG,
+    HERMIT_CRAB,
+    HORSE,
+    HOUND,
+    JADE_DRAGON,
+    JELLYFISH,
+    JERRY,
+    KUUDRA,
+    LION,
+    MAGMA_CUBE,
+    MAMMOTH,
+    MEGALODON,
+    MITHRIL_GOLEM,
+    MOLE,
+    MONKEY,
+    MOOSHROOM_COW,
+    MOSQUITO,
+    OCELOT,
+    ORCHID_MANTIS,
+    OWL,
+    PARROT,
+    PENGUIN,
+    PHOENIX,
+    PIG,
+    PIGMAN,
+    PRECURSOR_DRONE,
+    RABBIT,
+    RAT,
+    REINDEER,
+    ROCK,
+    ROSE_DRAGON,
+    SCATHA,
+    SEAL,
+    SHEEP,
+    SILVERFISH,
+    SKELETON,
+    SKELETON_HORSE,
+    SLOTH,
+    SLUG,
+    SNAIL,
+    SNOWMAN,
+    SPIDER,
+    SPINOSAURUS,
+    SPIRIT,
+    SQUID,
+    TARANTULA,
+    TIGER,
+    TURTLE,
+    TYRANNOSAURUS,
+    WITCH,
+    WITHER_SKELETON,
+    WOLF,
+    ZOMBIE
 }

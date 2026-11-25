@@ -15,8 +15,7 @@ services:
     networks:
       - hypixel_network
     healthcheck:
-      test: |
-        mongosh --eval "db.adminCommand('ping').ok" --quiet > /dev/null 2>&1 || exit 1
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -78,6 +77,23 @@ services:
     environment:
       <<: *forwarding_env
       SERVICE_CMD: java -jar HypixelCore.jar SKYBLOCK_ISLAND
+    depends_on:
+      proxy:
+        condition: service_healthy
+      game_server_builder:
+        condition: service_started
+    volumes:
+      - ./configuration:/app/configuration_files
+    networks:
+      - hypixel_network
+
+  hypixelcore_garden:
+    image: game_server_prepared
+    container_name: hypixelcore_garden
+    restart: "unless-stopped"
+    environment:
+      <<: *forwarding_env
+      SERVICE_CMD: java -jar HypixelCore.jar SKYBLOCK_GARDEN
     depends_on:
       proxy:
         condition: service_healthy

@@ -1,0 +1,63 @@
+items:
+  - id: EXP_SHARE_CORE
+    material: ENDER_EYE
+    name: Exp Share Core
+    rarity: EPIC
+    lore:
+      - Used to craft the Exp Share pet item.
+      - <e>Right-click to view recipes!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Exp Share Core
+  - id: LAPIS_CRYSTAL
+    material: PLAYER_HEAD
+    name: Lapis Crystal
+    rarity: RARE
+    lore:
+      - Can be used to reforge pickaxes.
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Lapis Crystal
+      - id: SKULL_HEAD
+        texture: db9ffd85bf0283a588706e3d27afb9d4917e06f2ba717c1aea68dc79393b91f4
+      - id: SELLABLE
+        value: 50.0
+  - id: GOLDEN_POWDER
+    material: GLOWSTONE_DUST
+    name: Golden Powder
+    rarity: EPIC
+    lore:
+      - <e>Right-click to view recipes!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Golden Powder
+      - id: ITEM_MODEL
+        item_model: hypixel_skyblock:item/uncategorized/golden_powder
+  - id: DIGESTED_MUSHROOMS
+    material: PAPER
+    name: Digested Mushrooms
+    rarity: UNCOMMON
+    lore:
+      - <7><o>Sometimes digested multiple times.
+      - <e>Right-click to view recipes!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Digested Mushrooms
+      - id: ITEM_MODEL
+        item_model: hypixel_skyblock:item/uncategorized/digested_mushrooms
+      - id: SELLABLE
+        value: 50.0
+  - id: MITE_GEL
+    material: INK_SAC
+    name: Mite Gel
+    rarity: EPIC
+    lore:
+      - <8><o>Sticky goo scraped off an Endermite.
+      - <e>Right-click to view recipes!
+    components:
+      - id: CUSTOM_DISPLAY_NAME
+        display_name: Mite Gel
+      - id: ITEM_MODEL
+        item_model: hypixel_skyblock:item/island_relevant/combat_3/mite_gel
+      - id: SELLABLE
+        value: 2000.0

@@ -4,18 +4,37 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonParseException;
+import io.github.term4.polyp.MechanicsKeys;
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.mechanics.attack.AttackSystem;
+import io.github.term4.polyp.mechanics.attribute.AttributeSystem;
+import io.github.term4.polyp.mechanics.blocking.BlockingSystem;
+import io.github.term4.polyp.mechanics.consumable.ConsumableSystem;
+import io.github.term4.polyp.mechanics.damage.DamageSystem;
+import io.github.term4.polyp.mechanics.explosion.ExplosionSystem;
+import io.github.term4.polyp.mechanics.hunger.HungerSystem;
+import io.github.term4.polyp.mechanics.knockback.KnockbackSystem;
+import io.github.term4.polyp.mechanics.projectile.ProjectileSystem;
+import io.github.term4.polyp.platform.compatibility.Compat18;
+import io.github.term4.polyp.platform.fixes.Fixes18;
+import io.github.term4.polyp.platform.fixes.FixesSystem;
+import io.github.term4.polyp.presets.Preset;
+import io.github.term4.polyp.presets.hypixel.Tnt;
+import io.github.term4.polyp.presets.vanilla18.Explosion;
+import io.github.term4.polyp.vri.Vri;
+import io.github.term4.polyp.vri.VriConfig;
+import io.github.term4.polyp.world.MechanicsWorld;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.color.Color;
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
-import net.minestom.server.network.packet.server.play.EntityAnimationPacket;
-import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.registry.RegistryKey;
 import net.minestom.server.tag.Tag;
 import net.minestom.server.timer.TaskSchedule;
@@ -28,24 +47,21 @@ import net.swofty.commons.ServiceType;
 import net.swofty.commons.bedwars.BedWarsGameType;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.commons.protocol.objects.orchestrator.GameHeartbeatProtocol;
-import net.swofty.proxyapi.ProxyService;
 import net.swofty.commons.redis.RedisMessageHandler;
-import net.swofty.commons.redis.RedisMessageContext;
 import net.swofty.commons.text.Text;
-import net.swofty.pvp.MinestomPvP;
-import net.swofty.pvp.feature.CombatFeatureSet;
-import net.swofty.pvp.feature.CombatFeatures;
-import net.swofty.pvp.feature.FeatureType;
-import net.swofty.pvp.utils.CombatVersion;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.proxyapi.ProxyService;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.item.SimpleInteractableItem;
 import net.swofty.type.bedwarsgame.item.SimpleInteractableItemHandler;
+import net.swofty.type.bedwarsgame.replay.BedWarsMechanicsWorld;
+import net.swofty.type.bedwarsgame.replay.BedWarsReplayAdapter;
 import net.swofty.type.bedwarsgame.shop.ShopManager;
 import net.swofty.type.bedwarsgame.shop.TeamShopManager;
 import net.swofty.type.bedwarsgame.shop.TrapManager;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameObject;
 import net.swofty.type.game.game.GameState;
+import net.swofty.type.game.replay.api.ReplayAdapterRegistry;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.HypixelTypeLoader;
@@ -73,9 +89,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static net.swofty.pvp.feature.CombatFeatures.*;
 import static net.swofty.type.generic.HypixelGenericLoader.getLoadedPlayers;
 
 public class TypeBedWarsGameLoader implements HypixelTypeLoader {
@@ -93,6 +109,8 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
     public static final TrapManager trapManager = new TrapManager();
     @Getter
     public static final SimpleInteractableItemHandler itemHandler = new SimpleInteractableItemHandler();
+    @Getter
+    private static final ReplayAdapterRegistry<Function<BedWarsGame, BedWarsReplayAdapter>> replayAdapters = new ReplayAdapterRegistry<>();
 
     public static final Tag<@NotNull Boolean> PLAYER_PLACED_TAG = Tag.Boolean("player_placed");
     public static final Tag<@NotNull Integer> ARMOR_LEVEL_TAG = Tag.Integer("armor_level");
@@ -110,47 +128,11 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
         printHierarchy(clazz.getSuperclass());
     }
 
-    static CombatFeatureSet combatFeatures = CombatFeatures.empty().version(CombatVersion.LEGACY).addAll(List.of(
-        VANILLA_ARMOR, VANILLA_ATTACK, VANILLA_CRITICAL, //VANILLA_SWEEPING,
-        VANILLA_EQUIPMENT, VANILLA_BLOCK, VANILLA_ATTACK_COOLDOWN, VANILLA_ITEM_COOLDOWN,
-        VANILLA_DAMAGE, VANILLA_EFFECT, VANILLA_ENCHANTMENT, VANILLA_EXPLOSION,
-        VANILLA_EXPLOSIVE, VANILLA_FALL, VANILLA_FOOD, LEGACY_VANILLA_BLOCK,
-        VANILLA_REGENERATION, VANILLA_KNOCKBACK, VANILLA_POTION, VANILLA_BOW,
-        VANILLA_CROSSBOW, VANILLA_FISHING_ROD, VANILLA_MISC_PROJECTILE,
-        VANILLA_PROJECTILE_ITEM, VANILLA_TRIDENT, VANILLA_SPECTATE,
-        VANILLA_PLAYER_STATE, VANILLA_TOTEM//, VANILLA_DEATH_MESSAGE
-    )).soundProvider((audience, original, x, y, z) -> {
-        printHierarchy(audience.getClass());
-        audience.playSound(original, x, y, z);
-        // Try to get the game from the audience context
-        BedWarsGame game = null;
-        if (audience instanceof BedWarsPlayer player) {
-            game = player.getGame();
-        } else if (audience instanceof net.minestom.server.entity.Entity entity) {
-            game = TypeBedWarsGameLoader.getGameByInstance(entity.getInstance());
-        }
-        if (game != null && game.getReplayManager().isRecording()) {
-            game.getReplayManager().recordSound(original, x, y, z);
-        }
-    }).packetProvider((viewable, packet) -> {
-        printHierarchy(viewable.getClass());
-        viewable.sendPacketToViewersAndSelf(packet);
-        BedWarsGame game = null;
-        if (viewable instanceof BedWarsPlayer bwPlayer) {
-            game = bwPlayer.getGame();
-        } else if (viewable instanceof Entity entity) {
-            game = TypeBedWarsGameLoader.getGameByInstance(entity.getInstance());
-        }
-        if (game == null || !game.getReplayManager().isRecording()) {
-            return;
-        }
+    private static ExplosionSystem explosions;
 
-        if (packet instanceof ParticlePacket particlePacket) {
-            game.getReplayManager().recordParticle(particlePacket);
-        } else if (packet instanceof EntityAnimationPacket animationPacket) {
-            game.getReplayManager().recordEntityAnimation(animationPacket);
-        }
-    }).build();
+    public static void explodeBedWars(Instance instance, Point center, float power, Entity source) {
+        explosions.explode(instance, center, power, source);
+    }
 
     @Getter
     private static BedWarsMapsConfig mapsConfig;
@@ -181,9 +163,10 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
         }
         InstanceContainer mapInstance = instanceManager.createInstanceContainer(fullbrightDimension);
         mapInstance.setChunkLoader(new PolarLoader(new File("./configuration/bedwars/" + entry.getId() + ".polar").toPath()));
-        mapInstance.setExplosionSupplier(combatFeatures.get(FeatureType.EXPLOSION).getExplosionSupplier());
+        mapInstance.setExplosionSupplier(explosions.supplier());
 
         BedWarsGame game = new BedWarsGame(entry, mapInstance, type);
+        mapInstance.setTag(MechanicsWorld.TAG, new BedWarsMechanicsWorld(mapInstance, game));
         games.add(game);
         return game;
     }
@@ -206,11 +189,11 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
     }
 
     private static Text footer(BedWarsPlayer player) {
-        Text text = Text.empty();
+        Text start = Text.empty();
         if (player.getGame() != null) {
-            text = text.append("<b>Kills: <e>0 <b>Final Kills: <e>0 <b>Beds Broken: <e>0\n");
+            start = start.append("<b>Kills: <e>0 <b>Final Kills: <e>0 <b>Beds Broken: <e>0\n");
         }
-        return text.append("<a>Ranks, Boosters & MORE! <c><l>STORE.HYPIXEL.NET");
+        return start.append("<a>Ranks, Boosters & MORE! <c><l>STORE.HYPIXEL.NET");
     }
 
     @Override
@@ -220,6 +203,8 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
 
     @Override
     public void onInitialize(MinecraftServer server) {
+        replayAdapters.register(BedWarsReplayAdapter.GAME_TYPE, BedWarsReplayAdapter::new);
+        initializePolyp();
         BedWarsCollectibleCatalog.initialize();
         gson = new GsonBuilder()
             .registerTypeAdapter(BedWarsGameType.class, (JsonDeserializer<BedWarsGameType>) (json, _, _) -> {
@@ -233,7 +218,6 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
             .create();
         instanceManager = MinecraftServer.getInstanceManager();
         fullbrightDimension = MinecraftServer.getDimensionTypeRegistry().register("fullbright", DimensionType.builder().ambientLight(1f).setAttribute(EnvironmentAttribute.AMBIENT_LIGHT_COLOR, Color.WHITE).build());
-        MinecraftServer.getGlobalEventHandler().addChild(combatFeatures.createNode());
 
         Path mapsPath = Path.of("./configuration/bedwars/maps.json");
         if (!Files.exists(mapsPath)) {
@@ -259,11 +243,9 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
             UUID uuid = gameProfile.getPlayer().getUuid();
             String username = gameProfile.getPlayer().getUsername();
 
-            ServerType originServer = RedisOriginServer.consume(uuid);
-
-            if (originServer != null) {
-
-                player.setOriginServer(originServer);
+            if (RedisOriginServer.origin.containsKey(uuid)) {
+                player.setOriginServer(RedisOriginServer.origin.get(uuid));
+                RedisOriginServer.origin.remove(uuid);
             }
 
             Logger.info("Received new player: " + username + " (" + uuid + ")");
@@ -283,7 +265,6 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
         });
         HypixelGenericLoader.loopThroughPackage("net.swofty.type.bedwarsgame.item.impl", SimpleInteractableItem.class).forEach(itemHandler::add);
         itemHandler.getShopBackedItems().forEach(shopManager::addInteractableItem);
-        MinestomPvP.init();
 
         // heartbeat to orchestrator with supported maps and current load
         MinecraftServer.getSchedulerManager().buildTask(() -> {
@@ -362,6 +343,35 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
         }).repeat(10, TimeUnit.SERVER_TICK).schedule();
     }
 
+    private static void initializePolyp() {
+        Polyp polyp = Polyp.getInstance();
+        polyp.installPlayerProvider = false;
+        polyp.metaFix = false;
+        polyp.init();
+        polyp.profiles().setGlobal(Preset.HYPIXEL_BEDWARS.profile().toBuilder()
+                .set(MechanicsKeys.COMPAT, Compat18.config())
+                .set(MechanicsKeys.FIXES, Fixes18.config())
+                .set(MechanicsKeys.TNT, Tnt.config().toBuilder().igniteOnPlace(false).build())
+                .build());
+        AttackSystem.install(polyp);
+        DamageSystem.install(polyp);
+        KnockbackSystem.install(polyp);
+        ProjectileSystem.install(polyp);
+        AttributeSystem.install(polyp);
+        ConsumableSystem.install(polyp);
+        BlockingSystem.install(polyp);
+        HungerSystem.install(polyp);
+        FixesSystem.install(polyp);
+        Vri.install(polyp, VriConfig.builder().tntIgnite(true).build());
+        var explosionConfig = polyp.profiles().resolve(null, MechanicsKeys.EXPLOSION).toBuilder()
+                .blockBreaking(Explosion.blockBreaking().toBuilder()
+                        .breakRule((block, position, ignored) -> Boolean.TRUE.equals(block.getTag(PLAYER_PLACED_TAG)))
+                        .build())
+                .build();
+        polyp.profiles().setGlobal(MechanicsKeys.EXPLOSION, explosionConfig);
+        explosions = ExplosionSystem.install(polyp, explosionConfig);
+    }
+
     @Override
     public List<ServiceType> getRequiredServices() {
         return List.of(ServiceType.ORCHESTRATOR);
@@ -395,7 +405,7 @@ public class TypeBedWarsGameLoader implements HypixelTypeLoader {
                 HypixelEventClass.class
             ),
             HypixelGenericLoader.loopThroughPackage(
-                "net.swofty.type.bedwarsgame.game.v2.listener",
+                    "net.swofty.type.bedwarsgame.game.listener",
                 HypixelEventClass.class
             )
         ).toList();

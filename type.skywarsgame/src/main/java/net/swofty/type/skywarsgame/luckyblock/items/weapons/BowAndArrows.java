@@ -3,7 +3,7 @@ package net.swofty.type.skywarsgame.luckyblock.items.weapons;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockWeapon;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -29,7 +29,7 @@ public class BowAndArrows implements LuckyBlockWeapon {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.BOW, """
+        return ItemStackCreator.raw(Material.BOW, """
                         <f>Bow
 
                         <7>A standard bow.

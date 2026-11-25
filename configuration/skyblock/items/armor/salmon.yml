@@ -1,0 +1,121 @@
+items:
+  - id: SALMON_HELMET_NEW
+    material: LEATHER_HELMET
+    name: Salmon Helmet
+    rarity: RARE
+    default_statistics:
+      health: 100
+      defense: 30
+      sea_creature_chance: 1.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - AAA
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_RAW_SALMON
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: SALMON_HELMET_NEW
+              amount: 1
+  - id: SALMON_CHESTPLATE_NEW
+    material: LEATHER_CHESTPLATE
+    name: Salmon Chestplate
+    rarity: RARE
+    default_statistics:
+      health: 130
+      defense: 55
+      sea_creature_chance: 1.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_RAW_SALMON
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: SALMON_CHESTPLATE_NEW
+              amount: 1
+  - id: SALMON_LEGGINGS_NEW
+    material: LEATHER_LEGGINGS
+    name: Salmon Leggings
+    rarity: RARE
+    default_statistics:
+      health: 115
+      defense: 45
+      sea_creature_chance: 1.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_RAW_SALMON
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: SALMON_LEGGINGS_NEW
+              amount: 1
+  - id: SALMON_BOOTS_NEW
+    material: LEATHER_BOOTS
+    name: Salmon Boots
+    rarity: RARE
+    default_statistics:
+      health: 85
+      defense: 20
+      sea_creature_chance: 1.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FISHING
+            pattern:
+              - AOA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_RAW_SALMON
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: SALMON_BOOTS_NEW
+              amount: 1

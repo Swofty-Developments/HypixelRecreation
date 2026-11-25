@@ -8,7 +8,7 @@ import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.gui.inventory.Inventories;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
@@ -34,7 +34,7 @@ public class ChestSpawn implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.CHEST, """
+        return ItemStackCreator.item(Material.CHEST, """
                 <6><l>Chest Spawn</l>
                 <7>Place a chest filled with
                 <7>2-4 random lucky block items!

@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y jq netcat-traditional curl && apt-get clean
 
 # Download Velocity proxy JAR
-RUN curl -fSL -o velocity.jar "https://fill-data.papermc.io/v1/objects/0ec616020166465dacca3b790d3db2b246f8f7c13b3aaacaae60c825744a66e0/velocity-3.5.0-SNAPSHOT-605.jar"
+RUN curl -fSL -o velocity.jar "https://fill-data.papermc.io/v1/objects/0844bcabdcdb4f5b875906fd4c3365bc1bb76918e42bc595ed88ad195258dd75/velocity-4.3.1-45.jar"
 
 # Locally built JARs, empty for a regular install
 COPY ./DockerFiles/jars /app/prebuilt_jars
@@ -31,8 +31,12 @@ RUN rm -f velocity.toml && \
 
 # Set up config.yml template
 RUN mkdir -p configuration && \
-    cp configuration_files/config.docker.yml ./configuration/config.yml
+    cp configuration_files/config.docker.yml ./configuration/config.yml && \
+    cp configuration_files/proxy-entrypoint.sh ./proxy-entrypoint.sh && \
+    sed -i 's/\r$//' proxy-entrypoint.sh
+
+ENV JAVA_TOOL_OPTIONS="--enable-native-access=ALL-UNNAMED"
 
 EXPOSE 25565
 
-CMD ["sh", "-c", "[ -n \"$FORWARDING_SECRET\" ] || { echo 'FORWARDING_SECRET is required' >&2; exit 1; }; printf '%s' \"$FORWARDING_SECRET\" > /app/forwarding.secret; sed -i \"s/velocity-secret: .*/velocity-secret: '$FORWARDING_SECRET'/\" /app/configuration/config.yml; java -jar velocity.jar"]
+CMD ["sh", "proxy-entrypoint.sh"]

@@ -1,0 +1,47 @@
+items:
+  - id: FINAL_DESTINATION_HELMET
+    material: PLAYER_HEAD
+    name: Final Destination Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 100
+      health: 140
+      intelligence: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 6217c56bbd77f647b8403803ed7ed982dd7afcf8a2ca4133d2c357ee0896efe2
+  - id: FINAL_DESTINATION_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Final Destination Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 100
+      health: 200
+      intelligence: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: FINAL_DESTINATION_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Final Destination Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 100
+      health: 160
+      intelligence: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: FINAL_DESTINATION_BOOTS
+    material: LEATHER_BOOTS
+    name: Final Destination Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 100
+      health: 100
+      intelligence: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

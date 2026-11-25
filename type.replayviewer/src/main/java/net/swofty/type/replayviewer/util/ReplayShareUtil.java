@@ -3,6 +3,7 @@ package net.swofty.type.replayviewer.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minestom.server.coordinate.Pos;
+import net.swofty.commons.text.Text;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.replayviewer.playback.ReplaySession;
 
@@ -16,8 +17,8 @@ public final class ReplayShareUtil {
         String shareCode = ReplayShareCodec.encode(
             position,
             clampedTick,
-            session.getMetadata().getMapCenterX(),
-            session.getMetadata().getMapCenterZ()
+                session.getMetadata().descriptor().mapCenterX(),
+                session.getMetadata().descriptor().mapCenterZ()
         );
 
         return "/replay " + session.getReplayId() + " " + shareCode;
@@ -34,9 +35,8 @@ public final class ReplayShareUtil {
     public static void sendShareCommandMessage(HypixelPlayer player, ReplaySession session, int tick, Pos position) {
         String fullCommand = buildShareCommand(session, position, tick);
 
-        player.sendMessage(
-            "<hover:'<e>Click to copy command to chat'><click:suggest:'{}'><6><l>Click here to put share command in chat!</click></hover>",
-            fullCommand
-        );
+        player.sendMessage(Text.of("<hover:'{}'><click:suggest:'{}'>{}",
+                Text.key("replays.share_command_hover"), fullCommand,
+                Text.key("replays.share_command_message")));
     }
 }

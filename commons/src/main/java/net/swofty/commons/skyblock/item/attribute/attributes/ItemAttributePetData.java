@@ -1,7 +1,8 @@
 package net.swofty.commons.skyblock.item.attribute.attributes;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+import net.swofty.commons.skyblock.item.ItemType;
 import net.swofty.commons.skyblock.item.Rarity;
 import net.swofty.commons.skyblock.item.attribute.ItemAttribute;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
@@ -18,27 +19,49 @@ public class ItemAttributePetData extends ItemAttribute<ItemAttributePetData.Pet
 
     @Override
     public PetData getDefaultValue(@Nullable ItemStatistics defaultStatistics) {
-        return new PetData(0);
+        return new PetData(0, null, null);
     }
 
     @Override
     public PetData loadFromString(String string) {
-        if (string.isEmpty()) {
-            return new PetData(0);
+        if (string == null || string.isEmpty() || string.equals("null")) {
+            return new PetData(0, null, null);
         }
 
-        return new PetData(Double.parseDouble(string));
+        String[] parts = string.split(":", -1);
+
+        try {
+            double experience = Double.parseDouble(parts[0]);
+            ItemType skinId = parts[1].isBlank() ? null : ItemType.get(parts[1]);
+            String skinVariant = parts[2].isBlank() ? null : parts[2];
+            return new PetData(experience, skinId, skinVariant);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            return new PetData(0, null, null);
+        }
     }
 
     @Override
     public String saveIntoString() {
-        return String.valueOf(this.value.experience);
+        if (getValue() == null) return "null";
+        PetData data = getValue();
+        String exp = String.valueOf(data.getExperience());
+        String skinId = data.getSkinId() == null ? "" : data.getSkinId().name();
+        String skinVariant = data.getSkinVariant() == null ? "" : data.getSkinVariant();
+        return exp + ":" + skinId + ":" + skinVariant;
     }
 
-    @AllArgsConstructor
     @Getter
+    @Setter
     public static class PetData {
         private double experience;
+        private ItemType skinId;
+        private String skinVariant;
+
+        public PetData(double experience, ItemType skinId, String skinVariant) {
+            this.experience = experience;
+            this.skinId = skinId;
+            this.skinVariant = skinVariant;
+        }
 
         // Returns true if the level was increased
         public boolean addExperience(double experience, Rarity rarity) {

@@ -1,29 +1,24 @@
 package net.swofty.type.replayviewer.playback.npc;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.component.DataComponents;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.instance.InstanceContainer;
-import net.swofty.commons.text.Text;
+import net.swofty.type.generic.entity.hologram.ServerHolograms;
 import net.swofty.type.replayviewer.entity.ReplayEntityManager;
-import net.swofty.type.replayviewer.entity.ReplayNpcTextEntity;
+import net.swofty.commons.text.Text;
 import net.swofty.type.replayviewer.playback.ReplaySession;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NpcReplayManager {
 
     private final InstanceContainer instance;
     private final ReplayEntityManager entityManager;
     private final Map<Integer, NpcReplayData> npcData = new HashMap<>();
-    private final Map<Integer, ReplayNpcTextEntity> textEntities = new HashMap<>();
-    private int nextTextEntityId = -10000; // Use negative IDs to avoid conflicts
+    private final Map<Integer, ServerHolograms.ExternalHologram> holograms = new HashMap<>();
+    private final Map<Integer, Integer> remainingDurations = new HashMap<>();
 
     public NpcReplayManager(ReplaySession session) {
         this.instance = session.getInstance();
@@ -72,11 +67,11 @@ public class NpcReplayManager {
         if (entity != null) {
             if (visible) {
                 String fullName = data.getFullDisplayName();
-                Component nameComponent = Text.read(fullName).asComponent();
+                Text name = Text.read(fullName);
                 if (nameColor >= 0) {
-                    nameComponent = nameComponent.color(TextColor.color(nameColor));
+                    name = Text.of("<color:{}>{}", TextColor.color(nameColor), name);
                 }
-                entity.set(DataComponents.CUSTOM_NAME, nameComponent);
+                entity.set(DataComponents.CUSTOM_NAME, name.asComponent());
                 entity.setCustomNameVisible(true);
             } else {
                 entity.setCustomNameVisible(false);
@@ -106,36 +101,26 @@ public class NpcReplayManager {
     }
 
     private void updateOrCreateTextEntity(int entityId, NpcReplayData data) {
-        ReplayNpcTextEntity textEntity = textEntities.get(entityId);
+        removeTextEntity(entityId);
+        Entity npcEntity = entityManager.getEntity(entityId);
+        if (npcEntity == null) return;
 
-        if (textEntity != null) {
-            // Update existing
-            textEntity.updateTextLines(data.getTextLines());
-        } else {
-            // Create new
-            Entity npcEntity = entityManager.getEntity(entityId);
-            if (npcEntity != null) {
-                int textId = nextTextEntityId--;
-                textEntity = new ReplayNpcTextEntity(
-                    entityId,
-                    data.getTextLines(),
-                    data.getTextYOffset(),
-                    data.getTextDisplayDurationTicks()
-                );
-
-                Pos textPos = npcEntity.getPosition().add(0, data.getTextYOffset(), 0);
-                textEntity.setInstance(instance, textPos);
-                textEntities.put(entityId, textEntity);
-                data.setTextEntityId(textId);
-            }
+        ServerHolograms.ExternalHologram hologram = ServerHolograms.ExternalHologram.builder()
+                .instance(instance)
+                .pos(npcEntity.getPosition().add(0, data.getTextYOffset(), 0))
+                .text(data.getTextLines().toArray(String[]::new))
+                .build();
+        ServerHolograms.addExternalHologram(hologram);
+        holograms.put(entityId, hologram);
+        if (data.getTextDisplayDurationTicks() > 0) {
+            remainingDurations.put(entityId, data.getTextDisplayDurationTicks());
         }
     }
 
     private void removeTextEntity(int entityId) {
-        ReplayNpcTextEntity textEntity = textEntities.remove(entityId);
-        if (textEntity != null) {
-            textEntity.remove();
-        }
+        ServerHolograms.ExternalHologram hologram = holograms.remove(entityId);
+        if (hologram != null) ServerHolograms.removeExternalHologram(hologram);
+        remainingDurations.remove(entityId);
         NpcReplayData data = npcData.get(entityId);
         if (data != null) {
             data.setTextEntityId(-1);
@@ -150,12 +135,8 @@ public class NpcReplayManager {
      * @param newPos   the new NPC position
      */
     public void updateNpcPosition(int entityId, Pos newPos) {
-        ReplayNpcTextEntity textEntity = textEntities.get(entityId);
         NpcReplayData data = npcData.get(entityId);
-
-        if (textEntity != null && data != null) {
-            textEntity.updatePositionFromParent(newPos);
-        }
+        if (holograms.containsKey(entityId) && data != null) updateOrCreateTextEntity(entityId, data);
     }
 
     /**
@@ -163,17 +144,12 @@ public class NpcReplayManager {
      * Removes expired text entities.
      */
     public void tick() {
-        Set<Integer> toRemove = new HashSet<>();
-
-        for (Map.Entry<Integer, ReplayNpcTextEntity> entry : textEntities.entrySet()) {
-            if (entry.getValue().tickDuration()) {
-                toRemove.add(entry.getKey());
-            }
-        }
-
-        for (Integer entityId : toRemove) {
-            removeTextEntity(entityId);
-        }
+        Set<Integer> expired = new HashSet<>();
+        remainingDurations.replaceAll((entityId, remaining) -> {
+            if (remaining <= 1) expired.add(entityId);
+            return remaining - 1;
+        });
+        expired.forEach(this::removeTextEntity);
     }
 
     /**
@@ -199,10 +175,11 @@ public class NpcReplayManager {
      * Cleans up all NPC data and text entities.
      */
     public void cleanup() {
-        for (ReplayNpcTextEntity entity : textEntities.values()) {
-            entity.remove();
+        for (ServerHolograms.ExternalHologram hologram : holograms.values()) {
+            ServerHolograms.removeExternalHologram(hologram);
         }
-        textEntities.clear();
+        holograms.clear();
+        remainingDurations.clear();
         npcData.clear();
     }
 }

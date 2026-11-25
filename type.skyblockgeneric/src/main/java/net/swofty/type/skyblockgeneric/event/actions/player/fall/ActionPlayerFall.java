@@ -33,11 +33,6 @@ public class ActionPlayerFall implements HypixelEventClass {
             currentHeight = currentPosition.blockY();
         }
 
-        if (newPosition.y() > currentPosition.y() && currentHeight < newPosition.blockY()) {
-            player.setFallHeight(newPosition.blockY());
-            return;
-        }
-
         if (player.isOnGround()) {
             int fallDistance = currentHeight - newPosition.blockY();
             if (fallDistance > 4) {
@@ -48,7 +43,7 @@ public class ActionPlayerFall implements HypixelEventClass {
 
                 SkyBlockItem pet = player.getPetData().getEnabledPet();
                 PetEvent.FallDamage fallDamageEvent = player.getPetData()
-                        .dispatch(new PetEvent.FallDamage(player, pet, finalDamage));
+                        .dispatch(new PetEvent.FallDamage(player, pet, finalDamage, fallDistance));
                 finalDamage = (float) fallDamageEvent.damage();
 
                 if (finalDamage > 0)

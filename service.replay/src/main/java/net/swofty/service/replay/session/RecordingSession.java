@@ -2,108 +2,80 @@ package net.swofty.service.replay.session;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.swofty.commons.ServerType;
-import net.swofty.type.game.replay.ReplayMetadata;
+import net.swofty.commons.protocol.objects.replay.ReplayProtocolDto;
+import net.swofty.commons.replay.protocol.ReplayChunk;
+import net.swofty.commons.replay.protocol.ReplayFormat;
+import net.swofty.commons.replay.protocol.ReplaySection;
+import net.swofty.type.game.replay.codec.ReplaySnapshotCodec;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 @Getter
 public class RecordingSession {
-	private final UUID replayId;
-	private final String gameId;
-	private final ServerType serverType;
-	private final String serverId;
-	private final String gameTypeName;
-	private final String mapName;
-	private final String mapHash;
-	private final long startTime;
-	private final double mapCenterX;
-	private final double mapCenterZ;
-	private final Map<UUID, String> players;
-	private final Map<String, List<UUID>> teams;
-	private final Map<String, ReplayMetadata.TeamInfo> teamInfo;
+    private final ReplayProtocolDto.Metadata metadata;
+    private final Map<ReplaySection, ConcurrentSkipListMap<Integer, ReplayChunk>> chunks = new EnumMap<>(ReplaySection.class);
+    private volatile long lastDataTime = System.currentTimeMillis();
+    @Setter
+    private long endTime;
+    @Setter
+    private int durationTicks;
 
-	@Setter
-	private long endTime;
-	@Setter
-	private int durationTicks;
-	@Setter
-	private String winnerId;
-	@Setter
-	private String winnerType;
+    public RecordingSession(ReplayProtocolDto.Metadata metadata) {
+        this.metadata = metadata;
+        for (ReplaySection section : ReplaySection.values()) chunks.put(section, new ConcurrentSkipListMap<>());
+    }
 
-	// Batches ordered by index
-	private final ConcurrentSkipListMap<Integer, DataBatch> batches = new ConcurrentSkipListMap<>();
-	private volatile long lastDataTime;
-	private volatile int highestTick = 0;
+    public void addChunk(ReplayChunk chunk) throws IOException {
+        ReplayFormat.readChunk(chunk);
+        ReplayChunk existing = chunks.get(chunk.section()).putIfAbsent(chunk.sequence(), chunk);
+        if (existing != null && !existing.equals(chunk)) {
+            throw new IOException("Conflicting replay chunk " + chunk.section() + "/" + chunk.sequence());
+        }
+        lastDataTime = System.currentTimeMillis();
+    }
 
-	// this is so large, so maybe a builder that requires all fields could be cleaner?
-	public RecordingSession(
-		UUID replayId,
-		String gameId,
-		ServerType serverType,
-		String serverId,
-		String gameTypeName,
-		String mapName,
-		String mapHash,
-		long startTime,
-		double mapCenterX,
-		double mapCenterZ,
-		Map<UUID, String> players,
-		Map<String, List<UUID>> teams,
-		Map<String, ReplayMetadata.TeamInfo> teamInfo
-	) {
-		this.replayId = replayId;
-		this.gameId = gameId;
-		this.serverType = serverType;
-		this.serverId = serverId;
-		this.gameTypeName = gameTypeName;
-		this.mapName = mapName;
-		this.mapHash = mapHash;
-		this.startTime = startTime;
-		this.mapCenterX = mapCenterX;
-		this.mapCenterZ = mapCenterZ;
-		this.players = new HashMap<>(players);
-		this.teams = new HashMap<>(teams);
-		this.teamInfo = new HashMap<>(teamInfo);
-		this.lastDataTime = System.currentTimeMillis();
-	}
+    public List<ReplayChunk> getOrderedChunks() {
+        List<ReplayChunk> result = new ArrayList<>();
+        chunks.values().forEach(values -> result.addAll(values.values()));
+        result.sort(Comparator.comparing(ReplayChunk::section).thenComparingInt(ReplayChunk::sequence));
+        return List.copyOf(result);
+    }
 
-	public void addBatch(int index, int startTick, int endTick, int recordableCount, byte[] compressedData) {
-		batches.put(index, new DataBatch(index, startTick, endTick, recordableCount, compressedData));
-		lastDataTime = System.currentTimeMillis();
-		if (endTick > highestTick) {
-			highestTick = endTick;
-		}
-	}
+    public void validateComplete() throws IOException {
+        if (metadata.descriptor().formatVersion() != ReplayFormat.MAJOR_VERSION) {
+            throw new IOException("Unsupported replay format version: " + metadata.descriptor().formatVersion());
+        }
+        if (durationTicks < 0 || durationTicks > ReplayFormat.MAX_TICKS)
+            throw new IOException("Invalid replay duration: " + durationTicks);
+        List<ReplayChunk> ordered = getOrderedChunks();
+        ReplayFormat.validateOrdered(ordered, ReplaySection.SNAPSHOT);
+        ReplayFormat.validateOrdered(ordered, ReplaySection.DELTA);
+        ReplayFormat.validateOrdered(ordered, ReplaySection.EVENT);
+        List<ReplayChunk> snapshots = chunks.get(ReplaySection.SNAPSHOT).values().stream().toList();
+        if (snapshots.isEmpty() || snapshots.getFirst().startTick() != 0)
+            throw new IOException("Replay is missing the tick zero snapshot");
+        if (snapshots.getLast().endTick() != durationTicks)
+            throw new IOException("Replay is missing the final snapshot");
+        int previousSnapshotTick = -1;
+        for (ReplayChunk chunk : snapshots) {
+            for (byte[] entry : ReplayFormat.readChunk(chunk)) {
+                int snapshotTick = ReplaySnapshotCodec.read(entry).tick();
+                if (snapshotTick <= previousSnapshotTick || snapshotTick < chunk.startTick() || snapshotTick > chunk.endTick()) {
+                    throw new IOException("Invalid replay snapshot index at tick " + snapshotTick);
+                }
+                if (previousSnapshotTick >= 0 && snapshotTick - previousSnapshotTick > 200) {
+                    throw new IOException("Replay snapshot interval exceeds 200 ticks");
+                }
+                previousSnapshotTick = snapshotTick;
+            }
+        }
+        if (previousSnapshotTick != durationTicks)
+            throw new IOException("Replay final snapshot tick does not match duration");
+    }
 
-	public List<DataBatch> getOrderedBatches() {
-		return new ArrayList<>(batches.values());
-	}
-
-	public long getTotalBytesReceived() {
-		return batches.values().stream()
-			.mapToLong(b -> b.compressedData.length)
-			.sum();
-	}
-
-	public int getTotalRecordableCount() {
-		return batches.values().stream()
-			.mapToInt(DataBatch::recordableCount)
-			.sum();
-	}
-
-	public record DataBatch(
-		int index,
-		int startTick,
-		int endTick,
-		int recordableCount,
-		byte[] compressedData
-	) {
-	}
+    public long getTotalBytesReceived() {
+        return getOrderedChunks().stream().mapToLong(chunk -> chunk.compressedPayload().length).sum();
+    }
 }

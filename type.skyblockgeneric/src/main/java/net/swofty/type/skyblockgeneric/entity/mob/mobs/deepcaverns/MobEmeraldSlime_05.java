@@ -1,6 +1,5 @@
 package net.swofty.type.skyblockgeneric.entity.mob.mobs.deepcaverns;
 
-import lombok.NonNull;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
@@ -16,12 +15,13 @@ import net.swofty.type.skyblockgeneric.entity.mob.ai.ClosestEntityRegionTarget;
 import net.swofty.type.skyblockgeneric.entity.mob.ai.MeleeAttackWithinRegionGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.ai.RandomRegionStrollGoal;
 import net.swofty.type.skyblockgeneric.entity.mob.impl.RegionPopulator;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
+import net.swofty.type.skyblockgeneric.loottable.MobLootTable;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.region.RegionType;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -76,19 +76,17 @@ public class MobEmeraldSlime_05 extends BestiaryMob implements RegionPopulator {
 
 	@Override
 	public @Nullable SkyBlockLootTable getLootTable() {
-		return new SkyBlockLootTable() {
-			@Override
-			public @NonNull List<LootRecord> getLootTable() {
-				return List.of(
-						new LootRecord(ItemType.SLIME_BALL, 1, 100)
-						//new LootRecord(ItemType.EXP_SHARE_CORE, 1, 0.01)
-				);
-			}
-
-			@Override
-			public @NotNull CalculationMode getCalculationMode() {
-				return CalculationMode.CALCULATE_INDIVIDUAL;
-			}
+		return switch (getLevel()) {
+			case 10 -> new MobLootTable(getMobID(),
+					new MobLootTable.Drop(ItemType.SLIME_BALL, 1, 100, BestiaryDropRarity.COMMON),
+					new MobLootTable.Drop(ItemType.SLIME_BALL, 1, 50, BestiaryDropRarity.COMMON),
+					new MobLootTable.Drop(ItemType.EXP_SHARE_CORE, 1, 0.01, BestiaryDropRarity.RNGESUS));
+			case 15 -> new MobLootTable(getMobID(),
+					new MobLootTable.Drop(ItemType.SLIME_BALL, 2, 100, BestiaryDropRarity.COMMON),
+					new MobLootTable.Drop(ItemType.EXP_SHARE_CORE, 1, 0.01, BestiaryDropRarity.RNGESUS));
+			default -> new MobLootTable(getMobID(),
+					new MobLootTable.Drop(ItemType.SLIME_BALL, 1, 100, BestiaryDropRarity.COMMON),
+					new MobLootTable.Drop(ItemType.EXP_SHARE_CORE, 1, 0.01, BestiaryDropRarity.RNGESUS));
 		};
 	}
 

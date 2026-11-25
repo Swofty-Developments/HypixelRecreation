@@ -1,17 +1,16 @@
 package net.swofty.type.skywarsgame.luckyblock.items.usables;
 
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
-import net.minestom.server.entity.EntityType;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.pvp.projectile.entities.FireballProjectile;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
-import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockConsumable;
+import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItem;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
-import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
-public class Fireball implements LuckyBlockConsumable {
+import java.util.List;
+
+public class Fireball implements LuckyBlockItem {
 
     @Override
     public String getId() {
@@ -25,19 +24,20 @@ public class Fireball implements LuckyBlockConsumable {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.item(Material.FIRE_CHARGE, 8, """
-                <c><l>Fireball</l>
-                <7>Launch an explosive fireball!
-
-                <e>Right-click to use!""")
+        return ItemStack.builder(Material.FIRE_CHARGE)
+                .amount(8)
+                .customName(Component.text(getDisplayName(), NamedTextColor.RED)
+                        .decoration(TextDecoration.ITALIC, false)
+                        .decoration(TextDecoration.BOLD, true))
+                .lore(List.of(
+                        Component.text("Launch an explosive fireball!", NamedTextColor.GRAY)
+                                .decoration(TextDecoration.ITALIC, false),
+                        Component.empty(),
+                        Component.text("Right-click to use!", NamedTextColor.YELLOW)
+                                .decoration(TextDecoration.ITALIC, false)
+                ))
                 .set(LuckyBlockItemRegistry.LUCKY_BLOCK_ITEM_TAG, getId())
                 .build();
     }
 
-    @Override
-    public void onConsume(SkywarsPlayer player) {
-        new FireballProjectile(EntityType.FIREBALL, player)
-                .shoot(player.getPosition().add(0, player.getEyeHeight(), 0).asVec(), 1, 1);
-        player.playSound(Sound.sound(Key.key("minecraft:entity.ghast.shoot"), Sound.Source.PLAYER, 1f, 1f), Sound.Emitter.self());
-    }
 }

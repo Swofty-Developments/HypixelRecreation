@@ -11,6 +11,8 @@ import net.kyori.adventure.translation.GlobalTranslator;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.GameMode;
+import net.minestom.server.MinecraftServer;
+import net.minestom.server.instance.Instance;
 import net.swofty.commons.text.Text;
 import net.swofty.type.generic.entity.npc.configuration.AnimalConfiguration;
 import net.swofty.type.generic.entity.npc.configuration.HumanConfiguration;
@@ -29,13 +31,14 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class HypixelNPC {
     private static final int SPAWN_DISTANCE = 48;
     private static final int LOOK_DISTANCE = 5;
 
     @Getter
-    private static final List<HypixelNPC> registeredNPCs = new ArrayList<>();
+    private static final List<HypixelNPC> registeredNPCs = new CopyOnWriteArrayList<>();
     @Getter
     private static final Map<UUID, HypixelNPC.PlayerNPCCache> perPlayerNPCs = new ConcurrentHashMap<>();
 
@@ -93,6 +96,19 @@ public abstract class HypixelNPC {
 
                 if (!playerHasNPC) {
                     NPCConfiguration config = npc.getParameters();
+                    Instance npcInstance = config.instance();
+
+                    // Prevent NPCs from spawning into instances that have already been unregistered.
+                    if (npcInstance != null && !MinecraftServer.getInstanceManager().getInstances().contains(npcInstance)) {
+                        Logger.warn(
+                            "Skipping stale NPC {} for player {}: instance {} is not registered",
+                            npc,
+                            player.getUsername(),
+                            npcInstance
+                        );
+                        npc.unregister();
+                        return;
+                    }
 
                     if (!config.visible(player)) return;
 
@@ -139,7 +155,13 @@ public abstract class HypixelNPC {
                     return;
                 }
 
-                Pos npcPosition = entity.getPosition();
+                if (entity.getInstance() != config.instance(player)) {
+                    entity.remove();
+                    cache.remove(npc);
+                    return;
+                }
+
+                Pos npcPosition = config.position(player);
                 if (!(entity instanceof NPCViewable npcViewable)) {
                     Logger.error("Entity for NPC {} does not implement NPCViewable, skipping update", npc.getName(player));
                     return;
@@ -192,6 +214,14 @@ public abstract class HypixelNPC {
 
     public void unregister() {
         registeredNPCs.remove(this);
+        // Remove all per-player entity copies of this NPC.
+        perPlayerNPCs.values().forEach(cache -> {
+            Entity entity = cache.get(this);
+            if (entity != null) {
+                entity.remove();
+                cache.remove(this);
+            }
+       });
     }
 
     /**

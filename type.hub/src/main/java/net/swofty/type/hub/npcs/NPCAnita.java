@@ -41,5 +41,4 @@ public class NPCAnita extends HypixelNPC {
     public void onClick(NPCInteractEvent e) {
         e.player().notImplemented();
     }
-
 }

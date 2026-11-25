@@ -24,6 +24,7 @@ public class KatUpgrade {
     public static KatUpgrade OnlyCoins(Long time, Integer coins) {
         return new KatUpgrade(time, coins);
     }
+
     public static KatUpgrade WithItem(Long time, Integer coins, ItemType item, Integer amount) {
         return new KatUpgrade(time, coins, item, amount);
     }

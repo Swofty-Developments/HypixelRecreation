@@ -7,7 +7,7 @@ import net.minestom.server.item.Material;
 import net.minestom.server.entity.metadata.item.ItemEntityMeta;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.role.GameRole;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 import net.swofty.type.generic.event.EventNodes;
@@ -26,7 +26,7 @@ public class ActionGoldPickup implements HypixelEventClass {
 
         Game game = TypeMurderMysteryGameLoader.getPlayerGame(player);
         if (game == null) return;
-        if (game.getGameStatus() != GameStatus.IN_PROGRESS) {
+        if (game.getState() != GameState.IN_PROGRESS) {
             event.setCancelled(true);
             return;
         }

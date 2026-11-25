@@ -17,7 +17,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
 import net.swofty.commons.text.Text;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.luckyblock.oprule.OPRuleManager;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -65,7 +65,7 @@ public class LuckyBlock {
 
         instance.setBlock(blockPos, type.getGlassBlock());
 
-        ItemStack headItem = ItemStacks.head(type.getSkullTexture(), Text.empty(), List.of()).build();
+        ItemStack headItem = ItemStackCreator.head(type.getSkullTexture(), Text.empty(), List.of()).build();
         LivingEntity displayEntity = new LivingEntity(EntityType.ITEM_DISPLAY);
         displayEntity.editEntityMeta(ItemDisplayMeta.class, meta -> {
             meta.setItemStack(headItem);

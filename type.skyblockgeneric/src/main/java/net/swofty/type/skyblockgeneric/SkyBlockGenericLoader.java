@@ -10,9 +10,7 @@ import net.kyori.adventure.key.Key;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.CoordConversion;
 import net.minestom.server.coordinate.Pos;
-import net.minestom.server.event.server.ServerTickMonitorEvent;
 import net.minestom.server.instance.Chunk;
-import net.minestom.server.monitoring.TickMonitor;
 import net.minestom.server.registry.RegistryKey;
 import net.minestom.server.timer.TaskSchedule;
 import net.minestom.server.utils.time.TimeUnit;
@@ -60,11 +58,13 @@ import net.swofty.type.skyblockgeneric.data.SkyBlockDomain;
 import net.swofty.type.skyblockgeneric.data.crystals.CrystalCatalog;
 import net.swofty.type.skyblockgeneric.data.monogdb.*;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
+import net.swofty.type.skyblockgeneric.entity.PetEntityImpl;
 import net.swofty.type.skyblockgeneric.entity.ServerCrystalImpl;
 import net.swofty.type.skyblockgeneric.entity.mob.MobRegistry;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
 import net.swofty.type.skyblockgeneric.event.value.SkyBlockValueEvent;
 import net.swofty.type.skyblockgeneric.fishing.registry.FishingRegistry;
+import net.swofty.type.skyblockgeneric.furniture.Furniture;
 import net.swofty.type.skyblockgeneric.hunting.HuntrapService;
 import net.swofty.type.skyblockgeneric.item.ItemConfigParser;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
@@ -97,6 +97,7 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockScoreboard;
 import net.swofty.type.skyblockgeneric.user.StashReminder;
 import net.swofty.type.skyblockgeneric.user.fairysouls.FairySoul;
 import net.swofty.type.skyblockgeneric.user.island.SkyBlockIsland;
+import net.swofty.type.skyblockgeneric.user.island.IslandWorldStorage;
 import net.swofty.type.skyblockgeneric.user.statistics.PlayerStatistics;
 import net.swofty.type.skyblockgeneric.user.statistics.TemporaryStatistic;
 import net.swofty.type.skyblockgeneric.utility.LaunchPads;
@@ -128,6 +129,8 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         SkyBlockGenericLoader.server = server;
         SkyBlockTextScopes.init();
         CustomWorlds mainInstance = typeLoader.getMainInstance();
+        IslandWorldStorage.validateTemplate();
+        Furniture.preload();
 
         /**
          * Setup launchpads
@@ -144,6 +147,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         MongoClient mongoClient = MongoClients.create(settings);
 
         IslandDatabase.connect(mongoClient);
+        GardenDatabase.connect(mongoClient);
         CoopDatabase.connect(mongoClient);
 
         PlayerWipeService.onIslandDropped(SkyBlockIsland::discard);
@@ -154,6 +158,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         ItemAttribute.registerItemAttributes();
         HuntrapService.initialize();
         PlayerItemUpdater.updateLoop(MinecraftServer.getSchedulerManager());
+        PetEntityImpl.updateTextureLoop(MinecraftServer.getSchedulerManager());
         File configDir = new File("./configuration/skyblock");
         File itemsDir = new File(configDir, "items");
         try {
@@ -209,8 +214,6 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         /**
          * Start generic SkyBlock tablist
          */
-        MinecraftServer.getGlobalEventHandler().addListener(ServerTickMonitorEvent.class, event ->
-            HypixelGenericLoader.LAST_TICK.set(event.getTickMonitor()));
         MinecraftServer.getSchedulerManager().buildTask(() -> {
             Collection<SkyBlockPlayer> players = getLoadedPlayers();
             if (players.isEmpty())
@@ -218,15 +221,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
 
             long ramUsage = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
             ramUsage /= (long) 1e6; // bytes to MB
-            TickMonitor tickMonitor = HypixelGenericLoader.LAST_TICK.get();
-            double TPS = 1000 / tickMonitor.getTickTime();
-
-            if (TPS < 20) {
-                HypixelGenericLoader.getLoadedPlayers().forEach(player -> {
-                    player.getLogHandler().debug(Text.of("<c>Server TPS is below 20! TPS: {}", TPS));
-                });
-                Logger.error("Server TPS is below 20! TPS: " + TPS);
-            }
+            double TPS = HypixelGenericLoader.getTicksPerSecond();
 
             final Text header = Text.of("""
                 <b>You are playing on <e><l>MC.HYPIXEL.NET</l>
@@ -330,6 +325,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
             Key.key("skyblock:island"),
             DimensionType.builder()
                 .ambientLight(1)
+                .defaultClock(RegistryKey.of("overworld"))
                 .build());
         SkyBlockIsland.runVacantLoop(MinecraftServer.getSchedulerManager());
 

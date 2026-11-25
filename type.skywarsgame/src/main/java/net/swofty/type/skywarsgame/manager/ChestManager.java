@@ -6,6 +6,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
+import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.skywars.SkywarsGameType;
 import net.swofty.commons.text.Text;
@@ -14,9 +15,16 @@ import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.loot.ChestLootTable;
 import net.swofty.type.skywarsgame.loot.LootTier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class ChestManager {
+    private final SkywarsGame game;
     private final Instance instance;
     private final SkywarsGameType gameType;
     private final List<Pos> islandChests;
@@ -27,8 +35,13 @@ public class ChestManager {
     private boolean refillScheduled = false;
     private int refillCount = 0;
     private long gameStartTime = 0;
+    private Task firstRefillTask;
+    private Task secondRefillTask;
+    private Task hologramTask;
 
-    public ChestManager(Instance instance, SkywarsGameType gameType, List<Pos> islandChests, List<Pos> centerChests) {
+    public ChestManager(SkywarsGame game, Instance instance, SkywarsGameType gameType,
+                        List<Pos> islandChests, List<Pos> centerChests) {
+        this.game = Objects.requireNonNull(game, "game");
         this.instance = instance;
         this.gameType = gameType;
         this.islandChests = new ArrayList<>(islandChests);
@@ -73,21 +86,25 @@ public class ChestManager {
         refillScheduled = true;
         gameStartTime = System.currentTimeMillis();
 
-        MinecraftServer.getSchedulerManager().buildTask(() -> {
+        firstRefillTask = MinecraftServer.getSchedulerManager().buildTask(() -> {
+            firstRefillTask = null;
+            if (!game.isInProgress()) return;
             refillAllChests();
             removeAllHolograms();
             refillCount = 1;
             broadcastFirst.run();
         }).delay(TaskSchedule.seconds(SkywarsGame.FIRST_REFILL_SECONDS)).schedule();
 
-        MinecraftServer.getSchedulerManager().buildTask(() -> {
+        secondRefillTask = MinecraftServer.getSchedulerManager().buildTask(() -> {
+            secondRefillTask = null;
+            if (!game.isInProgress()) return;
             refillAllChests();
             removeAllHolograms();
             refillCount = 2;
             broadcastSecond.run();
         }).delay(TaskSchedule.seconds(SkywarsGame.SECOND_REFILL_SECONDS)).schedule();
 
-        MinecraftServer.getSchedulerManager().buildTask(this::updateAllHolograms)
+        hologramTask = MinecraftServer.getSchedulerManager().buildTask(this::updateAllHolograms)
                 .repeat(TaskSchedule.tick(20))
                 .schedule();
     }
@@ -104,6 +121,7 @@ public class ChestManager {
     }
 
     public void reset() {
+        cancelScheduledTasks();
         removeAllHolograms();
         openedChests.clear();
         refilledOnce.clear();
@@ -113,7 +131,22 @@ public class ChestManager {
         gameStartTime = 0;
     }
 
+    public void stop() {
+        cancelScheduledTasks();
+        removeAllHolograms();
+    }
+
     public void triggerRefill(boolean isFirst) {
+        if (!game.isInProgress()) return;
+
+        if (isFirst && firstRefillTask != null) {
+            firstRefillTask.cancel();
+            firstRefillTask = null;
+        }
+        if (!isFirst && secondRefillTask != null) {
+            secondRefillTask.cancel();
+            secondRefillTask = null;
+        }
         refillAllChests();
         removeAllHolograms();
         refillCount = isFirst ? 1 : 2;
@@ -166,7 +199,7 @@ public class ChestManager {
     }
 
     private void updateAllHolograms() {
-        if (refillCount >= 2) return;
+        if (!game.isInProgress() || refillCount >= 2) return;
 
         Text newText = getHologramText();
         for (HologramEntity hologram : chestHolograms.values()) {
@@ -179,5 +212,20 @@ public class ChestManager {
             hologram.remove();
         }
         chestHolograms.clear();
+    }
+
+    private void cancelScheduledTasks() {
+        if (firstRefillTask != null) {
+            firstRefillTask.cancel();
+            firstRefillTask = null;
+        }
+        if (secondRefillTask != null) {
+            secondRefillTask.cancel();
+            secondRefillTask = null;
+        }
+        if (hologramTask != null) {
+            hologramTask.cancel();
+            hologramTask = null;
+        }
     }
 }

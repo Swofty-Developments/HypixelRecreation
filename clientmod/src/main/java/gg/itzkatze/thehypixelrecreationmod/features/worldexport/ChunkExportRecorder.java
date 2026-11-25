@@ -1,8 +1,8 @@
 package gg.itzkatze.thehypixelrecreationmod.features.worldexport;
 
-import gg.itzkatze.thehypixelrecreationmod.utils.PolarConvert;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import gg.itzkatze.thehypixelrecreationmod.utils.PolarConvert;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +12,7 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.level.storage.TagValueOutput;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ public final class ChunkExportRecorder {
     private static final Map<UUID, CapturedEntity> RECORDED_BLOCK_DISPLAYS = new LinkedHashMap<>();
     private static final Map<UUID, CompoundTag> RECORDED_RAVENGARD_OBJECTS = new LinkedHashMap<>();
     private static final Set<UUID> MOVING_ENTITIES = new HashSet<>();
+    private static final Map<UUID, BedWarsSprayPosition> RECORDED_SPRAY_POSITIONS = new LinkedHashMap<>();
 
     private static LoadedChunkExporter.SessionContext sessionContext;
     private static Instant startedAt;
@@ -61,6 +63,7 @@ public final class ChunkExportRecorder {
         RECORDED_BLOCK_DISPLAYS.clear();
         RECORDED_RAVENGARD_OBJECTS.clear();
         MOVING_ENTITIES.clear();
+        RECORDED_SPRAY_POSITIONS.clear();
         captureMode = mode;
         stitchedSessionName = sessionName == null ? null : LoadedChunkExporter.sanitizeSessionName(sessionName);
         try {
@@ -106,6 +109,9 @@ public final class ChunkExportRecorder {
         int ravengardObjectCount = RECORDED_RAVENGARD_OBJECTS.size();
         if (captureMode == CaptureMode.RAVENGARD) {
             writeRavengardConfiguration(polarResult.path(), RECORDED_RAVENGARD_OBJECTS.values());
+        }
+        if (captureMode == CaptureMode.BEDWARS) {
+            writeBedWarsConfiguration(polarResult.path());
         }
         if (stitchedSessionName != null) saveCheckpoint(stitchedSessionName);
         clearSession();
@@ -171,6 +177,15 @@ public final class ChunkExportRecorder {
             if (captureMode == CaptureMode.BLOCK_DISPLAYS || captureMode == CaptureMode.RAVENGARD) {
                 captureBlockDisplays(level);
             }
+            if (captureMode == CaptureMode.BEDWARS) captureSprayPositions(level);
+        }
+    }
+
+    private static void captureSprayPositions(ClientLevel level) {
+        for (Entity entity : level.entitiesForRendering()) {
+            if (!(entity instanceof ItemFrame frame)) continue;
+            RECORDED_SPRAY_POSITIONS.put(frame.getUUID(), new BedWarsSprayPosition(
+                    frame.getBlockX(), frame.getBlockY(), frame.getBlockZ(), frame.getDirection().getName()));
         }
     }
 
@@ -226,6 +241,7 @@ public final class ChunkExportRecorder {
         RECORDED_BLOCK_DISPLAYS.clear();
         RECORDED_RAVENGARD_OBJECTS.clear();
         MOVING_ENTITIES.clear();
+        RECORDED_SPRAY_POSITIONS.clear();
         sessionContext = null;
         startedAt = null;
         ticksUntilCapture = 0;
@@ -250,6 +266,13 @@ public final class ChunkExportRecorder {
         String id = polarFile.replaceFirst("\\.polar$", "").replaceFirst("\\.nbt$", "");
         Files.writeString(configurationPath, GSON.toJson(new RavengardDungeonConfiguration(
                 id, id, polarFile, new RavengardPosition(0.5, 65, 0.5, 0, 0), values)));
+    }
+
+    private static void writeBedWarsConfiguration(Path polarPath) throws IOException {
+        Path configurationPath = polarPath.resolveSibling(
+                polarPath.getFileName().toString().replaceFirst("\\.polar$", "") + "-bedwars.json");
+        Files.writeString(configurationPath, GSON.toJson(Map.of(
+                "sprays", RECORDED_SPRAY_POSITIONS.values())));
     }
 
     private static Path checkpointPath(String name) {
@@ -331,7 +354,8 @@ public final class ChunkExportRecorder {
     public enum CaptureMode {
         CHUNKS,
         BLOCK_DISPLAYS,
-        RAVENGARD
+        RAVENGARD,
+        BEDWARS
     }
 
     public record StartResult(String dimension, int initialChunkCount, int initialBlockDisplayCount, CaptureMode mode) {
@@ -366,6 +390,9 @@ public final class ChunkExportRecorder {
 
     private record RavengardDungeonObject(String category, String type, double x, double y, double z,
                                           float yaw, float pitch) {
+    }
+
+    private record BedWarsSprayPosition(int x, int y, int z, String facing) {
     }
 
     private record EntityPosition(double x, double y, double z) {

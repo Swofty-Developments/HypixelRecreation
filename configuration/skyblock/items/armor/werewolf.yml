@@ -1,0 +1,121 @@
+items:
+  - id: WEREWOLF_HELMET
+    material: PLAYER_HEAD
+    name: Werewolf Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 135
+      ferocity: 10
+      intelligence: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: WEREWOLF_SKIN
+                amount: 4
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: WEREWOLF_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: ce4606c6d973a999aec1687c7e075f7d37db8185e88b844507f16b3e2b3eb690
+  - id: WEREWOLF_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Werewolf Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 240
+      ferocity: 10
+      intelligence: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: WEREWOLF_SKIN
+                amount: 4
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: WEREWOLF_CHESTPLATE
+              amount: 1
+  - id: WEREWOLF_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Werewolf Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 200
+      ferocity: 10
+      intelligence: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: WEREWOLF_SKIN
+                amount: 4
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: WEREWOLF_LEGGINGS
+              amount: 1
+  - id: WEREWOLF_BOOTS
+    material: LEATHER_BOOTS
+    name: Werewolf Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 125
+      ferocity: 10
+      intelligence: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: WEREWOLF_SKIN
+                amount: 4
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: WEREWOLF_BOOTS
+              amount: 1

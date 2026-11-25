@@ -12,7 +12,7 @@ import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItem;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 
 public class PlayAgainItem extends SimpleInteractableItem {
     private static final ProxyService PROXY_SERVICE = new ProxyService(ServiceType.ORCHESTRATOR);
@@ -23,7 +23,7 @@ public class PlayAgainItem extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStacks.item(Material.PAPER, 1, """
+        return ItemStackCreator.item(Material.PAPER, 1, """
                 <a>Play Again <7>(Right Click)
                 <7>Right-click to queue for another game!""").build();
     }

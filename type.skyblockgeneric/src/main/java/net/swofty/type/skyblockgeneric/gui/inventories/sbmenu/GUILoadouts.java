@@ -15,7 +15,7 @@ import net.swofty.type.skyblockgeneric.data.datapoints.DatapointLoadouts;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.PlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.loadout.LoadoutManager;
-import net.swofty.type.skyblockgeneric.loadout.LoadoutManager.TreeType;
+import net.swofty.type.skyblockgeneric.skilltree.SkillTreeType;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 
 import java.util.ArrayList;
@@ -43,8 +43,8 @@ public class GUILoadouts implements StatefulView<GUILoadouts.LoadoutsState> {
         SkyBlockPlayer player = (SkyBlockPlayer) ctx.player();
         DatapointLoadouts.LoadoutsData data = LoadoutManager.data(player);
 
-        layout.slot(9, treeSummary(data, TreeType.HOTF), (_, c) -> c.push(new GUITreeSlots(TreeType.HOTF)));
-        layout.slot(18, treeSummary(data, TreeType.HOTM), (_, c) -> c.push(new GUITreeSlots(TreeType.HOTM)));
+        layout.slot(9, treeSummary(data, SkillTreeType.HOTF), (_, c) -> c.push(new GUITreeSlots(SkillTreeType.HOTF)));
+        layout.slot(18, treeSummary(data, SkillTreeType.HOTM), (_, c) -> c.push(new GUITreeSlots(SkillTreeType.HOTM)));
         for (int component = 0; component < 4; component++) {
             int piece = component;
             layout.slot(10 + component * 9, (s, c) -> currentEquipment((SkyBlockPlayer) c.player(), piece),
@@ -188,8 +188,8 @@ public class GUILoadouts implements StatefulView<GUILoadouts.LoadoutsState> {
                 : PlayerItemUpdater.playerUpdate(player, pet.getItemStack());
     }
 
-    private static ItemStack.Builder treeSummary(DatapointLoadouts.LoadoutsData data, TreeType tree) {
-        boolean hotm = tree == TreeType.HOTM;
+    private static ItemStack.Builder treeSummary(DatapointLoadouts.LoadoutsData data, SkillTreeType tree) {
+        boolean hotm = tree == SkillTreeType.HOTM;
         int active = hotm ? data.getActiveHotmSlot() : data.getActiveHotfSlot();
         String[] names = hotm ? data.getHotmNames() : data.getHotfNames();
         String title = hotm ? "Heart of the Mountain" : "Heart of the Forest";

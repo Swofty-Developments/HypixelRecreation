@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 env:
-  WORLD_ASSETS_URL: https://files.catbox.moe/flri48.zip
+  WORLD_ASSETS_URL: https://github.com/Swofty-Developments/HypixelRecreation/releases/download/world-assets/world-assets.zip
   INSTALL_DIR: /home/runner/hypixel-skyblock
   LOG_DIR: ${{ github.workspace }}/smoke-logs
   COMPOSE_PROJECT_NAME: hypixel-skyblock
@@ -123,7 +123,7 @@ jobs:
           missing=0
           for type in $declared; do
             lower=$(printf '%s' "$type" | tr '[:upper:]' '[:lower:]')
-            if ! printf '%s\n' "$generated" | grep -qx "hypixelcore_$lower"; then
+            if ! printf '%s\n' "$generated" | grep -x "hypixelcore_$lower" >/dev/null; then
               echo "::error::the generated Compose file has no container for $type"
               missing=1
             fi
@@ -212,7 +212,7 @@ jobs:
                 fail "$name hit a fatal error while booting: $excerpt" "$id"
                 return 1
               fi
-              if printf '%s\n' "$logs" | grep -qF "$needle"; then
+              if printf '%s\n' "$logs" | grep -F "$needle" >/dev/null; then
                 return 0
               fi
               status=$(docker inspect -f '{{.State.Status}}' "$id")
@@ -265,7 +265,7 @@ jobs:
           echo "::group::Starting the proxy"
           docker compose up -d proxy
           wait_healthy proxy "$PROXY_TIMEOUT" || exit 1
-          if ! docker logs "$(container proxy)" 2>&1 | grep -qF "$PROXY_PLUGIN_READY"; then
+          if ! docker logs "$(container proxy)" 2>&1 | grep -F "$PROXY_PLUGIN_READY" >/dev/null; then
             fail "the proxy came up without loading the SkyBlock plugin" "$(container proxy)"
             exit 1
           fi

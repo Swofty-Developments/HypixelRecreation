@@ -5,11 +5,10 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.gui.GUICageKitSelector;
 import net.swofty.type.skywarsgame.item.SimpleInteractableItem;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 
 public class KitSelectorBow extends SimpleInteractableItem {
 
@@ -19,7 +18,7 @@ public class KitSelectorBow extends SimpleInteractableItem {
 
     @Override
     public ItemStack getBlandItem() {
-        return ItemStacks.item(Material.BOW, 1, """
+        return ItemStackCreator.item(Material.BOW, 1, """
                 <a>Kit Selector <7>(Right Click)
                 <7>Right-click to select your kit!""").build();
     }
@@ -27,7 +26,7 @@ public class KitSelectorBow extends SimpleInteractableItem {
     @Override
     public void onItemUse(PlayerUseItemEvent event) {
         SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(event.getPlayer());
-        if (game != null && game.getGameStatus() == SkywarsGameStatus.WAITING) {
+        if (game != null && game.getState().isWaiting()) {
             SkywarsPlayer player = (SkywarsPlayer) event.getPlayer();
             String mode = game.getGameType().getModeString();
             new GUICageKitSelector(mode, game).open(player);

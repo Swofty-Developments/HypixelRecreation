@@ -1,0 +1,94 @@
+rarity_thresholds:
+  RARE: 1
+  EPIC: 4
+  LEGENDARY: 16
+garden_sowdust:
+  formula: ceil(total_farming_fortune / 100) / block_break_multiplier
+  double_break_crops:
+    - SUGAR_CANE
+    - CACTUS
+greenhouse_crop_multipliers:
+  WHEAT: 1
+  CARROT: 3.5
+  POTATO: 3
+  PUMPKIN: 0.85
+  SUGAR_CANE: 2
+  MELON_SLICE: 4
+  CACTUS: 1.5
+  COCOA_BEANS: 2
+  MUSHROOM: 0.95
+  NETHER_WART: 3
+  MOONFLOWER: 2
+  SUNFLOWER: 2
+  WILD_ROSE: 2
+level_costs:
+  - { level: 2, cost: 100000 }
+  - { level: 3, cost: 200000 }
+  - { level: 4, cost: 300000 }
+  - { level: 5, cost: 400000 }
+  - { level: 6, cost: 550000 }
+  - { level: 7, cost: 700000 }
+  - { level: 8, cost: 850000 }
+  - { level: 9, cost: 1000000 }
+  - { level: 10, cost: 1150000 }
+  - { level: 11, cost: 1300000 }
+  - { level: 12, cost: 1450000 }
+  - { level: 13, cost: 1600000 }
+  - { level: 14, cost: 1750000 }
+  - { level: 15, cost: 1900000 }
+  - { level: 16, cost: 2050000 }
+  - { level: 17, cost: 2200000 }
+  - { level: 18, cost: 2350000 }
+  - { level: 19, cost: 2500000 }
+  - { level: 20, cost: 2650000 }
+chips:
+  - id: VERMIN_VAPORIZER_GARDEN_CHIP
+    display_name: Vermin Vaporizer Chip
+    acquisition: Dragonfly Pest 1%
+    effects: { rare_per_level: 3, epic_per_level: 4, legendary_per_level: 5 }
+    cap: { rare: 30, epic: 60, legendary: 100 }
+  - id: SYNTHESIS_GARDEN_CHIP
+    display_name: Synthesis Chip
+    acquisition: Greenhouse Harvest Bounty 3%
+    effects: { rare_per_level: 1, epic_per_level: 1.5, legendary_per_level: 2 }
+    cap: { rare: 10, epic: 22.5, legendary: 40 }
+  - id: SOWLEDGE_GARDEN_CHIP
+    display_name: Sowledge Chip
+    acquisition: SkyMart 200 Copper
+    effects: { rare_per_level: 1, epic_per_level: 1.25, legendary_per_level: 1.5 }
+    cap: { rare: 10, epic: 18.75, legendary: 30 }
+  - id: MECHAMIND_GARDEN_CHIP
+    display_name: Mechamind Chip
+    acquisition: Anita 1 Gold Medal
+    effects: { rare_per_level: 1.5, epic_per_level: 2, legendary_per_level: 2.5 }
+    cap: { rare: 15, epic: 30, legendary: 50 }
+  - id: HYPERCHARGE_GARDEN_CHIP
+    display_name: Hypercharge Chip
+    acquisition: Visitor Offers 2%
+    effects: { rare_per_level: 3, epic_per_level: 4, legendary_per_level: 5 }
+    cap: { rare: 30, epic: 60, legendary: 100 }
+  - id: EVERGREEN_GARDEN_CHIP
+    display_name: Evergreen Chip
+    acquisition: Greenhouse Harvest Bounty 3%
+    effects: { rare_per_level: 2, epic_per_level: 2.5, legendary_per_level: 3 }
+    cap: { rare: 20, epic: 37.5, legendary: 60 }
+  - id: OVERDRIVE_GARDEN_CHIP
+    display_name: Overdrive Chip
+    acquisition: Anita 2 Gold Medals
+    effects: { rare_per_level: 5, epic_per_level: 6, legendary_per_level: 7 }
+    cap: { rare: 50, epic: 90, legendary: 140 }
+  - id: CROPSHOT_GARDEN_CHIP
+    display_name: Cropshot Chip
+    acquisition: SkyMart 500 Copper / Jeff First Chip
+    effects: { rare_per_level: 3, epic_per_level: 4, legendary_per_level: 5 }
+    cap: { rare: 30, epic: 60, legendary: 100 }
+  - id: QUICKDRAW_GARDEN_CHIP
+    display_name: Quickdraw Chip
+    acquisition: Visitor Offers 2%
+    effects: { rare_per_level: 1.5, epic_per_level: 2, legendary_per_level: 2.5 }
+    cap: { rare: 15, epic: 30, legendary: 50 }
+  - id: RAREFINDER_GARDEN_CHIP
+    display_name: Rarefinder Chip
+    acquisition: Crop Farming 0.00015%
+    effects: { rare_per_level: 2, epic_per_level: 2.5, legendary_per_level: 3 }
+    cap: { rare: 20, epic: 37.5, legendary: 60 }

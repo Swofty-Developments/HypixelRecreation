@@ -2,17 +2,13 @@ package net.swofty.service.replay.endpoints;
 
 import net.swofty.commons.ServerType;
 import net.swofty.commons.protocol.objects.replay.ReplayListProtocolObject;
-import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.commons.redis.RedisMessageContext;
+import net.swofty.commons.redis.RedisMessageHandler;
 import net.swofty.service.replay.ReplayService;
 import org.bson.Document;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ReplayListEndpoint implements RedisMessageHandler<
         ReplayListProtocolObject.ListRequest,
@@ -32,9 +28,9 @@ public class ReplayListEndpoint implements RedisMessageHandler<
             List<ReplayListProtocolObject.ReplaySummary> replays = new ArrayList<>();
             for (Document doc : docs) {
                 Map<UUID, String> players = new HashMap<>();
-                Document playerNames = doc.get("playerNames", Document.class);
-                if (playerNames != null) {
-                    playerNames.forEach((key, value) -> players.put(UUID.fromString(key), (String) value));
+                List<Document> participants = doc.getList("participants", Document.class, List.of());
+                for (Document participant : participants) {
+                    players.put(UUID.fromString(participant.getString("uuid")), participant.getString("username"));
                 }
 
                 replays.add(new ReplayListProtocolObject.ReplaySummary(
@@ -42,7 +38,7 @@ public class ReplayListEndpoint implements RedisMessageHandler<
                         doc.getString("gameId"),
                         ServerType.valueOf(doc.getString("serverType")),
                         doc.getString("serverId"),
-                        doc.getString("gameTypeName"),
+                        doc.getString("gameType"),
                         doc.getString("mapName"),
                         doc.getLong("startTime"),
                         doc.getLong("endTime"),

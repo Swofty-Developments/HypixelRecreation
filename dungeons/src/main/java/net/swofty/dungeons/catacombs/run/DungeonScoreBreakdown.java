@@ -13,4 +13,12 @@ public record DungeonScoreBreakdown(
     public DungeonScoreRank rank() {
         return DungeonScoreRank.fromScore(total());
     }
+
+    public int rngMeterProgress() {
+        return switch (rank()) {
+            case S_PLUS -> total();
+            case S -> (int) Math.round(total() * 0.7D);
+            default -> 0;
+        };
+    }
 }

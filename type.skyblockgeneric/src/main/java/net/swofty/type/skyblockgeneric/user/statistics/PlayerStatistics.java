@@ -43,6 +43,7 @@ import net.swofty.type.skyblockgeneric.item.components.ConstantStatisticsCompone
 import net.swofty.type.skyblockgeneric.item.components.PetComponent;
 import net.swofty.type.skyblockgeneric.item.components.SkullHeadComponent;
 import net.swofty.type.skyblockgeneric.item.handlers.pet.abstr.PetAbility;
+import net.swofty.type.skyblockgeneric.item.handlers.pet.abstr.PetEvent;
 import net.swofty.type.skyblockgeneric.item.components.StandardItemComponent;
 import net.swofty.type.skyblockgeneric.item.set.ArmorSetRegistry;
 import net.swofty.type.skyblockgeneric.item.set.impl.ArmorSet;
@@ -57,7 +58,6 @@ import net.swofty.type.skyblockgeneric.user.SkyBlockActionBar;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Constructor;
 import java.util.*;
 
 public class PlayerStatistics {
@@ -127,15 +127,19 @@ public class PlayerStatistics {
                     enemy
             )));
         }
-        if (player.getArmorSet() != null) {
-            ArmorSetRegistry armorSetRegistry = player.getArmorSet();
-            try {
-                Constructor<? extends ArmorSet> constructor = armorSetRegistry.getClazz().getConstructor();
-                ArmorSet armorSet = constructor.newInstance();
-                total = ItemStatistics.add(total, armorSet.getStatistics());
-            } catch (Exception _) {
-            }
-        }
+		List<ArmorSetRegistry> wornSets = getWornArmorSets();
+		if (player.getArmorSet() == ArmorSetRegistry.ENDER
+					&& player.getRegion() != null
+					&& switch (player.getRegion().getType()) {
+                        case THE_END, THE_END_NEST, VOID_SEPULTURE, DRAGONS_NEST -> true;
+						default -> false;
+					}) {
+				total = ItemStatistics.multiply(total, 2);
+			}
+		for (ArmorSetRegistry armorSetRegistry : wornSets) {
+			ArmorSet armorSet = armorSetRegistry.create();
+			total = ItemStatistics.add(total, armorSet.getStatistics(player));
+		}
         return total;
     }
 
@@ -190,21 +194,28 @@ public class PlayerStatistics {
                 ));
     }
 
-    public ItemStatistics petStatistics() {
-        SkyBlockItem pet = player.getPetData().getEnabledPet();
-        if (pet == null) return ItemStatistics.empty();
-        PetComponent component = pet.getComponent(PetComponent.class);
-        ItemStatistics baseStatistics = component.getBaseStatistics();
-        ItemStatistics perLevelStatistics = component.getPerLevelStatistics(
-                pet.getAttributeHandler().getRarity()
-        );
-        int level = pet.getAttributeHandler().getPetData().getAsLevel(pet.getAttributeHandler().getRarity());
-        ItemStatistics stats = ItemStatistics.add(baseStatistics, ItemStatistics.multiply(perLevelStatistics, level));
-
-        for (PetAbility ability : player.getPetData().getCachedAbilities(pet)) {
-            stats = ItemStatistics.add(stats, ability.getStatistics(player, pet));
+    public ItemStatistics petStatistics(@Nullable LivingEntity entity) {
+        ItemStatistics stats = ItemStatistics.empty();
+        for (SkyBlockItem pet : player.getPetData().getActivePets()) {
+            stats = ItemStatistics.add(stats, petStats(pet, entity));
         }
+        return stats;
+    }
 
+    private ItemStatistics petStats(SkyBlockItem pet, @Nullable LivingEntity entity) {
+        ItemStatistics stats = ItemStatistics.empty();
+        if (player.getPetData().getEnabledPet() == pet) {
+            PetComponent component = pet.getComponent(PetComponent.class);
+            ItemStatistics baseStatistics = component.getBaseStatistics();
+            ItemStatistics perLevelStatistics = component.getPerLevelStatistics(
+                    pet.getAttributeHandler().getRarity()
+            );
+            int level = pet.getAttributeHandler().getPetData().getAsLevel(pet.getAttributeHandler().getRarity());
+            stats = ItemStatistics.add(baseStatistics, ItemStatistics.multiply(perLevelStatistics, level));
+        }
+        for (PetAbility ability : player.getPetData().getAbilities(pet)) {
+            stats = ItemStatistics.add(stats, ability.getStatistics(player, pet, entity));
+        }
         return stats;
     }
 
@@ -241,19 +252,22 @@ public class PlayerStatistics {
     }
 
     public ItemStatistics allStatistics(SkyBlockPlayer causer, LivingEntity enemy) {
-        ItemStatistics total = ItemStatistics.builder().build();
-        if (enemy instanceof BestiaryMob bestiaryMob) total = ItemStatistics.add(total, getBestiaryStatistics(causer, bestiaryMob));
-        total = ItemStatistics.add(total, allArmorStatistics(causer, enemy));
-        total = ItemStatistics.add(total, equipmentStatistics(causer, enemy));
-        total = ItemStatistics.add(total, mainHandStatistics(causer, enemy));
-        total = ItemStatistics.add(total, spareStatistics());
-        total = ItemStatistics.add(total, getTemporaryStatistics());
-        total = ItemStatistics.add(total, petStatistics());
-        total = ItemStatistics.add(total, accessoryStatistics);
-        total = ItemStatistics.add(total, AttributeEffectService.statistics(player));
-        total = ItemStatistics.add(total, ItemStatistic.getOfAllBaseValues());
+        ItemStatistics base = allNonPetStatistics(causer, enemy);
+        return ItemStatistics.add(base, petStatistics(enemy));
+    }
 
-        return total;
+    public ItemStatistics allNonPetStatistics(SkyBlockPlayer causer, LivingEntity enemy) {
+        ItemStatistics base = ItemStatistics.builder().build();
+        if (enemy instanceof BestiaryMob bestiaryMob) base = ItemStatistics.add(base, getBestiaryStatistics(causer, bestiaryMob));
+        base = ItemStatistics.add(base, allArmorStatistics(causer, enemy));
+        base = ItemStatistics.add(base, equipmentStatistics(causer, enemy));
+        base = ItemStatistics.add(base, mainHandStatistics(causer, enemy));
+        base = ItemStatistics.add(base, spareStatistics());
+        base = ItemStatistics.add(base, getTemporaryStatistics());
+        base = ItemStatistics.add(base, accessoryStatistics);
+        base = ItemStatistics.add(base, AttributeEffectService.statistics(player));
+        base = ItemStatistics.add(base, ItemStatistic.getOfAllBaseValues());
+        return base;
     }
 
     public List<StatisticSource> statisticSources() {
@@ -283,15 +297,12 @@ public class PlayerStatistics {
         addItemModifiers(modifiers, cache.get(PlayerItemOrigin.CHESTPLATE), StatisticSourceType.ARMOR);
         addItemModifiers(modifiers, cache.get(PlayerItemOrigin.LEGGINGS), StatisticSourceType.ARMOR);
         addItemModifiers(modifiers, cache.get(PlayerItemOrigin.BOOTS), StatisticSourceType.ARMOR);
-        if (player.getArmorSet() != null) {
-            try {
-                ArmorSet armorSet = player.getArmorSet().getClazz().getConstructor().newInstance();
-                addModifier(modifiers, player.getArmorSet().getDisplayName() + " Set Bonus",
-                    armorSet.getStatistics(), StatisticSourceType.ARMOR,
-                    StatisticModifierType.ABILITY_PASSIVE, null, Material.IRON_CHESTPLATE, null);
-            } catch (ReflectiveOperationException ignored) {
-            }
-        }
+		for (ArmorSetRegistry armorSetRegistry : getWornArmorSets()) {
+			ArmorSet armorSet = armorSetRegistry.create();
+			addModifier(modifiers, armorSetRegistry.getDisplayName() + " Set Bonus",
+				armorSet.getStatistics(player), StatisticSourceType.ARMOR,
+				StatisticModifierType.ABILITY_PASSIVE, null, Material.IRON_CHESTPLATE, null);
+		}
 
         DatapointInventory inventory = player.getSkyblockDataHandler()
             .get(SkyBlockDataHandler.Data.INVENTORY, DatapointInventory.class);
@@ -307,9 +318,10 @@ public class PlayerStatistics {
                 StatisticSourceType.ATTRIBUTE, StatisticModifierType.ATTRIBUTE, null, Material.PRISMARINE_SHARD, null);
         addTemporaryModifiers(modifiers);
 
-        SkyBlockItem pet = player.getPetData().getEnabledPet();
-        if (pet != null) modifiers.add(new StatisticModifier(pet.getDisplayName(), pet.getMaterial(),
-            texture(pet), petStatistics(), StatisticSourceType.PET, StatisticModifierType.BASIC, null));
+        for (SkyBlockItem pet : player.getPetData().getActivePets()) {
+            addModifier(modifiers, pet.getDisplayName(), petStats(pet, null),
+                StatisticSourceType.PET, StatisticModifierType.BASIC, null, pet.getMaterial(), texture(pet));
+        }
 
         Set<ItemType> usedAccessories = new HashSet<>();
         for (ItemStack stack : player.getInventory().getItemStacks()) {
@@ -324,6 +336,14 @@ public class PlayerStatistics {
             ItemStatistic.getOfAllBaseValues(), StatisticSourceType.INNATE, StatisticModifierType.INNATE, null));
         return modifiers;
     }
+
+	private List<ArmorSetRegistry> getWornArmorSets() {
+		ItemType helmet = new SkyBlockItem(player.getHelmet()).getAttributeHandler().getPotentialType();
+		ItemType chestplate = new SkyBlockItem(player.getChestplate()).getAttributeHandler().getPotentialType();
+		ItemType leggings = new SkyBlockItem(player.getLeggings()).getAttributeHandler().getPotentialType();
+		ItemType boots = new SkyBlockItem(player.getBoots()).getAttributeHandler().getPotentialType();
+		return ArmorSetRegistry.getWornSets(boots, leggings, chestplate, helmet);
+	}
 
     /**
      * the updater skips the main hand while a menu is open, which causes
@@ -841,8 +861,12 @@ public class PlayerStatistics {
                     player.setMana(player.getMaxMana());
                 if (player.getMana() <= player.getMaxMana()) {
                     float manaPool = player.getMaxMana();
-                    player.setMana(Math.min(manaPool, Math.min(manaPool, player.getMana() + (manaPool / 50) +
-                            (int) ((manaPool / 50) * player.getStatistics().getManaRegenerationPercentBonus()))));
+                    float manaRegeneration = manaPool / 50
+                            + (int) ((manaPool / 50) * player.getStatistics().getManaRegenerationPercentBonus());
+                    SkyBlockItem pet = player.getPetData().getEnabledPet();
+                    PetEvent.ManaRegen manaRegenEvent = player.getPetData()
+                            .dispatch(new PetEvent.ManaRegen(player, pet, manaRegeneration));
+                    player.setMana((float) Math.min(manaPool, player.getMana() + manaRegenEvent.amount()));
                 }
             });
             return TaskSchedule.seconds(1);

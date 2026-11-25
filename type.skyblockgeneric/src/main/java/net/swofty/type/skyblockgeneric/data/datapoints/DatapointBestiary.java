@@ -123,11 +123,12 @@ public class DatapointBestiary extends SkyBlockDatapoint<DatapointBestiary.Playe
             List<MobType> mobtypes = mob.getMobTypes();
 
             if (mobtypes.size() == 1) {
-                lore.add("<7>Mob Type: " + mobtypes.getFirst().getFullDisplayName());
+                lore.add("<7>Mob Type: " + mobtypes.getFirst().getFullDisplayName().serialize());
                 lore.add("");
             } else if (mobtypes.size() > 1) {
                 lore.add("<7>Mob Types: " + mobtypes.stream()
                         .map(MobType::getFullDisplayName)
+                        .map(net.swofty.commons.text.Text::serialize)
                         .collect(Collectors.joining("<7>, ")));
                 lore.add("");
             }

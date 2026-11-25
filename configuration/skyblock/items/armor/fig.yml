@@ -1,0 +1,134 @@
+items:
+  - id: FIG_HELMET
+    material: PLAYER_HEAD
+    name: Fig Cap
+    rarity: RARE
+    default_statistics:
+      health: 80
+      defense: 30
+      foraging_fortune: 30
+      sweep: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FORAGING
+            pattern:
+              - AAA
+              - ABA
+            ingredients:
+              A:
+                type: FIGSTONE
+                amount: 1
+              B:
+                type: CANOPY_HELMET
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: FIG_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: 531d3f448491a35d711b877973e5da5d0e72a2ecfdc98dede71bfa1b537bb4eb
+  - id: FIG_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Figmail
+    rarity: RARE
+    default_statistics:
+      health: 160
+      defense: 45
+      foraging_fortune: 30
+      sweep: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FORAGING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: FIGSTONE
+                amount: 1
+              B:
+                type: CANOPY_CHESTPLATE
+                amount: 1
+            result:
+              type: FIG_CHESTPLATE
+              amount: 1
+  - id: FIG_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Fig Trousers
+    rarity: RARE
+    default_statistics:
+      health: 140
+      defense: 35
+      foraging_fortune: 30
+      sweep: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FORAGING
+            pattern:
+              - AAA
+              - ABA
+              - AOA
+            ingredients:
+              A:
+                type: FIGSTONE
+                amount: 1
+              B:
+                type: CANOPY_LEGGINGS
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: FIG_LEGGINGS
+              amount: 1
+  - id: FIG_BOOTS
+    material: LEATHER_BOOTS
+    name: Fig Striders
+    rarity: RARE
+    default_statistics:
+      health: 65
+      defense: 25
+      foraging_fortune: 30
+      sweep: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FORAGING
+            pattern:
+              - ABA
+              - AOA
+            ingredients:
+              A:
+                type: FIGSTONE
+                amount: 1
+              B:
+                type: CANOPY_BOOTS
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: FIG_BOOTS
+              amount: 1

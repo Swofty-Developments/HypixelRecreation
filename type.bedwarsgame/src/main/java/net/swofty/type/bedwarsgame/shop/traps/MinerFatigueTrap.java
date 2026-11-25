@@ -7,7 +7,7 @@ import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.shop.Currency;
 import net.swofty.type.bedwarsgame.shop.Trap;
 import net.swofty.type.bedwarsgame.shop.TrapId;

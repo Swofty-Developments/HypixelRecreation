@@ -12,7 +12,6 @@ import net.swofty.type.generic.redis.service.GameInformationHandler;
 import net.swofty.type.generic.utility.MathUtility;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 import org.tinylog.Logger;
 
@@ -50,13 +49,13 @@ public class ActionPlayerJoin implements HypixelEventClass {
             return;
         }
 
-        if (assignedGame.getGameStatus() != SkywarsGameStatus.WAITING) {
+        if (!assignedGame.getState().isWaiting()) {
             player.sendMessage("<c>The game has already started! Returning to lobby...");
             player.sendTo(ServerType.SKYWARS_LOBBY);
             return;
         }
 
-        if (assignedGame.getPlayers().size() >= assignedGame.getGameType().getMaxPlayers()) {
+        if (!assignedGame.canAcceptPlayers()) {
             player.sendMessage("<c>The game is full! Returning to lobby...");
             player.sendTo(ServerType.SKYWARS_LOBBY);
             return;

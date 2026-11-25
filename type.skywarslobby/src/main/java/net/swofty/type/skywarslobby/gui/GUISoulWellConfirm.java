@@ -6,7 +6,7 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSoulWellUpgrades;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skywarslobby.soulwell.SoulWellMessages;
@@ -46,7 +46,7 @@ public class GUISoulWellConfirm extends StatelessView {
 
         layout.slot(13, (_, __) -> {
             String colorCode = upgrade.color();
-            return ItemStacks.item(upgrade.material(), 1,
+            return ItemStackCreator.item(upgrade.material(), 1,
                     Text.of("<color:{}>{} {:roman}", colorCode, upgrade.name(), newLevel),
                     List.of(
                             Text.of("<8>Permanent Upgrade"),
@@ -62,13 +62,13 @@ public class GUISoulWellConfirm extends StatelessView {
         layout.slot(11,
                 (_, __) -> {
                     if (canAfford) {
-                        return ItemStacks.item(Material.LIME_TERRACOTTA, 1, """
+                        return ItemStackCreator.item(Material.LIME_TERRACOTTA, 1, """
                                 <a>Confirm
                                 <7>Click to purchase {}
                                 <7>for <6>{} Coins<7>.""",
                                 Text.of("<color:{}>{}", upgrade.color(), upgrade.name()), formattedCost);
                     }
-                    return ItemStacks.item(Material.GRAY_TERRACOTTA, 1, """
+                    return ItemStackCreator.item(Material.GRAY_TERRACOTTA, 1, """
                             <c>Cannot Afford
                             <7>You need <6>{} Coins
                             <7>to purchase this upgrade.
@@ -100,7 +100,7 @@ public class GUISoulWellConfirm extends StatelessView {
         );
 
         layout.slot(15,
-                (_, __) -> ItemStacks.item(Material.RED_TERRACOTTA, 1, """
+                (_, __) -> ItemStackCreator.item(Material.RED_TERRACOTTA, 1, """
                         <c>Cancel
                         <7>Click to go back."""),
                 (_, c) -> c.replace(new GUISoulWell())

@@ -1,0 +1,49 @@
+items:
+  - id: ENDER_NECKLACE
+    material: PLAYER_HEAD
+    name: Ender Necklace
+    rarity: EPIC
+    default_statistics:
+      health: 15
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: NECKLACE
+      - id: SKULL_HEAD
+        texture: 36da7b957b82103b17140e71179114648a00291b05657c27d3f93d726e87e640
+  - id: ENDER_CLOAK
+    material: PLAYER_HEAD
+    name: Ender Cloak
+    rarity: EPIC
+    default_statistics:
+      health: 15
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CLOAK
+      - id: SKULL_HEAD
+        texture: c778fb6f2e649c0adabf51ef45c7ce323fe1758f6dac4f8cd13add1e2af29ff6
+  - id: ENDER_BELT
+    material: PLAYER_HEAD
+    name: Ender Belt
+    rarity: EPIC
+    default_statistics:
+      health: 15
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BELT
+      - id: SKULL_HEAD
+        texture: 6032a016621e126870fa00c29c51d942afdba5a94a2327f264fe1a9409e455ae
+  - id: ENDER_GAUNTLET
+    material: PLAYER_HEAD
+    name: Ender Gauntlet
+    rarity: EPIC
+    default_statistics:
+      health: 15
+      defense: 10
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: GLOVES
+      - id: SKULL_HEAD
+        texture: 22b8813fbd8a049d0e42a7799f8db69dfed9cdd44e7350caeec5f023c7151c2f

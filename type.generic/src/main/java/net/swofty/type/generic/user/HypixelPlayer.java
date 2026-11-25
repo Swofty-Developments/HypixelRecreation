@@ -21,9 +21,19 @@ import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.generic.data.HypixelDataHandler;
-import net.swofty.type.generic.data.datapoints.*;
+import net.swofty.type.generic.data.datapoints.DatapointBoolean;
+import net.swofty.type.generic.data.datapoints.DatapointChatType;
+import net.swofty.type.generic.data.datapoints.DatapointInteger;
+import net.swofty.type.generic.data.datapoints.DatapointLocale;
+import net.swofty.type.generic.data.datapoints.DatapointRank;
+import net.swofty.type.generic.data.datapoints.DatapointString;
+import net.swofty.type.generic.data.datapoints.DatapointToggles;
 import net.swofty.type.generic.experience.PlayerExperienceHandler;
-import net.swofty.type.generic.gui.v2.*;
+import net.swofty.type.generic.gui.v2.StatefulView;
+import net.swofty.type.generic.gui.v2.StatelessView;
+import net.swofty.type.generic.gui.v2.View;
+import net.swofty.type.generic.gui.v2.ViewNavigator;
+import net.swofty.type.generic.gui.v2.ViewSession;
 import net.swofty.type.generic.quest.PlayerQuestHandler;
 import net.swofty.type.generic.text.HypixelTextRenderer;
 import net.swofty.type.generic.text.RenderContext;
@@ -37,6 +47,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -49,6 +60,7 @@ public class HypixelPlayer extends Player {
 	private boolean readyForEvents = false;
 	@Getter
 	private PlayerHookManager hookManager;
+    @Getter
 	protected BelowNameTag belowNameTag;
 
 	@Getter
@@ -95,6 +107,14 @@ public class HypixelPlayer extends Player {
 
 	public HypixelDataHandler getDataHandler() {
 		return HypixelDataHandler.getUser(this.getUuid());
+	}
+
+	public Optional<HypixelDataHandler> getOptionalDataHandler() {
+		try {
+			return Optional.of(getDataHandler());
+		} catch (RuntimeException e) {
+			return Optional.empty();
+		}
 	}
 
 	public Rank getRank() {

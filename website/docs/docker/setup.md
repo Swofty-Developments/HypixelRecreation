@@ -105,6 +105,9 @@ x-forwarding-env: &forwarding_env
 
 ### 3. Build and Run
 
+The first build downloads the world files (`world/`, `resourcepacks/` and `limbo.schem`) into the game server image. If `configuration/` already contains them, the download is skipped. To use another mirror, pass `--build-arg WORLD_ASSETS_URL=<zip url>` to the `game_server_builder` build.
+
+
 ```bash
 docker compose up --build
 ```

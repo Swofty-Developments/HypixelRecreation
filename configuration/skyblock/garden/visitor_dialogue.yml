@@ -1,0 +1,58 @@
+ambient_dialogue:
+  time_queries:
+    enabled: true
+  seasonal_small_talk:
+    enabled: true
+  generic_pairs: [ ]
+
+npcs:
+  sam:
+    dialogue_sets:
+      - key: hello
+        trigger: first_interaction
+        first_interaction_only: true
+        lines:
+          - Welcome to your Garden!
+          - Use the Desk to manage plots, skins, upgrades, and visitors.
+  anita:
+    dialogue_sets:
+      - key: hello
+        trigger: first_interaction
+        first_interaction_only: true
+        lines:
+          - Earn Jacob's Tickets and medals in farming contests.
+          - Come back to me when you're ready to spend them.
+  pamela:
+    dialogue_sets:
+      - key: hello
+        trigger: first_interaction
+        first_interaction_only: true
+        lines:
+          - Jacob's contests come around fast in the Garden.
+          - Keep farming and check in before the next one starts.
+  jacob:
+    dialogue_sets:
+      - key: hello
+        trigger: first_interaction
+        first_interaction_only: true
+        lines:
+          - Every 3 SkyBlock days, I host a contest for 3 crops.
+          - Collect at least 100 of a contest crop to earn rewards.
+  jeff:
+    dialogue_sets:
+      - key: hello
+        trigger: first_interaction
+        first_interaction_only: true
+        lines:
+          - Garden Chips get stronger as you redeem more copies and spend Sowdust.
+          - Use my menu to redeem chips and level them up.
+  phillip:
+    dialogue_sets:
+      - key: hello
+        trigger: first_interaction
+        first_interaction_only: true
+        lines:
+          - Pests are a nuisance, but they also drop useful Garden materials.
+          - Keep your plots clean and visit me when you need pest tools.
+
+visitors: { }

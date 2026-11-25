@@ -7,7 +7,7 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSoulWellUpgrades;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.skywarslobby.soulwell.SoulWellUpgrade;
@@ -42,7 +42,7 @@ public class GUISoulWell extends StatelessView {
 
         // Roll Soul Well button (slot 12)
         layout.slot(12,
-                (_, _) -> ItemStacks.item(Material.END_PORTAL_FRAME, 1, """
+                (_, _) -> ItemStackCreator.item(Material.END_PORTAL_FRAME, 1, """
                         <a>Roll Soul Well
                         <7>Rolls for a random kit, perk, or coin
                         <7>bonus.
@@ -81,7 +81,7 @@ public class GUISoulWell extends StatelessView {
                     if (wheels < 5) lore.add(Text.of("<e>Left-click to increase!"));
                     if (wheels > 1) lore.add(Text.of("<e>Right-click to decrease!"));
 
-                    return ItemStacks.item(Material.ENCHANTING_TABLE, 1,
+                    return ItemStackCreator.item(Material.ENCHANTING_TABLE, 1,
                             Text.of("<6>Soul Well Wheels"), lore);
                 },
                 (click, c) -> {
@@ -104,7 +104,7 @@ public class GUISoulWell extends StatelessView {
         layoutUpgradeItem(layout, 32, "angel_of_death", playerUpgrades, coins);
 
         // Head Collection placeholder (slot 34)
-        layout.slot(34, (_, _) -> ItemStacks.item(Material.CHEST, 1, """
+        layout.slot(34, (_, _) -> ItemStackCreator.item(Material.CHEST, 1, """
                 <c>Head Collection
                 <7>View your collection of <c>Heads</c>.
 
@@ -118,7 +118,7 @@ public class GUISoulWell extends StatelessView {
         // Total Coins display (slot 50)
         layout.slot(50, (_, _) -> {
             String formattedCoins = NumberFormat.getNumberInstance(Locale.US).format(coins);
-            return ItemStacks.item(Material.EMERALD, 1, """
+            return ItemStackCreator.item(Material.EMERALD, 1, """
                     <7>Total Coins: <6>{}
                     <6>https://store.hypixel.net""", formattedCoins);
         });
@@ -158,7 +158,7 @@ public class GUISoulWell extends StatelessView {
                         lore.add(Text.empty());
                         lore.add(Text.of("<a>MAXED OUT!"));
 
-                        return ItemStacks.item(upgrade.material(), 1,
+                        return ItemStackCreator.item(upgrade.material(), 1,
                                 Text.of("<color:{}>{} {:roman}", colorCode, upgrade.name(), currentLevel), lore);
                     }
 
@@ -183,10 +183,10 @@ public class GUISoulWell extends StatelessView {
                                     colorCode, upgrade.name(), currentLevel, currentLevel + 1);
                         }
 
-                        return ItemStacks.item(upgrade.material(), 1, displayName, lore);
+                        return ItemStackCreator.item(upgrade.material(), 1, displayName, lore);
                     }
 
-                    return ItemStacks.item(upgrade.material(), 1,
+                    return ItemStackCreator.item(upgrade.material(), 1,
                             Text.of("<7>{}", upgrade.name()), lore);
                 },
                 (_, c) -> {

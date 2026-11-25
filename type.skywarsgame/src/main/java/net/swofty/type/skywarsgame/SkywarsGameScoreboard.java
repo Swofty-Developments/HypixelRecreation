@@ -4,13 +4,14 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
+import net.swofty.commons.text.Text;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
-import net.swofty.commons.text.Text;
 import net.swofty.type.generic.scoreboard.HypixelScoreboard;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
+import net.swofty.type.skywarsgame.game.SkywarsGameStat;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 import java.time.LocalDateTime;
@@ -48,7 +49,7 @@ public class SkywarsGameScoreboard {
 					HypixelConst.getServerName()));
 				lines.add(BLANK);
 
-				if (game.getGameStatus() == SkywarsGameStatus.IN_PROGRESS) {
+				if (game.getState() == GameState.IN_PROGRESS) {
 					long elapsedMs = System.currentTimeMillis() - game.getGameStartTime();
 					long elapsedSeconds = elapsedMs / 1000;
 
@@ -62,12 +63,15 @@ public class SkywarsGameScoreboard {
 					int alive = (int) game.getPlayers().stream().filter(p -> !p.isEliminated()).count();
 					lines.add(Text.key("scoreboard.skywars_game.players_left_line", alive));
 					lines.add(BLANK);
-					lines.add(Text.key("scoreboard.skywars_game.kills_line", swPlayer.getKillsThisGame()));
-				} else if (game.getGameStatus() == SkywarsGameStatus.ENDING) {
+					lines.add(Text.key("scoreboard.skywars_game.kills_line",
+						game.getGameStats().get(swPlayer.getUuid(), SkywarsGameStat.KILLS)));
+				} else if (game.getState().isEnding()) {
 					lines.add(Text.key("scoreboard.skywars_game.top_killers_label"));
 
-					java.util.List<SkywarsPlayer> topKillers = game.getPlayers().stream()
-							.sorted((a, b) -> Integer.compare(b.getKillsThisGame(), a.getKillsThisGame()))
+					List<SkywarsPlayer> topKillers = game.getPlayers().stream()
+							.sorted((a, b) -> Long.compare(
+								game.getGameStats().get(b.getUuid(), SkywarsGameStat.KILLS),
+								game.getGameStats().get(a.getUuid(), SkywarsGameStat.KILLS)))
 							.limit(3)
 							.toList();
 
@@ -81,24 +85,25 @@ public class SkywarsGameScoreboard {
 						lines.add(Text.key("scoreboard.skywars_game.top_killer_line",
 							places[i],
 							killer.getUsername(),
-							killer.getKillsThisGame()));
+							game.getGameStats().get(killer.getUuid(), SkywarsGameStat.KILLS)));
 					}
 
 					lines.add(BLANK);
-					lines.add(Text.key("scoreboard.skywars_game.your_kills_line", swPlayer.getKillsThisGame()));
-				} else if (game.getGameStatus() == SkywarsGameStatus.WAITING) {
+					lines.add(Text.key("scoreboard.skywars_game.your_kills_line",
+						game.getGameStats().get(swPlayer.getUuid(), SkywarsGameStat.KILLS)));
+				} else if (game.getState() == GameState.WAITING) {
 					lines.add(Text.key("scoreboard.skywars_game.players_line",
 						game.getPlayers().size(),
 						game.getGameType().getMaxPlayers()));
 					lines.add(BLANK);
 					lines.add(Text.key("scoreboard.skywars_game.waiting"));
-				} else if (game.getGameStatus() == SkywarsGameStatus.STARTING) {
+				} else if (game.getState() == GameState.COUNTDOWN) {
 					lines.add(Text.key("scoreboard.skywars_game.players_line",
 						game.getPlayers().size(),
 						game.getGameType().getMaxPlayers()));
 					lines.add(BLANK);
 					lines.add(Text.key("scoreboard.skywars_game.starting_in_line",
-						game.getCountdown().getSecondsRemaining()));
+						game.getCountdown().getRemainingSeconds()));
 				}
 
 				lines.add(BLANK);

@@ -41,5 +41,4 @@ public class NPCGuy extends HypixelNPC {
     public void onClick(NPCInteractEvent e) {
         e.player().notImplemented();
     }
-
 }

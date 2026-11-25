@@ -1,8 +1,8 @@
 package net.swofty.type.murdermysterygame.events;
 
+import io.github.term4.polyp.mechanics.projectile.entities.ProjectileEntity;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.event.entity.projectile.ProjectileCollideWithEntityEvent;
-import net.swofty.pvp.projectile.AbstractProjectile;
 import net.swofty.type.generic.achievement.PlayerAchievementHandler;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
@@ -10,7 +10,7 @@ import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.role.GameRole;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 
@@ -21,7 +21,7 @@ public class ActionArrowHit implements HypixelEventClass {
         Entity projectile = event.getEntity();
         Entity target = event.getTarget();
 
-        if (!(projectile instanceof AbstractProjectile arrow)) return;
+        if (!(projectile instanceof ProjectileEntity arrow)) return;
         if (!(target instanceof MurderMysteryPlayer victim)) return;
 
         Entity shooter = arrow.getShooter();
@@ -33,7 +33,7 @@ public class ActionArrowHit implements HypixelEventClass {
             return;
         }
 
-        if (game.getGameStatus() != GameStatus.IN_PROGRESS) {
+        if (game.getState() != GameState.IN_PROGRESS) {
             event.setCancelled(true);
             return;
         }

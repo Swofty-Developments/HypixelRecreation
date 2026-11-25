@@ -15,6 +15,7 @@ import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.tab.TablistManager;
 import net.swofty.type.generic.tab.TablistModule;
 import net.swofty.type.island.lifecycle.IslandLifecycleSteps;
+import net.swofty.type.island.npcs.NPCSam;
 import net.swofty.type.island.tab.IslandGuestsModule;
 import net.swofty.type.island.tab.IslandMemberModule;
 import net.swofty.type.island.tab.IslandServerModule;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 
 public class TypeIslandLoader implements SkyBlockTypeLoader {
     public static final Pos SPAWN_POS = new Pos(7.5, 100, 7.5);
+    private final List<HypixelNPC> npcs = List.of(new NPCSam());
 
     @Override
     public ServerType getType() {
@@ -41,6 +43,7 @@ public class TypeIslandLoader implements SkyBlockTypeLoader {
         Logger.info("TypeIslandLoader initialized!");
 
         IslandLifecycleSteps.register();
+        npcs.forEach(HypixelNPC::register);
         new MinionHandler(MinecraftServer.getSchedulerManager()).start();
     }
 
@@ -87,7 +90,7 @@ public class TypeIslandLoader implements SkyBlockTypeLoader {
 
     @Override
     public List<HypixelNPC> getNPCs() {
-        return new ArrayList<>();
+        return npcs;
     }
 
 

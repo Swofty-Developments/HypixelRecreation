@@ -1,6 +1,7 @@
 package net.swofty.type.replayviewer.item;
 
 import net.minestom.server.component.DataComponents;
+import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.event.item.ItemDropEvent;
 import net.minestom.server.event.item.PlayerFinishItemUseEvent;
 import net.minestom.server.event.player.PlayerHandAnimationEvent;
@@ -9,13 +10,7 @@ import net.minestom.server.event.player.PlayerUseItemOnBlockEvent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.component.CustomData;
 import net.minestom.server.tag.Tag;
-import net.swofty.type.replayviewer.item.impl.BackwardItem;
-import net.swofty.type.replayviewer.item.impl.FasterItem;
-import net.swofty.type.replayviewer.item.impl.ForwardItem;
-import net.swofty.type.replayviewer.item.impl.MoreItem;
-import net.swofty.type.replayviewer.item.impl.PlaybackControlItem;
-import net.swofty.type.replayviewer.item.impl.SlowerItem;
-import net.swofty.type.replayviewer.item.impl.TeleporterItem;
+import net.swofty.type.replayviewer.item.impl.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +84,16 @@ public class ReplayItemHandler {
                 item.onItemDrop(event);
             }
         }
+    }
+
+    public boolean onInventoryClick(InventoryPreClickEvent event) {
+        for (ReplayItem item : items) {
+            if (isItem(item, event.getClickedItem())) {
+                item.onInventoryClick(event);
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isItem(ReplayItem item, ItemStack itemStack) {

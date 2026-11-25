@@ -122,9 +122,20 @@ public class DatapointToggles extends Datapoint<DatapointToggles.Toggles> {
             HAS_SPOKEN_TO_FISHERWOMAN_ENID(false),
             HAS_SPOKEN_TO_CAPTAIN_BAHA(false),
             HAS_SPOKEN_TO_RODDY(false),
+            HAS_SPOKEN_TO_SAM(false),
+            HAS_ACCEPTED_SAM_GARDEN(false),
             HAS_CAUGHT_FIRST_FISH(false),
             HAS_UNLOCKED_SHIP(false),
             HAS_VISITED_BACKWATER_BAYOU(false),
+            HAS_SPOKEN_TO_GREGORY(false),
+            HAS_SPOKEN_TO_GUBER(false),
+            HAS_SPOKEN_TO_LONE_ADVENTURER(false),
+            HAS_SPOKEN_TO_PEARL_DEALER(false),
+            HAS_SPOKEN_TO_TYZZO(false),
+            HAS_ASKED_TYZZO_FOR_SCALE(false),
+            HAS_COMPLETED_TYZZO(false),
+            HAS_COMPLETED_LONE_ADVENTURER(false),
+            HAS_RECEIVED_DRAGON_SHORTBOW(false),
             ;
 
             private final boolean defaultValue;

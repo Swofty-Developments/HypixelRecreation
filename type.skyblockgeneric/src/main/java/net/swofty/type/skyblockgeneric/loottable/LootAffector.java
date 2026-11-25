@@ -14,6 +14,7 @@ import java.util.Map;
 public enum LootAffector {
 
     MAGIC_FIND((player, original, mob) -> {
+        if (original >= 0.05) return original;
         if (mob != null) {
             return original + (original * player.getStatistics().allStatistics(player, mob).getOverall(ItemStatistic.MAGIC_FIND) * 0.01);
         } else {

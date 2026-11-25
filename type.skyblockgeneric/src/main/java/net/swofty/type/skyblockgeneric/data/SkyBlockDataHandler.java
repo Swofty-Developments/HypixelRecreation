@@ -24,7 +24,53 @@ import net.swofty.type.generic.data.mongodb.ProfilesDatabase;
 import net.swofty.type.generic.data.mongodb.UserDatabase;
 import net.swofty.type.generic.user.HypixelPlayer;
 import net.swofty.type.skyblockgeneric.SkyBlockGenericLoader;
-import net.swofty.type.skyblockgeneric.data.datapoints.*;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointAccessoryBag;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointArcheryPractice;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointAuctionEscrow;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointAuctionStatistics;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointBackpacks;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointBankData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointBestiary;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointChocolateFactory;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointGardenComposter;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointGardenCore;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointGardenGreenhouse;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointGardenPersonal;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointGardenPests;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointGardenVisitors;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCollectedMobTypeRewards;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCollection;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCommissions;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointCompletedBazaarTransactions;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointDeaths;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointExperimentation;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointFairySouls;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointHOTM;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointHunting;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointInventory;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointItemsInSacks;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointKat;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointLoadouts;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointMinionData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointMissionData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointMuseum;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointPetData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointPityCounters;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointQuiver;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointRNGMeters;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSackOfSacks;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointShipState;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointShopData;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkillCategory;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkills;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSkyBlockExperience;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointSlayer;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointStash;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointStorage;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointTrophyFish;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointUUID;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointUUIDList;
+import net.swofty.type.skyblockgeneric.data.datapoints.DatapointWardrobe;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.updater.NonPlayerItemUpdater;
 import net.swofty.type.skyblockgeneric.item.updater.PlayerItemOrigin;
@@ -38,7 +84,11 @@ import org.jetbrains.annotations.Nullable;
 import org.tinylog.Logger;
 import tools.jackson.core.JacksonException;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -345,6 +395,15 @@ public class SkyBlockDataHandler extends DataHandler {
         SKILLS("skills", false, false, false,
                 DatapointSkills.class, new DatapointSkills("skills")),
 
+        EXPERIMENTATION("experimentation", false, false, false,
+                DatapointExperimentation.class, new DatapointExperimentation("experimentation")),
+
+        RNG_METERS("rng_meters", false, false, false,
+                DatapointRNGMeters.class, new DatapointRNGMeters("rng_meters")),
+
+        PITY_COUNTERS("pity_counters", false, false, false,
+                DatapointPityCounters.class, new DatapointPityCounters("pity_counters")),
+
         EXPERIENCE("experience", false, false, false,
                 DatapointLong.class, new DatapointLong("experience", 0L),
                 (player, datapoint) -> {
@@ -569,8 +628,30 @@ public class SkyBlockDataHandler extends DataHandler {
         KAT("kat", false, false, false,
                 DatapointKat.class, new DatapointKat("kat")),
 
+        GARDEN_CORE("garden_core", false, true, false,
+                DatapointGardenCore.class, new DatapointGardenCore("garden_core")),
+
+        GARDEN_VISITORS("garden_visitors", false, true, false,
+                DatapointGardenVisitors.class, new DatapointGardenVisitors("garden_visitors")),
+
+        GARDEN_PESTS("garden_pests", false, true, false,
+                DatapointGardenPests.class, new DatapointGardenPests("garden_pests")),
+
+        GARDEN_COMPOSTER("garden_composter", false, true, false,
+                DatapointGardenComposter.class, new DatapointGardenComposter("garden_composter")),
+
+        GARDEN_GREENHOUSE("garden_greenhouse", false, true, false,
+                DatapointGardenGreenhouse.class, new DatapointGardenGreenhouse("garden_greenhouse")),
+
+        GARDEN_PERSONAL("garden_personal", false, false, false,
+                DatapointGardenPersonal.class, new DatapointGardenPersonal("garden_personal")),
+
         STASH("stash", false, false, false,
                 DatapointStash.class, new DatapointStash("stash")),
+
+        // TODO: proper typed record or something like that
+        TABLIST_WIDGET_SETTINGS("tablist_widget_settings", false, false, false,
+                DatapointString.class, new DatapointString("tablist_widget_settings", "{}")),
 
         COLLECTED_MOB_TYPE_REWARDS("collected_mob_type_rewards", false, false, false,
                 DatapointCollectedMobTypeRewards.class, new DatapointCollectedMobTypeRewards("collected_mob_type_rewards")),

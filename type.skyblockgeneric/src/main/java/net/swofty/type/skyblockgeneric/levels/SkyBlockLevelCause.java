@@ -43,6 +43,10 @@ public class SkyBlockLevelCause {
             CAUSES.put("level-" + i, new LevelCause(i));
         }
 
+        for (int dose = 1; dose <= 3; dose++) {
+            CAUSES.put("metaphysical-serum-" + dose, new MetaphysicalSerumLevelCause(dose));
+        }
+
         // Register all collection causes
         for (ItemType itemTypeLinker : ItemType.values()) {
             CollectionCategory category = CollectionCategories.getCategory(itemTypeLinker);
@@ -143,6 +147,15 @@ public class SkyBlockLevelCause {
                 if (levelCause.getLevel() == level) {
                     return levelCause;
                 }
+            }
+        }
+        return null;
+    }
+
+    public static MetaphysicalSerumLevelCause getMetaphysicalSerumCause(int dose) {
+        for (SkyBlockLevelCauseAbstr cause : CAUSES.values()) {
+            if (cause instanceof MetaphysicalSerumLevelCause serumCause && serumCause.getDose() == dose) {
+                return serumCause;
             }
         }
         return null;

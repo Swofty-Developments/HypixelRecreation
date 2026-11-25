@@ -1,0 +1,55 @@
+items:
+  - id: HELIANTHUS_HELMET
+    material: PLAYER_HEAD
+    name: Helianthus Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      farming_fortune: 35
+      speed: 6
+      health: 140
+      defense: 50
+      bonus_pest_chance: 20
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 46e48a6eff318dcda57d5d76a9b2656be25973e3d472b6d2e446a8e60f60a78a
+  - id: HELIANTHUS_CHESTPLATE
+    material: IRON_CHESTPLATE
+    name: Helianthus Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      farming_fortune: 40
+      speed: 7
+      health: 205
+      defense: 50
+      bonus_pest_chance: 20
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: HELIANTHUS_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Helianthus Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      farming_fortune: 40
+      speed: 7
+      health: 205
+      defense: 50
+      bonus_pest_chance: 20
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: HELIANTHUS_BOOTS
+    material: IRON_BOOTS
+    name: Helianthus Boots
+    rarity: LEGENDARY
+    default_statistics:
+      farming_fortune: 35
+      speed: 6
+      health: 140
+      defense: 50
+      bonus_pest_chance: 20
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

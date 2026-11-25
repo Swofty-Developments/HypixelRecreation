@@ -23,7 +23,7 @@ public class EnchantmentEnderSlayer implements Ench, EnchFromTable, EventBasedEn
 
     @Override
     public String getDescription(int level) {
-        return "Increases damage dealt to " + MobType.ENDER.getFullDisplayName()
+        return "Increases damage dealt to " + MobType.ENDER.getFullDisplayName().serialize()
                 + "<7> mobs by <a>" + MULTIPLIERS[level - 1] + "%<7>.";
     }
 

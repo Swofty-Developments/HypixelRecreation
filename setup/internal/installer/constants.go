@@ -4,10 +4,14 @@ const (
 	Version           = "2.1.0"
 	GitHubRepo        = "Swofty-Developments/HypixelRecreation"
 	GitHubAPI         = "https://api.github.com/repos/" + GitHubRepo
-	LimboAssetsURL    = "https://files.catbox.moe/flri48.zip"
 	StateFileName     = ".state.json"
 	DefaultInstallSub = ".hypixel-skyblock"
 )
+
+var LimboAssetsURLs = []string{
+	"https://github.com/Swofty-Developments/HypixelRecreation/releases/download/world-assets/world-assets.zip",
+	"https://files.catbox.moe/flri48.zip",
+}
 
 var SkyBlockServers = []string{
 	"SKYBLOCK_HUB",
@@ -17,6 +21,7 @@ var SkyBlockServers = []string{
 	"SKYBLOCK_CRIMSON_ISLE",
 	"SKYBLOCK_DUNGEON_HUB",
 	"SKYBLOCK_THE_FARMING_ISLANDS",
+	"SKYBLOCK_GARDEN",
 	"SKYBLOCK_GOLD_MINE",
 	"SKYBLOCK_DEEP_CAVERNS",
 	"SKYBLOCK_DWARVEN_MINES",
@@ -58,6 +63,7 @@ var AllServices = []string{
 	"ServiceGuild",
 	"ServicePunishment",
 	"ServiceReplay",
+	"ServiceJacobsContest",
 }
 
 var RequiredServices = []string{"ServiceParty"}

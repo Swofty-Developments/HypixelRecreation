@@ -6,7 +6,7 @@ Game servers run the actual gameplay using Minestom. Each server runs as a speci
 
 1. Download `HypixelCore.jar` from the [releases page](https://github.com/Swofty-Developments/HypixelRecreation/releases/tag/latest)
 2. Download [`config.yml`](https://github.com/Swofty-Developments/HypixelRecreation/tree/master/configuration)
-3. Download [world files](https://files.catbox.moe/flri48.zip) (all server worlds + `limbo.schem`; extract into `configuration/`)
+3. Download [world files](https://github.com/Swofty-Developments/HypixelRecreation/releases/download/world-assets/world-assets.zip) (all server worlds + `limbo.schem`; extract into `configuration/`)
 4. Download [`PicoLimbo.jar`](https://github.com/Swofty-Developments/HypixelRecreation/tree/master/configuration) and its config
 
 ## Directory Structure

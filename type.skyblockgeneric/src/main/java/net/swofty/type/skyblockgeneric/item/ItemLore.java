@@ -28,6 +28,8 @@ import net.swofty.type.skyblockgeneric.item.handlers.ability.RegisteredAbility;
 import net.swofty.type.skyblockgeneric.item.handlers.lore.LoreConfig;
 import net.swofty.type.skyblockgeneric.item.set.ArmorSetRegistry;
 import net.swofty.type.skyblockgeneric.item.set.impl.ArmorSet;
+import net.swofty.type.skyblockgeneric.item.set.impl.ArmorSetContext;
+import net.swofty.type.skyblockgeneric.item.set.impl.ArmorSetEffect;
 import net.swofty.type.skyblockgeneric.potion.PotionEffectType;
 import net.swofty.type.skyblockgeneric.text.LoreText;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
@@ -92,6 +94,7 @@ public class ItemLore {
 		fillSoulbound(lore);
 		fillStatsWhenShot(lore);
 		fillUnfinished(lore);
+		fillDyeColor(lore);
 		lore.section(LoreText.Sections.RARITY_FOOTER).line("{}", displayRarity(item, rarity));
 
 		this.stack = ItemStacks.lines(stack.builder(), lore.render())
@@ -379,33 +382,39 @@ public class ItemLore {
 		}
 	}
 
-	@SneakyThrows
 	private static void fillFullSetBonus(LoreText lore) {
 		SkyBlockItem item = lore.item();
-		ArmorSetRegistry registry = ArmorSetRegistry.getArmorSet(item.getAttributeHandler().getPotentialType());
-		if (registry == null || registry.getClazz() == null) return;
-
-		ArmorSet armorSet = registry.getClazz().getDeclaredConstructor().newInstance();
+		ItemType itemType = item.getAttributeHandler().getPotentialType();
 		SkyBlockPlayer viewer = lore.viewer();
 
-		int wearingAmount = 0;
+		Set<ItemType> wornItems = EnumSet.noneOf(ItemType.class);
 		if (viewer != null && viewer.isWearingItem(item)) {
 			for (SkyBlockItem armorItem : viewer.getArmor()) {
 				if (armorItem == null) continue;
-				ArmorSetRegistry armorSetRegistry = ArmorSetRegistry.getArmorSet(armorItem.getAttributeHandler().getPotentialType());
-				if (armorSetRegistry == null) continue;
-				if (armorSetRegistry.getClazz() == armorSet.getClass()) {
-					wearingAmount++;
-				}
+				ItemType armorType = armorItem.getAttributeHandler().getPotentialType();
+				if (armorType != null) wornItems.add(armorType);
 			}
 		}
 
-		ArmorSetRegistry setRegistry = ArmorSetRegistry.getArmorSet(armorSet.getClass());
-		int totalPieces = setRegistry == null ? 4 : ArmorSetRegistry.getPieceCount(setRegistry);
-
 		TextBody.Section section = lore.section(LoreText.Sections.FULL_SET_BONUS);
-		section.line(Text.key("items.lore.full_set_bonus", Text.parseLenient(armorSet.getName()), wearingAmount, totalPieces));
-		armorSet.getDescription().forEach(line -> section.line(LoreText.gray(line)));
+		boolean first = true;
+		for (ArmorSetRegistry registry : ArmorSetRegistry.getArmorSets(itemType)) {
+			ArmorSet armorSet = registry.create();
+			ArmorSetContext context = new ArmorSetContext(registry, viewer, wornItems, registry.getWornPieceCount(wornItems));
+			for (ArmorSetEffect effect : armorSet.getEffects()) {
+				if (!effect.isRelevantTo(itemType)) continue;
+				int requiredPieces = effect.getRequiredItems().isEmpty()
+						? effect.getRequiredPieces(context)
+						: effect.getRequiredItems().size();
+				int activePieces = effect.getRequiredItems().isEmpty()
+						? context.wornPieces()
+						: (int) effect.getRequiredItems().stream().filter(wornItems::contains).count();
+				if (!first) section.line(Text.empty());
+				first = false;
+				section.line(Text.key("items.lore.armor_bonus", effect.getType().getDisplayName(), effect.getName(), activePieces, requiredPieces));
+				effect.getDescription(context).forEach(line -> section.line(Text.parseLenient("<gray>" + line)));
+			}
+		}
 	}
 
 	private static void fillRecipes(LoreText lore) {
@@ -441,6 +450,19 @@ public class ItemLore {
 		lore.section(LoreText.Sections.UNFINISHED)
 				.line(Text.key("items.lore.not_finished"))
 				.line(Text.empty());
+	}
+
+	private static void fillDyeColor(LoreText lore) {
+		String dyeColor = lore.item().getAttributeHandler().getDyeColor();
+		if (dyeColor == null) return;
+
+		TextBody.Section section = lore.section(LoreText.Sections.DYE_COLOR);
+		if (dyeColor.startsWith("animated:")) {
+			String[] colors = dyeColor.split(":");
+			section.line(Text.of("<7>Color: <d>Animated <8>({} <7>➜ <8>{}<8>)", colors[1], colors[2]));
+		} else {
+			section.line(Text.of("<7>Color: <8>{}", dyeColor));
+		}
 	}
 
 	private static Text displayName(SkyBlockItem item, Material material) {

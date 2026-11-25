@@ -17,7 +17,7 @@ public abstract class AbstractGame<P extends GameParticipant> implements Game<P>
     @Getter
     protected final Consumer<Object> eventDispatcher;
 
-    protected GameState state = GameState.WAITING;
+    protected volatile GameState state = GameState.WAITING;
     protected DefaultGameCountdown countdown;
 
     /**
@@ -116,7 +116,7 @@ public abstract class AbstractGame<P extends GameParticipant> implements Game<P>
             return new JoinResult.Denied(event.getCancelReason() != null ? event.getCancelReason() : "Join cancelled");
         }
 
-        if (state != GameState.WAITING && state != GameState.COUNTDOWN) {
+        if (!state.isWaiting()) {
             return new JoinResult.Denied("Game already in progress");
         }
 
@@ -174,6 +174,7 @@ public abstract class AbstractGame<P extends GameParticipant> implements Game<P>
         }
 
         UUID uuid = player.getUuid();
+        if (!players.containsKey(uuid)) return;
         boolean canRejoin = canPlayerRejoin(player);
 
         if (canRejoin) {
@@ -197,8 +198,17 @@ public abstract class AbstractGame<P extends GameParticipant> implements Game<P>
     }
 
     public boolean handleRejoin(P player) {
-        DisconnectedPlayerData data = disconnectedPlayers.remove(player.getUuid());
-        if (data == null || state != GameState.IN_PROGRESS) {
+        if (state != GameState.IN_PROGRESS) {
+            return false;
+        }
+
+        UUID uuid = player.getUuid();
+        if (players.containsKey(uuid)) {
+            return false;
+        }
+
+        DisconnectedPlayerData data = disconnectedPlayers.remove(uuid);
+        if (data == null) {
             return false;
         }
 
@@ -221,9 +231,13 @@ public abstract class AbstractGame<P extends GameParticipant> implements Game<P>
         return disconnectedPlayers.containsKey(uuid);
     }
 
+    public List<UUID> getDisconnectedPlayerUuids() {
+        return List.copyOf(disconnectedPlayers.keySet());
+    }
+
     @Override
     public void start() {
-        if (state != GameState.WAITING && state != GameState.COUNTDOWN) return;
+        if (!state.isWaiting()) return;
         if (countdown.isActive()) {
             countdown.terminate();
         }
@@ -236,14 +250,18 @@ public abstract class AbstractGame<P extends GameParticipant> implements Game<P>
     @Override
     public void end() {
         if (state == GameState.ENDING || state == GameState.TERMINATED) return;
+        countdown.terminate();
 
         setState(GameState.ENDING);
     }
 
     @Override
     public void dispose() {
+        if (state == GameState.TERMINATED) return;
+
         setState(GameState.TERMINATED);
         countdown.terminate();
+        players.values().forEach(player -> player.setGameId(null));
         players.clear();
         disconnectedPlayers.clear();
         eventDispatcher.accept(new GameDisposeEvent(

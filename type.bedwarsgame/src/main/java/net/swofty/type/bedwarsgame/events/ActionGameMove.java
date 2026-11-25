@@ -7,15 +7,15 @@ import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.MapTeam;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
 import net.swofty.type.bedwarsgame.TypeBedWarsGameLoader;
-import net.swofty.type.bedwarsgame.game.v2.BedWarsGame;
+import net.swofty.type.bedwarsgame.game.BedWarsGame;
 import net.swofty.type.bedwarsgame.item.impl.LuckyBlockTrap;
 import net.swofty.type.bedwarsgame.item.impl.LuckyEquipmentEffects;
 import net.swofty.type.bedwarsgame.shop.TrapId;
 import net.swofty.type.bedwarsgame.user.BedWarsPlayer;
 import net.swofty.type.game.game.GameState;
 import net.swofty.type.generic.event.EventNodes;
-import net.swofty.type.generic.event.phase.PhasedEvent;
 import net.swofty.type.generic.event.HypixelEventClass;
+import net.swofty.type.generic.event.phase.PhasedEvent;
 
 import java.util.List;
 import java.util.Map;

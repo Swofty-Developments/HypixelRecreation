@@ -2,6 +2,24 @@ package net.swofty.type.murdermysterygame;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.term4.polyp.MechanicsKeys;
+import io.github.term4.polyp.Polyp;
+import io.github.term4.polyp.mechanics.attack.AttackSystem;
+import io.github.term4.polyp.mechanics.attribute.AttributeSystem;
+import io.github.term4.polyp.mechanics.blocking.BlockingSystem;
+import io.github.term4.polyp.mechanics.consumable.ConsumableSystem;
+import io.github.term4.polyp.mechanics.damage.DamageSystem;
+import io.github.term4.polyp.mechanics.explosion.ExplosionSystem;
+import io.github.term4.polyp.mechanics.hunger.HungerSystem;
+import io.github.term4.polyp.mechanics.knockback.KnockbackSystem;
+import io.github.term4.polyp.mechanics.projectile.ProjectileSystem;
+import io.github.term4.polyp.platform.compatibility.Compat18;
+import io.github.term4.polyp.platform.fixes.Fixes18;
+import io.github.term4.polyp.platform.fixes.FixesSystem;
+import io.github.term4.polyp.presets.Preset;
+import io.github.term4.polyp.presets.hypixel.Tnt;
+import io.github.term4.polyp.vri.Vri;
+import io.github.term4.polyp.vri.VriConfig;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.hollowcube.polar.PolarLoader;
@@ -24,10 +42,11 @@ import net.swofty.commons.murdermystery.MurderMysteryGameType;
 import net.swofty.commons.murdermystery.map.MurderMysteryMapsConfig;
 import net.swofty.commons.text.Text;
 import net.swofty.commons.protocol.objects.orchestrator.GameHeartbeatProtocol;
-import net.swofty.proxyapi.ProxyService;
 import net.swofty.commons.redis.RedisMessageHandler;
-import net.swofty.pvp.MinestomPvP;
+import net.swofty.proxyapi.ProxyService;
 import net.swofty.type.game.game.GameObject;
+import net.swofty.type.game.game.GameState;
+import net.swofty.type.game.replay.api.ReplayAdapterRegistry;
 import net.swofty.type.generic.HypixelConst;
 import net.swofty.type.generic.HypixelGenericLoader;
 import net.swofty.type.generic.HypixelTypeLoader;
@@ -46,6 +65,7 @@ import net.swofty.type.murdermysterygame.item.SimpleInteractableItem;
 import net.swofty.type.murdermysterygame.item.SimpleInteractableItemHandler;
 import net.swofty.type.murdermysterygame.maphandler.MapHandler;
 import net.swofty.type.murdermysterygame.maphandler.MapHandlerRegistry;
+import net.swofty.type.murdermysterygame.replay.MurderMysteryReplayAdapter;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,6 +80,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static net.swofty.type.generic.HypixelGenericLoader.getLoadedPlayers;
 
@@ -74,8 +95,12 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
     public static final SimpleInteractableItemHandler itemHandler = new SimpleInteractableItemHandler();
 
     @Getter
+    private static final ReplayAdapterRegistry<Function<Game, MurderMysteryReplayAdapter>> replayAdapters = new ReplayAdapterRegistry<>();
+
+    @Getter
     private static MurderMysteryMapsConfig mapsConfig;
     private static InstanceManager instanceManager;
+    private static ExplosionSystem explosions;
     private static RegistryKey<@NotNull DimensionType> fullbrightDimension;
     private Gson gson;
 
@@ -99,6 +124,7 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
         }
         InstanceContainer mapInstance = instanceManager.createInstanceContainer(fullbrightDimension);
         mapInstance.setChunkLoader(new PolarLoader(new File("./configuration/murdermystery/" + entry.getId() + ".polar").toPath()));
+        mapInstance.setExplosionSupplier(explosions.supplier());
         Game game = new Game(entry, mapInstance, gameType);
         games.add(game);
         return game;
@@ -123,6 +149,8 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
 
     @Override
     public void onInitialize(MinecraftServer server) {
+        initializePolyp();
+        replayAdapters.register(MurderMysteryReplayAdapter.GAME_TYPE, MurderMysteryReplayAdapter::new);
         gson = new GsonBuilder().create();
         instanceManager = MinecraftServer.getInstanceManager();
         fullbrightDimension = MinecraftServer.getDimensionTypeRegistry().register("fullbright", DimensionType.builder().ambientLight(1f).setAttribute(EnvironmentAttribute.AMBIENT_LIGHT_COLOR, Color.WHITE).build());
@@ -173,9 +201,6 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
                 Logger.error(e, "Failed to register command " + command.getCommand().getName() + " in class " + command.getClass().getSimpleName());
             }
         });
-        MinestomPvP.init();
-        // Attach the PvP event node for bow shooting, arrow consumption, etc.
-        MinecraftServer.getGlobalEventHandler().addChild(MinestomPvP.events());
         MurderMysteryGameScoreboard.start();
         HypixelGenericLoader.loopThroughPackage("net.swofty.type.murdermysterygame.item.impl", SimpleInteractableItem.class).forEach(itemHandler::add);
 
@@ -196,6 +221,8 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
                 commonsGame.setType(ServerType.MURDER_MYSTERY_GAME);
                 commonsGame.setMap(internalGame.getMapEntry().getName());
                 commonsGame.setGameTypeName(internalGame.getGameType().name());
+                commonsGame.setAcceptingJoins(internalGame.getState() == GameState.WAITING
+                        || internalGame.getState() == GameState.COUNTDOWN);
 
                 List<UUID> playerUuids = new ArrayList<>();
                 for (MurderMysteryPlayer player : internalGame.getPlayers()) {
@@ -228,9 +255,32 @@ public class TypeMurderMysteryGameLoader implements HypixelTypeLoader {
         }).repeat(10, TimeUnit.SERVER_TICK).schedule();
     }
 
+    private static void initializePolyp() {
+        Polyp polyp = Polyp.getInstance();
+        polyp.installPlayerProvider = false;
+        polyp.metaFix = false;
+        polyp.init();
+        polyp.profiles().setGlobal(Preset.HYPIXEL.profile().toBuilder()
+                .set(MechanicsKeys.COMPAT, Compat18.config())
+                .set(MechanicsKeys.FIXES, Fixes18.config())
+                .set(MechanicsKeys.TNT, Tnt.config().toBuilder().igniteOnPlace(false).build())
+                .build());
+        AttackSystem.install(polyp);
+        DamageSystem.install(polyp);
+        KnockbackSystem.install(polyp);
+        ProjectileSystem.install(polyp);
+        AttributeSystem.install(polyp);
+        ConsumableSystem.install(polyp);
+        BlockingSystem.install(polyp);
+        HungerSystem.install(polyp);
+        FixesSystem.install(polyp);
+        Vri.install(polyp, VriConfig.all());
+        explosions = ExplosionSystem.install(polyp);
+    }
+
     @Override
     public List<ServiceType> getRequiredServices() {
-        return List.of(ServiceType.ORCHESTRATOR);
+        return List.of(ServiceType.ORCHESTRATOR, ServiceType.REPLAY);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.swofty.type.skyblockgeneric.entity.mob.mobs.dwarvenmines;
 
 import lombok.NonNull;
+import net.kyori.adventure.key.Key;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ai.GoalSelector;
 import net.minestom.server.entity.ai.TargetSelector;
@@ -11,6 +12,7 @@ import net.swofty.type.generic.gui.inventory.item.GUIMaterial;
 import net.swofty.type.skyblockgeneric.entity.mob.BestiaryMob;
 import net.swofty.type.skyblockgeneric.entity.mob.MobType;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
+import net.swofty.type.skyblockgeneric.loottable.BestiaryDropRarity;
 import net.swofty.type.skyblockgeneric.loottable.OtherLoot;
 import net.swofty.type.skyblockgeneric.loottable.SkyBlockLootTable;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
@@ -84,11 +86,11 @@ public class DiamondGoblin extends BestiaryMob {
 
 	@Override
 	public @Nullable SkyBlockLootTable getLootTable() {
-		return new SkyBlockLootTable() {
+        return new SkyBlockLootTable(Key.key("skyblock", "mob/diamond_goblin")) {
 			@Override
 			public @NonNull List<LootRecord> getLootTable() {
 				return List.of(
-						new LootRecord(ItemType.MITHRIL, 20, 100)
+                        new LootRecord(ItemType.MITHRIL, 20, 100, BestiaryDropRarity.COMMON)
 				);
 			}
 

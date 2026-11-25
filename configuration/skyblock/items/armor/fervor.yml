@@ -1,0 +1,51 @@
+items:
+  - id: FERVOR_HELMET
+    material: PLAYER_HEAD
+    name: Fervor Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 100
+      health: 180
+      intelligence: 15
+      true_defense: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: bc6e137e2a6a501dfc854ca900b5b681227dea4d5a9616849a3a68f09c6dc327
+  - id: FERVOR_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Fervor Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 140
+      health: 265
+      intelligence: 5
+      true_defense: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: FERVOR_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Fervor Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 115
+      health: 210
+      intelligence: 5
+      true_defense: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: FERVOR_BOOTS
+    material: LEATHER_BOOTS
+    name: Fervor Boots
+    rarity: LEGENDARY
+    default_statistics:
+      defense: 85
+      health: 160
+      intelligence: 5
+      true_defense: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

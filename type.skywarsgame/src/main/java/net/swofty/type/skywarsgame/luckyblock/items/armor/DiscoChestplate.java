@@ -5,7 +5,7 @@ import net.minestom.server.component.DataComponents;
 import net.minestom.server.entity.EquipmentSlot;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockArmor;
 import net.swofty.type.skywarsgame.luckyblock.items.LuckyBlockItemRegistry;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
@@ -47,7 +47,7 @@ public class DiscoChestplate implements LuckyBlockArmor {
 
     @Override
     public ItemStack createItemStack() {
-        return ItemStacks.raw(Material.LEATHER_CHESTPLATE, """
+        return ItemStackCreator.raw(Material.LEATHER_CHESTPLATE, """
                         <d>Disco Chestplate
 
                         <7>Protection III

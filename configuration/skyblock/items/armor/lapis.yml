@@ -1,7 +1,7 @@
 items:
   - id: LAPIS_ARMOR_HELMET
-    material: sea_lantern
-    name: "Lapis Armor Helmet"
+    material: SEA_LANTERN
+    name: Lapis Armor Helmet
     rarity: UNCOMMON
     default_statistics:
       defense: 25
@@ -24,8 +24,8 @@ items:
         game_stage: AMATEUR
         donation_xp: 3
   - id: LAPIS_ARMOR_CHESTPLATE
-    material: leather_chestplate
-    name: "Lapis Armor Chestplate"
+    material: LEATHER_CHESTPLATE
+    name: Lapis Armor Chestplate
     rarity: UNCOMMON
     default_statistics:
       defense: 40
@@ -48,8 +48,8 @@ items:
         game_stage: AMATEUR
         donation_xp: 3
   - id: LAPIS_ARMOR_LEGGINGS
-    material: leather_leggings
-    name: "Lapis Armor Leggings"
+    material: LEATHER_LEGGINGS
+    name: Lapis Armor Leggings
     rarity: UNCOMMON
     default_statistics:
       defense: 35
@@ -72,8 +72,8 @@ items:
         game_stage: AMATEUR
         donation_xp: 3
   - id: LAPIS_ARMOR_BOOTS
-    material: leather_boots
-    name: "Lapis Armor Boots"
+    material: LEATHER_BOOTS
+    name: Lapis Armor Boots
     rarity: UNCOMMON
     default_statistics:
       defense: 20

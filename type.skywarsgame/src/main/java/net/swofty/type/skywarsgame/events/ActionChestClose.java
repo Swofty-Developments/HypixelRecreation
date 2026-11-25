@@ -8,9 +8,9 @@ import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 public class ActionChestClose implements HypixelEventClass {
@@ -24,7 +24,7 @@ public class ActionChestClose implements HypixelEventClass {
         SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(player);
         if (game == null) return;
 
-        if (game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) return;
+        if (game.getState() != GameState.IN_PROGRESS) return;
 
         Pos chestPos = game.getChestManager().getChestPositionForInventory((Inventory) closedInventory);
         if (chestPos != null) {

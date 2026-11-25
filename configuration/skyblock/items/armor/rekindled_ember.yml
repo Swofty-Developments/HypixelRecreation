@@ -1,0 +1,55 @@
+items:
+  - id: REKINDLED_EMBER_HELMET
+    material: PLAYER_HEAD
+    name: Rekindled Ember Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 50
+      health: 175
+      intelligence: 15
+      strength: 30
+      critical_damage: 20
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 7b2991911f452ac341a8933b710e139900b3ef0f0307141a30260c623f029714
+  - id: REKINDLED_EMBER_CHESTPLATE
+    material: CHAINMAIL_CHESTPLATE
+    name: Rekindled Ember Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 70
+      health: 250
+      intelligence: 5
+      strength: 30
+      critical_damage: 20
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: REKINDLED_EMBER_LEGGINGS
+    material: CHAINMAIL_LEGGINGS
+    name: Rekindled Ember Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 70
+      health: 220
+      intelligence: 5
+      strength: 30
+      critical_damage: 20
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: REKINDLED_EMBER_BOOTS
+    material: CHAINMAIL_BOOTS
+    name: Rekindled Ember Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 40
+      health: 140
+      intelligence: 5
+      strength: 30
+      critical_damage: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

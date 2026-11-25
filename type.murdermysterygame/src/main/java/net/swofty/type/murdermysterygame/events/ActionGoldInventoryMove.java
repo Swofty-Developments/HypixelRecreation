@@ -5,7 +5,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.swofty.type.murdermysterygame.TypeMurderMysteryGameLoader;
 import net.swofty.type.murdermysterygame.game.Game;
-import net.swofty.type.murdermysterygame.game.GameStatus;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.murdermysterygame.user.MurderMysteryPlayer;
 import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
@@ -22,7 +22,7 @@ public class ActionGoldInventoryMove implements HypixelEventClass {
 
         Game game = TypeMurderMysteryGameLoader.getPlayerGame(player);
         if (game == null) return;
-        if (game.getGameStatus() != GameStatus.IN_PROGRESS) return;
+        if (game.getState() != GameState.IN_PROGRESS) return;
 
         int totalGold = 0;
         for (int i = 0; i < 36; i++) {
@@ -45,4 +45,3 @@ public class ActionGoldInventoryMove implements HypixelEventClass {
         }
     }
 }
-

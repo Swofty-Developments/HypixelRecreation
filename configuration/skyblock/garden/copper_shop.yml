@@ -1,0 +1,107 @@
+categories:
+  farming_essentials:
+    - GARDEN_SCYTHE
+    - BUILDERS_RULER
+    - SUNDER_I
+    - GREEN_THUMB_I
+    - DEDICATION_I
+    - LOTUS_BRACELET
+    - LOTUS_BELT
+    - LOTUS_NECKLACE
+    - LOTUS_CLOAK
+  farming_tools:
+    - BASIC_GARDENING_HOE
+    - ADVANCED_GARDENING_HOE
+    - BASIC_GARDENING_AXE
+    - ADVANCED_GARDENING_AXE
+    - SOWLEDGE_GARDEN_CHIP
+    - CROPSHOT_GARDEN_CHIP
+  barn_skins:
+    - TRADING_POST_BARN_SKIN
+    - AUTUMN_HUT_BARN_SKIN
+    - BAMBOO_BARN_SKIN
+    - HIVE_BARN_SKIN
+    - CASTLE_BARN_SKIN
+  greenhouse_skins: [ ]
+  pests: [ ]
+skymart:
+  - id: GARDEN_SCYTHE
+    display_name: Garden Scythe
+    category: farming_essentials
+    copper: 20
+  - id: BUILDERS_RULER
+    display_name: Builder's Ruler
+    category: farming_essentials
+    copper: 20
+  - id: SUNDER_I
+    display_name: Enchanted Book (Sunder I)
+    category: farming_essentials
+    copper: 10
+  - id: GREEN_THUMB_I
+    display_name: Enchanted Book (Green Thumb I)
+    category: farming_essentials
+    copper: 1500
+  - id: DEDICATION_I
+    display_name: Enchanted Book (Dedication I)
+    category: farming_essentials
+    copper: 250
+  - id: LOTUS_BRACELET
+    display_name: Lotus Bracelet
+    category: farming_essentials
+    copper: 50
+  - id: LOTUS_BELT
+    display_name: Lotus Belt
+    category: farming_essentials
+    copper: 100
+  - id: LOTUS_NECKLACE
+    display_name: Lotus Necklace
+    category: farming_essentials
+    copper: 200
+  - id: LOTUS_CLOAK
+    display_name: Lotus Cloak
+    category: farming_essentials
+    copper: 500
+  - id: BASIC_GARDENING_HOE
+    display_name: Basic Gardening Hoe
+    category: farming_tools
+    copper: 5
+  - id: ADVANCED_GARDENING_HOE
+    display_name: Advanced Gardening Hoe
+    category: farming_tools
+    copper: 25
+  - id: BASIC_GARDENING_AXE
+    display_name: Basic Gardening Axe
+    category: farming_tools
+    copper: 5
+  - id: ADVANCED_GARDENING_AXE
+    display_name: Advanced Gardening Axe
+    category: farming_tools
+    copper: 25
+  - id: SOWLEDGE_GARDEN_CHIP
+    display_name: Sowledge Chip
+    category: farming_tools
+    copper: 200
+  - id: CROPSHOT_GARDEN_CHIP
+    display_name: Cropshot Chip
+    category: farming_tools
+    copper: 500
+  - id: HIVE_BARN_SKIN
+    display_name: Hive Barn Skin
+    category: barn_skins
+    copper: 10000
+  - id: TRADING_POST_BARN_SKIN
+    display_name: Trading Post Barn Skin
+    category: barn_skins
+    copper: 1000
+  - id: AUTUMN_HUT_BARN_SKIN
+    display_name: Autumn Hut Barn Skin
+    category: barn_skins
+    copper: 2000
+  - id: CASTLE_BARN_SKIN
+    display_name: Castle Barn Skin
+    category: barn_skins
+    copper: 15000
+  - id: BAMBOO_BARN_SKIN
+    display_name: Bamboo Barn Skin
+    category: barn_skins
+    copper: 7500

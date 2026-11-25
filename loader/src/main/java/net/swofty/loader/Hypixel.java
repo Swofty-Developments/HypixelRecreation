@@ -54,6 +54,7 @@ public class Hypixel {
 
     private static final boolean ENABLE_SPARK = ConfigProvider.settings().getIntegrations().isSpark();
     private static final long SERVER_NAME_RETRY_MILLIS = 2000;
+    private static final long PROXY_REGISTRATION_TIMEOUT_SECONDS = 30;
 
     @SneakyThrows
     static void main(String[] args) {
@@ -249,11 +250,12 @@ public class Hypixel {
             }
         });
 
-        CompletableFuture.delayedExecutor(5, TimeUnit.SECONDS)
+        CompletableFuture.delayedExecutor(PROXY_REGISTRATION_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .execute(() -> {
                     if (startServer.isDone()) return;
-                    Logger.error("Couldn't connect to proxy. Shutting down...");
-                    System.exit(0);
+                    Logger.error("Couldn't connect to the proxy within " + PROXY_REGISTRATION_TIMEOUT_SECONDS
+                            + " seconds. Check that the proxy is running and shares this server's Redis. Shutting down...");
+                    System.exit(1);
                 });
 
         registerWithProxy(serverType, maxPlayers, options, null)

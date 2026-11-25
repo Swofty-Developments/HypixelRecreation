@@ -15,11 +15,13 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.generic.data.HypixelDataHandler;
 import net.swofty.type.generic.data.datapoints.DatapointRank;
 import net.swofty.type.generic.user.HypixelPlayer;
+import net.swofty.type.generic.user.categories.Rank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class HypixelCommand {
     @Getter
@@ -80,9 +82,16 @@ public abstract class HypixelCommand {
     }
 
     public boolean permissionCheck(CommandSender sender) {
-        HypixelPlayer player = (HypixelPlayer) sender;
-        HypixelDataHandler dataHandler = player.getDataHandler();
-        boolean passes = dataHandler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(params.permission());
+        return permissionCheck((HypixelPlayer) sender, params.permission());
+    }
+
+    public boolean permissionCheck(HypixelPlayer player, Rank rank) {
+        Optional<HypixelDataHandler> dataHandler = player.getOptionalDataHandler();
+        if (dataHandler.isEmpty()) {
+            player.sendMessage("<c>Your player data is unavailable right now. Please reconnect.");
+            return false;
+        }
+        boolean passes = dataHandler.get().get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue().isEqualOrHigherThan(rank);
 
         if (!passes) {
             player.sendMessage("<c>You do not have permission to use this command.");
@@ -151,10 +160,10 @@ public abstract class HypixelCommand {
                 }
 
                 HypixelPlayer player = (HypixelPlayer) commandSender;
-                HypixelDataHandler dataHandler = player.getDataHandler();
-
-                return dataHandler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue()
-                        .isEqualOrHigherThan(command.getParams().permission());
+                return player.getOptionalDataHandler()
+                        .map(handler -> handler.get(HypixelDataHandler.Data.RANK, DatapointRank.class).getValue()
+                                .isEqualOrHigherThan(command.getParams().permission()))
+                        .orElse(false);
             });
 
             command.registerUsage(this);

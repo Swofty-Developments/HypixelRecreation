@@ -1,8 +1,9 @@
 package net.swofty.type.generic.gui.v2;
 
+import net.kyori.adventure.text.Component;
+import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
 import net.swofty.type.generic.user.HypixelPlayer;
@@ -23,8 +24,6 @@ public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>
         19, 20, 21, 22, 23, 24, 25,
         28, 29, 30, 31, 32, 33, 34
     };
-
-    protected static final ItemStack.Builder FILLER = ItemStacks.filler(Material.BLACK_STAINED_GLASS_PANE);
 
     public interface PaginatedState<T> {
         List<T> items();
@@ -75,7 +74,7 @@ public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>
     }
 
     protected void layoutBackground(ViewLayout<S> layout, S state, ViewContext ctx) {
-        layout.filler(FILLER);
+        layout.filler(Components.FILLER);
     }
 
     protected void layoutNavigation(ViewLayout<S> layout, S state, ViewContext ctx, int currentPage, int totalPages) {
@@ -89,7 +88,7 @@ public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>
                     return typedState.withPage(Math.max(0, typedState.page() - 1));
                 }));
             } else if (shouldRenderNavBackground()) {
-                layout.slot(prevSlot, FILLER);
+                layout.slot(prevSlot, Components.FILLER);
             }
         }
 
@@ -100,7 +99,7 @@ public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>
                     return typedState.withPage(typedState.page() + 1);
                 }));
             } else if (shouldRenderNavBackground()) {
-                layout.slot(nextSlot, FILLER);
+                layout.slot(nextSlot, Components.FILLER);
             }
         }
     }
@@ -113,13 +112,11 @@ public abstract class PaginatedView<T, S extends PaginatedView.PaginatedState<T>
     }
 
     protected ItemStack.Builder createPrevPageItem(int currentPage, int totalPages) {
-        return ItemStacks.lore(ItemStacks.named(Material.ARROW, "<a>Previous Page"),
-                "<e>Page {}", currentPage);
+        return ItemStack.builder(Material.ARROW).set(DataComponents.CUSTOM_NAME, Component.text("§aPrevious Page")).set(DataComponents.LORE, List.of(Component.text("§ePage " + currentPage)));
     }
 
     protected ItemStack.Builder createNextPageItem(int currentPage, int totalPages) {
-        return ItemStacks.lore(ItemStacks.named(Material.ARROW, "<a>Next Page"),
-                "<e>Page {}", currentPage + 2);
+        return ItemStack.builder(Material.ARROW).set(DataComponents.CUSTOM_NAME, Component.text("§aNext Page")).set(DataComponents.LORE, List.of(Component.text("§ePage " + (currentPage + 2))));
     }
 
     protected abstract int[] getPaginatedSlots();

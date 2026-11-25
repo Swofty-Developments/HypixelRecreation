@@ -9,7 +9,7 @@ import net.minestom.server.timer.TaskSchedule;
 import net.swofty.type.generic.data.datapoints.DatapointLong;
 import net.swofty.type.generic.data.datapoints.DatapointSkywarsUnlocks;
 import net.swofty.type.generic.data.handlers.SkywarsDataHandler;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.v2.*;
 import net.swofty.type.generic.gui.v2.context.ClickContext;
 import net.swofty.type.generic.gui.v2.context.ViewContext;
@@ -115,11 +115,11 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
 
             // Left side of wheel column's middle position
             if (slotCol == wheelCol - 1 && slotRow == 2) {
-                return ItemStacks.item(Material.BLACK_STAINED_GLASS_PANE, 1, " ");
+                return ItemStackCreator.item(Material.BLACK_STAINED_GLASS_PANE, 1, " ");
             }
             // Right side of wheel column's middle position
             if (slotCol == wheelCol + 1 && slotRow == 2) {
-                return ItemStacks.item(Material.BLACK_STAINED_GLASS_PANE, 1, " ");
+                return ItemStackCreator.item(Material.BLACK_STAINED_GLASS_PANE, 1, " ");
             }
 
             for (int i = 0; i < slots.length; i++) {
@@ -131,7 +131,7 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
                     if (i == 2) {
                         return finalRewards.get(wheel).toItemStack();
                     }
-                    return ItemStacks.item(Material.AIR, 1, " ");
+                    return ItemStackCreator.item(Material.AIR, 1, " ");
                 }
 
                 List<SoulWellReward> items = wheelItems.get(wheel);
@@ -142,9 +142,9 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
 
         boolean allStopped = state.stoppedWheels.size() >= wheelCount;
         if (allStopped) {
-            return ItemStacks.item(Material.AIR, 1, " ");
+            return ItemStackCreator.item(Material.AIR, 1, " ");
         }
-        return ItemStacks.item(GLASS_COLORS[RANDOM.nextInt(GLASS_COLORS.length)], 1, " ");
+        return ItemStackCreator.item(GLASS_COLORS[RANDOM.nextInt(GLASS_COLORS.length)], 1, " ");
     }
 
     private int getStopTick(int wheel) {
@@ -260,23 +260,23 @@ public class GUISoulWellRolling implements StatefulView<GUISoulWellRolling.State
     public record SoulWellReward(RewardType type, SkywarsKit kit, SkywarsPerk perk, String displayName) {
         public ItemStack.Builder toItemStack() {
             return switch (type) {
-                case COINS_SMALL -> ItemStacks.item(Material.SUNFLOWER, 1, "<a>Small bag of coins");
-                case COINS_MEDIUM -> ItemStacks.item(Material.SUNFLOWER, 1, "<9>Medium bag of coins");
-                case COINS_LARGE -> ItemStacks.item(Material.SUNFLOWER, 1, "<6>Large bag of coins");
+                case COINS_SMALL -> ItemStackCreator.item(Material.SUNFLOWER, 1, "<a>Small bag of coins");
+                case COINS_MEDIUM -> ItemStackCreator.item(Material.SUNFLOWER, 1, "<9>Medium bag of coins");
+                case COINS_LARGE -> ItemStackCreator.item(Material.SUNFLOWER, 1, "<6>Large bag of coins");
                 case KIT -> {
                     if (kit != null) {
                         if (kit.hasCustomTexture()) {
-                            yield ItemStacks.head(kit.getIconTexture(), "<a>{}", displayName);
+                            yield ItemStackCreator.head(kit.getIconTexture(), "<a>{}", displayName);
                         }
-                        yield ItemStacks.item(kit.getIconMaterial(), 1, "<a>{}", displayName);
+                        yield ItemStackCreator.item(kit.getIconMaterial(), 1, "<a>{}", displayName);
                     }
-                    yield ItemStacks.item(Material.LEATHER_HELMET, 1, "<a>{}", displayName);
+                    yield ItemStackCreator.item(Material.LEATHER_HELMET, 1, "<a>{}", displayName);
                 }
                 case PERK -> {
                     if (perk != null) {
-                        yield ItemStacks.item(perk.getIconMaterial(), 1, "<a>{}", displayName);
+                        yield ItemStackCreator.item(perk.getIconMaterial(), 1, "<a>{}", displayName);
                     }
-                    yield ItemStacks.item(Material.OAK_PLANKS, 1, "<a>{}", displayName);
+                    yield ItemStackCreator.item(Material.OAK_PLANKS, 1, "<a>{}", displayName);
                 }
             };
         }

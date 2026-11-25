@@ -40,5 +40,4 @@ public class ActionPlayerInteractNPC implements HypixelEventClass {
 			event.setCancelled(true);
 		}
 	}
-
 }

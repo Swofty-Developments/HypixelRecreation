@@ -10,9 +10,9 @@ import net.swofty.type.generic.event.EventNodes;
 import net.swofty.type.generic.event.HypixelEventClass;
 import net.swofty.type.generic.event.phase.EventPhase;
 import net.swofty.type.generic.event.phase.PhasedEvent;
+import net.swofty.type.game.game.GameState;
 import net.swofty.type.skywarsgame.TypeSkywarsGameLoader;
 import net.swofty.type.skywarsgame.game.SkywarsGame;
-import net.swofty.type.skywarsgame.game.SkywarsGameStatus;
 import net.swofty.type.skywarsgame.user.SkywarsPlayer;
 
 public class ActionMobAttack implements HypixelEventClass {
@@ -27,7 +27,7 @@ public class ActionMobAttack implements HypixelEventClass {
         if (!(target instanceof SkywarsPlayer victim)) return;
 
         SkywarsGame game = TypeSkywarsGameLoader.getPlayerGame(victim);
-        if (game == null || game.getGameStatus() != SkywarsGameStatus.IN_PROGRESS) return;
+        if (game == null || game.getState() != GameState.IN_PROGRESS) return;
         if (victim.isEliminated()) return;
 
         float damage = getMobDamage(mob);

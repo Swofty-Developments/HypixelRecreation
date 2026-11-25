@@ -43,5 +43,4 @@ public class NPCWizard extends HypixelNPC {
     public void onClick(NPCInteractEvent e) {
         e.player().notImplemented();
     }
-
 }

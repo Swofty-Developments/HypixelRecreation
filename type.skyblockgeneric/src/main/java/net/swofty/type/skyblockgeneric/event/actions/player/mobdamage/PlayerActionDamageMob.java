@@ -18,6 +18,7 @@ import net.swofty.type.skyblockgeneric.event.value.SkyBlockValueEvent;
 import net.swofty.type.skyblockgeneric.event.value.events.PlayerDamageMobValueUpdateEvent;
 import net.swofty.type.skyblockgeneric.hunting.AttributeEffectService;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
+import net.swofty.type.skyblockgeneric.item.handlers.pet.abstr.PetEvent;
 import net.swofty.type.skyblockgeneric.item.components.ItemRequirementsComponent;
 import net.swofty.type.skyblockgeneric.item.updater.PlayerItemOrigin;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
@@ -64,6 +65,7 @@ public class PlayerActionDamageMob implements HypixelEventClass {
         float damageAmount = ((Number) valueEvent.getValue()).floatValue();
         if (!AttackService.applyHit(player, mob, damageAmount, critical)) return;
 
+
         double ferocity = player.getStatistics().allStatistics().getOverall(ItemStatistic.FEROCITY);
         if (player.getPosition().distance(mob.getPosition()) <= AttackService.MAX_MELEE_FEROCITY_DISTANCE)
             AttackService.scheduleExtraHits(player, mob, damageAmount, critical, ferocity);
@@ -77,5 +79,8 @@ public class PlayerActionDamageMob implements HypixelEventClass {
                 damageEventEnchant.onDamageDealt(player, targetLivingEntity, damageValue, enchantment.level());
             }
         }
+
+        SkyBlockItem pet = player.getPetData().getEnabledPet();
+        player.getPetData().dispatch(new PetEvent.MeleeDamageDealt(player, pet, mob, mainHandItem, damageValue));
     }
 }

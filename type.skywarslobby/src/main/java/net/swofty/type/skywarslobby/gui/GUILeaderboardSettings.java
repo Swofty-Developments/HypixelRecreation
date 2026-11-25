@@ -13,7 +13,7 @@ import net.swofty.commons.text.Text;
 import net.swofty.type.skywarslobby.hologram.LeaderboardHologramManager;
 import net.swofty.type.skywarslobby.hologram.LeaderboardHologramManager.PlayerLeaderboardState;
 import net.swofty.type.generic.gui.inventory.HypixelInventoryGUI;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 import net.swofty.type.generic.gui.inventory.item.GUIClickableItem;
 import net.swofty.type.generic.user.HypixelPlayer;
 
@@ -65,7 +65,7 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
                 lore.add(Text.empty());
                 lore.add(Text.of("<e>Left/Right Click to change!"));
 
-                return ItemStacks.item(Material.BOW, 1, Text.of("<a>Select the Mode!"), lore);
+                return ItemStackCreator.item(Material.BOW, 1, Text.of("<a>Select the Mode!"), lore);
             }
 
             @Override
@@ -100,7 +100,7 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
                 lore.add(Text.empty());
                 lore.add(Text.of("<e>Left/Right Click to change!"));
 
-                return ItemStacks.item(Material.CLOCK, 1, Text.of("<a>Select the Time!"), lore);
+                return ItemStackCreator.item(Material.CLOCK, 1, Text.of("<a>Select the Time!"), lore);
             }
 
             @Override
@@ -133,7 +133,7 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
                 lore.add(Text.empty());
                 lore.add(Text.of("<e>Left/Right Click to change!"));
 
-                return ItemStacks.item(Material.LADDER, 1, Text.of("<a>Select the View!"), lore);
+                return ItemStackCreator.item(Material.LADDER, 1, Text.of("<a>Select the View!"), lore);
             }
 
             @Override
@@ -151,7 +151,7 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
         set(new GUIClickableItem(14) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.SKELETON_SKULL, 1, """
+                return ItemStackCreator.item(Material.SKELETON_SKULL, 1, """
                         <a>Select the Players!
 
                         <a>\u279C <7>All
@@ -193,7 +193,7 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
                 lore.add(Text.empty());
                 lore.add(Text.of("<e>Left/Right Click to change!"));
 
-                return ItemStacks.item(Material.ITEM_FRAME, 1,
+                return ItemStackCreator.item(Material.ITEM_FRAME, 1,
                         Text.of("<a>Select the Text Alignment!"), lore);
             }
 
@@ -212,7 +212,7 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
         set(new GUIClickableItem(30) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.GREEN_TERRACOTTA, 1, """
+                return ItemStackCreator.item(Material.GREEN_TERRACOTTA, 1, """
                         <a>Apply changes
                         <e>Click to apply the changes!""");
             }
@@ -233,7 +233,7 @@ public class GUILeaderboardSettings extends HypixelInventoryGUI {
         set(new GUIClickableItem(32) {
             @Override
             public ItemStack.Builder getItem(HypixelPlayer player) {
-                return ItemStacks.item(Material.RED_TERRACOTTA, 1, """
+                return ItemStackCreator.item(Material.RED_TERRACOTTA, 1, """
                         <c>Discard changes
                         <e>Close the menu without applying
                         <e>changes!""");

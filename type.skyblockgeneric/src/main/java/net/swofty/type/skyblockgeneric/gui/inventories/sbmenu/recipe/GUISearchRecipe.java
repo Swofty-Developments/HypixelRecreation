@@ -76,7 +76,7 @@ public class GUISearchRecipe extends PaginatedView<SkyBlockRecipe<?>, GUISearchR
 
     @Override
     public void layout(ViewLayout<SearchState> layout, SearchState state, ViewContext ctx) {
-        layout.filler(Layouts.border(0, 53), FILLER);
+        layout.filler(Layouts.border(0, 53), Components.asFiller(Material.BLACK_STAINED_GLASS_PANE));
         Components.back(layout, 48, ctx);
         Components.close(layout, 49);
 

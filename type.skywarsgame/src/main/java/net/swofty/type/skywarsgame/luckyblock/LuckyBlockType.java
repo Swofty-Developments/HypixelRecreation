@@ -7,7 +7,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.tag.Tag;
 import net.swofty.commons.text.Text;
-import net.swofty.type.generic.gui.inventory.ItemStacks;
+import net.swofty.type.generic.gui.inventory.ItemStackCreator;
 
 import java.util.List;
 
@@ -68,7 +68,7 @@ public enum LuckyBlockType {
     }
 
     public ItemStack createItemStack() {
-        return ItemStacks.head(skullTexture, 1,
+        return ItemStackCreator.head(skullTexture, 1,
                 Text.of("<color:{}>{} Lucky Block", color, displayName),
                 List.of(
                         Text.of("<7>Place this block to receive"),
