@@ -33,6 +33,8 @@ RUN rm -f velocity.toml && \
 RUN mkdir -p configuration && \
     cp configuration_files/config.docker.yml ./configuration/config.yml
 
+ENV JAVA_TOOL_OPTIONS="--enable-native-access=ALL-UNNAMED"
+
 EXPOSE 25565
 
 CMD ["sh", "-c", "[ -n \"$FORWARDING_SECRET\" ] || { echo 'FORWARDING_SECRET is required' >&2; exit 1; }; printf '%s' \"$FORWARDING_SECRET\" > /app/forwarding.secret; sed -i \"s/velocity-secret: .*/velocity-secret: '$FORWARDING_SECRET'/\" /app/configuration/config.yml; java -jar velocity.jar"]
