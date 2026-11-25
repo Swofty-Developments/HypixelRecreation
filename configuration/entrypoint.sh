@@ -12,7 +12,7 @@ fi
 printf '%s' "$secret" > ./forwarding.secret
 
 mkdir -p ./configuration
-cp -an ./configuration_files/. ./configuration/ 2>/dev/null || true
+cp -au ./configuration_files/. ./configuration/ 2>/dev/null || true
 
 if ! ls ./configuration/world/*.polar >/dev/null 2>&1; then
     echo "ERROR: no world files found in ./configuration/world." >&2
