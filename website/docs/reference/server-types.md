@@ -174,7 +174,7 @@ The proxy will distribute players across all available instances.
 
 ## World Requirements
 
-All `.polar` world files go in `configuration/world/` unless noted otherwise. The complete world pack is available in the [world download zip](https://files.catbox.moe/flri48.zip) referenced by the [Game Servers setup](/docs/setup/game-servers).
+All `.polar` world files go in `configuration/world/` unless noted otherwise. The complete world pack is available in the [world download zip](https://github.com/Swofty-Developments/HypixelRecreation/releases/download/world-assets/world-assets.zip) referenced by the [Game Servers setup](/docs/setup/game-servers).
 
 | World                                    | Location                      | Used By                                   |
 |------------------------------------------|-------------------------------|-------------------------------------------|

@@ -45,7 +45,8 @@ COPY ./configuration /app/configuration_files
 RUN mkdir -p configuration && \
     cp -a configuration_files/. ./configuration/
 
-ARG WORLD_ASSETS_URL=https://files.catbox.moe/flri48.zip
+ARG WORLD_ASSETS_URL=https://github.com/Swofty-Developments/HypixelRecreation/releases/download/world-assets/world-assets.zip
+ARG WORLD_ASSETS_FALLBACK_URL=https://files.catbox.moe/flri48.zip
 
 # Worlds, limbo.schem and resource packs are not in git; fetch them unless configuration/ already has them
 RUN set -eu; \
@@ -53,8 +54,9 @@ RUN set -eu; \
         echo "World files found in configuration/, skipping download"; \
     else \
         echo "Downloading world files from ${WORLD_ASSETS_URL}"; \
-        if ! curl -fSL --retry 3 --connect-timeout 20 -o /tmp/world_assets.zip "${WORLD_ASSETS_URL}"; then \
-            echo "ERROR: could not download the world files from ${WORLD_ASSETS_URL}." >&2; \
+        if ! curl -fSL --retry 3 --connect-timeout 20 -o /tmp/world_assets.zip "${WORLD_ASSETS_URL}" \
+            && ! { echo "Retrying from ${WORLD_ASSETS_FALLBACK_URL}"; curl -fSL --retry 3 --connect-timeout 20 -o /tmp/world_assets.zip "${WORLD_ASSETS_FALLBACK_URL}"; }; then \
+            echo "ERROR: could not download the world files from ${WORLD_ASSETS_URL} or ${WORLD_ASSETS_FALLBACK_URL}." >&2; \
             echo "Download them manually, extract them into ./configuration (world/, resourcepacks/, limbo.schem) and run docker compose up --build again." >&2; \
             exit 1; \
         fi; \

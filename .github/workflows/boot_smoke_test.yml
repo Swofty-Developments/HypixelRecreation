@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 env:
-  WORLD_ASSETS_URL: https://files.catbox.moe/flri48.zip
+  WORLD_ASSETS_URL: https://github.com/Swofty-Developments/HypixelRecreation/releases/download/world-assets/world-assets.zip
   INSTALL_DIR: /home/runner/hypixel-skyblock
   LOG_DIR: ${{ github.workspace }}/smoke-logs
   COMPOSE_PROJECT_NAME: hypixel-skyblock

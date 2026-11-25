@@ -25,10 +25,23 @@ func DownloadLimboAssets(ctx context.Context, installDir string, events chan<- E
 		return importLocalLimboAssets(localPath, configDir)
 	}
 
+	var errs []string
+	for _, url := range LimboAssetsURLs {
+		err := downloadLimboAssetsFrom(ctx, url, configDir, events)
+		if err == nil {
+			return nil
+		}
+		emitAssetProgress(events, "Could not get world assets from %s: %v", url, err)
+		errs = append(errs, fmt.Sprintf("%s: %v", url, err))
+	}
+	return fmt.Errorf("world assets download failed (%s)", strings.Join(errs, "; "))
+}
+
+func downloadLimboAssetsFrom(ctx context.Context, url, configDir string, events chan<- Event) error {
 	reqCtx, cancel := context.WithTimeout(ctx, 15*time.Minute)
 	defer cancel()
 
-	req, err := http.NewRequestWithContext(reqCtx, http.MethodGet, LimboAssetsURL, nil)
+	req, err := http.NewRequestWithContext(reqCtx, http.MethodGet, url, nil)
 	if err != nil {
 		return err
 	}
@@ -42,7 +55,7 @@ func DownloadLimboAssets(ctx context.Context, installDir string, events chan<- E
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return fmt.Errorf("download returned %s", resp.Status)
 	}
-	emitAssetProgress(events, "Downloading world assets from %s", LimboAssetsURL)
+	emitAssetProgress(events, "Downloading world assets from %s", url)
 	if resp.ContentLength > 0 {
 		emitAssetProgress(events, "Remote asset size: %s", formatBytes(resp.ContentLength))
 	} else {
