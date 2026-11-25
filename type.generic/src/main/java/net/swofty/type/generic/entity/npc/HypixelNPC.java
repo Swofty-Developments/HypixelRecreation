@@ -31,13 +31,14 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class HypixelNPC {
     private static final int SPAWN_DISTANCE = 48;
     private static final int LOOK_DISTANCE = 5;
 
     @Getter
-    private static final List<HypixelNPC> registeredNPCs = new ArrayList<>();
+    private static final List<HypixelNPC> registeredNPCs = new CopyOnWriteArrayList<>();
     @Getter
     private static final Map<UUID, HypixelNPC.PlayerNPCCache> perPlayerNPCs = new ConcurrentHashMap<>();
 
