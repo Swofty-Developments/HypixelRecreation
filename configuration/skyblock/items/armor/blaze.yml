@@ -1,0 +1,123 @@
+items:
+  - id: BLAZE_HELMET
+    material: PLAYER_HEAD
+    name: Blaze Helmet
+    rarity: EPIC
+    default_statistics:
+      speed: 2
+      defense: 90
+      strength: 30
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_BLAZE_ROD
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: BLAZE_HELMET
+              amount: 1
+      - id: SKULL_HEAD
+        texture: 531b2183392ebcffe217a983c96a573cf90dd58687d18fd63036ccc59eb2f47d
+  - id: BLAZE_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Blaze Chestplate
+    rarity: EPIC
+    default_statistics:
+      speed: 2
+      defense: 165
+      strength: 30
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_BLAZE_ROD
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: BLAZE_CHESTPLATE
+              amount: 1
+  - id: BLAZE_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Blaze Leggings
+    rarity: EPIC
+    default_statistics:
+      speed: 2
+      defense: 130
+      strength: 30
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_BLAZE_ROD
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: BLAZE_LEGGINGS
+              amount: 1
+  - id: BLAZE_BOOTS
+    material: LEATHER_BOOTS
+    name: Blaze Boots
+    rarity: EPIC
+    default_statistics:
+      speed: 2
+      defense: 80
+      strength: 30
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_BLAZE_ROD
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: BLAZE_BOOTS
+              amount: 1

@@ -1,0 +1,136 @@
+items:
+  - id: TARANTULA_BOOTS
+    material: LEATHER_BOOTS
+    name: Tarantula Boots
+    rarity: EPIC
+    default_statistics:
+      speed: 5
+      defense: 70
+      health: 70
+      intelligence: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - ABA
+              - CDC
+              - ACA
+            ingredients:
+              A:
+                type: TARANTULA_SILK
+                amount: 1
+              B:
+                type: SPIDER_CATALYST
+                amount: 1
+              C:
+                type: ENCHANTED_IRON_INGOT
+                amount: 64
+              D:
+                type: SPIDER_BOOTS
+                amount: 1
+            result:
+              type: TARANTULA_BOOTS
+              amount: 1
+  - id: TARANTULA_HELMET
+    material: LEATHER_HELMET
+    name: Tarantula Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 80
+      health: 100
+      intelligence: 80
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - BOB
+            ingredients:
+              A:
+                type: TARANTULA_SILK
+                amount: 1
+              B:
+                type: ENCHANTED_IRON_INGOT
+                amount: 64
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: TARANTULA_HELMET
+              amount: 1
+  - id: TARANTULA_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Tarantula Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 100
+      health: 120
+      intelligence: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - ABA
+              - BBB
+            ingredients:
+              A:
+                type: ENCHANTED_IRON_INGOT
+                amount: 64
+              O:
+                type: AIR
+                amount: 1
+              B:
+                type: TARANTULA_SILK
+                amount: 1
+            result:
+              type: TARANTULA_CHESTPLATE
+              amount: 1
+  - id: TARANTULA_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Tarantula Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 90
+      health: 105
+      intelligence: 80
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - BOB
+              - BOB
+            ingredients:
+              A:
+                type: TARANTULA_SILK
+                amount: 1
+              B:
+                type: ENCHANTED_IRON_INGOT
+                amount: 64
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: TARANTULA_LEGGINGS
+              amount: 1

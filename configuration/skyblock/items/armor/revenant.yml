@@ -1,0 +1,96 @@
+items:
+  - id: REVENANT_CHESTPLATE
+    material: DIAMOND_CHESTPLATE
+    name: Revenant Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 70
+      health: 180
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - ABA
+              - BBB
+            ingredients:
+              A:
+                type: ENCHANTED_DIAMOND
+                amount: 32
+              O:
+                type: AIR
+                amount: 1
+              B:
+                type: REVENANT_VISCERA
+                amount: 1
+            result:
+              type: REVENANT_CHESTPLATE
+              amount: 1
+  - id: REVENANT_LEGGINGS
+    material: DIAMOND_LEGGINGS
+    name: Revenant Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 50
+      health: 120
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - BOB
+              - BOB
+            ingredients:
+              A:
+                type: REVENANT_VISCERA
+                amount: 1
+              B:
+                type: ENCHANTED_DIAMOND
+                amount: 16
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: REVENANT_LEGGINGS
+              amount: 1
+  - id: REVENANT_BOOTS
+    material: DIAMOND_BOOTS
+    name: Revenant Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 30
+      health: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - BOB
+            ingredients:
+              A:
+                type: ENCHANTED_DIAMOND
+                amount: 32
+              O:
+                type: AIR
+                amount: 1
+              B:
+                type: REVENANT_VISCERA
+                amount: 1
+            result:
+              type: REVENANT_BOOTS
+              amount: 1

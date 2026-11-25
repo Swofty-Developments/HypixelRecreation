@@ -11,6 +11,7 @@ import net.swofty.type.generic.event.HypixelEventHandler;
 import net.swofty.type.generic.event.custom.DragonHitEvent;
 import net.swofty.type.generic.user.HypixelPlayer;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -26,6 +27,13 @@ public class DragonEntity extends LivingEntity {
     private Pos currentIdleTarget = null;
     private double idleAngle = 0;
     private double idleHeight = 0;
+    private List<Pos[]> path = List.of();
+    private int pathIndex;
+    private double pathProgress;
+    private Pos returnStart;
+    private Pos returnEnd;
+    private double returnProgress;
+    private double returnSpeed;
 
     public DragonEntity() {
         super(EntityType.ENDER_DRAGON);
@@ -58,6 +66,28 @@ public class DragonEntity extends LivingEntity {
         pickNewIdleTarget();
     }
 
+    public void setPath(List<Pos[]> path, double speed) {
+        this.path = List.copyOf(path);
+        this.moveSpeed = speed;
+        this.pathIndex = 0;
+        this.pathProgress = 0;
+        this.returnStart = null;
+        this.returnEnd = null;
+        this.idleMode = false;
+        this.followingPlayer = null;
+        this.targetPosition = null;
+    }
+
+    public void returnToPath(double speed) {
+        this.idleMode = false;
+        this.followingPlayer = null;
+        this.targetPosition = null;
+        this.returnStart = getPosition();
+        this.returnEnd = path.get(pathIndex)[3];
+        this.returnProgress = 0;
+        this.returnSpeed = speed;
+    }
+
     public void clearTarget() {
         this.targetPosition = null;
         this.followingPlayer = null;
@@ -79,7 +109,7 @@ public class DragonEntity extends LivingEntity {
 
     @Override
     public boolean damage(Damage damage) {
-        if (damage.getSource() instanceof Player player) {
+        if (damage.getAttacker() instanceof Player player) {
             HypixelPlayer hypixelPlayer = (HypixelPlayer) player;
             DragonHitEvent event = new DragonHitEvent(hypixelPlayer, this, damage.getAmount());
             HypixelEventHandler.callCustomEvent(event);
@@ -110,6 +140,15 @@ public class DragonEntity extends LivingEntity {
 
     @Override
     protected void movementTick() {
+        if (targetPosition == null && followingPlayer == null && !idleMode && !path.isEmpty()) {
+            if (returnStart != null) {
+                moveBackToPath();
+                return;
+            }
+            moveAlongPath();
+            return;
+        }
+
         Pos effectiveTarget = targetPosition;
 
         if (followingPlayer != null) {
@@ -149,6 +188,11 @@ public class DragonEntity extends LivingEntity {
         double dz = effectiveTarget.z() - current.z();
         double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
+        if (dist < 0.001) {
+            setVelocity(Vec.ZERO);
+            return;
+        }
+
         if (dist < 3.0 && !idleMode) {
             setVelocity(Vec.ZERO);
             return;
@@ -164,5 +208,47 @@ public class DragonEntity extends LivingEntity {
         lookAt(getPosition().add(-vx, vy, -vz));
 
         super.movementTick();
+    }
+
+    private void moveAlongPath() {
+        Pos[] points = path.get(pathIndex);
+        Pos position = bezier(points, pathProgress);
+        Pos next = bezier(points, Math.min(1, pathProgress + moveSpeed));
+        teleport(position);
+        lookAt(next);
+        pathProgress += moveSpeed;
+        if (pathProgress <= 1) return;
+        pathProgress = 0;
+        pathIndex = (pathIndex + 1) % path.size();
+    }
+
+    private void moveBackToPath() {
+        double progress = Math.min(1, returnProgress);
+        Pos position = new Pos(
+                returnStart.x() + (returnEnd.x() - returnStart.x()) * progress,
+                returnStart.y() + (returnEnd.y() - returnStart.y()) * progress,
+                returnStart.z() + (returnEnd.z() - returnStart.z()) * progress
+        );
+        teleport(position);
+        lookAt(returnEnd);
+        returnProgress += returnSpeed;
+        if (returnProgress < 1) return;
+        returnStart = null;
+        returnEnd = null;
+        pathProgress = 0;
+        pathIndex = (pathIndex + 1) % path.size();
+    }
+
+    private Pos bezier(Pos[] points, double progress) {
+        double inverse = 1 - progress;
+        double a = inverse * inverse * inverse;
+        double b = 3 * inverse * inverse * progress;
+        double c = 3 * inverse * progress * progress;
+        double d = progress * progress * progress;
+        return new Pos(
+                points[0].x() * a + points[1].x() * b + points[2].x() * c + points[3].x() * d,
+                points[0].y() * a + points[1].y() * b + points[2].y() * c + points[3].y() * d,
+                points[0].z() * a + points[1].z() * b + points[2].z() * c + points[3].z() * d
+        );
     }
 }

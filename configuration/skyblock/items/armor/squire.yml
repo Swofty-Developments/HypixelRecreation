@@ -1,11 +1,12 @@
 items:
   - id: SQUIRE_BOOTS
-    material: leather_boots
-    name: "Squire Boots"
+    material: LEATHER_BOOTS
+    name: Squire Boots
     rarity: UNCOMMON
     default_statistics:
-      health: 20.0
-      defense: 20.0
+      defense: 20
+      health: 20
+      strength: 5
     components:
       - id: LEATHER_COLOR
         r: '84'
@@ -16,36 +17,39 @@ items:
       - id: SELLABLE
         value: 2000.0
   - id: SQUIRE_CHESTPLATE
-    material: iron_chestplate
-    name: "Squire Chestplate"
+    material: IRON_CHESTPLATE
+    name: Squire Chestplate
     rarity: UNCOMMON
     default_statistics:
-      health: 40.0
-      defense: 40.0
+      defense: 40
+      health: 40
+      strength: 5
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
       - id: SELLABLE
         value: 4000.0
   - id: SQUIRE_HELMET
-    material: chainmail_helmet
-    name: "Squire Helmet"
+    material: CHAINMAIL_HELMET
+    name: Squire Helmet
     rarity: UNCOMMON
     default_statistics:
       health: 25.0
       defense: 25.0
+      strength: 5.0
     components:
       - id: STANDARD_ITEM
         standard_item_type: HELMET
       - id: SELLABLE
         value: 2500.0
   - id: SQUIRE_LEGGINGS
-    material: chainmail_leggings
-    name: "Squire Leggings"
+    material: CHAINMAIL_LEGGINGS
+    name: Squire Leggings
     rarity: UNCOMMON
     default_statistics:
-      health: 30.0
-      defense: 30.0
+      defense: 30
+      health: 30
+      strength: 5
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS

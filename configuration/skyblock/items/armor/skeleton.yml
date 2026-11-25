@@ -1,0 +1,10 @@
+items:
+  - id: SKELETON_HELMET
+    material: IRON_HELMET
+    name: Skeleton's Helmet
+    rarity: RARE
+    default_statistics:
+      defense: 75
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET

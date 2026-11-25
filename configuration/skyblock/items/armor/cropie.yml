@@ -1,0 +1,55 @@
+items:
+  - id: CROPIE_HELMET
+    material: PLAYER_HEAD
+    name: Cropie Helmet
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 20
+      speed: 3
+      health: 110
+      defense: 30
+      bonus_pest_chance: 12.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: e4bacb96734e244b9f7331d453e686fa2e32522a411aa568f960e741d74b3289
+  - id: CROPIE_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Cropie Chestplate
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 25
+      speed: 4
+      health: 165
+      defense: 30
+      bonus_pest_chance: 12.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: CROPIE_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Cropie Leggings
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 25
+      speed: 4
+      health: 165
+      defense: 30
+      bonus_pest_chance: 12.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: CROPIE_BOOTS
+    material: LEATHER_BOOTS
+    name: Cropie Boots
+    rarity: UNCOMMON
+    default_statistics:
+      farming_fortune: 20
+      speed: 4
+      health: 110
+      defense: 30
+      bonus_pest_chance: 12.5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

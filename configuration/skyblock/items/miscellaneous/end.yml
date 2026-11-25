@@ -1,0 +1,112 @@
+items:
+  - id: SILENT_PEARL
+    material: ENDER_PEARL
+    name: Silent Pearl
+    rarity: UNCOMMON
+  - id: REMNANT_OF_THE_EYE
+    material: PAPER
+    name: Remnant of the Eye
+    rarity: EPIC
+    components:
+      - id: ITEM_MODEL
+        item_model: hypixel_skyblock:item/uncategorized/remnant_of_the_eye
+  - id: STONK
+    material: GOLDEN_PICKAXE
+    name: Stonk
+    rarity: EPIC
+  - id: ENDERMAN_MASK
+    material: PLAYER_HEAD
+    name: Enderman Mask
+    rarity: UNCOMMON
+    components:
+      - id: SKULL_HEAD
+        texture: 5bc4c2cb99f647217baa7c19d74ee1f0257cfdfc1befab4304d3455d466e841
+    default_statistics:
+      defense: 1
+      health: 1
+      strength: 1
+      intelligence: -99
+  - id: NOPE_THE_FISH
+    material: COD
+    name: Nope the Fish
+    rarity: SPECIAL
+  - id: PIGS_FOOT
+    material: PLAYER_HEAD
+    name: Pig's Foot
+    rarity: RARE
+    components:
+      - id: SKULL_HEAD
+        texture: 604faebefd0a8f721403e3142efecb83fbf4b7d1f705d0c9b44d91f0bf40127b
+    default_statistics:
+      speed: 1
+  - id: DRAGON_ESSENCE
+    material: DRAGON_BREATH
+    name: Dragon Essence
+    rarity: COMMON
+  - id: DRAGON_SCALE
+    material: PLAYER_HEAD
+    name: Dragon Scale
+    rarity: RARE
+    components:
+      - id: SKULL_HEAD
+        texture: cadde5c31fbc3cbec9ff66360c4efb6e86584617179632ff38fea1e556649b19
+  - id: DRAGON_CLAW
+    material: PLAYER_HEAD
+    name: Dragon Claw
+    rarity: RARE
+    components:
+      - id: SKULL_HEAD
+        texture: 2b7f9f48726e525b0d9a0868178c3233474ee4ed3da3f7619857449d41a0c63a
+  - id: DRAGON_HORN
+    material: PLAYER_HEAD
+    name: Dragon Horn
+    rarity: EPIC
+    components:
+      - id: SKULL_HEAD
+        texture: 8744c81099c1aebf20f677faed24cace520a294cf46bdeb6a257f436a323a1d8
+  - id: ENDERMAN_CORTEX_REWRITER
+    material: PLAYER_HEAD
+    name: Enderman Cortex Rewriter
+    rarity: MYTHIC
+    components:
+      - id: SKULL_HEAD
+        texture: eb07594e2df273921a77c101d0bfdfa1115abed5b9b2029eb496ceba9bdbb4b3
+  - id: MITE_GEL
+    material: INK_SAC
+    name: Mite Gel
+    rarity: EPIC
+    components:
+      - id: ITEM_MODEL
+        item_model: hypixel_skyblock:item/island_relevant/combat_3/mite_gel
+  - id: PEARLESCENT_DYE
+    material: PURPLE_DYE
+    name: Pearlescent Dye
+    rarity: LEGENDARY
+  - id: YOUNG_DRAGON_FRAGMENT
+    material: PLAYER_HEAD
+    name: Young Dragon Fragment
+    rarity: RARE
+  - id: OLD_DRAGON_FRAGMENT
+    material: PLAYER_HEAD
+    name: Old Dragon Fragment
+    rarity: RARE
+  - id: STRONG_DRAGON_FRAGMENT
+    material: PLAYER_HEAD
+    name: Strong Dragon Fragment
+    rarity: RARE
+  - id: WISE_DRAGON_FRAGMENT
+    material: PLAYER_HEAD
+    name: Wise Dragon Fragment
+    rarity: RARE
+  - id: UNSTABLE_DRAGON_FRAGMENT
+    material: PLAYER_HEAD
+    name: Unstable Dragon Fragment
+    rarity: RARE
+  - id: PROTECTOR_DRAGON_FRAGMENT
+    material: PLAYER_HEAD
+    name: Protector Dragon Fragment
+    rarity: RARE
+  - id: SUPERIOR_DRAGON_FRAGMENT
+    material: PLAYER_HEAD
+    name: Superior Dragon Fragment
+    rarity: RARE

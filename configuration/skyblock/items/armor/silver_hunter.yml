@@ -1,0 +1,37 @@
+items:
+  - id: SILVER_HUNTER_HELMET
+    material: IRON_HELMET
+    name: Silver Hunter Helmet
+    rarity: RARE
+    default_statistics:
+      health: 75
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: SILVER_HUNTER_CHESTPLATE
+    material: IRON_CHESTPLATE
+    name: Silver Hunter Chestplate
+    rarity: RARE
+    default_statistics:
+      health: 125
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: SILVER_HUNTER_LEGGINGS
+    material: IRON_LEGGINGS
+    name: Silver Hunter Leggings
+    rarity: RARE
+    default_statistics:
+      health: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SILVER_HUNTER_BOOTS
+    material: IRON_BOOTS
+    name: Silver Hunter Boots
+    rarity: RARE
+    default_statistics:
+      health: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

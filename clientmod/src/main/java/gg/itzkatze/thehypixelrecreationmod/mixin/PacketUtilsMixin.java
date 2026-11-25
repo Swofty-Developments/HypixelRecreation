@@ -4,6 +4,7 @@ import gg.itzkatze.thehypixelrecreationmod.features.fullcapture.FullCapture;
 import gg.itzkatze.thehypixelrecreationmod.features.hudcapture.HudCaptureRecorder;
 import gg.itzkatze.thehypixelrecreationmod.features.packetlog.EntityPacketLogger;
 import gg.itzkatze.thehypixelrecreationmod.features.packetlog.RavengardSessionLogger;
+import gg.itzkatze.thehypixelrecreationmod.features.packetlog.SkyBlockSessionLogger;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.PacketProcessor;
 import net.minecraft.network.protocol.Packet;
@@ -29,6 +30,7 @@ public abstract class PacketUtilsMixin {
         if (listener instanceof ClientGamePacketListener) {
             EntityPacketLogger.record(packet);
             RavengardSessionLogger.record(packet);
+            SkyBlockSessionLogger.recordInbound(packet);
             HudCaptureRecorder.record(packet);
             FullCapture.recordInbound(packet);
         }

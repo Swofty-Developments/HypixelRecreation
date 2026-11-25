@@ -1,12 +1,12 @@
 items:
   - id: FANCY_TUXEDO_BOOTS
-    material: leather_boots
-    name: "Fancy Tuxedo Boots"
+    material: LEATHER_BOOTS
+    name: Fancy Tuxedo Boots
     rarity: LEGENDARY
     default_statistics:
-      CRITICAL_DAMAGE: 35.0
-      speed: 10.0
-      intelligence: 75.0
+      speed: 10
+      critical_damage: 35
+      intelligence: 75
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS
@@ -17,12 +17,12 @@ items:
       - id: CUSTOM_DISPLAY_NAME
         display_name: Fancy Tuxedo Oxfords
   - id: FANCY_TUXEDO_CHESTPLATE
-    material: leather_chestplate
-    name: "Fancy Tuxedo Chestplate"
+    material: LEATHER_CHESTPLATE
+    name: Fancy Tuxedo Chestplate
     rarity: LEGENDARY
     default_statistics:
-      CRITICAL_DAMAGE: 80.0
-      intelligence: 150.0
+      critical_damage: 80
+      intelligence: 150
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -33,12 +33,12 @@ items:
       - id: CUSTOM_DISPLAY_NAME
         display_name: Fancy Tuxedo Jacket
   - id: FANCY_TUXEDO_LEGGINGS
-    material: leather_leggings
-    name: "Fancy Tuxedo Leggings"
+    material: LEATHER_LEGGINGS
+    name: Fancy Tuxedo Leggings
     rarity: LEGENDARY
     default_statistics:
-      CRITICAL_DAMAGE: 35.0
-      intelligence: 75.0
+      critical_damage: 35
+      intelligence: 75
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS

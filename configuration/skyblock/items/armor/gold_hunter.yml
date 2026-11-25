@@ -1,0 +1,37 @@
+items:
+  - id: GOLD_HUNTER_HELMET
+    material: GOLDEN_HELMET
+    name: Gold Hunter Helmet
+    rarity: EPIC
+    default_statistics:
+      health: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: GOLD_HUNTER_CHESTPLATE
+    material: GOLDEN_CHESTPLATE
+    name: Gold Hunter Chestplate
+    rarity: EPIC
+    default_statistics:
+      health: 150
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: GOLD_HUNTER_LEGGINGS
+    material: GOLDEN_LEGGINGS
+    name: Gold Hunter Leggings
+    rarity: EPIC
+    default_statistics:
+      health: 125
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: GOLD_HUNTER_BOOTS
+    material: GOLDEN_BOOTS
+    name: Gold Hunter Boots
+    rarity: EPIC
+    default_statistics:
+      health: 75
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

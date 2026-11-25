@@ -1,12 +1,12 @@
 items:
   - id: ELEGANT_TUXEDO_BOOTS
-    material: leather_boots
-    name: "Elegant Tuxedo Boots"
+    material: LEATHER_BOOTS
+    name: Elegant Tuxedo Boots
     rarity: LEGENDARY
     default_statistics:
-      CRITICAL_DAMAGE: 50.0
-      speed: 10.0
-      intelligence: 100.0
+      speed: 10
+      critical_damage: 50
+      intelligence: 100
     components:
       - id: STANDARD_ITEM
         standard_item_type: BOOTS
@@ -17,12 +17,12 @@ items:
       - id: CUSTOM_DISPLAY_NAME
         display_name: Elegant Tuxedo Oxfords
   - id: ELEGANT_TUXEDO_CHESTPLATE
-    material: leather_chestplate
-    name: "Elegant Tuxedo Chestplate"
+    material: LEATHER_CHESTPLATE
+    name: Elegant Tuxedo Chestplate
     rarity: LEGENDARY
     default_statistics:
-      CRITICAL_DAMAGE: 100.0
-      intelligence: 300.0
+      critical_damage: 100
+      intelligence: 300
     components:
       - id: STANDARD_ITEM
         standard_item_type: CHESTPLATE
@@ -33,12 +33,12 @@ items:
       - id: CUSTOM_DISPLAY_NAME
         display_name: Elegant Tuxedo Jacket
   - id: ELEGANT_TUXEDO_LEGGINGS
-    material: leather_leggings
-    name: "Elegant Tuxedo Leggings"
+    material: LEATHER_LEGGINGS
+    name: Elegant Tuxedo Leggings
     rarity: LEGENDARY
     default_statistics:
-      CRITICAL_DAMAGE: 50.0
-      intelligence: 100.0
+      critical_damage: 50
+      intelligence: 100
     components:
       - id: STANDARD_ITEM
         standard_item_type: LEGGINGS

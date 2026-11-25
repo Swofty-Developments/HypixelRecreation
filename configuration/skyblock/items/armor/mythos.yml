@@ -1,0 +1,47 @@
+items:
+  - id: MYTHOS_HELMET
+    material: PLAYER_HEAD
+    name: Mythos Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      strength: 20
+      health: 100
+      defense: 50
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 5ff0d31cfe43b97a772c9055e6bdad3cb0df60fed34cbc6492df65616dadbbdf
+  - id: MYTHOS_CHESTPLATE
+    material: GOLDEN_CHESTPLATE
+    name: Mythos Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      strength: 50
+      health: 160
+      defense: 80
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: MYTHOS_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Mythos Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      strength: 40
+      health: 140
+      defense: 70
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: MYTHOS_BOOTS
+    material: LEATHER_BOOTS
+    name: Mythos Boots
+    rarity: LEGENDARY
+    default_statistics:
+      strength: 10
+      health: 80
+      defense: 60
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

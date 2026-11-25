@@ -1,0 +1,111 @@
+items:
+  - id: PERFECT_HELMET_1
+    material: DIAMOND_HELMET
+    name: Perfect Helmet
+    rarity: RARE
+    default_statistics:
+      defense: 110
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_DIAMOND_BLOCK
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: PERFECT_HELMET_1
+              amount: 1
+  - id: PERFECT_CHESTPLATE_1
+    material: DIAMOND_CHESTPLATE
+    name: Perfect Chestplate
+    rarity: RARE
+    default_statistics:
+      defense: 160
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_DIAMOND_BLOCK
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: PERFECT_CHESTPLATE_1
+              amount: 1
+  - id: PERFECT_LEGGINGS_1
+    material: DIAMOND_LEGGINGS
+    name: Perfect Leggings
+    rarity: RARE
+    default_statistics:
+      defense: 140
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_DIAMOND_BLOCK
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: PERFECT_LEGGINGS_1
+              amount: 1
+  - id: PERFECT_BOOTS_1
+    material: DIAMOND_BOOTS
+    name: Perfect Boots
+    rarity: RARE
+    default_statistics:
+      defense: 90
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: COMBAT
+            pattern:
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_DIAMOND_BLOCK
+                amount: 1
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: PERFECT_BOOTS_1
+              amount: 1

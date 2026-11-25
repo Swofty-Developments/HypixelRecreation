@@ -1,0 +1,117 @@
+items:
+  - id: SPROUT_HELMET
+    material: LEATHER_HELMET
+    name: Sprout Helmet
+    rarity: UNCOMMON
+    default_statistics:
+      defense: 20
+      farming_fortune: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_CARROT
+                amount: 8
+              B:
+                type: FARM_ARMOR_HELMET
+                amount: 1
+            result:
+              type: SPROUT_HELMET
+              amount: 1
+  - id: SPROUT_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Sprout Chestplate
+    rarity: UNCOMMON
+    default_statistics:
+      defense: 20
+      farming_fortune: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_CARROT
+                amount: 8
+              B:
+                type: FARM_ARMOR_CHESTPLATE
+                amount: 1
+            result:
+              type: SPROUT_CHESTPLATE
+              amount: 1
+  - id: SPROUT_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Sprout Leggings
+    rarity: UNCOMMON
+    default_statistics:
+      defense: 20
+      farming_fortune: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_CARROT
+                amount: 8
+              B:
+                type: FARM_ARMOR_LEGGINGS
+                amount: 1
+            result:
+              type: SPROUT_LEGGINGS
+              amount: 1
+  - id: SPROUT_BOOTS
+    material: LEATHER_BOOTS
+    name: Sprout Boots
+    rarity: UNCOMMON
+    default_statistics:
+      defense: 20
+      farming_fortune: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: FARMING
+            pattern:
+              - AAA
+              - ABA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_CARROT
+                amount: 8
+              B:
+                type: FARM_ARMOR_BOOTS
+                amount: 1
+            result:
+              type: SPROUT_BOOTS
+              amount: 1

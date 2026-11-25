@@ -1,0 +1,47 @@
+items:
+  - id: YOUNG_DRAGON_HELMET
+    material: PLAYER_HEAD
+    name: Young Dragon Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 20
+      defense: 110
+      health: 70
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: a0e81ed07dfb0244d56f4d5f2b37553ec026fb4796f0fb0c57a8eb264983e1e0
+  - id: YOUNG_DRAGON_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Young Dragon Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 20
+      defense: 160
+      health: 120
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: YOUNG_DRAGON_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Young Dragon Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 20
+      defense: 140
+      health: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: YOUNG_DRAGON_BOOTS
+    material: LEATHER_BOOTS
+    name: Young Dragon Boots
+    rarity: LEGENDARY
+    default_statistics:
+      speed: 20
+      defense: 90
+      health: 60
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

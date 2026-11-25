@@ -1,0 +1,51 @@
+items:
+  - id: TAURUS_HELMET
+    material: PLAYER_HEAD
+    name: Taurus Helmet
+    rarity: RARE
+    default_statistics:
+      health: 175
+      defense: 150
+      sea_creature_chance: 3
+      critical_damage: 20
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 1642a06cd75ef307c1913ba7a224fb2082d8a2c5254fd1bf006125a087a9a868
+  - id: FLAMING_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Flaming Chestplate
+    rarity: RARE
+    default_statistics:
+      health: 225
+      defense: 200
+      sea_creature_chance: 3
+      strength: 25
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: MOOGMA_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Moogma Leggings
+    rarity: RARE
+    default_statistics:
+      health: 200
+      defense: 175
+      sea_creature_chance: 3
+      critical_damage: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: SLUG_BOOTS
+    material: LEATHER_BOOTS
+    name: Slug Boots
+    rarity: RARE
+    default_statistics:
+      health: 150
+      defense: 125
+      sea_creature_chance: 3
+      strength: 20
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

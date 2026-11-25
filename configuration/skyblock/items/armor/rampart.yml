@@ -1,0 +1,47 @@
+items:
+  - id: RAMPART_HELMET
+    material: PLAYER_HEAD
+    name: Rampart Helmet
+    rarity: RARE
+    default_statistics:
+      defense: 45
+      health: 100
+      intelligence: 15
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: SKULL_HEAD
+        texture: 50db6fa8eff25b222a34df5f42ca67a68e6b6f50c0276a8cdb8afb40e3272927
+  - id: RAMPART_CHESTPLATE
+    material: LEATHER_CHESTPLATE
+    name: Rampart Chestplate
+    rarity: RARE
+    default_statistics:
+      defense: 60
+      health: 175
+      intelligence: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: RAMPART_LEGGINGS
+    material: LEATHER_LEGGINGS
+    name: Rampart Leggings
+    rarity: RARE
+    default_statistics:
+      defense: 55
+      health: 150
+      intelligence: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: RAMPART_BOOTS
+    material: LEATHER_BOOTS
+    name: Rampart Boots
+    rarity: RARE
+    default_statistics:
+      defense: 40
+      health: 75
+      intelligence: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

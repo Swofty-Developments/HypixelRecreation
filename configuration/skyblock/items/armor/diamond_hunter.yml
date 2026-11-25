@@ -1,0 +1,37 @@
+items:
+  - id: DIAMOND_HUNTER_HELMET
+    material: DIAMOND_HELMET
+    name: Diamond Hunter Helmet
+    rarity: LEGENDARY
+    default_statistics:
+      health: 125
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+  - id: DIAMOND_HUNTER_CHESTPLATE
+    material: DIAMOND_CHESTPLATE
+    name: Diamond Hunter Chestplate
+    rarity: LEGENDARY
+    default_statistics:
+      health: 175
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+  - id: DIAMOND_HUNTER_LEGGINGS
+    material: DIAMOND_LEGGINGS
+    name: Diamond Hunter Leggings
+    rarity: LEGENDARY
+    default_statistics:
+      health: 150
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+  - id: DIAMOND_HUNTER_BOOTS
+    material: DIAMOND_BOOTS
+    name: Diamond Hunter Boots
+    rarity: LEGENDARY
+    default_statistics:
+      health: 100
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS

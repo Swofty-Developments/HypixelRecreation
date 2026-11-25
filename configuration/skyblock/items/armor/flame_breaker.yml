@@ -1,0 +1,127 @@
+items:
+  - id: FLAME_BREAKER_HELMET
+    material: CHAINMAIL_HELMET
+    name: Flamebreaker Helmet
+    rarity: EPIC
+    default_statistics:
+      defense: 40
+      health: 40
+      mining_fortune: 15
+      mining_speed: 25
+      heat_resistance: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: HELMET
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_HARD_STONE
+                amount: 20
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: FLAME_BREAKER_HELMET
+              amount: 1
+  - id: FLAME_BREAKER_CHESTPLATE
+    material: CHAINMAIL_CHESTPLATE
+    name: Flamebreaker Chestplate
+    rarity: EPIC
+    default_statistics:
+      defense: 70
+      health: 70
+      mining_fortune: 15
+      mining_speed: 25
+      heat_resistance: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: CHESTPLATE
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AOA
+              - AAA
+              - AAA
+            ingredients:
+              A:
+                type: ENCHANTED_HARD_STONE
+                amount: 20
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: FLAME_BREAKER_CHESTPLATE
+              amount: 1
+  - id: FLAME_BREAKER_LEGGINGS
+    material: CHAINMAIL_LEGGINGS
+    name: Flamebreaker Leggings
+    rarity: EPIC
+    default_statistics:
+      defense: 60
+      health: 60
+      mining_fortune: 15
+      mining_speed: 25
+      heat_resistance: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: LEGGINGS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AAA
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_HARD_STONE
+                amount: 20
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: FLAME_BREAKER_LEGGINGS
+              amount: 1
+  - id: FLAME_BREAKER_BOOTS
+    material: CHAINMAIL_BOOTS
+    name: Flamebreaker Boots
+    rarity: EPIC
+    default_statistics:
+      defense: 35
+      health: 35
+      mining_fortune: 15
+      mining_speed: 25
+      heat_resistance: 5
+    components:
+      - id: STANDARD_ITEM
+        standard_item_type: BOOTS
+      - id: DEFAULT_CRAFTABLE
+        default-craftable: false
+        recipes:
+          - type: SHAPED
+            recipe-type: MINING
+            pattern:
+              - AOA
+              - AOA
+            ingredients:
+              A:
+                type: ENCHANTED_HARD_STONE
+                amount: 20
+              O:
+                type: AIR
+                amount: 1
+            result:
+              type: FLAME_BREAKER_BOOTS
+              amount: 1
