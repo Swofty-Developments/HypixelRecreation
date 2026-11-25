@@ -5,7 +5,7 @@ The Velocity proxy acts as the entry point for all player connections and routes
 ## Download Required Files
 
 1. Download `SkyBlockProxy.jar` from the [releases page](https://github.com/Swofty-Developments/HypixelRecreation/releases/tag/latest)
-2. Download [Velocity 3.5.0-SNAPSHOT](https://fill-data.papermc.io/v1/objects/0ec616020166465dacca3b790d3db2b246f8f7c13b3aaacaae60c825744a66e0/velocity-3.5.0-SNAPSHOT-605.jar) (the same build used by the official Docker setup)
+2. Download [Velocity 4.3.1](https://fill-data.papermc.io/v1/objects/0844bcabdcdb4f5b875906fd4c3365bc1bb76918e42bc595ed88ad195258dd75/velocity-4.3.1-45.jar) (the same build used by the official Docker setup)
 3. Download [`velocity.toml`](https://github.com/Swofty-Developments/HypixelRecreation/tree/master/configuration)
 4. Download [`config.yml`](https://github.com/Swofty-Developments/HypixelRecreation/tree/master/configuration)
 
@@ -15,7 +15,7 @@ Create the following structure:
 
 ```
 proxy/
-├── velocity-3.5.0-SNAPSHOT-605.jar
+├── velocity-4.3.1-45.jar
 ├── velocity.toml
 ├── configuration/
 │   └── config.yml
@@ -29,7 +29,7 @@ proxy/
 
 2. **First run** - Start the proxy to generate required files:
    ```bash
-   java -jar velocity-3.5.0-SNAPSHOT-605.jar
+   java -jar velocity-4.3.1-45.jar
    ```
 
 3. **Stop the proxy** once the `plugins` folder is generated (Ctrl+C)
@@ -42,7 +42,7 @@ proxy/
 
 7. **Start the proxy**:
    ```bash
-   java -jar velocity-3.5.0-SNAPSHOT-605.jar
+   java -jar velocity-4.3.1-45.jar
    ```
 
 ## Configuration
