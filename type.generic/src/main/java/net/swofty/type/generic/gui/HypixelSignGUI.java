@@ -7,6 +7,7 @@ import net.kyori.adventure.nbt.StringBinaryTag;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.block.Block;
+import net.minestom.server.instance.block.SignTextSlot;
 import net.minestom.server.network.packet.server.play.BlockChangePacket;
 import net.minestom.server.network.packet.server.play.BlockEntityDataPacket;
 import net.minestom.server.network.packet.server.play.OpenSignEditorPacket;
@@ -58,7 +59,7 @@ public class HypixelSignGUI {
 				new BlockEntityDataPacket(pos, Block.OAK_SIGN.blockEntityType(), compound)
 		);
 		MinecraftServer.getSchedulerManager().scheduleTask(() -> {
-            player.sendPacket(new OpenSignEditorPacket(pos, true));
+            player.sendPacket(new OpenSignEditorPacket(pos, SignTextSlot.FRONT));
         }, TaskSchedule.tick(2), TaskSchedule.stop());
 
         CompletableFuture<String> future = new CompletableFuture<>();

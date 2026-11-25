@@ -5,7 +5,7 @@ import io.github.term4.polyp.MechanicsProfile;
 import io.github.term4.polyp.presets.mmc18.Knockback;
 import io.github.term4.polyp.presets.mmc18.Movement;
 import io.github.term4.polyp.testsupport.HeadlessServerTest;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.LivingEntity;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *  sign*0.05 (0 -> +0.05) - a sign-keeping magnitude floor, never floored up. */
 class KnockbackWireFloorTest extends HeadlessServerTest {
 
-    private static final double TPS = ServerFlag.SERVER_TICKS_PER_SECOND;
+    private static final double TPS = ServerProperties.SERVER_TICKS_PER_SECOND.get();
     private static Instance scoped;
 
     @BeforeAll

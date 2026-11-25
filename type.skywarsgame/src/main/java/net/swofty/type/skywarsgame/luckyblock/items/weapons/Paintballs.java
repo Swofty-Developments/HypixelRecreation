@@ -130,7 +130,7 @@ public class Paintballs implements LuckyBlockWeapon {
                     for (int dz = -1; dz <= 1; dz++) {
                         Point blockPos = pos.add(dx, dy, dz);
                         Block block = projectile.getInstance().getBlock(blockPos);
-                        if (!block.isAir() && !block.compare(Block.BEDROCK)) {
+                        if (!block.air() && !block.compare(Block.BEDROCK)) {
                             projectile.getInstance().setBlock(blockPos, color);
                         }
                     }

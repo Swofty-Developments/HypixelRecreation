@@ -7,7 +7,7 @@ import io.github.term4.polyp.tracking.motion.VelocityContext;
 import io.github.term4.polyp.tracking.motion.VelocityRule;
 import io.github.term4.polyp.util.Directions;
 import io.github.term4.polyp.util.tick.TickScaler;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -25,7 +25,7 @@ public final class KnockbackCalculator {
     private final Services services;
     private final KnockbackConfig defaults;
 
-    private final double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+    private final double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
 
     public KnockbackCalculator(Services services, KnockbackConfig defaults) {
         this.services = services;

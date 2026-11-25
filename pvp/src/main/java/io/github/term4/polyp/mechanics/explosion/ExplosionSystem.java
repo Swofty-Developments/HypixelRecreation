@@ -25,7 +25,7 @@ import io.github.term4.polyp.tracking.motion.VelocityContext;
 import io.github.term4.polyp.tracking.motion.VelocityRule;
 import io.github.term4.polyp.util.Directions;
 import net.kyori.adventure.key.Key;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -335,7 +335,7 @@ public final class ExplosionSystem implements MechanicsModule {
 
     /** Explosion model vectors are blocks/tick (vanilla); the {@link KnockbackSystem} wire boundary takes blocks/second. */
     private static Vec perSecond(Vec perTick) {
-        return perTick.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+        return perTick.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
     }
 
     /** The victim's server-tracked motion (b/t): players via the profile's {@link VelocityRule} (MotionTracker), non-players their own velocity. */
@@ -363,7 +363,7 @@ public final class ExplosionSystem implements MechanicsModule {
 
     private static ExplosionPacket packet(Point center, float power, @Nullable Point knockback) {
         return new ExplosionPacket(center, power, 0, knockback,
-                Particle.EXPLOSION, SoundEvent.ENTITY_GENERIC_EXPLODE, WeightedList.of());
+                Particle.EXPLOSION, SoundEvent.ENTITY_GENERIC_EXPLODE, WeightedList.of(), true);
     }
 
     /** An {@link ExplosionSupplier} routing {@code instance.explode(...)} through this system (no source; breaks no blocks). */

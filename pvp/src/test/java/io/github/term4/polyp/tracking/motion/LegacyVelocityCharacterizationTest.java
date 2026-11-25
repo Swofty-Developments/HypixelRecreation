@@ -1,6 +1,6 @@
 package io.github.term4.polyp.tracking.motion;
 
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Vec;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Golden pins for the 1.8 wire-grid quantization of outgoing knockback velocity. Pure math over
- * {@code ServerFlag.SERVER_TICKS_PER_SECOND}, pinned at the default 20 TPS. See docs/attributes-design.md.
+ * {@code ServerProperties.SERVER_TICKS_PER_SECOND.get()}, pinned at the default 20 TPS. See docs/attributes-design.md.
  */
 class LegacyVelocityCharacterizationTest {
 
@@ -23,7 +23,7 @@ class LegacyVelocityCharacterizationTest {
     /** Every pin below assumes 20 TPS (b/s = 20 * b/t). */
     @Test
     void tpsPrecondition() {
-        assertEquals(20, (int) ServerFlag.SERVER_TICKS_PER_SECOND);
+        assertEquals(20, (int) ServerProperties.SERVER_TICKS_PER_SECOND.get());
     }
 
     @Test

@@ -1,6 +1,6 @@
 package net.swofty.type.skyblockgeneric.item.handlers.bow;
 
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.swofty.type.skyblockgeneric.entity.ArrowEntityImpl;
@@ -69,7 +69,7 @@ public class BowRegistry {
         double velocityZ = Math.cos(yawRadians) * Math.cos(pitchRadians) * arrowSpeed;
 
         // Multiply by ticks per second to convert to Minestom velocity
-        return new Vec(velocityX, velocityY, velocityZ).mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+        return new Vec(velocityX, velocityY, velocityZ).mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
     }
 
     private static Pos calculateArrowSpawnPosition(SkyBlockPlayer player) {

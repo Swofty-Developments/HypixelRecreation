@@ -1,7 +1,7 @@
 package io.github.term4.polyp.util.tick;
 
 import net.kyori.adventure.key.Key;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
@@ -56,7 +56,7 @@ public final class TickScaler {
         return out;
     }
 
-    private static int serverTps() { return ServerFlag.SERVER_TICKS_PER_SECOND; }
+    private static int serverTps() { return ServerProperties.SERVER_TICKS_PER_SECOND.get(); }
 
     /** The {@link TickScalingConfig#SERVER_TPS} sentinel means "track the server TPS" (-> no scaling). */
     private static int resolve(int baseline) {

@@ -58,7 +58,7 @@ dependencies {
     testImplementation(project(":world"))
     compileOnly(project(":codegen"))
     annotationProcessor(project(":codegen"))
-    val minestomVersion = "2026.08.16-26.2"
+    val minestomVersion = "26_3-SNAPSHOT"
     val slf4jVersion = "2.0.18"
     val junitVersion = "6.0.3"
 

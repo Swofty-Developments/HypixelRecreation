@@ -16,6 +16,8 @@ import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.network.packet.server.play.BlockBreakAnimationPacket;
 import net.minestom.server.network.packet.server.play.EntityAnimationPacket;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
+import net.minestom.server.network.packet.server.play.SwingAnimationPacket;
+import net.minestom.server.entity.PlayerHand;
 import net.minestom.server.timer.Task;
 import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.ServerType;
@@ -374,7 +376,7 @@ public class BedWarsReplayManager {
 
     public void recordParticle(ParticlePacket particlePacket) {
         if (!recording) return;
-        byte[] data = NetworkBuffer.makeArray(networkBuffer -> ParticlePacket.SERIALIZER.write(networkBuffer, particlePacket));
+        byte[] data = NetworkBuffer.makeArray(ParticlePacket.SERIALIZER, particlePacket, MinecraftServer.process().registries());
         recorder.recordEvent(new ReplayParticleEvent(data));
     }
 
@@ -392,14 +394,18 @@ public class BedWarsReplayManager {
     public void recordEntityAnimation(EntityAnimationPacket packet) {
         if (!recording) return;
         ReplayEntityAnimationEvent.Animation animationType = switch (packet.animation()) {
-            case SWING_MAIN_ARM -> ReplayEntityAnimationEvent.Animation.SWING_MAIN_HAND;
-            case SWING_OFF_HAND -> ReplayEntityAnimationEvent.Animation.SWING_OFF_HAND;
-            case TAKE_DAMAGE -> ReplayEntityAnimationEvent.Animation.TAKE_DAMAGE;
             case LEAVE_BED -> ReplayEntityAnimationEvent.Animation.LEAVE_BED;
             case CRITICAL_EFFECT -> ReplayEntityAnimationEvent.Animation.CRITICAL_EFFECT;
             case MAGICAL_CRITICAL_EFFECT -> ReplayEntityAnimationEvent.Animation.MAGIC_CRITICAL_EFFECT;
         };
         recorder.recordEvent(new ReplayEntityAnimationEvent(packet.entityId(), animationType));
+    }
+
+    public void recordSwingAnimation(SwingAnimationPacket packet) {
+        if (!recording) return;
+        recorder.recordEvent(new ReplayEntityAnimationEvent(packet.entityId(), packet.hand() == PlayerHand.MAIN
+                ? ReplayEntityAnimationEvent.Animation.SWING_MAIN_HAND
+                : ReplayEntityAnimationEvent.Animation.SWING_OFF_HAND));
     }
 
     public void recordBlockBreakAnimation(BlockBreakAnimationPacket packet) {

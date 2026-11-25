@@ -14,7 +14,7 @@ import io.github.term4.polyp.tracking.motion.LegacyVelocity;
 import io.github.term4.polyp.tracking.motion.MotionTracker;
 import io.github.term4.polyp.tracking.motion.VelocityRule;
 import net.kyori.adventure.key.Key;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.event.Event;
@@ -121,7 +121,7 @@ public final class KnockbackSystem extends ScopedSystem<KnockbackConfig> {
     }
 
     private void broadcast(Entity target, Vec velocity, KnockbackConfigResolver.ResolvedKnockbackConfig resolved, KnockbackSnapshot snap) {
-        double tps = ServerFlag.SERVER_TICKS_PER_SECOND;
+        double tps = ServerProperties.SERVER_TICKS_PER_SECOND.get();
         KnockbackConfig.WireRule wire = resolved.wireRule();
         if (wire == null) {
             // scope-only, NOT the effectiveVelocity chain: the floor is the victim network's tracker law, so a

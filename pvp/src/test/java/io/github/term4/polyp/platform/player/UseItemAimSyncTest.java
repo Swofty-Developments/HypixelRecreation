@@ -3,7 +3,7 @@ package io.github.term4.polyp.platform.player;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.PlayerHand;
 import net.minestom.server.network.packet.client.ClientPacket;
-import net.minestom.server.network.packet.client.play.ClientAnimationPacket;
+import net.minestom.server.network.packet.client.play.ClientPunchPacket;
 import net.minestom.server.network.packet.client.play.ClientPlayerPositionAndRotationPacket;
 import net.minestom.server.network.packet.client.play.ClientPlayerPositionPacket;
 import net.minestom.server.network.packet.client.play.ClientPlayerPositionStatusPacket;
@@ -64,7 +64,7 @@ class UseItemAimSyncTest {
 
     @Test
     void nonFlyingPacketsPassThroughWhileHolding() {
-        ClientAnimationPacket swing = new ClientAnimationPacket(PlayerHand.MAIN);
+        ClientPunchPacket swing = new ClientPunchPacket();
         ClientPlayerRotationPacket rot = new ClientPlayerRotationPacket(90.0f, 0.0f, (byte) 1);
         feed(true, USE, swing, rot);
         assertEquals(List.of(swing, new ClientUseItemPacket(PlayerHand.MAIN, 7, 90.0f, 0.0f), rot), out);
@@ -81,7 +81,7 @@ class UseItemAimSyncTest {
     void staleHoldReleasesOnTimeout() throws InterruptedException {
         feed(true, USE);
         Thread.sleep(150); // past the 100ms hold cap
-        ClientAnimationPacket swing = new ClientAnimationPacket(PlayerHand.MAIN);
+        ClientPunchPacket swing = new ClientPunchPacket();
         feed(true, swing);
         assertEquals(List.of(USE, swing), out);
     }

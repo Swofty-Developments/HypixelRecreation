@@ -67,7 +67,9 @@ public final class FakePlayer {
     /** In send order, with broadcast CachedPacket wrappers unwrapped. */
     public <T extends SendablePacket> List<T> sent(Class<T> type) {
         return sent.stream()
+                .filter(java.util.Objects::nonNull)
                 .map(p -> (SendablePacket) SendablePacket.extractServerPacket(ConnectionState.PLAY, p))
+                .filter(java.util.Objects::nonNull)
                 .filter(type::isInstance).map(type::cast).toList();
     }
 

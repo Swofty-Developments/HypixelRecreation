@@ -239,7 +239,7 @@ public final class BlockContact {
 
     /** Whether an entity can occupy {@code block}'s space - the inverse of Minecraft's {@code blocksMotion}. */
     public static boolean isPassable(Block block) {
-        return !block.blocksMotion();
+        return !block.solid();
     }
 
     /**

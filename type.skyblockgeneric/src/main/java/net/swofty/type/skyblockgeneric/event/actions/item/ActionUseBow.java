@@ -1,6 +1,6 @@
 package net.swofty.type.skyblockgeneric.event.actions.item;
 
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.event.item.PlayerCancelItemUseEvent;
 import net.minestom.server.item.Material;
 import net.swofty.type.generic.event.EventNodes;
@@ -43,7 +43,7 @@ public class ActionUseBow implements HypixelEventClass {
      * @return Power from 0.0 to 1.0
      */
     public static double getBowPower(long ticks) {
-        double seconds = ticks / (double) ServerFlag.SERVER_TICKS_PER_SECOND;
+        double seconds = ticks / (double) ServerProperties.SERVER_TICKS_PER_SECOND.get();
         double power = (seconds * seconds + seconds * 2.0) / 3.0;
         return Math.min(power, 1.0);
     }

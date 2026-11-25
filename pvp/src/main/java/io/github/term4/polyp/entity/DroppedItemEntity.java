@@ -13,7 +13,7 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.DoubleBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
 import net.kyori.adventure.sound.Sound;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.codec.Transcoder;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.PhysicsResult;
@@ -73,7 +73,7 @@ public class DroppedItemEntity extends ItemEntity implements ExternallyTickable 
     private static final double FLOAT_HEIGHT = 0.1;        // 26.1: fluid height gating float vs gravity
     private static final double FLOW_SCALE = 0.014;
     private static final double LAVA_FLOW_SCALE = 0.0023333333333333335; // 26.1 overworld (nether FAST_LAVA: 0.007)
-    private static final double TPS = ServerFlag.SERVER_TICKS_PER_SECOND;
+    private static final double TPS = ServerProperties.SERVER_TICKS_PER_SECOND.get();
 
     private final @Nullable Model model;
 

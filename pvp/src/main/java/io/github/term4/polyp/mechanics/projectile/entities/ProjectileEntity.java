@@ -9,7 +9,7 @@ import io.github.term4.polyp.util.Directions;
 import io.github.term4.polyp.util.tick.TickScaler;
 import io.github.term4.polyp.tracking.motion.FluidFlow;
 import io.github.term4.polyp.tracking.motion.VelocityRule;
-import net.minestom.server.ServerFlag;
+import net.minestom.server.property.ServerProperties;
 import net.minestom.server.collision.Aerodynamics;
 import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.collision.EntityCollisionResult;
@@ -303,13 +303,13 @@ public abstract class ProjectileEntity extends MechanicsEntity {
      */
     public void setVelocityBt(@NotNull Vec bt) {
         this.velocityBt = subStepping() ? bt : TickScaler.fromClientVelocity(scopeSubject(), bt);
-        this.velocity = velocityBt.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+        this.velocity = velocityBt.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
     }
 
     /** Explicit velocity set (redirect / homing): broadcasts even for arrows, so unlike {@link #setVelocityBt} it reaches 1.8 clients through the per-tick suppression. */
     @Override
     public void setVelocity(@NotNull Vec velocity) {
-        this.velocityBt = velocity.div(ServerFlag.SERVER_TICKS_PER_SECOND);
+        this.velocityBt = velocity.div(ServerProperties.SERVER_TICKS_PER_SECOND.get());
         this.velocity = velocity;
         // re-aiming a stuck projectile re-launches it (an explosion boost): clear the stuck state, the client's
         // inGround freeze included, and fall again (stick set no-gravity)
@@ -401,7 +401,7 @@ public abstract class ProjectileEntity extends MechanicsEntity {
                     Vec cur = sample.current(nativeStep ? waterPush : TickScaler.gravityPerTick(scopeSubject(), waterPush), velocityBt.x(), velocityBt.z());
                     if (!cur.isZero()) {
                         velocityBt = velocityBt.add(cur);
-                        this.velocity = velocityBt.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+                        this.velocity = velocityBt.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
                     }
                 }
             } else {
@@ -409,7 +409,7 @@ public abstract class ProjectileEntity extends MechanicsEntity {
                 inWater = flow != null;
                 if (inWater && waterPush > 0 && !flow.isZero()) {
                     velocityBt = velocityBt.add(flow.mul(nativeStep ? waterPush : TickScaler.gravityPerTick(scopeSubject(), waterPush)));
-                    this.velocity = velocityBt.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+                    this.velocity = velocityBt.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
                 }
             }
         }
@@ -489,7 +489,7 @@ public abstract class ProjectileEntity extends MechanicsEntity {
         } else if (physics.hasCollision()) {
             // clipped move without contact: vanilla move() semantics - collided axes zero, the slide keeps the rest
             velocityBt = physics.newVelocity();
-            this.velocity = velocityBt.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+            this.velocity = velocityBt.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
             onBlockClip(physics);
         }
 
@@ -551,7 +551,7 @@ public abstract class ProjectileEntity extends MechanicsEntity {
         velocityBt = physicsOrder == ProjectileTypeConfig.PhysicsOrder.DRAG_BEFORE_MOVE
                 ? velocityBt.add(accel).sub(0, gravity, 0).mul(hDrag, vDrag, hDrag)
                 : velocityBt.add(accel).mul(hDrag, vDrag, hDrag).sub(0, gravity, 0);
-        this.velocity = velocityBt.mul(ServerFlag.SERVER_TICKS_PER_SECOND);
+        this.velocity = velocityBt.mul(ServerProperties.SERVER_TICKS_PER_SECOND.get());
     }
 
     /** The 26.1 {@link #leftOwnerImmunity} test (vanilla {@code Projectile.isOutsideOwnerCollisionRange}). */
@@ -730,7 +730,7 @@ public abstract class ProjectileEntity extends MechanicsEntity {
         // moves it through refreshPosition, whose sends flow only while the base schedule is armed; the
         // interval-0 silent wire never rearms it, so without the super call every relative move swallows
         if (hasNoGravity() && velocityBt.isZero()) {
-            if (getSynchronizationTicks() <= 1) setSynchronizationTicks(ServerFlag.ENTITY_SYNCHRONIZATION_TICKS);
+            if (getSynchronizationTicks() <= 1) setSynchronizationTicks(ServerProperties.ENTITY_SYNCHRONIZATION_TICKS.get());
             super.synchronizePosition();
             return;
         }
