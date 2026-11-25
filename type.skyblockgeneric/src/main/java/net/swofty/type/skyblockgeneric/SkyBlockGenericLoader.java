@@ -60,6 +60,7 @@ import net.swofty.type.skyblockgeneric.data.SkyBlockDomain;
 import net.swofty.type.skyblockgeneric.data.crystals.CrystalCatalog;
 import net.swofty.type.skyblockgeneric.data.monogdb.*;
 import net.swofty.type.skyblockgeneric.elections.ElectionManager;
+import net.swofty.type.skyblockgeneric.entity.PetEntityImpl;
 import net.swofty.type.skyblockgeneric.entity.ServerCrystalImpl;
 import net.swofty.type.skyblockgeneric.entity.mob.MobRegistry;
 import net.swofty.type.skyblockgeneric.entity.mob.SkyBlockMob;
@@ -154,6 +155,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
         ItemAttribute.registerItemAttributes();
         HuntrapService.initialize();
         PlayerItemUpdater.updateLoop(MinecraftServer.getSchedulerManager());
+        PetEntityImpl.updateTextureLoop(MinecraftServer.getSchedulerManager());
         File configDir = new File("./configuration/skyblock");
         File itemsDir = new File(configDir, "items");
         try {
@@ -330,6 +332,7 @@ public record SkyBlockGenericLoader(HypixelTypeLoader typeLoader) {
             Key.key("skyblock:island"),
             DimensionType.builder()
                 .ambientLight(1)
+                .defaultClock(RegistryKey.unsafeOf("overworld"))
                 .build());
         SkyBlockIsland.runVacantLoop(MinecraftServer.getSchedulerManager());
 

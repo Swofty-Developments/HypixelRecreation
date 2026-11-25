@@ -656,6 +656,7 @@ public class ItemConfigParser {
 					String skillCategory = safeConfig.getString("skill_category");
 					String skullTexture = safeConfig.getString("skull_texture");
 					String handlerId = safeConfig.getString("handler_id");
+					boolean passive = safeConfig.getBoolean("passive", false);
 
 					yield new PetComponent(
 							petName,
@@ -666,9 +667,42 @@ public class ItemConfigParser {
 							particleId,
 							skillCategory,
 							skullTexture,
-							handlerId
+							handlerId,
+							passive
 					);
 				}
+                case "PET_SKIN" -> {
+                    ItemType skinItemType = ItemType.valueOf(itemId);
+                    String skinName = safeConfig.getString("skin_name");
+                    ItemType pet = ItemType.valueOf(safeConfig.getString("apply_to"));
+                    int gemPrice = safeConfig.getInt("gem_price", 0);
+                    PetSkinComponent.PetSkinType skinType = safeConfig.getEnum(
+                            "skin_type", PetSkinComponent.PetSkinType.class
+                    );
+                    int animationDurationTicks = safeConfig.getInt("animation_duration_ticks", 0);
+                    String swapMessage = safeConfig.getString("swap_message", null);
+                    List<PetSkinComponent.Variant> variants = new ArrayList<>();
+
+                    for (Map<String, Object> variantConfig : safeConfig.getMapList("variants")) {
+                        SafeConfig variant = SafeConfig.of(variantConfig);
+                        variants.add(new PetSkinComponent.Variant(
+                                variant.getString("name", null),
+                                variant.getString("color", null),
+                                variant.getList("textures", String.class)
+                        ));
+                    }
+
+                    yield new PetSkinComponent(
+                            skinItemType,
+                            skinName,
+                            pet,
+                            gemPrice,
+                            skinType,
+                            variants,
+                            animationDurationTicks,
+                            swapMessage
+                    );
+                }
 				case "UPGRADES" -> {
 					List<Map<String, Object>> levelsConfig = safeConfig.getMapList("levels");
 					List<UpgradesComponent.UpgradeLevel> levels = new ArrayList<>();

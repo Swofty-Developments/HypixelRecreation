@@ -1,0 +1,160 @@
+items:
+  - id: RED_ELF_JERRY_SKIN
+    material: player_head
+    name: "Red Elf Jerry Skin"
+    rarity: UNCOMMON
+    components:
+      - id: PET_SKIN
+        skin_name: "Red Elf Jerry"
+        apply_to: JERRY_PET
+        skin_type: STATIC
+        variants:
+          - textures:
+              - 1d82f9c36e824c1e37963a849bf5abd76d3b349125023504af58369086089ee9
+        gem_price: 0
+      - id: TRACKED_UNIQUE
+
+  - id: SPIRIT_WOLF_SKIN
+    material: player_head
+    name: "Spirit Wolf Skin"
+    rarity: LEGENDARY
+    components:
+      - id: PET_SKIN
+        skin_name: "Spirit Wolf"
+        apply_to: WOLF_PET
+        skin_type: DAY_NIGHT
+        variants:
+          - textures:
+              - a6197d8ce763e21ac1196131140180109ca84f78a96f6b7fbe0058b2d374daa0
+          - textures:
+              - 11d1c5de76f55dcd211cca67755279fd915ec444037353f080988d706b37977e
+        gem_price: 950
+      - id: TRACKED_UNIQUE
+
+  - id: BIOME_FROG_SKIN
+    material: player_head
+    name: "Biome Frog Skin"
+    rarity: MYTHIC
+    components:
+      - id: PET_SKIN
+        skin_name: "Biome Frog"
+        apply_to: FROG_PET
+        skin_type: SELECTABLE
+        animation_duration_ticks: 62
+        swap_message: "BIOMED!"
+        variants:
+          - name: "Deep Dark"
+            color: "<9>"
+            textures:
+              - 40339f3bfc1371f4e8804e9279d10bf8185f0069c3b4c5b0fcbd80ee049d3fce
+              - 19d9a68a3b1cd7c2ce27ebf57687836bfe2aa8950a2f69ba220a7160b010a02e
+          - name: "Bastion"
+            color: "<8>"
+            textures:
+              - a4b86e231f4b962896d2206c31f59972d95d6ef3f2e894a2708ff00f1fd52ff4
+              - 4896983eed089602c12d8b2a7a178bc5158ab9fc99bf4ddca5fc1369146b5e33
+          - name: "Ravine"
+            color: "<5>"
+            textures:
+              - 77419ef3b608f3a1994c7ca95ad2c719b18d8bc70708bcf47ffdd37eace73b07
+              - 95885edfd4133f0e968ee90591997b944b3967a85fa5d76150f9f25c8738cc34
+          - name: "End"
+            color: "<d>"
+            textures:
+              - ceb1099a8b89a9a0c9548d7494933446ab082063d3b09f433b70ec6fa13d3c81
+              - fb8dc5521e96cd095598191024690630cacc02dc29cab9dafbea3954bad4c92d
+          - name: "Cherry"
+            color: "<4>"
+            textures:
+              - d296640e49d8fead389c698db12babcd4b5ddbb188e69a3f3389234af234155c
+              - 51a55b80a8ce7a48475216111e77079e233714cc42fc734ffec93ab07592931d
+          - name: "Mushroom"
+            color: "<c>"
+            textures:
+              - af6c001fe84f2e5204b8168a969066a03615089ae82cb123867b63a83badb7b6
+              - 27c247ae079494b8091bde95f7bbe6da2f3cfdb8b5ecb028c024e3e351c31fe3
+          - name: "Crimson"
+            color: "<6>"
+            textures:
+              - 2e639afff80af3c0982828a4963a2292f7e210c4557820f33ca991992cc5c941
+              - 6f9987a9f045bb6e4240baa71479aaffb5c678a19ed20eb2fef4e287af4aedaf
+          - name: "Desert"
+            color: "<f>"
+            textures:
+              - f58dfc8e5127da13013235b15d91fbbb54916432cd7525aab82bb3860a3742d7
+              - f15713c9f40a0b608c3d75cb10235f786fec618e948d28dbec1a5c520349b4a0
+          - name: "Bamboo"
+            color: "<f>"
+            textures:
+              - a685fe037f13521498191cc9e3cb781bcc35ea210fb977d44f215029d5fa0add
+              - 513e480fdc3b8340c4f31ea5e966df1a8a796e77a90298b6bbfe2e0b5336981e
+          - name: "Plains"
+            color: "<2>"
+            textures:
+              - 6ff7e94f3479a31a491a5a69a4eb49cde0d00214065d4ca9cb4edb2465c912eb
+              - 6ebd674fba25c6d1427c3a08d6474e85b55bd7cbb1b4d078fe93bfcfc1c8af7c
+          - name: "Forest"
+            color: "<a>"
+            textures:
+              - 7696226bd2fd6b6d33401df3053c4f80e245c00b310b40769a421cc9cb38c430
+              - e632240e5a5078ccaa997a45a5140a99983ca1e684b98108b4d6b1d7adbac1f0
+          - name: "Swamp"
+            color: "<6>"
+            textures:
+              - c56afb3d2b9be07f7cc2e7a07dff2ea1d222726600cc422a540bace94ca58eb5
+              - 6e177ebb4d737af1aca8166e540b0011d21c52b2d7827a28e6cfd84be80e55a2
+          - name: "Warped"
+            color: "<3>"
+            textures:
+              - 30e7502965965abce62446e840e70d45a3116c3cfcc8c24986241a1d02b881f0
+              - ea4b5c35535cce025c95f6081265d67b54394a3035a40f7745f3026131163e75
+          - name: "Ocean"
+            color: "<9>"
+            textures:
+              - 55bc025c7d91984228170bc0b63c6addc0b68073c65d693b2608c708626d0825
+              - 46d614d3e7439936ae1aa4a4eb0a266228c0da56bf55413c7880633c746c9ad9
+          - name: "Ice Spikes"
+            color: "<f>"
+            textures:
+              - 63bed8374d429dcdd7560aaae05a1cc756ac4f1bcb4e37f19e0debf720527e1a
+              - bd9cf81ba2cb973112c9e3808de721ebccb6c30484d05615377c1cb541895c4b
+        gem_price: 1350
+      - id: TRACKED_UNIQUE
+
+  - id: ANCIENT_TURTLE_SKIN
+    material: player_head
+    name: "Ancient Turtle Skin"
+    rarity: MYTHIC
+    components:
+      - id: PET_SKIN
+        skin_name: "Ancient Turtle"
+        apply_to: TURTLE_PET
+        skin_type: ANIMATED
+        animation_duration_ticks: 54
+        variants:
+          - textures:
+              - 5a85b6d364e8cd9dc777c0beed34e1af28d1bd6777a93852073c142a8ae17586
+              - 39338a35acead2ebe5a0ce22588aea8fac96fb7f17cd315ceb07e7fe8e7d53e4
+              - 846fc012198105099e08f29a9fb1fdc08767ac2fb1cf094c2015d1125f6df5b7
+              - c2fb5e8957e0163385e88e0654d0c55886d09acebaefa893e90eb4b3fa0ef9c
+              - 511d782ab5006ec9e6444ad72a326bad543ff94e9ec0731a193175ecd3a8d1ee
+              - f2ef09ad45e23f9884a9fc738e71e82f2484bf9bae124f5c5023bb961903c87b
+              - edfdb51cf229ee304f17ebf73c2adc16a4a2008f417ebe28cde4e0b445bc03f0
+              - 9cd3a58a5a4e93d024ba6fbb8d9b4d878efe9c009668bae5a3c925ab8af2361c
+              - bc37fd41d532e9fac79bb1724e7e28de3ea0213b8bff37648acdfeaf45d94c88
+              - 3700ffb5c97d57be37517573ef9dba469b601d54b7f355eb5cf54aa3d9696b4a
+              - 3440d9ef2e02123c2031ae371f7c91861cbd626472ebd172851524f792032ae0
+              - 19e40749900f4aa06500417107f0a9bfb6278350f30e865429d7064d6867987a
+              - 193c27f9f87ddd4c54c419c6a952f60552079868f6d45952bf1d5ba3ebb25707
+              - 18110f367a02de3e916bf124f5cb11796d7bddfd0749e8151a6a53d483d6d30e
+              - a3b693c20d9b641b13b84322129bc1a281f2c5b275fe8b1e2d11d0d4ee385915
+              - d0de277e989a86e02f65c5e8f829f63a36a114c66976e254034ca92be928cb44
+              - cc84771b41e6471fdbbf62da48a4cd1a61b06257ed56d24d5b9354da2efb314b
+              - 87f041661251501cc4f26bc5ccddb80eddac5af849e16c757a33002e9d773552
+              - 69716e1fd3e1a180b1764dab9b12187b72337498acf365cb7153ba318f82a90c
+              - 18fd187468539e4a3a03bd958461fa2270f4d2453a3ec3cf0749f69a4dce3ffd
+              - 94552bb1ac071f380e35c7102e4f0e9cb5200395b8a9b4686c72776571981fc3
+              - 1c8627c03bf67ba0250e552825f34b681e5a70b2b5508d0f17ba3fec3d7747d6
+              - 361359381c439dc3bd0f49777db0d69c789f1b6d017873f24b2b8aff89db1223
+        gem_price: 0
+      - id: TRACKED_UNIQUE

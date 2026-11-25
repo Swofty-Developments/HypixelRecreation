@@ -12,12 +12,13 @@ import net.swofty.commons.skyblock.statistics.ItemStatistic;
 import net.swofty.commons.skyblock.statistics.ItemStatistics;
 import net.swofty.commons.text.Text;
 import net.swofty.type.skyblockgeneric.data.datapoints.DatapointPetData;
+import net.swofty.type.skyblockgeneric.gui.inventories.sbmenu.GUIPetSkinVariants;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItem;
 import net.swofty.type.skyblockgeneric.item.SkyBlockItemComponent;
 import net.swofty.type.skyblockgeneric.item.handlers.lore.LoreConfig;
 import net.swofty.type.skyblockgeneric.item.handlers.pet.KatUpgrade;
+import net.swofty.type.skyblockgeneric.item.handlers.pet.PetAbilityRegistry;
 import net.swofty.type.skyblockgeneric.item.handlers.pet.abstr.PetAbility;
-import net.swofty.type.skyblockgeneric.item.handlers.pet.PetHandler;
 import net.swofty.type.skyblockgeneric.skill.SkillCategories;
 import net.swofty.type.skyblockgeneric.user.SkyBlockPlayer;
 import net.swofty.type.skyblockgeneric.utility.RarityValue;
@@ -25,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 public class PetComponent extends SkyBlockItemComponent {
@@ -38,12 +38,13 @@ public class PetComponent extends SkyBlockItemComponent {
     private final SkillCategories skillCategory;
     private final String skullTexture;
     private final String handlerId;
+    private final boolean passive;
 
     public PetComponent(String petName, RarityValue<Integer> georgePrice,
                         @Nullable RarityValue<KatUpgrade> katUpgrades,
                         ItemStatistics baseStatistics, RarityValue<ItemStatistics> perLevelStatistics,
                         Particle particleId, String skillCategory, String skullTexture,
-                        String handlerId) {
+                        String handlerId, boolean passive) {
         this.petName = petName;
         this.georgePrice = georgePrice;
         this.katUpgrades = katUpgrades;
@@ -53,10 +54,11 @@ public class PetComponent extends SkyBlockItemComponent {
         this.skillCategory = SkillCategories.valueOf(skillCategory);
         this.skullTexture = skullTexture;
         this.handlerId = handlerId;
+        this.passive = passive;
 
-        addInheritedComponent(new SkullHeadComponent((item) -> skullTexture));
+        addInheritedComponent(new SkullHeadComponent(this::getTexture));
         addInheritedComponent(new TrackedUniqueComponent());
-        addInheritedComponent(new InteractableComponent(this::interact, this::interact, null));
+        addInheritedComponent(new InteractableComponent(this::rightInteract, this::leftInteract, null));
         addInheritedComponent(new LoreUpdateComponent(
                 new LoreConfig((item, player) -> getAbsoluteLore(player, item), (item, player) -> {
                     Rarity rarity = item.getAttributeHandler().getRarity();
@@ -66,7 +68,14 @@ public class PetComponent extends SkyBlockItemComponent {
         );
     }
 
-    private void interact(SkyBlockPlayer player, SkyBlockItem item) {
+    private void leftInteract(SkyBlockPlayer player, SkyBlockItem item) {
+        PetSkinComponent skin = getSkin(item);
+        if (skin == null || skin.getSkinType() != PetSkinComponent.PetSkinType.SELECTABLE) return;
+
+        player.openView(new GUIPetSkinVariants(item, skin));
+    }
+
+    private void rightInteract(SkyBlockPlayer player, SkyBlockItem item) {
         DatapointPetData.UserPetData petData = player.getPetData();
         ItemType type = item.getAttributeHandler().getPotentialType();
         Rarity rarity = item.getAttributeHandler().getRarity();
@@ -78,7 +87,7 @@ public class PetComponent extends SkyBlockItemComponent {
 
         petData.addPet(item);
         player.setItemInHand(null);
-        player.sendMessage("<a>Successfully added {} <a>to your pet menu!", item.getDisplayName());
+        player.sendMessage("<a>Successfully added {} <a>to your pet menu!", item.getDisplayNameText());
         player.playSound(Sound.sound()
                 .type(Key.key("minecraft", "entity.experience_orb.pickup"))
                 .volume(1f)
@@ -86,13 +95,13 @@ public class PetComponent extends SkyBlockItemComponent {
                 .build());
     }
 
-    public List<String> getAbsoluteLore(@Nullable SkyBlockPlayer player, SkyBlockItem item) {
+    private List<String> getAbsoluteLore(@Nullable SkyBlockPlayer player, SkyBlockItem item) {
         List<String> lore = new ArrayList<>();
         ItemAttributePetData.PetData petData = item.getAttributeHandler().getPetData();
         Rarity rarity = item.getAttributeHandler().getRarity();
         int level = petData.getAsLevel(rarity);
 
-        List<PetAbility> abilities = PetHandler.valueOf(handlerId.toUpperCase()).getAbilities(item);
+        List<PetAbility> abilities = PetAbilityRegistry.getAbilities(item);
 
         lore.add("<8>" + skillCategory.asCategory().getName() + " Pet");
         lore.add(" ");
@@ -112,7 +121,18 @@ public class PetComponent extends SkyBlockItemComponent {
         for (PetAbility ability : abilities) {
             lore.add(" ");
             lore.add("<6>" + ability.getName());
-            lore.addAll(ability.getDescription(item));
+            lore.addAll(ability.getDescription(rarity, level));
+            String notImplemented = PetAbilityRegistry.notImplementedLine(ability);
+            if (notImplemented != null) {
+                lore.add(" ");
+                lore.add(notImplemented);
+            }
+        }
+
+        if (item.getComponent(PetComponent.class).isPassive()) {
+            lore.add(" ");
+            lore.add("<8>This pet's perks are active even");
+            lore.add("<8>when the pet is not summoned!");
         }
 
         if (level < 100) {
@@ -133,6 +153,32 @@ public class PetComponent extends SkyBlockItemComponent {
 
     public ItemStatistics getPerLevelStatistics(Rarity rarity) {
         return perLevelStatistics.getForRarity(rarity);
+    }
+
+    public String getTexture(SkyBlockItem pet) {
+        PetSkinComponent skin = getSkin(pet);
+        return skin == null ? skullTexture : skin.getItemTexture(pet);
+    }
+
+    public String getEntityTexture(SkyBlockItem pet, long time) {
+        PetSkinComponent skin = getSkin(pet);
+        return skin == null ? skullTexture : skin.getTexture(pet, time);
+    }
+
+    public boolean isTextureTimeDependent(SkyBlockItem pet) {
+        PetSkinComponent skin = getSkin(pet);
+        return skin != null && skin.isTimeDependent(pet);
+    }
+
+    public @Nullable PetSkinComponent getSkin(SkyBlockItem pet) {
+        ItemType skinId = pet.getAttributeHandler().getPetData().getSkinId();
+        if (skinId == null) return null;
+
+        PetSkinComponent skin = PetSkinComponent.get(skinId);
+        if (skin == null || skin.getApplicablePet() != pet.getAttributeHandler().getPotentialType()) {
+            return null;
+        }
+        return skin;
     }
 
     private static String progressText(String label, double current, double max) {

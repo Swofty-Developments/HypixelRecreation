@@ -10,6 +10,7 @@ import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.PlayerHand;
 import net.minestom.server.entity.RelativeFlags;
 import net.minestom.server.event.inventory.InventoryCloseEvent;
+import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.PlayerInventory;
@@ -37,6 +38,8 @@ import net.swofty.type.skyblockgeneric.collection.CustomCollectionAward;
 import net.swofty.type.skyblockgeneric.data.SkyBlockDataHandler;
 import net.swofty.type.skyblockgeneric.data.datapoints.*;
 import net.swofty.type.skyblockgeneric.data.monogdb.CoopDatabase;
+import net.swofty.type.generic.entity.drop.ItemDrops;
+import net.swofty.type.skyblockgeneric.entity.DroppedItemEntityImpl;
 import net.swofty.type.skyblockgeneric.event.actions.player.ActionPlayerChangeHypixelMenuDisplay;
 import net.swofty.type.skyblockgeneric.event.value.SkyBlockValueEvent;
 import net.swofty.type.skyblockgeneric.event.value.ValueUpdateEvent;
@@ -77,7 +80,7 @@ import java.util.stream.Stream;
 
 @Getter
 public class SkyBlockPlayer extends HypixelPlayer {
-    private final PlayerAbilityHandler abilityHandler = new PlayerAbilityHandler();
+    private final PlayerAbilityHandler abilityHandler = new PlayerAbilityHandler(this);
     @Getter
     private final PlayerStatistics statistics = new PlayerStatistics(this);
     public float health = 100;
@@ -508,6 +511,45 @@ public class SkyBlockPlayer extends HypixelPlayer {
 
     public void addAndUpdateItem(ItemStack item) {
         addAndUpdateItem(new SkyBlockItem(item));
+    }
+
+    public void giveLoot(SkyBlockItem item, int amount, @Nullable Pos source) {
+        ItemType type = item.getAttributeHandler().getPotentialType();
+        if (type != null && canInsertItemIntoSacks(type, amount)) {
+            getSackItems().increase(type, amount);
+            return;
+        }
+        if (getSkyBlockExperience().getLevel().asInt() >= 6) {
+            addAndUpdateItem(item);
+            return;
+        }
+
+        Instance instance = getInstance();
+        if (instance == null) {
+            addAndUpdateItem(item);
+            return;
+        }
+
+        Pos origin = source == null ? getPosition() : source;
+        Pos[] offsets = {
+                new Pos(1, 0, 0), new Pos(-1, 0, 0),
+                new Pos(0, 1, 0), new Pos(0, -1, 0),
+                new Pos(0, 0, 1), new Pos(0, 0, -1)
+        };
+        Pos nearest = null;
+        double nearestDistance = Double.MAX_VALUE;
+        for (Pos offset : offsets) {
+            Pos candidate = origin.add(offset);
+            if (!instance.getBlock(candidate).air()) continue;
+            double distance = candidate.distanceSquared(getPosition());
+            if (distance < nearestDistance) {
+                nearest = candidate;
+                nearestDistance = distance;
+            }
+        }
+
+        Pos dropPosition = nearest == null ? origin.add(0.5, 1.5, 0.5) : nearest.add(0.5, 0.5, 0.5);
+        ItemDrops.dropAt(new DroppedItemEntityImpl(item, this), instance, dropPosition);
     }
 
     public int countItem(ItemType item) {
