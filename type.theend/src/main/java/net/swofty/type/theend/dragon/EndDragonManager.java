@@ -162,7 +162,7 @@ public final class EndDragonManager {
             for (int z = -5; z <= 5; z++) {
                 Point point = VAULT_DOOR.add(0, y, z);
                 Block block = endInstance.getBlock(point);
-                if (!block.isAir()) continue;
+                if (!block.air()) continue;
                 changedBlocks.put(point, block);
                 endInstance.setBlock(point, Block.BARRIER);
             }
@@ -190,7 +190,7 @@ public final class EndDragonManager {
             int y = layer[0]++;
             Point point = new Pos(altar.blockX(), y, altar.blockZ());
             Block block = endInstance.getBlock(point);
-            if (!block.isAir()) {
+            if (!block.air()) {
                 changedBlocks.putIfAbsent(point, block);
                 endInstance.setBlock(point, Block.AIR);
                 sendParticles(new Pos(point.x() + 0.5, point.y() + 0.5, point.z() + 0.5), Particle.PORTAL, 3);
@@ -208,7 +208,7 @@ public final class EndDragonManager {
                 for (int z = -10; z <= 10; z++) {
                     Point point = new Pos(altar.blockX() + x, y, altar.blockZ() + z);
                     Block block = endInstance.getBlock(point);
-                    if (block.isAir() || block == Block.BEDROCK || block == Block.BARRIER) continue;
+                    if (block.air() || block == Block.BEDROCK || block == Block.BARRIER) continue;
                     changedBlocks.putIfAbsent(point, block);
                     endInstance.setBlock(point, Block.AIR);
                     launchBlock(point, block, center);
@@ -478,7 +478,7 @@ public final class EndDragonManager {
 
     private void createLootCircle(Pos deathPosition) {
         int groundY = deathPosition.blockY();
-        while (groundY > altar.blockY() && endInstance.getBlock(deathPosition.blockX(), groundY, deathPosition.blockZ()).isAir()) {
+        while (groundY > altar.blockY() && endInstance.getBlock(deathPosition.blockX(), groundY, deathPosition.blockZ()).air()) {
             groundY--;
         }
         for (int degrees = 0; degrees < 360; degrees += 6) {
@@ -486,7 +486,7 @@ public final class EndDragonManager {
             int x = (int) Math.round(deathPosition.x() + Math.cos(radians) * 6);
             int z = (int) Math.round(deathPosition.z() + Math.sin(radians) * 6);
             int y = groundY;
-            while (y > altar.blockY() && endInstance.getBlock(x, y, z).isAir()) y--;
+            while (y > altar.blockY() && endInstance.getBlock(x, y, z).air()) y--;
             Point point = new Pos(x, y, z);
             temporaryBlocks.putIfAbsent(point, endInstance.getBlock(point));
             endInstance.setBlock(point, Block.TERRACOTTA);
