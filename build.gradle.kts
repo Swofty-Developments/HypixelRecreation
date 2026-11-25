@@ -60,6 +60,13 @@ subprojects {
         implementation(libsCatalog.findLibrary("jackson-core").get())
         implementation(libsCatalog.findLibrary("jackson-databind").get())
         implementation(libsCatalog.findLibrary("jackson-annotations").get())
+
+        constraints {
+            val jackson2 = libsCatalog.findVersion("jackson2").get().requiredVersion
+            listOf("jackson-core", "jackson-databind").forEach {
+                implementation("com.fasterxml.jackson.core:$it:$jackson2")
+            }
+        }
     }
 
     tasks.test {

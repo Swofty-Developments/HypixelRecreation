@@ -15,7 +15,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^1.21.0",
     "mongodb": "^7.4.0",
-    "next": "16.2.11",
+    "next": "16.4.6",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "stripe": "^22.3.0",
@@ -28,7 +28,7 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.39.4",
-    "eslint-config-next": "16.2.9",
+    "eslint-config-next": "16.4.6",
     "tailwindcss": "^4",
     "typescript": "^6.0.3"
   }
