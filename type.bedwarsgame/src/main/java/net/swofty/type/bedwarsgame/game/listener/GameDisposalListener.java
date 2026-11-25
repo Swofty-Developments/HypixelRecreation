@@ -19,6 +19,7 @@ public class GameDisposalListener implements HypixelEventClass {
 
         if (disposedGame != null) {
             disposedGame.getSwappageManager().stop();
+            disposedGame.getWorldManager().cleanupNPCs();
             unregisterInstanceWhenEmpty(disposedGame, 0);
         }
     }

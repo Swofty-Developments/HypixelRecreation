@@ -7,6 +7,7 @@ import net.minestom.server.entity.VillagerProfession;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.Material;
+import net.minestom.server.timer.TaskSchedule;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.MapTeam;
 import net.swofty.commons.bedwars.map.BedWarsMapsConfig.TeamKey;
@@ -36,6 +37,7 @@ import java.util.function.Consumer;
 public class BedWarsWorldManager {
     private final BedWarsGame game;
     private final List<RecordedShopNpc> recordedShopNPCs = new ArrayList<>();
+    private final List<HypixelNPC> registeredNPCs = new ArrayList<>();
     private boolean shopNPCsRecorded = false;
 
     public void clearExistingBeds() {
@@ -144,6 +146,7 @@ public class BedWarsWorldManager {
                     bwPlayer.openView(new GUIItemShop(bwPlayer.getGame()));
                 });
                 shopNpc.register();
+                registeredNPCs.add(shopNpc);
 
                 int npcEntityId = 10000 + teamKey.ordinal() * 2; // Generate unique entity ID
                 recordedShopNPCs.add(new RecordedShopNpc(
@@ -170,6 +173,7 @@ public class BedWarsWorldManager {
                     bwPlayer.openView(new GUITeamShop());
                 });
                 teamNpc.register();
+                registeredNPCs.add(teamNpc);
 
                 int npcEntityId = 10000 + teamKey.ordinal() * 2 + 1; // Generate unique entity ID
                 recordedShopNPCs.add(new RecordedShopNpc(
@@ -315,6 +319,11 @@ public class BedWarsWorldManager {
         };
     }
 
+    public void cleanupNPCs() {
+        registeredNPCs.forEach(HypixelNPC::unregister);
+        registeredNPCs.clear();
+    }
+
     public void spawnTemporaryItemShop(Pos position) {
         BedWarsShopkeeperAppearanceService.ShopkeeperAppearance appearance =
             BedWarsShopkeeperAppearanceService.defaultAppearance();
@@ -330,8 +339,13 @@ public class BedWarsWorldManager {
             }
         );
         shopNpc.register();
-        net.minestom.server.MinecraftServer.getSchedulerManager().buildTask(shopNpc::unregister)
-            .delay(net.minestom.server.timer.TaskSchedule.seconds(30))
+        registeredNPCs.add(shopNpc);
+
+        net.minestom.server.MinecraftServer.getSchedulerManager().buildTask(() -> {
+            shopNpc.unregister();
+            registeredNPCs.remove(shopNpc);
+        })
+            .delay(TaskSchedule.seconds(30))
             .schedule();
     }
 
