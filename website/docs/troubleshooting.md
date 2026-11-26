@@ -75,7 +75,12 @@ resource-packs:
         server-url: https://packs.example.com
 ```
 
-The game server log prints `Sending resource pack <hash> to <player> from <url>` for each player, and the status the client reported when the pack fails.
+The game server log prints `Sending resource pack <hash> to <player> from <url>` for each player, and the status the client reported when the pack fails:
+
+- `FAILED_DOWNLOAD`: the client could not reach the URL in the log line.
+- `FAILED_RELOAD`: the client downloaded the pack but could not apply it. World assets older than version 2 ship shaders that 26.3 clients cannot compile. Run the installer again (or choose **Install** for an existing installation) to replace them; `configuration/world-assets.version` holds the installed version. For a manual setup, download the [world files](/docs/setup/game-servers) again and replace `configuration/resourcepacks/skyblockpack` and `configuration/resourcepacks/ravengard`.
+
+A player whose pack fails is sent back to a lobby.
 
 ### Players Can't See Each Other
 
