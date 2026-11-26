@@ -187,6 +187,14 @@ func (r *Runner) Reconfigure(ctx context.Context, cfg Config) error {
 		return err
 	}
 
+	r.emit("Checking for world assets")
+	if err := DownloadLimboAssets(ctx, cfg.InstallDir, r.Events); err != nil {
+		r.emit("asset update failed: %v", err)
+		r.emit("Manual fallback: %s", LimboAssetsManualHint())
+	} else {
+		r.emit("world assets are ready")
+	}
+
 	r.emit("Writing updated configuration")
 	if err := PrepareFiles(cfg); err != nil {
 		return err

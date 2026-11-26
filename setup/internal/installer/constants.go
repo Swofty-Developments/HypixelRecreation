@@ -1,16 +1,16 @@
 package installer
 
 const (
-	Version           = "2.1.2"
-	GitHubRepo        = "Swofty-Developments/HypixelRecreation"
-	GitHubAPI         = "https://api.github.com/repos/" + GitHubRepo
-	StateFileName     = ".state.json"
-	DefaultInstallSub = ".hypixel-skyblock"
+	Version            = "2.1.2"
+	GitHubRepo         = "Swofty-Developments/HypixelRecreation"
+	GitHubAPI          = "https://api.github.com/repos/" + GitHubRepo
+	StateFileName      = ".state.json"
+	DefaultInstallSub  = ".hypixel-skyblock"
+	WorldAssetsVersion = "2"
 )
 
 var LimboAssetsURLs = []string{
 	"https://github.com/Swofty-Developments/HypixelRecreation/releases/download/world-assets/world-assets.zip",
-	"https://files.catbox.moe/flri48.zip",
 }
 
 var SkyBlockServers = []string{
