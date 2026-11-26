@@ -93,9 +93,11 @@ services:
       - hypixel_network
 
   pico_limbo:
-    image: ghcr.io/quozul/picolimbo:v1.12.2-mc26.1.2
+    image: ghcr.io/quozul/picolimbo:v1.15.0-mc26.3
     container_name: pico_limbo
     restart: unless-stopped
+    working_dir: /app/configuration_files
+    command: ["pico_limbo", "--config", "/app/configuration_files/server.toml"]
     environment:
       <<: *forwarding_env
     depends_on:

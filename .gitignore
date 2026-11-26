@@ -53,6 +53,7 @@ build/
 *.schem
 /setup/skyblock-installer
 /configuration/*.schem
+!/configuration/limbo.schem
 
 ### Logs ###
 /configuration/logs/
