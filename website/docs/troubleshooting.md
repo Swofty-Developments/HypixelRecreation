@@ -61,6 +61,27 @@ Common issues and their solutions.
 2. Replace your Velocity proxy with that version
 3. Restart the proxy (which will also restart all game servers)
 
+### Resource Pack Fails to Load
+
+The client downloads the pack from the pack server on port `7270`. When `resource-packs.<pack>.server-url` in `config.yml` points at `127.0.0.1` or `localhost`, each player gets the address they typed to join, with port `7270`. Port `7270` has to be reachable from the player's machine (open it in the firewall next to `25565`).
+
+When players join through a domain or tunnel that only forwards `25565`, set `server-url` to a URL that reaches the pack server, for example:
+
+```yaml
+resource-packs:
+    skyblockpack:
+        server-url: https://packs.example.com
+    ravengard:
+        server-url: https://packs.example.com
+```
+
+The game server log prints `Sending resource pack <hash> to <player> from <url>` for each player, and the status the client reported when the pack fails:
+
+- `FAILED_DOWNLOAD`: the client could not reach the URL in the log line.
+- `FAILED_RELOAD`: the client downloaded the pack but could not apply it. World assets older than version 2 ship shaders that 26.3 clients cannot compile. Run the installer again (or choose **Install** for an existing installation) to replace them; `configuration/world-assets.version` holds the installed version. For a manual setup, download the [world files](/docs/setup/game-servers) again and replace `configuration/resourcepacks/skyblockpack` and `configuration/resourcepacks/ravengard`.
+
+A player whose pack fails is sent back to a lobby.
+
 ### Players Can't See Each Other
 
 **Cause**: Multiple servers not syncing through Redis

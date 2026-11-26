@@ -3,6 +3,7 @@ package installer
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -171,7 +172,11 @@ resource-packs:
         server-url: http://127.0.0.1:7270
 `
 	configPath := filepath.Join(cfg.InstallDir, "configuration", "config.yml")
-	if err := os.WriteFile(configPath, []byte(body), 0o644); err != nil {
+	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {
+		if err := os.WriteFile(configPath, []byte(body), 0o644); err != nil {
+			return err
+		}
+	} else if err != nil {
 		return err
 	}
 	return os.WriteFile(filepath.Join(cfg.InstallDir, "configuration", "config.example.yml"), []byte(body), 0o644)

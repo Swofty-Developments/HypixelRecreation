@@ -15,10 +15,20 @@ import (
 // use this so you can replace the assets
 const limboAssetsEnv = "SKYBLOCK_WORLD_ASSETS"
 
+const worldAssetsVersionFile = "world-assets.version"
+
+var installerOwnedPacks = []string{
+	filepath.Join("resourcepacks", "ravengard"),
+	filepath.Join("resourcepacks", "skyblockpack"),
+}
+
 func DownloadLimboAssets(ctx context.Context, installDir string, events chan<- Event) error {
 	configDir := filepath.Join(installDir, "configuration")
-	if LimboAssetsPresent(configDir) {
+	if LimboAssetsCurrent(configDir) {
 		return nil
+	}
+	if LimboAssetsPresent(configDir) {
+		emitAssetProgress(events, "World assets are older than version %s, updating them", WorldAssetsVersion)
 	}
 
 	if localPath := strings.TrimSpace(os.Getenv(limboAssetsEnv)); localPath != "" {
@@ -77,25 +87,67 @@ func downloadLimboAssetsFrom(ctx context.Context, url, configDir string, events 
 		return err
 	}
 
+	version, err := zipAssetsVersion(tmpPath)
+	if err != nil {
+		return err
+	}
+	if version != WorldAssetsVersion {
+		return fmt.Errorf("zip holds world assets version %q, this installer needs version %s", version, WorldAssetsVersion)
+	}
+
 	emitAssetProgress(events, "Extracting world assets")
+	for _, pack := range installerOwnedPacks {
+		if err := os.RemoveAll(filepath.Join(configDir, pack)); err != nil {
+			return err
+		}
+	}
 	if err := extractZip(tmpPath, configDir); err != nil {
 		return err
 	}
-	if !LimboAssetsPresent(configDir) {
-		return fmt.Errorf("downloaded zip did not contain limbo.schem, world/ and resourcepacks/")
+	if !LimboAssetsCurrent(configDir) {
+		return fmt.Errorf("downloaded zip did not contain limbo.schem, world/, resourcepacks/ and %s", worldAssetsVersionFile)
 	}
 	return nil
+}
+
+func LimboAssetsCurrent(configDir string) bool {
+	if !LimboAssetsPresent(configDir) {
+		return false
+	}
+	data, err := os.ReadFile(filepath.Join(configDir, worldAssetsVersionFile))
+	return err == nil && strings.TrimSpace(string(data)) == WorldAssetsVersion
+}
+
+func zipAssetsVersion(zipPath string) (string, error) {
+	reader, err := zip.OpenReader(zipPath)
+	if err != nil {
+		return "", err
+	}
+	defer reader.Close()
+
+	for _, file := range reader.File {
+		if file.Name != worldAssetsVersionFile {
+			continue
+		}
+		in, err := file.Open()
+		if err != nil {
+			return "", err
+		}
+		defer in.Close()
+		data, err := io.ReadAll(io.LimitReader(in, 64))
+		if err != nil {
+			return "", err
+		}
+		return strings.TrimSpace(string(data)), nil
+	}
+	return "", nil
 }
 
 func LimboAssetsPresent(configDir string) bool {
 	if _, err := os.Stat(filepath.Join(configDir, "limbo.schem")); err != nil {
 		return false
 	}
-	for _, dir := range []string{
-		"world",
-		filepath.Join("resourcepacks", "ravengard"),
-		filepath.Join("resourcepacks", "skyblockpack"),
-	} {
+	for _, dir := range append([]string{"world"}, installerOwnedPacks...) {
 		if info, err := os.Stat(filepath.Join(configDir, dir)); err != nil || !info.IsDir() {
 			return false
 		}

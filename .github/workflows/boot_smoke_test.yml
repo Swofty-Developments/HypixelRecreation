@@ -92,7 +92,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/world-assets
-          key: world-assets-flri48
+          key: world-assets-v2
 
       - name: Download world assets
         if: steps.world-assets.outputs.cache-hit != 'true'

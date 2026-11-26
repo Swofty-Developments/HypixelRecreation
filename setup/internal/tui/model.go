@@ -105,7 +105,11 @@ type statusMsg struct {
 
 type eventMsg installer.Event
 type depsMsg error
-type logsMsg string
+type logsMsg struct {
+	stream *logStream
+	line   string
+	ended  bool
+}
 
 type depsReportMsg struct {
 	report installer.DependencyReport
@@ -192,11 +196,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.updateDeps(msg)
 		case screenLogs:
 			if msg.String() == "esc" || msg.String() == "q" {
-				if activeLogs != nil {
-					_ = activeLogs.Close()
-					activeLogs = nil
-					activeLogScan = nil
-				}
+				closeActiveLog()
 				m.screen = screenDashboard
 				return m, refreshStatus()
 			}
@@ -272,12 +272,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, nextEvent()
 	case logsMsg:
-		m.logs.SetContent(appendLine(m.logs.View(), string(msg)))
-		m.logs.GotoBottom()
-		if string(msg) == "logs ended" {
+		if msg.stream != activeLog {
 			return m, nil
 		}
-		return m, nextLog()
+		if msg.ended {
+			activeLog = nil
+			m.logs.SetContent(appendLine(m.logs.View(), "logs ended"))
+			m.logs.GotoBottom()
+			return m, nil
+		}
+		m.logs.SetContent(appendLine(m.logs.View(), msg.line))
+		m.logs.GotoBottom()
+		return m, nextLog(activeLog)
 	case spinner.TickMsg:
 		var cmd tea.Cmd
 		m.spinner, cmd = m.spinner.Update(msg)
@@ -805,18 +811,16 @@ func (m Model) startLogs() (tea.Model, tea.Cmd) {
 }
 
 func (m Model) openLogs(name string) (tea.Model, tea.Cmd) {
-	activeLogs = nil
-	activeLogScan = nil
+	closeActiveLog()
 	rc, err := installer.ContainerLogs(context.Background(), name, "80")
 	if err != nil {
 		m.err = err
 		return m, nil
 	}
-	activeLogs = rc
-	activeLogScan = bufio.NewScanner(rc)
+	activeLog = &logStream{rc: rc, scan: bufio.NewScanner(rc)}
 	m.screen = screenLogs
 	m.logs.SetContent("Logs for " + name)
-	return m, nextLog()
+	return m, nextLog(activeLog)
 }
 
 func (m *Model) refreshInstallState() {
@@ -923,34 +927,43 @@ func checkDepsReport(back screen) tea.Cmd {
 var activeEvents <-chan installer.Event
 
 func nextEvent() tea.Cmd {
+	events := activeEvents
+	if events == nil {
+		return nil
+	}
 	return func() tea.Msg {
-		if activeEvents == nil {
-			return nil
-		}
-		ev, ok := <-activeEvents
+		ev, ok := <-events
 		if !ok {
-			activeEvents = nil
 			return eventMsg{Done: true}
 		}
 		return eventMsg(ev)
 	}
 }
 
-var activeLogs io.ReadCloser
-var activeLogScan *bufio.Scanner
+type logStream struct {
+	rc   io.ReadCloser
+	scan *bufio.Scanner
+}
 
-func nextLog() tea.Cmd {
+var activeLog *logStream
+
+func closeActiveLog() {
+	if activeLog != nil {
+		_ = activeLog.rc.Close()
+		activeLog = nil
+	}
+}
+
+func nextLog(stream *logStream) tea.Cmd {
+	if stream == nil {
+		return nil
+	}
 	return func() tea.Msg {
-		if activeLogs == nil || activeLogScan == nil {
-			return nil
+		if !stream.scan.Scan() {
+			_ = stream.rc.Close()
+			return logsMsg{stream: stream, ended: true}
 		}
-		if !activeLogScan.Scan() {
-			_ = activeLogs.Close()
-			activeLogs = nil
-			activeLogScan = nil
-			return logsMsg("logs ended")
-		}
-		return logsMsg(activeLogScan.Text())
+		return logsMsg{stream: stream, line: stream.scan.Text()}
 	}
 }
 
