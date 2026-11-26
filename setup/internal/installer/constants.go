@@ -1,7 +1,7 @@
 package installer
 
 const (
-	Version           = "2.1.1"
+	Version           = "2.1.2"
 	GitHubRepo        = "Swofty-Developments/HypixelRecreation"
 	GitHubAPI         = "https://api.github.com/repos/" + GitHubRepo
 	StateFileName     = ".state.json"
