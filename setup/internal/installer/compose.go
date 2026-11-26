@@ -34,8 +34,10 @@ services:
     healthcheck:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 6
+      start_period: 60s
+    restart: unless-stopped
     command: ["mongod", "--quiet"]
 
   redis:
@@ -51,6 +53,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 20s
+    restart: unless-stopped
 
   proxy:
     build:
