@@ -3486,7 +3486,7 @@ public enum ItemType {
 
   PASTEL_SKY_DYE(Material.MAGENTA_DYE, Rarity.MYTHIC),
 
-  PEARLESCENT_DYE(Material.PURPLE_DYE, Rarity.LEGENDARY),
+  PEARLESCENT_DYE(Material.CYAN_DYE, Rarity.LEGENDARY),
 
   PENGUIN_PET(Material.PLAYER_HEAD, Rarity.LEGENDARY),
 
