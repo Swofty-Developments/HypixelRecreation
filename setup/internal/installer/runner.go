@@ -144,11 +144,11 @@ func (r *Runner) Start(ctx context.Context, dir string) error {
 	if err := Compose(ctx, dir, r.Events, "up", "-d", "mongodb", "redis"); err != nil {
 		return err
 	}
-	if err := WaitHealthy(ctx, "hypixel_mongo", 60*time.Second); err != nil {
-		r.emit("MongoDB health warning: %v", err)
+	if err := WaitHealthy(ctx, "hypixel_mongo", 3*time.Minute); err != nil {
+		return r.dependencyFailure(ctx, dir, "MongoDB", "hypixel_mongo", err)
 	}
-	if err := WaitHealthy(ctx, "hypixel_redis", 30*time.Second); err != nil {
-		r.emit("Redis health warning: %v", err)
+	if err := WaitHealthy(ctx, "hypixel_redis", time.Minute); err != nil {
+		return r.dependencyFailure(ctx, dir, "Redis", "hypixel_redis", err)
 	}
 
 	r.emit("Starting proxy")
@@ -161,6 +161,20 @@ func (r *Runner) Start(ctx context.Context, dir string) error {
 
 	r.emit("Starting remaining services")
 	return Compose(ctx, dir, r.Events, "up", "-d")
+}
+
+func (r *Runner) dependencyFailure(ctx context.Context, dir, label, container string, cause error) error {
+	r.emit("%s did not start: %v", label, cause)
+	summary, hints := DiagnoseContainer(ctx, container)
+	r.emit("Container state: %s", summary)
+	r.emit("Last %s log lines:", label)
+	if err := runStream(ctx, dir, r.Events, "docker", "logs", "--tail", "40", container); err != nil {
+		r.emit("Could not read the %s log: %v", label, err)
+	}
+	for _, hint := range hints {
+		r.emit("%s", hint)
+	}
+	return fmt.Errorf("%s did not start, see the log above (share it when asking for help)", label)
 }
 
 func (r *Runner) Reconfigure(ctx context.Context, cfg Config) error {

@@ -106,29 +106,105 @@ func WaitHealthy(ctx context.Context, name string, timeout time.Duration) error 
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
 
+	last := "not created"
 	for {
 		inspect, err := cli.ContainerInspect(deadline, name, client.ContainerInspectOptions{})
 		container := inspect.Container
 		if err == nil && container.State != nil {
+			last = string(container.State.Status)
 			if container.State.Health != nil {
-				switch container.State.Health.Status {
-				case "healthy":
+				last = string(container.State.Health.Status)
+				if container.State.Health.Status == "healthy" {
 					return nil
-				case "unhealthy":
-					return fmt.Errorf("%s is unhealthy", name)
 				}
 			}
-			if container.State.Status == "exited" {
-				return fmt.Errorf("%s exited", name)
+			if container.State.Status == "exited" || container.State.Status == "dead" {
+				return fmt.Errorf("%s stopped with exit code %d", name, container.State.ExitCode)
+			}
+			if inspect.Container.RestartCount >= 2 {
+				return fmt.Errorf("%s keeps crashing (restarted %d times)", name, inspect.Container.RestartCount)
 			}
 		}
 
 		select {
 		case <-deadline.Done():
-			return fmt.Errorf("%s did not become healthy within %s", name, timeout)
+			return fmt.Errorf("%s was still %s after %s", name, last, timeout)
 		case <-ticker.C:
 		}
 	}
+}
+
+func DiagnoseContainer(ctx context.Context, name string) (string, []string) {
+	cli, err := DockerClient()
+	if err != nil {
+		return err.Error(), nil
+	}
+	defer cli.Close()
+
+	inspect, err := cli.ContainerInspect(ctx, name, client.ContainerInspectOptions{})
+	if err != nil {
+		return err.Error(), nil
+	}
+	state := inspect.Container.State
+	if state == nil {
+		return "no state reported", nil
+	}
+	exitCode := state.ExitCode
+	if state.Status == "running" && inspect.Container.RestartCount > 0 {
+		if code, ok := nextExit(ctx, cli, name, 45*time.Second); ok {
+			exitCode = code
+			if again, err := cli.ContainerInspect(ctx, name, client.ContainerInspectOptions{}); err == nil && again.Container.State != nil {
+				inspect = again
+				state = again.Container.State
+			}
+		}
+	}
+
+	parts := []string{
+		fmt.Sprintf("status %s", state.Status),
+		fmt.Sprintf("exit code %d", exitCode),
+		fmt.Sprintf("restarts %d", inspect.Container.RestartCount),
+	}
+	if state.OOMKilled {
+		parts = append(parts, "killed for running out of memory")
+	}
+	if state.Error != "" {
+		parts = append(parts, "error: "+state.Error)
+	}
+	if state.Health != nil && len(state.Health.Log) > 0 {
+		check := state.Health.Log[len(state.Health.Log)-1]
+		parts = append(parts, fmt.Sprintf("last health check exit %d: %s", check.ExitCode, strings.TrimSpace(check.Output)))
+	}
+	return strings.Join(parts, ", "), exitHints(name, exitCode, state.OOMKilled)
+}
+
+func nextExit(ctx context.Context, cli *client.Client, name string, timeout time.Duration) (int, bool) {
+	waitCtx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+	wait := cli.ContainerWait(waitCtx, name, client.ContainerWaitOptions{Condition: "next-exit"})
+	select {
+	case res := <-wait.Result:
+		return int(res.StatusCode), true
+	case <-wait.Error:
+		return 0, false
+	case <-waitCtx.Done():
+		return 0, false
+	}
+}
+
+func exitHints(container string, exitCode int, oomKilled bool) []string {
+	mongo := container == "hypixel_mongo"
+	switch {
+	case oomKilled || exitCode == 137:
+		return []string{"Docker ran out of memory. Give Docker more memory (Docker Desktop: Settings > Resources, WSL: memory= in .wslconfig) or select fewer servers."}
+	case mongo && exitCode == 132:
+		return []string{"The CPU does not support AVX, which MongoDB 5.0 and newer require. On a VM, enable AVX passthrough for the guest."}
+	case mongo && exitCode == 139:
+		return []string{"MongoDB crashed with a segmentation fault. MongoDB 8 can crash this way on Linux kernel 6.19 and newer; run `uname -r` to check the kernel."}
+	case mongo && exitCode == 62:
+		return []string{"The mongo-data volume holds data written by a newer MongoDB version. Back it up, or remove it with `docker rm -f hypixel_mongo && docker volume rm mongo-data` (this deletes that data)."}
+	}
+	return nil
 }
 
 const (

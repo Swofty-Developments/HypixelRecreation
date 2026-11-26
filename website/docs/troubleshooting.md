@@ -57,7 +57,7 @@ Common issues and their solutions.
 
 **Solution**:
 
-1. Download the Velocity 3.5.0-SNAPSHOT-605 build linked in [Proxy Setup](/docs/setup/proxy) — the same stock PaperMC build the Docker image uses
+1. Download the Velocity 4.3.1 build linked in [Proxy Setup](/docs/setup/proxy), the same stock PaperMC build the Docker image uses
 2. Replace your Velocity proxy with that version
 3. Restart the proxy (which will also restart all game servers)
 
@@ -125,6 +125,22 @@ If joining says there are no Prototype Lobby servers available, the `prototype_l
 2. Check for port conflicts (25565, 27017, 6379, 8080)
 3. Review logs: `docker-compose logs`
 4. Try rebuilding: `docker-compose down && docker-compose up --build`
+
+### MongoDB Container Exits or Is Unhealthy
+
+The installer stops with `MongoDB did not start`, followed by the container's exit code and its last log lines. Read the same details by hand with:
+
+```bash
+docker logs --tail 50 hypixel_mongo
+docker inspect hypixel_mongo --format '{{.State.ExitCode}} {{.State.OOMKilled}}'
+```
+
+- `137`, or `OOMKilled` is `true`: Docker ran out of memory. Raise the memory limit in Docker Desktop (Settings > Resources) or `memory=` in `.wslconfig` on WSL, or select fewer servers.
+- `132`: the CPU has no AVX, which MongoDB 5.0 and newer require.
+- `139`: segmentation fault. MongoDB 8 can crash this way on Linux kernel 6.19 and newer; `uname -r` prints the kernel version.
+- `62`: the `mongo-data` volume holds data written by a newer MongoDB version. `docker rm -f hypixel_mongo && docker volume rm mongo-data` removes it and deletes that data.
+
+For any other exit code, post the log output in #code-help.
 
 ### Can't Connect to Docker Server
 
