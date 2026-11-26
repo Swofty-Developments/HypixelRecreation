@@ -435,69 +435,103 @@ public class SkyBlockVelocity {
 
     @Subscribe
     public void onServerCrash(KickedFromServerEvent event) {
-        if (checkPunished(event.getPlayer())) {
+        Player player = event.getPlayer();
+        if (checkPunished(player)) {
             return;
         }
 
-        // Send the player to the limbo
         RegisteredServer originalServer = event.getServer();
         Component reason = event.getServerKickReason().orElseGet(() ->
             ProxyText.render("<c>Your connection to the server was lost. Please try again later."));
         ServerType serverType = GameManager.getTypeFromRegisteredServer(originalServer);
+
+        if (originalServer.equals(limboServer)) {
+            onLimboUnavailable(event, reason);
+            return;
+        }
 
         event.setResult(KickedFromServerEvent.RedirectPlayer.create(
             limboServer,
             null
         ));
 
-        TransferHandler transferHandler = new TransferHandler(event.getPlayer());
+        TransferHandler transferHandler = new TransferHandler(player);
 
         CompletableFuture.delayedExecutor(GameManager.SLEEP_TIME + 300, TimeUnit.MILLISECONDS)
             .execute(() -> {
-                // Determine if the registeredServer disconnect was due to a crash —
-                // if it was, send the player to another server of that type;
-                // otherwise disconnect them with the original reason.
+                if (!player.isActive()) {
+                    transferHandler.forceRemoveFromLimbo();
+                    return;
+                }
+                boolean leftLimbo = player.getCurrentServer()
+                    .map(connection -> !connection.getServer().equals(limboServer))
+                    .orElse(false);
+                if (leftLimbo) {
+                    return;
+                }
                 try {
-                    LinkedHashSet<ServerType> candidates = new LinkedHashSet<>();
-                    if (serverType != null && !LobbyDestination.isSessionType(serverType)) {
-                        candidates.add(serverType);
-                    }
-                    candidates.add(LobbyDestination.resolveDefaultDestination(serverType));
-                    candidates.add(ServerType.PROTOTYPE_LOBBY);
-
-                    ServerType serverTypeToTry = null;
-                    GameManager.GameServer server = null;
-                    for (ServerType candidate : candidates) {
-                        if (!GameManager.hasType(candidate) || !GameManager.isAnyEmpty(candidate)) {
-                            continue;
-                        }
-                        GameManager.GameServer candidateServer = BalanceConfigurations.getServerFor(event.getPlayer(), candidate);
-                        if (candidateServer == null || candidateServer.registeredServer().equals(originalServer)) {
-                            continue;
-                        }
-                        serverTypeToTry = candidate;
-                        server = candidateServer;
-                        break;
-                    }
+                    GameManager.GameServer server = fallbackServer(player, serverType, originalServer);
                     if (server == null) {
                         transferHandler.forceRemoveFromLimbo();
-                        event.getPlayer().disconnect(reason);
+                        player.disconnect(reason);
                         return;
                     }
                     transferHandler.transferTo(server.registeredServer());
 
-                    if (serverTypeToTry == serverType) {
-                        event.getPlayer().sendMessage(Text.of("<c>An exception occurred in your connection, so you were put into another server of the same type."));
+                    if (serverType != null && serverType == GameManager.getTypeFromRegisteredServer(server.registeredServer())) {
+                        player.sendMessage(Text.of("<c>An exception occurred in your connection, so you were put into another server of the same type."));
                     } else {
-                        event.getPlayer().sendMessage(Text.of("<c>An exception occurred in your connection, so you were put into a lobby."));
+                        player.sendMessage(Text.of("<c>An exception occurred in your connection, so you were put into a lobby."));
                     }
-                    event.getPlayer().sendMessage(Text.of("<7>Sending to server {}...", server.displayName()));
+                    player.sendMessage(Text.of("<7>Sending to server {}...", server.displayName()));
                 } catch (Exception e) {
-                    Logger.getAnonymousLogger().log(Level.SEVERE, "An exception occurred while trying to transfer " + event.getPlayer().getUsername() + " to " + serverType, e);
+                    Logger.getAnonymousLogger().log(Level.SEVERE, "An exception occurred while trying to transfer " + player.getUsername() + " to " + serverType, e);
                     transferHandler.forceRemoveFromLimbo();
-                    event.getPlayer().disconnect(reason);
+                    player.disconnect(reason);
                 }
             });
+    }
+
+    private void onLimboUnavailable(KickedFromServerEvent event, Component reason) {
+        Player player = event.getPlayer();
+        new TransferHandler(player).forceRemoveFromLimbo();
+        if (event.kickedDuringServerConnect()) {
+            return;
+        }
+        if (unauthenticated.contains(player.getUniqueId())) {
+            event.setResult(KickedFromServerEvent.DisconnectPlayer.create(reason));
+            return;
+        }
+        GameManager.GameServer lobby = fallbackServer(player, null, limboServer);
+        if (lobby == null) {
+            event.setResult(KickedFromServerEvent.DisconnectPlayer.create(reason));
+            return;
+        }
+        event.setResult(KickedFromServerEvent.RedirectPlayer.create(
+            lobby.registeredServer(),
+            ProxyText.render("<c>An exception occurred in your connection, so you were put into a lobby.")
+        ));
+    }
+
+    private static GameManager.GameServer fallbackServer(Player player, ServerType serverType, RegisteredServer excluded) {
+        LinkedHashSet<ServerType> candidates = new LinkedHashSet<>();
+        if (serverType != null && !LobbyDestination.isSessionType(serverType)) {
+            candidates.add(serverType);
+        }
+        candidates.add(LobbyDestination.resolveDefaultDestination(serverType));
+        candidates.add(ServerType.PROTOTYPE_LOBBY);
+
+        for (ServerType candidate : candidates) {
+            if (!GameManager.hasType(candidate) || !GameManager.isAnyEmpty(candidate)) {
+                continue;
+            }
+            GameManager.GameServer candidateServer = BalanceConfigurations.getServerFor(player, candidate);
+            if (candidateServer == null || candidateServer.registeredServer().equals(excluded)) {
+                continue;
+            }
+            return candidateServer;
+        }
+        return null;
     }
 
     @Subscribe
