@@ -61,9 +61,10 @@ public class ResourcePackManager {
             Logger.warn("Cookie fetch failed for {}, pushing pack anyway", player.getUsername());
         }
 
+        URI playerPackUrl = PackUrl.forConnection(packUrl, player.getPlayerConnection().getServerAddress());
         ResourcePackInfo info = ResourcePackInfo.resourcePackInfo(
                 UUID.nameUUIDFromBytes(packHash.getBytes()),
-                URI.create(packUrl),
+                playerPackUrl,
                 packHash
         );
 
@@ -79,13 +80,14 @@ public class ResourcePackManager {
                         player.getPlayerConnection().storeCookie("hypixel:applied_pack",
                                 packHash.getBytes(java.nio.charset.StandardCharsets.UTF_8));
                     } else {
-                        Logger.warn("Resource pack {} for {} finished with status {}",
-                                packHash.substring(0, 8), player.getUsername(), status);
+                        Logger.warn("Resource pack {} for {} finished with status {} (url {})",
+                                packHash.substring(0, 8), player.getUsername(), status, playerPackUrl);
                     }
                     resolved.complete(null);
                 })
                 .build();
 
+        Logger.info("Sending resource pack {} to {} from {}", packHash.substring(0, 8), player.getUsername(), playerPackUrl);
         player.sendResourcePacks(request);
 
         if (timeoutSeconds > 0) {
